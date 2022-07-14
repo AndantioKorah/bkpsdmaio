@@ -3,12 +3,12 @@
 ?>
     <div class="row p-2">
         <div class="col-12">
-
+        <form id="form_mutasi_pegawai">
         <div class="tab-content col-12" id="myTabContent">
             <div class="tab-pane show active" id="role_tab">
                 <div class="row">
                     <div class="col-12">
-                        <form id="form_mutasi_pegawai">
+                       
                             <h4><?=$pegawai[0]['nama_pegawai']?></h4>
                             <label>Pilih SKPD Tujuan Mutasi:</label>
                             
@@ -22,14 +22,26 @@
                                 </option>
                                 <?php } } ?>
                             </select>
-                   <input style="display: none;"  class="form-control form-control-sm" name="skpd" value="<?=$pegawai[0]['skpd']?>"/>
-                   <input style="display: none;"  class="form-control form-control-sm" name="nip" value="<?=$pegawai[0]['nipbaru']?>"/>
+                            </div>
+                            </div>
+                            <div class="row">
+                    <div class="col-12" style="margin-top:10px;">
+                    <div class="form-group">
+                            <label>TMT</label>
+                            <input  class="form-control datepicker" id="tmt_mutasi" name="tmt_mutasi">
+                           
+                        </div>
+                     
+                            </div>
+                            </div>
+                            <input style="display: none;"  class="form-control form-control-sm" name="skpd" value="<?=$pegawai[0]['skpd']?>"/>
+                            <input style="display: none;"  class="form-control form-control-sm" name="nip" value="<?=$pegawai[0]['nipbaru']?>"/>
                             <input style="display: none;" class="form-control form-control-sm" name="id_peg" value="<?=$pegawai[0]['id_peg']?>"/>
                             <button class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
-                        </form>
+                      
                     </div>
-                    <div class="col-12"><hr></div>
-                
+                   
+                    </form>
                 </div>
             </div>
             
@@ -73,5 +85,8 @@
             })
         })
 
-    
+        $('.datepicker').datepicker({
+            format: 'yyyy/mm/dd',
+            todayBtn: "linked"
+        });
 </script>

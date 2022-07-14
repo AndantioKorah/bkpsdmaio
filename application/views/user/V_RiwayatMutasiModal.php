@@ -14,6 +14,7 @@
                 <th>Nama</th>
                 <th>Unit Kerja Asal Mutasi</th>   
                 <th>Unit Kerja Tujuan Mutasi</th>
+                <th>TMT</th>
             </thead>
             <tbody>
                 <?php $no = 1; foreach($riwayat as $rs){ ?>
@@ -22,6 +23,9 @@
                         <td><?=$rs['nama'];?></td>
                         <td><?=$rs['unit_kerja_asal'];?></td>
                         <td><?=$rs['unit_kerja_tujuan'];?></td>
+                        <td>
+                            <?= formatDateOnly($rs['tmt_mutasi']);?>
+                        </td>
                        
                 
                     </tr>

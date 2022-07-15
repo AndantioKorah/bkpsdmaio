@@ -148,4 +148,17 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->tambahHariLibur());
     }
 
+    public function jamKerja(){
+        render('master/V_JamKerja', '', '', null);
+    }
+
+    public function loadJamKerja(){
+        $data['result'] = $this->master->getAllJamKerja();
+        $this->load->view('master/V_JamKerjaResult', $data);
+    }
+
+    public function deleteJamKerja(){
+        echo json_encode($this->master->deleteJamKerja($id));
+    }
+
 }

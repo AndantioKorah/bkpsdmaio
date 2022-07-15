@@ -31,6 +31,13 @@
                             <span><?=$i?></span>
                         </th>
                     <?php } ?>
+                    <th style="text-align: center;">Alpa</th>
+                    <th style="text-align: center;">TMK 1</th>
+                    <th style="text-align: center;">TMK 2</th>
+                    <th style="text-align: center;">TMK 3</th>
+                    <th style="text-align: center;">PKSW 1</th>
+                    <th style="text-align: center;">PKSW 2</th>
+                    <th style="text-align: center;">PKSW 3</th>
                 </thead>
                 <tbody>
                 <?php $no=1; foreach($result as $rs){ ?>
@@ -38,12 +45,6 @@
                         <td style="text-align: center;"><?=$no++;?></td> 
                         <td><?=$rs['nama_pegawai']?></td>
                         <td style="text-align: center;">`<?=$rs['nip']?></td>
-                        <th style="text-align: center;">TMK 1</th>
-                        <th style="text-align: center;">TMK 2</th>
-                        <th style="text-align: center;">TMK 3</th>
-                        <th style="text-align: center;">PKSW 1</th>
-                        <th style="text-align: center;">PKSW 2</th>
-                        <th style="text-align: center;">PKSW 3</th>
                         <?php
                             for($i = 1; $i <= $jumlah_hari; $i++){
                                 if($i < 10){
@@ -73,13 +74,21 @@
                                             $fcpulang = '#ff0000';
                                         }
                                     ?>
-                                        <span style="color: <?=$fcmasuk?>;font-size: 14px;"><?=$a['masuk']['data']?></span> - 
-                                        <span style="color: <?=$fcpulang?>;font-size: 14px;"><?=$a['pulang']['data']?></span>
+                                        <span style="color: <?=$fcmasuk?>;font-size: 14px;"><?=$a['masuk']['data']?></span>
+                                        <?php
+                                            $jam_pulang = $a['pulang']['data'] ? ' - '.$a['pulang']['data'] : '';
+                                        ?>
+                                        <span style="color: <?=$fcpulang?>;font-size: 14px;"><?=$jam_pulang?></span>
                                 <?php } else { ?>
                                     <span style="font-size: 14px;">-</span>
                                 <?php } ?>
                             </td>
                         <?php } ?>
+                        <td style="text-align: center;">
+                            <?php if(isset($rs['rekap_absensi'])){ ?>
+                                <?=$rs['rekap_absensi']['tk']?>
+                            <?php } ?>
+                        </td>
                         <td style="text-align: center;">
                             <?php if(isset($rs['rekap_absensi'])){ ?>
                                 <?=$rs['rekap_absensi']['tmk1']?>

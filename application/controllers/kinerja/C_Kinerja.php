@@ -6,6 +6,7 @@ class C_Kinerja extends CI_Controller
     {
         parent::__construct();
         $this->load->model('general/M_General', 'general');
+        $this->load->model('master/M_Master', 'master');
         $this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('kinerja/M_VerifKinerja', 'verifkinerja');
         $this->load->helper('url_helper');
@@ -311,4 +312,27 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->verifkinerja->saveNiliKomponenKinerja($this->input->post()));
     }
     
+    public function disiplinKerja(){
+        $data['skpd'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_DisiplinKerja', '', '', $data);
+    }
+
+    public function searchDisiplinKerja(){
+        $data['result'] = $this->kinerja->searchDisiplinKerja($this->input->post());
+        $this->load->view('kinerja/V_DisiplinKerjaResult', $data);
+    }
+
+    public function insertDisiplinKerja(){
+        echo json_encode($this->kinerja->insertDisiplinKerja($this->input->post()));
+    }
+
+    public function modalTambahDataDisiplinKerja($id_unitkerja){
+        $data['pegawai'] = $this->master->getPegawaiBySkpd($id_unitkerja);
+        $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
+        $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
+    }
+
+    public function deleteDataDisiplinKerja($id){
+        $this->kinerja->deleteDataDisiplinKerja($id);
+    }
 }

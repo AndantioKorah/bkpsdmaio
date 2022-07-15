@@ -657,5 +657,73 @@
                         ->group_by('a.sasaran_kerja')
                         ->get()->result_array();
     }
+
+    public function searchDisiplinKerja($data){
+        if(!$this->general_library->isProgrammer() && !$this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN){
+            $data['id_unitkerja'] = $this->general_library->getUnitKerjaPegawai();
+        }
+
+        return $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username')
+                        ->from('t_disiplin_kerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->where('a.bulan', floatval($data['bulan']))
+                        ->where('a.tahun', floatval($data['tahun']))
+                        ->where('c.skpd', $data['id_unitkerja'])
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.created_date', 'desc')
+                        ->get()->result_array();
+    }
+
+    public function insertDisiplinKerja($data){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+
+        $this->db->trans_begin();
+
+        $tanggal = explodeRangeDateNew($data['range_periode']);
+        $jenis_disiplin = explode(';', $data['jenis_disiplin']);
+
+        $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
+        
+        $insert_data = null;
+        $i = 0;
+        foreach($data['pegawai'] as $d){
+            $disiplin = explode(';', $data['jenis_disiplin']);
+            foreach($list_tanggal as $l){
+                // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
+                    $date = explode('-', $l);
+                    $insert_data[$i]['id_m_user'] = $d;
+                    $insert_data[$i]['tahun'] = $date[0];
+                    $insert_data[$i]['bulan'] = $date[1];
+                    $insert_data[$i]['tanggal'] = $date[2];
+                    $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
+                    $insert_data[$i]['keterangan'] = $disiplin[1];
+                    $insert_data[$i]['pengurangan'] = $disiplin[2];
+                    $insert_data[$i]['created_by'] = $this->general_library->getId();
+
+                    $i++;
+                // }
+            }
+        }
+        
+        $this->db->insert_batch('t_disiplin_kerja', $insert_data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $rs;
+    }
+
+    public function deleteDataDisiplinKerja($id){
+        $this->db->where('id', $id)
+                ->update('t_disiplin_kerja', ['flag_active' => 0]);
+    }
 }
 ?>

@@ -66,7 +66,19 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                            ->where('a.skpd', 4012000)
+                            ->where('a.skpd', $data)
+                            ->order_by('a.nama', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getPegawaiBySkpd($data){
+            return $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                            ->join('m_user e', 'a.nipbaru_ws = e.username')
+                            ->where('e.flag_active', 1)
+                            ->where('a.skpd', $data)
                             ->order_by('a.nama', 'asc')
                             ->get()->result_array();
         }
@@ -289,6 +301,19 @@
                     $this->db->insert_batch('t_hari_libur', $insert_data);
                 }
             }
+        }
+
+        public function deleteJamKerja(){
+            $this->db->where('id', $id)
+                    ->update('t_hari_libur', ['flag_active' => 0]); 
+        }
+
+        public function getAllJamKerja(){
+            return $this->db->select('a.*, b.jenis_skpd')
+                            ->from('t_jam_kerja a')
+                            ->join('m_jenis_skpd b', 'a.id_m_jenis_skpd = b.id')
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
         }
 	}
 ?>

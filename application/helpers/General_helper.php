@@ -106,6 +106,17 @@ function explodeRangeDate($date){
     return [$start_date, $end_date];
 }
 
+function explodeRangeDateNew($date){
+    $tanggal = explode("-", $date);
+    $awal = explode("/", $tanggal[0]);    
+    $akhir = explode("/", $tanggal[1]);
+
+    $start_date = trim($awal[2]).'-'.trim($awal[0]).'-'.trim($awal[1]);
+    $end_date = trim($akhir[2]).'-'.trim($akhir[0]).'-'.trim($akhir[1]);
+
+    return [$start_date, $end_date];
+}
+
 function getStatusTransaksi($status){
     switch($status){
         case 1:

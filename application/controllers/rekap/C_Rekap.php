@@ -25,83 +25,26 @@ class C_Rekap extends CI_Controller
     }
 
     public function readAbsensiExcel(){
-        $rs['code'] = 0;
-        $rs['message'] = 0;
-        $file_excel = array();
-        $temp_data = null;
-        $data = array();
-
-        if($_FILES["file_excel"]["name"] != ''){
-            $allowed_extension = ['xls', 'csv', 'xlsx'];
-            $file_array = explode(".", $_FILES["file_excel"]["name"]);
-            $file_extension = end($file_array);
-
-            if(in_array($file_extension, $allowed_extension)){
-                $config['upload_path'] = 'assets/upload_rekap_absen'; 
-                $config['allowed_types'] = '*';
-                $config['max_size'] = '5000'; // max_size in kb
-                $config['file_name'] = $_FILES['file_excel']['name'];
-
-                $this->load->library('upload', $config); 
-
-                $uploadfile = $this->upload->do_upload('file_excel');
-
-                if($uploadfile){
-                    $upload_data = $this->upload->data(); 
-                    $file_excel['name'] = $upload_data['file_name'];
-
-                    $filename = $_FILES["file_excel"]["name"];
-                    libxml_use_internal_errors(true);
-                    // $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES["file_excel"]["name"]);
-                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($config['upload_path'].'/'.$file_excel['name']);
-                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
-
-                    $spreadsheet = $reader->load($_FILES["file_excel"]["tmp_name"]);
-                    // $data = $spreadsheet->getActiveSheet()->toArray();
-
-                    $data['skpd'] = $spreadsheet->getActiveSheet()->getCell(SKPD_CELL)->getValue();
-                    $data['periode'] = $spreadsheet->getActiveSheet()->getCell(PERIODE_CELL)->getValue();
-                    $data['nama_file'] = "Rekap Absensi ".$data['skpd']." ".$data['periode'].".xls";
-                    $data['header'] = $spreadsheet->getActiveSheet()->rangeToArray(HEADER_CELL);
-                    $start_cell = $spreadsheet->getActiveSheet()->getCell(START_CELL)->getValue();
-                    $highestRow = $spreadsheet->getActiveSheet()->getHighestRow();
-                    $highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
-                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-                    
-                    for($row = START_ROW_NUM; $row <= $highestRow; $row++){
-                        for($col = 2; $col <= $highestColumnIndex; $col++){
-                            $value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row)->getValue();
-                            if($value){
-                                if($col == 2){
-                                    $temp_data[$row]['nama_pegawai'] = $value;    
-                                } else{
-                                    $temp_data[$row]['absen']['hari'][] = $data['header'][0][$col-1];
-                                    $temp_data[$row]['absen']['jam'][] = $value;
-                                }
-                            } else {
-                                break;
-                            }
-                        }    
-                    }
-                    $data['result'] = $temp_data;
-                }
-
-                // foreach($data as $d){
-                //     $insert_data = [
-                //         ':first_name' => $d[0],
-                //         ':last_name' => $d[1],
-                //     ];
-                // }
-
-            } else {
-                $rs['code'] = 1;
-                $rs['message'] = "File yang dipilih bukan file Excel atau CSV !";    
+        $url = base_url('assets/rekapabsen/RekapAbsensi.xls');
+        // $url = base_url('assets/rekapabsen/test.txt');
+        // $curl = curl_init();
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($curl, CURLOPT_HEADER, false);
+        // $data = curl_exec($curl);
+        // curl_close($curl);
+        $handle = fopen($url, "r");
+        if ($handle) {
+            while (($line = fgets($handle)) !== false) {
+                echo $line;
             }
+        
+            fclose($handle);
         } else {
-            $rs['code'] = 1;
-            $rs['message'] = "Tidak ada file yang dipilih";
-        }
-
+            // error opening the file.
+        } 
+        dd($handle);
+        // $data = $this->rekap->readAbsensiExcel();
         $this->load->view('rekap/V_RekapAbsensiResult', $data);
     }
 
@@ -132,14 +75,23 @@ class C_Rekap extends CI_Controller
     public function rekapDisiplinSearch($flag_print = 0){
         $data['parameter'] = $this->input->post();
         $data['flag_print'] = $flag_print;
+
+        $data['result_db'] = null;
+        $result_db = $this->rekap->getRekapAbsen($data['parameter']);
+        if($result_db){
+            $data['result_db'] = json_decode($result_db['json_result'], true);
+        }
         if($flag_print == 1){
             $data['result'] = $this->session->userdata('data_penilaian_disiplin_kerja');
             $data['parameter'] = $this->session->userdata('parameter_data_disiplin_kerja');
         } else {
             $data['result'] = $this->rekap->rekapDisiplinSearch($this->input->post());
-            $this->session->set_userdata('data_penilaian_disiplin_kerja', $data['result']);
-            $this->session->set_userdata('parameter_data_disiplin_kerja', $data['parameter']);
         }
+
+        $this->session->set_userdata('data_penilaian_disiplin_kerja', $data['result_db']);
+        $this->session->set_userdata('data_penilaian_disiplin_kerja_excel', $data['result']);
+        $this->session->set_userdata('parameter_data_disiplin_kerja', $data['parameter']);
+
         $this->load->view('rekap/V_RekapDisiplinResult', $data);
     }
 
@@ -147,6 +99,17 @@ class C_Rekap extends CI_Controller
         $data['result'] = $this->session->userdata('data_penilaian_disiplin_kerja');
         $data['parameter'] = $this->session->userdata('parameter_data_disiplin_kerja');
         $this->load->view('rekap/V_RekapDisiplinExcel', $data);
+    }
+
+    public function saveDbRekapDisiplin(){
+        $excel = $this->session->userdata('data_penilaian_disiplin_kerja_excel');
+        if($excel){
+            $data['result'] = $excel;
+        } else {
+            $data['result'] = $this->session->userdata('data_penilaian_disiplin_kerja');
+        }
+        $data['parameter'] = $this->session->userdata('parameter_data_disiplin_kerja');
+        $this->rekap->saveDbRekapDisiplin($data);
     }
 
 }

@@ -83,12 +83,15 @@
             $result = null;
             $rs = null;
             $skpd = explode(";",$data['skpd']);
-            $data_jam_kerja['wfo_masuk'] = "07:45:59";
-            $data_jam_kerja['wfo_pulang'] = "17:00";
-            $data_jam_kerja['wfoj_masuk'] = "07:30:59";
-            $data_jam_kerja['wfoj_pulang'] = "15:30";
+            // $data_jam_kerja['wfo_masuk'] = "07:45:00";
+            // $data_jam_kerja['wfo_pulang'] = "17:00";
+            // $data_jam_kerja['wfoj_masuk'] = "07:30:00";
+            // $data_jam_kerja['wfoj_pulang'] = "15:30";
+            $data_jam_kerja = null;
+            $id_unitkerja = null;
+            $list_disiplin_kerja = null;
 
-            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon, f.role_name')
+            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon, f.role_name, d.id_unitkerja, d.id_unitkerjamaster')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -101,11 +104,66 @@
                                     ->order_by('c.eselon, b.username')
                                     ->get()->result_array();
                                     
+            $data_disiplin_kerja = $this->db->select('a.*, b.username as nip, d.keterangan')
+                        ->from('t_disiplin_kerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                        ->where('a.bulan', $data['bulan'])
+                        ->where('a.tahun', $data['tahun'])
+                        ->where('c.skpd', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->get()->result_array();
+                
+            if($data_disiplin_kerja){
+                foreach($data_disiplin_kerja as $ddk){
+                    $tanggal = $ddk['tanggal'] < 10 ? '0'.$ddk['tanggal'] : $ddk['tanggal'];
+                    $bulan = $ddk['bulan'] < 10 ? '0'.$ddk['bulan'] : $ddk['bulan'];
+                    $date = $tanggal.'-'.$bulan.'-'.$ddk['tahun'];
+
+                    $list_disiplin_kerja[$ddk['nip']][$date] = $ddk['keterangan'];
+                    // if(isset($list_pegawai[$ddk['nip']]) && isset($list_pegawai[$ddk['nip']]['absensi'][$date])){ // cek jika ada data absensi pada tanggal tersebut
+                    //     $list_pegawai[$ddk['nip']]['absensi'][$date]['masuk']['data'] = $ddk['keterangan'];
+                    // }
+                }
+            }
+                                    
             if($list_pegawai){
                 $temp = $list_pegawai;
+
+                $id_unitkerja = $list_pegawai[0]['id_unitkerja'];
+                $id_unitkerjamaster = $list_pegawai[0]['id_unitkerjamaster'];
+
+                $jenis_skpd = 1;
+                if(in_array($id_unitkerja, LIST_UNIT_KERJA_KHUSUS)){
+                    $jenis_skpd = 2;
+                } else if(in_array($id_unitkerjamaster, LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+                    $jenis_skpd = 4;
+                }
+
+                $jam_kerja_skpd = $this->db->select('*')
+                                            ->from('t_jam_kerja')
+                                            ->where('id_m_jenis_skpd', $jenis_skpd)
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+
+                // get data jam kerja khusus jika bukan SKPD Khusus. untuk kebutuhan data absensi lurah/camat
+                if($jenis_skpd != 2){
+                    $jam_kerja_khusus = $this->db->select('*')
+                                            ->from('t_jam_kerja')
+                                            ->where('id_m_jenis_skpd', 2)
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+                }
+
                 $list_pegawai = null;
                 foreach($temp as $t){
                     $list_pegawai[$t['nip']] = $t;
+                    $list_pegawai[$t['nip']]['jam_kerja'] = $jam_kerja_skpd;
+                    if(in_array($t['role_name'], LIST_ROLE_KHUSUS)){
+                        $list_pegawai[$t['nip']]['jam_kerja'] = $jam_kerja_khusus;
+                    }
                 }
             }
 
@@ -174,6 +232,7 @@
                                     //     $list_pegawai[$nip]['nama_pegawai'] = $value;
                                     }
                                     if(isset($list_pegawai[$nip])){
+                                        $data_jam_kerja = $list_pegawai[$nip]['jam_kerja'];
                                         if($col == 4){ //tanggal absen
                                             $tanggal = explode("/", $value);
                                             if($tanggal[1] == $data['bulan'] && $tanggal[2] == $data['tahun']){
@@ -208,6 +267,9 @@
                                                 if(!isset($list_pegawai[$nip]['rekap_absensi']['pksw3'])){
                                                     $list_pegawai[$nip]['rekap_absensi']['pksw3'] = 0;
                                                 }
+                                                if(!isset($list_pegawai[$nip]['rekap_absensi']['tk'])){
+                                                    $list_pegawai[$nip]['rekap_absensi']['tk'] = 0;
+                                                }
                                                 $list_pegawai[$nip]['absensi'][$value_tanggal] = null;
                                                 $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['data'] = null;
                                                 $list_pegawai[$nip]['absensi'][$value_tanggal]['pulang']['data'] = null;
@@ -224,8 +286,15 @@
                                                 // if($nip == '197402061998031008'){
                                                 //     echo $value_tanggal.' ; ';
                                                 // }
-                                                $list_pegawai[$nip]['rekap_absensi']['tmk3']++;
-                                                $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['keterangan'] = 'tmk3';
+                                                if(isset($list_disiplin_kerja[$nip][$value_tanggal])){
+                                                    $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['data'] = $list_disiplin_kerja[$nip][$value_tanggal];
+                                                } else {
+                                                    $list_pegawai[$nip]['rekap_absensi']['tk']++;
+                                                    $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['data'] = 'A';   
+                                                }
+                                                break;
+                                                // $list_pegawai[$nip]['rekap_absensi']['tmk3']++;
+                                                // $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['keterangan'] = 'tmk3';
                                             } else {
                                                 if($flag_jumat){
                                                     $jam_masuk = $data_jam_kerja['wfoj_masuk'];
@@ -314,6 +383,106 @@
             }
             return $list_pegawai;
         }
+    
+    public function readAbsensiExcel(){
+        $rs['code'] = 0;
+        $rs['message'] = 0;
+        $file_excel = array();
+        $temp_data = null;
+        $data = array();
 
-	}
+        if($_FILES["file_excel"]["name"] != ''){
+            $allowed_extension = ['xls', 'csv', 'xlsx'];
+            $file_array = explode(".", $_FILES["file_excel"]["name"]);
+            $file_extension = end($file_array);
+
+            if(in_array($file_extension, $allowed_extension)){
+                $config['upload_path'] = 'assets/upload_rekap_absen'; 
+                $config['allowed_types'] = '*';
+                $config['max_size'] = '5000'; // max_size in kb
+                $config['file_name'] = $_FILES['file_excel']['name'];
+
+                $this->load->library('upload', $config); 
+
+                $uploadfile = $this->upload->do_upload('file_excel');
+
+                if($uploadfile){
+                    $upload_data = $this->upload->data(); 
+                    $file_excel['name'] = $upload_data['file_name'];
+
+                    $filename = $_FILES["file_excel"]["name"];
+                    libxml_use_internal_errors(true);
+                    // $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES["file_excel"]["name"]);
+                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($config['upload_path'].'/'.$file_excel['name']);
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+
+                    $spreadsheet = $reader->load($_FILES["file_excel"]["tmp_name"]);
+                    // $data = $spreadsheet->getActiveSheet()->toArray();
+
+                    $data['skpd'] = $spreadsheet->getActiveSheet()->getCell(SKPD_CELL)->getValue();
+                    $data['periode'] = $spreadsheet->getActiveSheet()->getCell(PERIODE_CELL)->getValue();
+                    $data['nama_file'] = "Rekap Absensi ".$data['skpd']." ".$data['periode'].".xls";
+                    $data['header'] = $spreadsheet->getActiveSheet()->rangeToArray(HEADER_CELL);
+                    $start_cell = $spreadsheet->getActiveSheet()->getCell(START_CELL)->getValue();
+                    $highestRow = $spreadsheet->getActiveSheet()->getHighestRow();
+                    $highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+                    
+                    for($row = START_ROW_NUM; $row <= $highestRow; $row++){
+                        for($col = 2; $col <= $highestColumnIndex; $col++){
+                            $value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row)->getValue();
+                            if($value){
+                                if($col == 2){
+                                    $temp_data[$row]['nama_pegawai'] = $value;    
+                                } else{
+                                    $temp_data[$row]['absen']['hari'][] = $data['header'][0][$col-1];
+                                    $temp_data[$row]['absen']['jam'][] = $value;
+                                }
+                            } else {
+                                break;
+                            }
+                        }    
+                    }
+                    $data['result'] = $temp_data;
+                }
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = "File yang dipilih bukan file Excel atau CSV !";    
+            }
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = "Tidak ada file yang dipilih";
+        }
+        return $data;
+    }
+
+    public function saveDbRekapDisiplin($data){
+        $skpd = explode(";", $data['parameter']['skpd']);
+        $insert_data['json_result'] = json_encode($data['result']);
+        $insert_data['bulan'] = $data['parameter']['bulan'];
+        $insert_data['tahun'] = $data['parameter']['tahun'];
+        $insert_data['id_unitkerja'] = $skpd[0];
+        $insert_data['created_by'] = $this->general_library->getId();
+
+        $this->db->where('bulan', $insert_data['bulan'])
+            ->where('tahun', $insert_data['tahun'])
+            ->where('id_unitkerja', $insert_data['id_unitkerja'])
+            ->update('t_rekap_absen', ['flag_active' => 0]);
+
+        $this->db->insert('t_rekap_absen', $insert_data);
+    }
+
+    public function getRekapAbsen($parameter){
+        $skpd = explode(";", $parameter['skpd']);
+        return $this->db->select('*')
+                        ->from('t_rekap_absen')
+                        ->where('id_unitkerja', $skpd[0])
+                        ->where('bulan', floatval($parameter['bulan']))
+                        ->where('tahun', floatval($parameter['tahun']))
+                        ->where('flag_active', 1)
+                        ->order_by('created_date', 'desc')
+                        ->limit(1)
+                        ->get()->row_array();
+    }
+}
 ?>

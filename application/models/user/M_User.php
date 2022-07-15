@@ -803,11 +803,14 @@
             ->where('flag_active', 1)
             ->get()->row_array();
 
+            // dd($data['tmt_mutasi']);
+
     
             $update['skpd'] = $data['select_search_skpd_modal'];
             $dataInsert['id_pegawai'] = $data['id_peg'];
             $dataInsert['id_unit_kerja_asal'] = $data['skpd'];
             $dataInsert['id_unit_kerja_tujuan'] = $data['select_search_skpd_modal'];
+            $dataInsert['tmt_mutasi'] = $data['tmt_mutasi'];
             $dataInsert['id_user_inputer'] = $this->general_library->getId();
             $dataInsert['created_by'] = $this->general_library->getId();
                     $this->db->where('id_peg', $data['id_peg'])

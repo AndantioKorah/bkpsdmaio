@@ -725,5 +725,40 @@
         $this->db->where('id', $id)
                 ->update('t_disiplin_kerja', ['flag_active' => 0]);
     }
+    public function cekRencanaKinerjaApelPagi(){
+
+        $this->db->trans_begin();
+        $bulan = date('n');
+        $kegiatan = "Mengikuti Apel Pagi";
+         $cekApelPagi = $this->db->select('*')
+                        ->from('t_rencana_kinerja as a ')
+                        ->where('a.id_m_user',$this->general_library->getId())
+                        ->where('a.bulan', $bulan)
+                        ->where('a.tugas_jabatan', $kegiatan)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+                       
+        if(!$cekApelPagi) {
+            $data["id_m_user"] = $this->general_library->getId();
+            $data["tugas_jabatan"] = "Mengikuti Apel Pagi";
+            $data["sasaran_kerja"] = "Terciptanya Disiplin Pegawai";
+            $data["tahun"] = 2022;
+            $data["bulan"] = 6;
+            $data["target_kuantitas"] = 1;
+            $data["satuan"] = "Kegiatan";
+            $data["target_kualitas"] = 100;
+            $this->db->insert('t_rencana_kinerja', $data);
+        } 
+
+        if ($this->db->trans_status() === FALSE)
+            {
+                    $this->db->trans_rollback();
+            }
+            else
+            {
+                    $this->db->trans_commit();
+            }        
+    }
+   
 }
 ?>

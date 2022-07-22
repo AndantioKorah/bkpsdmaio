@@ -19,7 +19,8 @@ $route['kinerja/disiplin'] = 'kinerja/C_Kinerja/disiplinKerja';
 $route['rekapitulasi/realisasi-kinerja'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 // $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensi';
 $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapDisiplin';
-// $route['rekapitulasi/penilaian/disiplin'] = 'rekap/C_Rekap/rekapDisiplin';
+$route['rekapitulasi/penilaian/disiplin'] = 'rekap/C_Rekap/rekapPenilaianDisiplin';
 $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
+$route['master/tpp'] = 'master/C_Master/tpp';
 
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';  

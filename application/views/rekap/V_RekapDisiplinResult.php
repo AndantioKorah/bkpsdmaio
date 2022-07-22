@@ -36,14 +36,15 @@
             </table>
             
             <div class="row">
-                <div class="col-3"></div>
-                <div class="col-3">
+                <div class="col-4">
                     <button type="button" id="btn_database" class="btn btn-block btn-info">Database</button>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <button type="button" id="btn_excel" class="btn btn-block btn-success">Excel</button>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-4">
+                    <button type="button" id="btn_rekap_absen" class="btn btn-block btn-danger">Rekap Kehadiran</button>
+                </div>
             </div>
 
             <div class="row">
@@ -62,7 +63,9 @@
                         $data['from'] = 'Uploaded Excel';
                         $this->load->view('rekap/V_RekapDisiplinData', $data); 
                     ?>
-                    </div>
+                </div>
+                <div class="col-12 mt-3" id="rekap_div">
+                </div>
             </div>
         </form>
     </div>
@@ -108,12 +111,30 @@
         $('#btn_database').on('click', function(){
             $('#database_div').show()
             $('#excel_div').hide()
+            $('#rekap_div').html('')
+            $('#rekap_div').hide()
         })
 
         $('#btn_excel').on('click', function(){
             $('#database_div').hide()
             $('#excel_div').show()
+            $('#rekap_div').html('')
+            $('#rekap_div').hide()
         })
+
+        $('#btn_rekap_absen').on('click', function(){
+            $('#database_div').hide()
+            $('#excel_div').hide()
+            $('#rekap_div').show()
+            $('#rekap_div').html('')
+            $('#rekap_div').append(divLoaderNavy)
+            $('#rekap_div').load('<?=base_url("rekap/C_Rekap/rekapKehadiran")?>', function(){
+                $('#loader').hide()
+            })
+        })
+
+
+        
     </script>
 <?php // } else { ?>
     <!-- <h5>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h5> -->

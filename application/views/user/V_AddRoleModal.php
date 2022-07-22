@@ -11,7 +11,7 @@
                     <a class="nav-link active" aria-current="page" href="#role_tab" data-toggle="tab">Role</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" onclick="refreshSubBidang()" href="#bidang_tab" data-toggle="tab">Sub Bidang/Sub Bagian/Seksi</a>
+                    <a class="nav-link" onclick="refreshBidang()" href="#bidang_tab" data-toggle="tab">Bidang / Bagian</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#password_tab" data-toggle="tab">Password</a>
@@ -52,12 +52,12 @@
             <div class="tab-pane" id="bidang_tab">
                 <div class="row">
                     <div class="col-12">
-                        <form id="form_tambah_sub_bidang">
-                            <label>Sub Bidang/Sub Bagian/Seksi:</label>
-                            <select style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_sub_bidang">
+                        <form id="form_tambah_bidang">
+                            <label>Bidang / Bagian:</label>
+                            <select style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_bidang">
                                 <option value="0" disabled selected>Pilih Item</option>
-                                <?php if($sub_bidang){ foreach($sub_bidang as $b){ ?>
-                                    <option value="<?=$b['id_m_sub_bidang']?>"><?=$b['nama_sub_bidang']?></option>
+                                <?php if($bidang){ foreach($bidang as $b){ ?>
+                                    <option value="<?=$b['id']?>"><?=$b['nama_bidang']?></option>
                                 <?php } } ?>
                             </select>
                             <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id_m_user']?>"/>
@@ -176,10 +176,10 @@
         })
     }
 
-    function refreshSubBidang(){
+    function refreshBidang(){
         $('#div_bidang').html('')
         $('#div_bidang').append(divLoaderNavy)
-        $('#div_bidang').load('<?=base_url("user/C_User/refreshSubBidang")?>'+'/'+'<?=$user['id_m_user']?>', function(){
+        $('#div_bidang').load('<?=base_url("user/C_User/refreshBidang")?>'+'/'+'<?=$user['id_m_user']?>', function(){
 
         })
     }
@@ -297,16 +297,16 @@
         })
     })
 
-    $('#form_tambah_sub_bidang').on('submit', function(e){
+    $('#form_tambah_bidang').on('submit', function(e){
         e.preventDefault()
         $.ajax({
-            url: '<?=base_url("user/C_User/tambahSubBidangUser")?>',
+            url: '<?=base_url("user/C_User/tambahBidangUser")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){
                 let rs = JSON.parse(data)
                 successtoast('Berhasil menambahkan Sub Bidang pada User')
-                refreshSubBidang()
+                refreshBidang()
                 $('#label_bidang_<?=$user['id_m_user']?>').html(rs.nama_bidang)
                 $('#label_sub_bidang_<?=$user['id_m_user']?>').html(rs.nama_sub_bidang)
             }, error: function(e){

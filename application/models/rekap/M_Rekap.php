@@ -249,6 +249,12 @@
                                                 } else if($hari == 'Sabtu' || $hari == 'Minggu'){
                                                     $flag_libur = true;
                                                 }
+                                                if(!isset($list_pegawai[$nip]['rekap_absensi']['hadir'])){
+                                                    $list_pegawai[$nip]['rekap_absensi']['hadir'] = 0;
+                                                }
+                                                if(!isset($list_pegawai[$nip]['rekap_absensi']['jhk'])){
+                                                    $list_pegawai[$nip]['rekap_absensi']['jhk'] = 0;
+                                                }
                                                 if(!isset($list_pegawai[$nip]['rekap_absensi']['tmk1'])){
                                                     $list_pegawai[$nip]['rekap_absensi']['tmk1'] = 0;
                                                 }
@@ -277,6 +283,8 @@
                                                 $list_pegawai[$nip]['absensi'][$value_tanggal]['pulang']['keterangan'] = null;
                                             }
                                         } else if($col == 6 && $value_tanggal && !$flag_libur){ //absen masuk
+                                            $list_pegawai[$nip]['rekap_absensi']['jhk']++;
+
                                             // if($nip == '197402061998031008' && $value_tanggal == '29-05-2022'){
                                             //     echo $value_tanggal.';'.$flag_libur.';'.json_encode($list_hari_libur);
                                             //     die();
@@ -296,6 +304,7 @@
                                                 // $list_pegawai[$nip]['rekap_absensi']['tmk3']++;
                                                 // $list_pegawai[$nip]['absensi'][$value_tanggal]['masuk']['keterangan'] = 'tmk3';
                                             } else {
+                                                $list_pegawai[$nip]['rekap_absensi']['hadir']++;
                                                 if($flag_jumat){
                                                     $jam_masuk = $data_jam_kerja['wfoj_masuk'];
                                                 } else {
@@ -474,8 +483,21 @@
 
     public function getRekapAbsen($parameter){
         $skpd = explode(";", $parameter['skpd']);
-        return $this->db->select('*')
-                        ->from('t_rekap_absen')
+
+        $data_disiplin_kerja = $this->db->select('a.*, b.username as nip, d.keterangan')
+                        ->from('t_disiplin_kerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                        ->where('a.bulan', $parameter['bulan'])
+                        ->where('a.tahun', $parameter['tahun'])
+                        ->where('c.skpd', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->get()->result_array();
+
+        $data_rekap =  $this->db->select('*')
+                        ->from('t_rekap_absen a')
                         ->where('id_unitkerja', $skpd[0])
                         ->where('bulan', floatval($parameter['bulan']))
                         ->where('tahun', floatval($parameter['tahun']))
@@ -483,6 +505,196 @@
                         ->order_by('created_date', 'desc')
                         ->limit(1)
                         ->get()->row_array();
+
+        $tempdk = null;
+        $result = null;
+        if($data_disiplin_kerja){
+            foreach($data_disiplin_kerja as $dk){
+                $tanggal = $dk['tanggal'] < 10 ? '0'.$dk['tanggal'] : $dk['tanggal'];
+                $bulan = $dk['bulan'] < 10 ? '0'.$dk['bulan'] : $dk['bulan'];
+                $tempdk[$dk['nip']][$tanggal.'-'.$bulan.'-'.$dk['tahun']] = $dk['keterangan'];
+            }
+
+            if($data_rekap){
+                $i = 0;
+                $tmp_data_rekap = json_decode($data_rekap['json_result'], true);
+                foreach($tmp_data_rekap as $d){
+                    if(isset($tempdk[$d['nip']])){
+                        $tempdk_keys = array_keys($tempdk[$d['nip']]);
+                        foreach($tempdk_keys as $t){
+                            $d['absensi'][$t]['masuk']['data'] = $tempdk[$d['nip']][$t];
+                        }
+                    }
+                    $result[$i] = $d;
+                    $i++;
+                }
+            }
+            $data_rekap['json_result'] = json_encode($result);
+        }
+        return $data_rekap;
+    }
+
+    public function rekapPenilaianDisiplinSearch($data){
+        $skpd = explode(";", $data['skpd']);
+
+        $data_disiplin_kerja = $this->db->select('a.*, b.username as nip, d.keterangan')
+                        ->from('t_disiplin_kerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                        ->where('a.bulan', $data['bulan'])
+                        ->where('a.tahun', $data['tahun'])
+                        ->where('c.skpd', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->get()->result_array();
+
+        $data_rekap =  $this->db->select('*')
+                        ->from('t_rekap_absen a')
+                        ->where('id_unitkerja', $skpd[0])
+                        ->where('bulan', floatval($data['bulan']))
+                        ->where('tahun', floatval($data['tahun']))
+                        ->where('flag_active', 1)
+                        ->order_by('created_date', 'desc')
+                        ->limit(1)
+                        ->get()->row_array();
+
+        $tempdk = null;
+        $result = null;
+        if($data_disiplin_kerja){
+            foreach($data_disiplin_kerja as $dk){
+                $tanggal = $dk['tanggal'] < 10 ? '0'.$dk['tanggal'] : $dk['tanggal'];
+                $bulan = $dk['bulan'] < 10 ? '0'.$dk['bulan'] : $dk['bulan'];
+                $tempdk[$dk['nip']][$tanggal.'-'.$bulan.'-'.$dk['tahun']] = $dk['keterangan'];
+            }
+        }
+
+        if($data_rekap){
+            $i = 0;
+            $tmp_data_rekap = json_decode($data_rekap['json_result'], true);
+            foreach($tmp_data_rekap as $d){
+                if(isset($tempdk[$d['nip']])){
+                    $tempdk_keys = array_keys($tempdk[$d['nip']]);
+                    foreach($tempdk_keys as $t){
+                        $d['absensi'][$t]['masuk']['data'] = $tempdk[$d['nip']][$t];
+                    }
+                }
+
+                $result[$i]['nama_pegawai'] = $d['nama_pegawai'];
+                $result[$i]['nip'] = $d['nip'];
+                $result[$i]['rekap_absensi'] = $d['rekap_absensi'];
+                $result[$i]['rekap_absensi']['sakit'] = 0;
+                $result[$i]['rekap_absensi']['izin'] = 0;
+                $result[$i]['rekap_absensi']['cuti'] = 0;
+                $result[$i]['rekap_absensi']['sidak'] = 0;
+                $result[$i]['rekap_absensi']['mtti'] = 0;
+                $result[$i]['rekap_absensi']['keneg'] = 0;
+                $result[$i]['rekap_absensi']['tl'] = 0;
+                $result[$i]['rekap_absensi']['dispensasi'] = 0;
+                $result[$i]['rekap_absensi']['tb'] = 0;
+
+                foreach($d['absensi'] as $a){
+                    switch ($a) {
+                        case "S" : $result[$i]['sakit']++;
+                        case "I" : $result[$i]['i']++;
+                        case "C" : $result[$i]['cuti']++;
+                        case "SIDAK" : $result[$i]['sidak']++;
+                        case "MTTI" : $result[$i]['mtti']++;
+                        case "KENEG" : $result[$i]['keneg']++;
+                        case "TL" : $result[$i]['tl']++;
+                        case "DISP" : $result[$i]['dispensasi']++;
+                        case "TB" : $result[$i]['tb']++;
+                    }
+
+                    dd($a);
+                }
+                $i++;
+            }
+        }
+        return $result;
+    }
+
+    public function rekapKehadiran($data, $parameter){
+        $skpd = explode(";", $parameter['skpd']);
+
+        $data_disiplin_kerja = $this->db->select('a.*, b.username as nip, d.keterangan')
+                        ->from('t_disiplin_kerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                        ->where('a.bulan', $parameter['bulan'])
+                        ->where('a.tahun', $parameter['tahun'])
+                        ->where('c.skpd', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->get()->result_array();
+
+        $tempdk = null;
+        $result = null;
+        if($data_disiplin_kerja){
+            foreach($data_disiplin_kerja as $dk){
+                $tanggal = $dk['tanggal'] < 10 ? '0'.$dk['tanggal'] : $dk['tanggal'];
+                $bulan = $dk['bulan'] < 10 ? '0'.$dk['bulan'] : $dk['bulan'];
+                $tempdk[$dk['nip']][$tanggal.'-'.$bulan.'-'.$dk['tahun']] = $dk['keterangan'];
+            }
+        }
+
+        $data_rekap = $data;
+        if($data_rekap){
+            $i = 0;
+            $tmp_data_rekap = $data_rekap;
+            foreach($tmp_data_rekap as $d){
+                if(isset($tempdk[$d['nip']])){
+                    $tempdk_keys = array_keys($tempdk[$d['nip']]);
+                    foreach($tempdk_keys as $t){
+                        $d['absensi'][$t]['masuk']['data'] = $tempdk[$d['nip']][$t];
+                    }
+                }
+
+                $result[$i]['nama_pegawai'] = $d['nama_pegawai'];
+                $result[$i]['nip'] = $d['nip'];
+                $ra = null;
+                if(isset($d['rekap_absensi'])){
+                    $ra = $d['rekap_absensi'];
+                } else {
+                    $ra['tmk1'] = 0;
+                    $ra['tmk2'] = 0;
+                    $ra['tmk3'] = 0;
+                    $ra['pksw1'] = 0;
+                    $ra['pksw2'] = 0;
+                    $ra['pksw3'] = 0;
+                }
+                $result[$i]['rekap_absensi'] = $ra;
+                $result[$i]['rekap_absensi']['sakit'] = 0;
+                $result[$i]['rekap_absensi']['izin'] = 0;
+                $result[$i]['rekap_absensi']['cuti'] = 0;
+                $result[$i]['rekap_absensi']['sidak'] = 0;
+                $result[$i]['rekap_absensi']['mtti'] = 0;
+                $result[$i]['rekap_absensi']['keneg'] = 0;
+                $result[$i]['rekap_absensi']['tl'] = 0;
+                $result[$i]['rekap_absensi']['dispensasi'] = 0;
+                $result[$i]['rekap_absensi']['tb'] = 0;
+
+                if(isset($d['absensi'])){
+                    foreach($d['absensi'] as $a){
+                        switch ($a) {
+                            case "S" : $result[$i]['rekap_absensi']['sakit']++;
+                            case "I" : $result[$i]['rekap_absensi']['izin']++;
+                            case "C" : $result[$i]['rekap_absensi']['cuti']++;
+                            case "SIDAK" : $result[$i]['rekap_absensi']['sidak']++;
+                            case "MTTI" : $result[$i]['rekap_absensi']['mtti']++;
+                            case "KENEG" : $result[$i]['rekap_absensi']['keneg']++;
+                            case "TL" : $result[$i]['rekap_absensi']['tl']++;
+                            case "DISP" : $result[$i]['rekap_absensi']['dispensasi']++;
+                            case "TB" : $result[$i]['rekap_absensi']['tb']++;
+                        }
+                    }
+                }
+                $i++;
+            }
+        }
+        dd(json_encode($result));
+        return $result;
     }
 }
 ?>

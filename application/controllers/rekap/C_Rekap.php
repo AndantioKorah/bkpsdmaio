@@ -112,4 +112,18 @@ class C_Rekap extends CI_Controller
         $this->rekap->saveDbRekapDisiplin($data);
     }
 
+    public function rekapPenilaianDisiplin(){
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        render('rekap/V_RekapPenilaianDisiplin', '', '', $data);
+    }
+
+    public function rekapPenilaianDisiplinSearch(){
+        $rs = $this->rekap->rekapPenilaianDisiplinSearch($this->input->post());
+        $data['result'] = json_decode($rs['json_result'], true);
+    }
+
+    public function rekapKehadiran(){
+        $data['result'] = $this->rekap->rekapKehadiran($this->session->userdata('data_penilaian_disiplin_kerja'), $this->session->userdata('parameter_data_disiplin_kerja'));
+    }
+
 }

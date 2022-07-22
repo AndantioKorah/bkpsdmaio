@@ -101,6 +101,14 @@
                             ->get()->row_array();
         }
 
+        public function getBidangById($id){
+            return $this->db->select('*')
+                            ->from('m_bidang a')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id', $id)
+                            ->get()->row_array();
+        }
+
         public function importBidangSubBidangByUnitKerja($id_unitkerja){
             $data = $this->db->select('a.*, b.nm_unitkerja, b.id_unitkerja')
                             ->from('db_pegawai.jabatan a')
@@ -314,6 +322,41 @@
                             ->join('m_jenis_skpd b', 'a.id_m_jenis_skpd = b.id')
                             ->where('a.flag_active', 1)
                             ->get()->result_array();
+        }
+
+        public function getJabatanByUnitKerja($id){
+            return $this->db->select('*')
+                            ->from('db_pegawai.jabatan')
+                            ->where('id_unitkerja', $id)
+                            ->order_by('eselon')
+                            ->get()->result_array();
+        }
+
+        public function loadMasterTpp(){
+            return $this->db->select('a.nominal, b.nm_unitkerja, c.nm_pangkat, a.id, a.id_jabatan,
+                            (SELECT (d.nama_jabatan) FROM db_pegawai.jabatan d WHERE d.id_jabatanpeg = a.id_jabatan LIMIT 1) as nama_jabatan')
+                            ->from('m_besaran_tpp a')
+                            ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                            ->join('db_pegawai.pangkat c', 'a.id_pangkat = c.id_pangkat')
+                            ->where('a.flag_active', 1)
+                            ->group_by('a.id')
+                            ->order_by('a.created_date', 'desc')
+                            ->get()->result_array();
+        }
+
+        public function inputMasterTpp($data){
+            $insert_data = null;
+            $i = 0;
+            foreach($data['id_pangkat'] as $p){
+                $insert_data[$i]['id_unitkerja'] = $data['id_unitkerja'];
+                $insert_data[$i]['id_jabatan'] = $data['id_jabatan'];
+                $insert_data[$i]['id_pangkat'] = $p;
+                $insert_data[$i]['nominal'] = clearString($data['nominal']);
+                $insert_data[$i]['created_by'] = $this->general_library->getId();
+                $i++;
+            }
+
+            $this->db->insert_batch('m_besaran_tpp', $insert_data);
         }
 	}
 ?>

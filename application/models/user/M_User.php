@@ -28,11 +28,10 @@
         }
 
         public function getAllUsersBySkpd($id_unitkerja){
-            return $this->db->select('a.*, a.nama as nama_user, b.nama_sub_bidang, d.nama_bidang')
+            return $this->db->select('a.*, a.nama as nama_user, b.nama_bidang')
                             ->from('m_user a')
-                            ->join('m_sub_bidang b', 'a.id_m_sub_bidang = b.id', 'left')
+                            ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
-                            ->join('m_bidang d', 'b.id_m_bidang = d.id', 'left')
                             ->where('c.skpd', $id_unitkerja)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama')
@@ -746,6 +745,15 @@
                             ->from('m_user a')
                             ->join('m_sub_bidang b', 'a.id_m_sub_bidang = b.id')
                             ->join('m_bidang c', 'b.id_m_bidang = c.id')
+                            ->where('a.id', $id_m_user)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+        }
+
+        public function getBidangUser($id_m_user){
+            return $this->db->select('*, a.id as id_m_user')
+                            ->from('m_user a')
+                            ->join('m_bidang b', 'a.id_m_bidang = b.id')
                             ->where('a.id', $id_m_user)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();

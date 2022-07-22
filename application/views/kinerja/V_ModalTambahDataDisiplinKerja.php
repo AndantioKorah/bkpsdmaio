@@ -10,11 +10,11 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Periode</label>  
                 <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
             </div>
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Jenis Disiplin</label>  
                 <select class="form-control select2-navy" style="width: 100%"
                     id="jenis_disiplin" data-dropdown-css-class="select2-navy" name="jenis_disiplin">
@@ -23,7 +23,11 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="col-lg-12 col-md-12" style="margin-top: 28px;">
+            <div class="col-lg-12 col-md-12 mt-3">
+                <label>Dokumen Pendukung</label>  
+                <input class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
+            </div>
+            <div class="col-lg-12 col-md-12 mt-3" style="margin-top: 28px;">
                 <button id="btn_tambah" type="submit" class="btn btn-block btn-navy"><i class="fa fa-input"></i> Tambah</button>
                 <button style="display: none;" id="btn_loading" disabled type="button" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
             </div>
@@ -56,7 +60,10 @@
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/insertDisiplinKerja")?>',
             method: 'post',
-            data: $(this).serialize(),
+            data: new FormData($('#form_input')[0]),
+            contentType: false,  
+            cache: false,  
+            processData:false,
             success: function(data){
                 $('#btn_tambah').show()
                 $('#btn_loading').hide()

@@ -70,7 +70,7 @@
                 <div>
                     <div class="row">
                         <?php if($this->general_library->isKaban() || $this->general_library->isWalikota() || $this->general_library->isSetda() || $this->general_library->isProgrammer()){ ?>
-                            <div class="col-lg-4 col-md-4">
+                            <div class="col-lg-8 col-md-8">
                                 <label class="bmd-label-floating">Pilih Bidang/Bagian</label>
                                 <select class="form-control select2-navy" style="width: 100%"
                                     id="bidang" data-dropdown-css-class="select2-navy" name="bidang">
@@ -81,16 +81,16 @@
                                 </select>
                             </div>
                         <?php } ?>
-                        <div class="col-lg-4 col-md-4">
+                        <!-- <div class="col-lg-4 col-md-4">
                             <label class="bmd-label-floating">Pilih Sub Bidang/Sub Bagian/Seksi</label>
                             <select class="form-control select2-navy" style="width: 100%"
                                 id="sub_bidang" data-dropdown-css-class="select2-navy" name="sub_bidang">
-                                <!-- <option selected value="0">Semua</option> -->
+                                <option selected value="0">Semua</option>
                                 <?php if($this->general_library->isKabid()){ foreach($list_sub_bidang as $sb){ ?>
                                     <option value="<?=$sb['id']?>"><?=$sb['nama_sub_bidang']?></option>
                                 <?php } } ?>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-lg-2 col-md-2">
                             <label class="bmd-label-floating">Pilih Bulan</label>
                             <select class="form-control select2-navy" style="width: 100%"
@@ -140,24 +140,24 @@
             $('#form_data_dashboard').submit()
         })
 
-        $('#bidang').on('change', function(){
-            $.ajax({
-                url: '<?=base_url("dashboard/C_Dashboard/loadSubBidangByBidang")?>'+'/'+$(this).val(),
-                method: 'post',
-                data: $(this).serialize(),
-                success: function(data){
-                    let res = JSON.parse(data)
-                    $('#sub_bidang').empty()
-                    $('#sub_bidang').append('<option selected value="0">Semua</option>')
-                    res.forEach(function(item) {
-                        $('#sub_bidang').append('<option value="'+item.id+'">'+item.nama_sub_bidang+'</option>')
-                    })
-                    $('#form_data_dashboard').submit()
-                }, error: function(e){
-                    errortoast('Terjadi Kesalahan')
-                }
-            })
-        })
+        // $('#bidang').on('change', function(){
+        //     $.ajax({
+        //         url: '<?=base_url("dashboard/C_Dashboard/loadSubBidangByBidang")?>'+'/'+$(this).val(),
+        //         method: 'post',
+        //         data: $(this).serialize(),
+        //         success: function(data){
+        //             let res = JSON.parse(data)
+        //             $('#sub_bidang').empty()
+        //             $('#sub_bidang').append('<option selected value="0">Semua</option>')
+        //             res.forEach(function(item) {
+        //                 $('#sub_bidang').append('<option value="'+item.id+'">'+item.nama_sub_bidang+'</option>')
+        //             })
+        //             $('#form_data_dashboard').submit()
+        //         }, error: function(e){
+        //             errortoast('Terjadi Kesalahan')
+        //         }
+        //     })
+        // })
 
         $('#sub_bidang').on('change', function(){
             $('#form_data_dashboard').submit()

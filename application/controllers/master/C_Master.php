@@ -148,4 +148,47 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->tambahHariLibur());
     }
 
+    public function jamKerja(){
+        render('master/V_JamKerja', '', '', null);
+    }
+
+    public function loadJamKerja(){
+        $data['result'] = $this->master->getAllJamKerja();
+        $this->load->view('master/V_JamKerjaResult', $data);
+    }
+
+    public function deleteJamKerja(){
+        echo json_encode($this->master->deleteJamKerja($id));
+    }
+
+    public function tpp(){
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        $data['role'] = $this->general->getAll('m_role');
+        $data['pangkat'] = $this->general->getAll('db_pegawai.pangkat', 0);
+        $data['jabatan'] = $this->general->getAll('db_pegawai.jabatan', 0);
+        render('master/V_Tpp', '', '', $data);
+    }
+
+    public function getJabatanByUnitKerja($id){
+        echo json_encode($this->master->getJabatanByUnitKerja($id));
+    }
+
+    public function loadTpp(){
+        $data['result'] = $this->master->loadMasterTpp();
+        $this->load->view('master/V_TppData', $data);
+    }
+
+    public function inputMasterTpp(){
+        $this->master->inputMasterTpp($this->input->post());
+
+        // $data = $this->input->post();
+        // $data['nominal'] = clearString($data['nominal']);
+        // $data['created_by'] = $this->general_library->getId();
+        // $this->general->insert('m_besaran_tpp', $data);
+    }
+
+    public function hapusMasterTpp($id){
+        $this->general->delete('id', $id, 'm_besaran_tpp');
+    }
+
 }

@@ -112,11 +112,17 @@ define('DB_RESTORE_FOLDER', 'db/restore/'); //local with xampp
 
 define('DEVELOPER', 'nikita');
 
-define('START_CELL', 'B23');
-define('HEADER_CELL', 'A21:AG22');
-define('START_ROW_NUM', '23');
-define('SKPD_CELL', 'C19');
-define('PERIODE_CELL', 'C20');
+// define('START_CELL', 'B23');
+// define('HEADER_CELL', 'A21:AG22');
+// define('START_ROW_NUM', '23');
+// define('SKPD_CELL', 'C19');
+// define('PERIODE_CELL', 'C20');
+
+define('START_CELL', 'B12');
+define('HEADER_CELL', 'A10:AG11');
+define('START_ROW_NUM', '12');
+define('SKPD_CELL', 'C8');
+define('PERIODE_CELL', 'C9');
 
 define('IMPORT_UNIT_KERJA', '4018000');
 
@@ -132,4 +138,8 @@ define('VONAGE_API_SECRET', 'd9b1754f4da78a5a');
 define('TARGET_BOBOT_PRODUKTIVITAS_KERJA', 60);
 define('URL_API_HARI_LIBUR', 'https://api-harilibur.vercel.app/api');
 define('LIST_UNIT_KERJA_KHUSUS', [4011000, 4026000, 4012000, 4018000, 1010400, 1030750, 1020500, 7005010, 7005020]);
+define('LIST_UNIT_KERJA_MASTER_SEKOLAH', [8000000, 8010000, 8020000, 8030000]);
 define('LIST_ROLE_KHUSUS', ['lurah', 'camat']);
+define('ID_BIDANG_PEKIN', 166);
+define('ID_UNITKERJA_DIKBUD', 3010000);
+define('DOKUMEN_PENDUKUNG_DISIPLIN_KERJA', 'assets/dokumen_pendukung_disiplin_kerja');

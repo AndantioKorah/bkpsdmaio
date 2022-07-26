@@ -6,7 +6,7 @@
                 <th>Nama</th>
                 <th>Username</th>
                 <th>Bidang</th>
-                <th>Sub Bidang</th>
+                <!-- <th>Sub Bidang</th> -->
                 <th>Pilihan</th>
             </thead>
             <tbody>
@@ -16,7 +16,7 @@
                         <td><?=$rs['nama_user'];?></td>
                         <td><?=$rs['username'];?></td>
                         <td><a id="label_bidang_<?=$rs['id']?>"><?=$rs['nama_bidang'];?></a></td>
-                        <td><a id="label_sub_bidang_<?=$rs['id']?>"><?=$rs['nama_sub_bidang'];?></a></td>
+                        <!-- <td><a id="label_sub_bidang_<?=$rs['id']?>"><?=$rs['nama_sub_bidang'];?></a></td> -->
                         <td>
                             <button type="button" data-toggle="modal" href="#add_role_modal" onclick="openAddRoleModal('<?=$rs['id']?>')" class="btn btn-sm btn-info"
                             data-tooltip="tooltip" title="Pengaturan"><i class="fa fa-cog"></i> Pengaturan</button>

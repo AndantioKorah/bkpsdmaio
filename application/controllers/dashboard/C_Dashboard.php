@@ -25,8 +25,7 @@ class C_Dashboard extends CI_Controller
         $data['list_bidang'] = $this->dashboard->getBidangBySkpd($id_skpd);
         $data['data_skpd'] = $this->dashboard->getDataSkpd($id_skpd);
         if($this->general_library->isKabid()){
-            $data['bidang'] = $this->master->getBidangBySubBidang($this->general_library->getSubBidangUser());
-            $data['list_sub_bidang'] = $this->master->getSubBidangByBidang($data['bidang']['id_m_bidang']);
+            $data['bidang'] = $this->master->getBidangById($this->general_library->getBidangUser());
         }
         $this->load->view('dashboard/V_DataSkpdDashboard', $data);
     }

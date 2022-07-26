@@ -1,16 +1,12 @@
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Rekap Absensi</h3>
+        <h3 class="card-title">Rekap Penilaian Disiplin Kerja</h3>
     </div>
     <div class="card-body" style="display: block;">
         <!-- <form id="form_upload_file" enctype="multipart/form-data" method="post"> -->
         <form id="search_form" enctype="multipart/form-data" method="post">
             <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <label>Pilih File</label>
-                    <input type="file" class="form-control" name="file_rekap" id="file_rekap" />
-                </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih SKPD</label>
                         <select class="form-control select2-navy" style="width: 100%"
@@ -21,7 +17,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih Bulan</label>
                         <select class="form-control select2-navy" style="width: 100%"
@@ -41,7 +37,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih Tahun</label>
                         <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
@@ -59,7 +55,7 @@
 
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">REKAP ABSENSI</h3>
+        <h3 class="card-title">REKAP PENILAIAN DISIPLIN</h3>
     </div>
     <div class="card-body">
         <div id="div_result" class="row">
@@ -78,7 +74,7 @@
         $('#div_result').html('')
         $('#div_result').append(divLoaderNavy)
         $.ajax({
-            url: '<?=base_url("rekap/C_Rekap/rekapDisiplinSearch")?>',
+            url: '<?=base_url("rekap/C_Rekap/rekapPenilaianDisiplinSearch")?>',
             method: 'post',
             // data: $(this).serialize(),
             data: new FormData(this),

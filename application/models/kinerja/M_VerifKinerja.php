@@ -23,8 +23,8 @@
             $list_bidang_tambahan = null;
             if($vt){
                 foreach($vt as $v){
-                    if($v['id_m_sub_bidang']){
-                        $list_bidang_tambahan[] = $v['id_m_sub_bidang'];
+                    if($v['id_m_bidang']){
+                        $list_bidang_tambahan[] = $v['id_m_bidang'];
                     } else {
                         $list_user_tambahan[] = $v['id_m_user_verif'];
                     }
@@ -44,40 +44,40 @@
                 //pegawai yang diverif adalah staf pelaksana di sub bidang yang sama
                 $list_pegawai = $this->db->select('*, id as id_m_user')
                                         ->from('m_user')
-                                        ->where('id_m_sub_bidang', $this_user['id_m_sub_bidang'])
+                                        ->where('id_m_bidang', $this_user['id_m_bidang'])
                                         ->where('id !=', $this->general_library->getId())
                                         ->where('flag_active', 1)
                                         ->get()->result_array();
             } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
                 //pegawai yang diverif adalah subkoordinator di bidang yang sama
-                $subbidang = $this->db->select('*')
-                                        ->from('m_sub_bidang a')
-                                        ->where('a.id', $this_user['id_m_sub_bidang'])
-                                        ->where('a.flag_active', 1)
-                                        ->get()->row_array();
+                // $subbidang = $this->db->select('*')
+                //                         ->from('m_sub_bidang a')
+                //                         ->where('a.id', $this_user['id_m_bidang'])
+                //                         ->where('a.flag_active', 1)
+                //                         ->get()->row_array();
                 $list_role = ['subkoordinator', 'staffpelaksana'];
 
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                         ->from('m_user a')
-                                        ->join('m_sub_bidang b', 'a.id_m_sub_bidang = b.id')
+                                        ->join('m_bidang b', 'a.id_m_bidang = b.id')
                                         ->join('m_user_role c', 'a.id = c.id_m_user')
                                         ->join('m_role d', 'c.id_m_role = d.id')
-                                        ->where('b.id_m_bidang', $subbidang['id_m_bidang'])
+                                        ->where('b.id', $this_user['id_m_bidang'])
                                         ->where_in('d.role_name', $list_role)
                                         ->where('a.id !=', $this->general_library->getId())
                                         ->where('a.flag_active', 1)
                                         ->where('c.flag_active', 1)
                                         ->get()->result_array();
                 $list_pegawai_tambahan = null;
-                if($this_user['id_m_sub_bidang'] == 138 || $this_user['id_m_sub_bidang'] == 134){
+                if($this_user['id_m_bidang'] == 138 || $this_user['id_m_bidang'] == 134){
                     $unitkerjamaster = '8020000';
-                    if($this_user['id_m_sub_bidang'] == 134){
+                    if($this_user['id_m_bidang'] == 134){
                         $unitkerjamaster = '8010000';
                     }
                     $list_role_tambahan = ['kepalasekolah'];
                     $list_pegawai_tambahan = $this->db->select('*, a.id as id_m_user')
                                                         ->from('m_user a')
-                                                        // ->join('m_sub_bidang b', 'a.id_m_sub_bidang = b.id')
+                                                        // ->join('m_sub_bidang b', 'a.id_m_bidang = b.id')
                                                         ->join('m_user_role c', 'a.id = c.id_m_user')
                                                         ->join('m_role d', 'c.id_m_role = d.id')
                                                         ->join('db_pegawai.pegawai e', 'a.username = e.nipbaru_ws')
@@ -103,7 +103,7 @@
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
                                             ->join('m_role d', 'd.id = b.id_m_role')
-                                            ->join('m_sub_bidang c', 'c.id = a.id_m_sub_bidang')
+                                            ->join('m_bidang c', 'c.id = a.id_m_bidang')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
                                             ->where('a.flag_active', 1)
@@ -133,7 +133,7 @@
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
                                             ->join('m_role d', 'd.id = b.id_m_role')
-                                            ->join('m_sub_bidang c', 'c.id = a.id_m_sub_bidang')
+                                            ->join('m_bidang c', 'c.id = a.id_m_bidang')
                                             ->where('a.id !=', $this->general_library->getId())
                                             ->where_in('d.role_name', $list_role)
                                             ->where_in('c.id_m_bidang', $list_bidang)
@@ -147,7 +147,7 @@
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
                                             ->join('m_role d', 'd.id = b.id_m_role')
-                                            ->join('m_sub_bidang c', 'c.id = a.id_m_sub_bidang')
+                                            ->join('m_bidang c', 'c.id = a.id_m_bidang')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
                                             ->where('c.id_m_bidang', $data['filter'])
@@ -253,7 +253,7 @@
             if($list_bidang_tambahan){
                 $pegawai = $this->db->select('*, a.id as id_m_user')
                                     ->from('m_user a')
-                                    ->where_in('a.id_m_sub_bidang', $list_bidang_tambahan)
+                                    ->where_in('a.id_m_bidang', $list_bidang_tambahan)
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
 
@@ -459,7 +459,7 @@
                     $this->db->join('db_pegawai.pegawai d', 'b.username = d.nipbaru_ws')
                             ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja');
                 } else {
-                    $this->db->join('m_sub_bidang c', 'b.id_m_sub_bidang = c.id');
+                    $this->db->join('m_bidang c', 'b.id_m_bidang = c.id');
                 }
                 $temp = $this->db->get()->result_array();
                 if($temp){
@@ -534,8 +534,7 @@
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
-                                ->join('m_sub_bidang d', 'a.id_m_sub_bidang = d.id', 'left')
-                                ->join('m_bidang e', 'd.id_m_bidang = e.id', 'left')
+                                ->join('m_bidang d', 'a.id_m_bidang = d.id', 'left')
                                 ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
                                 ->where_in('a.id', $list_id_pegawai)
                                 ->get()->result_array();
@@ -573,8 +572,7 @@
                                     ->from('m_user a')
                                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                     ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
-                                    ->join('m_sub_bidang d', 'a.id_m_sub_bidang = d.id', 'left')
-                                    ->join('m_bidang e', 'd.id_m_bidang = e.id', 'left')
+                                    ->join('m_bidang d', 'a.id_m_bidang = d.id', 'left')
                                     ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
                                     ->where('a.id', $id)
                                     ->get()->row_array();

@@ -36,12 +36,16 @@
             return $flag_valid;
         }
 
-        public function getAll($tableName)
+        public function getAll($tableName, $use_flag_active = 1)
         {
             $this->db->select('*')
-            ->where('id !=', 0)
-            ->where('flag_active', 1)
+            // ->where('id !=', 0)
             ->from($tableName);
+
+            if($use_flag_active == 1){
+                $this->db->where('flag_active', 1);
+            }
+            
             return $this->db->get()->result_array(); 
         }
 
@@ -185,8 +189,7 @@
         public function getUserForSetting($id){
             return $this->db->select('*, a.id as id_m_user')
                             ->from('m_user a')
-                            ->join('m_sub_bidang b', 'a.id_m_sub_bidang = b.id', 'left')
-                            ->join('m_bidang c', 'b.id_m_bidang = c.id', 'left')
+                            ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                             ->where('a.flag_active',1)
                             ->where('a.id', $id)

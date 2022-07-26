@@ -1,15 +1,15 @@
 <div class="row p-3">
-    <?php if($rs['id_m_sub_bidang'] != 0){ ?>
+    <?php if($rs['id_m_bidang'] != 0){ ?>
         <table class="table table-hover table-striped">
             <thead>
                 <th>Bidang</th>
-                <th>Sub Bidang</th>
+                <!-- <th>Sub Bidang</th> -->
                 <th>Pilihan</th>
             </thead>
             <tbody>
                 <tr>
                     <td><?=strtoupper($rs['nama_bidang'])?></td>
-                    <td><?=strtoupper($rs['nama_sub_bidang'])?></td>
+                    <!-- <td><?=strtoupper($rs['nama_sub_bidang'])?></td> -->
                     <td>
                         <button onclick="deleteUserBidang('<?=$rs['id_m_user']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                     </td>
@@ -31,9 +31,9 @@
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(data){
-                    successtoast('Berhasil menghapus Sub Bidang pada User')
+                    successtoast('Berhasil menghapus Bidang pada User')
                     $('#label_bidang_<?=$rs['id_m_user']?>').html('')
-                    refreshSubBidang()
+                    refreshBidang()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

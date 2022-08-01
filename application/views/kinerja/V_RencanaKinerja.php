@@ -86,42 +86,8 @@
     </div>
 </div>
 
-<div class="card card-default">
-    <div class="card-header">
-        <h3 class="card-title">List Rencana Kinerja</h3>
-    </div>
-    <div class="card-body">
-    <div class="col-12">
-    <form class="form-inline" method="post">
-  <div class="form-group">
-    <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="search_tahun" name="search_tahun" value="<?=date('Y');?>">
-  </div>
-  <div class="form-group">
-    <label for="pwd" class="mr-2 ml-3"> Bulan</label>
-    <select class="form-control select2-navy" 
-                 id="search_bulan" data-dropdown-css-class="select2-navy" name="search_bulan" required>
-                 <option <?=date('m') == 1 ? 'selected' : '';?> value="1">Januari</option>
-                 <option <?=date('m') == 2 ? 'selected' : '';?> value="2">Februari</option>
-                 <option <?=date('m') == 3 ? 'selected' : '';?> value="3">Maret</option>
-                 <option <?=date('m') == 4 ? 'selected' : '';?> value="4">April</option>
-                 <option <?=date('m') == 5 ? 'selected' : '';?> value="5">Mei</option>
-                 <option <?=date('m') == 6 ? 'selected' : '';?> value="6">Juni</option>
-                 <option <?=date('m') == 7 ? 'selected' : '';?> value="7">Juli</option>
-                 <option <?=date('m') == 8 ? 'selected' : '';?> value="8">Agustus</option>
-                 <option <?=date('m') == 9 ? 'selected' : '';?> value="9">September</option>
-                 <option <?=date('m') == 10 ? 'selected' : '';?> value="10">Oktober</option>
-                 <option <?=date('m') == 11 ? 'selected' : '';?> value="11">November</option>
-                 <option <?=date('m') == 12 ? 'selected' : '';?> value="12">Desember</option>
-                 </select>
-         </div>
-        <!-- <button type="button" onclick="searchListKegiatan()" class="btn btn-primary ml-3">Cari</button> -->
-        </form>
-     <br>
-    </div>
-        <div id="list_rencana_kinerja" class="row">
-        </div>
-    </div>
+<div class="card card-default" id="list_rencana_kinerja">
+    
 </div>
 
 <div class="modal fade" id="edit_rencana_kinerja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -145,12 +111,13 @@
 <script>
 
     $(function(){
-        loadRencanaKinerja()
+      var tahun = '<?=date("Y")?>'
+         var bulan = '<?=date("m")?>'
+        loadRencanaKinerja(bulan,tahun)
     })
 
     function loadRencanaKinerja(bulan,tahun){
-      var tahun = '<?=date("Y")?>'
-         var bulan = '<?=date("m")?>'
+      
 
         $('#list_rencana_kinerja').html('')
         $('#list_rencana_kinerja').append(divLoaderNavy)

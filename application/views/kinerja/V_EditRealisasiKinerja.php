@@ -43,6 +43,12 @@
         })
 
         $('#form_edit_realisasi_kinerja').on('submit', function(e){
+            tanggal = $('#edit_tanggal_kegiatan').val()
+            var d = new Date(tanggal);
+
+            var bulan = d.getMonth() + 1;
+            var tahun = d.getFullYear();
+
             e.preventDefault()
             $.ajax({
                 url: '<?=base_url("kinerja/C_Kinerja/editRealisasiKinerja")?>',
@@ -54,7 +60,7 @@
                         successtoast('Data Berhasil Disimpan')
             
                             $('#edit_realisasi_kinerja').modal('hide')
-                            loadListKegiatan()
+                            loadListKegiatan(tahun,bulan)
                    } else {
                        errortoast(res.message)
                    }

@@ -209,6 +209,8 @@ class C_Kinerja extends CI_Controller
     public function loadKegiatan($tahun,$bulan){
        
         $data['list_kegiatan'] = $this->kinerja->loadKegiatan($tahun,$bulan);
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
         $this->load->view('kinerja/V_RealisasiKinerjaItem', $data);
     }
 
@@ -228,6 +230,8 @@ class C_Kinerja extends CI_Controller
             $bulan = date('m');
         }
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
         $this->load->view('kinerja/V_RencanaKinerjaItem', $data);
     }
 

@@ -72,42 +72,8 @@
     </div>
 </div>
 
-<div class="card card-default">
-    <div class="card-header">
-        <h3 class="card-title">List Realisasi Kegiatan</h3>
-    </div>
-    <div class="card-body">
-    <div class="col-12">
-    <form class="form-inline" method="post">
-  <div class="form-group">
-    <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y');?>">
-  </div>
-  <div class="form-group">
-    <label for="pwd" class="mr-2 ml-3"> Bulan</label>
-    <select class="form-control select2-navy" 
-                 id="bulan" data-dropdown-css-class="select2-navy" name="bulan" required>
-                 <option <?=date('m') == 1 ? 'selected' : '';?> value="1">Januari</option>
-                 <option <?=date('m') == 2 ? 'selected' : '';?> value="2">Februari</option>
-                 <option <?=date('m') == 3 ? 'selected' : '';?> value="3">Maret</option>
-                 <option <?=date('m') == 4 ? 'selected' : '';?> value="4">April</option>
-                 <option <?=date('m') == 5 ? 'selected' : '';?> value="5">Mei</option>
-                 <option <?=date('m') == 6 ? 'selected' : '';?> value="6">Juni</option>
-                 <option <?=date('m') == 7 ? 'selected' : '';?> value="7">Juli</option>
-                 <option <?=date('m') == 8 ? 'selected' : '';?> value="8">Agustus</option>
-                 <option <?=date('m') == 9 ? 'selected' : '';?> value="9">September</option>
-                 <option <?=date('m') == 10 ? 'selected' : '';?> value="10">Oktober</option>
-                 <option <?=date('m') == 11 ? 'selected' : '';?> value="11">November</option>
-                 <option <?=date('m') == 12 ? 'selected' : '';?> value="12">Desember</option>
-                 </select>
-         </div>
-        <!-- <button type="button" onclick="searchListKegiatan()" class="btn btn-primary ml-3">Cari</button> -->
-        </form>
-     <br>
-    </div>
-        <div id="list_kegiatan" class="row">
-        </div>
-    </div>
+<div class="card card-default" id="list_kegiatan">
+   
 </div>
 
 <div class="modal fade" id="edit_realisasi_kinerja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -131,13 +97,14 @@
 
 
     $(function(){
-        loadListKegiatan()
+      var tahun = '<?=date("Y")?>'
+         var bulan = '<?=date("m")?>'
+        loadListKegiatan(tahun,bulan)
         loadListTugasJabatan()
     })
 
-     function loadListKegiatan(){
-         var tahun = '<?=date("Y")?>'
-         var bulan = '<?=date("m")?>'
+     function loadListKegiatan(tahun,bulan){
+       
  
         $('#list_kegiatan').html('')
         $('#list_kegiatan').append(divLoaderNavy)
@@ -146,13 +113,13 @@
         })
     }
 
-    $('#bulan').on('change', function(){
-        searchListKegiatan()
-    })
+    // $('#bulan').on('change', function(){
+    //     searchListKegiatan()
+    // })
 
-    $('#tahun').on('change', function(){
-        searchListKegiatan()
-    })
+    // $('#tahun').on('change', function(){
+    //     searchListKegiatan()
+    // })
 
     
      function getDok(){
@@ -218,12 +185,15 @@
 
     
         $('#upload_form').on('submit', function(e){  
-        document.getElementById('btn_upload').disabled = true;
+        // document.getElementById('btn_upload').disabled = true;
         $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        // var tes = $('#tugas_jabatan').val()
-        // alert(tes)
-        // return false; 
+        var tanggal = $('#tanggal_kegiatan').val()
+        var d = new Date(tanggal);
+
+        var bulan = d.getMonth() + 1;
+        var tahun = d.getFullYear();
+      
       
         if($('#tugas_jabatan').val() == "- Pilih Tugas Jabatan -")  
         {  
@@ -251,7 +221,7 @@
             
               if(result.success == true){
                 successtoast(result.msg)
-                loadListKegiatan()
+                loadListKegiatan(tahun,bulan)
               } else {
                 errortoast(result.msg)
                 return false;
@@ -343,21 +313,21 @@
 
       
 
-    function searchListKegiatan(){
-        if($('#bulan').val() == '')  
-        {  
-        errortoast(" Pilih Bulan terlebih dahulu");  
-        return false
-        } 
-        var tahun = $('#tahun').val(); 
-        var bulan = $('#bulan').val();
-        $('#list_kegiatan').html(' ')
-        $('#list_kegiatan').append(divLoaderNavy)
-        $('#list_kegiatan').load('<?=base_url('kinerja/C_Kinerja/loadKegiatan/')?>'+tahun+'/'+bulan+'', function(){
-            $('#loader').hide()
+    // function searchListKegiatan(){
+    //     if($('#bulan').val() == '')  
+    //     {  
+    //     errortoast(" Pilih Bulan terlebih dahulu");  
+    //     return false
+    //     } 
+    //     var tahun = $('#tahun').val(); 
+    //     var bulan = $('#bulan').val();
+    //     $('#list_kegiatan').html(' ')
+    //     $('#list_kegiatan').append(divLoaderNavy)
+    //     $('#list_kegiatan').load('<?=base_url('kinerja/C_Kinerja/loadKegiatan/')?>'+tahun+'/'+bulan+'', function(){
+    //         $('#loader').hide()
            
-        })
-    }
+    //     })
+    // }
 
     function openModalEditRealisasiKinerja(id = 0){
     $('#edit_realisasi_kinerja_content').html('')

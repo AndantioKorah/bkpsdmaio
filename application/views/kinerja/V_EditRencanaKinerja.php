@@ -1,5 +1,5 @@
 <?php if($rencana){ ?>
-    <form id="form_edit_realisasi_kinerja">
+    <form id="form_edit_rencana_kinerja">
         <input style="display: none;" id="id_kegiatan" name="id_rencana_kinerja" value="<?=$rencana['id']?>" />
         <div class="row p-3">
             <div class="col-md-12">
@@ -25,6 +25,7 @@
 
             <div class="col-md-4">
                 <label>Bulan</label>
+                <input type="hidden" autocomplete="off" id="edit_bulan_angka"  class="form-control form-control-sm" name="edit_bulan_angka" value="<?= $rencana['bulan']?>" Readonly/>
                 <input autocomplete="off" id="edit_bulan"  class="form-control form-control-sm" name="edit_bulan" value="<?= getNamaBulan($rencana['bulan'])?>" Readonly/>
             </div>
 
@@ -59,7 +60,12 @@
             });
         })
 
-        $('#form_edit_realisasi_kinerja').on('submit', function(e){
+        $('#form_edit_rencana_kinerja').on('submit', function(e){
+           
+
+            var bulan = $('#edit_bulan_angka').val()
+            var tahun = $('#edit_tahun').val()
+            
             e.preventDefault()
             $.ajax({
                 url: '<?=base_url("kinerja/C_Kinerja/editRencanaKinerja")?>',
@@ -71,7 +77,7 @@
                         successtoast('Data Berhasil Disimpan')
             
                             $('#edit_rencana_kinerja').modal('hide')
-                            loadRencanaKinerja()
+                            loadRencanaKinerja(bulan,tahun)
                    } else {
                        errortoast(res.message)
                    }

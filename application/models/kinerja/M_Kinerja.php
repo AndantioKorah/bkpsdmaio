@@ -40,7 +40,7 @@
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
 
-        // dd($cek['0']['target_kuantitas']);            
+        if($cek){          
          if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){
             $this->db->where('id',  $dataPost['tugas_jabatan'])
                      ->update('t_rencana_kinerja', [
@@ -48,6 +48,7 @@
                      'target_kuantitas' => $cek['0']['realisasi_target_kuantitas']
             ]);
          }
+        }
          if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();

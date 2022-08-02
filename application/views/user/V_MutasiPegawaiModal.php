@@ -28,7 +28,7 @@
                     <div class="col-12" style="margin-top:10px;">
                     <div class="form-group">
                             <label>TMT</label>
-                            <input  class="form-control datepicker" id="tmt_mutasi" name="tmt_mutasi">
+                            <input autocomplete="off"  class="form-control datepicker" id="tmt_mutasi" name="tmt_mutasi">
                            
                         </div>
                      

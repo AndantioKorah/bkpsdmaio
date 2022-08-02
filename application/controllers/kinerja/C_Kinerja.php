@@ -52,7 +52,6 @@ class C_Kinerja extends CI_Controller
 
     public function multipleImageStore()
   {
-       $this->load->library('image_lib');
       $countfiles = count($_FILES['files']['name']);
     
       $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -103,18 +102,28 @@ class C_Kinerja extends CI_Controller
                $config['create_thumb'] = FALSE;
                $config['maintain_ratio'] = FALSE;
                
-               if($data['image_height'] > 1000) {
+               if($data['file_size'] > 1000) {
                 // $imgdata=exif_read_data($this->upload->upload_path.$this->upload->file_name, 'IFD0');
-                $config['width'] = $data['image_width'] * 50 / 100;
                 $config['height'] = $data['image_height'] * 50 / 100;
+                $config['width'] = $data['image_width'] * 50 / 100;
+              
                } else {
-                $config['width'] = 600;
                 $config['height'] =600;  
+                $config['width'] = 600;
+               
                }
                $config['master_dim'] = 'auto';
                $config['quality'] = "50%";
               
-               $this->image_lib->initialize($config);
+            //    $this->image_lib->initialize($config);
+            //    $this->image_lib->resize(); 
+
+               $this->load->library('image_lib');
+                        $this->image_lib->initialize($config);
+                        if (!$this->image_lib->resize()) {
+                            echo $this->image_lib->display_errors();
+                        }
+                $this->image_lib->clear();
               
             // if($data['image_height'] > 1000) {
             //     if (!$this->image_lib->resize()){  
@@ -147,7 +156,7 @@ class C_Kinerja extends CI_Controller
             //     } else {
             //     $this->image_lib->resize();
             //     } 
-            $this->image_lib->resize();  
+            
               }
             }
             $nama_file[] = $data['file_name'];
@@ -200,6 +209,8 @@ class C_Kinerja extends CI_Controller
     public function loadKegiatan($tahun,$bulan){
        
         $data['list_kegiatan'] = $this->kinerja->loadKegiatan($tahun,$bulan);
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
         $this->load->view('kinerja/V_RealisasiKinerjaItem', $data);
     }
 
@@ -219,6 +230,8 @@ class C_Kinerja extends CI_Controller
             $bulan = date('m');
         }
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
         $this->load->view('kinerja/V_RencanaKinerjaItem', $data);
     }
 

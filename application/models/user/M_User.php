@@ -391,17 +391,16 @@
                     foreach($menu_pekin as $mp){
                         $tmp_menu_pekin[$mp['id_m_menu']] = $mp;
                     }
-                    
-                    
+
                     $flag_parent_found = 0;
                     if($list_menu){
-                        $temp = $list_menu;
+                        $list_menu = $list_menu;
                         // $list_menu = [];
                         $i = 0;
-                        foreach($temp as $t){
+                        foreach($list_menu as $t){
                             foreach($menu_pekin as $mp){
                                 if($mp['id_m_menu_parent'] == $t['id']){
-                                    $temp[$i]['child'][] = $mp;
+                                    $list_menu[$i]['child'][] = $mp;
                                     unset($tmp_menu_pekin[$mp['id_m_menu']]);
                                     if(!$tmp_menu_pekin){
                                         break;
@@ -437,6 +436,11 @@
                     }
                 }
             }
+
+            $menu_name = array_column($list_menu, 'nama_menu');
+            
+            array_multisort($menu_name, SORT_ASC, $list_menu);
+
             return $list_menu;
         }
 

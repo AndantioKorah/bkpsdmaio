@@ -1,15 +1,20 @@
 <div class="row p-3">
-    <?php if($rs['id_m_bidang'] != 0){ ?>
+    <?php if($rs['id_m_bidang'] != 0){
+        // $nama_bidang = $rs['nama_bidang'];
+        // if($rs['id_m_sub_bidang'] != "0"){
+        //     $nama_bidang = $rs['nama_bidang']." (".$rs['nama_sub_bidang'].")";
+        // }
+    ?>
         <table class="table table-hover table-striped">
             <thead>
                 <th>Bidang</th>
-                <!-- <th>Sub Bidang</th> -->
+                <th>Sub Bidang</th>
                 <th>Pilihan</th>
             </thead>
             <tbody>
                 <tr>
                     <td><?=strtoupper($rs['nama_bidang'])?></td>
-                    <!-- <td><?=strtoupper($rs['nama_sub_bidang'])?></td> -->
+                    <td><?=strtoupper($rs['nama_sub_bidang'])?></td>
                     <td>
                         <button onclick="deleteUserBidang('<?=$rs['id_m_user']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                     </td>

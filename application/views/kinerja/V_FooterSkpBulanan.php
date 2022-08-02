@@ -21,12 +21,15 @@
                 NIP. <?=formatNip($atasan_pegawai['nipbaru_ws'])?>
             </td>
         </tr>
-        <table style="width: 100%;">
+    </table>
+    <center>
+        <table style="width: 100%; margin-top: 20px;">
             <tr>
                 <td style="width: 100%; text-align: center;">Menyetujui,</td>
             </tr>
             <tr>
-                <td style="width: 100%; text-align: center;">Kepala Perangkat Daerah</td>
+                <!-- <td style="width: 100%; text-align: center;">Kepala Perangkat Daerah</td> -->
+                <td style="width: 100%; text-align: center;"><?=$kepala_pd['nama_jabatan']?></td>
             </tr>
             <tr>
                 <td><br><br><br></td>
@@ -40,7 +43,7 @@
                 </tr>
             <?php // } ?>
         </table>
-    </table>
+    </center>
 <?php } else { ?>
     <table style="width: 100%;">
         <tr>

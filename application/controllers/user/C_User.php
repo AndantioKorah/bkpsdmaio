@@ -84,6 +84,7 @@ class C_User extends CI_Controller
     public function tambahBidangUser(){
         $data = $this->input->post();
         $update_user['id_m_bidang'] = $data['id_m_bidang'];
+        $update_user['id_m_sub_bidang'] = isset($data['id_m_sub_bidang']) ? $data['id_m_sub_bidang'] : '0';
         $update_user['updated_by'] = $this->general_library->getId();
         $this->general->update('id', $data['id_m_user'], 'm_user', $update_user);
         echo json_encode($this->user->getBidanguser($data['id_m_user']));
@@ -104,6 +105,7 @@ class C_User extends CI_Controller
         $data['user'] = $this->general->getUserForSetting($id_m_user);
         $data['roles'] = $this->general->getRoleByUnitKerjaMaster($id_m_user);
         $data['bidang'] = $this->master->loadMasterBidangByUnitKerja($data['user']['skpd']);
+        $data['subbidang'] = $this->master->getSubBidangByBidang($data['user']['id_m_bidang']);
         $data['pegawai'] = $this->user->getListPegawaiSkpd($data['user']['skpd'], $id_m_user);
         $this->load->view('user/V_AddRoleModal', $data);
     }
@@ -274,7 +276,6 @@ class C_User extends CI_Controller
         echo json_encode($this->user->mutasiPegawaiSubmit($this->input->post()));
     }
 
-
     public function openRiwayatMutasiModal($id_peg){
         $data['riwayat'] = $this->user->getRiwayatMutasiPegawai($id_peg);
         $this->load->view('user/V_RiwayatMutasiModal', $data);
@@ -295,5 +296,9 @@ class C_User extends CI_Controller
 
     public function runQuery(){
         $this->user->runQuery();
+    }
+
+    public function getSubBidangByBidang($id){
+        echo json_encode($this->master->getSubBidangByBidang($id));
     }
 }

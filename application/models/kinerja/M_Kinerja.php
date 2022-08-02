@@ -255,12 +255,13 @@
     }
 
     public function createSkpBulanan($data){
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, d.nama_jabatan, e.nm_pangkat, 
-        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster')
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, 
+        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, a.id_m_sub_bidang,
+        (SELECT aa.nm_jabatan FROM db_pegawai.pegjabatan aa WHERE b.id_peg = aa.id_pegawai ORDER BY aa.tmtjabatan DESC LIMIT 1) as nama_jabatan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                            ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                            // ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
@@ -284,6 +285,10 @@
                 $flag_kecamatan = true;
                 $atasan = 'sekretarisbadan';
                 $kepala_pd = "camat";
+            }
+
+            if($pegawai['nama_bidang'] == 'Sekretariat'){
+                $atasan = 'subkoordinator';
             }
         } else if($this->general_library->isKabid() || $this->general_library->isSekban()){
             $atasan = 'kepalabadan';
@@ -566,9 +571,15 @@
                                         ->where('g.flag_active', 1)
                                         ->group_by('a.id')
                                         ->limit(1);
+
                 if($atasan != 'setda'){
                     $this->db->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                             ->where('a.id_m_bidang', $pegawai['id_m_bidang']);
+                }
+
+                if($pegawai['nama_bidang'] == 'Sekretariat' && $atasan == 'subkoordinator'){
+                    $this->db->where('a.id_m_sub_bidang', $pegawai['id_m_sub_bidang'])
+                            ->where('d.eselon !=', "Non Eselon");
                 }
 
                 $atasan_pegawai = $this->db->get()->row_array();

@@ -60,10 +60,16 @@ class C_Login extends CI_Controller
             $list_sub_bidang = null;
             if($list_role){
                 $active_role = $list_role[0];
-                $list_menu = $this->general_library->getListMenu($active_role['id'], $active_role['role_name']);
+                $list_menu = $this->general_library->getListMenu($active_role['id'], $active_role['role_name'], $result[0]['id_m_bidang']);
                 $urls = $this->general_library->getListUrl($active_role['id']);
                 foreach($urls as $u){
                     $list_url[$u['url']] = $u['url'];
+                }
+                if($result[0]['id_m_bidang'] == ID_BIDANG_PEKIN){
+                    $url_pekin = URL_MENU_PEKIN;
+                    foreach($url_pekin as $u){
+                        $list_url[$u] = $u;
+                    }
                 }
             }
             if($all_menu){

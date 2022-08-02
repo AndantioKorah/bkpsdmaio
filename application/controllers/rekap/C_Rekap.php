@@ -21,11 +21,12 @@ class C_Rekap extends CI_Controller
     }
 
     public function rekapAbsensi(){
-        render('rekap/V_RekapAbsensi', '', '', null);
+        $data['jam_kerja'] = $this->general->getAll('t_jam_kerja');
+        render('rekap/V_RekapAbsensi', '', '', $data);
     }
 
     public function readAbsensiExcel(){
-        $url = base_url('assets/rekapabsen/RekapAbsensi.xls');
+        // $url = base_url('assets/rekapabsen/RekapAbsensi.xls');
         // $url = base_url('assets/rekapabsen/test.txt');
         // $curl = curl_init();
         // curl_setopt($curl, CURLOPT_URL, $url);
@@ -33,18 +34,26 @@ class C_Rekap extends CI_Controller
         // curl_setopt($curl, CURLOPT_HEADER, false);
         // $data = curl_exec($curl);
         // curl_close($curl);
-        $handle = fopen($url, "r");
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                echo $line;
-            }
+        // $handle = fopen($url, "r");
+        // if ($handle) {
+        //     while (($line = fgets($handle)) !== false) {
+        //         echo $line;
+        //     }
         
-            fclose($handle);
-        } else {
-            // error opening the file.
-        } 
-        dd($handle);
-        // $data = $this->rekap->readAbsensiExcel();
+        //     fclose($handle);
+        // } else {
+        //     // error opening the file.
+        // } 
+        // dd($handle);
+        $data = $this->rekap->readAbsensiExcel();
+        $this->session->set_userdata('data_read_absensi_excel', $data);
+        $data['flag_print'] = 0;
+        $this->load->view('rekap/V_RekapAbsensiResult', $data);
+    }
+
+    public function downloadAbsensi(){
+        $data = $this->session->userdata('data_read_absensi_excel');
+        $data['flag_print'] = 1;
         $this->load->view('rekap/V_RekapAbsensiResult', $data);
     }
 

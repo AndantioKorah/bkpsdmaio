@@ -75,14 +75,14 @@ class General_library
         // }
     }
 
-    public function getListMenu($id_role = 0, $role_name = 0){
+    public function getListMenu($id_role = 0, $role_name = 0, $id_bidang = 0){
         if($id_role == 0){
             $id_role = $this->nikita->session->userdata('active_role_id');
         }
         if($role_name == 0){
             $role_name = $this->nikita->session->userdata('active_role_name');
         }
-        return $this->nikita->m_user->getListMenu($id_role, $role_name);
+        return $this->nikita->m_user->getListMenu($id_role, $role_name, $id_bidang);
     }
 
     public function getListUrl($id_role){
@@ -211,16 +211,26 @@ class General_library
         if($this->isSessionExpired()){
             $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
-            if(isset($url_exist[$current_url]) && $url_exist[$current_url] == 0){
-                $list_url = $this->nikita->session->userdata('list_url');
+            $list_url = $this->nikita->session->userdata('list_url');
+
+            if($this->getBidangUser() == ID_BIDANG_PEKIN){
                 if(isset($list_url[$current_url])){
                     $res = 1;
-                } else {
-                    $this->nikita->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
                 }
-            } else {
-                return true;
             }
+
+            if($res == 0){
+                if(isset($url_exist[$current_url]) && $url_exist[$current_url] == 0){
+                    if(isset($list_url[$current_url])){
+                        $res = 1;
+                    } else {
+                        $this->nikita->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
+                    }
+                } else {
+                    return true;
+                }
+            }
+           
         }
         return $res == 0 ? false : true;
         // return $this->isSessionExpired();

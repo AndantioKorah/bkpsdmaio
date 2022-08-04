@@ -28,10 +28,11 @@
         }
 
         public function getAllUsersBySkpd($id_unitkerja){
-            return $this->db->select('a.*, a.nama as nama_user, b.nama_bidang')
+            return $this->db->select('a.*, a.nama as nama_user, b.nama_bidang, c.nama_sub_bidang')
                             ->from('m_user a')
                             ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
+                            ->join('m_sub_bidang c', 'a.id_m_sub_bidang = c.id', 'left')
                             ->where('c.skpd', $id_unitkerja)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama')
@@ -316,7 +317,7 @@
                             ->get()->result_array();
         }
 
-        public function getListMenu($id_role, $role_name){
+        public function getListMenu($id_role, $role_name, $id_bidang = 0){
             $this->db->select('a.*')
                     ->from('m_menu a')
                     ->where('a.id_m_menu_parent', 0)
@@ -329,7 +330,9 @@
                         ->where('b.id_m_role', $id_role)    
                         ->where('b.flag_active', 1);    
             }
+
             $list_menu = $this->db->get()->result_array();
+            
             if($list_menu){
                 $i = 0;
                 foreach($list_menu as $l){
@@ -379,9 +382,77 @@
                     $list_menu[$i]['child'] = $child;
                     $i++;
                 }
-                // dd($list_menu);
+                // dd(json_encode($list_menu));
             }
+            $menu_pekin = null;
+            if($id_bidang == ID_BIDANG_PEKIN){
+                $menu_pekin = $this->getMenuPekin();
+                if($menu_pekin){
+                    $tmp_menu_pekin;
+                    foreach($menu_pekin as $mp){
+                        $tmp_menu_pekin[$mp['id_m_menu']] = $mp;
+                    }
+
+                    $flag_parent_found = 0;
+                    if($list_menu){
+                        $list_menu = $list_menu;
+                        // $list_menu = [];
+                        $i = 0;
+                        foreach($list_menu as $t){
+                            foreach($menu_pekin as $mp){
+                                if($mp['id_m_menu_parent'] == $t['id']){
+                                    $list_menu[$i]['child'][] = $mp;
+                                    unset($tmp_menu_pekin[$mp['id_m_menu']]);
+                                    if(!$tmp_menu_pekin){
+                                        break;
+                                    }
+                                }
+                            }
+                            $i++;
+                        }
+                    }
+
+                    if($tmp_menu_pekin){
+                        $lp = [];
+                        $temp = [];
+                        foreach($tmp_menu_pekin as $tm){
+                            $lp[] = $tm['id_m_menu_parent'];
+                            $temp[$tm['id_m_menu_parent']][] = $tm;
+                        }
+
+                        $parent = $this->db->select('*, id as id_m_menu')
+                                    ->from('m_menu')
+                                    ->where_in('id', $lp)
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+                        $tambahan_menu = [];
+                        if($parent){
+                            $i = count($list_menu);
+                            foreach($parent as $p){
+                                $list_menu[$i] = $p;
+                                $list_menu[$i]['child'] = $temp[$p['id_m_menu']];
+                                $i++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $menu_name = array_column($list_menu, 'nama_menu');
+            
+            array_multisort($menu_name, SORT_ASC, $list_menu);
+
             return $list_menu;
+        }
+
+        public function getMenuPekin(){
+            $list_menu = [];
+            $child = $this->db->select('*, id as id_m_menu')
+                            ->from('m_menu')
+                            ->where('flag_active', 1)
+                            ->where_in('url', URL_MENU_PEKIN)
+                            ->get()->result_array();
+            return $child;
         }
 
         public function getMenuRole($id){
@@ -751,9 +822,10 @@
         }
 
         public function getBidangUser($id_m_user){
-            return $this->db->select('*, a.id as id_m_user')
+            return $this->db->select('a.*, b.*, a.id as id_m_user, c.nama_sub_bidang')
                             ->from('m_user a')
                             ->join('m_bidang b', 'a.id_m_bidang = b.id')
+                            ->join('m_sub_bidang c', 'a.id_m_sub_bidang = c.id', 'left')
                             ->where('a.id', $id_m_user)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();

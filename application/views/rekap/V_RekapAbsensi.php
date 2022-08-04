@@ -10,6 +10,15 @@
                     <label>Pilih File</label>
                     <input type="file" class="form-control" name="file_excel" id="file_excel" />
                 </div>
+                <div class="col-4">
+                    <label>Pilih Jam Kerja</label>
+                    <select class="form-control select2-navy" style="width: 100%"
+                        id="jam_kerja" data-dropdown-css-class="select2-navy" name="jam_kerja">
+                        <?php foreach($jam_kerja as $j){ ?>
+                            <option value="<?=$j['id']?>"><?=$j['nama_jam_kerja']?></option>
+                        <?php } ?>
+                    </select>
+                </div>
                 <div class="col-4 text-left">
                     <br>
                     <button class="btn btn-sm btn-navy" style="margin-top: 12px;" type="submit"><i class="fa fa-save"></i> UPLOAD</button>
@@ -19,7 +28,7 @@
     </div>
 </div>
 
-<div class="card card-default">
+<!-- <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">LIST MENU</h3>
     </div>
@@ -27,10 +36,11 @@
         <div id="list_menu" class="row">
         </div>
     </div>
-</div>
+</div> -->
 
 <script>
     $(function(){
+        $('#jam_kerja').select2()
         loadMenu()
     })
 

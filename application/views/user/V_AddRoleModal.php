@@ -54,12 +54,22 @@
                     <div class="col-12">
                         <form id="form_tambah_bidang">
                             <label>Bidang / Bagian:</label>
-                            <select style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_bidang">
-                                <option value="0" disabled selected>Pilih Item</option>
+                            <select id="id_m_bidang" style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_bidang">
+                                <option value="0" disabled selected>Pilih Bidang</option>
                                 <?php if($bidang){ foreach($bidang as $b){ ?>
-                                    <option value="<?=$b['id']?>"><?=$b['nama_bidang']?></option>
+                                    <option <?=$user['id_m_bidang'] == $b['id'] ? 'selected' : ''?> value="<?=$b['id']?>"><?=$b['nama_bidang']?></option>
                                 <?php } } ?>
                             </select>
+
+                            <div id="sub_bidang_div" style="display: block;" class="mt-3">
+                                <label>Sub Bidang / Sub Bagian:</label>
+                                <select id="id_m_sub_bidang" style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_sub_bidang">
+                                    <option value="0">Pilih Sub Bidang</option>
+                                    <?php if($subbidang){ foreach($subbidang as $sb){ ?>
+                                        <option <?=$user['id_m_sub_bidang'] == $sb['id'] ? 'selected' : ''?> value="<?=$sb['id']?>"><?=$sb['nama_sub_bidang']?></option>
+                                    <?php } } ?>
+                                </select>
+                            </div>
                             <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id_m_user']?>"/>
                             <button class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
                         </form>
@@ -117,7 +127,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-12">
+                    <!-- <div class="col-12">
                         <div class="tab-content col-12" id="myTabContent">
                             <div class="tab-pane show active" id="verif_bidang_tab">
                                 <div class="row">
@@ -156,7 +166,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -166,6 +176,32 @@
     $(function(){
         $('.select2_this').select2()
         loadListRole('<?=$user['id_m_user']?>')
+    })
+
+    function loadSubBidangByBidang(){
+        $.ajax({
+            url: '<?=base_url("user/C_User/getSubBidangByBidang")?>'+'/'+$('#id_m_bidang').val(),
+            method: 'post',
+            data: [],
+            success: function(data){
+                let rs = JSON.parse(data)
+                $('#id_m_sub_bidang')
+                .find('option')
+                .remove()
+                .end()
+                
+                $('#id_m_sub_bidang').append('<option value="0">Pilih Sub Bidang</option>')
+                rs.forEach(function(item) {
+                    $('#id_m_sub_bidang').append('<option value='+item.id+'>'+item.nama_sub_bidang+'</option>')
+                });
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
+    $('#id_m_bidang').on('change', function(){
+        loadSubBidangByBidang()
     })
 
     function loadListRole(id){
@@ -307,7 +343,9 @@
                 let rs = JSON.parse(data)
                 successtoast('Berhasil menambahkan Sub Bidang pada User')
                 refreshBidang()
-                $('#label_bidang_<?=$user['id_m_user']?>').html(rs.nama_bidang)
+                let nama_bidang = rs.nama_bidang
+
+                $('#label_bidang_<?=$user['id_m_user']?>').html(nama_bidang)
                 $('#label_sub_bidang_<?=$user['id_m_user']?>').html(rs.nama_sub_bidang)
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')

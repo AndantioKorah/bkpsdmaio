@@ -185,7 +185,7 @@
 
     
         $('#upload_form').on('submit', function(e){  
-        // document.getElementById('btn_upload').disabled = true;
+        document.getElementById('btn_upload').disabled = true;
         $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()
@@ -220,6 +220,7 @@
             // return false;
             
               if(result.success == true){
+                document.getElementById('btn_upload').disabled = true;
                 successtoast(result.msg)
                 loadListKegiatan(tahun,bulan)
               } else {

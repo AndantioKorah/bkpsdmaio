@@ -492,7 +492,7 @@
                                                 $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_masuk'] = 'A';
                                             } else {
                                                 $diff_masuk = strtotime(trim($jam_absen[0])) - strtotime($format_hari[$i]['jam_masuk'].'+ 59 seconds');
-                                                if($diff_masuk > 1){
+                                                if($diff_masuk > 0){
                                                     $ket_masuk = floatval($diff_masuk) / 1800;
                                                     if($ket_masuk <= 1){
                                                         $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_masuk'] = 'tmk1';
@@ -507,7 +507,7 @@
                                                     $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_pulang'] = 'pksw3';
                                                 } else {
                                                     $diff_pulang = strtotime($format_hari[$i]['jam_pulang']) - strtotime($jam_absen[2]);
-                                                    if($diff_pulang > 1){
+                                                    if($diff_pulang > 0){
                                                         $ket_pulang = floatval($diff_pulang) / 1800;
                                                         if($ket_pulang <= 1){
                                                             $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_pulang'] = 'pksw1';

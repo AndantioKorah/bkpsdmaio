@@ -1,15 +1,20 @@
 <div class="modal-body">
     <form id="form_input">
         <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <label>Pilih Pegawai</label>
-                <select required multiple="multiple" class="form-control select2-navy" style="width: 100%"
-                    id="pegawai" data-dropdown-css-class="select2-navy" name="pegawai[]">
-                    <?php foreach($pegawai as $p){ ?>
-                        <option value="<?=$p['id_m_user']?>"><?=getNamaPegawaiFull($p)?></option>
-                    <?php } ?>
-                </select>
-            </div>
+            <?php if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()) {
+            ?>
+                <div class="col-lg-12 col-md-12">
+                    <label>Pilih Pegawai</label>
+                    <select required multiple="multiple" class="form-control select2-navy" style="width: 100%"
+                        id="pegawai" data-dropdown-css-class="select2-navy" name="pegawai[]">
+                        <?php foreach($pegawai as $p){ ?>
+                            <option value="<?=$p['id_m_user']?>"><?=getNamaPegawaiFull($p)?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            <?php } else { ?>
+                <input style="display: none;" class="form-control form-control-sm" readonly name="pegawai[]" value="<?=$this->general_library->getId()?>" />
+            <?php } ?>
             <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Periode</label>  
                 <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>

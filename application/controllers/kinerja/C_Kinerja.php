@@ -336,6 +336,12 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_DisiplinKerjaResult', $data);
     }
 
+    public function loadDataPendukungByStatus($status, $bulan, $tahun){
+        list($data['result'], $data['count']) = $this->kinerja->loadDataPendukungByStatus($status, $bulan, $tahun);
+        $data['status'] = $status;
+        $this->load->view('kinerja/V_DisiplinKerjaResultData', $data);
+    }
+
     public function insertDisiplinKerja(){
         $this->load->library('image_lib');
         $countfiles = count($_FILES['files']['name']);
@@ -411,7 +417,7 @@ class C_Kinerja extends CI_Controller
     }
 
     public function deleteDataDisiplinKerja($id){
-        $this->kinerja->deleteDataDisiplinKerja($id);
+        echo json_encode($this->kinerja->deleteDataDisiplinKerja($id));
     }
 
     public function deleteDataDisiplinKerjaByIdUser(){
@@ -421,5 +427,25 @@ class C_Kinerja extends CI_Controller
     public function openModalDetailDisiplinKerja($id, $bulan, $tahun){
         $data['result'] = $this->kinerja->openModalDetailDisiplinKerja($id, $bulan, $tahun);
         $this->load->view('kinerja/V_DisiplinKerjaDetailModal', $data);
+    }
+
+    public function verifikasiDokumenPendukung(){
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_VerifDokumenPendukungAbsensi', '', '', $data);
+    }
+
+    public function searchVerifDokumen(){
+        $data['result'] = $this->kinerja->searchVerifDokumen($this->input->post());
+        $this->load->view('kinerja/V_VerifDokumenSearch', $data);
+    }
+
+    public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja){
+        list($data['result'], $data['count']) = $this->kinerja->loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja);
+        $data['status'] = $status;
+        $this->load->view('kinerja/V_VerifDokumenData', $data);
+    }
+
+    public function verifDokumen($id, $status){
+        echo json_encode($this->kinerja->verifDokumen($id, $status));
     }
 }

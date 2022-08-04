@@ -14,7 +14,9 @@ $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
 $route['kinerja/rekapitulasi-realisasi'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['kinerja/skp-bulanan'] = 'kinerja/C_Kinerja/skpBulanan';
 $route['kinerja/komponen'] = 'kinerja/C_Kinerja/komponenKinerja';
-$route['kinerja/disiplin'] = 'kinerja/C_Kinerja/disiplinKerja';
+// $route['kinerja/disiplin'] = 'kinerja/C_Kinerja/disiplinKerja';
+$route['dokumen-pendukung-absensi/upload'] = 'kinerja/C_Kinerja/disiplinKerja';
+$route['dokumen-pendukung-absensi/verifikasi'] = 'kinerja/C_Kinerja/verifikasiDokumenPendukung';
 
 $route['rekapitulasi/realisasi-kinerja'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensi';

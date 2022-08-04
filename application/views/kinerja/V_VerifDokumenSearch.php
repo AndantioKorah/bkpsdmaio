@@ -43,12 +43,6 @@
         
     </div>
 </div>
-<div class="modal fade" id="detailModalDataDisiplinKerja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content" id="detailModalDataDisiplinKerjaContent">
-      </div>
-  </div>
-</div>
 
 <script>
     $(function(){
@@ -65,67 +59,7 @@
         active_status = status
         $('#result_data').html('')
         $('#result_data').append(divLoaderNavy)
-        $('#result_data').load('<?=base_url('kinerja/C_Kinerja/loadDataPendukungByStatus')?>'+'/'+status+'/'+$('#bulan').val()+'/'+$('#tahun').val(), function(){
-            $('#loader').hide()
-        })
-    }
-
-    function deleteDataDisiplinKerjaById(id){
-        if(confirm('Apakah Anda yakin ingin menghapus data?')){
-            $('#btn_delete_detail_'+id).hide()
-            $('#btn_loading_detail_'+id).show()
-            $.ajax({
-                url: '<?=base_url("kinerja/C_Kinerja/deleteDataDisiplinKerja")?>'+'/'+id,
-                method: 'post',
-                data: null,
-                success: function(data){
-                    let rs = JSON.parse(data)
-                    console.log(rs)
-                    if(rs.code == 0){
-                        successtoast('Berhasil Menghapus Data Disiplin Kerja')
-                        // $('#form_search_disiplin_kerja').submit()
-                        openListData(active_status)
-                        $('#count_pengajuan').html(rs.data.pengajuan)
-                        $('#count_diterima').html(rs.data.diterima)
-                        $('#count_ditolak').html(rs.data.ditolak)
-                    } else {
-                        errortoast(rs.message)
-                    }
-                }, error: function(e){
-                    errortoast('Terjadi Kesalahan')
-                }
-            })
-        }
-    }
-
-    // function deleteDisiplinKerjaByIdUser(id){
-    //     if(confirm('Apakah Anda yakin ingin menghapus data?')){
-    //         $('#btn_delete_'+id).hide()
-    //         $('#btn_loading_'+id).show()
-    //         $.ajax({
-    //             url: '<?=base_url("kinerja/C_Kinerja/deleteDataDisiplinKerjaByIdUser")?>',
-    //             method: 'post',
-    //             data: {
-    //                 id_m_user: id,
-    //                 bulan: $('#bulan').val() ,
-    //                 tahun: $('#tahun').val() 
-    //             },
-    //             success: function(data){
-    //                 successtoast('Berhasil Menghapus Data Disiplin Kerja')
-    //                 $('#form_search_disiplin_kerja').submit()
-    //             }, error: function(e){
-    //                 errortoast('Terjadi Kesalahan')
-    //             }
-    //         })
-    //     }
-    // }
-
-    function openDetailModalDataDisiplinKerja(id){
-        var bulan = $('#bulan').val() 
-        var tahun = $('#tahun').val() 
-        $('#detailModalDataDisiplinKerjaContent').html('')
-        $('#detailModalDataDisiplinKerjaContent').append(divLoaderNavy)
-        $('#detailModalDataDisiplinKerjaContent').load('<?=base_url("kinerja/C_Kinerja/openModalDetailDisiplinKerja")?>'+'/'+id+'/'+bulan+'/'+tahun, function(){
+        $('#result_data').load('<?=base_url('kinerja/C_Kinerja/loadSearchVerifDokumen')?>'+'/'+status+'/'+$('#bulan').val()+'/'+$('#tahun').val()+'/'+$('#id_unitkerja').val(), function(){
             $('#loader').hide()
         })
     }

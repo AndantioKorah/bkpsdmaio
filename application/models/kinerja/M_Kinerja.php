@@ -678,7 +678,7 @@
         ->where('a.status', floatval($status))
         ->where('a.flag_active', 1)
         ->order_by('a.created_date', 'desc');
-
+        
         if($this->general_library->isAdministrator()){
            $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
         } 
@@ -811,7 +811,7 @@
         return $rs;
     }
 
-    public function countTotalDataPendukung($id, $bulan, $tahun){
+    public function countTotalDataPendukung($id, $bulan, $tahun, $flag_verif = 0){
         $rs['pengajuan'] = 0;
         $rs['diterima'] = 0;
         $rs['ditolak'] = 0;
@@ -827,7 +827,7 @@
                 ->where('a.flag_active', 1)
                 ->group_by('a.status');
 
-        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1)){
             $this->db->where('d.skpd', $id);
         } else {
             $this->db->where('a.id_m_user', $id);
@@ -989,13 +989,19 @@
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
-        ->where('c.skpd', $this->general_library->getUnitKerjaPegawai())
-        ->where('a.flag_active', 1)
-        ->order_by('a.updated_date', 'desc');
+        ->where('c.skpd', $id_unitkerja)
+        ->where('a.flag_active', 1);
+
+        if($status == 1){
+            $this->db->order_by('created_date', 'asc');
+        } else {
+            $this->db->order_by('a.updated_date', 'desc');
+        }
+
         $result = $this->db->get()->result_array();
 
         $id_count = $id_unitkerja;
-        $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
+        $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun, 1);
         return [$result, $count];
     }
     
@@ -1014,6 +1020,15 @@
 
         $this->db->where('id', $id)
                 ->update('t_dokumen_pendukung', $data_verif);
+
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
+                        ->from('t_dokumen_pendukung a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->where('a.id', $id)
+                        ->get()->row_array();
+
+        $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

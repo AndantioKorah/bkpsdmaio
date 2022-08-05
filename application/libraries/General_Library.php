@@ -118,6 +118,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isAdministrator(){
+        return $this->getActiveRoleName() == 'administrator';
+    }
+
     public function isKaban(){
         return $this->getActiveRoleName() == 'kepalabadan';
     }
@@ -204,15 +208,15 @@ class General_library
 
     public function isNotMenu(){
         // return true;
-        if($this->isProgrammer()){
-            return true;
-        }
         $res = 0;
         if($this->isSessionExpired()){
+            if($this->isProgrammer()){
+                return true;
+            }
             $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
-
+            // dd($list_url);
             if($this->getBidangUser() == ID_BIDANG_PEKIN){
                 if(isset($list_url[$current_url])){
                     $res = 1;
@@ -230,7 +234,6 @@ class General_library
                     return true;
                 }
             }
-           
         }
         return $res == 0 ? false : true;
         // return $this->isSessionExpired();

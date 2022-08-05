@@ -119,7 +119,7 @@ define('DEVELOPER', 'nikita');
 // define('PERIODE_CELL', 'C20');
 
 define('START_CELL', 'B12');
-define('HEADER_CELL', 'A10:AG11');
+define('HEADER_CELL', 'A10:AH11');
 define('START_ROW_NUM', '12');
 define('SKPD_CELL', 'C8');
 define('PERIODE_CELL', 'C9');
@@ -141,6 +141,6 @@ define('LIST_UNIT_KERJA_KHUSUS', [4011000, 4026000, 4012000, 4018000, 1010400, 1
 define('LIST_UNIT_KERJA_MASTER_SEKOLAH', [8000000, 8010000, 8020000, 8030000]);
 define('LIST_ROLE_KHUSUS', ['lurah', 'camat']);
 define('ID_BIDANG_PEKIN', 166);
-define('URL_MENU_PEKIN', ['rekapitulasi/absensi']);
+define('URL_MENU_PEKIN', ['rekapitulasi/absensi', 'dokumen-pendukung-absensi/verifikasi']);
 define('ID_UNITKERJA_DIKBUD', 3010000);
 define('DOKUMEN_PENDUKUNG_DISIPLIN_KERJA', 'assets/dokumen_pendukung_disiplin_kerja');

@@ -666,41 +666,102 @@
                         ->get()->result_array();
     }
 
-    public function searchDisiplinKerja($data){
-        if(!$this->general_library->isProgrammer() && !$this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN){
-            $data['id_unitkerja'] = $this->general_library->getUnitKerjaPegawai();
+    public function loadDataPendukungByStatus($status, $bulan, $tahun, $id_unitkerja = 0){
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        ->from('t_dokumen_pendukung a')
+        ->join('m_user b', 'a.id_m_user = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
+        ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->where('a.bulan', floatval($bulan))
+        ->where('a.tahun', floatval($tahun))
+        ->where('a.status', floatval($status))
+        ->where('a.flag_active', 1)
+        ->order_by('a.created_date', 'desc');
+
+        if($this->general_library->isAdministrator()){
+           $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
+        } 
+        // else if($this->general_library->isProgrammer ) {
+        //     $this->db->where('a.id_m_user', $this->general_library->getId());
+        // } 
+        else {
+            $this->db->where('a.id_m_user', $this->general_library->getId());
         }
 
+        $result = $this->db->get()->result_array();
+
+        $id_count = $this->general_library->getId();
+        if($this->general_library->isAdministrator()){
+            $id_count = $this->general_library->getUnitKerjaPegawai();
+        } 
+        $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
+        return [$result, $count];
+    }
+
+    public function searchDisiplinKerja($data){
         $result = null;
 
-        $disiplin_kerja = $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user')
-                        ->from('t_disiplin_kerja a')
-                        ->join('m_user b', 'a.id_m_user = b.id')
-                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                        ->where('a.bulan', floatval($data['bulan']))
-                        ->where('a.tahun', floatval($data['tahun']))
-                        ->where('c.skpd', $data['id_unitkerja'])
-                        ->where('a.flag_active', 1)
-                        ->order_by('a.created_date', 'desc')
-                        ->get()->result_array();
-
-        if($disiplin_kerja){
-            foreach($disiplin_kerja as $dk){
-                $result[$dk['nip']]['nip'] = $dk['nip'];
-                $result[$dk['nip']]['nama'] = getNamaPegawaiFull($dk);
-                $result[$dk['nip']]['id_m_user'] = $dk['id_m_user'];
-                
-                if(isset($result[$dk['nip']]['jenis_disiplin'])){
-                    if(!in_array($dk['keterangan'], $result[$dk['nip']]['jenis_disiplin'])){
-                        $result[$dk['nip']]['jenis_disiplin'][] = $dk['keterangan'];
-                    }
-                } else {
-                    $result[$dk['nip']]['jenis_disiplin'][] = $dk['keterangan'];
-                }
+        if(!isset($data['id_unitkerja'])){
+            if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()) {
+                $data['id_unitkerja'] = $this->general_library->getUnitKerjaPegawai();
             }
         }
 
-        return $result;
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+            ->from('t_dokumen_pendukung a')
+            ->join('m_user b', 'a.id_m_user = b.id')
+            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+            ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
+            ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+            ->where('a.bulan', floatval($data['bulan']))
+            ->where('a.tahun', floatval($data['tahun']))
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+        if(isset($data['id_unitkerja'])){
+            $this->db->where('c.skpd', $data['id_unitkerja']);
+        } else {
+            $this->db->where('a.id_m_user', $this->general_library->getId());
+        }
+        $disiplin_kerja = $this->db->get()->result_array();
+        // if(!isset($data['id_unitkerja'])){
+            $result['pengajuan'] = [];
+            $result['diterima'] = [];
+            $result['ditolak'] = [];
+            $result['batal'] = [];
+            if($disiplin_kerja){
+                foreach($disiplin_kerja as $d){
+                    if($d['status'] == 1){
+                        $result['pengajuan'][] = $d;
+                    } else if($d['status'] == 2){
+                        $result['diterima'][] = $d;
+                    } else if($d['status'] == 3){
+                        $result['ditolak'][] = $d;
+                    } else if($d['status'] == 4){
+                        $result['batal'][] = $d;
+                    }
+                }
+            }
+            return $result;
+        // }
+
+        // if($disiplin_kerja){
+        //     foreach($disiplin_kerja as $dk){
+        //         $result[$dk['nip']]['nip'] = $dk['nip'];
+        //         $result[$dk['nip']]['nama'] = getNamaPegawaiFull($dk);
+        //         $result[$dk['nip']]['id_m_user'] = $dk['id_m_user'];
+                
+        //         if(isset($result[$dk['nip']]['jenis_disiplin'])){
+        //             if(!in_array($dk['keterangan'], $result[$dk['nip']]['jenis_disiplin'])){
+        //                 $result[$dk['nip']]['jenis_disiplin'][] = $dk['keterangan'];
+        //             }
+        //         } else {
+        //             $result[$dk['nip']]['jenis_disiplin'][] = $dk['keterangan'];
+        //         }
+        //     }
+        // }
+
+        // return $result;
     }
 
     public function insertDisiplinKerja($data, $filename){
@@ -736,7 +797,7 @@
             }
         }
         
-        $this->db->insert_batch('t_disiplin_kerja', $insert_data);
+        $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -750,16 +811,90 @@
         return $rs;
     }
 
+    public function countTotalDataPendukung($id, $bulan, $tahun){
+        $rs['pengajuan'] = 0;
+        $rs['diterima'] = 0;
+        $rs['ditolak'] = 0;
+        $rs['batal'] = 0;
+
+        $this->db->select('COUNT(a.id) as total, a.status')
+                ->from('t_dokumen_pendukung a')
+                ->join('m_status_dokumen_pendukung b', 'a.status = b.id')
+                ->join('m_user c', 'a.id_m_user = c.id')
+                ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                ->where('a.bulan', floatval($bulan))
+                ->where('a.tahun', floatval($tahun))
+                ->where('a.flag_active', 1)
+                ->group_by('a.status');
+
+        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+            $this->db->where('d.skpd', $id);
+        } else {
+            $this->db->where('a.id_m_user', $id);
+        }
+        
+        $count = $this->db->get()->result_array(); 
+
+        if($count){
+            
+            foreach($count as $c){
+                if($c['status'] == 1){
+                    $rs['pengajuan'] = $c['total'];
+                } else if($c['status'] == 2){
+                    $rs['diterima'] = $c['total'];
+                } else if($c['status'] == 3){
+                    $rs['ditolak'] = $c['total'];
+                } else if($c['status'] == 4){
+                    $rs['batal'] = $c['total'];
+                }
+            }
+        }
+
+        return $rs;
+    }
+
     public function deleteDataDisiplinKerja($id){
+        $res['code'] = 0;
+        $res['message'] = 'OK';
+        $res['data'] = null;
+
+        $this->db->trans_begin();
+
         $this->db->where('id', $id)
-                ->update('t_disiplin_kerja', ['flag_active' => 0]);
+                ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+        
+        $tmp = $this->db->select('*')
+                        ->from('t_dokumen_pendukung', $id)
+                        ->get()->row_array();
+
+        $id_count = $tmp['id_m_user'];
+        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()){
+            $id_count = $this->general_library->getUnitKerjaPegawai();
+        }
+        $res['data'] = $this->countTotalDataPendukung($id_count, $tmp['bulan'], $tmp['tahun']);
+
+        if(!$res['data']){
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan Saat Menghapus Data';
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+        
+        return $res;
     }
 
     public function deleteDataDisiplinKerjaByIdUser($data){
         $this->db->where('id_m_user', $data['id_m_user'])
                 ->where('bulan', $data['bulan'])
                 ->where('tahun', $data['tahun'])
-                ->update('t_disiplin_kerja', ['flag_active' => 0]);
+                ->update('t_dokumen_pendukung', ['flag_active' => 0]);
     }
 
     public function cekRencanaKinerjaApelPagi(){
@@ -799,7 +934,7 @@
     
     public function openModalDetailDisiplinKerja($id, $bulan, $tahun){
         return $this->db->select('a.*, c.nama, c.gelar1, c.gelar2, b.username as nip, b.id as id_m_user')
-                        ->from('t_disiplin_kerja a')
+                        ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
                         ->where('b.id', $id)
@@ -809,6 +944,86 @@
                         ->order_by('a.created_date', 'desc')
                         ->get()->result_array();
     }
-   
+
+    public function searchVerifDokumen($data){
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen')
+            ->from('t_dokumen_pendukung a')
+            ->join('m_user b', 'a.id_m_user = b.id')
+            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+            ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
+            ->where('a.bulan', floatval($data['bulan']))
+            ->where('a.tahun', floatval($data['tahun']))
+            ->where('c.skpd', $data['id_unitkerja'])
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+
+        $disiplin_kerja = $this->db->get()->result_array();
+        // if(!isset($data['id_unitkerja'])){
+            $result['pengajuan'] = [];
+            $result['diterima'] = [];
+            $result['ditolak'] = [];
+            $result['batal'] = [];
+            if($disiplin_kerja){
+                foreach($disiplin_kerja as $d){
+                    if($d['status'] == 1){
+                        $result['pengajuan'][] = $d;
+                    } else if($d['status'] == 2){
+                        $result['diterima'][] = $d;
+                    } else if($d['status'] == 3){
+                        $result['ditolak'][] = $d;
+                    } else if($d['status'] == 4){
+                        $result['batal'][] = $d;
+                    }
+                }
+            }
+            return $result;
+    }
+
+    public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        ->from('t_dokumen_pendukung a')
+        ->join('m_user b', 'a.id_m_user = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
+        ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->where('a.bulan', floatval($bulan))
+        ->where('a.tahun', floatval($tahun))
+        ->where('a.status', floatval($status))
+        ->where('c.skpd', $this->general_library->getUnitKerjaPegawai())
+        ->where('a.flag_active', 1)
+        ->order_by('a.updated_date', 'desc');
+        $result = $this->db->get()->result_array();
+
+        $id_count = $id_unitkerja;
+        $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
+        return [$result, $count];
+    }
+    
+    public function verifDokumen($id, $status){
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';        
+        $this->db->trans_begin();
+
+        $data_verif['status'] = $status;
+        $data_verif['id_m_user_verif'] = $this->general_library->getId();
+        $data_verif['updated_by'] = $this->general_library->getId();
+        $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+        if($status == 2 || $status == 3){
+            $data_verif['keterangan_verif'] = $this->input->post('keterangan');
+        }
+
+        $this->db->where('id', $id)
+                ->update('t_dokumen_pendukung', $data_verif);
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;        
+            $rs['message'] = 'Terjadi Kesalahan';
+        }else{
+            $this->db->trans_commit();
+        }
+        
+        return $rs;
+    }
 }
 ?>

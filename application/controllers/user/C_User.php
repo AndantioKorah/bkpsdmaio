@@ -126,6 +126,7 @@ class C_User extends CI_Controller
 
     public function loadUsers($id_unitkerja){
         $data['result'] = $this->user->getAllUsersBySkpd($id_unitkerja);
+        // dd($data['result']);
         $this->load->view('user/V_UsersItem', $data);
     }
 

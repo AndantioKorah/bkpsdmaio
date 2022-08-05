@@ -15,7 +15,29 @@
     <div class="card-header"  style="display: block;">
         <h3 class="card-title">Realisasi Kinerja Pegawai</h3>
     </div>
+    
     <div class="card-body" style="display: block;">
+
+    <div class="card" id="bar-progress-realisaasi" style="display: none;">
+    
+  <div class="card-body">
+    <?php $progress = 60;?>
+    <center>
+                        <small style="font-size: 90% !important; font-weight: bold !important;">
+                        Capaian
+                        </small>
+                        </center>
+    <div class="progress progress-sm" style="height:30px;">
+            <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="" aria-valuemax="100"  style="height:50px; width: 0%; background-color: #000000;">
+                            </div>
+                        </div>
+                        <center>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
+                        </small>
+                        </center>
+  </div>
+  </div>
+
     <form method="post" id="upload_form" enctype="multipart/form-data">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Kegiatan</label>
@@ -24,7 +46,7 @@
     <div class="form-group">
          <label class="bmd-label-floating">Kegiatan Tugas Jabatan </label>
          <select class="form-control select2-navy" name="tugas_jabatan" id="tugas_jabatan" onchange="getSatuan()" required>
-         <option value="0" selected>- Pilih Tugas Jabatan -</option>
+         <option value="" selected>- Pilih Tugas Jabatan -</option>
          </select>
              <!-- <select class="form-control select2-navy" style="width: 100%" onchange="getSatuan()"
                  id="tugas_jabatan" data-dropdown-css-class="select2-navy" name="tugas_jabatan" required>
@@ -263,6 +285,18 @@
  function getSatuan() {
         var id_t_rencana_kinerja = $('#tugas_jabatan').val(); 
         var base_url = "<?=base_url()?>";
+        var prosesBar = $('.progress-bar');
+        var prosesAngka = 0;
+
+      
+         if($('#tugas_jabatan').val() == "- Pilih Tugas Jabatan -"){  
+          $('#ket_proogress').html('0% selesai');
+          $("#bar-progress-realisaasi").hide('fast');
+            prosesBar.css('width',  '0%');
+             prosesBar.attr('aria-valuenow', 0);
+         return false
+         } 
+
      
         $.ajax({
         type : "POST",
@@ -270,8 +304,32 @@
         dataType : "JSON",
         data : {id_t_rencana_kinerja:id_t_rencana_kinerja},
         success: function(data){
+
             var satuan = data[0].satuan;
-            $('[name="satuan"]').val(satuan);
+            var total_realisasi_kuantitas = data[0].total_realisasi_kuantitas;
+            var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
+            var nilai_pembulatan = (Math.round(total_progress * 100) / 100).toFixed(2);
+
+            var bgcolor = '#ff0000 !important';
+            if(nilai_pembulatan > 25 && nilai_pembulatan <= 50){
+             bgcolor = '#ff7100 !important';
+            } else if(nilai_pembulatan > 50 && nilai_pembulatan <= 65){
+             bgcolor = '#ffcf00 !important';
+            } else if(nilai_pembulatan > 65 && nilai_pembulatan <= 85){
+             bgcolor = '#5bff00 !important';
+            } else if(nilai_pembulatan > 85 && nilai_pembulatan <= 99){
+             bgcolor = '#41b302 !important';
+            } else if(nilai_pembulatan >= 100){
+             bgcolor = '#006600 !important';
+    }
+
+
+             $("#bar-progress-realisaasi").show('fast');
+             $('[name="satuan"]').val(satuan);
+             $('#ket_proogress').html(nilai_pembulatan+'% selesai');
+             prosesBar.css('width', total_progress + '%');
+             prosesBar.css('background-color', bgcolor);
+             prosesBar.attr('aria-valuenow', total_progress);
          }
         });
         return false;

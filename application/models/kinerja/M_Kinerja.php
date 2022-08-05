@@ -104,7 +104,7 @@
         public function getSatuan()
     {      
         $id = $this->input->post('id_t_rencana_kinerja');
-        $this->db->select('*')
+        $this->db->select('*, , (select  sum(realisasi_target_kuantitas) from t_kegiatan where t_kegiatan.id_t_rencana_kinerja = a.id and t_kegiatan.status_verif = 1) as total_realisasi_kuantitas')
             ->from('t_rencana_kinerja as a')
             ->where('a.id', $id)
             ->where('a.flag_active', 1)

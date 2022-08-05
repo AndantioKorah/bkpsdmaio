@@ -9,7 +9,7 @@
   <div class="form-group" >
     <label for="exampleFormControlInput1">Kegiatan Tugas Jabatan</label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
-    <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"/>
+    <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
       <datalist id="tugasjabatan">
       <?php if($list_rencana_kinerja){
                                 foreach($list_rencana_kinerja as $ls){
@@ -160,12 +160,14 @@
     // })
 
     $('#form_tambah_rencana_kinerja').on('submit', function(e){
+      document.getElementById('btn_upload').disabled = true;
         e.preventDefault();
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/createRencanaKinerja")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(){
+              document.getElementById('btn_upload').disabled = false;
                 successtoast('Data berhasil ditambahkan')
                 loadRencanaKinerja($('#bulan').val(), $('#tahun').val())
                 document.getElementById("form_tambah_rencana_kinerja").reset();

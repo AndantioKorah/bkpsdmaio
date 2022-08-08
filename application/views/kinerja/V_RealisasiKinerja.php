@@ -22,17 +22,17 @@
     
   <div class="card-body">
     <?php $progress = 60;?>
-    <center>
-                        <small style="font-size: 90% !important; font-weight: bold !important;">
-                        Capaian
+                      <center>
+                      <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_tugas_jabatan">
                         </small>
+                  
                         </center>
     <div class="progress progress-sm" style="height:30px;">
             <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="" aria-valuemax="100"  style="height:50px; width: 0%; background-color: #000000;">
                             </div>
                         </div>
                         <center>
-                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
+                     <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
                         </small>
                         </center>
   </div>
@@ -304,9 +304,10 @@
         dataType : "JSON",
         data : {id_t_rencana_kinerja:id_t_rencana_kinerja},
         success: function(data){
-
+            console.log(data)
             var satuan = data[0].satuan;
             var total_realisasi_kuantitas = data[0].total_realisasi_kuantitas;
+            var tugas_jabatan = data[0].tugas_jabatan;
             var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
             var nilai_pembulatan = (Math.round(total_progress * 100) / 100).toFixed(2);
 
@@ -326,7 +327,8 @@
 
              $("#bar-progress-realisaasi").show('fast');
              $('[name="satuan"]').val(satuan);
-             $('#ket_proogress').html(nilai_pembulatan+'% selesai');
+             $('#ket_tugas_jabatan').html(tugas_jabatan);
+             $('#ket_proogress').html('Capaian '+nilai_pembulatan+'% selesai');
              prosesBar.css('width', total_progress + '%');
              prosesBar.css('background-color', bgcolor);
              prosesBar.attr('aria-valuenow', total_progress);

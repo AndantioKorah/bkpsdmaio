@@ -4,8 +4,7 @@
     </div>
     <div class="card-body">
         <form id="form_search_verif_dokumen">
-            <div class="row mt-3">
-                <div class="col-lg-12"><hr></div>
+            <div class="row">
                 <div class="col-lg col-md-12">
                     <label>Pilih Unit Kerja</label>
                     <select class="form-control select2-navy" style="width: 100%"

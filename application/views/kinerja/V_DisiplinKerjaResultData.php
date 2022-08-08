@@ -5,8 +5,9 @@
             <th class="text-left">Nama Pegawai</th>
             <th class="text-left">NIP</th>
             <th class="text-center">Tanggal</th>
+            <th class="text-center">Tanggal Usul</th>
             <th class="text-center">Keterangan</th>
-            <th class="text-center">Dokumen Pendukung</th>
+            <th class="text-center">Dokumen</th>
             <?php if($status != 1){ ?>
                 <th class="text-center">Verifikator</th>
             <?php } ?>
@@ -23,6 +24,7 @@
                         $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
                     ?>
                     <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td>
+                    <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
                     <td class="text-center"><?= ($r['keterangan']) ?></td>
                     <td class="text-center">
                         <?php if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if($dokpen[0] != "") { $nodok = 1; ?>

@@ -587,6 +587,7 @@
                                                 
                                                 if($jam_absen[2] == "00:00"){
                                                     $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_pulang'] = 'pksw3';
+                                                    $temp_data[$row]['rekap']['pksw3']++;
                                                 } else {
                                                     $diff_pulang = strtotime($format_hari[$i]['jam_pulang']) - strtotime($jam_absen[2]);
                                                     if($diff_pulang > 0){
@@ -624,6 +625,292 @@
             $rs['code'] = 1;
             $rs['message'] = "Tidak ada file yang dipilih";
         }
+        return $data;
+    }
+
+    public function readAbsensiExcelNew(){
+        $rs['code'] = 0;
+        $rs['message'] = 0;
+        $file_excel = array();
+        $temp_data = null;
+        $data = array();
+
+        if($_FILES["file_excel"]["name"] != ''){
+            $allowed_extension = ['xls', 'csv', 'xlsx'];
+            $file_array = explode(".", $_FILES["file_excel"]["name"]);
+            $file_extension = end($file_array);
+
+            if(in_array($file_extension, $allowed_extension)){
+                $config['upload_path'] = 'assets/upload_rekap_absen'; 
+                $config['allowed_types'] = '*';
+                $config['max_size'] = '5000'; // max_size in kb
+                $config['file_name'] = $_FILES['file_excel']['name'];
+
+                $this->load->library('upload', $config); 
+
+                $uploadfile = $this->upload->do_upload('file_excel');
+
+                if($uploadfile){
+                    $upload_data = $this->upload->data(); 
+                    $file_excel['name'] = $upload_data['file_name'];
+
+                    $filename = $_FILES["file_excel"]["name"];
+                    libxml_use_internal_errors(true);
+                    // $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES["file_excel"]["name"]);
+                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($config['upload_path'].'/'.$file_excel['name']);
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+
+                    $spreadsheet = $reader->load($_FILES["file_excel"]["tmp_name"]);
+                    // $data = $spreadsheet->getActiveSheet()->toArray();
+
+                    $data['skpd'] = $spreadsheet->getActiveSheet()->getCell(SKPD_CELL)->getValue();
+                    $data['periode'] = $spreadsheet->getActiveSheet()->getCell(PERIODE_CELL)->getValue();
+                    $data['nama_file'] = "Rekap Absensi ".$data['skpd']." ".$data['periode'].".xls";
+                    $data['header'] = $spreadsheet->getActiveSheet()->rangeToArray(HEADER_CELL);
+                    $start_cell = $spreadsheet->getActiveSheet()->getCell(START_CELL)->getValue();
+                    $highestRow = $spreadsheet->getActiveSheet()->getHighestRow();
+                    $highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+                    
+                    $periode = explode(" ", $data['periode']);
+                    $date = explode("-", $periode[0]);
+                    $bulan = $date[1];
+                    $tahun = $date[2];
+                    $data['bulan'] = $bulan;
+                    $data['tahun'] = $tahun;
+                    $list_hari = getDateBetweenDates($periode[0], $periode[2]);
+                    $format_hari = null;
+                    $data['unitkerja'] = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('nm_unitkerja', $data['skpd'])
+                                ->get()->row_array(0);
+
+                    if($list_hari){
+                        $i = 0;
+                        foreach($list_hari as $lh){
+                            $format_hari[$i]['tanggal'] = $lh;
+                            $i++;
+                        }
+                    }
+                    for($row = START_ROW_NUM; $row <= $highestRow; $row++){
+                        $i = 0;
+                        for($col = 2; $col <= $highestColumnIndex; $col++){
+                            $value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row)->getValue();
+                            if($value){
+                                if($col == 2){
+                                    $temp_data[$row]['nama_pegawai'] = $value; 
+                                } else if($col == 3){
+                                    $temp_data[$row]['nip'] = $value;
+                                    $nip = $value;
+                                } else {
+                                    $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_masuk'] = '';
+                                    $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_pulang'] = '';
+                                    $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket'] = '';
+                                    $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_masuk'] = '';
+                                    $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket_pulang'] = '';
+                                    $tanggal = $format_hari[$i]['tanggal'];
+                                    if($value == 'A'){
+                                        $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket'] = 'A';
+                                    } else {
+                                        $jam_absen = explode(" ", $value);
+                                        if(count($jam_absen) > 1){
+                                            $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_masuk'] = $jam_absen[0];
+                                            $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_pulang'] = $jam_absen[2];
+                                            if($jam_absen[0] == '00:00'){
+                                                $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket'] = 'A';
+                                                $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_masuk'] = 'A';
+                                            } 
+                                        }
+                                    }
+                                    $i++;
+                                }
+                            } else {
+                                unset($temp_data[$row]);
+                                break;
+                            }
+                        }
+                    }
+                    $data['result'] = $temp_data;
+                }
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = "File yang dipilih bukan file Excel atau CSV !";    
+            }
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = "Tidak ada file yang dipilih";
+        }
+        return $data;
+    }
+
+    public function buildDataAbsensi($data){
+        $rs = null;
+        if(!$data['unitkerja']){
+            return $data;
+        }
+        $rs['id_unitkerja'] = $data['unitkerja']['id_unitkerja'];
+        $rs['bulan'] = $data['bulan'];
+        $rs['tahun'] = $data['tahun'];
+        $rs['created_by'] = $this->general_library->getId();
+
+        $uker = $this->db->select('a.*')
+                        ->from('db_pegawai.unitkerja a')
+                        ->where('a.id_unitkerja', $rs['id_unitkerja'])
+                        ->get()->row_array();
+
+        $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
+                            ->from('db_pegawai.pegawai a')
+                            ->where('a.skpd', $data['unitkerja']['id_unitkerja'])
+                            ->order_by('a.nama')
+                            ->get()->result_array();
+        $lp = null;
+        if($list_pegawai){
+            foreach($list_pegawai as $l){
+                $lp[$l['nip']] = $l;
+            }
+        }
+        
+        $jskpd = 1;
+        if(in_array($uker['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
+            $jskpd = 2;
+        } else if(in_array($uker['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+            $jskpd = 4;
+        }
+        $jam_kerja = $this->db->select('*')
+                ->from('t_jam_kerja')
+                ->where('id_m_jenis_skpd', $jskpd)
+                ->where('flag_active', 1)
+                ->get()->row_array();
+        $data['jam_kerja'] = $jam_kerja;
+
+        $hari_libur = $this->db->select('*')
+                ->from('t_hari_libur')
+                ->where('flag_active', 1)
+                ->where('flag_hari_libur_nasional', 1)
+                ->get()->result_array();
+        $tmp_hari_libur = $hari_libur;
+        if($tmp_hari_libur){
+            $hari_libur = null;
+            foreach($tmp_hari_libur as $h){
+                $hari_libur[$h['tanggal']] = $h;
+            }
+        }
+
+        $data['disiplin_kerja'] = $this->db->select('keterangan')
+                ->from('m_jenis_disiplin_kerja')
+                ->where('flag_active', 1)
+                ->where_not_in('id', [7, 8, 9, 10, 11, 12])
+                ->get()->result_array();
+
+        $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan')
+                ->from('t_dokumen_pendukung a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c','b.username = c.nipbaru_ws')
+                ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                ->where('a.bulan', floatval($data['bulan']))
+                ->where('a.tahun', floatval($data['tahun']))
+                ->where('a.flag_active', 1)
+                ->where('c.skpd', $uker['id_unitkerja'])
+                ->where('a.status', 2);
+        $tmp_dokpen = $this->db->get()->result_array();
+        $dokpen = null;
+        if($tmp_dokpen){
+            foreach($tmp_dokpen as $dok){
+                $tanggal_dok = $dok['tanggal'] < 10 ? '0'.$dok['tanggal'] : $dok['tanggal'];
+                $bulan_dok = $dok['bulan'] < 10 ? '0'.$dok['bulan'] : $dok['bulan'];
+                $date_dok = $dok['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
+
+                $dokpen[$dok['nip']]['nip'] = $dok['nip'];
+                $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
+            }
+        }
+
+        $tempresult = $data['result'];
+        $data['result'] = null;
+        $periode = explode(" ", $data['periode']);
+        $list_hari = getDateBetweenDates($periode[0], $periode[2]);
+        $i = 0;
+        $format_hari = null;
+        
+        foreach($list_hari as $lh){
+            $format_hari[$lh]['tanggal'] = $lh;
+            $format_hari[$lh]['jam_masuk'] = '';
+            $format_hari[$lh]['jam_pulang'] = '';
+            if(getNamaHari($lh) != 'Jumat' && getNamaHari($lh) != 'Sabtu' && getNamaHari($lh) != 'Minggu'){
+                $format_hari[$lh]['jam_masuk'] = $jam_kerja['wfo_masuk'];
+                $format_hari[$lh]['jam_pulang'] = $jam_kerja['wfo_pulang'];
+            } else if(getNamaHari($lh) == 'Jumat'){
+                $format_hari[$lh]['jam_masuk'] = $jam_kerja['wfoj_masuk'];
+                $format_hari[$lh]['jam_pulang'] = $jam_kerja['wfoj_pulang'];
+            } 
+            // $i++;
+        }
+
+        foreach($tempresult as $tr){
+            $lp[$tr['nip']] = $tr;
+            $lp[$tr['nip']]['rekap']['tmk1'] = 0;
+            $lp[$tr['nip']]['rekap']['tmk2'] = 0;
+            $lp[$tr['nip']]['rekap']['tmk3'] = 0;
+            $lp[$tr['nip']]['rekap']['pksw1'] = 0;
+            $lp[$tr['nip']]['rekap']['pksw2'] = 0;
+            $lp[$tr['nip']]['rekap']['pksw3'] = 0;
+            $lp[$tr['nip']]['rekap']['alpa'] = 0;
+            $lp[$tr['nip']]['rekap']['jhk'] = 0;
+            $lp[$tr['nip']]['rekap']['hadir'] = 0;
+            // $lp[$tr['nip']]['rekap']['hadir_mk'] = 0;
+            if($data['disiplin_kerja']){
+                foreach($data['disiplin_kerja'] as $dk){
+                    $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+                }
+            }
+            foreach($list_hari as $l){
+                if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
+                    $lp[$tr['nip']]['rekap']['jhk']++;
+                    if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
+                        if(isset($dokpen[$tr['nip']][$l])){
+                            $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
+                            $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                        } else {
+                            $lp[$tr['nip']]['rekap']['alpa']++;
+                        }
+                    } else {
+                        $lp[$tr['nip']]['rekap']['hadir']++;
+                        $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
+                        if($diff_masuk > 0){
+                            $ket_masuk = floatval($diff_masuk) / 1800;
+                            if($ket_masuk <= 1){
+                                $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk1';
+                                $lp[$tr['nip']]['rekap']['tmk1']++;
+                            } else if($ket_masuk > 1 && $ket_masuk <= 2){
+                                $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk2';
+                                $lp[$tr['nip']]['rekap']['tmk2']++;
+                            } else if($ket_masuk > 2) {
+                                $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                $lp[$tr['nip']]['rekap']['tmk3']++;
+                            }
+                        }
+
+                        $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
+                        if($diff_keluar > 0){
+                            $ket_pulang = floatval($diff_keluar) / 1800;
+                            if($ket_pulang <= 1){
+                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw1';
+                                $lp[$tr['nip']]['rekap']['pksw1']++;
+                            } else if($ket_pulang > 1 && $ket_pulang <= 2){
+                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw2';
+                                $lp[$tr['nip']]['rekap']['pksw2']++;
+                            } else if($ket_pulang > 2) {
+                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                $lp[$tr['nip']]['rekap']['pksw3']++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $data['result'] = $lp;
+        $rs['json_result'] = json_encode($lp);
+        
         return $data;
     }
 

@@ -125,11 +125,9 @@ class C_Kinerja extends CI_Controller
                             echo $this->image_lib->display_errors();
                         }
                 $this->image_lib->clear();
+              //batas
+            // if($data['image_height'] < $data['image_width']) {
               
-            // if($data['image_height'] > 1000) {
-            //     if (!$this->image_lib->resize()){  
-            //         echo "error";
-            //     }else{
     
             //         $this->image_lib->clear();
             //         $config=array();
@@ -153,10 +151,9 @@ class C_Kinerja extends CI_Controller
             //         $this->image_lib->initialize($config); 
             //         $this->image_lib->rotate();
     
-            //     }
-            //     } else {
-            //     $this->image_lib->resize();
+                
             //     } 
+            //batas
             
               }
             }
@@ -449,4 +446,9 @@ class C_Kinerja extends CI_Controller
     public function verifDokumen($id, $status){
         echo json_encode($this->kinerja->verifDokumen($id, $status));
     }
+
+
+  
+
+    
 }

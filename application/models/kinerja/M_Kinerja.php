@@ -29,26 +29,26 @@
         $id =  $this->general_library->getId();
         $bulan = date('n');
         $tahun = date('Y');
-        $cek = $this->db->select('a.*,
-        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
-        ')
-                        ->from('t_rencana_kinerja a')
-                        ->where('a.id_m_user', $id)
-                        ->where('a.tahun', $tahun)
-                        ->where('a.bulan', $bulan)
-                        ->where('a.id', $dataPost['tugas_jabatan'])
-                        ->where('a.flag_active', 1)
-                        ->get()->result_array();
+        // $cek = $this->db->select('a.*,
+        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
+        // ')
+        //                 ->from('t_rencana_kinerja a')
+        //                 ->where('a.id_m_user', $id)
+        //                 ->where('a.tahun', $tahun)
+        //                 ->where('a.bulan', $bulan)
+        //                 ->where('a.id', $dataPost['tugas_jabatan'])
+        //                 ->where('a.flag_active', 1)
+        //                 ->get()->result_array();
 
-        if($cek){          
-         if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){
-            $this->db->where('id',  $dataPost['tugas_jabatan'])
-                     ->update('t_rencana_kinerja', [
-                     'updated_by' => $this->general_library->getId(),
-                     'target_kuantitas' => $cek['0']['realisasi_target_kuantitas']
-            ]);
-         }
-        }
+        // if($cek){          
+        //  if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){
+        //     $this->db->where('id',  $dataPost['tugas_jabatan'])
+        //              ->update('t_rencana_kinerja', [
+        //              'updated_by' => $this->general_library->getId(),
+        //              'target_kuantitas' => $cek['0']['realisasi_target_kuantitas']
+        //     ]);
+        //  }
+        // }
          if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();

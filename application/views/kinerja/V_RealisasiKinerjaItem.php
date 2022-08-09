@@ -1,3 +1,118 @@
+<style>
+    
+body {
+  background: #72cffa;
+}
+
+/* .modal-transparent */
+
+.modal-transparent {
+ /* background: transparent;*/
+}
+.modal-transparent .modal-content {
+ /* background: transparent;*/
+}
+.modal-backdrop.modal-backdrop-transparent {
+  background: #pink;
+}
+.modal-backdrop.modal-backdrop-transparent.in {
+  /*opacity: .9;
+  filter: alpha(opacity=90);*/
+}
+
+/* .modal-fullscreen */
+#myModalLabel {
+  text-align: center;
+  padding-top: 50px;
+  margin-bottom: 50px;
+}
+
+.center-content {
+				text-align:center;
+				margin-top: 50px;
+			}
+
+			.content-wrapper {
+				height: 100%;
+				
+				.content {
+					line-height: 1.5em;
+					
+					font-weight: 300;
+					color: $gray;
+				}
+				.l-content-help{
+					margin: 50px 50px;
+				}
+				.l-text-indent {
+					text-indent: -1.1em;
+				}
+				.large-text{
+					font-size: 1.5em;
+					// margin-top: -20px;
+					
+				}
+				.btn-large {
+					font-size: 1.3em;
+					font-weight: 300;
+					letter-spacing: 1px;
+					// border-color: #624E7A;
+				}
+
+				
+				.fa {
+					color: $purple-dark;
+					// border-color: #624E7A;
+					border-color: $purple-dark;
+				}
+				i.fa.fa-lg.fa-download {
+					color: $gray !important;
+				}
+			}
+		}
+.modal-fullscreen {
+  /*background: transparent;*/
+}
+.modal-fullscreen .modal-content {
+  background: transparent;
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.modal-backdrop.modal-backdrop-fullscreen {
+  background: #ffffff;
+}
+.modal-backdrop.modal-backdrop-fullscreen.in {
+  /*opacity: .97;
+  filter: alpha(opacity=97);*/
+}
+
+/* .modal-fullscreen size: we use Bootstrap media query breakpoints */
+
+.modal-fullscreen .modal-dialog {
+  margin: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .modal-fullscreen .modal-dialog {
+    width: 100%;
+  }
+}
+@media (min-width: 992px) {
+  .modal-fullscreen .modal-dialog {
+    width: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  .modal-fullscreen .modal-dialog {
+    width: 100%;
+  }
+}
+
+
+</style>
 
     <div class="card-header">
         <h3 class="card-title">List Realisasi Kegiatan</h3>
@@ -78,6 +193,7 @@
                                         echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                     } else {
                                         echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                        // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
                                     }
                                    $nodok++;
                                 } 
@@ -88,6 +204,7 @@
                         </td>
                         
                         <td class="text-center">
+                      
                        
                         <?php if($lp['id_status_verif'] != 1){ ?>
                             <span href="#edit_realisasi_kinerja" data-toggle="modal" >
@@ -118,6 +235,105 @@
         </div>
     </div>
 <?php } ?>
+
+
+
+<div aria-hidden="true" aria-labelledby="myLargeModalLabel" role="dialog" tabindex="-1" id="edit-data" class="modal modal-fullscreen fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          
+            <div class="modal-body">
+            <div id="textbox">
+            <button onClick="rotateImgLeft()"   type="button" class="next btn btn-info alignleft" value=""> <i class="fa fa-undo" aria-hidden="true"></i> </button>
+            <button onClick="rotateImgRight()"  type="button" class="next btn btn-info alignright" value=""> <i class="fa fa-redo" aria-hidden="true"></i> </button>
+           
+            </div>
+            <style>
+                .alignleft {
+                    float: left;
+                }
+                .alignright {
+                    float: right;
+                }
+            </style>
+
+           
+                <center>
+                        <div class="container" style="margin-top:50px;">
+                        <div id="gambar_lama"></div>
+                        </div>
+                 </center>      
+         </div>
+                
+         
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img = document.getElementById("myImg");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+img.onclick = function(){
+  modal.style.display = "block";
+  modalImg.src = this.src;
+  captionText.innerHTML = this.alt;
+}
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() { 
+  modal.style.display = "none";
+}
+</script>
+<script>
+    let rotation = 0;
+    function rotateImgRight() {
+      rotation += 90; // add 90 degrees, you can change this as you want
+      if (rotation === 360) { 
+        // 360 means rotate back to 0
+        rotation = 0;
+      }
+      document.querySelector("#img").style.transform = `rotate(${rotation}deg)`;
+    }
+
+    function rotateImgLeft() {
+      rotation += -90; // add 90 degrees, you can change this as you want
+      if (rotation === 360) { 
+        // 360 means rotate back to 0
+        rotation = 0;
+      }
+      document.querySelector("#img").style.transform = `rotate(${rotation}deg)`;
+    }
+  </script>
+
+<script>
+           $('#edit-data').on('show.bs.modal', function (event) {
+            $('#gambar_lama').html('');
+          
+            var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
+            var modal          = $(this)
+           
+            // Isi nilai pada field
+            modal.find('#id').attr("value",div.data('id'));
+
+            modal.find('#img2').attr("src","http://placekitten.com/120/120/");
+            // console.log(div.data('gambar'))
+            $('#gambar_lama').append('<img id="img" class="img-fluid" alt="Responsive image"  src="<?php echo base_url();?>/assets/bukti_kegiatan/'+div.data('gambar')+'?=t'+new Date().getTime()+'" class="thumb">');
+            
+        });
+</script>
 
 <script>
         // $(document).ready(function () {

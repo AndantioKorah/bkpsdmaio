@@ -81,6 +81,17 @@ class C_User extends CI_Controller
         echo json_encode ($this->user->importPegawaiByUnitKerja($id_unitkerja));
     }
 
+    public function importAllPegawai($ukmaster){
+        // $ukmaster = '1000000';
+        $unitkerja = $this->master->getAllUnitKerjaByIdUnitKerjaMaster($ukmaster);
+        foreach($unitkerja as $u){
+            echo 'working '.$u['id_unitkerja'].' '.$u['nm_unitkerja'].'<br>';
+            $this->importPegawaiByUnitKerja($u['id_unitkerja']);
+            echo '<br>';
+            echo 'done '.$u['id_unitkerja'].' '.$u['nm_unitkerja'].'<br><br><br>';
+        }
+    }
+
     public function tambahBidangUser(){
         $data = $this->input->post();
         $update_user['id_m_bidang'] = $data['id_m_bidang'];

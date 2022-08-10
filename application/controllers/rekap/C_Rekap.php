@@ -41,7 +41,9 @@ class C_Rekap extends CI_Controller
     public function readAbsensiExcelNew(){
         $temp = $this->rekap->readAbsensiExcelNew();
         $data = $this->rekap->buildDataAbsensi($temp);
+        $this->session->set_userdata('data_read_absensi_excel', $data);
         $data['flag_print'] = 0;
+        $this->rekap->saveDbRekapAbsensi($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 
@@ -49,6 +51,21 @@ class C_Rekap extends CI_Controller
         $data = $this->session->userdata('data_read_absensi_excel');
         $data['flag_print'] = 1;
         $this->load->view('rekap/V_RekapAbsensiResult', $data);
+    }
+
+    public function downloadAbsensiNew(){
+        $data = $this->session->userdata('data_read_absensi_excel');
+        $data['flag_print'] = 1;
+        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+    }
+
+    public function readAbsensiFromDb(){
+        $temp = $this->rekap->readAbsensiFromDb($this->input->post());
+        $data = null;
+        if($temp){
+            $data = json_decode($temp['json_result'], true);
+        }
+        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 
     public function rekapPenilaian(){

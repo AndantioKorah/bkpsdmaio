@@ -19,8 +19,8 @@ $route['dokumen-pendukung-absensi/upload'] = 'kinerja/C_Kinerja/disiplinKerja';
 $route['dokumen-pendukung-absensi/verifikasi'] = 'kinerja/C_Kinerja/verifikasiDokumenPendukung';
 
 $route['rekapitulasi/realisasi-kinerja'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
-$route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensi';
-// $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapDisiplin';
+// $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensi';
+$route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensiNew';
 $route['rekapitulasi/penilaian/disiplin'] = 'rekap/C_Rekap/rekapPenilaianDisiplin';
 $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
 $route['master/tpp'] = 'master/C_Master/tpp';

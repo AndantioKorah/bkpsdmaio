@@ -62,6 +62,11 @@
                         </div>
                     </div>
                 </form>
+                <div class="col-12">
+                    <hr>
+                    <div id="result_search" class="row mt-3 table-responsive">
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="custom-content-below-excel" role="tabpanel" aria-labelledby="custom-content-below-excel-tab">
                 <form id="form_upload_file" enctype="multipart/form-data" method="post" action="<?=base_url("rekap/C_Rekap/readAbsensiExcelNew")?>">
@@ -110,9 +115,27 @@
         // })
     }
 
+    $('#search_form').on('submit', function(e){
+        $('#result_search').html('')
+        $('#result_search').append(divLoaderNavy)
+        e.preventDefault();
+        $.ajax({
+            url: '<?=base_url("rekap/C_Rekap/readAbsensiFromDb")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                $('#result_search').html('')
+                $('#result_search').html(data)
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
     $('#form_upload_file').on('submit', function(e){
         $('#btn_upload').hide()
         $('#btn_upload_loading').show()
+        $('#result-div').html('')
         e.preventDefault();
         $.ajax({
             url: '<?=base_url("rekap/C_Rekap/readAbsensiExcelNew")?>',

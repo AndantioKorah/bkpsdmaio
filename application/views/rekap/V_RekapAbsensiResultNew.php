@@ -26,7 +26,7 @@
         </style>
     <head>
     <?php
-        if($flag_print == 1){
+        if(isset($flag_print) && $flag_print == 1){
             $filename = $nama_file;
             header("Content-type: application/vnd-ms-excel");
             header("Content-Disposition: attachment; filename=$filename"); 
@@ -39,8 +39,8 @@
                 REKAP ABSENSI <?=strtoupper($skpd)?><br>
                 <?=strtoupper($periode)?>
             </h5>
-            <?php if($flag_print == 0){ ?>
-                <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensi')?>">
+            <?php if(isset($flag_print) && $flag_print == 0){ ?>
+                <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
                     <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
                 </form>
                 <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></span>
@@ -85,6 +85,9 @@
                     ?>
                         <th style="text-align: center; font-size: 13px;"><?=$val?></th>
                     <?php $i++; } ?>
+                    <th style="text-align: center; font-size: 13px;">JHK</th>
+                    <th style="text-align: center; font-size: 13px;">Hadir</th>
+                    <th style="text-align: center; font-size: 13px;">Alpa</th>
                     <th style="text-align: center; font-size: 13px;">TMK 1</th>
                     <th style="text-align: center; font-size: 13px;">TMK 2</th>
                     <th style="text-align: center; font-size: 13px;">TMK 3</th>
@@ -100,15 +103,14 @@
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){
-                    // dd(json_encode($rs['absen']));
+                    if(isset($rs['absen'])){
                     $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                     ?>
                         <tr class="<?=$bgtr?>">
                             <td style="text-align: center; font-size: 12px;"><?=$no++;?></td>
                             <td style="width: 300px; font-size: 12px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
-                            <td style="font-size: 12px;"><a><?=$rs['nip']?></a></td>
+                            <td style="font-size: 12px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                             <?php
-
                             foreach($rs['absen'] as $a){
                                 $bgcolor = '';
                                 $textcolor = 'black';
@@ -148,6 +150,9 @@
                                 <?php } ?>
                             </td>
                             <?php } ?>
+                            <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
+                            <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
+                            <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td>
                             <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
                             <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
                             <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
@@ -155,10 +160,10 @@
                             <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
                             <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
                             <?php foreach($list_dk as $l){ ?>
-                                <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
+                                <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
                             <?php } ?>
                         </tr>
-                    <?php } ?>
+                    <?php } } ?>
                 </tbody>
             </table>
             <br>

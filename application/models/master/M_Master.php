@@ -12,6 +12,14 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function getAllUnitKerjaByIdUnitKerjaMaster($ukmaster = '0000000'){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster', $ukmaster)
+                            ->order_by('nm_unitkerja', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getAllUnitKerja(){
             return $this->db->select('*')
                             ->from('db_pegawai.unitkerja')

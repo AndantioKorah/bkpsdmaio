@@ -914,6 +914,30 @@
         return $data;
     }
 
+    public function saveDbRekapAbsensi($data){
+        $insert_data['json_result'] = json_encode($data);
+        $insert_data['bulan'] = $data['bulan'];
+        $insert_data['tahun'] = $data['tahun'];
+        $insert_data['id_unitkerja'] = $data['unitkerja']['id_unitkerja'];
+        $insert_data['created_by'] = $this->general_library->getId();
+        $this->db->where('bulan', $insert_data['bulan'])
+            ->where('tahun', $insert_data['tahun'])
+            ->where('id_unitkerja', $insert_data['id_unitkerja'])
+            ->update('t_rekap_absen', ['flag_active' => 0]);
+
+        $this->db->insert('t_rekap_absen', $insert_data);
+    }
+
+    public function readAbsensiFromDb($param){
+        return $this->db->select('*')
+                    ->from('t_rekap_absen')
+                    ->where('bulan', $param['bulan'])
+                    ->where('tahun', $param['tahun'])
+                    ->where('id_unitkerja', $param['skpd'])
+                    ->where('flag_active', 1)
+                    ->get()->row_array();
+    }
+
     public function saveDbRekapDisiplin($data){
         $skpd = explode(";", $data['parameter']['skpd']);
         $insert_data['json_result'] = json_encode($data['result']);

@@ -96,8 +96,9 @@
 
   <div class="form-group">
     <label>Dokumen Bukti Kegiatan</label>
-    <!-- <input class="form-control" type="file" id="image_file" multiple="multiple" /> -->
     <input onclick="getDok()" class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
+    <!-- <input  class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
+
     <br>
       <div id="uploadPreview"></div>
   </div>
@@ -162,6 +163,7 @@
      function getDok(){
         document.getElementById("uploadPreview").reset();
      }
+
      function loadListTugasJabatan(){
       
            var bulan = new Date().getMonth()+1;

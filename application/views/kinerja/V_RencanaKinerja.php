@@ -69,7 +69,16 @@
     </div>
     <div class="col">
     <label >Satuan</label>
-      <input required type="text" class="form-control" name="satuan" id="satuan" autocomplete="off">
+      <input required type="text" class="form-control" name="satuan" id="satuan" autocomplete="off" list="sat" >
+      <datalist id="sat">
+        <option >Dokumen</option>
+        <option >Data</option>
+        <option >Pegawai</option>
+        <option >SKPD</option>
+        <option >Hari</option>
+        <option >Jam</option>
+</datalist>
+   
     </div>
   </div>
   </div>

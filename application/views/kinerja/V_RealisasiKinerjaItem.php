@@ -1,8 +1,6 @@
 <style>
     
-body {
-  background: #72cffa;
-}
+
 
 /* .modal-transparent */
 

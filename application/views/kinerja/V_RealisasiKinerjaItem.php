@@ -1,8 +1,6 @@
 <style>
     
-body {
-  background: #72cffa;
-}
+
 
 /* .modal-transparent */
 
@@ -187,13 +185,21 @@ body {
                             
                             $file = json_decode($lp['bukti_kegiatan']);
                             $nodok = 1;
+                            
                             foreach($file as $file_name)
                                 {
+                                  $data = $file_name;    
+                                  $ekstension = substr($data, strpos($data, ".") + 1);    
+
+                                  
                                     if($file_name == null){
                                         echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                     } else {
-                                        // echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                      if($ekstension == "pdf"){
+                                        echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                      } else {
                                         echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
+                                      }
                                     }
                                    $nodok++;
                                 } 
@@ -309,6 +315,7 @@ var span = document.getElementsByClassName("close")[0];
     }
 
     function rotateImgLeft() {
+      // let rotation = 0;
       rotation += -90; // add 90 degrees, you can change this as you want
       if (rotation === 360) { 
         // 360 means rotate back to 0

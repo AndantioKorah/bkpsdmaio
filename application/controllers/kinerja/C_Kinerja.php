@@ -96,7 +96,7 @@ class C_Kinerja extends CI_Controller
               if($this->upload->do_upload('file')){
                
                $data = $this->upload->data(); 
-            //    dd($data['image_width']);
+               if($data['file_type'] != "application/pdf") {
                $insert['name'] = $data['file_name'];
                $config['image_library'] = 'gd2';
                $config['source_image'] = './assets/bukti_kegiatan/'.$data["file_name"];
@@ -116,8 +116,7 @@ class C_Kinerja extends CI_Controller
                $config['master_dim'] = 'auto';
                $config['quality'] = "50%";
               
-            //    $this->image_lib->initialize($config);
-            //    $this->image_lib->resize(); 
+
 
                $this->load->library('image_lib');
                         $this->image_lib->initialize($config);
@@ -125,35 +124,7 @@ class C_Kinerja extends CI_Controller
                             echo $this->image_lib->display_errors();
                         }
                 $this->image_lib->clear();
-              //batas
-            // if($data['image_height'] < $data['image_width']) {
-              
-    
-            //         $this->image_lib->clear();
-            //         $config=array();
-    
-            //         $config['image_library'] = 'gd2';
-            //         $config['source_image'] = $this->upload->upload_path.$this->upload->file_name;
-    
-    
-            //         switch($imgdata['Orientation']) {
-            //             case 3:
-            //                 $config['rotation_angle']='180';
-            //                 break;
-            //             case 6:
-            //                 $config['rotation_angle']='270';
-            //                 break;
-            //             case 8:
-            //                 $config['rotation_angle']='90';
-            //                 break;
-            //         }
-    
-            //         $this->image_lib->initialize($config); 
-            //         $this->image_lib->rotate();
-    
-                
-            //     } 
-            //batas
+            }
             
               }
             }
@@ -167,6 +138,7 @@ class C_Kinerja extends CI_Controller
             
            
       }
+      
         echo json_encode($res);
   
   }

@@ -105,6 +105,8 @@
     $(function(){
         $('#jam_kerja').select2()
         loadMenu()
+        $('#skpd').select2()
+        $('#bulan').select2()
     })
 
     function loadMenu(){

@@ -29,7 +29,7 @@
         if(isset($flag_print) && $flag_print == 1){
             $filename = $nama_file;
             header("Content-type: application/vnd-ms-excel");
-            header("Content-Disposition: attachment; filename=$filename"); 
+            header("Content-Disposition: attachment; filename=\"$filename\""); 
         }
     ?>
     <body>

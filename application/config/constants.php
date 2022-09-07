@@ -118,11 +118,17 @@ define('DEVELOPER', 'nikita');
 // define('SKPD_CELL', 'C19');
 // define('PERIODE_CELL', 'C20');
 
-define('START_CELL', 'B12');
-define('HEADER_CELL', 'A10:AH11');
-define('START_ROW_NUM', '12');
-define('SKPD_CELL', 'C8');
-define('PERIODE_CELL', 'C9');
+// define('START_CELL', 'B12');
+// define('HEADER_CELL', 'A10:AH11');
+// define('START_ROW_NUM', '12');
+// define('SKPD_CELL', 'C8');
+// define('PERIODE_CELL', 'C9'); //lastt
+
+define('START_CELL', 'B7');
+define('HEADER_CELL', 'A5:AH6');
+define('START_ROW_NUM', '7');
+define('SKPD_CELL', 'C3');
+define('PERIODE_CELL', 'C4');
 
 define('IMPORT_UNIT_KERJA', '4018000');
 

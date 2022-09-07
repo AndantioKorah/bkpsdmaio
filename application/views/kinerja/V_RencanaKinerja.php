@@ -76,8 +76,7 @@
         <option >Pegawai</option>
         <option >SKPD</option>
         <option >Hari</option>
-        <option >Jam</option>
-</datalist>
+      </datalist>
    
     </div>
   </div>

@@ -47,7 +47,16 @@
                             </div>
                         </div>
                         <center>
-                     <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
+                        </small>
+                        <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_target">
+                        </small>
+                        <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_sudah_verif">
+                        </small>
+                        <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_belum_verif">
                         </small>
                         </center>
   </div>
@@ -327,6 +336,9 @@
             var tugas_jabatan = data[0].tugas_jabatan;
             var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
             var nilai_pembulatan = (Math.floor(total_progress * 100) / 100).toFixed(2);
+            var target_kuantitas = data[0].target_kuantitas;
+            var sudah_verif = data[0].total_realisasi_kuantitas;
+            var belum_verif = data[0].total_belum_verif;
             // var nilai_pembulatan =total_progress;
 
             var bgcolor = '#ff0000 !important';
@@ -340,13 +352,23 @@
              bgcolor = '#41b302 !important';
             } else if(nilai_pembulatan >= 100){
              bgcolor = '#006600 !important';
-    }
+             }
+
+             if(sudah_verif == null){
+              sudah_verif = 0;
+             }
+             if(belum_verif == null){
+               belum_verif = 0;
+             }
 
 
              $("#bar-progress-realisaasi").show('fast');
              $('[name="satuan"]').val(satuan);
              $('#ket_tugas_jabatan').html(tugas_jabatan);
              $('#ket_proogress').html('Capaian '+nilai_pembulatan+'% selesai');
+             $('#ket_target').html('Target Kuantitas : '+target_kuantitas+' '+satuan);
+             $('#ket_sudah_verif').html('Laporan diverifikasi : '+sudah_verif);
+             $('#ket_belum_verif').html('Laporan belum diverifikasi :'+belum_verif);
              prosesBar.css('width', total_progress + '%');
              prosesBar.css('background-color', bgcolor);
              prosesBar.attr('aria-valuenow', total_progress);

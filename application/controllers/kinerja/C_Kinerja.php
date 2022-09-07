@@ -75,11 +75,12 @@ class C_Kinerja extends CI_Controller
               $_FILES['file']['error'] = $_FILES['files']['error'][$i];
               $_FILES['file']['size'] = $_FILES['files']['size'][$i];
             
-            //   if($_FILES['file']['size'] > 1048576){
-            //     $ress = 0;
-            //     $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
-            //     break;
-            //   }
+
+              if($_FILES['file']['size'] > 1048576){
+                $ress = 0;
+                $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
+                break;
+              }
            
               // Set preference
               $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );

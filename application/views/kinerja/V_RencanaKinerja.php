@@ -1,6 +1,6 @@
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Rencana Kinerja Pegawai</h3>
+        <h3 class="card-title">Penetapan Sasaran Kerja</h3>
     </div>
     <div class="card-body" style="display: block;">
     
@@ -102,7 +102,7 @@
   <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
-              <h6 class="modal-title">EDIT RENCANA KINERJA</h6>
+              <h6 class="modal-title">EDIT SASARAN KERJA</h6>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>

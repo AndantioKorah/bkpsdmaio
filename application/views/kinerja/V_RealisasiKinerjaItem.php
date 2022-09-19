@@ -113,7 +113,7 @@
 </style>
 
     <div class="card-header">
-        <h3 class="card-title">List Realisasi Kegiatan</h3>
+        <h3 class="card-title">List Realisasi Kerja</h3>
     </div>
     <div class="card-body">
     <div class="col-12">
@@ -150,7 +150,7 @@
         <table class="table table-hover table-striped" id="table_realisasi_kinerja" width="100%">
             <thead>
                 <th class="text-center table-danger">No</th>
-                <th class="text-left table-danger">Kegiatan Tugas Jabatan</th>
+                <th class="text-left table-danger">Uraian Tugas</th>
                 <th class="text-left table-danger">Tanggal Kegiatan</th>
                 <th class="text-left table-danger">Detail Kegiatan</th>
                 <th class="text-left table-danger">Realisasi Target (Kuantitas)</th>
@@ -389,7 +389,7 @@ var span = document.getElementsByClassName("close")[0];
                          
                      
                         var i;
-                        var html = '<option>- Pilih Tugas Jabatan -</option>';
+                        var html = '<option>- Pilih Uraian Tugas -</option>';
                         for(i=0; i<data.length; i++){
                        
                             html += '<option value='+data[i].id+'>'+data[i].tugas_jabatan+'</option>';

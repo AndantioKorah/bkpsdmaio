@@ -13,7 +13,7 @@
 </style>
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Realisasi Kinerja Pegawai</h3>
+        <h3 class="card-title">Realisasi Kerja</h3>
     </div>
     
     <div class="card-body" style="display: block;">
@@ -68,9 +68,9 @@
     <input oncanges="" class="form-control datetimepickerthis" id="tanggal_kegiatan" name="tanggal_kegiatan" readonly value="<?= date('Y-m-d H:i:s') ;?>">
   </div>
     <div class="form-group">
-         <label class="bmd-label-floating">Kegiatan Tugas Jabatan </label>
+         <label class="bmd-label-floating">Uraian Tugas </label>
          <select class="form-control select2-navy" name="tugas_jabatan" id="tugas_jabatan" onchange="getSatuan()" required>
-         <option value="" selected>- Pilih Tugas Jabatan -</option>
+         <option value="" selected>- Pilih Uraian Tugas -</option>
          </select>
              <!-- <select class="form-control select2-navy" style="width: 100%" onchange="getSatuan()"
                  id="tugas_jabatan" data-dropdown-css-class="select2-navy" name="tugas_jabatan" required>
@@ -127,7 +127,7 @@
   <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
-              <h6 class="modal-title">EDIT REALISASI KINERJA</h6>
+              <h6 class="modal-title">EDIT REALISASI KERJA</h6>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
@@ -188,7 +188,7 @@
                          
                         
                         var i;
-                        var html = '<option>- Pilih Tugas Jabatan -</option>';
+                        var html = '<option>- Pilih Uraian Tugas -</option>';
                         for(i=0; i<data.length; i++){
                             
                             html += '<option value='+data[i].id+'>'+data[i].tugas_jabatan+'</option>';
@@ -331,7 +331,10 @@
         data : {id_t_rencana_kinerja:id_t_rencana_kinerja},
         success: function(data){
             console.log(data)
-            var satuan = data[0].satuan;
+            if (data.length === 0) { 
+              $("#bar-progress-realisaasi").hide('fast');
+            } else {
+              var satuan = data[0].satuan;
             var total_realisasi_kuantitas = data[0].total_realisasi_kuantitas;
             var tugas_jabatan = data[0].tugas_jabatan;
             var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
@@ -372,6 +375,8 @@
              prosesBar.css('width', total_progress + '%');
              prosesBar.css('background-color', bgcolor);
              prosesBar.attr('aria-valuenow', total_progress);
+            }
+           
          }
         });
         return false;

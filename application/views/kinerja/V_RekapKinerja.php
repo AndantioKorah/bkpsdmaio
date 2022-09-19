@@ -1,7 +1,7 @@
 
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">Rekap Kinerja Pegawai</h3>
+        <h3 class="card-title">Rekap Sasaran Kerja</h3>
     </div>
 
     

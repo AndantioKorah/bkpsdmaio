@@ -7,7 +7,7 @@
     <form method="post" id="form_tambah_rencana_kinerja">
     
   <div class="form-group" >
-    <label for="exampleFormControlInput1">Kegiatan Tugas Jabatan</label>
+    <label for="exampleFormControlInput1">Uraian Tugas</label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
     <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
       <datalist id="tugasjabatan">

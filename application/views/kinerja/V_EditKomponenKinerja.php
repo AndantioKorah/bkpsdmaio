@@ -31,7 +31,7 @@
             <input style="display: none;" name="tahun" value="<?=$tahun?>" />
             <input style="display: none;" name="bulan" value="<?=$bulan?>" />
             <input style="display: none;" name="id_t_komponen_kinerja" value="<?=$result ? $result['id_t_komponen_kinerja'] : null ?>" />
-
+           
             <table border=="1" style="width: 100%;" class="table table-hover table-striped">
             <tr>
                     <td style="padding: 5px; font-weight: bold; width: 5%; text-align: center;">NO</td>
@@ -44,12 +44,14 @@
             <tr>
                     <td style="text-align: center; padding: 5px;"><b><?=$no++;?></b></td>
                     <td style="padding: 5px;"><b><?=$lp['nama_perilaku_kerja']?></b>
-                    <td><input readonly type="number" id="<?=$lp['name_id'];?>" class="form-control form-control-sm" name="<?=$lp['name_id'];?>" max="100"  /></td>
+                    <td><input readonly type="number" id="<?=$lp['name_id'];?>" class="form-control form-control-sm" name="<?=$lp['name_id'];?>" max="100" /> </td>
                      <?php foreach($lp['sub_perilaku_kerja'] as $sp){ ?>
                         <tr rowspan="3">
                             <td></td>
                             <td><?=$sp['nama_sub_perilaku_kerja'];?></td>
-                            <td><input  oninput="countNilaiKomponen()" type="number" id="<?=$sp['name_id'];?>" class="form-control form-control-sm" name="<?=$sp['name_id'];?>" max="100"  /></td>
+                            <td>
+                            <input  type="hidden" class="form-control form-control-sm" name="id_m_sub_perilaku_kerja[]" value="<?=$sp['id_m_sub_perilaku_kerja'];?>"  /> 
+                                <input  oninput="countNilaiKomponen()" type="number" id="<?=$sp['name_id'];?>" class="form-control form-control-sm hsl" name="nilai[]" max="100"  value="<?=$sp['nilai'] ? $sp['nilai'] : '' ?>"/> </td>
                         </tr>
                         <?php } ?> 
              
@@ -105,11 +107,11 @@
                 </tr>  -->
                 <tr>
                     <td colspan=2 style="padding: 5px; text-align: right;"><strong>JUMLAH NILAI CAPAIAN</strong></td>
-                    <td class="text-center" style="padding: 5px;"><span style="font-weight:bold; font-size: 20px;" id="capaian"></span></td>
+                    <td class="text-center" style="padding: 5px;"><span style="font-weight:bold; font-size: 20px;" id="capaian"></span> <input type="hidden" name="nilai_capaian" id="nilai_capaian"> </td>
                 </tr>
                 <tr>
                     <td colspan=2 style="padding: 5px; text-align: right;"><i>HASIL PEMBOBOTAN</i></td>
-                    <td class="text-center" style="padding: 5px;"><i><span style="font-weight:bold; font-size: 18px;" id="bobot"></span></i></td>
+                    <td class="text-center" style="padding: 5px;"><i><span style="font-weight:bold; font-size: 18px;" id="bobot"></span></i> <input type="hidden" name="nilai_bobot"  id="nilai_bobot"></td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -190,6 +192,9 @@
                     + parseInt($('#perilaku_7').val())
 
         $('#capaian').html(capaian)
+        $('#nilai_capaian').val(capaian)
+        
+        $('#nilai_bobot').val(countBobotNilaiKomponenKinerja(capaian).toFixed(2))
         $('#bobot').html(countBobotNilaiKomponenKinerja(capaian).toFixed(2)+'%')
     }
 
@@ -220,9 +225,14 @@
     }
 
     $('#form_nilai_komponen').on('submit', function(e){
-        $('#btn_submit').hide()
-        $('#btn_loading').show()
+        // $('#btn_submit').hide()
+        // $('#btn_loading').show()
         e.preventDefault()
+        var count_data = 0;
+        $('.hsl').each(function(){
+        count_data = count_data + 1;
+        });
+   
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/saveNilaiKomponenKinerja")?>',
             method: 'post',

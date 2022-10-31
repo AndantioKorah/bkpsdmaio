@@ -290,6 +290,8 @@ class C_Kinerja extends CI_Controller
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         list($data['pegawai'], $data['result']) = $this->verifkinerja->loadNilaiKomponen($id, $bulan, $tahun);
+        $data['list_perilaku_kerja'] = $this->verifkinerja->loadPerilakuKerja();
+        // dd( $data['list_perilaku_kerja']);
         $this->load->view('kinerja/V_EditKomponenKinerja', $data);
     }
 

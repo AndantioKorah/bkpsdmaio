@@ -49,7 +49,7 @@
                         <center>
                         <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
                         </small>
-                        <br>
+                        <!-- <br>
                         <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_target">
                         </small>
                         <br>
@@ -57,7 +57,7 @@
                         </small>
                         <br>
                         <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_belum_verif">
-                        </small>
+                        </small> -->
                         </center>
   </div>
   </div>
@@ -308,7 +308,7 @@
 
 
 
- function getSatuan() {
+ function getPelanggan() {
         var id_t_rencana_kinerja = $('#tugas_jabatan').val(); 
         var base_url = "<?=base_url()?>";
         var prosesBar = $('.progress-bar');
@@ -369,9 +369,9 @@
              $('[name="satuan"]').val(satuan);
              $('#ket_tugas_jabatan').html(tugas_jabatan);
              $('#ket_proogress').html('Capaian '+nilai_pembulatan+'% selesai');
-             $('#ket_target').html('Target Kuantitas : '+target_kuantitas+' '+satuan);
-             $('#ket_sudah_verif').html('Laporan diverifikasi : '+sudah_verif);
-             $('#ket_belum_verif').html('Laporan belum diverifikasi :'+belum_verif);
+            //  $('#ket_target').html('Target Kuantitas : '+target_kuantitas+' '+satuan);
+            //  $('#ket_sudah_verif').html('Laporan diverifikasi : '+sudah_verif);
+            //  $('#ket_belum_verif').html('Laporan belum diverifikasi :'+belum_verif);
              prosesBar.css('width', total_progress + '%');
              prosesBar.css('background-color', bgcolor);
              prosesBar.attr('aria-valuenow', total_progress);

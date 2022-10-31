@@ -625,5 +625,41 @@
 
             return $res;
         }
+
+        public function loadPerilakuKerja(){
+
+            $final_result = null;
+            $result =  $this->db->select('*')
+                                    ->from('m_perilaku_kerja a')
+                                    ->where('a.flag_active', 1)
+                                    ->get()->result_array();
+
+                                    if($result){
+                                        $detail = $this->db->select('a.id, a.nama_sub_perilaku_kerja, a.id_m_perilaku_kerja, a.id_m_perilaku_kerja, a.name_id')
+                                                        ->from('m_sub_perilaku_kerja a')
+                                                        ->where('a.flag_active', 1)
+                                                        // ->where('a.id_m_perilaku_kerja', $result[0]['id'])
+                                                        ->group_by('a.id')
+                                                        ->get()->result_array();
+                                
+                                        if($detail){
+                                            $i = 0;
+                                            foreach($result as $rs){
+                                                $final_result[$rs['id']]['id_m_perilaku_kerja'] = $rs['id'];
+                                                $final_result[$rs['id']]['nama_perilaku_kerja'] = $rs['nama_perilaku_kerja'];
+                                                $final_result[$rs['id']]['name_id'] = $rs['name_id'];
+                                            }
+                                            $j = 0;
+                                            foreach($detail as $d){
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['nama_sub_perilaku_kerja'] = $d['nama_sub_perilaku_kerja'];
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['name_id'] = $d['name_id'];
+                                                $j++;
+                                            }
+                      
+                                        }
+                                    }
+
+            return $final_result;
+        }
 	}
 ?>

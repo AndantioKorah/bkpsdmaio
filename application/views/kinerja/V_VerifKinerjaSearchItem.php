@@ -5,8 +5,8 @@
                 <th class="text-center">No</th>
                 <th class="text-center">Tanggal Kegiatan</th>
                 <th class="text-center">Nama Pegawai</th>
-                <th class="text-center">Nama Kegiatan</th>
-                <th class="text-center">Rencana Kegiatan</th>
+                <th class="text-center">Detail Kegiatan</th>
+                <th class="text-center">Uraian Tugas</th>
                 <th class="text-center">Realisasi</th>
                 <th class="text-center">Detail</th>
                 <th class="text-center">Keterangan</th>

@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-// $config['base_url'] = 'http://172.168.16.173/bidik/';
-$config['base_url'] = 'http://localhost/bidik/';
+$config['base_url'] = 'http://172.168.16.173/bidik/';
+// $config['base_url'] = 'http://localhost/bidik/';
 // 
 /*
 |--------------------------------------------------------------------------

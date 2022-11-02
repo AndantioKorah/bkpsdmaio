@@ -243,8 +243,9 @@
                     errortoast(res.message)
                 } else {
                     successtoast('Data berhasil disimpan')
-                    $('#capaian_<?=$pegawai['id_m_user']?>').html(res.data.capaian)
-                    $('#pembobotan_<?=$pegawai['id_m_user']?>').html(countBobotNilaiKomponenKinerja(res.data.capaian).toFixed(2)+'%')
+                    // $('#capaian_<?=$pegawai['id_m_user']?>').html(res.data.capaian)
+                    // $('#pembobotan_<?=$pegawai['id_m_user']?>').html(countBobotNilaiKomponenKinerja(res.data.capaian).toFixed(2)+'%')
+                    const myTimeout = setTimeout(sukses, 500);
                     $('#btn_submit').show()
                     $('#btn_loading').hide()
                     $('#modal_edit_data_nilai').modal('hide')
@@ -254,4 +255,8 @@
             }
         })
     })
+
+    function sukses(){
+        $('#form_search_komponen_kinerja').submit()
+    }
 </script>

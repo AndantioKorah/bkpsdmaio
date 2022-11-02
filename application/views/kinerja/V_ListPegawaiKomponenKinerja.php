@@ -19,7 +19,7 @@
                     // dd($this->general_library->getId());
                     // $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
                     $capaian = $p['komponen_kinerja']['capaian'];
-                    $pembobotan = $p['komponen_kinerja']['bobot'];
+                    $pembobotan = $p['komponen_kinerja']['bobot']."%";
                 }
             ?>
                 <tr>

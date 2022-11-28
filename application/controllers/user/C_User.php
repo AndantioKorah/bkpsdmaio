@@ -15,6 +15,7 @@ class C_User extends CI_Controller
 
     public function roles(){
         render('user/V_Roles', 'user_management', 'roles', null);
+        
     }
 
     public function createRole(){

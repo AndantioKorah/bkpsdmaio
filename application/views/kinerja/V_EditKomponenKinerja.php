@@ -25,19 +25,45 @@
             </thead>
         </table>
         <hr>
+        <?php if($result) { ?><?php } ?>
         <form id="form_nilai_komponen">
             <input style="display: none;" name="id_m_user" value="<?=$pegawai['id_m_user']?>" />
             <input style="display: none;" name="tahun" value="<?=$tahun?>" />
             <input style="display: none;" name="bulan" value="<?=$bulan?>" />
             <input style="display: none;" name="id_t_komponen_kinerja" value="<?=$result ? $result['id_t_komponen_kinerja'] : null ?>" />
-
-            <table border=1 style="width: 100%;" class="table table-hover table-striped">
-                <tr>
+           
+            <table border=="1" style="width: 100%;" class="table table-hover table-striped">
+            <tr>
                     <td style="padding: 5px; font-weight: bold; width: 5%; text-align: center;">NO</td>
                     <td style="padding: 5px; font-weight: bold; width: 70%; text-align: center;">KOMPONEN KINERJA</td>
                     <td style="padding: 5px; font-weight: bold; width: 25%; text-align: center;">NILAI</td>
                 </tr>
-                <tr>
+            <!-- baru -->
+             <?php $no=1; 
+           foreach($list_perilaku_kerja as $lp){ ?>
+            <tr>
+                    <td style="text-align: center; padding: 5px;"><b><?=$no++;?></b></td>
+                    <td style="padding: 5px;"><b><?=$lp['nama_perilaku_kerja']?></b>
+                    <td><input readonly type="number" id="<?=$lp['name_id'];?>" class="form-control form-control-sm" name="<?=$lp['name_id'];?>" max="100" /> </td>
+                     <?php foreach($lp['sub_perilaku_kerja'] as $sp){ ?>
+                        <tr rowspan="3">
+                            <td></td>
+                            <td><?=$sp['nama_sub_perilaku_kerja'];?></td>
+                            <td>
+                            <input  type="hidden" class="form-control form-control-sm" name="id_m_sub_perilaku_kerja[]" value="<?=$sp['id_m_sub_perilaku_kerja'];?>"  /> 
+                                <input  oninput="countNilaiKomponen()" type="number" id="<?=$sp['name_id'];?>" class="form-control form-control-sm hsl" name="nilai[]" max="100"  value="<?=$sp['nilai'] ? $sp['nilai'] : '' ?>"/> </td>
+                        </tr>
+                        <?php } ?> 
+             
+                    </td>
+                    
+                 
+                  
+                </tr>
+            <?php } ?> 
+            <!-- baru -->
+
+                <!-- <tr>
                     <td style="text-align: center; padding: 5px;">1</td>
                     <td style="padding: 5px;">Efektivitas</td>
                     <td oninput="countNilaiKomponen()" style="padding: 5px;"><input type="number" id="efektivitas_input" class="form-control form-control-sm"
@@ -78,14 +104,14 @@
                     <td style="padding: 5px;">Ketaatan</td>
                     <td oninput="countNilaiKomponen()" style="padding: 5px;"><input type="number" id="ketaatan_input" class="form-control form-control-sm"
                     name="ketaatan" value="<?=$result['ketaatan'] ? $result['ketaatan'] : 97;?>" /></td>
-                </tr>
+                </tr>  -->
                 <tr>
                     <td colspan=2 style="padding: 5px; text-align: right;"><strong>JUMLAH NILAI CAPAIAN</strong></td>
-                    <td class="text-center" style="padding: 5px;"><span style="font-weight:bold; font-size: 20px;" id="capaian"></span></td>
+                    <td class="text-center" style="padding: 5px;"><span style="font-weight:bold; font-size: 20px;" id="capaian"></span> <input type="hidden" name="nilai_capaian" id="nilai_capaian"> </td>
                 </tr>
                 <tr>
                     <td colspan=2 style="padding: 5px; text-align: right;"><i>HASIL PEMBOBOTAN</i></td>
-                    <td class="text-center" style="padding: 5px;"><i><span style="font-weight:bold; font-size: 18px;" id="bobot"></span></i></td>
+                    <td class="text-center" style="padding: 5px;"><i><span style="font-weight:bold; font-size: 18px;" id="bobot"></span></i> <input type="hidden" name="nilai_bobot"  id="nilai_bobot"></td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -98,7 +124,7 @@
                     </td>
                 </tr>
             </table>
-        </form>
+        </form>  
     </div>
 </div>
 <script>
@@ -107,14 +133,68 @@
     })
 
     function countNilaiKomponen(){
-        let capaian = parseInt($('#efektivitas_input').val())
-                    + parseInt($('#efisiensi_input').val())
-                    + parseInt($('#inovasi_input').val())
-                    + parseInt($('#kerjasama_input').val())
-                    + parseInt($('#kecepatan_input').val())
-                    + parseInt($('#tanggungjawab_input').val())
-                    + parseInt($('#ketaatan_input').val())
+      
+        let perilaku1 = parseInt($('#sub_perilaku_1').val())
+                    + parseInt($('#sub_perilaku_2').val())
+                    + parseInt($('#sub_perilaku_3').val())
+        let total_perilaku1 = perilaku1 / 3;
+        let perilaku_1 = total_perilaku1.toFixed(2) 
+        $('#perilaku_1').val(perilaku_1)
+
+        let perilaku2 = parseInt($('#sub_perilaku_4').val())
+                    + parseInt($('#sub_perilaku_5').val())
+                    + parseInt($('#sub_perilaku_6').val())
+        let total_perilaku2 = perilaku2 / 3;
+        let perilaku_2 = total_perilaku2.toFixed(2) 
+        $('#perilaku_2').val(perilaku_2)
+
+        let perilaku3 = parseInt($('#sub_perilaku_7').val())
+                    + parseInt($('#sub_perilaku_8').val())
+                    + parseInt($('#sub_perilaku_9').val())
+        let total_perilaku3 = perilaku3 / 3;
+        let perilaku_3 = total_perilaku3.toFixed(2) 
+        $('#perilaku_3').val(perilaku_2)
+
+        let perilaku4 = parseInt($('#sub_perilaku_10').val())
+                    + parseInt($('#sub_perilaku_11').val())
+                    + parseInt($('#sub_perilaku_12').val())
+        let total_perilaku4 = perilaku4 / 3;
+        let perilaku_4 = total_perilaku4.toFixed(2) 
+        $('#perilaku_4').val(perilaku_4)
+
+        let perilaku5 = parseInt($('#sub_perilaku_13').val())
+                    + parseInt($('#sub_perilaku_14').val())
+                    + parseInt($('#sub_perilaku_15').val())
+        let total_perilaku5 = perilaku5 / 3;
+        let perilaku_5 = total_perilaku5.toFixed(2) 
+        $('#perilaku_5').val(perilaku_5)
+
+        let perilaku6 = parseInt($('#sub_perilaku_16').val())
+                    + parseInt($('#sub_perilaku_17').val())
+                    + parseInt($('#sub_perilaku_18').val())
+        let total_perilaku6 = perilaku6 / 3;
+        let perilaku_6 = total_perilaku6.toFixed(2) 
+        $('#perilaku_6').val(perilaku_6)
+
+        let perilaku7 = parseInt($('#sub_perilaku_19').val())
+                    + parseInt($('#sub_perilaku_20').val())
+                    + parseInt($('#sub_perilaku_21').val())
+        let total_perilaku7 = perilaku7 / 3;
+        let perilaku_7 = total_perilaku7.toFixed(2) 
+        $('#perilaku_7').val(perilaku_7)
+
+        let capaian = parseInt($('#perilaku_1').val())
+                    + parseInt($('#perilaku_2').val())
+                    + parseInt($('#perilaku_3').val())
+                    + parseInt($('#perilaku_4').val())
+                    + parseInt($('#perilaku_5').val())
+                    + parseInt($('#perilaku_6').val())
+                    + parseInt($('#perilaku_7').val())
+
         $('#capaian').html(capaian)
+        $('#nilai_capaian').val(capaian)
+        
+        $('#nilai_bobot').val(countBobotNilaiKomponenKinerja(capaian).toFixed(2))
         $('#bobot').html(countBobotNilaiKomponenKinerja(capaian).toFixed(2)+'%')
     }
 
@@ -145,9 +225,14 @@
     }
 
     $('#form_nilai_komponen').on('submit', function(e){
-        $('#btn_submit').hide()
-        $('#btn_loading').show()
+        // $('#btn_submit').hide()
+        // $('#btn_loading').show()
         e.preventDefault()
+        var count_data = 0;
+        $('.hsl').each(function(){
+        count_data = count_data + 1;
+        });
+   
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/saveNilaiKomponenKinerja")?>',
             method: 'post',
@@ -158,8 +243,9 @@
                     errortoast(res.message)
                 } else {
                     successtoast('Data berhasil disimpan')
-                    $('#capaian_<?=$pegawai['id_m_user']?>').html(res.data.capaian)
-                    $('#pembobotan_<?=$pegawai['id_m_user']?>').html(countBobotNilaiKomponenKinerja(res.data.capaian).toFixed(2)+'%')
+                    // $('#capaian_<?=$pegawai['id_m_user']?>').html(res.data.capaian)
+                    // $('#pembobotan_<?=$pegawai['id_m_user']?>').html(countBobotNilaiKomponenKinerja(res.data.capaian).toFixed(2)+'%')
+                    const myTimeout = setTimeout(sukses, 500);
                     $('#btn_submit').show()
                     $('#btn_loading').hide()
                     $('#modal_edit_data_nilai').modal('hide')
@@ -169,4 +255,8 @@
             }
         })
     })
+
+    function sukses(){
+        $('#form_search_komponen_kinerja').submit()
+    }
 </script>

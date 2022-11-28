@@ -1,5 +1,5 @@
 <div class="card-header">
-        <h3 class="card-title">List Rencana Kinerja</h3>
+        <h3 class="card-title">List Sasaran Kerja</h3>
     </div>
     <div class="card-body">
     <div class="col-12">
@@ -40,7 +40,7 @@
         <table class="table table-hover table-striped" id="table_rencana_kinerja">
             <thead>
                 <th class="text-center table-danger">No</th>
-                <th class="text-left table-danger">Kegiatan Tugas Jabatan</th>
+                <th class="text-left table-danger">Uraian Tugas</th>
                 <th class="text-left table-danger">Sasaran Kerja</th>
                 <th class="text-left table-danger">Tahun</th>
                 <th class="text-left table-danger">Bulan</th>

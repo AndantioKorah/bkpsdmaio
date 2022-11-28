@@ -11,18 +11,21 @@
             <?php $no=1; foreach($list_pegawai as $p){
                 $capaian = null;
                 $pembobotan = null;
+               
                 if(isset($p['komponen_kinerja']) && $p['komponen_kinerja']){
-                    list($capaian, $pembobotan) = countNilaiKomponen($p['komponen_kinerja']);
+                    // list($capaian, $pembobotan) = countNilaiKomponen($p['komponen_kinerja']);
                     // $pembobotan = $pembobotan * 100;
                     // dd($p['created_by']);
                     // dd($this->general_library->getId());
-                    $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
+                    // $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
+                    $capaian = $p['komponen_kinerja']['capaian'];
+                    $pembobotan = $p['komponen_kinerja']['bobot']."%";
                 }
             ?>
                 <tr>
                     <td class="text-center"><?=$no++;?></td>
                     <td><?=getNamaPegawaiFull($p)?></td>
-                    <td class="text-center"><span id="capaian_<?=$p['id_m_user']?>"><?=$capaian?></span></td>
+                    <td class="text-center"><span id="capaian_<?=$p['id_m_user']?>"> <?=$capaian ?>  </span></td>
                     <td class="text-center"><span id="pembobotan_<?=$p['id_m_user']?>"><?=$pembobotan?></span></td>
                     <td class="text-center">
                         <button data-toggle="modal" href="#modal_edit_data_nilai" onclick="editNilaiKomponen('<?=$p['id_m_user']?>')" 

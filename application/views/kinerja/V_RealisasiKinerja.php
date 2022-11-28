@@ -13,7 +13,7 @@
 </style>
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Realisasi Kinerja Pegawai</h3>
+        <h3 class="card-title">Realisasi Kerja</h3>
     </div>
     
     <div class="card-body" style="display: block;">
@@ -47,8 +47,17 @@
                             </div>
                         </div>
                         <center>
-                     <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
                         </small>
+                        <!-- <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_target">
+                        </small>
+                        <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_sudah_verif">
+                        </small>
+                        <br>
+                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_belum_verif">
+                        </small> -->
                         </center>
   </div>
   </div>
@@ -59,9 +68,9 @@
     <input oncanges="" class="form-control datetimepickerthis" id="tanggal_kegiatan" name="tanggal_kegiatan" readonly value="<?= date('Y-m-d H:i:s') ;?>">
   </div>
     <div class="form-group">
-         <label class="bmd-label-floating">Kegiatan Tugas Jabatan </label>
+         <label class="bmd-label-floating">Uraian Tugas </label>
          <select class="form-control select2-navy" name="tugas_jabatan" id="tugas_jabatan" onchange="getSatuan()" required>
-         <option value="" selected>- Pilih Tugas Jabatan -</option>
+         <option value="" selected>- Pilih Uraian Tugas -</option>
          </select>
              <!-- <select class="form-control select2-navy" style="width: 100%" onchange="getSatuan()"
                  id="tugas_jabatan" data-dropdown-css-class="select2-navy" name="tugas_jabatan" required>
@@ -118,7 +127,7 @@
   <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
-              <h6 class="modal-title">EDIT REALISASI KINERJA</h6>
+              <h6 class="modal-title">EDIT REALISASI KERJA</h6>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
@@ -179,7 +188,7 @@
                          
                         
                         var i;
-                        var html = '<option>- Pilih Tugas Jabatan -</option>';
+                        var html = '<option>- Pilih Uraian Tugas -</option>';
                         for(i=0; i<data.length; i++){
                             
                             html += '<option value='+data[i].id+'>'+data[i].tugas_jabatan+'</option>';
@@ -299,7 +308,7 @@
 
 
 
- function getSatuan() {
+ function getPelanggan() {
         var id_t_rencana_kinerja = $('#tugas_jabatan').val(); 
         var base_url = "<?=base_url()?>";
         var prosesBar = $('.progress-bar');
@@ -322,11 +331,17 @@
         data : {id_t_rencana_kinerja:id_t_rencana_kinerja},
         success: function(data){
             console.log(data)
-            var satuan = data[0].satuan;
+            if (data.length === 0) { 
+              $("#bar-progress-realisaasi").hide('fast');
+            } else {
+              var satuan = data[0].satuan;
             var total_realisasi_kuantitas = data[0].total_realisasi_kuantitas;
             var tugas_jabatan = data[0].tugas_jabatan;
             var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
             var nilai_pembulatan = (Math.floor(total_progress * 100) / 100).toFixed(2);
+            var target_kuantitas = data[0].target_kuantitas;
+            var sudah_verif = data[0].total_realisasi_kuantitas;
+            var belum_verif = data[0].total_belum_verif;
             // var nilai_pembulatan =total_progress;
 
             var bgcolor = '#ff0000 !important';
@@ -340,16 +355,28 @@
              bgcolor = '#41b302 !important';
             } else if(nilai_pembulatan >= 100){
              bgcolor = '#006600 !important';
-    }
+             }
+
+             if(sudah_verif == null){
+              sudah_verif = 0;
+             }
+             if(belum_verif == null){
+               belum_verif = 0;
+             }
 
 
              $("#bar-progress-realisaasi").show('fast');
              $('[name="satuan"]').val(satuan);
              $('#ket_tugas_jabatan').html(tugas_jabatan);
              $('#ket_proogress').html('Capaian '+nilai_pembulatan+'% selesai');
+            //  $('#ket_target').html('Target Kuantitas : '+target_kuantitas+' '+satuan);
+            //  $('#ket_sudah_verif').html('Laporan diverifikasi : '+sudah_verif);
+            //  $('#ket_belum_verif').html('Laporan belum diverifikasi :'+belum_verif);
              prosesBar.css('width', total_progress + '%');
              prosesBar.css('background-color', bgcolor);
              prosesBar.attr('aria-valuenow', total_progress);
+            }
+           
          }
         });
         return false;

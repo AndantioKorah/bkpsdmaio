@@ -38,13 +38,20 @@ function generateNorm($last_norm){
 }
 
 function countNilaiKomponen($data){
-    $capaian = floatval($data['efektivitas']) +
-                floatval($data['efisiensi']) +
-                floatval($data['inovasi']) +
-                floatval($data['kerjasama']) +
-                floatval($data['kecepatan']) +
-                floatval($data['tanggungjawab']) +
-                floatval($data['ketaatan']);
+    // $capaian = floatval($data['efektivitas']) +
+    //             floatval($data['efisiensi']) +
+    //             floatval($data['inovasi']) +
+    //             floatval($data['kerjasama']) +
+    //             floatval($data['kecepatan']) +
+    //             floatval($data['tanggungjawab']) +
+    //             floatval($data['ketaatan']);
+    $capaian = floatval($data['perilaku_1']) +
+    floatval($data['perilaku_2']) +
+    floatval($data['perilaku_3']) +
+    floatval($data['perilaku_4']) +
+    floatval($data['perilaku_5']) +
+    floatval($data['perilaku_6']) +
+    floatval($data['perilaku_7']);
     $bobot = 30;
     if($capaian < 350){
         $bobot = 0;

@@ -1,6 +1,6 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">VERIFIKASI KINERJA</h3>
+        <h3 class="card-title">VERIFIKASI SASARAN KERJA</h3>
     </div>
     <div class="card-body">
         <form id="form_search_verif_kinerja">

@@ -75,11 +75,12 @@ class C_Kinerja extends CI_Controller
               $_FILES['file']['error'] = $_FILES['files']['error'][$i];
               $_FILES['file']['size'] = $_FILES['files']['size'][$i];
             
-            //   if($_FILES['file']['size'] > 1048576){
-            //     $ress = 0;
-            //     $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
-            //     break;
-            //   }
+
+              if($_FILES['file']['size'] > 1048576){
+                $ress = 0;
+                $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
+                break;
+              }
            
               // Set preference
               $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
@@ -289,11 +290,34 @@ class C_Kinerja extends CI_Controller
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         list($data['pegawai'], $data['result']) = $this->verifkinerja->loadNilaiKomponen($id, $bulan, $tahun);
+        $data['list_perilaku_kerja'] = $this->verifkinerja->loadPerilakuKerja($id,$data);
+        // dd( $data['list_perilaku_kerja']);
         $this->load->view('kinerja/V_EditKomponenKinerja', $data);
     }
 
     public function saveNilaiKomponenKinerja(){
-        echo json_encode($this->verifkinerja->saveNiliKomponenKinerja($this->input->post()));
+        // dd($_POST);
+        // echo json_encode($this->verifkinerja->saveNiliKomponenKinerja($this->input->post()));
+        // for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
+        //     $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
+        //     $data = null;
+        //     if(isset($_POST['hasil_'.$id_m_sub_perilaku_kerja])){
+        //         $data['nilai'] = $_POST['nilai'.$id_m_sub_perilaku_kerja];
+        //     }
+
+            // $data = array(
+            //     'hasil' => $_POST['hasil'][$count],
+            //     'nilai_normal' => $_POST['nilai_normal'][$count],
+            //     'satuan' => $_POST['satuan'][$count],
+            //     'keterangan' => $_POST['keterangan'][$count],
+            // );
+            // var_dump($data);
+            // die();
+       
+
+        // }
+       
+        echo json_encode( $this->verifkinerja->createNilaiKomponenKinerja());
     }
     
     public function disiplinKerja(){

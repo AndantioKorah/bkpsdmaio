@@ -541,7 +541,7 @@
 
                 if($result){
                     $data_komponen = $this->db->select('*, a.id as id_t_komponen_kinerja')
-                                        ->from('t_komponen_kinerja a')
+                                        ->from('t_komponen_kinerja_new a')
                                         ->join('m_user b', 'a.id_m_user = b.id')
                                         ->where_in('a.id_m_user', $list_id_pegawai)
                                         ->where('a.bulan', $data['bulan'])
@@ -578,12 +578,13 @@
                                     ->get()->row_array();
 
             $komponen =  $this->db->select('*, a.id as id_t_komponen_kinerja')
-                                    ->from('t_komponen_kinerja a')
+                                    ->from('t_komponen_kinerja_new a')
                                     ->where('a.id_m_user', $id)
                                     ->where('a.bulan', $bulan)
                                     ->where('a.tahun', $tahun)
                                     ->where('a.flag_active', 1)
                                     ->get()->row_array();
+                                    // dd($komponen);
             return [$pegawai, $komponen];
         }
 
@@ -591,7 +592,9 @@
             $res['code'] = 0;
             $res['message'] = 'OK';
             $res['data'] = $data;
-            list($capaian, $bobot) = countNilaiKomponen($data);
+            $insert_data = null;
+            // list($capaian, $bobot) = countNilaiKomponen($data);
+         
 
             if($data['id_t_komponen_kinerja']){
                 $id = $data['id_t_komponen_kinerja'];
@@ -601,8 +604,18 @@
                         ->update('t_komponen_kinerja', $data);
             } else {
                 unset($data['id_t_komponen_kinerja']);
-                $data['created_by'] = $this->general_library->getId();
-                $this->db->insert('t_komponen_kinerja', $data);
+                $insert_data['created_by'] = $this->general_library->getId();
+                $insert_data['berorientasi_pelayanan'] = $data['perilaku_1'];
+                $insert_data['akuntabel'] = $data['perilaku_2'];
+                $insert_data['kompeten'] = $data['perilaku_3'];
+                $insert_data['harmonis'] = $data['perilaku_4'];
+                $insert_data['loyal'] = $data['perilaku_5'];
+                $insert_data['adaptif'] = $data['perilaku_6'];
+                $insert_data['kolaboratif'] = $data['perilaku_7'];
+                $insert_data['tahun'] = $data['tahun'];
+                $insert_data['bulan'] = $data['bulan'];
+                $insert_data['id_m_user'] = $data['id_m_user'];
+                $this->db->insert('t_komponen_kinerja', $insert_data);
             }
 
             $res['data']['capaian'] = $capaian;
@@ -622,6 +635,137 @@
                 $rs['code'] = 1;
                 $rs['message'] = 'Terjadi Kesalahan';
             }
+
+            return $res;
+        }
+
+        public function loadPerilakuKerja($id, $data){
+           $tahun = $data['tahun'];
+            $bulan = $data['bulan'];
+
+            $final_result = null;
+            $result =  $this->db->select('*')
+                                    ->from('m_perilaku_kerja a')
+                                    ->where('a.flag_active', 1)
+                                    ->get()->result_array();
+
+                                    if($result){
+                                        $detail = $this->db->select('a.id, a.nama_sub_perilaku_kerja, a.id_m_perilaku_kerja, a.id_m_perilaku_kerja, a.name_id, a.id,
+                                        (select nilai from t_komponen_kinerja_new where id_m_user = '.$id.' and tahun = '.$tahun.' and bulan = '.$bulan.' and id_m_sub_perilaku_kerja = a.id limit 1) as nilai')
+                                                        ->from('m_sub_perilaku_kerja a')
+                                                        ->where('a.flag_active', 1)
+                                                        // ->where('a.id_m_perilaku_kerja', $result[0]['id'])
+                                                        ->group_by('a.id')
+                                                        ->get()->result_array();
+                                
+                                        if($detail){
+                                            $i = 0;
+                                            foreach($result as $rs){
+                                                $final_result[$rs['id']]['id_m_perilaku_kerja'] = $rs['id'];
+                                                $final_result[$rs['id']]['nama_perilaku_kerja'] = $rs['nama_perilaku_kerja'];
+                                                $final_result[$rs['id']]['name_id'] = $rs['name_id'];
+                                            }
+                                            $j = 0;
+                                            foreach($detail as $d){
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['nama_sub_perilaku_kerja'] = $d['nama_sub_perilaku_kerja'];
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['name_id'] = $d['name_id'];
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['id_m_sub_perilaku_kerja'] = $d['id'];
+                                                $final_result[$d['id_m_perilaku_kerja']]['sub_perilaku_kerja'][$j]['nilai'] = $d['nilai'];
+                                                $j++;
+                                            }
+                      
+                                        }
+                                    }
+
+            return $final_result;
+        }
+
+        public function createNilaiKomponenKinerja(){
+           
+            $res['code'] = 0;
+            $res['message'] = 'OK';
+            $res['data'] = $_POST;
+            $insert_data = null;
+
+            $exist = $this->db->select('*')
+            ->from('t_komponen_kinerja_new a')
+            ->where('a.flag_active', 1)
+            ->where('a.id_m_user', $_POST['id_m_user'])
+            ->where('a.tahun', $_POST['tahun'])
+            ->where('a.bulan', $_POST['bulan'])
+            ->group_by('a.id')
+            ->get()->result_array();
+
+            if($exist){
+
+                for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
+                    $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
+                    $nilai = $_POST['nilai'][$count];         
+                   
+
+                    $data_update['nilai'] = $nilai;
+                    $data_update['capaian'] = $_POST['nilai_capaian'];
+                    $data_update['bobot'] = $_POST['nilai_bobot'];
+                   
+            
+                    $this->db->where('id_m_user', $_POST['id_m_user'])
+                             ->where('tahun', $_POST['tahun'])
+                             ->where('bulan', $_POST['bulan'])
+                             ->where('id_m_sub_perilaku_kerja', $id_m_sub_perilaku_kerja)
+                            ->update('t_komponen_kinerja_new', $data_update);
+                
+                }
+                return $res;
+
+            } else {
+
+                for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
+                    $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
+                    $nilai = $_POST['nilai'][$count];         
+                    $insert_data['tahun'] = $_POST['tahun'];
+                    $insert_data['bulan'] = $_POST['bulan'];
+                    $insert_data['id_m_user'] = $_POST['id_m_user'];
+                    $insert_data['id_m_sub_perilaku_kerja'] = $id_m_sub_perilaku_kerja;
+                    $insert_data['nilai'] = $nilai;
+                    $insert_data['capaian'] = $_POST['nilai_capaian'];
+                    $insert_data['bobot'] = $_POST['nilai_bobot'];
+                    $this->db->insert('t_komponen_kinerja_new', $insert_data);
+                
+                }
+                return $res;
+
+            }
+
+    
+            
+
+            // list($capaian, $bobot) = countNilaiKomponen($data);
+               
+
+            // if($data['id_t_komponen_kinerja']){
+            //     $id = $data['id_t_komponen_kinerja'];
+            //     unset($data['id_t_komponen_kinerja']);
+            //     $data['updated_by'] = $this->general_library->getId();
+            //     $this->db->where('id', $id)
+            //             ->update('t_komponen_kinerja', $data);
+            // } else {
+            //     unset($data['id_t_komponen_kinerja']);
+            //     $insert_data['created_by'] = $this->general_library->getId();
+            //     $insert_data['berorientasi_pelayanan'] = $data['perilaku_1'];
+            //     $insert_data['akuntabel'] = $data['perilaku_2'];
+            //     $insert_data['kompeten'] = $data['perilaku_3'];
+            //     $insert_data['harmonis'] = $data['perilaku_4'];
+            //     $insert_data['loyal'] = $data['perilaku_5'];
+            //     $insert_data['adaptif'] = $data['perilaku_6'];
+            //     $insert_data['kolaboratif'] = $data['perilaku_7'];
+            //     $insert_data['tahun'] = $data['tahun'];
+            //     $insert_data['bulan'] = $data['bulan'];
+            //     $insert_data['id_m_user'] = $data['id_m_user'];
+            //     $this->db->insert('t_komponen_kinerja', $insert_data);
+            // }
+
+            // $res['data']['capaian'] = $capaian;
+            // $res['data']['bobot'] = $bobot;
 
             return $res;
         }

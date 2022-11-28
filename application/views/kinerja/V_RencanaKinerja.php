@@ -1,13 +1,13 @@
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Rencana Kinerja Pegawai</h3>
+        <h3 class="card-title">Penetapan Sasaran Kerja</h3>
     </div>
     <div class="card-body" style="display: block;">
     
     <form method="post" id="form_tambah_rencana_kinerja">
     
   <div class="form-group" >
-    <label for="exampleFormControlInput1">Kegiatan Tugas Jabatan</label>
+    <label for="exampleFormControlInput1">Uraian Tugas</label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
     <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
       <datalist id="tugasjabatan">
@@ -76,8 +76,7 @@
         <option >Pegawai</option>
         <option >SKPD</option>
         <option >Hari</option>
-        <option >Jam</option>
-</datalist>
+      </datalist>
    
     </div>
   </div>
@@ -103,7 +102,7 @@
   <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
-              <h6 class="modal-title">EDIT RENCANA KINERJA</h6>
+              <h6 class="modal-title">EDIT SASARAN KERJA</h6>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>

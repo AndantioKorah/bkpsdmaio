@@ -32,13 +32,13 @@
             <table class="table" border=1>
                 <thead>
                     <tr>
-                        <th style="width: 50%;" colspan=2 class="text-center">Kegiatan</th>
-                        <th style="width: 50%;" colspan=3 class="text-center">Rencana Kegiatan</th>
+                        <th style="width: 50%;" colspan=2 class="text-center">Detail Kegiatan</th>
+                        <th style="width: 50%;" colspan=3 class="text-center">Uraian Tugas</th>
                     </tr>
                     <tr>
-                        <th style="width: 40%;" colspan=1>Nama Kegiatan</th>
+                        <th style="width: 40%;" colspan=1>Nama Detail Kegiatan</th>
                         <th class="text-center" style="width: 10%;" colspan=1>Realisasi</th>
-                        <th style="width: 30%;" colspan=1>Nama Rencana Kegiatan</th>
+                        <th style="width: 30%;" colspan=1>Nama Uraian Tugas</th>
                         <th class="text-center" style="width: 10%;" colspan=1>Target</th>
                         <th class="text-center" style="width: 10%;" colspan=1>Satuan</th>
                     </tr>

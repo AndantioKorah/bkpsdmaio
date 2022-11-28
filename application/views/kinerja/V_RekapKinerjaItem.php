@@ -3,7 +3,7 @@
     <table border="2"  class="table table-hover table-striped" id="table_rekap_kinerja">
     <tbody><tr height="20" style="height:15.0pt">
     <th rowspan="2" class="table-danger" height="40" >No</th>
-    <th rowspan="2" class="table-danger">Kegiatan Tugas Jabatan</th>
+    <th rowspan="2" class="table-danger">Uraian Tugas</th>
     <th rowspan="2" class="table-danger">Sasaran Kerja</th>
     <th rowspan="2" class="table-danger">Tahun</th>
     <th rowspan="2" class="table-danger">Bulan</th>

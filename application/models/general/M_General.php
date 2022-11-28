@@ -220,13 +220,13 @@
                     ->from('m_role')
                     ->where('flag_active', 1);
             
-            if(in_array($unitkerja['id_unitkerjamaster'], $ukmsekolah)){
+            if(in_array($unitkerja['id_unitkerjamaster'], $ukmsekolah)){ //role untuk sekolah
                 $include_role = ['gurusekolah', 'kepalasekolah', 'administrator'];
-            } else if($explodeuk[0] == 'Kecamatan') {
+            } else if($explodeuk[0] == 'Kecamatan') { //role untuk kecamatan
                 $include_role = ['administrator', 'camat', 'sekretarisbadan', 'staffpelaksana', 'kepalabidang', 'subkoordinator'];
-            } else if($explodeuk[0] == 'Kelurahan') {
+            } else if($explodeuk[0] == 'Kelurahan') { //role untuk kelurahan
                 $include_role = ['administrator', 'lurah', 'sekretarisbadan', 'staffpelaksana', 'kepalabidang', 'subkoordinator'];
-            } else {
+            } else { //role untuk badan, dinas dsb
                 $include_role = ['administrator', 'kepalabadan', 'sekretarisbadan', 'staffpelaksana', 'kepalabidang', 'subkoordinator'];
             }
 

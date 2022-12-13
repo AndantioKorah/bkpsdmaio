@@ -308,7 +308,7 @@
 
 
 
- function getPelanggan() {
+ function getSatuan() {
         var id_t_rencana_kinerja = $('#tugas_jabatan').val(); 
         var base_url = "<?=base_url()?>";
         var prosesBar = $('.progress-bar');

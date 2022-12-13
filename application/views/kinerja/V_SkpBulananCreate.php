@@ -124,7 +124,31 @@
     </div>
     <div class="mt-4" id="konten_skp">
         <table border=1 style="width: 100%;">
+        <?php $no=1; 
+           foreach($list_perilaku_kerja as $lp){ ?>
             <tr>
+                    <td style="text-align: center; padding: 5px;"><b><?=$no++;?></b></td>
+                    <td style="padding: 5px;"><b><?=$lp['nama_perilaku_kerja']?></b>
+                    <td class="text-center">
+                    <span style="font-weight:bold; " id="<?=$lp['name_id'];?>"></span>
+                        </td>
+                     <?php foreach($lp['sub_perilaku_kerja'] as $sp){ ?>
+                        <tr rowspan="3">
+                            <td></td>
+                            <td><?=$sp['nama_sub_perilaku_kerja'];?></td>
+                            <td style="padding: 5px; text-align: center;" class="text-center;">
+                            <input  type="hidden" class="form-control form-control-sm" name="id_m_sub_perilaku_kerja[]" value="<?=$sp['id_m_sub_perilaku_kerja'];?>"  /> 
+                                <input  oninput="countNilaiKomponen()" type="hidden" id="<?=$sp['name_id'];?>" class="form-control form-control-sm hsl" name="nilai[]" max="100"  value="<?=$sp['nilai'] ? $sp['nilai'] : '' ?>"/> <?=$sp['nilai'] ? $sp['nilai'] : '' ?> </td>
+                        </tr>
+                        <?php } ?> 
+             
+                    </td>
+                    
+                 
+                  
+                </tr>
+            <?php } ?> 
+            <!-- <tr>
                 <td style="padding: 5px; font-weight: bold; width: 5%; text-align: center;">NO</td>
                 <td style="padding: 5px; font-weight: bold; width: 70%; text-align: center;">KOMPONEN KINERJA</td>
                 <td style="padding: 5px; font-weight: bold; width: 25%; text-align: center;">NILAI</td>
@@ -163,7 +187,7 @@
                 <td style="text-align: center; padding: 5px;">7</td>
                 <td style="padding: 5px;">Ketaatan</td>
                 <td class="text-center" style="padding: 5px;"><?=$nilai_komponen ? $nilai_komponen['ketaatan'] : ''?></td>
-            </tr>
+            </tr> -->
             <?php
                 $capaian = null;
                 $pembobotan = null;
@@ -177,11 +201,11 @@
             ?>
             <tr>
                 <td colspan=2 style="padding: 5px; text-align: right;"><strong>JUMLAH NILAI CAPAIAN</strong></td>
-                <td class="text-center" style="padding: 5px; font-size: 18px; font-weight: bold;"><?=$capaian?></td>
+                <td class="text-center" style="padding: 5px; font-size: 18px; font-weight: bold;"><span  id="capaian"></span></td>
             </tr>
             <tr>
                 <td colspan=2 style="padding: 5px; text-align: right;"><i>HASIL PEMBOBOTAN</i></td>
-                <td class="text-center" style="padding: 5px; font-size: 18px; font-weight: bold;"><i><?=$pembobotan?></i></td>
+                <td class="text-center" style="padding: 5px; font-size: 18px; font-weight: bold;"><i><span id="bobot"></span></td>
             </tr>
         </table>
     </div>
@@ -189,3 +213,97 @@
         <?php $data['width'] = '100'; $data['flag_komponen_kinerja'] = true; $this->load->view('kinerja/V_FooterSkpBulanan', $data); ?>
     </div>
 </div>
+<script>
+     $(function(){
+        countNilaiKomponen()
+    })
+
+    function countNilaiKomponen(){
+      
+        let perilaku1 = parseInt($('#sub_perilaku_1').val())
+                    + parseInt($('#sub_perilaku_2').val())
+                    + parseInt($('#sub_perilaku_3').val())
+        let total_perilaku1 = perilaku1 / 3;
+        let perilaku_1 = total_perilaku1.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_1)) == true) {
+            perilaku_1 = "";
+        }
+        $('#perilaku_1').html(perilaku_1)
+
+        let perilaku2 = parseInt($('#sub_perilaku_4').val())
+                    + parseInt($('#sub_perilaku_5').val())
+                    + parseInt($('#sub_perilaku_6').val())
+        let total_perilaku2 = perilaku2 / 3;
+        let perilaku_2 = total_perilaku2.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_2)) == true) {
+            perilaku_2 = "";
+        }
+        $('#perilaku_2').html(perilaku_2)
+
+        let perilaku3 = parseInt($('#sub_perilaku_7').val())
+                    + parseInt($('#sub_perilaku_8').val())
+                    + parseInt($('#sub_perilaku_9').val())
+        let total_perilaku3 = perilaku3 / 3;
+        let perilaku_3 = total_perilaku3.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_3)) == true) {
+            perilaku_3 = "";
+        }
+        $('#perilaku_3').html(perilaku_3)
+
+        let perilaku4 = parseInt($('#sub_perilaku_10').val())
+                    + parseInt($('#sub_perilaku_11').val())
+                    + parseInt($('#sub_perilaku_12').val())
+        let total_perilaku4 = perilaku4 / 3;
+        let perilaku_4 = total_perilaku4.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_4)) == true) {
+            perilaku_4 = "";
+        }
+        $('#perilaku_4').html(perilaku_4)
+
+        let perilaku5 = parseInt($('#sub_perilaku_13').val())
+                    + parseInt($('#sub_perilaku_14').val())
+                    + parseInt($('#sub_perilaku_15').val())
+        let total_perilaku5 = perilaku5 / 3;
+        let perilaku_5 = total_perilaku5.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_5)) == true) {
+            perilaku_5 = "";
+        }
+        $('#perilaku_5').html(perilaku_5)
+
+        let perilaku6 = parseInt($('#sub_perilaku_16').val())
+                    + parseInt($('#sub_perilaku_17').val())
+                    + parseInt($('#sub_perilaku_18').val())
+        let total_perilaku6 = perilaku6 / 3;
+        let perilaku_6 = total_perilaku6.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_6)) == true) {
+            perilaku_6 = "";
+        }
+        $('#perilaku_6').html(perilaku_6)
+
+        let perilaku7 = parseInt($('#sub_perilaku_19').val())
+                    + parseInt($('#sub_perilaku_20').val())
+                    + parseInt($('#sub_perilaku_21').val())
+        let total_perilaku7 = perilaku7 / 3;
+        let perilaku_7 = total_perilaku7.toFixed(2) 
+        if(isNaN(parseFloat(perilaku_7)) == true) {
+            perilaku_7 = "";
+        }
+        $('#perilaku_7').html(perilaku_7)
+
+        let capaian = parseInt(perilaku_1)
+                    + parseInt(perilaku_2)
+                    + parseInt(perilaku_3)
+                    + parseInt(perilaku_4)
+                    + parseInt(perilaku_5)
+                    + parseInt(perilaku_6)
+                    + parseInt(perilaku_7)
+
+        $('#capaian').html(capaian)
+        $('#nilai_capaian').val(capaian)
+        if(isNaN(parseFloat(capaian)) == true) {
+            capaian = "";
+        }
+        $('#nilai_bobot').val(countBobotNilaiKomponenKinerja(capaian).toFixed(2))
+        $('#bobot').html(countBobotNilaiKomponenKinerja(capaian).toFixed(2)+'%')
+    }
+</script>

@@ -187,6 +187,11 @@ class C_Master extends CI_Controller
         // $this->general->insert('m_besaran_tpp', $data);
     }
 
+    public function loadDataTppById($id){
+        $data['result'] = $this->master->loadDataTppById($id);
+        $this->load->view('master/V_TppEdit', $data);
+    }
+
     public function hapusMasterTpp($id){
         $this->general->delete('id', $id, 'm_besaran_tpp');
     }

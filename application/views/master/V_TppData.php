@@ -17,6 +17,7 @@
                     <td><?=$rs['id_jabatan'] == 0 || !$rs['id_jabatan'] ? '' : $rs['nama_jabatan']?></td>
                     <td><?=formatCurrency($rs['nominal'])?></td>
                     <td class="text-center">
+                        <button href="#edit_nominal_tpp" data-toggle="modal" onclick="editMasterTpp('<?=$rs['id']?>')" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</button>
                         <button onclick="hapusMasterTpp('<?=$rs['id']?>')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                     </td>
                 </tr>
@@ -27,6 +28,14 @@
         $(function(){
             $('.datatable').dataTable()
         })
+
+        function editMasterTpp(id){
+            $('#edit_nominal_tpp_content').html('')
+            $('#edit_nominal_tpp_content').append(divLoaderNavy)
+            $('#edit_nominal_tpp_content').load('<?=base_url("master/C_Master/loadDataTppById/")?>'+id, function(){
+                $('#loader').hide()
+            })
+        }
 
         function hapusMasterTpp(id){
             if(confirm('Apakah Anda yakin?')){

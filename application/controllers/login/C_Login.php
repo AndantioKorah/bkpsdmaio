@@ -56,6 +56,7 @@ class C_Login extends CI_Controller
             $active_role = null;
             $list_exist_url = null;
             $pegawai = $this->m_general->getDataPegawai($result[0]['username']);
+            $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
             // $sub_bidang = $this->m_general->getAllSubBidang();
             $list_sub_bidang = null;
             if($list_role){
@@ -83,6 +84,13 @@ class C_Login extends CI_Controller
                 redirect('login');
             }
 
+            $list_tpp_kelas_jabatan = null;
+            if($tpp_kelas_jabatan){
+                foreach($tpp_kelas_jabatan as $tpp){
+                    $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
+                }
+            }
+
             $this->session->set_userdata([
                 'user_logged_in' => $result,
                 'params' => $params,
@@ -98,6 +106,7 @@ class C_Login extends CI_Controller
                 'pegawai' => $pegawai,
                 // 'getBidangBySub' => $list_sub_bidang,
                 'ID_PENDAFTARAN_PASIEN' =>  null,
+                'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
             ]);
             if($params){
                 foreach($params as $p){

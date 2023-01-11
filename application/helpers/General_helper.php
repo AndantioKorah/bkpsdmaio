@@ -271,6 +271,10 @@ function getNamaPegawaiFull($pegawai){
     return trim($pegawai['gelar1']).' '.trim($pegawai['nama']).' '.trim($pegawai['gelar2']);
 }
 
+function sortArrayObjectValue($object1, $object2, $value) {
+    return $object1->$value > $object2->$value;
+}
+
 function getNamaBulan($bulan){
     $bulan = floatval($bulan);
     switch($bulan){

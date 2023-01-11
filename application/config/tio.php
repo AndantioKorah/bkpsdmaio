@@ -23,6 +23,7 @@ $route['rekapitulasi/realisasi-kinerja'] = 'kinerja/C_VerifKinerja/rekapRealisas
 $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensiNew';
 $route['rekapitulasi/penilaian/disiplin'] = 'rekap/C_Rekap/rekapPenilaianDisiplin';
 $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
+$route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
 $route['master/tpp'] = 'master/C_Master/tpp';
 
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';  

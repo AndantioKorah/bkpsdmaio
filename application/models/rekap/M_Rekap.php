@@ -522,7 +522,7 @@
                         $temp_data[$row]['rekap']['pksw1'] = 0;
                         $temp_data[$row]['rekap']['pksw2'] = 0;
                         $temp_data[$row]['rekap']['pksw3'] = 0;
-                        $temp_data[$row]['rekap']['alpa'] = 0;
+                        $temp_data[$row]['rekap']['TK'] = 0;
                         $temp_data[$row]['rekap']['jhk'] = 0;
                         $temp_data[$row]['rekap']['hadir'] = 0;
                         if($data['disiplin_kerja']){
@@ -567,7 +567,7 @@
                                             if($jam_absen[0] == '00:00'){
                                                 $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['ket'] = 'A';
                                                 $temp_data[$row]['absen'][$format_hari[$i]['tanggal']]['jam_masuk'] = 'A';
-                                                $temp_data[$row]['rekap']['alpa']++;
+                                                $temp_data[$row]['rekap']['TK']++;
                                             } else {
                                                 $temp_data[$row]['rekap']['hadir']++;
                                                 $diff_masuk = strtotime(trim($jam_absen[0])) - strtotime($format_hari[$i]['jam_masuk'].'+ 59 seconds');
@@ -748,6 +748,7 @@
         if(!$data['unitkerja']){
             return $data;
         }
+        $raw_data_excel = json_encode($data);
         $rs['id_unitkerja'] = $data['unitkerja']['id_unitkerja'];
         $rs['bulan'] = $data['bulan'];
         $rs['tahun'] = $data['tahun'];
@@ -757,7 +758,7 @@
                         ->from('db_pegawai.unitkerja a')
                         ->where('a.id_unitkerja', $rs['id_unitkerja'])
                         ->get()->row_array();
-
+                        
         $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
                             ->from('db_pegawai.pegawai a')
                             ->where('a.skpd', $data['unitkerja']['id_unitkerja'])
@@ -854,7 +855,7 @@
             $lp[$tr['nip']]['rekap']['pksw1'] = 0;
             $lp[$tr['nip']]['rekap']['pksw2'] = 0;
             $lp[$tr['nip']]['rekap']['pksw3'] = 0;
-            $lp[$tr['nip']]['rekap']['alpa'] = 0;
+            $lp[$tr['nip']]['rekap']['TK'] = 0;
             $lp[$tr['nip']]['rekap']['jhk'] = 0;
             $lp[$tr['nip']]['rekap']['hadir'] = 0;
             // $lp[$tr['nip']]['rekap']['hadir_mk'] = 0;
@@ -871,7 +872,7 @@
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                         } else {
-                            $lp[$tr['nip']]['rekap']['alpa']++;
+                            $lp[$tr['nip']]['rekap']['TK']++;
                         }
                     } else {
                         $lp[$tr['nip']]['rekap']['hadir']++;
@@ -910,7 +911,8 @@
         }
         $data['result'] = $lp;
         $rs['json_result'] = json_encode($lp);
-        
+        $data['raw_data_excel'] = $raw_data_excel;
+
         return $data;
     }
 
@@ -918,6 +920,7 @@
         $insert_data['json_result'] = json_encode($data);
         $insert_data['bulan'] = $data['bulan'];
         $insert_data['tahun'] = $data['tahun'];
+        $insert_data['raw_data_excel'] = $data['raw_data_excel'];
         $insert_data['id_unitkerja'] = $data['unitkerja']['id_unitkerja'];
         $insert_data['created_by'] = $this->general_library->getId();
         $this->db->where('bulan', $insert_data['bulan'])
@@ -929,13 +932,21 @@
     }
 
     public function readAbsensiFromDb($param){
-        return $this->db->select('*')
+        $result = null;
+
+        $data_absen = $this->db->select('*')
                     ->from('t_rekap_absen')
                     ->where('bulan', $param['bulan'])
                     ->where('tahun', $param['tahun'])
                     ->where('id_unitkerja', $param['skpd'])
                     ->where('flag_active', 1)
                     ->get()->row_array();
+        if($data_absen){
+            // dd($data_absen);
+            $result = $this->buildDataAbsensi(json_decode($data_absen['raw_data_excel'], true));
+        }
+
+        return $result;
     }
 
     public function saveDbRekapDisiplin($data){
@@ -1008,6 +1019,128 @@
     }
 
     public function rekapPenilaianDisiplinSearch($data){
+        $result = null;
+
+        $disiplin_kerja = $this->db->select('*')
+                            ->from('m_jenis_disiplin_kerja')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+        $mdisker = null;
+
+        $mdisker['tmk1']['nama'] = "Terlambat Masuk Kerja K1";
+        $mdisker['tmk1']['keterangan'] = 'tmk1';
+        $mdisker['tmk1']['pengurangan'] = 1;
+
+        $mdisker['tmk2']['nama'] = "Terlambat Masuk Kerja K2";
+        $mdisker['tmk2']['keterangan'] = 'tmk2';
+        $mdisker['tmk2']['pengurangan'] = 2;
+
+        $mdisker['tmk3']['nama'] = "Terlambat Masuk Kerja K3";
+        $mdisker['tmk3']['keterangan'] = 'tmk3';
+        $mdisker['tmk3']['pengurangan'] = 3;
+
+        $mdisker['pksw1']['nama'] = "Pulang Kerja Sebelum Waktu K1";
+        $mdisker['pksw1']['keterangan'] = 'pksw1';
+        $mdisker['pksw1']['pengurangan'] = 1;
+
+        $mdisker['pksw2']['nama'] = "Pulang Kerja Sebelum Waktu K2";
+        $mdisker['pksw2']['keterangan'] = 'pksw2';
+        $mdisker['pksw2']['pengurangan'] = 2;
+
+        $mdisker['pksw3']['nama'] = "Pulang Kerja Sebelum Waktu K3";
+        $mdisker['pksw3']['keterangan'] = 'pksw3';
+        $mdisker['pksw3']['pengurangan'] = 3;
+
+        foreach($disiplin_kerja as $dk){
+            $mdisker[$dk['keterangan']]['nama'] = $dk['nama_jenis_disiplin_kerja'];
+            $mdisker[$dk['keterangan']]['keterangan'] = $dk['keterangan'];
+            $mdisker[$dk['keterangan']]['pengurangan'] = $dk['pengurangan'];
+        }
+                            
+        $skpd = explode(";", $data['skpd']);
+        $param['bulan'] = $data['bulan'];
+        $param['tahun'] = $data['tahun'];
+        $param['skpd'] = $skpd[0];
+        $temp = $this->readAbsensiFromDb($param);
+        $data_absen = $this->db->select('*')
+                    ->from('t_rekap_absen')
+                    ->where('bulan', $param['bulan'])
+                    ->where('tahun', $param['tahun'])
+                    ->where('id_unitkerja', $param['skpd'])
+                    ->where('flag_active', 1)
+                    ->get()->row_array();
+        if($temp){
+            $result['skpd'] = $temp['skpd'];
+            $result['periode'] = $temp['periode'];
+            $result['bulan'] = $temp['bulan'];
+            $result['tahun'] = $temp['tahun'];
+            $result['mdisker'] = $mdisker;
+            foreach($temp['result'] as $tr){
+                if(isset($tr['nama_pegawai'])){
+                    $result['result'][$tr['nip']]['nama_pegawai'] = $tr['nama_pegawai'];
+                    $result['result'][$tr['nip']]['nip'] = $tr['nip'];
+                    $result['result'][$tr['nip']]['rekap']['jhk'] = $tr['rekap']['jhk'];
+                    $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['hadir'];
+                    
+                    $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] = 0;
+                    $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = 0;
+                    $total_pengurangan = 0;
+                    foreach($mdisker as $m){
+                        $total = $tr['rekap'][$m['keterangan']];
+                        $pengurangan = floatval($total) * floatval($m['pengurangan']);
+                        $total_pengurangan += $pengurangan;
+
+                        $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['total'] = $total;
+                        $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['pengurangan'] = $pengurangan;
+                    }
+
+                    if($total_pengurangan <= 100){
+                        $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] = 100 - $total_pengurangan;
+                        $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] * floatval(TARGET_BOBOT_DISIPLIN_KERJA/100);
+                    }
+                }
+            }
+        }
+
+        $this->db->where('id', $data_absen['id'])
+                ->update('t_rekap_absen', [
+                    'json_rekap_penilaian_disiplin_kerja' => json_encode($result)
+                ]);
+        
+        return $result;
+    }
+
+    public function rekapTppSearch($data){
+        $result = null;
+        $skpd = explode(";", $data['skpd']);
+        $param['bulan'] = $data['bulan'];
+        $param['tahun'] = $data['tahun'];
+        $param['skpd'] = $skpd[0];
+
+        $data_absen = $this->db->select('*')
+                    ->from('t_rekap_absen')
+                    ->where('bulan', $param['bulan'])
+                    ->where('tahun', $param['tahun'])
+                    ->where('id_unitkerja', $param['skpd'])
+                    ->where('flag_active', 1)
+                    ->get()->row_array();
+
+        $unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $param['skpd'])
+                            ->get()->row_array();
+
+        $data_absen['skpd'] = $unitkerja['nm_unitkerja'];
+        $data_absen['bulan'] = $param['bulan'];
+        $data_absen['tahun'] = $param['tahun'];
+                            
+        $this->session->set_userdata('data_absen_rekap_tpp', $data_absen);
+
+        return $data_absen;
+    }
+
+    public function rekapPenilaianDisiplinSearchOld($data){
         $skpd = explode(";", $data['skpd']);
 
         $data_disiplin_kerja = $this->db->select('a.*, b.username as nip, d.keterangan')

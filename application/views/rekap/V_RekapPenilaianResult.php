@@ -8,23 +8,27 @@
 ?>
         <div class="col-lg-12" style="width: 100%;">
             <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank">
-                <center><h5><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h5></center>
+                <?php if(isset($use_header) && $use_header == 1){ ?>
+                    <center><h5><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h5></center>
+                <?php } ?>
                 <br>
                 <?php if($flag_print == 0){ ?>
                     <button style="display: none;" type="submit" class="text-right float-right btn btn-navy btn-sm"><i class="fa fa-download"></i> Simpan sebagai Excel</button>
                 <?php } ?>
-                <table style="width: 100%;">
-                    <tr>
-                        <td>SKPD</td>
-                        <td>:</td>
-                        <td><?=$skpd[1]?></td>
-                    </tr>
-                    <tr>
-                        <td>Periode</td>
-                        <td>:</td>
-                        <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
-                    </tr>
-                </table>
+                <?php if(isset($use_header) && $use_header == 1){ ?>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>SKPD</td>
+                            <td>:</td>
+                            <td><?=$skpd[1]?></td>
+                        </tr>
+                        <tr>
+                            <td>Periode</td>
+                            <td>:</td>
+                            <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
+                        </tr>
+                    </table>
+                <?php } ?>
                 <table style="width: 100%;" border=1>
                     <tr>
                         <td style="text-align: center;" rowspan="2">No</td>

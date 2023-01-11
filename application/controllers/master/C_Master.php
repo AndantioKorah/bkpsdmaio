@@ -187,8 +187,33 @@ class C_Master extends CI_Controller
         // $this->general->insert('m_besaran_tpp', $data);
     }
 
+    public function inputMasterPresentaseTpp(){
+        echo json_encode($this->master->inputMasterPresentaseTpp($this->input->post()));
+
+        // $data = $this->input->post();
+        // $data['nominal'] = clearString($data['nominal']);
+        // $data['created_by'] = $this->general_library->getId();
+        // $this->general->insert('m_besaran_tpp', $data);
+    }
+    
     public function hapusMasterTpp($id){
         $this->general->delete('id', $id, 'm_besaran_tpp');
     }
 
+    public function presentaseTpp(){
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        $data['role'] = $this->general->getAll('m_role');
+        $data['pangkat'] = $this->general->getAll('db_pegawai.pangkat', 0);
+        $data['jabatan'] = $this->general->getAll('db_pegawai.jabatan', 0);
+        render('master/V_PresentaseTpp', '', '', $data);
+    }
+
+    public function loadPresentaseTpp(){
+        $data['result'] = $this->master->loadPresentaseTpp();
+        $this->load->view('master/V_PresentaseTppData', $data);
+    }
+
+    public function hapusMasterPresentaseTpp($id){
+        $this->general->delete('id', $id, 'm_presentase_tpp');
+    }
 }

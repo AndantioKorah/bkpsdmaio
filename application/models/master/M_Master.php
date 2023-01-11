@@ -352,6 +352,17 @@
                             ->get()->result_array();
         }
 
+        public function loadDataTppById($id){
+            return $this->db->select('a.nominal, b.nm_unitkerja, c.nm_pangkat, a.id, a.id_jabatan,
+                            (SELECT (d.nama_jabatan) FROM db_pegawai.jabatan d WHERE d.id_jabatanpeg = a.id_jabatan LIMIT 1) as nama_jabatan')
+                            ->from('m_besaran_tpp a')
+                            ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                            ->join('db_pegawai.pangkat c', 'a.id_pangkat = c.id_pangkat')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id', $id)
+                            ->get()->row_array();
+        }
+
         public function inputMasterTpp($data){
             $insert_data = null;
             $i = 0;

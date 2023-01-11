@@ -94,7 +94,8 @@ define('DB_NAME', 'db_efort');
 
 
 define('KODE_TRANSAKSI', '01');
-define('KODE_TRANSAKSI_PEMBAYARAN', '02');
+define('KODE_TRANSAKSI_PEMBAYARAN', '02');  
+ 
 define('KODE_TRANSAKSI_UANG_MUKA', '03');
 
 define('VERSION', 'Version 1.0');

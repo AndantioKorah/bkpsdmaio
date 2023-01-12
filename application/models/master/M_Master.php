@@ -377,5 +377,36 @@
 
             $this->db->insert_batch('m_besaran_tpp', $insert_data);
         }
+
+        public function loadPresentaseTpp(){
+            return $this->db->select('a.*, b.nm_unitkerja')
+                            ->from('m_presentase_tpp a')
+                            ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.created_date', 'desc')
+                            ->get()->result_array();
+        }
+
+        public function inputMasterPresentaseTpp(){
+            $data = $this->input->post();
+            $rs['code'] = 0;
+            $rs['message'] = 'OK';
+
+            $exists = $this->db->select('*')
+                                ->from('m_presentase_tpp')
+                                ->where('flag_active', 1)
+                                ->where('id_unitkerja', $data['id_unitkerja'])
+                                ->where('kelas_jabatan', $data['kelas_jabatan'])
+                                ->where('jenis_jabatan', $data['jenis_jabatan'])
+                                ->get()->row_array();
+            if($exists){
+                $rs['code'] = 1;
+                $rs['message'] = 'Data Presentase dengan SKPD dan Kelas Jabatan sudah ada';
+            } else {
+                $this->db->insert('m_presentase_tpp', $data);
+            }
+
+            return $rs;
+        }
 	}
 ?>

@@ -448,7 +448,15 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->verifDokumen($id, $status));
     }
 
+    public function paguTpp(){
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_PaguTpp', '', '', $data);
+    }
 
+    public function countPaguTpp(){
+        $data['result'] = $this->kinerja->countPaguTpp($this->input->post());
+        $this->load->view('kinerja/V_PaguTppData', $data);
+    }
   
 
     

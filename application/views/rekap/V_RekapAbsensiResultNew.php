@@ -104,7 +104,8 @@
                         <?php } } ?>
                     </thead>
                     <tbody>
-                        <?php $no = 1; foreach($result as $rs){
+                        <?php  $no = 1; foreach($result as $rs){
+                          
                         if(isset($rs['absen'])){
                         $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                         ?>

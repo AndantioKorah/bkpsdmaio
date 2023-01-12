@@ -21,13 +21,31 @@
             </div>
             <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Jenis Disiplin</label>  
-                <select class="form-control select2-navy" style="width: 100%"
+                <select class="form-control select2-navy" style="width: 100%" onchange="suratTugas(this);"
                     id="jenis_disiplin" data-dropdown-css-class="select2-navy" name="jenis_disiplin">
                     <?php foreach($jenis_disiplin as $j){ ?>
                         <option value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan']?>"><?=$j['nama_jenis_disiplin_kerja']?></option>
                     <?php } ?>
                 </select>
             </div>
+
+
+            <div class="col-lg-12 col-md-12 mt-3" id="jenissurattugas" style="display:none">
+               
+               <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas1" value="Surat Tugas Pagi">
+                <label class="form-check-label" for="jenissurattugas1">Pagi</label>
+                </div>
+                <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas2" value="Surat Tugas Sore">
+                <label class="form-check-label" for="jenissurattugas2">Sore</label>
+                </div>
+                <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas3" value="Surat Tugas">
+                <label class="form-check-label" for="jenissurattugas3">Semua</label>
+                </div>
+            </div>
+
             <div class="col-lg-12 col-md-12 mt-3">
                 <label>Dokumen Pendukung</label>  
                 <input class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
@@ -86,4 +104,16 @@
             }
         })
     })
+
+  
+                function suratTugas(sel)
+                {
+                    if(sel.value == "18;Surat Tugas;"){
+                      $('#jenissurattugas').show()
+                    } else {
+                        $('#jenissurattugas').hide()
+                    }
+                }
+       
+
 </script>

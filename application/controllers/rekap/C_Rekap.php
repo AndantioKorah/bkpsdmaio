@@ -64,6 +64,7 @@ class C_Rekap extends CI_Controller
         // if($temp){
         //     $data = json_decode($temp['json_result'], true);
         // }
+        // dd($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 

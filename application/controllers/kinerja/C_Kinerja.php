@@ -344,7 +344,7 @@ class C_Kinerja extends CI_Controller
     public function insertDisiplinKerja(){
         $this->load->library('image_lib');
         $countfiles = count($_FILES['files']['name']);
-
+       
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         $ress = 1;
         if(implode($_FILES['files']['name']) == ""){

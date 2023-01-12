@@ -832,12 +832,14 @@
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
+    //    dd($tmp_dokpen);
         if($tmp_dokpen){
             foreach($tmp_dokpen as $dok){
+               
                 $tanggal_dok = $dok['tanggal'] < 10 ? '0'.$dok['tanggal'] : $dok['tanggal'];
                 $bulan_dok = $dok['bulan'] < 10 ? '0'.$dok['bulan'] : $dok['bulan'];
                 $date_dok = $dok['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
-
+              
                 $dokpen[$dok['nip']]['nip'] = $dok['nip'];
                 $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
             }
@@ -863,7 +865,7 @@
             } 
             // $i++;
         }
-
+      
         foreach($tempresult as $tr){
             $lp[$tr['nip']] = $tr;
             $lp[$tr['nip']]['rekap']['tmk1'] = 0;
@@ -882,10 +884,11 @@
                 }
             }
             foreach($list_hari as $l){
+                
                 if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
                     $lp[$tr['nip']]['rekap']['jhk']++;
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
-                        if(isset($dokpen[$tr['nip']][$l])){
+                        if(isset($dokpen[$tr['nip']][$l])){                          
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                         } else {
@@ -893,6 +896,7 @@
                         }
                     } else {
                         $lp[$tr['nip']]['rekap']['hadir']++;
+                       
                         $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
                         if($diff_masuk > 0){
                             $ket_masuk = floatval($diff_masuk) / 1800;
@@ -907,7 +911,8 @@
                                 $lp[$tr['nip']]['rekap']['tmk3']++;
                             }
                         }
-
+                        
+                     
                         $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
                         if($diff_keluar > 0){
                             $ket_pulang = floatval($diff_keluar) / 1800;
@@ -921,11 +926,12 @@
                                 $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
                                 $lp[$tr['nip']]['rekap']['pksw3']++;
                             }
-                        }
-                    }
+                        }  
+                    }   
                 }
-            }
+            } 
         }
+      
         $data['result'] = $lp;
         $rs['json_result'] = json_encode($lp);
         $data['raw_data_excel'] = $raw_data_excel;
@@ -961,6 +967,7 @@
         if($data_absen){
             // dd($data_absen['raw_data_excel']);
             $result = $this->buildDataAbsensi(json_decode($data_absen['raw_data_excel'], true));
+           
         }
        
         return $result;

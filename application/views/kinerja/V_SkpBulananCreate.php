@@ -192,11 +192,11 @@
                 $capaian = null;
                 $pembobotan = null;
                 if($nilai_komponen){
-                    list($capaian, $pembobotan) = countNilaiKomponen($nilai_komponen);
+                    // list($capaian, $pembobotan) = countNilaiKomponen($nilai_komponen);
                     // $pembobotan = $pembobotan * 100;
                     // dd($p['created_by']);
                     // dd($this->general_library->getId());
-                    $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
+                    // $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
                 }
             ?>
             <tr>

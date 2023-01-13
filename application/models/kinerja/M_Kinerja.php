@@ -788,7 +788,12 @@
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
-                    $insert_data[$i]['keterangan'] = $disiplin[1];
+                    if($disiplin[0] == 18){
+                        $insert_data[$i]['keterangan'] = $data['jenis_surat_tugas'];
+                    } else {
+                        $insert_data[$i]['keterangan'] = $disiplin[1];
+                    }
+                   
                     $insert_data[$i]['pengurangan'] = $disiplin[2];
                     $insert_data[$i]['dokumen_pendukung'] = $filename;
                     $insert_data[$i]['created_by'] = $this->general_library->getId();
@@ -797,7 +802,6 @@
                 // }
             }
         }
-        
         $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
 
         if($this->db->trans_status() == FALSE){

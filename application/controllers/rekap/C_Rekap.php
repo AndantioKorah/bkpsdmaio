@@ -64,6 +64,7 @@ class C_Rekap extends CI_Controller
         // if($temp){
         //     $data = json_decode($temp['json_result'], true);
         // }
+        // dd($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 
@@ -83,6 +84,7 @@ class C_Rekap extends CI_Controller
             $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
             $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
         }
+        
         $this->load->view('rekap/V_RekapPenilaianResult', $data);
     }
 

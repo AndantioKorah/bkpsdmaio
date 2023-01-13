@@ -133,66 +133,76 @@
     })
 
     function countNilaiKomponen(){
+
+        const toFixedWithoutZeros = (num, precision) =>
+  `${1 * num.toFixed(precision)}`;
+
       
         let perilaku1 = parseInt($('#sub_perilaku_1').val())
                     + parseInt($('#sub_perilaku_2').val())
                     + parseInt($('#sub_perilaku_3').val())
         let total_perilaku1 = perilaku1 / 3;
-        let perilaku_1 = total_perilaku1.toFixed(2) 
+        let perilaku_1 = parseFloat(total_perilaku1.toFixed(2))
         $('#perilaku_1').val(perilaku_1)
+        
 
         let perilaku2 = parseInt($('#sub_perilaku_4').val())
                     + parseInt($('#sub_perilaku_5').val())
                     + parseInt($('#sub_perilaku_6').val())
         let total_perilaku2 = perilaku2 / 3;
-        let perilaku_2 = total_perilaku2.toFixed(2) 
+        let perilaku_2 = parseFloat(total_perilaku2.toFixed(2)) 
         $('#perilaku_2').val(perilaku_2)
 
         let perilaku3 = parseInt($('#sub_perilaku_7').val())
                     + parseInt($('#sub_perilaku_8').val())
                     + parseInt($('#sub_perilaku_9').val())
         let total_perilaku3 = perilaku3 / 3;
-        let perilaku_3 = total_perilaku3.toFixed(2) 
+        let perilaku_3 = parseFloat(total_perilaku3.toFixed(2)) 
         $('#perilaku_3').val(perilaku_2)
 
         let perilaku4 = parseInt($('#sub_perilaku_10').val())
                     + parseInt($('#sub_perilaku_11').val())
                     + parseInt($('#sub_perilaku_12').val())
         let total_perilaku4 = perilaku4 / 3;
-        let perilaku_4 = total_perilaku4.toFixed(2) 
+        let perilaku_4 = parseFloat(total_perilaku4.toFixed(2)) 
         $('#perilaku_4').val(perilaku_4)
 
         let perilaku5 = parseInt($('#sub_perilaku_13').val())
                     + parseInt($('#sub_perilaku_14').val())
                     + parseInt($('#sub_perilaku_15').val())
         let total_perilaku5 = perilaku5 / 3;
-        let perilaku_5 = total_perilaku5.toFixed(2) 
+        let perilaku_5 = parseFloat(total_perilaku5.toFixed(2)) 
         $('#perilaku_5').val(perilaku_5)
 
         let perilaku6 = parseInt($('#sub_perilaku_16').val())
                     + parseInt($('#sub_perilaku_17').val())
                     + parseInt($('#sub_perilaku_18').val())
         let total_perilaku6 = perilaku6 / 3;
-        let perilaku_6 = total_perilaku6.toFixed(2) 
+        let perilaku_6 = parseFloat(total_perilaku6.toFixed(2))
         $('#perilaku_6').val(perilaku_6)
 
         let perilaku7 = parseInt($('#sub_perilaku_19').val())
                     + parseInt($('#sub_perilaku_20').val())
                     + parseInt($('#sub_perilaku_21').val())
         let total_perilaku7 = perilaku7 / 3;
-        let perilaku_7 = total_perilaku7.toFixed(2) 
+        let perilaku_7 = parseFloat(total_perilaku7.toFixed(2))
         $('#perilaku_7').val(perilaku_7)
+        
 
-        let capaian = parseInt($('#perilaku_1').val())
-                    + parseInt($('#perilaku_2').val())
-                    + parseInt($('#perilaku_3').val())
-                    + parseInt($('#perilaku_4').val())
-                    + parseInt($('#perilaku_5').val())
-                    + parseInt($('#perilaku_6').val())
-                    + parseInt($('#perilaku_7').val())
 
-        $('#capaian').html(capaian)
-        $('#nilai_capaian').val(capaian)
+        let capaian = parseFloat($('#perilaku_1').val())
+                    + parseFloat($('#perilaku_2').val())
+                    + parseFloat($('#perilaku_3').val())
+                    + parseFloat($('#perilaku_4').val())
+                    + parseFloat($('#perilaku_5').val())
+                    + parseFloat($('#perilaku_6').val())
+                    + parseFloat($('#perilaku_7').val())
+
+        // $('#capaian').html(capaian.toFixed(2))
+        // $('#nilai_capaian').val(capaian.toFixed(2))
+
+        $('#capaian').html(toFixedWithoutZeros(capaian, 2))
+        $('#nilai_capaian').val(toFixedWithoutZeros(capaian, 2))
         
         $('#nilai_bobot').val(countBobotNilaiKomponenKinerja(capaian).toFixed(2))
         $('#bobot').html(countBobotNilaiKomponenKinerja(capaian).toFixed(2)+'%')

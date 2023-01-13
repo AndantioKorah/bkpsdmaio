@@ -141,8 +141,6 @@ define('ROW_PER_PAGE_CETAK_TINDAKAN', 45);
 
 define('VONAGE_API_KEY', 'b9e13f92');
 define('VONAGE_API_SECRET', 'd9b1754f4da78a5a');
-define('TARGET_BOBOT_PRODUKTIVITAS_KERJA', 60);
-define('TARGET_BOBOT_DISIPLIN_KERJA', 40);
 define('TARGET_PENILAIAN_DISIPLIN_KERJA', 100);
 define('URL_API_HARI_LIBUR', 'https://api-harilibur.vercel.app/api');
 define('LIST_UNIT_KERJA_KHUSUS', [4011000, 4026000, 4012000, 4018000, 1010400, 1030750, 1020500, 7005010, 7005020]);
@@ -154,3 +152,8 @@ define('ID_BIDANG_PEKIN', 166);
 define('URL_MENU_PEKIN', ['rekapitulasi/absensi', 'dokumen-pendukung-absensi/verifikasi']);
 define('ID_UNITKERJA_DIKBUD', 3010000);
 define('DOKUMEN_PENDUKUNG_DISIPLIN_KERJA', 'assets/dokumen_pendukung_disiplin_kerja');
+
+define('TARGET_BOBOT_PRODUKTIVITAS_KERJA', 60);
+define('TARGET_BOBOT_DISIPLIN_KERJA', 40);
+define('BOBOT_NILAI_SKBP', 0.3);
+define('BOBOT_NILAI_KOMPONEN_KINERJA', 0.3);

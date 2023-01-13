@@ -1323,7 +1323,66 @@
                 $i++;
             }
         }
-        dd(json_encode($result));
+        // dd(json_encode($result));
+        return $result;
+    }
+    
+    public function getDaftarPerhitunganTpp($pagu_tpp, $rekap, $param){
+        $data_disiplin_kerja = null;
+        if(isset($data_rekap['penilaian_disiplin_kerja'])){
+            $data_disiplin_kerja = null;
+            $data_disiplin_kerja = $data_rekap['penilaian_disiplin_kerja'];
+        } else {
+            $data_disiplin_kerja = $this->rekapPenilaianDisiplinSearch($param);
+            $data_disiplin_kerja['flag_print'] = 0;
+            $data_disiplin_kerja['use_header'] = 0;
+            $temp['penilaian_disiplin_kerja'] = $data_disiplin_kerja;
+            $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_disiplin_kerja);
+        }
+        $temp_disiplin_kerja = $data_disiplin_kerja;
+        $data_disiplin_kerja = null;
+        foreach($temp_disiplin_kerja['result'] as $tdk){
+            if(isset($tdk['nip'])){
+                $data_disiplin_kerja[$tdk['nip']] = $tdk;
+            }
+        }
+
+        $data_kinerja = null;
+        if(isset($data_rekap['produktivitas_kerja'])){
+            $data_kinerja = null;
+            $data_kinerja = $data_rekap['produktivitas_kerja'];
+        } else {
+            $data_kinerja = $this->rekapPenilaianSearch($param);
+            $data_kinerja['parameter'] = $param;
+            $data_kinerja['flag_print'] = 0;
+            $data_kinerja['use_header'] = 0;
+            $temp['produktivitas_kerja'] = $data_kinerja;
+            $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_kinerja);
+        }
+        $temp_kinerja = $data_kinerja;
+        $data_kinerja = null;
+        foreach($temp_kinerja as $tdk){
+            if(isset($tdk['nip'])){
+                $data_kinerja[$tdk['nip']] = $tdk;
+            }
+        }
+
+        $result = null;
+        foreach($pagu_tpp as $p){
+            if(isset($data_disiplin_kerja[$p['nipbaru_ws']])){
+                $result[$p['nipbaru_ws']]['nama_pegawai'] = getNamaPegawaiFull($p);
+                $result[$p['nipbaru_ws']]['nip'] = $p['nipbaru_ws'];
+                $result[$p['nipbaru_ws']]['pangkat'] = $p['nm_pangkat'];
+                $result[$p['nipbaru_ws']]['nama_jabatan'] = $p['nama_jabatan'];
+                $result[$p['nipbaru_ws']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                $result[$p['nipbaru_ws']]['pagu_tpp'] = $p['pagu_tpp'];
+                $result[$p['nipbaru_ws']]['bobot_produktivitas_kerja'] = $data_kinerja[$p['nipbaru_ws']]['bobot_capaian_produktivitas_kerja'];
+                $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'] = $data_disiplin_kerja[$p['nipbaru_ws']]['rekap']['capaian_bobot_disiplin_kerja'];
+                $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
+                $result[$p['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$p['nipbaru_ws']]['presentase_tpp']) * floatval($p['pagu_tpp'])) / 100;
+            }
+        }
+
         return $result;
     }
 }

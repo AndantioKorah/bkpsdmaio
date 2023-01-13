@@ -284,15 +284,15 @@
                 return null;
             }
             $list_kerja = null;
-            $temp = $this->db->select('*, a.id as id_t_kegiatan, a.created_date as tanggal_kegiatan, a.realisasi_target_kuantitas')
+            $temp = $this->db->select('*, a.id as id_t_kegiatan, a.tanggal_kegiatan as tanggal_kegiatan, a.realisasi_target_kuantitas')
                                 ->from('t_kegiatan a')
                                 ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
                                 ->join('m_user c', 'a.id_m_user = c.id')
                                 ->where('a.flag_active', 1)
                                 ->where_in('a.id_m_user', $list_id_pegawai)
-                                ->where('a.created_date >=', $startDate.' 00:00:00')
-                                ->where('a.created_date <=', $endDate.' 23:59:59')
-                                ->order_by('a.created_date', 'desc')
+                                ->where('a.tanggal_kegiatan >=', $startDate.' 00:00:00')
+                                ->where('a.tanggal_kegiatan <=', $endDate.' 23:59:59')
+                                ->order_by('a.tanggal_kegiatan', 'desc')
                                 ->group_by('a.id')
                                 ->get()->result_array();
 

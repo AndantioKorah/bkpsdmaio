@@ -8,7 +8,7 @@
             <th class="text-center">Pilihan</th>
         </thead>
         <tbody>
-            <?php $no=1; foreach($result as $rs){ ?>
+            <?php $no=1; foreach($result as $rs){ dd(json_encode($rs));?>
                 <tr>
                     <td class="text-center"><?=$no++;?></td>
                     <td class="text-center"><?=$rs['jenis_skpd']?></td>

@@ -221,10 +221,15 @@ class C_Rekap extends CI_Controller
 
             case "daftar_perhitungan_tpp":
                 if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
-                    $data = $data_rekap['daftar_perhitungan_tpp'];
+                    $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 } else {
-                    $data = $this->rekap->getDaftarPerhitunganTpp();
+                    $explode_param = explode(";", $param['skpd']);
+                    $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
+                    $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                    $temp['daftar_perhitungan_tpp'] = $data['result'];
+                    $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
                 }
+                $this->load->view('rekap/V_RekapPerhitunganTpp', $data);
             break;
         }
     }

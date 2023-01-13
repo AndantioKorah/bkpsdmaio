@@ -26,7 +26,7 @@
                                 <option selected value="absen">Rekap Absensi</option>
                                 <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
-                                <option value="penilaian_tpp">Rekap Penilaian TPP</option>
+                                <!-- <option value="penilaian_tpp">Rekap Penilaian TPP</option> -->
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
                             </select>    
                         </td>

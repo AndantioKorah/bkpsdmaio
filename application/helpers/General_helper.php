@@ -83,6 +83,9 @@ function countNilaiSkp($data){
         if($result['bobot'] > 30){
             $result['bobot'] = 30;
         }
+        if($result['capaian'] > 100){
+            $result['capaian'] = 100;
+        }
     }
     return $result;
 }

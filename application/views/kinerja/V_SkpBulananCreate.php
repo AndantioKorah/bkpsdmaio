@@ -75,7 +75,11 @@
                 if(floatval($rk['total_realisasi']) > 0){
                     $nilai_capaian = (floatval($rk['total_realisasi']) / floatval($rk['target_kuantitas'])) * 100;
                 }
+                if($nilai_capaian > 100){
+                    $nilai_capaian = 100;
+                }
                 $akumulasi_nilai_capaian += $nilai_capaian;
+             
             ?>
                 <tr>
                     <td style="padding: 5px;" class="text-center"><?=$no++;?></td>

@@ -346,9 +346,9 @@
                                                     ->where('a.id', $kegiatan['id_t_rencana_kinerja'])
                                                     ->get()->row_array();
 
-                        if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
-                            $rencana_kegiatan['sum_realisasi'] = 100;
-                        }
+                        // if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
+                        //     $rencana_kegiatan['sum_realisasi'] = 100;
+                        // }
                         $this->db->where('id', $rencana_kegiatan['id'])
                                     ->update('t_rencana_kinerja', ['total_realisasi' => floatval($rencana_kegiatan['sum_realisasi'])]);
                         
@@ -378,9 +378,9 @@
                                 ->where('a.id', $kegiatan['id_t_rencana_kinerja'])
                                 ->get()->row_array();
                                     
-                        if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
-                            $rencana_kegiatan['sum_realisasi'] = 100;
-                        }
+                        // if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
+                        //     $rencana_kegiatan['sum_realisasi'] = 100;
+                        // }
                         $this->db->where('id', $rencana_kegiatan['id'])
                                 ->update('t_rencana_kinerja', ['total_realisasi' => floatval($rencana_kegiatan['sum_realisasi'])]);
                     } else {

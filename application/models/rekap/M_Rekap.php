@@ -832,7 +832,7 @@
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
-    //    dd($tmp_dokpen);
+      
         if($tmp_dokpen){
             foreach($tmp_dokpen as $dok){
                
@@ -844,7 +844,7 @@
                 $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
             }
         }
-
+       
         $tempresult = $data['result'];
         $data['result'] = null;
         $periode = explode(" ", $data['periode']);
@@ -886,9 +886,11 @@
             foreach($list_hari as $l){
                 
                 if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
+                    
                     $lp[$tr['nip']]['rekap']['jhk']++;
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
-                        if(isset($dokpen[$tr['nip']][$l])){                          
+                       
+                        if(isset($dokpen[$tr['nip']][$l])){  
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                         } else {

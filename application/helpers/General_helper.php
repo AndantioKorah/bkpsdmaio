@@ -56,7 +56,7 @@ function countNilaiKomponen($data){
     if($capaian < 350){
         $bobot = 0;
     } else if ($capaian > 350 && $capaian < 679){
-        $bobot = ($capaian / 700) * 0.3;
+        $bobot = ($capaian / 700) * floatval(BOBOT_NILAI_KOMPONEN_KINERJA);
         $bobot = $bobot * 100;
     }
     
@@ -79,7 +79,7 @@ function countNilaiSkp($data){
         if(count($data) != 0){
             $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
         }
-        $result['bobot'] = $result['capaian'] * 0.3;
+        $result['bobot'] = $result['capaian'] * floatval(BOBOT_NILAI_SKBP);
         if($result['bobot'] > 30){
             $result['bobot'] = 30;
         }

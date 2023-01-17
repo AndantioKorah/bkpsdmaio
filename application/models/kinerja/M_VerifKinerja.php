@@ -284,15 +284,15 @@
                 return null;
             }
             $list_kerja = null;
-            $temp = $this->db->select('*, a.id as id_t_kegiatan, a.created_date as tanggal_kegiatan, a.realisasi_target_kuantitas')
+            $temp = $this->db->select('*, a.id as id_t_kegiatan, a.tanggal_kegiatan as tanggal_kegiatan, a.realisasi_target_kuantitas')
                                 ->from('t_kegiatan a')
                                 ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
                                 ->join('m_user c', 'a.id_m_user = c.id')
                                 ->where('a.flag_active', 1)
                                 ->where_in('a.id_m_user', $list_id_pegawai)
-                                ->where('a.created_date >=', $startDate.' 00:00:00')
-                                ->where('a.created_date <=', $endDate.' 23:59:59')
-                                ->order_by('a.created_date', 'desc')
+                                ->where('a.tanggal_kegiatan >=', $startDate.' 00:00:00')
+                                ->where('a.tanggal_kegiatan <=', $endDate.' 23:59:59')
+                                ->order_by('a.tanggal_kegiatan', 'desc')
                                 ->group_by('a.id')
                                 ->get()->result_array();
 
@@ -346,9 +346,9 @@
                                                     ->where('a.id', $kegiatan['id_t_rencana_kinerja'])
                                                     ->get()->row_array();
 
-                        if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
-                            $rencana_kegiatan['sum_realisasi'] = 100;
-                        }
+                        // if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
+                        //     $rencana_kegiatan['sum_realisasi'] = 100;
+                        // }
                         $this->db->where('id', $rencana_kegiatan['id'])
                                     ->update('t_rencana_kinerja', ['total_realisasi' => floatval($rencana_kegiatan['sum_realisasi'])]);
                         
@@ -378,9 +378,9 @@
                                 ->where('a.id', $kegiatan['id_t_rencana_kinerja'])
                                 ->get()->row_array();
                                     
-                        if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
-                            $rencana_kegiatan['sum_realisasi'] = 100;
-                        }
+                        // if(floatval($rencana_kegiatan['sum_realisasi']) > 100){
+                        //     $rencana_kegiatan['sum_realisasi'] = 100;
+                        // }
                         $this->db->where('id', $rencana_kegiatan['id'])
                                 ->update('t_rencana_kinerja', ['total_realisasi' => floatval($rencana_kegiatan['sum_realisasi'])]);
                     } else {
@@ -695,7 +695,7 @@
             ->where('a.bulan', $_POST['bulan'])
             ->group_by('a.id')
             ->get()->result_array();
-
+          
             if($exist){
 
                 for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
@@ -706,6 +706,15 @@
                     $data_update['nilai'] = $nilai;
                     $data_update['capaian'] = $_POST['nilai_capaian'];
                     $data_update['bobot'] = $_POST['nilai_bobot'];
+
+                    $data_update2['berorientasi_pelayanan'] = $_POST['perilaku_1'];
+                    $data_update2['akuntabel'] = $_POST['perilaku_2'];
+                    $data_update2['kompeten'] = $_POST['perilaku_3'];
+                    $data_update2['harmonis'] = $_POST['perilaku_4'];
+                    $data_update2['loyal'] = $_POST['perilaku_5'];
+                    $data_update2['adaptif'] = $_POST['perilaku_6'];
+                    $data_update2['kolaboratif'] = $_POST['perilaku_7'];
+                    // dd($data_update2);
                    
             
                     $this->db->where('id_m_user', $_POST['id_m_user'])
@@ -713,13 +722,19 @@
                              ->where('bulan', $_POST['bulan'])
                              ->where('id_m_sub_perilaku_kerja', $id_m_sub_perilaku_kerja)
                             ->update('t_komponen_kinerja_new', $data_update);
+
+                    $this->db->where('id_m_user', $_POST['id_m_user'])
+                            ->where('tahun', $_POST['tahun'])
+                            ->where('bulan', $_POST['bulan'])
+                           ->update('t_komponen_kinerja', $data_update2);
                 
                 }
                 return $res;
 
             } else {
-
+               
                 for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
+                   
                     $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
                     $nilai = $_POST['nilai'][$count];         
                     $insert_data['tahun'] = $_POST['tahun'];
@@ -730,8 +745,23 @@
                     $insert_data['capaian'] = $_POST['nilai_capaian'];
                     $insert_data['bobot'] = $_POST['nilai_bobot'];
                     $this->db->insert('t_komponen_kinerja_new', $insert_data);
-                
+
+               
+
+              
                 }
+                $insert_data2['created_by'] = $this->general_library->getId();
+                $insert_data2['berorientasi_pelayanan'] = $_POST['perilaku_1'];
+                $insert_data2['akuntabel'] = $_POST['perilaku_2'];
+                $insert_data2['kompeten'] = $_POST['perilaku_3'];
+                $insert_data2['harmonis'] = $_POST['perilaku_4'];
+                $insert_data2['loyal'] = $_POST['perilaku_5'];
+                $insert_data2['adaptif'] = $_POST['perilaku_6'];
+                $insert_data2['kolaboratif'] = $_POST['perilaku_7'];
+                $insert_data2['tahun'] = $_POST['tahun'];
+                $insert_data2['bulan'] = $_POST['bulan'];
+                $insert_data2['id_m_user'] = $_POST['id_m_user'];
+                $this->db->insert('t_komponen_kinerja', $insert_data2);
                 return $res;
 
             }

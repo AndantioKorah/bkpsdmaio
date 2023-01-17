@@ -338,6 +338,9 @@
             var total_realisasi_kuantitas = data[0].total_realisasi_kuantitas;
             var tugas_jabatan = data[0].tugas_jabatan;
             var total_progress =  (data[0].total_realisasi_kuantitas/data[0].target_kuantitas) * 100;
+            if(total_progress > 100){
+              var total_progress = 100;
+            }
             var nilai_pembulatan = (Math.floor(total_progress * 100) / 100).toFixed(2);
             var target_kuantitas = data[0].target_kuantitas;
             var sudah_verif = data[0].total_realisasi_kuantitas;

@@ -693,7 +693,7 @@
         $result = $this->db->get()->result_array();
 
         $id_count = $this->general_library->getId();
-        if($this->general_library->isAdministrator()){
+        if($this->general_library->isAdministrator() || $this->general_library->isProgrammer()){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         } 
         $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
@@ -788,7 +788,12 @@
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
-                    $insert_data[$i]['keterangan'] = $disiplin[1];
+                    if($disiplin[0] == 18){
+                        $insert_data[$i]['keterangan'] = $data['jenis_surat_tugas'];
+                    } else {
+                        $insert_data[$i]['keterangan'] = $disiplin[1];
+                    }
+                   
                     $insert_data[$i]['pengurangan'] = $disiplin[2];
                     $insert_data[$i]['dokumen_pendukung'] = $filename;
                     $insert_data[$i]['created_by'] = $this->general_library->getId();
@@ -797,7 +802,6 @@
                 // }
             }
         }
-        
         $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
 
         if($this->db->trans_status() == FALSE){
@@ -1040,6 +1044,268 @@
         }
         
         return $rs;
+    }
+
+
+    public function getPaguTppUnitKerja($id_unitkerja, $unitkerja){
+        $result = null;
+        $list_tpp_kelas_jabatan = $this->session->userdata('list_tpp_kelas_jabatan');
+        $j = 1;
+        foreach($list_tpp_kelas_jabatan as $lt){
+            $result[$j]['jft'] = $lt;
+            $result[$j]['jfu'] = $lt;
+            $result[$j]['eselon_4'] = $lt;
+            $result[$j]['kepala_skpd'] = $lt;
+            $result[$j]['semua'] = $lt;
+            $j++;
+        }
+
+        $flag_kec_kel_puskes = 0;
+        if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){
+            $flag_kec_kel_puskes = 1;
+        }
+
+        if($flag_kec_kel_puskes == '0'){
+            $explode_nama = explode(" ", $unitkerja['nm_unitkerja']);
+            if($explode_nama[0] == 'Puskesmas'){
+                $flag_kec_kel_puskes = 1;
+            }
+        }
+
+        $presentase_tpp = $this->db->select('*')
+                                ->from('m_presentase_tpp')
+                                ->where('id_unitkerja', $id_unitkerja)
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+
+        $presentase_semua = $this->db->select('*')
+                            ->from('m_presentase_tpp')
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->where('kelas_jabatan', 0)
+                            ->where('jenis_jabatan', 'semua')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+        if($presentase_tpp || $flag_kec_kel_puskes == 1){
+            $temp_presentase_tpp = null;
+
+            if($flag_kec_kel_puskes == 1 && !$presentase_tpp){ //jika unit kerja adalah kecamatan / kelurahan / puskesmas
+                if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN)){ // kecamatan
+                    $presentase_tpp[0]['kelas_jabatan'] = 12;
+                    $presentase_tpp[0]['presentase'] = 160;
+                    $presentase_tpp[0]['jenis_jabatan'] = 'kepala_skpd';
+                } else if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)) { // kelurahan
+                    $presentase_tpp[0]['kelas_jabatan'] = 9;
+                    $presentase_tpp[0]['presentase'] = 170;
+                    $presentase_tpp[0]['jenis_jabatan'] = 'kepala_skpd';
+                } else if($explode_nama[0] == 'Puskesmas'){ //puskesmas
+                    $presentase_tpp[0]['kelas_jabatan'] = 9;
+                    $presentase_tpp[0]['presentase'] = 290;
+                    $presentase_tpp[0]['jenis_jabatan'] = 'kepala_skpd';
+                }
+            }
+
+            $list_exclude = [];
+            if($presentase_semua && count($presentase_tpp > 1)){ //jika ada syarat TPP untuk semua pegawai dan syarat TPP lebih dari 1 syarat di unit kerja tersebut
+                $j = 1;
+                foreach($presentase_tpp as $p){ //exclude jenis jabatan dan kelas jabatan tertentu dari presentase yang mewakili semua pegawai dalam PD
+                    if($p['kelas_jabatan'] != '0' && $p['jenis_jabatan'] == 'semua'){
+                        $list_exclude[$p['kelas_jabatan']] = ['jft', 'jfu', 'eselon_4', 'kepala_skpd'];
+                    } else if($p['kelas_jabatan'] == '0' && $p['jenis_jabatan'] != 'semua'){
+                        array_push($list_exclude[0], $p['jenis_jabatan']);
+                    } else if($p['kelas_jabatan'] != '0' && $p['jenis_jabatan'] != 'semua'){
+                        // $list_exclude[[$p['kelas_jabatan']]] = 1;
+                        if(!isset($list_exclude[$p['kelas_jabatan']])){
+                            $list_exclude[$p['kelas_jabatan']] = [];
+                        }
+                        array_push($list_exclude[$p['kelas_jabatan']], $p['jenis_jabatan']);
+                    } 
+                    $j++;
+                }
+            }
+
+            foreach($presentase_tpp as $prt){
+                if($prt['kelas_jabatan'] == '0' && $prt['jenis_jabatan'] == 'semua'){ // semua pegawai
+                    $j = 1;
+                    foreach($list_tpp_kelas_jabatan as $ltj){
+                        if(!isset($list_exclude[$j])){
+                            if(!isset($list_exclude[0]['jft'])){
+                                $result[$j]['jft'] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                            }
+                            if(!isset($list_exclude[0]['jfu'])){
+                                $result[$j]['jfu'] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                            }
+                            if(!isset($list_exclude[0]['eselon_4'])){
+                                $result[$j]['eselon_4'] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                            }
+                            if(!isset($list_exclude[0]['kepala_skpd'])){
+                                $result[$j]['kepala_skpd'] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                            }
+                            $result[$j]['semua'] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                        }
+                        $j++;
+                    }
+                } else if($prt['kelas_jabatan'] == '0'){ // semua kelas jabatan
+                    $j = 1;
+                    foreach($list_tpp_kelas_jabatan as $ltj){
+                        $result[$j][$prt['jenis_jabatan']] = floatval($ltj) * floatval($prt['presentase'] / 100);
+                        $j++;
+                    }
+                } else if($prt['jenis_jabatan'] == '0'){// semua jenis jabatan
+                    // $j = 1;
+                    // foreach($list_tpp_kelas_jabatan as $ltj){
+                        $result[$prt['kelas_jabatan']]['jft'] = floatval($list_tpp_kelas_jabatan[$prt['kelas_jabatan']]) * floatval($prt['presentase'] / 100);
+                        $result[$prt['kelas_jabatan']]['jfu'] = floatval($list_tpp_kelas_jabatan[$prt['kelas_jabatan']]) * floatval($prt['presentase'] / 100);
+                        $result[$prt['kelas_jabatan']]['eselon_4'] = floatval($list_tpp_kelas_jabatan[$prt['kelas_jabatan']]) * floatval($prt['presentase'] / 100);
+                        $result[$prt['kelas_jabatan']]['semua'] = floatval($list_tpp_kelas_jabatan[$prt['kelas_jabatan']]) * floatval($prt['presentase'] / 100);
+                        $result[$prt['kelas_jabatan']]['kepala_skpd'] = floatval($list_tpp_kelas_jabatan[$prt['kelas_jabatan']]) * floatval($prt['presentase'] / 100);
+                        // $j++;
+                    // }
+                    // if($prt['kelas_jabatan'] == 12){
+                    //     dd($result[$prt['kelas_jabatan']]);
+                    // }
+                } else {
+                    $result[$prt['kelas_jabatan']][$prt['jenis_jabatan']] = $list_tpp_kelas_jabatan[$prt['kelas_jabatan']] * ($prt['presentase'] / 100);
+                }
+            }
+        }
+        // dd(json_encode($result));
+        return $result;
+    }
+
+    public function countPaguTpp($data){
+        $result = null;
+
+        $unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $data['id_unitkerja'])
+                            ->get()->row_array();
+
+        $pagu_tpp = $this->getPaguTppUnitKerja($data['id_unitkerja'], $unitkerja);
+
+        $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
+                            
+        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat,
+                            b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg,
+                            (SELECT CONCAT(
+                                IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
+                                    ";",
+                                IF( c.kepalaskpd IS NULL, "", c.kepalaskpd ),
+                                    ";",
+                                IF( aa.jenisjabatan IS NULL, "", aa.jenisjabatan ),
+                                    ";",
+                                IF( d.id_eselon IS NULL, "", d.id_eselon ) 
+                                ) 
+                            FROM db_pegawai.pegjabatan aa
+                            WHERE aa.id_pegawai = a.id_peg
+                            ORDER BY tmtjabatan DESC
+                            LIMIT 1) as jabatan')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                            ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                            ->where('a.skpd', $data['id_unitkerja'])
+                            ->order_by('c.eselon, a.nama')
+                            ->get()->result_array();
+        // dd($pegawai);
+        if($pegawai){
+            $i = 0;
+            foreach($pegawai as $p){
+                $result[$i] = $p;
+                $result[$i]['kepala_skpd'] = 0;
+                $concat = explode(";", $p['jabatan']);
+                $nama_jabatan = explode(" ", $concat[0]);
+                $result[$i]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
+                $result[$i]['nama_jabatan'] = $concat[0];
+                $result[$i]['jenis_jabatan'] = 'jfu';
+                // if($p['nipbaru_ws'] == '198701072011021001'){
+                //     dd($nama_jabatan);
+                //     // dd(
+                //     //     (
+                //     //         (
+                //     //             isset($nama_jabatan[1]) && ($nama_jabatan[1] == 'Kepala')
+                //     //         ) &&
+                //     //         (
+                //     //             isset($nama_jabatan[2]) && ($nama_jabatan[2] == 'Bagian') 
+                //     //             || ($nama_jabatan[2] == 'Puskesmas')
+                //     //         )
+                //     //     )
+                //     // );
+                // }
+                if((isset($concat[2]) && $concat[2] == '00') 
+                || ((isset($nama_jabatan[0]) && ($nama_jabatan[0] == 'Kepala'))
+                && (isset($nama_jabatan[1]) && ($nama_jabatan[1] == 'Bagian' || $nama_jabatan[1] == 'Puskesmas')))){ // pejabat struktural atau kepala puskesmas
+                    if($concat[1] == 1){ // kepala skpd
+                        $result[$i]['kepala_skpd'] = 1;
+                        $result[$i]['jenis_jabatan'] = 'kepala_skpd';
+                        $result[$i]['kelas_jabatan'] = 14;
+                        if($data['id_unitkerja'] == 1000001){ //setda
+                            $result[$i]['kelas_jabatan'] = 15;
+                        } else if($nama_unit_kerja[0] == 'Kelurahan'){ // lurah
+                            $result[$i]['kelas_jabatan'] = 9;
+                        } else if($nama_unit_kerja[0] == 'Kecamatan'){ // camat
+                            $result[$i]['kelas_jabatan'] = 12;
+                        } else if($nama_unit_kerja[0] == 'Puskesmas'){ // kepala puskesmas
+                            $result[$i]['kelas_jabatan'] = 9;
+                        } else if($nama_unit_kerja[0] == 'Bagian'){ // kepala bagian
+                            $result[$i]['kelas_jabatan'] = 12;
+                        } else if($unitkerja['id_unitkerja'] == '7005020' || $unitkerja['id_unitkerja'] == '7005010'){ // RSUD & RSKDGDM
+                            $result[$i]['kelas_jabatan'] = 12;
+                        }
+                    } else {
+                        $eselon_jabatan = explode(" ", $concat[3]);
+                        // if($p['nipbaru_ws'] == '197504272000122003'){
+                        //     dd($concat);
+                        // }
+                        if($concat[3] == 6 || $concat[3] == 7){ // pejabat eselon 3
+                            if($concat[3] == 6){ // sekretaris, inspektur pembantu
+                                $result[$i]['kelas_jabatan'] = 12;
+                            } else { //kabag, kabid
+                                $result[$i]['kelas_jabatan'] = 11;
+                                if($nama_unit_kerja[0] == 'Kecamatan'){ // sekretaris kecamatan 
+                                    $result[$i]['kelas_jabatan'] = 11;
+                                }
+                            }
+                            $result[$i]['jenis_jabatan'] = 'semua';
+                        } else if($concat[3] == 8 || $concat[3] == 9){ //eselon 4, kasubag, kasubid, seklur
+                            $result[$i]['kelas_jabatan'] = 9;
+                            if($nama_unit_kerja[0] == 'Kelurahan' || $nama_unit_kerja[0] == 'Kecamatan'){
+                                $result[$i]['kelas_jabatan'] = 8;
+                            }
+                            $result[$i]['jenis_jabatan'] = 'eselon_4';
+                        } else if(($concat[3] == 4 || $concat[3] == 5) && $data['id_unitkerja'] == 1000001){ //asisten setda
+                            $result[$i]['kelas_jabatan'] = 14;
+                        }
+                    }
+                } else if (isset($concat[2]) && $concat[2] == '10'){ // pejabat fungsional
+                    $list_jfu = ['Pelaksana', 'Staff', 'Staf'];
+                    $result[$i]['jenis_jabatan'] = 'jfu';
+                    // dd($p);
+                    if(!in_array($concat[0], $list_jfu)){ // jft
+                        $result[$i]['jenis_jabatan'] = 'jft';
+                        $result[$i]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                    }
+                }
+
+                unset($result[$i]['kelas_jabatan_jfu']);
+                unset($result[$i]['kelas_jabatan_jft']);
+                
+                $result[$i]['pagu_tpp'] = $pagu_tpp[$result[$i]['kelas_jabatan']][$result[$i]['jenis_jabatan']]; // pasang pagu tpp
+                if($result[$i]['statuspeg'] == 1){ //pegawai CPNS
+                    $result[$i]['pagu_tpp'] = $result[$i]['pagu_tpp'] * 0.8;
+                }
+
+                $i++;
+            }
+        }
+
+        function comparator($object1, $object2) {
+            return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
+        }
+
+        usort($result, 'comparator');
+        // dd($result);
+        return $result;
     }
 }
 ?>

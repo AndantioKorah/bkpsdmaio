@@ -38,25 +38,25 @@ function generateNorm($last_norm){
 }
 
 function countNilaiKomponen($data){
-    // $capaian = floatval($data['efektivitas']) +
-    //             floatval($data['efisiensi']) +
-    //             floatval($data['inovasi']) +
-    //             floatval($data['kerjasama']) +
-    //             floatval($data['kecepatan']) +
-    //             floatval($data['tanggungjawab']) +
-    //             floatval($data['ketaatan']);
-    $capaian = floatval($data['perilaku_1']) +
-    floatval($data['perilaku_2']) +
-    floatval($data['perilaku_3']) +
-    floatval($data['perilaku_4']) +
-    floatval($data['perilaku_5']) +
-    floatval($data['perilaku_6']) +
-    floatval($data['perilaku_7']);
+    $capaian = floatval($data['berorientasi_pelayanan']) +
+                floatval($data['akuntabel']) +
+                floatval($data['kompeten']) +
+                floatval($data['harmonis']) +
+                floatval($data['loyal']) +
+                floatval($data['adaptif']) +
+                floatval($data['kolaboratif']);
+    // $capaian = floatval($data['perilaku_1']) +
+    // floatval($data['perilaku_2']) +
+    // floatval($data['perilaku_3']) +
+    // floatval($data['perilaku_4']) +
+    // floatval($data['perilaku_5']) +
+    // floatval($data['perilaku_6']) +
+    // floatval($data['perilaku_7']);
     $bobot = 30;
     if($capaian < 350){
         $bobot = 0;
     } else if ($capaian > 350 && $capaian < 679){
-        $bobot = ($capaian / 700) * 0.3;
+        $bobot = ($capaian / 700) * floatval(BOBOT_NILAI_KOMPONEN_KINERJA);
         $bobot = $bobot * 100;
     }
     
@@ -79,9 +79,12 @@ function countNilaiSkp($data){
         if(count($data) != 0){
             $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
         }
-        $result['bobot'] = $result['capaian'] * 0.3;
+        $result['bobot'] = $result['capaian'] * floatval(BOBOT_NILAI_SKBP);
         if($result['bobot'] > 30){
             $result['bobot'] = 30;
+        }
+        if($result['capaian'] > 100){
+            $result['capaian'] = 100;
         }
     }
     return $result;
@@ -269,6 +272,10 @@ function formatDateNamaBulanWT($data){
 
 function getNamaPegawaiFull($pegawai){
     return trim($pegawai['gelar1']).' '.trim($pegawai['nama']).' '.trim($pegawai['gelar2']);
+}
+
+function sortArrayObjectValue($object1, $object2, $value) {
+    return $object1->$value > $object2->$value;
 }
 
 function getNamaBulan($bulan){

@@ -820,7 +820,7 @@
                 ->where_not_in('id', [7, 8, 9, 10, 11, 12])
                 ->get()->result_array();
 
-        $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan')
+        $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan, a.keterangan as keterngn')
                 ->from('t_dokumen_pendukung a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c','b.username = c.nipbaru_ws')
@@ -832,18 +832,24 @@
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
-      
+        // dd($tmp_dokpen);
         if($tmp_dokpen){
+           
             foreach($tmp_dokpen as $dok){
                
                 $tanggal_dok = $dok['tanggal'] < 10 ? '0'.$dok['tanggal'] : $dok['tanggal'];
                 $bulan_dok = $dok['bulan'] < 10 ? '0'.$dok['bulan'] : $dok['bulan'];
                 $date_dok = $dok['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
-              
+               
                 $dokpen[$dok['nip']]['nip'] = $dok['nip'];
                 $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
+                $dokpen[$dok['nip']]["ket_".$date_dok]= $dok['keterngn'];
+        
             }
         }
+       
+       
+       
        
         $tempresult = $data['result'];
         $data['result'] = null;
@@ -888,11 +894,27 @@
                 if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
                     
                     $lp[$tr['nip']]['rekap']['jhk']++;
+                  
+
+                    if(isset($dokpen[$tr['nip']][$l])){  
+                        if($dokpen[$tr['nip']][$l] == "ST"){
+                            if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Pagi"){
+                                $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
+                            } else if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Sore"){
+                                $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
+                            } 
+                            
+                        } 
+                    }
+                    
+
+                   
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
                        
                         if(isset($dokpen[$tr['nip']][$l])){  
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                           
                         } else {
                             $lp[$tr['nip']]['rekap']['TK']++;
                         }

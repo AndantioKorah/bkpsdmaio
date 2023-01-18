@@ -902,6 +902,8 @@
                                 $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
                             } else if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Sore"){
                                 $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
+                                // $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "17:00";
+
                             } 
                             
                         } 
@@ -948,8 +950,11 @@
                                 $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw2';
                                 $lp[$tr['nip']]['rekap']['pksw2']++;
                             } else if($ket_pulang > 2) {
-                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
-                                $lp[$tr['nip']]['rekap']['pksw3']++;
+                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "ST"){
+                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                    $lp[$tr['nip']]['rekap']['pksw3']++;
+                                }
+                               
                             }
                         }  
                     }   

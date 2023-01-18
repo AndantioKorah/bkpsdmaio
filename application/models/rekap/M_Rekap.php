@@ -895,7 +895,7 @@
                     
                     $lp[$tr['nip']]['rekap']['jhk']++;
                   
-
+            // Surat Tugas
                     if(isset($dokpen[$tr['nip']][$l])){  
                         if($dokpen[$tr['nip']][$l] == "ST"){
                             if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Pagi"){
@@ -906,6 +906,7 @@
                             
                         } 
                     }
+            // Tutup Surat Tugas
                     
 
                    

@@ -17,23 +17,8 @@
                             ->where('id_m_user', $id_m_user)
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)
-                            // ->where('a.id_m_user', 78)
-                            // ->where('a.bulan', $bulan)
-                            // ->where('a.tahun', $tahun)
-                            // ->where('flag_active', 1)
+                            ->where('flag_active', 1)
                             ->get()->row_array();
-
-            // $query =  $this->db->select('*')
-            //                 ->from('t_komponen_kinerja as a')
-            //                 ->join('m_sub_perilaku_kerja b', 'a.id_m_sub_perilaku_kerja = b.id')
-            //                 ->join('m_perilaku_kerja c', 'b.id_m_perilaku_kerja = c.id')
-            //                 ->where('a.id_m_user', 78)
-            //                 ->where('a.bulan', $bulan)
-            //                 ->where('a.tahun', $tahun)
-            //                 ->where('a.flag_active', 1)
-            //                 ->get()->result_array();
-         
-            //                 return $query;
         }
 
         public function getKinerjaPegawai($id_m_user, $bulan, $tahun){

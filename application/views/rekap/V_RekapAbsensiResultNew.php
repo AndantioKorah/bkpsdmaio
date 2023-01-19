@@ -34,7 +34,7 @@
             }
         ?>
         <body>
-            <div style="width: 100%;">
+            <div  style="width: 3300px; height: 500px; overflow-y: scroll;">
                 <center>
                 <h5 style="font-size: 20px;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
@@ -66,6 +66,7 @@
                     </table>
                 <?php } ?>
                 </center>
+                <div >
                 <table border=1 style="width: 100%;">
                     <thead>
                         <?php $i=0; 
@@ -169,6 +170,7 @@
                         <?php } } ?>
                     </tbody>
                 </table>
+                                </div>
                 <br>
                 <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>
                 <br>

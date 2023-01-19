@@ -890,8 +890,7 @@
                                 $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
                                 $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                             } else {
-                                $lp[$tr['nip']]['absen'][$l]['ket'] = "TL";
-                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                $lp[$tr['nip']]['absen'][$l]['ket'] = "A";
                             } 
                             
                         } 

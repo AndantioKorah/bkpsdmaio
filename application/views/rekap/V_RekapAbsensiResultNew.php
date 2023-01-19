@@ -3,133 +3,133 @@
         <head>
             <style>
    
+               
+            table {
+            /* width: 6000px; */
+            margin: 1em 0;
+            border-collapse: collapse;
+            border: 0.1em solid #d6d6d6;
+            }
+
+            /* caption {
+            text-align: left;
+            font-style: italic;
+            padding: 0.25em 0.5em 0.5em 0.5em;
+            } */
+
                 .content{
                      font-size: 13px;
                      text-align: center;
                         }
+
                 .fixTableHead { 
                 overflow-y: auto; 
                 height: 500px; 
+                border-top: 1px solid #000; 
+                margin-top: 10px;
+                
                 } 
 
                 .fixTableHead thead th { 
                 position: sticky; 
                 top: 0; 
                 } 
-                
-                table { 
-                /* border-collapse: collapse;		  */
-                width: 100%; 
-                } 
+               
                 th, 
                 td { 
                 padding: 8px 15px; 
                 border: 1px solid #000; 
                 } 
                 th { 
-                background: #dc3545; 
-                /* width: 500px; */
+                /* background: #dc3545;  */
+                background: #b3b3b3; 
                 border-top: 5px;
                 } 
 
-                
+            th,
+            td {
+            padding: 0.25em 0.5em 0.25em 1em;
+            vertical-align: text-top;
+            text-align: left;
+            text-indent: -0.5em;
+            width: 100px; 
+            }
 
-table {
-    width: 6000px;
-  margin: 1em 0;
-  border-collapse: collapse;
-  border: 0.1em solid #d6d6d6;
-}
+            /* th {
+            vertical-align: bottom;
+            background-color: #666;
+            color: #fff;
+            } */
 
-caption {
-  text-align: left;
-  font-style: italic;
-  padding: 0.25em 0.5em 0.5em 0.5em;
-}
+            tr:nth-child(even) th[scope=row] {
+            background-color: #f2f2f2;
+            }
 
-th,
-td {
-  padding: 0.25em 0.5em 0.25em 1em;
-  vertical-align: text-top;
-  text-align: left;
-  text-indent: -0.5em;
-}
+            tr:nth-child(odd) th[scope=row] {
+            background-color: #fff;
+            }
 
-/* th {
-  vertical-align: bottom;
-  background-color: #666;
-  color: #fff;
-} */
+            tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05);
+            }
 
-tr:nth-child(even) th[scope=row] {
-  background-color: #f2f2f2;
-}
+            tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+            }
 
-tr:nth-child(odd) th[scope=row] {
-  background-color: #fff;
-}
+            td:nth-of-type(2) {
+            /* font-style: italic; */
+            /* background-color: #000; */
+            width: 100px;
+            }
 
-tr:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
+            th:nth-of-type(3),
+            td:nth-of-type(3) {
+            text-align: center;
+            }
 
-tr:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.05);
-}
+            /* Fixed Headers */
 
-td:nth-of-type(2) {
-  /* font-style: italic; */
-  /* background-color: #000; */
-  width: 100px;
-}
+            th {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            }
 
-th:nth-of-type(3),
-td:nth-of-type(3) {
-  text-align: center;
-}
+            th[scope=row] {
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            }
 
-/* Fixed Headers */
+            th[scope=row] {
+            vertical-align: top;
+            color: inherit;
+            background-color: inherit;
+            background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
+            }
 
-th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
+            table:nth-of-type(2) th:not([scope=row]):first-child {
+            left: 0;
+            z-index: 3;
+            background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
+            }
 
-th[scope=row] {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
+            /* Strictly for making the scrolling happen. */
 
-th[scope=row] {
-  vertical-align: top;
-  color: inherit;
-  background-color: inherit;
-  background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
-}
+            th[scope=row] + td {
+            /* min-width: 24em; */
+            }
 
-table:nth-of-type(2) th:not([scope=row]):first-child {
-  left: 0;
-  z-index: 3;
-  background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
-}
-
-/* Strictly for making the scrolling happen. */
-
-th[scope=row] + td {
-  min-width: 24em;
-}
-
-th[scope=row] {
-  min-width: 20em;
-}
+            th[scope=row] {
+            min-width: 22em;
+            }
 
 
 
-</style> 
+            </style> 
         <head>
         <?php
             if(isset($flag_print) && $flag_print == 1){
@@ -176,7 +176,7 @@ th[scope=row] {
 
 
 <div class="fixTableHead"> 
-<table>
+<table style="width: 6000px;margin-top: -1px;">
   <thead>
   <tr> 
         <thead>
@@ -189,6 +189,7 @@ th[scope=row] {
                                 }
                             }
                         }
+                       
                         foreach($header[0] as $h){
                             $val = $h;
                             $rowspan = 1;
@@ -197,7 +198,7 @@ th[scope=row] {
                             }
                             if(strlen($val) >= 5){
                         ?>  
-                            <th style="text-align: center; font-size: 13px;"><?=$val?></th>
+                        <th style="text-align: center; font-size: 13px;"><?= $val?></th>
                         <?php $i++; } }?>
                         <th style="text-align: center; font-size: 13px;">JHK</th>
                         <th style="text-align: center; font-size: 13px;">Hadir</th>
@@ -223,8 +224,8 @@ th[scope=row] {
                           $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                           ?>
                               <tr class="<?=$bgtr?>">
-                                  <td  style="text-align: center; font-size: 13px;"><?=$no++;?></td>
-                                  <th scope="row"  style="width: 300px; font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></th>
+                                  <td style="text-align: center; font-size: 13px;"><?=$no++;?></td>
+                                  <th scope="row" style="font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></th>
                                   <td style="font-size: 13px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                                   <?php
                                   foreach($rs['absen'] as $a){

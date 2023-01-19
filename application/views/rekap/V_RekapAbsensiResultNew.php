@@ -8,14 +8,15 @@
                      text-align: center;
                         }
                 .fixTableHead { 
-                /* width: 6000px;  */
                 overflow-y: auto; 
                 height: 500px; 
                 } 
+
                 .fixTableHead thead th { 
                 position: sticky; 
                 top: 0; 
                 } 
+                
                 table { 
                 /* border-collapse: collapse;		  */
                 width: 100%; 
@@ -27,7 +28,7 @@
                 } 
                 th { 
                 background: #dc3545; 
-                width: 500px;
+                /* width: 500px; */
                 border-top: 5px;
                 } 
 
@@ -77,12 +78,14 @@ tr:nth-child(odd) {
 }
 
 td:nth-of-type(2) {
-  font-style: italic;
+  /* font-style: italic; */
+  /* background-color: #000; */
+  width: 100px;
 }
 
 th:nth-of-type(3),
 td:nth-of-type(3) {
-  text-align: right;
+  text-align: center;
 }
 
 /* Fixed Headers */
@@ -277,8 +280,8 @@ th[scope=row] {
                                   <?php } ?>
                               </tr>
                           <?php } } ?>
-  </tbody>
-</table>
+                            </tbody>
+                            </table>
 
 
                                 </div>

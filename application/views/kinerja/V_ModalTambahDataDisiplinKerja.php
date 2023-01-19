@@ -30,19 +30,19 @@
             </div>
 
 
-            <div class="col-lg-12 col-md-12 mt-3" id="jenissurattugas" style="display:none">
+            <div class="col-lg-12 col-md-12 mt-3" id="jenistugasluar" style="display:none">
                
                <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas1" value="Surat Tugas Pagi">
-                <label class="form-check-label" for="jenissurattugas1">Pagi</label>
+                <input class="form-check-input" type="radio" name="jenis_tugas_luar" id="jenistugasluar1" value="Tugas Luar Pagi">
+                <label class="form-check-label" for="jenistugasluar1">Pagi</label>
                 </div>
                 <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas2" value="Surat Tugas Sore">
-                <label class="form-check-label" for="jenissurattugas2">Sore</label>
+                <input class="form-check-input" type="radio" name="jenis_tugas_luar" id="jenistugasluar2" value="Tugas Luar Sore">
+                <label class="form-check-label" for="jenistugasluar2">Sore</label>
                 </div>
                 <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="jenis_surat_tugas" id="jenissurattugas3" value="Surat Tugas">
-                <label class="form-check-label" for="jenissurattugas3">Semua</label>
+                <input class="form-check-input" type="radio" name="jenis_tugas_luar" id="jenistugasluar3" value="Tugas Luar">
+                <label class="form-check-label" for="jenistugasluar3">Semua</label>
                 </div>
             </div>
 
@@ -108,10 +108,10 @@
   
                 function suratTugas(sel)
                 {
-                    if(sel.value == "18;Surat Tugas;"){
-                      $('#jenissurattugas').show()
+                    if(sel.value == "14;Tugas Luar;0"){
+                      $('#jenistugasluar').show()
                     } else {
-                        $('#jenissurattugas').hide()
+                        $('#jenistugasluar').hide()
                     }
                 }
        

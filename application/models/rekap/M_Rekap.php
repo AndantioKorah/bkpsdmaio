@@ -833,7 +833,7 @@
             }
         }
        
-       
+      
        
        
         $tempresult = $data['result'];
@@ -882,13 +882,16 @@
                   
             // Surat Tugas
                     if(isset($dokpen[$tr['nip']][$l])){  
-                        if($dokpen[$tr['nip']][$l] == "ST"){
-                            if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Pagi"){
+                        if($dokpen[$tr['nip']][$l] == "TL"){
+                            if($dokpen[$tr['nip']]["ket_".$l] == "Tugas Luar Pagi"){
                                 $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
-                            } else if($dokpen[$tr['nip']]["ket_".$l] == "Surat Tugas Sore"){
+                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                            } else if($dokpen[$tr['nip']]["ket_".$l] == "Tugas Luar Sore"){
                                 $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
-                                // $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "17:00";
-
+                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                            } else {
+                                $lp[$tr['nip']]['absen'][$l]['ket'] = "TL";
+                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                             } 
                             
                         } 
@@ -900,6 +903,7 @@
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
                        
                         if(isset($dokpen[$tr['nip']][$l])){  
+                            var_dump($dokpen[$tr['nip']][$l]);
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                            
@@ -935,7 +939,7 @@
                                 $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw2';
                                 $lp[$tr['nip']]['rekap']['pksw2']++;
                             } else if($ket_pulang > 2) {
-                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "ST"){
+                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TL"){
                                     $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
                                     $lp[$tr['nip']]['rekap']['pksw3']++;
                                 }

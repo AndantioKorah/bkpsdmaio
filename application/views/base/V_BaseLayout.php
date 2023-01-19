@@ -78,6 +78,115 @@
     .content-header{
       padding: 8px !important;
     }
+
+
+  /* fixed header and coloum table */
+    table {
+            margin: 1em 0;
+            border-collapse: collapse;
+            border: 0.1em solid #d6d6d6;
+            }
+
+ 
+                /* .content{
+                     font-size: 13px;
+                     text-align: center;
+                        } */
+
+                .fixTableHead { 
+                overflow-y: auto; 
+                height: 500px; 
+                margin-top: -30px;
+                
+                } 
+
+                .fixTableHead thead th { 
+                position: sticky; 
+                top: 0; 
+                } 
+               
+                .fixTableHead thead th, 
+                .fixTableHead td { 
+                padding: 8px 15px; 
+                border: 1px solid #000; 
+                } 
+                .fixTableHead th { 
+                background: #b3b3b3; 
+                border-top: 5px;
+                } 
+
+            /* th,
+            td {
+            padding: 0.25em 0.5em 0.25em 1em;
+            vertical-align: text-top;
+            text-align: left;
+            text-indent: -0.5em;
+            width: 100px; 
+            } */
+
+    
+            tr:nth-child(even) th[scope=row] {
+            background-color: #f2f2f2;
+            border: 1px solid #000;
+            }
+
+            tr:nth-child(odd) th[scope=row] {
+            background-color: #fff;
+            }
+
+            tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05);
+            }
+
+            tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            td:nth-of-type(2) {
+            width: 100px;
+            }
+
+            th:nth-of-type(3),
+            td:nth-of-type(3) {
+            text-align: center;
+            } 
+
+
+            .fixTableHead th {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            }
+
+            .fixTableHead th[scope=row] {
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            }
+
+            .fixTableHead th[scope=row] {
+            vertical-align: top;
+            color: inherit;
+            background-color: inherit;
+            background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
+            }
+
+            .fixTableHead table:nth-of-type(2)  th:not([scope=row]):first-child {
+            left: 0;
+            z-index: 3;
+            background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
+            }
+
+
+            .fixTableHead th[scope=row] + td {
+            }
+
+            .fixTableHead th[scope=row] {
+            min-width: 22em;
+            }
+             /* fixed header and coloum table */
   </style>
 </head>
 <?php

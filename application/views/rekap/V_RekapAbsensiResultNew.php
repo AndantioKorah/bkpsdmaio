@@ -3,20 +3,14 @@
         <head>
             <style>
    
-               
+/*                
             table {
-            /* width: 6000px; */
             margin: 1em 0;
             border-collapse: collapse;
             border: 0.1em solid #d6d6d6;
             }
 
-            /* caption {
-            text-align: left;
-            font-style: italic;
-            padding: 0.25em 0.5em 0.5em 0.5em;
-            } */
-
+ 
                 .content{
                      font-size: 13px;
                      text-align: center;
@@ -41,7 +35,6 @@
                 border: 1px solid #000; 
                 } 
                 th { 
-                /* background: #dc3545;  */
                 background: #b3b3b3; 
                 border-top: 5px;
                 } 
@@ -55,12 +48,7 @@
             width: 100px; 
             }
 
-            /* th {
-            vertical-align: bottom;
-            background-color: #666;
-            color: #fff;
-            } */
-
+      
             tr:nth-child(even) th[scope=row] {
             background-color: #f2f2f2;
             }
@@ -78,8 +66,6 @@
             }
 
             td:nth-of-type(2) {
-            /* font-style: italic; */
-            /* background-color: #000; */
             width: 100px;
             }
 
@@ -88,7 +74,6 @@
             text-align: center;
             }
 
-            /* Fixed Headers */
 
             th {
             position: -webkit-sticky;
@@ -117,17 +102,13 @@
             background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
             }
 
-            /* Strictly for making the scrolling happen. */
 
             th[scope=row] + td {
-            /* min-width: 24em; */
             }
 
             th[scope=row] {
             min-width: 22em;
-            }
-
-
+            } */
 
             </style> 
         <head>
@@ -170,16 +151,12 @@
                     </table>
                 <?php } ?>
                 </center>
-                <div >
-              
-
-
-
+               
+<br>
 <div class="fixTableHead"> 
-<table style="width: 6000px;margin-top: -1px;">
+<table style="width: 6000px; ">
   <thead>
   <tr> 
-        <thead>
                         <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){

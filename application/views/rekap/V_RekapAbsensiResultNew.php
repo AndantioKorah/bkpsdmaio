@@ -2,30 +2,13 @@
     <html>
         <head>
             <style>
-                body{
-                    font-family: Tahoma;
-                }
-                
-                .normal{
-                    color: black;
-                    text-align: center;
-                }
-
-                .tr_odd{
-                    /* background-color: #dfdfdf; */
-                    background-color: #f1f1f1;
-                }
-
-                table{
-                    /* font-size: 14px; */
-                }
-
+   
                 .content{
-                    font-size: 13px;
-                    text-align: center;
-                }
-          
+                     font-size: 13px;
+                     text-align: center;
+                        }
                 .fixTableHead { 
+                /* width: 6000px;  */
                 overflow-y: auto; 
                 height: 500px; 
                 } 
@@ -34,17 +17,115 @@
                 top: 0; 
                 } 
                 table { 
-                border-collapse: collapse;		 
+                /* border-collapse: collapse;		  */
                 width: 100%; 
                 } 
                 th, 
                 td { 
                 padding: 8px 15px; 
-                border: 2px solid #000000; 
+                border: 1px solid #000; 
                 } 
                 th { 
                 background: #dc3545; 
+                width: 500px;
+                border-top: 5px;
                 } 
+
+                
+
+table {
+    width: 6000px;
+  margin: 1em 0;
+  border-collapse: collapse;
+  border: 0.1em solid #d6d6d6;
+}
+
+caption {
+  text-align: left;
+  font-style: italic;
+  padding: 0.25em 0.5em 0.5em 0.5em;
+}
+
+th,
+td {
+  padding: 0.25em 0.5em 0.25em 1em;
+  vertical-align: text-top;
+  text-align: left;
+  text-indent: -0.5em;
+}
+
+/* th {
+  vertical-align: bottom;
+  background-color: #666;
+  color: #fff;
+} */
+
+tr:nth-child(even) th[scope=row] {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) th[scope=row] {
+  background-color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+td:nth-of-type(2) {
+  font-style: italic;
+}
+
+th:nth-of-type(3),
+td:nth-of-type(3) {
+  text-align: right;
+}
+
+/* Fixed Headers */
+
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+th[scope=row] {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+th[scope=row] {
+  vertical-align: top;
+  color: inherit;
+  background-color: inherit;
+  background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
+}
+
+table:nth-of-type(2) th:not([scope=row]):first-child {
+  left: 0;
+  z-index: 3;
+  background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
+}
+
+/* Strictly for making the scrolling happen. */
+
+th[scope=row] + td {
+  min-width: 24em;
+}
+
+th[scope=row] {
+  min-width: 20em;
+}
+
+
+
 </style> 
         <head>
         <?php
@@ -55,7 +136,6 @@
             }
         ?>
         <body>
-           
                 <center>
                 <h5 style="font-size: 20px;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
@@ -93,9 +173,9 @@
 
 
 <div class="fixTableHead"> 
-	<table> 
-	<thead> 
-		<tr> 
+<table>
+  <thead>
+  <tr> 
         <thead>
                         <?php $i=0; 
                         $list_dk = null;
@@ -132,18 +212,17 @@
                             <th style="text-align: center; font-size: 13px;"><?=$ldk?></th>
                         <?php } } ?>
 		</tr> 
-	</thead> 
-
-	<tbody> 
-    <?php  $no = 1; foreach($result as $rs){
+  </thead>
+  <tbody>
+  <?php  $no = 1; foreach($result as $rs){
                           
                           if(isset($rs['absen'])){
                           $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                           ?>
                               <tr class="<?=$bgtr?>">
-                                  <td style="text-align: center; font-size: 12px;"><?=$no++;?></td>
-                                  <td style="width: 300px; font-size: 12px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
-                                  <td style="font-size: 12px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
+                                  <td  style="text-align: center; font-size: 13px;"><?=$no++;?></td>
+                                  <th scope="row"  style="width: 300px; font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></th>
+                                  <td style="font-size: 13px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                                   <?php
                                   foreach($rs['absen'] as $a){
                                       $bgcolor = '';
@@ -198,15 +277,17 @@
                                   <?php } ?>
                               </tr>
                           <?php } } ?>
-	</tbody> 
-		
-	</table> 
+  </tbody>
+</table>
+
+
                                 </div>
                 <br>
+                <center>
                 <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>
                 <br>
                 <span style="font-size: 12px;">date: </span><span style="font-size: 12px; font-weight: bold;"><?=date('d/m/Y H:i:s')?></span>
-           
+                                  </center>
         </body>
     </html>
 <?php } else { ?>

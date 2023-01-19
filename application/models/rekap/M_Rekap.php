@@ -902,7 +902,6 @@
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
                        
                         if(isset($dokpen[$tr['nip']][$l])){  
-                            var_dump($dokpen[$tr['nip']][$l]);
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                            

@@ -656,7 +656,7 @@
 
                                     if($result){
                                         $detail = $this->db->select('a.id, a.nama_sub_perilaku_kerja, a.id_m_perilaku_kerja, a.id_m_perilaku_kerja, a.name_id, a.id,
-                                        (select nilai from t_komponen_kinerja_new where id_m_user = '.$id.' and tahun = '.$tahun.' and bulan = '.$bulan.' and id_m_sub_perilaku_kerja = a.id limit 1) as nilai')
+                                        (select nilai from t_komponen_kinerja_new where id_m_user = '.$id.' and tahun = '.$tahun.' and bulan = '.$bulan.' and flag_active = 1 and id_m_sub_perilaku_kerja = a.id limit 1) as nilai')
                                                         ->from('m_sub_perilaku_kerja a')
                                                         ->where('a.flag_active', 1)
                                                         // ->where('a.id_m_perilaku_kerja', $result[0]['id'])

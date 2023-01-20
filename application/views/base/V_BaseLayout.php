@@ -87,7 +87,10 @@
                      font-size: 13px;
                      text-align: center;
                         }
-
+  .tableFixHead table { 
+              border: 1px solid #fff;
+            } 
+            
   .tableFixHead th { 
               background-color: #2C3B49;
               color: white;
@@ -96,30 +99,30 @@
             } 
 
 
-        tr:nth-child(even) th[scope=row] {
+        .tableFixHead tr:nth-child(even) th[scope=row] {
         background-color: #2C3B49;
          color: white;
         border: 1px solid #000;
         }
 
     
-        tr:nth-child(odd) th[scope=row] {
+        .tableFixHead tr:nth-child(odd) th[scope=row] {
         background-color: #fff;
         }
 
-        tr:nth-child(even) {
+        .tableFixHead tr:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.05);
         }
 
-        tr:nth-child(odd) {
+        .tableFixHead tr:nth-child(odd) {
         background-color: rgba(255, 255, 255, 0.05);
         }
 
-        td:nth-of-type(2) {
+        .tableFixHead td:nth-of-type(2) {
         width: 100px;
         }
 
-        th:nth-of-type(3),
+        .tableFixHead th:nth-of-type(3),
         td:nth-of-type(3) {
         text-align: center;
         } 

@@ -154,7 +154,7 @@
                
                 <br>
                 <div class="tableFixHead"> 
-                <table style="width: 5000px;" border="1">
+                <table style="width: 5000px;" border="1" id="table_rekap_absenx">
                 <thead>
                 <tr> 
                         <?php $i=0; 
@@ -278,4 +278,9 @@
    $(function(){
     fixedHeaderTable()
     })
+
+    $('#table_rekap_absen').DataTable({
+    "ordering": false
+     });
+    
 </script>

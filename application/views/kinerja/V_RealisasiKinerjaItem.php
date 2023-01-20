@@ -1,7 +1,5 @@
 <style>
     
-
-
 /* .modal-transparent */
 
 .modal-transparent {
@@ -146,19 +144,19 @@
     </div>
         <div id="" class="row">
         <?php if($list_kegiatan){ ?>
-        <div class="col-12 table-responsive">
+        <div class="col-12 tableFixHead">
         <table class="table table-hover table-striped" id="table_realisasi_kinerja" width="100%">
             <thead>
-                <th class="text-center table-danger">No</th>
-                <th class="text-left table-danger">Uraian Tugas</th>
-                <th class="text-left table-danger">Tanggal Kegiatan</th>
-                <th class="text-left table-danger">Detail Kegiatan</th>
-                <th class="text-left table-danger">Realisasi Target (Kuantitas)</th>
-                <th class="text-left table-danger">Satuan</th>
-                <th class="text-center table-danger">Status</th>
-                <th class="text-center table-danger">Dokumen Bukti Kegiatan</th>
+                <th class="text-center table-success">No</th>
+                <th class="text-left table-success">Uraian Tugas</th>
+                <th class="text-left table-success">Tanggal Kegiatan</th>
+                <th class="text-left table-success">Detail Kegiatan</th>
+                <th class="text-left table-success">Realisasi Target (Kuantitas)</th>
+                <th class="text-left table-success">Satuan</th>
+                <th class="text-center table-success">Status</th>
+                <th class="text-center table-success">Dokumen Bukti Kegiatan</th>
                
-                <th class="table-danger"></th>
+                <th class="table-success"></th>
             </thead>
             <tbody>
             <?php $no=1; foreach($list_kegiatan as $lp){ ?>

@@ -32,7 +32,7 @@
                
    
                 <div class="tableFixHead">
-                <table style="width: 2000px; margin-top : -10px" border="1" >
+                <table style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10px;" rowspan="2">No</th>
@@ -92,4 +92,8 @@
    $(function(){
     fixedHeaderTable()
     })
+
+    $('#table_rekap_penilaian').DataTable({
+    "ordering": false
+     });
 </script>

@@ -29,11 +29,13 @@
                         </tr>
                     </table>
                 <?php } ?>
-                <div class=""> 
-                <table style="width: 100%;" border=1>
+               
+   
+                <div class="tableFixHead">
+                <table style="width: 2000px; margin-top : -10px" border="1" >
                 <thead>
                     <tr>
-                        <th style="text-align: center;" rowspan="2">No</th>
+                        <th style="text-align: center; width: 10px;" rowspan="2">No</th>
                         <th style="text-align: center;" rowspan="2">Nama Pegawai</th>
                         <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
                         <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
@@ -57,11 +59,11 @@
                     <tbody>
                         <?php $no = 1; foreach($result as $rs){ ?>
                             <tr>
-                                <td style="text-align: center;"><?=$no++;?></td>
-                                <td style="padding-top: 5px; padding-bottom: 5px;">
+                                <td scope="row" style="text-align: center;"><?=$no++;?></td>
+                                <th scope="row" style="padding-top: 5px; padding-bottom: 5px;">
                                     <?=$rs['nama_pegawai']?><br>
                                     NIP. <?=$rs['nip']?>
-                                </td>
+                                </th>
                                 <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
@@ -79,9 +81,15 @@
                         <?php } ?>
                     </tbody>
                 </table>
+
                         </div>
             </form>
         </div>
 <?php } else { ?>
     <h5>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h5>
 <?php } ?>
+<script>
+   $(function(){
+    fixedHeaderTable()
+    })
+</script>

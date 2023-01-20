@@ -81,112 +81,87 @@
 
 
   /* fixed header and coloum table */
-    table {
-            margin: 1em 0;
-            border-collapse: collapse;
-            border: 0.1em solid #d6d6d6;
-            }
+  .tableFixHead { overflow-y: auto; height: 600px; }
 
- 
-                /* .content{
+  .content_table{
                      font-size: 13px;
                      text-align: center;
-                        } */
+                        }
 
-                .fixTableHead { 
-                overflow-y: auto; 
-                height: 500px; 
-                margin-top: -30px;
-                
-                } 
-
-                .fixTableHead thead th { 
-                position: sticky; 
-                top: 0; 
-                } 
-               
-                .fixTableHead thead th, 
-                .fixTableHead td { 
-                padding: 8px 15px; 
-                border: 1px solid #000; 
-                } 
-                .fixTableHead th { 
-                background: #b3b3b3; 
-                border-top: 5px;
-                } 
-
-            /* th,
-            td {
-            padding: 0.25em 0.5em 0.25em 1em;
-            vertical-align: text-top;
-            text-align: left;
-            text-indent: -0.5em;
-            width: 100px; 
-            } */
-
-    
-            tr:nth-child(even) th[scope=row] {
-            background-color: #f2f2f2;
-            border: 1px solid #000;
-            }
-
-            tr:nth-child(odd) th[scope=row] {
-            background-color: #fff;
-            }
-
-            tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.05);
-            }
-
-            tr:nth-child(odd) {
-            background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            td:nth-of-type(2) {
-            width: 100px;
-            }
-
-            th:nth-of-type(3),
-            td:nth-of-type(3) {
-            text-align: center;
+  .tableFixHead th { 
+              background-color: #2C3B49;
+              color: white;
+              border-top: 5px;
+              padding: 8px 15px; 
             } 
 
 
-            .fixTableHead th {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            }
+        tr:nth-child(even) th[scope=row] {
+        background-color: #2C3B49;
+         color: white;
+        border: 1px solid #000;
+        }
 
-            .fixTableHead th[scope=row] {
-            position: -webkit-sticky;
-            position: sticky;
-            left: 0;
-            z-index: 1;
-            }
+    
+        tr:nth-child(odd) th[scope=row] {
+        background-color: #fff;
+        }
 
-            .fixTableHead th[scope=row] {
-            vertical-align: top;
-            color: inherit;
-            background-color: inherit;
-            background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
-            }
+        tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.05);
+        }
 
-            .fixTableHead table:nth-of-type(2)  th:not([scope=row]):first-child {
-            left: 0;
-            z-index: 3;
-            background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
-            }
+        tr:nth-child(odd) {
+        background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        td:nth-of-type(2) {
+        width: 100px;
+        }
+
+        th:nth-of-type(3),
+        td:nth-of-type(3) {
+        text-align: center;
+        } 
 
 
-            .fixTableHead th[scope=row] + td {
-            }
 
-            .fixTableHead th[scope=row] {
-            min-width: 22em;
-            }
-             /* fixed header and coloum table */
+       @media screen and (width> 600px) {
+        .tableFixHead th[scope=row] {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0;
+        z-index: 0;
+        }
+        
+       }
+
+
+        .tableFixHead th[scope=row] {
+        vertical-align: top;
+        color: inherit;
+        background-color: inherit;
+        background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
+        z-index: 0;
+        }
+
+        .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
+        left: 0;
+        z-index: 0;
+        background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
+        }
+
+
+        .tableFixHead th[scope=row] + td {
+
+        }
+
+        .tableFixHead th[scope=row] {
+        z-index: 0;
+        min-width: 20em;
+        }
+  
+  /* fixed header and coloum table */
   </style>
 </head>
 <?php
@@ -255,6 +230,18 @@
 <div id="print_div" style="display:none;"></div>
 <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
 <script>
+
+function fixedHeaderTable() {
+  var $th = $('.tableFixHead').find('thead th')
+  $('.tableFixHead').on('scroll', function() {
+  $th.css('transform', 'translateY('+ this.scrollTop +'px)');
+  $th.css('zIndex', '60');
+  $th.css({ 'position': 'relative' });
+  });
+  }
+
+
+
   var live_date_time = ''
   var timertoast = 2500
   
@@ -550,6 +537,10 @@ $('.datepicker').datepicker({
   }
 
   $.widget.bridge('uibutton', $.ui.button)
+
+
+
+                
 </script>
 <script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
 <script src="<?=base_url('plugins/chart.js/Chart.min.js')?>"></script>

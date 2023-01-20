@@ -152,11 +152,11 @@
                 <?php } ?>
                 </center>
                
-<br>
-<div class="fixTableHead"> 
-<table style="width: 6000px; ">
-  <thead>
-  <tr> 
+                <br>
+                <div class="tableFixHead"> 
+                <table style="width: 5000px;" border="1">
+                <thead>
+                <tr> 
                         <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){
@@ -175,7 +175,7 @@
                             }
                             if(strlen($val) >= 5){
                         ?>  
-                        <th style="text-align: center; font-size: 13px;"><?= $val?></th>
+                        <th  style="text-align: center; font-size: 13px;"><?= $val?></th>
                         <?php $i++; } }?>
                         <th style="text-align: center; font-size: 13px;">JHK</th>
                         <th style="text-align: center; font-size: 13px;">Hadir</th>
@@ -234,7 +234,7 @@
                                           $txtcolorpulang = '#ff0000';
                                       }
                                   ?>
-                                  <td class="content" bgcolor="<?=$bgcolor?>">
+                                  <td class="content_table" bgcolor="<?=$bgcolor?>">
                                       <?php if($a['ket'] == "A"){ ?>
                                           <span style="color: <?=$textcolor?>;"><?=$a['ket']?></span>
                                       <?php } else if(in_array($a['ket'], $list_dk)){ ?>
@@ -246,23 +246,21 @@
                                   <?php } ?>
                                   <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
                                   <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
-                                  <!-- <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
+                                  <!-- <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
+                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
                                   <?php foreach($list_dk as $l){ ?>
-                                      <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#efefef;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
+                                      <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
                                   <?php } ?>
                               </tr>
                           <?php } } ?>
                             </tbody>
                             </table>
-
-
-                                </div>
+                            </div>
                 <br>
                 <center>
                 <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>
@@ -276,3 +274,8 @@
         <div class="col-lg-12 text-center">Data Tidak Ditemukan <i class="fa fa-exclamation"></i></div>
     </div>
 <?php } ?>
+<script>
+   $(function(){
+    fixedHeaderTable()
+    })
+</script>

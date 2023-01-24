@@ -29,25 +29,22 @@
         <!-- <button type="button" onclick="searchListKegiatan()" class="btn btn-primary ml-3">Cari</button> -->
         </form>
      <br>
-    </div>
-        <div id="" class="row">
-        </div>
-    </div>
+  
 
 
 <?php if($list_rencana_kinerja){ ?>
-    <div class="col-12 table-responsive">
+    <div class="col-12 tableFixHead">
         <table class="table table-hover table-striped" id="table_rencana_kinerja">
             <thead>
-                <th class="text-center table-danger">No</th>
-                <th class="text-left table-danger">Uraian Tugas</th>
-                <th class="text-left table-danger">Sasaran Kerja</th>
-                <th class="text-left table-danger">Tahun</th>
-                <th class="text-left table-danger">Bulan</th>
-                <th class="text-left table-danger">Target Kuantitas</th>
-                <th class="text-left table-danger">Satuan</th>
-                <th class="text-left table-danger">Target Kualitas (%)</th>
-                <th class="table-danger"></th>
+                <th class="text-center table-success">No</th>
+                <th class="text-left table-success">Uraian Tugas</th>
+                <th class="text-left table-success">Sasaran Kerja</th>
+                <th class="text-left table-success">Tahun</th>
+                <th class="text-left table-success">Bulan</th>
+                <th class="text-left table-success">Target Kuantitas</th>
+                <th class="text-left table-success">Satuan</th>
+                <th class="text-left table-success">Target Kualitas (%)</th>
+                <th class="table-success"></th>
             </thead>
             <tbody>
             <?php $no=1; foreach($list_rencana_kinerja as $lp){ ?>
@@ -78,6 +75,7 @@
             </tbody>
         </table>
     </div>
+   
 
    
 <?php } else { ?>
@@ -114,7 +112,7 @@
 
 $('#table_rencana_kinerja').DataTable({
     "ordering": false
-     } );
+     });
     
 
     $(function () {

@@ -788,8 +788,8 @@
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
-                    if($disiplin[0] == 18){
-                        $insert_data[$i]['keterangan'] = $data['jenis_surat_tugas'];
+                    if($disiplin[0] == 14){
+                        $insert_data[$i]['keterangan'] = $data['jenis_tugas_luar'];
                     } else {
                         $insert_data[$i]['keterangan'] = $disiplin[1];
                     }

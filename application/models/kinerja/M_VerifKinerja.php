@@ -540,7 +540,7 @@
                                 ->get()->result_array();
 
                 if($result){
-                    $data_komponen = $this->db->select('*, a.id as id_t_komponen_kinerja')
+                    $data_komponen = $this->db->select('*, a.id as id_t_komponen_kinerja_new')
                                         ->from('t_komponen_kinerja_new a')
                                         ->join('m_user b', 'a.id_m_user = b.id')
                                         ->where_in('a.id_m_user', $list_id_pegawai)
@@ -578,7 +578,7 @@
                                     ->get()->row_array();
 
             $komponen =  $this->db->select('*, a.id as id_t_komponen_kinerja')
-                                    ->from('t_komponen_kinerja_new a')
+                                    ->from('t_komponen_kinerja a')
                                     ->where('a.id_m_user', $id)
                                     ->where('a.bulan', $bulan)
                                     ->where('a.tahun', $tahun)
@@ -627,7 +627,12 @@
         public function deleteNilaiKomponen($id){
             $res['code'] = 0;
             $res['message'] = 'OK';
+
+          
             
+            $this->db->where('id_t_komponen_kinerja', $id)
+                    ->update('t_komponen_kinerja_new', ['flag_active' => 0]);
+
             $this->db->where('id', $id)
                     ->update('t_komponen_kinerja', ['flag_active' => 0]);
                     
@@ -651,7 +656,7 @@
 
                                     if($result){
                                         $detail = $this->db->select('a.id, a.nama_sub_perilaku_kerja, a.id_m_perilaku_kerja, a.id_m_perilaku_kerja, a.name_id, a.id,
-                                        (select nilai from t_komponen_kinerja_new where id_m_user = '.$id.' and tahun = '.$tahun.' and bulan = '.$bulan.' and id_m_sub_perilaku_kerja = a.id limit 1) as nilai')
+                                        (select nilai from t_komponen_kinerja_new where id_m_user = '.$id.' and tahun = '.$tahun.' and bulan = '.$bulan.' and flag_active = 1 and id_m_sub_perilaku_kerja = a.id limit 1) as nilai')
                                                         ->from('m_sub_perilaku_kerja a')
                                                         ->where('a.flag_active', 1)
                                                         // ->where('a.id_m_perilaku_kerja', $result[0]['id'])
@@ -732,24 +737,7 @@
                 return $res;
 
             } else {
-               
-                for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
-                   
-                    $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
-                    $nilai = $_POST['nilai'][$count];         
-                    $insert_data['tahun'] = $_POST['tahun'];
-                    $insert_data['bulan'] = $_POST['bulan'];
-                    $insert_data['id_m_user'] = $_POST['id_m_user'];
-                    $insert_data['id_m_sub_perilaku_kerja'] = $id_m_sub_perilaku_kerja;
-                    $insert_data['nilai'] = $nilai;
-                    $insert_data['capaian'] = $_POST['nilai_capaian'];
-                    $insert_data['bobot'] = $_POST['nilai_bobot'];
-                    $this->db->insert('t_komponen_kinerja_new', $insert_data);
 
-               
-
-              
-                }
                 $insert_data2['created_by'] = $this->general_library->getId();
                 $insert_data2['berorientasi_pelayanan'] = $_POST['perilaku_1'];
                 $insert_data2['akuntabel'] = $_POST['perilaku_2'];
@@ -762,6 +750,24 @@
                 $insert_data2['bulan'] = $_POST['bulan'];
                 $insert_data2['id_m_user'] = $_POST['id_m_user'];
                 $this->db->insert('t_komponen_kinerja', $insert_data2);
+                $id_t_komponen_kinerja = $this->db->insert_id();
+             
+                for ($count = 0; $count < count($_POST['id_m_sub_perilaku_kerja']); $count++) {
+                   
+                    $id_m_sub_perilaku_kerja = $_POST['id_m_sub_perilaku_kerja'][$count];
+                    $nilai = $_POST['nilai'][$count];         
+                    $insert_data['tahun'] = $_POST['tahun'];
+                    $insert_data['bulan'] = $_POST['bulan'];
+                    $insert_data['id_m_user'] = $_POST['id_m_user'];
+                    $insert_data['id_m_sub_perilaku_kerja'] = $id_m_sub_perilaku_kerja;
+                    $insert_data['nilai'] = $nilai;
+                    $insert_data['capaian'] = $_POST['nilai_capaian'];
+                    $insert_data['bobot'] = $_POST['nilai_bobot'];
+                    $insert_data['id_t_komponen_kinerja'] =  $id_t_komponen_kinerja;
+                    $this->db->insert('t_komponen_kinerja_new', $insert_data);
+
+                }
+                
                 return $res;
 
             }

@@ -56,9 +56,6 @@
                         <?php } ?> 
              
                     </td>
-                    
-                 
-                  
                 </tr>
             <?php } ?> 
             <!-- baru -->
@@ -133,6 +130,15 @@
     })
 
     function countNilaiKomponen(){
+        let nilaiDefault = 97;
+      
+       for (x = 0; x <= 21; x++) {
+        if($('#sub_perilaku_'+x).val() == ""){
+            $('#sub_perilaku_'+x).val(nilaiDefault)
+        }
+        }
+       
+       
 
         const toFixedWithoutZeros = (num, precision) =>
   `${1 * num.toFixed(precision)}`;

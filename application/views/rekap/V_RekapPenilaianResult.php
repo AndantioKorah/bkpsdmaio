@@ -29,36 +29,41 @@
                         </tr>
                     </table>
                 <?php } ?>
-                <table style="width: 100%;" border=1>
+               
+   
+                <div class="tableFixHead">
+                <table style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                <thead>
                     <tr>
-                        <td style="text-align: center;" rowspan="2">No</td>
-                        <td style="text-align: center;" rowspan="2">Nama Pegawai</td>
-                        <td style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</td>
-                        <td style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</td>
-                        <td style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</td>
-                        <td style="text-align: center;" rowspan="2">Capaian Bobot Produktivitas Kerja</td>
+                        <th style="text-align: center; width: 10px;" rowspan="2">No</th>
+                        <th style="text-align: center;" rowspan="2">Nama Pegawai</th>
+                        <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
+                        <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
+                        <th style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</th>
+                        <th style="text-align: center;" rowspan="2">Capaian Bobot Produktivitas Kerja</th>
                     </tr>
                     <tr>
-                        <td style="text-align: center;" rowspan="1" colspan="1">% Capaian</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Bobot</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Berorientasi Pelayanan</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Akuntabel</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Kompeten</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Harmonis</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Loyal</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Adaptif</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Kolaboratif</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Nilai Capaian</td>
-                        <td style="text-align: center;" rowspan="1" colspan="1">Bobot</td>
+                        <th style="text-align: center;" rowspan="1" colspan="1">% Capaian</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Bobot</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Berorientasi Pelayanan</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Akuntabel</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Kompeten</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Harmonis</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Loyal</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Adaptif</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Kolaboratif</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Nilai Capaian</th>
+                        <th style="text-align: center;" rowspan="1" colspan="1">Bobot</th>
                     </tr>
+                    </thead>
                     <tbody>
                         <?php $no = 1; foreach($result as $rs){ ?>
                             <tr>
-                                <td style="text-align: center;"><?=$no++;?></td>
-                                <td style="padding-top: 5px; padding-bottom: 5px;">
+                                <td scope="row" style="text-align: center;"><?=$no++;?></td>
+                                <th scope="row" style="padding-top: 5px; padding-bottom: 5px;">
                                     <?=$rs['nama_pegawai']?><br>
                                     NIP. <?=$rs['nip']?>
-                                </td>
+                                </th>
                                 <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
@@ -76,8 +81,19 @@
                         <?php } ?>
                     </tbody>
                 </table>
+
+                        </div>
             </form>
         </div>
 <?php } else { ?>
     <h5>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h5>
 <?php } ?>
+<script>
+   $(function(){
+    fixedHeaderTable()
+    })
+
+    $('#table_rekap_penilaian').DataTable({
+    "ordering": false
+     });
+</script>

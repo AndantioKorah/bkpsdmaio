@@ -160,6 +160,15 @@ function generateRandomNumber($length = 10) {
     return $randomString;
 }
 
+function getPphByIdPangkat($id_pangkat){
+    if(in_array($id_pangkat, [31, 32, 33, 34])){
+        return 5;
+    } else if(in_array($id_pangkat, [41, 42, 43, 44, 45])){
+        return 15;
+    }
+    return 0;
+}
+
 function clearString($str){
     return str_replace('.', '', preg_replace('/[^0-9.\.]+/', '', (trim($str))));
 }

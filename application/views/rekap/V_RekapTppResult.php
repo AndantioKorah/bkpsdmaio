@@ -3,7 +3,7 @@
 ?>
         <div class="col-lg-12" style="width: 100%;">
             <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank">
-                <center><h5><strong>REKAPITULASI PENILAIAN DISIPLIN KERJA</strong></h5></center>
+                <!-- <center><h5><strong>REKAPITULASI PENILAIAN DISIPLIN KERJA</strong></h5></center> -->
                 <br>
                 
                 <table style="width: 100%; position: relative;">
@@ -26,8 +26,9 @@
                                 <option selected value="absen">Rekap Absensi</option>
                                 <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
-                                <!-- <option value="penilaian_tpp">Rekap Penilaian TPP</option> -->
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
+                                <option value="daftar_permintaan">Daftar Permintaan</option>
+                                <option value="daftar_pembayaran">Daftar Pembayaran</option>
                             </select>    
                         </td>
                     </tr>

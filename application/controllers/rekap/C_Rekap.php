@@ -231,6 +231,32 @@ class C_Rekap extends CI_Controller
                 }
                 $this->load->view('rekap/V_RekapPerhitunganTpp', $data);
             break;
+
+            case "daftar_permintaan":
+                if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
+                    $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
+                } else {
+                    $explode_param = explode(";", $param['skpd']);
+                    $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
+                    $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                    $temp['daftar_perhitungan_tpp'] = $data['result'];
+                    $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
+                }
+                $this->load->view('rekap/V_DaftarPermintaanTpp', $data);
+            break;
+
+            case "daftar_pembayaran":
+                if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
+                    $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
+                } else {
+                    $explode_param = explode(";", $param['skpd']);
+                    $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
+                    $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                    $temp['daftar_perhitungan_tpp'] = $data['result'];
+                    $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
+                }
+                $this->load->view('rekap/V_DaftarPembayaranTpp', $data);
+            break;
         }
     }
 

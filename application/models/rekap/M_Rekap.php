@@ -1372,16 +1372,25 @@
         $result = null;
         foreach($pagu_tpp as $p){
             if(isset($data_disiplin_kerja[$p['nipbaru_ws']])){
+                $explode_golongan_all = explode(", ", $p['nm_pangkat']);
+                $explode_golongan_number = explode("/", $explode_golongan_all[1]);
                 $result[$p['nipbaru_ws']]['nama_pegawai'] = getNamaPegawaiFull($p);
                 $result[$p['nipbaru_ws']]['nip'] = $p['nipbaru_ws'];
                 $result[$p['nipbaru_ws']]['pangkat'] = $p['nm_pangkat'];
+                $result[$p['nipbaru_ws']]['id_pangkat'] = $p['id_pangkat'];
                 $result[$p['nipbaru_ws']]['nama_jabatan'] = $p['nama_jabatan'];
                 $result[$p['nipbaru_ws']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                $result[$p['nipbaru_ws']]['nomor_golongan'] = $explode_golongan_number[0];
+                $result[$p['nipbaru_ws']]['eselon'] = $data_kinerja[$p['nipbaru_ws']]['eselon'];
                 $result[$p['nipbaru_ws']]['pagu_tpp'] = $p['pagu_tpp'];
                 $result[$p['nipbaru_ws']]['bobot_produktivitas_kerja'] = $data_kinerja[$p['nipbaru_ws']]['bobot_capaian_produktivitas_kerja'];
                 $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'] = $data_disiplin_kerja[$p['nipbaru_ws']]['rekap']['capaian_bobot_disiplin_kerja'];
                 $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
                 $result[$p['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$p['nipbaru_ws']]['presentase_tpp']) * floatval($p['pagu_tpp'])) / 100;
+                $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
+                $result[$p['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$p['nipbaru_ws']]['pph']) / 100) * $result[$p['nipbaru_ws']]['besaran_tpp']);
+                $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
+
             }
         }
 

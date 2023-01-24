@@ -92,17 +92,17 @@
             } 
             
   .tableFixHead th { 
-              background-color: #2C3B49;
-              color: white;
+              background-color: #9c9ea1;
+              /* color: white; */
               border-top: 5px;
               padding: 8px 15px; 
+              
             } 
 
 
         .tableFixHead tr:nth-child(even) th[scope=row] {
-        background-color: #2C3B49;
-         color: white;
-        border: 1px solid #000;
+        background-color: #f2f2f2;
+        color: black;
         }
 
     
@@ -136,10 +136,9 @@
         left: 0;
         z-index: 0;
         }
-        
        }
 
-
+ 
         .tableFixHead th[scope=row] {
         vertical-align: top;
         color: inherit;
@@ -147,6 +146,7 @@
         background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
         z-index: 0;
         }
+        
 
         .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
         left: 0;
@@ -163,6 +163,16 @@
         z-index: 0;
         min-width: 20em;
         }
+
+
+        .cd-search{
+        padding: 10px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border-radius: 0px;
+                   }
   
   /* fixed header and coloum table */
   </style>
@@ -241,7 +251,45 @@ function fixedHeaderTable() {
   $th.css('zIndex', '60');
   $th.css({ 'position': 'relative' });
   });
-  }
+
+// Search table
+'use strict';
+
+var TableFilter = (function() {
+ var Arr = Array.prototype;
+		var input;
+  
+		function onInputEvent(e) {
+			input = e.target;
+			var table1 = document.getElementsByClassName(input.getAttribute('data-table'));
+			Arr.forEach.call(table1, function(table) {
+				Arr.forEach.call(table.tBodies, function(tbody) {
+					Arr.forEach.call(tbody.rows, filter);
+				});
+			});
+		}
+
+		function filter(row) {
+			var text = row.textContent.toLowerCase();
+       //console.log(text);
+      var val = input.value.toLowerCase();
+      //console.log(val);
+			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+		}
+
+		return {
+			init: function() {
+				var inputs = document.getElementsByClassName('table-filter');
+				Arr.forEach.call(inputs, function(input) {
+					input.oninput = onInputEvent;
+				});
+			}
+		};
+ 
+	})();
+ TableFilter.init(); 
+ // Tutup Search table
+}
 
 
 

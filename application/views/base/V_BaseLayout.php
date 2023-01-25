@@ -206,7 +206,7 @@
 
 .div_maintb table { 
       border: 1px solid #fff;
-      font-size: 13px;
+      font-size: 14px;
       width: 100%;
   } 
   

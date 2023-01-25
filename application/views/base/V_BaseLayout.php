@@ -173,6 +173,26 @@
         margin-bottom: 10px;
         border-radius: 0px;
                    }
+
+        .tableFixHead tr:nth-child(odd) td {
+            background: white;
+           
+        }
+
+        .tableFixHead tr:nth-child(even) td {
+            background: #f2f2f2;
+        }
+
+        @media screen and (width> 600px) {
+        tr>td:first-child + td {
+        position: sticky;
+        left: 0;
+        min-width: 20em;
+        }
+       }
+
+
+
   
   /* fixed header and coloum table */
   </style>

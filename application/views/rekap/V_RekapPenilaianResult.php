@@ -33,9 +33,9 @@
                 <!-- tes -->
               
                 <!-- tutup tes -->
-                <input type="text" class="cd-search table-filter" data-table="order-table" placeholder="Cari Pegawai" />
+                <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
                 <div class="tableFixHead">
-                <table class="cd-table order-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10px;" rowspan="2">No</th>
@@ -63,10 +63,10 @@
                         <?php $no = 1; foreach($result as $rs){ ?>
                             <tr>
                                 <td  style="text-align: center;"><?=$no++;?></td>
-                                <th scope="row" style="padding-top: 5px; padding-bottom: 5px;">
+                                <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
                                     <?=$rs['nama_pegawai']?><br>
                                     NIP. <?=$rs['nip']?>
-                                </th>
+                                </td>
                                 <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>

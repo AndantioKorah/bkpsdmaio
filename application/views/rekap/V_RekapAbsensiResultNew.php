@@ -94,7 +94,7 @@
                           ?>
                               <tr class="<?=$bgtr?>">
                                   <td style="text-align: center; font-size: 13px;"><?=$no++;?></td>
-                                  <th scope="row" style="font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></th>
+                                  <td scope="row" style="font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
                                   <td style="font-size: 13px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                                   <?php
                                   foreach($rs['absen'] as $a){

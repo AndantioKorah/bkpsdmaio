@@ -6,7 +6,7 @@
 
 <?php if($result){ ?>
     <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
-    <div class="col-lg-12 tableFixHead">
+    <div class="col-lg-12 div_maintb">
     <table border=1 class="table table-hover table-striped rekap-table">
         <thead>
             <tr>

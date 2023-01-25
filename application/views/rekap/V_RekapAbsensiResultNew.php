@@ -44,11 +44,16 @@
                 </center>
                
                 <br>
-                <input type="text" class="cd-search table-filter" data-table="order-table" placeholder="Cari Pegawai" />
-                <div class="tableFixHead"> 
-                <table class="cd-table order-table table" style="width: 5000px;" border="1" id="table_rekap_absenx">
-                <thead>
-                <tr> 
+
+                <!-- tes  -->
+   
+
+    <br /><br />
+    <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <div class="div_maintb">
+    <table class="rekap-table table"  border="1" id="table_rekap_absenx">
+            <thead>
+            <tr> 
                         <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){
@@ -67,35 +72,35 @@
                             }
                             if(strlen($val) >= 5){
                         ?>  
-                        <th  style="text-align: center; font-size: 13px;"><?= $val?></th>
+                        <th  style="text-align: center; "><?= $val?></th>
                         <?php $i++; } }?>
-                        <th style="text-align: center; font-size: 13px;">JHK</th>
-                        <th style="text-align: center; font-size: 13px;">Hadir</th>
-                        <!-- <th style="text-align: center; font-size: 13px;">Alpa</th> -->
-                        <th style="text-align: center; font-size: 13px;">TMK 1</th>
-                        <th style="text-align: center; font-size: 13px;">TMK 2</th>
-                        <th style="text-align: center; font-size: 13px;">TMK 3</th>
-                        <th style="text-align: center; font-size: 13px;">PKSW 1</th>
-                        <th style="text-align: center; font-size: 13px;">PKSW 2</th>
-                        <th style="text-align: center; font-size: 13px;">PKSW 3</th>
+                        <th style="text-align: center; ">JHK</th>
+                        <th style="text-align: center; ">Hadir</th>
+                        <!-- <th style="text-align: center; ">Alpa</th> -->
+                        <th style="text-align: center; ">TMK 1</th>
+                        <th style="text-align: center; ">TMK 2</th>
+                        <th style="text-align: center; ">TMK 3</th>
+                        <th style="text-align: center; ">PKSW 1</th>
+                        <th style="text-align: center; ">PKSW 2</th>
+                        <th style="text-align: center; ">PKSW 3</th>
                         <?php
                             if($list_dk){
                                 foreach($list_dk as $ldk){
                         ?>
-                            <th style="text-align: center; font-size: 13px;"><?=$ldk?></th>
+                            <th style="text-align: center; "><?=$ldk?></th>
                         <?php } } ?>
 		</tr> 
-  </thead>
-  <tbody>
-  <?php  $no = 1; foreach($result as $rs){
+            </thead>
+            <tbody>
+            <?php  $no = 1; foreach($result as $rs){
                           
                           if(isset($rs['absen'])){
                           $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                           ?>
                               <tr class="<?=$bgtr?>">
-                                  <td style="text-align: center; font-size: 13px;"><?=$no++;?></td>
-                                  <td scope="row" style="font-size: 13px; text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
-                                  <td style="font-size: 13px;"><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
+                                  <td style="text-align: center; "><?=$no++;?></td>
+                                  <td scope="row" style=" text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
+                                  <td style=""><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                                   <?php
                                   foreach($rs['absen'] as $a){
                                       $bgcolor = '';
@@ -136,23 +141,28 @@
                                       <?php } ?>
                                   </td>
                                   <?php } ?>
-                                  <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
-                                  <td style="font-size: 13px; text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
-                                  <!-- <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
-                                  <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
+                                  <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
+                                  <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
+                                  <!-- <td style=" text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
+                                  <td style=" text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
                                   <?php foreach($list_dk as $l){ ?>
-                                      <td style="font-size: 13px; text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
+                                      <td style=" text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
                                   <?php } ?>
                               </tr>
                           <?php } } ?>
-                            </tbody>
-                            </table>
-                            </div>
+            
+            </tbody>
+        </table>
+    </div>
+
+                <!-- tutup tes  -->
+               
+                
                 <br>
                 <center>
                 <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>

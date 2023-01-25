@@ -144,7 +144,7 @@
     </div>
         <div id="" class="row">
         <?php if($list_kegiatan){ ?>
-        <div class="col-12 tableFixHead">
+        <div class="col-12 div_maintb">
         <table class="table table-hover table-striped" id="table_realisasi_kinerja" width="100%">
             <thead>
                 <th class="text-center table-success">No</th>

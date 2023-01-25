@@ -89,14 +89,15 @@
                         }
   .tableFixHead table { 
               border: 1px solid #fff;
+              font-size: 13px;
             } 
             
-  .tableFixHead th { 
-              background-color: #9c9ea1;
-              /* color: white; */
+    .tableFixHead th { 
+              background-color: #464646;
+              color: #d1d1d1;
               border-top: 5px;
               padding: 8px 15px; 
-              
+              font-weight: normal;
             } 
 
 
@@ -108,6 +109,7 @@
     
         .tableFixHead tr:nth-child(odd) th[scope=row] {
         background-color: #fff;
+        
         }
 
         .tableFixHead tr:nth-child(even) {
@@ -129,40 +131,40 @@
 
 
 
-       @media screen and (width> 600px) {
+       /* @media screen and (width> 600px) {
         .tableFixHead th[scope=row] {
         position: -webkit-sticky;
         position: sticky;
         left: 0;
         z-index: 0;
         }
-       }
+       } */
 
  
-        .tableFixHead th[scope=row] {
+        /* .tableFixHead th[scope=row] {
         vertical-align: top;
         color: inherit;
         background-color: inherit;
         background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
         z-index: 0;
         }
-        
+         */
 
-        .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
+        /* .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
         left: 0;
         z-index: 0;
         background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
-        }
+        } */
 
 
-        .tableFixHead th[scope=row] + td {
+        /* .tableFixHead th[scope=row] + td {
 
         }
 
         .tableFixHead th[scope=row] {
         z-index: 0;
         min-width: 20em;
-        }
+        } */
 
 
         .cd-search{
@@ -184,13 +186,92 @@
         }
 
         @media screen and (width> 600px) {
-        tr>td:first-child + td {
+        .tableFixHead tr>td:first-child + td {
         position: sticky;
         left: 0;
         min-width: 20em;
         }
        }
 
+
+        /* FIXED LEFT COLOUM WITH HEADER */
+        .div_maintb {
+    /* height: calc(100vh - 180px);
+    width: calc(100vw - 100px);
+    overflow: scroll;
+    border: 1px solid #6f6f6f; */
+    overflow-y: auto; height: 600px;
+
+}
+
+.div_maintb table { 
+      border: 1px solid #fff;
+      font-size: 13px;
+      width: 100%;
+  } 
+  
+.div_maintb thead {
+            position: sticky;
+            top: 0;
+            z-index: 400;
+            }
+   
+
+.div_maintb th {
+        background: #464646;
+        color: #d1d1d1;
+        width: 100px;
+        min-width: 100px;
+        padding: 6px;
+        /* outline: 1px solid #7a7a7a; */
+        font-weight: normal;
+        margin-bottom:50px;
+    }
+
+    /* .div_maintb td {
+        padding: 6px;
+        outline: 1px solid #c3c3c3;
+    } */
+
+        /* .div_maintb th:nth-child(1),
+        .div_maintb td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            width: 130px;
+            min-width: 130px;
+        } */
+
+   @media screen and (width> 600px) {
+          .div_maintb th:nth-child(2),
+          .div_maintb td:nth-child(2) {
+            position: sticky;
+            left: 0;
+            width: 50px;
+            min-width: 50px;
+        }
+         }
+
+
+        
+    .div_maintb td:nth-child(2) {
+              z-index: 200;
+              min-width: 20em;
+          }
+
+      .div_maintb th:nth-child(1),
+      .div_maintb th:nth-child(2) {
+          z-index: 300;
+      }
+
+      .div_maintb tr:nth-child(odd) td {
+      background: white;
+    
+      }
+
+      .div_maintb tr:nth-child(even) td {
+          background: #f2f2f2;
+      }
+        /* TUTUP FIXED LEFT COLOUM WITH HEADER  */
 
 
   
@@ -271,6 +352,8 @@ function fixedHeaderTable() {
   $th.css('zIndex', '60');
   $th.css({ 'position': 'relative' });
   });
+
+
 
 // Search table
 'use strict';

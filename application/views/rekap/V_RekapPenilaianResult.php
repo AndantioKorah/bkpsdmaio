@@ -31,15 +31,17 @@
                     </table>
                 <?php } ?>
                 <!-- tes -->
-              
+              <style>
+               
+              </style>
                 <!-- tutup tes -->
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
-                <div class="tableFixHead">
-                <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                <div class="div_maintb">
+                <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10px;" rowspan="2">No</th>
-                        <th style="text-align: center;" rowspan="2">Nama Pegawai</th>
+                        <th style="text-align: center;z-index: 400;" rowspan="2">Nama Pegawai</th>
                         <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
                         <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
                         <th style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</th>
@@ -61,7 +63,7 @@
                     </thead>
                     <tbody>
                         <?php $no = 1; foreach($result as $rs){ ?>
-                            <tr>
+                            <tr >
                                 <td  style="text-align: center;"><?=$no++;?></td>
                                 <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
                                     <?=$rs['nama_pegawai']?><br>

@@ -31,21 +31,21 @@
                 <?php } ?>
                 <div>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
-                <div class="tableFixHead">
+                <div class="div_maintb">
                 <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                         <thead>
                             <tr >
-                                <th style="text-align: center; width: 3%;" rowspan="2">No</th>
-                                <th style="text-align: center; width: 20%;" rowspan="2">Nama Pegawai</td>
-                                <th style="text-align: center; width: 3%;" rowspan="2">JHK</td>
-                                <th style="text-align: center; width: 8%;" rowspan="2">TARGET CAP. PEN. DISIPLIN KERJA</th>
-                                <th style="text-align: center;" rowspan="1" colspan="<?=count($mdisker)?>">Keterangan</th>
-                                <th style="text-align: center; width: 8%;" rowspan="2">CAPAIAN PENILAIAN DISIPLIN KERJA</th>
-                                <th style="text-align: center; width: 8%;" rowspan="2">CAPAIAN BOBOT PENILAIAN DISIPLIN KERJA</td>
+                                <th style="text-align: center;  width: 3%;" rowspan="2">No</th>
+                                <th style="text-align: center;  z-index: 400; width: 20%;" rowspan="2">Nama Pegawai</td>
+                                <th style="text-align: center;  width: 3%;" rowspan="2">JHK</td>
+                                <th style="text-align: center;  width: 8%;" rowspan="2">TARGET CAP. PEN. DISIPLIN KERJA</th>
+                                <th style="text-align: center; " rowspan="1" colspan="<?=count($mdisker)?>">Keterangan</th>
+                                <th style="text-align: center;  width: 8%;" rowspan="2">CAPAIAN PENILAIAN DISIPLIN KERJA</th>
+                                <th style="text-align: center;  width: 8%;" rowspan="2">CAPAIAN BOBOT PENILAIAN DISIPLIN KERJA</td>
                             </tr>
                             <tr >
                                 <?php foreach($mdisker as $m){ ?>
-                                    <th style="text-align: center;" rowspan="1" colspan="1"><?=STRTOUPPER($m['keterangan'])?></th>
+                                    <th style="text-align: center; " rowspan="1" colspan="1"><?=STRTOUPPER($m['keterangan'])?></th>
                                 <?php } ?>
                             </tr>
                         </thead>

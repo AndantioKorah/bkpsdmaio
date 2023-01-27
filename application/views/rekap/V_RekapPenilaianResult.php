@@ -1,3 +1,4 @@
+
 <?php if($result){
     $skpd = explode(";",$parameter['skpd']);
     if($flag_print == 1){
@@ -12,8 +13,8 @@
                     <center><h5><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h5></center>
                 <?php } ?>
                 <br>
-                <?php if($flag_print == 0){ ?>
-                    <button style="display: none;" type="submit" class="text-right float-right btn btn-navy btn-sm"><i class="fa fa-download"></i> Simpan sebagai Excel</button>
+                <?php if($flag_print == 1){ ?>
+                    <button type="submit" class="text-right float-right btn btn-navy btn-sm"><i class="fa fa-download"></i> Simpan sebagai Excel</button>
                 <?php } ?>
                 <?php if(isset($use_header) && $use_header == 1){ ?>
                     <table style="width: 100%;">
@@ -29,14 +30,18 @@
                         </tr>
                     </table>
                 <?php } ?>
+                <!-- tes -->
+              <style>
                
-   
-                <div class="tableFixHead">
-                <table style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+              </style>
+                <!-- tutup tes -->
+                <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+                <div class="div_maintb">
+                <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10px;" rowspan="2">No</th>
-                        <th style="text-align: center;" rowspan="2">Nama Pegawai</th>
+                        <th style="text-align: center;z-index: 400;" rowspan="2">Nama Pegawai</th>
                         <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
                         <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
                         <th style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</th>
@@ -58,12 +63,12 @@
                     </thead>
                     <tbody>
                         <?php $no = 1; foreach($result as $rs){ ?>
-                            <tr>
-                                <td scope="row" style="text-align: center;"><?=$no++;?></td>
-                                <th scope="row" style="padding-top: 5px; padding-bottom: 5px;">
+                            <tr >
+                                <td  style="text-align: center;"><?=$no++;?></td>
+                                <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
                                     <?=$rs['nama_pegawai']?><br>
                                     NIP. <?=$rs['nip']?>
-                                </th>
+                                </td>
                                 <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
                                 <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
@@ -89,11 +94,23 @@
     <h5>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h5>
 <?php } ?>
 <script>
+    
    $(function(){
     fixedHeaderTable()
     })
 
     $('#table_rekap_penilaian').DataTable({
-    "ordering": false
+    "ordering": false,
+        scrollY:        "400px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        fixedColumns:   {
+            left: 2
+        }
      });
+
+
+  
+
 </script>

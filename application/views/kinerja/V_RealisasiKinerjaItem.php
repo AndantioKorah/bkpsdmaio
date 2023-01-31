@@ -117,8 +117,8 @@
     <div class="col-12">
     <form class="form-inline" method="post">
   <div class="form-group">
-    <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y');?>">
+    <label for="email" class="mr-2">Tahun  </label>
+    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
   </div>
   <div class="form-group">
     <label for="pwd" class="mr-2 ml-3"> Bulan</label>

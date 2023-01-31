@@ -5,8 +5,8 @@
     <div class="col-12">
     <form class="form-inline" method="post">
   <div class="form-group">
-    <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="search_tahun" name="search_tahun" value="<?=date('Y');?>">
+    <label for="email" class="mr-2">Tahun  </label>
+    <input  class="form-control datepicker" id="search_tahun" name="search_tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
   </div>
   <div class="form-group">
     <label for="pwd" class="mr-2 ml-3"> Bulan</label>
@@ -144,6 +144,14 @@ $('#search_bulan').on('change', function(){
         })
     }
 
-
+    $('.datepicker').datepicker({
+    format: 'yyyy',
+    startView: "years", 
+    orientation: 'bottom',
+    autoclose: true,
+    todayBtn: true,
+    viewMode: "years",
+    minViewMode: "years"
+});
 
 </script>

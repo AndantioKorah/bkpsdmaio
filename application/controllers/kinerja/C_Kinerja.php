@@ -98,7 +98,7 @@ class C_Kinerja extends CI_Controller
               if($this->upload->do_upload('file')){
                
                $data = $this->upload->data(); 
-               if($data['file_type'] == "image/png") {
+               if($data['file_type'] == "image/png" || $data['file_type'] == "image/jpeg") {
                $insert['name'] = $data['file_name'];
                $config['image_library'] = 'gd2';
                $config['source_image'] = './assets/bukti_kegiatan/'.$data["file_name"];

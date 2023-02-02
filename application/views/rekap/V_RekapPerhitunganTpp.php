@@ -5,8 +5,9 @@
 </style>
 
 <?php if($result){ ?>
-    <div class="col-lg-12 table-responsive">
-    <table border=1 class="table table-hover table-striped">
+    <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <div class="col-lg-12 div_maintb">
+    <table border=1 class="table table-hover table-striped rekap-table">
         <thead>
             <tr>
                 <th rowspan=2 class="text-center">No</th>
@@ -56,3 +57,8 @@
         <h5>DATA TIDAK DITEMUKAN <i class="fa fa-exclamation"></i></h5>
     </div>
 <?php } ?>
+<script>
+    $(function(){
+    fixedHeaderTable()
+    })
+</script>

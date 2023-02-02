@@ -13,13 +13,15 @@
                 $pembobotan = null;
                
                 if(isset($p['komponen_kinerja']) && $p['komponen_kinerja']){
-                    // list($capaian, $pembobotan) = countNilaiKomponen($p['komponen_kinerja']);
+                    // dd($p['komponen_kinerja']);
+                    list($capaian, $pembobotan) = countNilaiKomponen($p['komponen_kinerja']);
                     // $pembobotan = $pembobotan * 100;
                     // dd($p['created_by']);
                     // dd($this->general_library->getId());
                     // $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
-                    $capaian = $p['komponen_kinerja']['capaian'];
-                    $pembobotan = $p['komponen_kinerja']['bobot']."%";
+                    $pembobotan = number_format((float)$pembobotan, 2, '.', '').'%';
+                    // $capaian = $p['komponen_kinerja']['capaian'];
+                    // $pembobotan = $p['komponen_kinerja']['bobot']."%";
                 }
             ?>
                 <tr>

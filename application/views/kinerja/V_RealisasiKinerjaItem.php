@@ -117,8 +117,8 @@
     <div class="col-12">
     <form class="form-inline" method="post">
   <div class="form-group">
-    <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y');?>">
+    <label for="email" class="mr-2">Tahun  </label>
+    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
   </div>
   <div class="form-group">
     <label for="pwd" class="mr-2 ml-3"> Bulan</label>
@@ -193,10 +193,13 @@
                                     if($file_name == null){
                                         echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                     } else {
-                                      if($ekstension == "pdf"){
-                                        echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
-                                      } else {
+                                      if($ekstension == "png" || $ekstension == "jpg"){
+                                        // echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
                                         echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
+
+                                      } else {
+                                        echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                        // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
                                       }
                                     }
                                    $nodok++;

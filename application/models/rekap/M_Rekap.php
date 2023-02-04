@@ -1386,7 +1386,7 @@
 
         $result = null;
         foreach($pagu_tpp as $p){
-            if(isset($data_disiplin_kerja[$p['nipbaru_ws']])){
+            if(isset($data_disiplin_kerja[$p['nipbaru_ws']]) && isset($data_kinerja[$p['nipbaru_ws']])){
                 $explode_golongan_all = explode(", ", $p['nm_pangkat']);
                 $explode_golongan_number = explode("/", $explode_golongan_all[1]);
                 $result[$p['nipbaru_ws']]['nama_pegawai'] = getNamaPegawaiFull($p);

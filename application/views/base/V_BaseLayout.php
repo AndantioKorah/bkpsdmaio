@@ -85,8 +85,9 @@
 
   .content_table{
                      font-size: 13px;
-                     text-align: center;
+                     /* text-align: center; */
                         }
+
   .tableFixHead table { 
               border: 1px solid #fff;
               font-size: 13px;
@@ -126,7 +127,7 @@
 
         .tableFixHead th:nth-of-type(3),
         td:nth-of-type(3) {
-        text-align: center;
+        /* text-align: center; */
         } 
 
 

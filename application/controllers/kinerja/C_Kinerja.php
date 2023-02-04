@@ -53,6 +53,7 @@ class C_Kinerja extends CI_Controller
 
     public function multipleImageStore()
   {
+    //   dd($_FILES);
       $countfiles = count($_FILES['files']['name']);
     
       $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -75,12 +76,12 @@ class C_Kinerja extends CI_Controller
               $_FILES['file']['error'] = $_FILES['files']['error'][$i];
               $_FILES['file']['size'] = $_FILES['files']['size'][$i];
             
-
-              if($_FILES['file']['size'] > 1048576){
-                $ress = 0;
-                $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
-                break;
-              }
+                
+            //   if($_FILES['file']['size'] > 1048576){
+            //     $ress = 0;
+            //     $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
+            //     break;
+            //   }
            
               // Set preference
               $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
@@ -97,7 +98,7 @@ class C_Kinerja extends CI_Controller
               if($this->upload->do_upload('file')){
                
                $data = $this->upload->data(); 
-               if($data['file_type'] != "application/pdf") {
+               if($data['file_type'] == "image/png" || $data['file_type'] == "image/jpeg") {
                $insert['name'] = $data['file_name'];
                $config['image_library'] = 'gd2';
                $config['source_image'] = './assets/bukti_kegiatan/'.$data["file_name"];

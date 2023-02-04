@@ -273,6 +273,7 @@
                 loadListKegiatan(tahun,bulan)
               } else {
                 errortoast(result.msg)
+                document.getElementById('btn_upload').disabled = false;
                 return false;
               }
                 

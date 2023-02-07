@@ -16,6 +16,7 @@
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
                     <?=strtoupper($periode)?>
                 </h5>
+                
                 <?php if(isset($flag_print) && $flag_print == 1){ ?>
                     <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
                         <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>

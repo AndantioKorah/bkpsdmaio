@@ -3,6 +3,10 @@
 require 'vendor/autoload.php';
 // use PhpOffice\PhpSpreadSheet\Spreadsheet;
 // use PhpOffice\PhpSpreadSheet\IOFactory;
+require FCPATH.'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class C_Rekap extends CI_Controller
 {

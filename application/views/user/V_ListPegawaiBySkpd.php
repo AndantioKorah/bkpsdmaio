@@ -6,7 +6,7 @@
                     <th class="text-center">No</th>
                     <th class="text-center">NIP</th>
                     <th>Nama Pegawai</th>
-                    <th>Keterangan</th>
+                    <!-- <th>Keterangan</th> -->
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($list_pegawai as $lp){ ?>
@@ -14,13 +14,13 @@
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-center"><?=$lp['nipbaru_ws']?></td>
                             <td><?=getNamaPegawaiFull($lp)?></td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <?php if($lp['flag_user_created'] == 0) { ?>
                                     <h6 style="padding: 5px; border-radius: 2px; background-color: red; color: white;"><i class="fa fa-times"></i> User Belum Terdaftar</h6>
                                 <?php } else { ?>
                                     <h6 style="padding: 5px; border-radius: 2px; background-color: green; color: white;"><i class="fa fa-check"></i> User Sudah Ada</h6>
                                 <?php } ?>
-                            </td>
+                            </td> -->
                         </tr>
                     <?php } ?>
                 </tbody>

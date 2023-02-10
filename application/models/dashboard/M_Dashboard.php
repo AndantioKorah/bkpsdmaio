@@ -65,7 +65,7 @@
                     ->where('a.tahun', $data['tahun'])
                     ->where('a.flag_active', 1);
             if(isset($data['bidang']) && $data['bidang'] != 0){
-                $this->db->where('d.id_m_bidang', $data['bidang']);
+                $this->db->where('b.id_m_bidang', $data['bidang']);
             }
             
             $result['rencana_kinerja'] = $this->db->get()->result_array();

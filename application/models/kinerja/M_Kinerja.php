@@ -1106,8 +1106,7 @@
             }
 
             $list_exclude = [];
-            dd($presentase_semua);
-            if($presentase_semua && count($presentase_tpp > 1)){ //jika ada syarat TPP untuk semua pegawai dan syarat TPP lebih dari 1 syarat di unit kerja tersebut
+            if($presentase_semua && (count($presentase_tpp) > 1)){ //jika ada syarat TPP untuk semua pegawai dan syarat TPP lebih dari 1 syarat di unit kerja tersebut
                 $j = 1;
                 foreach($presentase_tpp as $p){ //exclude jenis jabatan dan kelas jabatan tertentu dari presentase yang mewakili semua pegawai dalam PD
                     if($p['kelas_jabatan'] != '0' && $p['jenis_jabatan'] == 'semua'){

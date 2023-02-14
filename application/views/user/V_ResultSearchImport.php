@@ -16,16 +16,16 @@
                 <td><?=getNamaPegawaiFull($lr)?></td>
                 <td><?=$lr['nm_unitkerja']?></td>
                 <td class="text-center">
-                    <?php
+                    <!-- <?php
                         if($lr['flag_user_created'] == 1){
                             echo "<label style='color: red;'>User sudah terdaftar</label>";
                         } else {
-                            ?>
+                            ?> -->
                             <button id="btn_create_<?=$lr['nipbaru_ws']?>" class="btn btn-sm btn-navy" onclick="createUserImport('<?=$lr['nipbaru_ws']?>')"><i class="fa fa-plus"></i> Buat User</button>
                             <button style="display: none;" id="btn_loading_<?=$lr['nipbaru_ws']?>" disabled class="btn btn-sm btn-navy"><i class="fa fa-spin fa-spinner"></i> Loading...</button>
-                            <?php
+                            <!-- <?php
                         }
-                    ?>
+                    ?> -->
                 </td>
             </tr>
         <?php $no++; } ?>

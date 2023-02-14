@@ -832,10 +832,6 @@
         
             }
         }
-       
-      
-       
-       
         $tempresult = $data['result'];
         $data['result'] = null;
         $periode = explode(" ", $data['periode']);
@@ -900,11 +896,10 @@
 
                    
                     if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
-                       
+                        
                         if(isset($dokpen[$tr['nip']][$l])){  
                             $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                             $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
-                           
                         } else {
                             $lp[$tr['nip']]['rekap']['TK']++;
                         }
@@ -1098,7 +1093,7 @@
             $mdisker[$dk['keterangan']]['keterangan'] = $dk['keterangan'];
             $mdisker[$dk['keterangan']]['pengurangan'] = $dk['pengurangan'];
         }
-                            
+                    
         $skpd = explode(";", $data['skpd']);
         $param['bulan'] = $data['bulan'];
         $param['tahun'] = $data['tahun'];
@@ -1346,16 +1341,16 @@
     
     public function getDaftarPerhitunganTpp($pagu_tpp, $rekap, $param){
         $data_disiplin_kerja = null;
-        if(isset($data_rekap['penilaian_disiplin_kerja'])){
-            $data_disiplin_kerja = null;
-            $data_disiplin_kerja = $data_rekap['penilaian_disiplin_kerja'];
-        } else {
+        // if(isset($data_rekap['penilaian_disiplin_kerja'])){
+        //     $data_disiplin_kerja = null;
+        //     $data_disiplin_kerja = $data_rekap['penilaian_disiplin_kerja'];
+        // } else {
             $data_disiplin_kerja = $this->rekapPenilaianDisiplinSearch($param);
             $data_disiplin_kerja['flag_print'] = 0;
             $data_disiplin_kerja['use_header'] = 0;
             $temp['penilaian_disiplin_kerja'] = $data_disiplin_kerja;
-            $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_disiplin_kerja);
-        }
+            // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_disiplin_kerja);
+        // }
         $temp_disiplin_kerja = $data_disiplin_kerja;
         $data_disiplin_kerja = null;
         foreach($temp_disiplin_kerja['result'] as $tdk){
@@ -1365,17 +1360,17 @@
         }
 
         $data_kinerja = null;
-        if(isset($data_rekap['produktivitas_kerja'])){
-            $data_kinerja = null;
-            $data_kinerja = $data_rekap['produktivitas_kerja'];
-        } else {
+        // if(isset($data_rekap['produktivitas_kerja'])){
+        //     $data_kinerja = null;
+        //     $data_kinerja = $data_rekap['produktivitas_kerja'];
+        // } else {
             $data_kinerja = $this->rekapPenilaianSearch($param);
             $data_kinerja['parameter'] = $param;
             $data_kinerja['flag_print'] = 0;
             $data_kinerja['use_header'] = 0;
             $temp['produktivitas_kerja'] = $data_kinerja;
-            $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_kinerja);
-        }
+            // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $data_kinerja);
+        // }
         $temp_kinerja = $data_kinerja;
         $data_kinerja = null;
         foreach($temp_kinerja as $tdk){

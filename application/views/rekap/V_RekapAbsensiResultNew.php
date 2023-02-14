@@ -16,7 +16,7 @@
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
                     <?=strtoupper($periode)?>
                 </h5>
-                <?php if(isset($flag_print) && $flag_print == 1){ ?>
+                <?php if(isset($flag_print) && $flag_print == 0){ ?>
                     <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
                         <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
                     </form>
@@ -49,7 +49,9 @@
    
 
     <br /><br />
-    <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <?php if(isset($flag_print) && $flag_print == 0){ ?>
+        <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <?php } ?>
     <div class="div_maintb">
     <table class="rekap-table table"  border="1" id="table_rekap_absenx">
             <thead>

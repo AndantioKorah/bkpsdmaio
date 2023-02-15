@@ -16,10 +16,13 @@
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
                     <?=strtoupper($periode)?>
                 </h5>
-                
-                <?php if(isset($flag_print) && $flag_print == 1){ ?>
+                <?php if(isset($flag_print) && $flag_print == 0){ ?>
                     <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
                         <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
+                    </form>
+                    <br>
+                    <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadPdf')?>">
+                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as PDF</button>
                     </form>
                     <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></span>
                     <table style="width: 50%; margin-bottom: 10px;" border=1>
@@ -50,7 +53,9 @@
    
 
     <br /><br />
-    <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <?php if(isset($flag_print) && $flag_print == 0){ ?>
+        <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+    <?php } ?>
     <div class="div_maintb">
     <table class="rekap-table table"  border="1" id="table_rekap_absenx">
             <thead>

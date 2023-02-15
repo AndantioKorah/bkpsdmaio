@@ -1,343 +1,457 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Receipt</title>
-    <style>
-        body {
-            margin-top: 20px;
-            background-color: #f7f7ff;
-        }
-
-        #invoice {
-            padding: 0px;
-        }
-
-        .invoice {
-            position: relative;
-            background-color: #FFF;
-            min-height: 680px;
-            padding: 15px
-        }
-
-        .invoice header {
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #0d6efd
-        }
-
-        .invoice .company-details {
-            text-align: right
-        }
-
-        .invoice .company-details .name {
-            margin-top: 0;
-            margin-bottom: 0
-        }
-
-        .invoice .contacts {
-            margin-bottom: 20px
-        }
-
-        .invoice .invoice-to {
-            text-align: left
-        }
-
-        .invoice .invoice-to .to {
-            margin-top: 0;
-            margin-bottom: 0
-        }
-
-        .invoice .invoice-details {
-            text-align: right
-        }
-
-        .invoice .invoice-details .invoice-id {
-            margin-top: 0;
-            color: #0d6efd
-        }
-
-        .invoice main {
-            padding-bottom: 50px
-        }
-
-        .invoice main .thanks {
-            margin-top: -100px;
-            font-size: 2em;
-            margin-bottom: 50px
-        }
-
-        .invoice main .notices {
-            padding-left: 6px;
-            border-left: 6px solid #0d6efd;
-            background: #e7f2ff;
-            padding: 10px;
-        }
-
-        .invoice main .notices .notice {
-            font-size: 1.2em
-        }
-
-        .invoice table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            margin-bottom: 20px
-        }
-
-        .invoice table td,
-        .invoice table th {
-            padding: 15px;
-            background: #eee;
-            border-bottom: 1px solid #fff
-        }
-
-        .invoice table th {
-            white-space: nowrap;
-            font-weight: 400;
-            font-size: 16px
-        }
-
-        .invoice table td h3 {
-            margin: 0;
-            font-weight: 400;
-            color: #0d6efd;
-            font-size: 1.2em
-        }
-
-        .invoice table .qty,
-        .invoice table .total,
-        .invoice table .unit {
-            text-align: right;
-            font-size: 1.2em
-        }
-
-        .invoice table .no {
-            color: #fff;
-            font-size: 1.6em;
-            background: #0d6efd
-        }
-
-        .invoice table .unit {
-            background: #ddd
-        }
-
-        .invoice table .total {
-            background: #0d6efd;
-            color: #fff
-        }
-
-        .invoice table tbody tr:last-child td {
-            border: none
-        }
-
-        .invoice table tfoot td {
-            background: 0 0;
-            border-bottom: none;
-            white-space: nowrap;
-            text-align: right;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            border-top: 1px solid #aaa
-        }
-
-        .invoice table tfoot tr:first-child td {
-            border-top: none
-        }
-
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0px solid rgba(0, 0, 0, 0);
-            border-radius: .25rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
-        }
-
-        .invoice table tfoot tr:last-child td {
-            color: #0d6efd;
-            font-size: 1.4em;
-            border-top: 1px solid #0d6efd
-        }
-
-        .invoice table tfoot tr td:first-child {
-            border: none
-        }
-
-        .invoice footer {
-            width: 100%;
-            text-align: center;
-            color: #777;
-            border-top: 1px solid #aaa;
-            padding: 8px 0
-        }
-
-        @media print {
-            .invoice {
-                font-size: 11px !important;
-                overflow: hidden !important
+<html>
+        <head>
+         <style>
+           .center {
+            margin-left: auto;
+            margin-right: auto;
             }
-
-            .invoice footer {
-                position: absolute;
-                bottom: 10px;
-                page-break-after: always
+            @media print {
+            .new-page {
+                page-break-before: always;
             }
-
-            .invoice>div:last-child {
-                page-break-before: always
             }
-        }
+         </style>
+        </head>
 
-        .invoice main .notices {
-            padding-left: 6px;
-            border-left: 6px solid #0d6efd;
-            background: #e7f2ff;
-            padding: 10px;
-        }
-    </style>
-
-</head><body>
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <div id="invoice">
-                    <div class="toolbar hidden-print">
-                        <div class="text-end">
-                            <button type="button" class="btn btn-dark"><i class="fa fa-print"></i> Print</button>
-                            <button type="button" class="btn btn-danger"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
-                        </div>
-                        <hr>
-                    </div>
-                    <div class="invoice overflow-auto">
-                        <div style="min-width: 600px">
-                            <header>
-                                <div class="row">
-                                    <div class="col">
-                                        <a href="javascript:;">
-                                            <img src="assets/images/logo-icon.png" width="80" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="col company-details">
-                                        <h2 class="name">
-                                            <a target="_blank" href="javascript:;">
-                                                Arboshiki
-                                            </a>
-                                        </h2>
-                                        <div>455 Foggy Heights, AZ 85004, US</div>
-                                        <div>(123) 456-789</div>
-                                        <div>company@example.com</div>
-                                    </div>
-                                </div>
-                            </header>
-                            <main>
-                                <div class="row contacts">
-                                    <div class="col invoice-to">
-                                        <div class="text-gray-light">INVOICE TO:</div>
-                                        <h2 class="to">John Doe</h2>
-                                        <div class="address">796 Silver Harbour, TX 79273, US</div>
-                                        <div class="email"><a href="mailto:john@example.com">john@example.com</a>
-                                        </div>
-                                    </div>
-                                    <div class="col invoice-details">
-                                        <h1 class="invoice-id">INVOICE 3-2-1</h1>
-                                        <div class="date">Date of Invoice: 01/10/2018</div>
-                                        <div class="date">Due Date: 30/10/2018</div>
-                                    </div>
-                                </div>
-                                <table>
-                                    <thead>
+        <body>
+       
+        <!-- Absensi -->
+        <h4 style="text-align: center;">
+            REKAP ABSENSI <?=strtoupper($skpd)?><br>
+            <?=strtoupper($periode)?>
+        </h4>
+        
+        
+        
+            <h4 style="font-size: 14px; font-weight: bold; text-align: center;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></h4>
+            <table style="width: 50%; margin-bottom: 10px;" border=1  class="center">
+                <thead>
+                    <th style="text-align: center; font-size: 14px;">Hari</th>
+                    <th style="text-align: center; font-size: 14px;">Jam Masuk</th>
+                    <th style="text-align: center; font-size: 14px;">Jam Pulang</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
+                        <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_masuk']?></td>
+                        <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_pulang']?></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 14px; text-align: center;">Jumat</td>
+                        <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_masuk']?></td>
+                        <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_pulang']?></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        <br>
+        <table class="rekap-table table"  border="1" id="table_rekap_absenx">
+        <thead>
+        <tr> 
+                <?php $i=0; 
+                $list_dk = null;
+                if($disiplin_kerja){
+                    foreach($disiplin_kerja as $dk){
+                        if($dk['keterangan']){
+                            $list_dk[] = $dk['keterangan'];
+                        }
+                    }
+                }
+               
+                foreach($header[0] as $h){
+                    $val = $h;
+                    $rowspan = 1;
+                    if($i !=0 || $i != 1){
+                        $val = $val.'<br>'.$header[1][$i];
+                    }
+                    if(strlen($val) >= 5){
+                ?>  
+                <th  style="text-align: center; "><?= $val?></th>
+                <?php $i++; } }?>
+                <th style="text-align: center; ">JHK</th>
+                <th style="text-align: center; ">Hadir</th>
+                <!-- <th style="text-align: center; ">Alpa</th> -->
+                <th style="text-align: center; ">TMK 1</th>
+                <th style="text-align: center; ">TMK 2</th>
+                <th style="text-align: center; ">TMK 3</th>
+                <th style="text-align: center; ">PKSW 1</th>
+                <th style="text-align: center; ">PKSW 2</th>
+                <th style="text-align: center; ">PKSW 3</th>
+                <?php
+                    if($list_dk){
+                        foreach($list_dk as $ldk){
+                ?>
+                    <th style="text-align: center; "><?=$ldk?></th>
+                <?php } } ?>
+        </tr> 
+        </thead>
+        <tbody>
+        <?php  $no = 1; foreach($result as $rs){
+                  
+                  if(isset($rs['absen'])){
+                  $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
+                  ?>
+                      <tr class="<?=$bgtr?>">
+                          <td style="text-align: center; "><?=$no++;?></td>
+                          <td scope="row" style=" text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
+                          <td style=""><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
+                          <?php
+                          foreach($rs['absen'] as $a){
+                              $bgcolor = '';
+                              $textcolor = 'black';
+                              $txtcolormasuk = 'black';
+                              $txtcolorpulang = 'black';
+                              $txtcolordisker = '#05ada5';
+        
+                              if($a['ket'] == "A"){
+                                  // $bgcolor = 'a3f0ec';
+                                  $textcolor = '#05ada5';
+                              } else if(in_array($a['ket'], $list_dk)){
+                                  // $bgcolor = 'a3f0ec';
+                                  $txtcolordisker = '#05ada5';
+                              } else if($a['ket_masuk'] == 'tmk1'){
+                                  $txtcolormasuk = '#d3b700';
+                              } else if($a['ket_masuk'] == 'tmk2'){
+                                  $txtcolormasuk = '#d37c00';
+                              } else if($a['ket_masuk'] == 'tmk3'){
+                                  $txtcolormasuk = '#ff0000';
+                              }
+        
+                              if($a['ket_pulang'] == 'pksw1'){
+                                  $txtcolorpulang = '#d3b700';
+                              } else if($a['ket_pulang'] == 'pksw2'){
+                                  $txtcolorpulang = '#d37c00';
+                              } else if($a['ket_pulang'] == 'pksw3'){
+                                  $txtcolorpulang = '#ff0000';
+                              }
+                          ?>
+                          <td class="content_table" bgcolor="<?=$bgcolor?>">
+                              <?php if($a['ket'] == "A"){ ?>
+                                  <span style="color: <?=$textcolor?>;"><?=$a['ket']?></span>
+                              <?php } else if(in_array($a['ket'], $list_dk)){ ?>
+                                  <span style="color: <?=$txtcolordisker?>;"><?=$a['ket']?></span>
+                              <?php } else { ?>
+                                  <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span> - <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
+                              <?php } ?>
+                          </td>
+                          <?php } ?>
+                          <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
+                          <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
+                          <!-- <td style=" text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
+                          <td style=" text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
+                          <td style=" text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
+                          <td style=" text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
+                          <td style=" text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
+                          <td style=" text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
+                          <td style=" text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
+                          <?php foreach($list_dk as $l){ ?>
+                              <td style=" text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
+                          <?php } ?>
+                      </tr>
+                  <?php } } ?>
+        
+        </tbody>
+        </table>
+        <!-- tutup absensi  -->
+        <!-- produktivitas  -->
+        <?php $skpd = explode(";",$parameter['skpd']);?>            
+            <h4 class="new-page" style="text-align: center;"><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h4>
+        <?php  $skpd = explode(";",$parameter['skpd']);;?>
+            <table style="width: 100%;">
+                <tr>
+                    <td>SKPD</td>
+                    <td>:</td>
+                    <td><?=$skpd[1]?></td>
+                </tr>
+                <tr>
+                    <td>Periode</td>
+                    <td>:</td>
+                    <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
+                </tr>
+            </table>
+        
+        
+        <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 10px;" rowspan="2">No</th>
+                <th style="text-align: center;z-index: 400;" rowspan="2">Nama Pegawai</th>
+                <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
+                <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
+                <th style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</th>
+                <th style="text-align: center;" rowspan="2">Capaian Bobot Produktivitas Kerja</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;" rowspan="1" colspan="1">% Capaian</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Bobot</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Berorientasi Pelayanan</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Akuntabel</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Kompeten</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Harmonis</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Loyal</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Adaptif</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Kolaboratif</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Nilai Capaian</th>
+                <th style="text-align: center;" rowspan="1" colspan="1">Bobot</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; foreach($penilaian as $rs){ ?>
+                    <tr >
+                        <td  style="text-align: center;"><?=$no++;?></td>
+                        <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
+                            <?=$rs['nama_pegawai']?><br>
+                            NIP. <?=$rs['nip']?>
+                        </td>
+                        <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['berorientasi_pelayanan'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['akuntabel'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['kompeten'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['harmonis'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['loyal'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['adaptif'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['kolaboratif'] : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? ($rs['komponen_kinerja']['capaian']) : 0;?></td>
+                        <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0;?>%</td>
+                        <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($rs['bobot_capaian_produktivitas_kerja'])?>%</td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <!-- tutup produktifitas   -->
+                   <!-- disiplin -->
+ <h4 class="new-page" style="text-align: center;"><strong>REKAPITULASI PENILAIAN DISIPLIN KERJA</strong></h4>
+                            <table style="width: 100%; position: relative;">
+                                <tr>
+                                    <td>SKPD</td>
+                                    <td>:</td>
+                                    <td><?=$skpd[1]?></td>
+                                </tr>
+                                <tr>
+                                    <td>Periode</td>
+                                    <td>:</td>
+                                    <td><?=getNamaBulan($bulan).' '.$tahun?></td>
+                                </tr>
+                            </table>
+                      <br>
+                        <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                                <thead>
+                                    <tr >
+                                        <th style="text-align: center;  width: 3%;" rowspan="2">No</th>
+                                        <th style="text-align: center;  z-index: 400; width: 20%;" rowspan="2">Nama Pegawai</td>
+                                        <th style="text-align: center;  width: 3%;" rowspan="2">JHK</td>
+                                        <th style="text-align: center;  width: 8%;" rowspan="2">TARGET CAP. PEN. DISIPLIN KERJA</th>
+                                        <th style="text-align: center; " rowspan="1" colspan="<?=count($disiplin['mdisker'])?>">Keterangan</th>
+                                        <th style="text-align: center;  width: 8%;" rowspan="2">CAPAIAN PENILAIAN DISIPLIN KERJA</th>
+                                        <th style="text-align: center;  width: 8%;" rowspan="2">CAPAIAN BOBOT PENILAIAN DISIPLIN KERJA</td>
+                                    </tr>
+                                    <tr >
+                                        <?php foreach($disiplin['mdisker'] as $m){ ?>
+                                            <th style="text-align: center; " rowspan="1" colspan="1"><?=STRTOUPPER($m['keterangan'])?></th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $no = 1; foreach($disiplin['result'] as $rs){
+                                        $capaian = 0;
+                                        $capaian_bobot = 0;
+                                    ?>
                                         <tr>
-                                            <th>#</th>
-                                            <th class="text-left">DESCRIPTION</th>
-                                            <th class="text-right">HOUR PRICE</th>
-                                            <th class="text-right">HOURS</th>
-                                            <th class="text-right">TOTAL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="no">04</td>
-                                            <td class="text-left">
-                                                <h3>
-                                                    <a target="_blank" href="javascript:;">
-                                                        Youtube channel
-                                                    </a>
-                                                </h3>
-                                                <a target="_blank" href="javascript:;">
-                                                    Useful videos
-                                                </a> to improve your Javascript skills. Subscribe and stay tuned :)
+                                            <td style="text-align: center;"><?=$no++;?></td>
+                                            <td style="padding-top: 5px; padding: 5px;">
+                                                <span style=""><?=$rs['nama_pegawai']?></span><br>
+                                                <span style="">NIP. <?=$rs['nip']?></span>
                                             </td>
-                                            <td class="unit">$0.00</td>
-                                            <td class="qty">100</td>
-                                            <td class="total">$0.00</td>
+                                            <td style="width: 6%; text-align: center;"><?=$rs['rekap']['jhk']?></td>
+                                            <td style="width: 6%; text-align: center;"><?=TARGET_PENILAIAN_DISIPLIN_KERJA.'%'?></td>
+                                            <?php $temp_capaian = 0; foreach($disiplin['mdisker'] as $md){
+                                                $color = '000000';
+                                                if($rs['rekap'][$md['keterangan']]['pengurangan'] == 0){
+                                                    $color = '#dfe2e5';
+                                                }
+                                            ?>
+                                                <td style="text-align: center; color: <?=$color?>" rowspan="1" colspan="1"><?=$rs['rekap'][$md['keterangan']]['pengurangan'].'%'?></td>
+                                            <?php } ?>
+                                            <td style="text-align: center;"><?=$rs['rekap']['capaian_disiplin_kerja'].'%'?></td>
+                                            <td style="text-align: center;"><?=$rs['rekap']['capaian_bobot_disiplin_kerja'].'%'?></td>
                                         </tr>
-                                        <tr>
-                                            <td class="no">01</td>
-                                            <td class="text-left">
-                                                <h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity
-                                            </td>
-                                            <td class="unit">$40.00</td>
-                                            <td class="qty">30</td>
-                                            <td class="total">$1,200.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="no">02</td>
-                                            <td class="text-left">
-                                                <h3>Website Development</h3>Developing a Content Management System-based Website
-                                            </td>
-                                            <td class="unit">$40.00</td>
-                                            <td class="qty">80</td>
-                                            <td class="total">$3,200.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="no">03</td>
-                                            <td class="text-left">
-                                                <h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)
-                                            </td>
-                                            <td class="unit">$40.00</td>
-                                            <td class="qty">20</td>
-                                            <td class="total">$800.00</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="2"></td>
-                                            <td colspan="2">SUBTOTAL</td>
-                                            <td>$5,200.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"></td>
-                                            <td colspan="2">TAX 25%</td>
-                                            <td>$1,300.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"></td>
-                                            <td colspan="2">GRAND TOTAL</td>
-                                            <td>$6,500.00</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <div class="thanks">Thank you!</div>
-                                <div class="notices">
-                                    <div>NOTICE:</div>
-                                    <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-                                </div>
-                            </main>
-                            <footer>Invoice was created on a computer and is valid without the signature and seal.</footer>
-                        </div>
-                        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
-                        <div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body></html>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        <!-- tutup disiplin  -->
+              <!-- perhitungan tpp  -->
+  <h4 class="new-page" style="text-align: center;"><strong>DAFTAR PERHITUNGAN TPP</strong></h4>
+        <?php  $skpd = explode(";",$parameter['skpd']);;?>
+            <table style="width: 100%;">
+                <tr>
+                    <td>SKPD</td>
+                    <td>:</td>
+                    <td><?=$skpd[1]?></td>
+                </tr>
+                <tr>
+                    <td>Periode</td>
+                    <td>:</td>
+                    <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
+                </tr>
+            </table>
+                <table border=1 class="table table-hover table-striped rekap-table">
+        <thead>
+            <tr>
+                <th rowspan=2 class="text-center">No</th>
+                <th rowspan=2 class="text-center">Pegawai</th>
+                <th rowspan=2 class="text-center">Kelas Jabatan</th>
+                <th rowspan=2 class="text-center">Besaran Pagu TPP (Rp)</th>
+                <th rowspan=2 class="text-center">% Capaian Produktivitas Kerja</th>
+                <th rowspan=2 class="text-center">% Capaian Disiplin Kerja Kerja</th>
+                <th rowspan=2 class="text-center">% Penilaian TPP</th>
+                <th rowspan=2 class="text-center">Capaian TPP (Rp)</th>
+                <th rowspan=1 colspan=2 class="text-center">Potongan PPh</th>
+                <th rowspan=2 class="text-center">Jumlah TPP Diterima (Rp)</th>
+            </tr>
+            <tr>
+                <th rowspan=1 colspan=1 class="text-center">%</th>
+                <th rowspan=1 colspan=1 class="text-center">Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach($perhitungan_tpp as $r){ ?>
+                <tr>
+                    <td class="text-center"><?=$no++;?></td>
+                    <td class="text-left">
+                        <span style="font-size: 14px; font-weight: bold"><?=$r['nama_pegawai']?></span><br>
+                        <span class="text-data-pegawai">NIP. <?=formatNip($r['nip'])?></span><br>
+                        <!-- <span class="text-data-pegawai"><?=$r['pangkat']?></span><br>
+                        <span class="font-weight-bold text-data-pegawai"><?=$r['nama_jabatan']?></span> -->
+                    </td>
+                    <td class="align-middle text-center"><?=$r['kelas_jabatan']?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['pagu_tpp'])?></td>
+                    <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['bobot_produktivitas_kerja'])?> %</td>
+                    <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['bobot_disiplin_kerja'])?> %</td>
+                    <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['presentase_tpp'])?> %</td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'])?></td>
+                    <td class="align-middle text-center">
+                        <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
+                    </td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'])?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+                <!-- tutup perhitungan tpp  -->
+                <!-- permintaan tpp  -->
+                <h4 class="new-page" style="text-align: center;"><strong>DAFTAR PERMINTAAN TPP</strong></h4>
+        <?php  $skpd = explode(";",$parameter['skpd']);;?>
+            <table style="width: 100%;">
+                <tr>
+                    <td>SKPD</td>
+                    <td>:</td>
+                    <td><?=$skpd[1]?></td>
+                </tr>
+                <tr>
+                    <td>Periode</td>
+                    <td>:</td>
+                    <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
+                </tr>
+            </table>
+            <table border=1 class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th rowspan=2 class="text-center">No</th>
+                <th rowspan=2 class="text-center">Nama / NIP</th>
+                <th rowspan=2 class="text-center">Gol / Rg</th>
+                <th rowspan=2 class="text-center">Jabatan</th>
+                <th rowspan=2 class="text-center">Kls. Jab.</th>
+                <th rowspan=2 class="text-center">Ess</th>
+                <th rowspan=2 class="text-center">Jumlah Capaian TPP (Rp)</th>
+                <th rowspan=1 colspan=2 class="text-center">Potongan PPh</th>
+                <th rowspan=2 class="text-center">Jumlah Setelah Dipotong PPh (Rp)</th>
+            </tr>
+            <tr>
+                <th rowspan=1 colspan=1 class="text-center">%</th>
+                <th rowspan=1 colspan=1 class="text-center">Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach($perhitungan_tpp as $r){ ?>
+                <tr>
+                    <td class="text-center"><?=$no++;?></td>
+                    <td class="text-left">
+                        <span style="font-size: 14px; font-weight: bold"><?=$r['nama_pegawai']?></span><br>
+                        <span class="text-data-pegawai"><?=formatNip($r['nip'])?></span><br>
+                        <!-- <span class="text-data-pegawai"><?=$r['pangkat']?></span><br>
+                        <span class="font-weight-bold text-data-pegawai"><?=$r['nama_jabatan']?></span> -->
+                    </td>
+                    <td class="align-middle text-center"><?=$r['nomor_golongan']?></td>
+                    <td class="align-middle text-center"><?=$r['nama_jabatan']?></td>
+                    <td class="align-middle text-center"><?=$r['kelas_jabatan']?></td>
+                    <td class="align-middle text-center"><?=$r['eselon']?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'])?></td>
+                    <td class="align-middle text-center">
+                        <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
+                    </td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'])?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+                <!-- tutup permintaan tpp  -->
+                <!-- pembayaran tpp  -->
+                <h4 class="new-page" style="text-align: center;"><strong>DAFTAR PEMBAYARAN TPP</strong></h4>
+        <?php  $skpd = explode(";",$parameter['skpd']);;?>
+            <table style="width: 100%;">
+                <tr>
+                    <td>SKPD</td>
+                    <td>:</td>
+                    <td><?=$skpd[1]?></td>
+                </tr>
+                <tr>
+                    <td>Periode</td>
+                    <td>:</td>
+                    <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
+                </tr>
+            </table>
+                <table border=1 class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th rowspan=2 class="text-center">No</th>
+                <th rowspan=2 class="text-center">Nama / NIP</th>
+                <th rowspan=2 class="text-center">Kls. Jab.</th>
+                <th rowspan=2 class="text-center">Ess</th>
+                <th rowspan=2 class="text-center">Jumlah TPP yang dicapai (Rp)</th>
+                <th rowspan=1 colspan=2 class="text-center">Potongan PPh</th>
+                <th rowspan=2 class="text-center">Jumlah Setelah Dipotong PPh (Rp)</th>
+            </tr>
+            <tr>
+                <th rowspan=1 colspan=1 class="text-center">%</th>
+                <th rowspan=1 colspan=1 class="text-center">Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach($perhitungan_tpp as $r){ ?>
+                <tr>
+                    <td class="text-center"><?=$no++;?></td>
+                    <td class="text-left">
+                        <span style="font-size: 14px; font-weight: bold"><?=$r['nama_pegawai']?></span><br>
+                        <span class="text-data-pegawai"><?=formatNip($r['nip'])?></span><br>
+                        <!-- <span class="text-data-pegawai"><?=$r['pangkat']?></span><br>
+                        <span class="font-weight-bold text-data-pegawai"><?=$r['nama_jabatan']?></span> -->
+                    </td>
+                    <td class="align-middle text-center"><?=$r['kelas_jabatan']?></td>
+                    <td class="align-middle text-center"><?=$r['eselon']?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'])?></td>
+                    <td class="align-middle text-center">
+                        <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
+                    </td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'])?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+                <!-- tutup pembayaran tpp  -->
+        </body>
+    </html>

@@ -21,9 +21,8 @@
                         <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
                     </form>
                     <br>
-                    <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadPdf')?>">
-                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as PDF</button>
-                    </form>
+
+                   
                     <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></span>
                     <table style="width: 50%; margin-bottom: 10px;" border=1>
                         <thead>

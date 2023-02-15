@@ -643,10 +643,10 @@
                         // echo 'masukkan '.$lp['nipbaru_ws'].' ke dalam list<br>';
                     }
                 }
-                if($list_id_pegawai){
-                    $this->db->where_in('id_peg', $list_id_pegawai)
-                            ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
-                }
+                // if($list_id_pegawai){
+                //     $this->db->where_in('id_peg', $list_id_pegawai)
+                //             ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
+                // }
                 if($bulkuser){
                     $this->db->insert_batch('m_user', $bulkuser);
                 } else {
@@ -687,8 +687,8 @@
             if($exist){
                 $rs['code'] = 1;
                 $rs['message'] = 'User sudah terdaftar';
-                $this->db->where('nipbaru_ws', $nip)
-                        ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
+                // $this->db->where('nipbaru_ws', $nip)
+                //         ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
             } else if(!$pegawai){
                 $rs['code'] = 1;
                 $rs['message'] = 'Terjadi Kesalahan';
@@ -701,8 +701,8 @@
                 $new_password = $pass_split[6].$pass_split[7].$pass_split[4].$pass_split[5].$pass_split[0].$pass_split[1].$pass_split[2].$pass_split[3];
                 $user['password'] = $this->general_library->encrypt($user['username'], $new_password);
                 $this->db->insert('m_user', $user);
-                $this->db->where('id_peg', $pegawai['id_peg'])
-                        ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
+                // $this->db->where('id_peg', $pegawai['id_peg'])
+                //         ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
             }
 
             if($this->db->trans_status() == FALSE){

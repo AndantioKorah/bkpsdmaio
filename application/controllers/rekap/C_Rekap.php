@@ -171,6 +171,7 @@ class C_Rekap extends CI_Controller
         
         $this->session->set_userdata('params_rekap_tpp', $this->input->post());
         $data = $this->rekap->rekapTppSearch($this->input->post());
+        // dd($data['json_result']);
         $data['data_serach'] = $this->input->post();
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
@@ -291,13 +292,13 @@ class C_Rekap extends CI_Controller
         $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
         $data['perhitungan_tpp'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $data['parameter']);
         $temp['daftar_perhitungan_tpp'] = $data['perhitungan_tpp'];
-
+      
 
     
 
         // dd($data['disiplin']);
 
-        $this->load->view('rekap/V_RekapTppPdf', $data);
+        // $this->load->view('rekap/V_RekapTppPdf', $data);
         
         // $data['flag_print'] = 1;
         // $html = $this->load->view('rekap/V_RekapTppPdf',$data, true);
@@ -313,7 +314,7 @@ class C_Rekap extends CI_Controller
         // $mpdf->Output();
 
         $html = $this->load->view('rekap/V_RekapTppPdf', $data, true);
-        $this->mpdf = new \Mpdf\mPDF();
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         // $this->stylesheet = file_get_contents('css/style.css');
         $this->mpdf->AddPage('L', // L - landscape, P - portrait
                 '', '', '', '',
@@ -324,8 +325,10 @@ class C_Rekap extends CI_Controller
                 18, // margin header
                 12); // margin footer
         $this->mpdf->WriteHTML($html);
-        //$this->mpdf->Output($file_name, 'D'); // download force
-        $this->mpdf->Output($file_name, 'I'); // view in the explorer
+        $skpd = explode(";", $data['parameter']['skpd']);
+        $bulan = getNamaBulan($data['parameter']['bulan']);
+        // $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.$bulan.' '.$data['parameter']['tahun'].'.pdf', 'D'); // download force
+        $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.$bulan.' '.$data['parameter']['tahun'].'.pdf', 'I'); // view in the explorer
     
     }
 

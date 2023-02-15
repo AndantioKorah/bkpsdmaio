@@ -1,3 +1,4 @@
+<?php if(isset($skpd)){ ?>
 <html>
         <head>
          <style>
@@ -9,6 +10,9 @@
             .new-page {
                 page-break-before: always;
             }
+            }
+            table, th, td {
+            
             }
          </style>
         </head>
@@ -24,7 +28,7 @@
         
         
             <h4 style="font-size: 14px; font-weight: bold; text-align: center;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></h4>
-            <table style="width: 50%; margin-bottom: 10px;" border=1  class="center">
+            <table style="width: 50%; margin-bottom: 10px; border: 1px solid black; border-collapse: collapse;" border=1  class="center">
                 <thead>
                     <th style="text-align: center; font-size: 14px;">Hari</th>
                     <th style="text-align: center; font-size: 14px;">Jam Masuk</th>
@@ -45,7 +49,7 @@
             </table>
         
         <br>
-        <table class="rekap-table table"  border="1" id="table_rekap_absenx">
+        <table class="rekap-table table"  border="1" style="border: 1px solid black; border-collapse: collapse;">
         <thead>
         <tr> 
                 <?php $i=0; 
@@ -171,7 +175,7 @@
             </table>
         
         
-        <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
+        <table class="cd-table rekap-table table" border="1" style="border: 1px solid black; border-collapse: collapse;">
         <thead>
             <tr>
                 <th style="text-align: center; width: 10px;" rowspan="2">No</th>
@@ -235,8 +239,8 @@
                                     <td><?=getNamaBulan($bulan).' '.$tahun?></td>
                                 </tr>
                             </table>
-                      <br>
-                        <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                    
+                        <table class="cd-table rekap-table table" style="border: 1px solid black; border-collapse: collapse;" border="1" id="table_rekap_penilaianx">
                                 <thead>
                                     <tr >
                                         <th style="text-align: center;  width: 3%;" rowspan="2">No</th>
@@ -296,7 +300,7 @@
                     <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
                 </tr>
             </table>
-                <table border=1 class="table table-hover table-striped rekap-table">
+                <table border=1 class="table table-hover table-striped rekap-table" style="border: 1px solid black; border-collapse: collapse;">
         <thead>
             <tr>
                 <th rowspan=2 class="text-center">No</th>
@@ -356,7 +360,7 @@
                     <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
                 </tr>
             </table>
-            <table border=1 class="table table-hover table-striped">
+            <table border=1 class="table table-hover table-striped" style="border: 1px solid black; border-collapse: collapse;">
         <thead>
             <tr>
                 <th rowspan=2 class="text-center">No</th>
@@ -414,7 +418,7 @@
                     <td><?=getNamaBulan($parameter['bulan']).' '.$parameter['tahun']?></td>
                 </tr>
             </table>
-                <table border=1 class="table table-hover table-striped">
+                <table border=1 class="table table-hover table-striped" style="border: 1px solid black; border-collapse: collapse;">
         <thead>
             <tr>
                 <th rowspan=2 class="text-center">No</th>
@@ -453,5 +457,10 @@
         </tbody>
     </table>
                 <!-- tutup pembayaran tpp  -->
+                <?php } else { ?>
+    <div class="row">
+        <div class="col-lg-12 text-center">Data Tidak Ditemukan <i class="fa fa-exclamation"></i></div>
+    </div>
+<?php } ?>
         </body>
     </html>

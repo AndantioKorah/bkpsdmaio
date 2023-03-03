@@ -1,139 +1,254 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?=TITLES?></title>
-  <link rel="shortcut icon" href="<?=base_url('assets/img/EFORT-png.png')?>" />
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html>
+<html lang="en-us">
 
-    <link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>">
-    <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-    <link rel="stylesheet" href="<?=base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/adminlte.min.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/general.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/font.css')?>">
-    <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
-    <style>
-        .login-page {
-            background-image: url('assets/img/login.jpg');
-            background-size: 100%;
-            /* width: 100%; */
-            background-attachment: scroll;
-            background-size: cover;
-            background-repeat: repeat;
-        }
+    <head>
 
-        .btn-navy{
-          color: white;
-          background-color: #001f3f !important;
-          text-decoration: none;
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <title>Siladen</title>
+        <meta name="description" content="">
+
+        <!-- The compiled CSS file -->
+		
+        <link rel="stylesheet" href="<?=base_url('')?>assets/login/css/production.css">
+
+        <!-- Web fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700|Source+Serif+Pro:700" rel="stylesheet"> 
+
+        <!-- favicon.ico. Place these in the root directory. -->
+        <link rel="shortcut icon" href="favicon.ico">
+	<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+    <link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/iconSiladen.png" />
+
+    </head>
+<style>
+.textCustom{
+            color:aliceblue;
         }
 
-        .btn-navy:hover{
-          color: white;
-          background-color: #05519e !important;
-          text-decoration: none;
-        }
+        .img-hover-zoom {
+  height: 300px; /* [1.1] Set it as per your need */
+  overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+}
 
-        .input-group-text{
-          color: #001f3f !important;
-        }
+/* [2] Transition property for smooth transformation of images */
+.img-hover-zoom img {
+  transition: transform .5s ease;
+}
 
-        .text-navy{
-          color: #001f3f !important;
-        }
+/* [3] Finally, transforming the image when container gets hovered */
+.img-hover-zoom :hover img {
+  transform: scale(1.5);
+}
+.zoom:hover { 
+    transform: scale(1.5);
+    transition: transform .5s ease;
+}
 
-        .card:hover{
-          opacity: 1 !important;
-        }
+.logoBkd{
+    height: auto;max-width: 70%;
+}
 
-        .login-box{
-          /* border-radius: 10px; */
-          box-shadow: 3px 3px 13px 3px #001f3f;
-          opacity: 1;
-          transition: 1s;
-          /* padding: 20px; */
-          height: 65%;
-          width: 30%;
-          background-color: #ffffff;
-          position: absolute;
-        }
-        
-        .login-container{
-          width: 90%;
-          transform: translate(-50%, -50%);
-          top: 45%;
-          left: 50%;
-          position: absolute;
-        }
+
+@media screen and (width> 600px) {
+.logoBkd{
+    height: auto;max-width: 40%;
+}
+}
+
+/* @media screen and (width< 600px) {
+.logoBkd{
+    height: auto;max-width: 70%;
+}
+} */
+
+
+
+
     </style>
-</head>
-<body class="hold-transition login-page">
-<div class="login-box">
-  <!-- <div class="login-logo">
-    <a href="#"><b><?=TITLES?></b></a>
-  </div> -->
-  <!-- /.login-logo -->
-  <!-- <div class="card shadow-lg mb-5 bg-white rounded"> -->
-  <center>
-    <div class="login-container">
-      <center>
-      <img src="<?=base_url('assets/img/EFORT-png.png')?>" style="height: 250px; width: 250px;
-      margin-top: -20px;
-      margin-bottom: -50px;"/>
-      <br>
-      <br>
-      <br>
-        <span style="font-weight: bold; font-size: 25px; white-space: nowrap; color: black; font-family: Verdana;"><?=TITLE_SECOND?></span>
-      <br>
-      <span style="font-weight: bold; font-size: 18px; color: black">BKPSDM Kota Manado</span>
-      <br>
-      </center>
-      <form action="<?=base_url('login/C_Login/authenticateAdmin')?>" method="post">
-        <div class="input-group mb-3 mt-3">
-          <input type="text" class="form-control" onclick="hideError()" name="username" placeholder="Username">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
+    <body class="has-animations">
+
+
+    <!-- Header -->
+    <header class="align--center pt2">
+        <div class="container--lg border--bottom pb2">
+            <img class="logo mb-1 reveal-on-scroll is-revealing  logoBkd" src="<?=base_url('')?>assets/adminkit/img/logoSiladen.png">
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Feature list -->
+        <!-- <div class="container pt3 mt2 text--gray align--center"> -->
+
+            <!-- <div class=" bg--dark-gray align--center textCustom">
+            <div class="grid-row pt3">
+               
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
+                    <a href="http://siladen.manadokota.go.id/">
+                    <img  class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/connected.svg" alt="Assign to others">
+                </a>
+                    <p>Layanan Kepegawaian</p>
+               
+                </div>
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing " >
+                    <a href="http://siladen.manadokota.go.id/bidik">
+                    <img class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/assign.svg" alt="Stay connected">
+                    </a>
+                    <p>Pelaporan Kinerja</p>
+                </div>
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
+                    <img class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/search.svg" alt="Powerful search">
+                    <p>Sistem Informasi Kepegawaian</p>
+                </div>
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
+                    <img class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/vault.svg" alt="Put in a vault">
+                    <p>Put in a vault</p>
+                </div>
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
+                    <img class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/messaging.svg" alt="Fast messaging">
+                    <p>Fast messaging</p>
+                </div>
+                <div class="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
+                    <img class="illustration--small mb1 zoom" src="<?=base_url()?>assets/img/mail.svg" alt="Share with others">
+                    <p>Share with others</p>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" onclick="hideError()" name="password" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
+        </div> -->
+
+        <!-- Focus -->
+        <!-- <div class="container--lg pt1 pb1">
+
+            <div class="grid-row grid-row--center">
+                <div class="grid-column mt3 mb2 order-2">
+                    <div class="border--bottom pb2 mb2">
+                        <h2>Usage data</h2>
+                        <p>Quis istud possit, inquit, negare? Videamus animi partes, quarum est conspectus illustrior; Illa sunt similia: hebes acies est cuipiam oculorum, corpore alius senescit; Non enim, si omnia non&nbsp;sequebatur.</p>
+                    </div>
+                    <p class="italic text--gray mb1">Quae quo sunt excelsiores, eo dant clariora indicia naturae. Causa autem fuit huc veniendi ut quosdam&nbsp;hinc.</p>
+                    <p class="bold">Carry Andersen, COO at&nbsp;Stripe</p>
+                </div>
+                <div class="grid-column span-1"></div>
+                <div class="grid-column mt3 mb2 order-1 reveal-on-scroll is-revealing">
+                    <img src="img/data.svg" alt="Usage data">
+                </div>
             </div>
-          </div>
+
+            <div class="grid-row grid-row--center">
+                <div class="grid-column mt3 mb2 reveal-on-scroll is-revealing">
+                    <img src="img/security.svg" alt="Absolute security">
+                </div>
+                <div class="grid-column span-1"></div>
+                <div class="grid-column mt3 mb2">
+                    <div class="border--bottom pb2 mb2">
+                        <h2>Absolute security</h2>
+                        <p>Itaque his sapiens semper vacabit. Qualis ista philosophia est, quae non interitum afferat pravitatis, sed sit contenta mediocritate vitiorum? Quid de Platone aut de Democrito loquar? Quis istud possit, inquit&nbsp;negare?</p>
+                    </div>
+                    <p class="italic text--gray mb1">Estne, quaeso, inquam, sitienti in bibendo voluptas? Duo Reges: constructio&nbsp;interrete.</p>
+                    <p class="bold">Josh Blenton, Product Manager at&nbsp;Blinkist</p>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Mentioned -->
+        <!-- <div class="container--lg pt3 pb3 mb2 align--center">
+            <p class="mb2">Mentioned in</p>
+            <span><img class="mentioned" src="img/mentioned.svg" alt="New York Times, TC, Product Hunt, Recode"></span>
+        </div> -->
+
+        <!-- CTA -->
+        <div class="bg--dark-gray align--center pt1 pb1" style="height:500px;">
+            <div class="container pt2 pb2">
+                <!-- <img class="cta-image mb1 reveal-on-scroll is-revealing" src="<?=base_url()?>assets/login/img/logo_pemkot.png" alt="Text the app"> -->
+            
+             <center>
+             <p style="margin-left:-10px;" class="h3 text--white mb3 pt2 bold">Selamat Datang</p>
+             </center>
+                
+                <!-- <p class="text--white mb1">Silahkan Login untuk :)</p> -->
+                <!-- <p class="text--white  mb2"> <?= $this->session->flashdata('message');?></p> -->
+                <!-- <form action="<?= base_url();?>C_Login/home"> -->
+                <form class="login100-form validate-form" action="<?=base_url('login/C_Login/authenticateAdmin')?>" method="post">
+				<div class="inline-block mr1 no-mr-on-mobile mb1" style="width:280px;max-width:100%">
+
+              
+                            <input class="form-control mb2"  name="username"  placeholder="Username">
+                
+					
+
+                   
+                        
+                            <input class="form-control mb2" type="password"  name="password"  placeholder="Password">
+                
+							
+						
+               
+                <button class="btn btn--secondary inline-block mr1 no-mr-on-mobile" >Login</button>
+                </form>
+				</div>
+            </div>
         </div>
-        <div class="row">
-          <!-- <div class="col-7">
-          </div> -->
-          <div class="col-12">
-            <button type="submit" class="btn btn-block btn-navy">Sign In <i class="fas fa-sign-in-alt"></i></button>
-          </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="pt2 pb1 align--center-on-mobile">
+        <div class="container">
+            <div class="grid-row">
+                <div class="grid-column mt2 span-half">
+                    <div class="mb1">
+                       
+                    </div>
+                    <p class="small">Copyright © 2023 BKPSDM Manado</p>
+                </div>
+                <div class="grid-column mt2 span-half align--right align--center-on-mobile">
+                    <ul class="no-bullets list--inline">
+                        <li class="mr1"><a href="" class="link"><img class="icon" src="<?=base_url()?>assets/login/img/youtube.svg" alt="YouTube"></a></li>
+                        <li class="mr1"><a href="" class="link"><img class="icon" src="<?=base_url()?>assets/login/img/instagram.svg" alt="Twitter"></a></li>
+                        <li><a href="" class="link"><img class="icon" src="<?=base_url()?>assets/login/img/facebook.svg" alt="Facebook"></a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </form>
+    </footer>
 
-      <div class="col-12 text-center text-red mt-3" id="error_div" style="display: none;"></div>
-    </div>
-  </center>
-  <!-- </div> -->
-</div>
+    <!-- Scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
 
-<script src="<?=base_url('plugins/jquery/jquery.min.js')?>"></script>
-<script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
-<script src="<?=base_url('assets/js/adminlte.min.js')?>"></script>
+    <!-- The compiled JavaScript file -->
+    <script src="<?=base_url('')?>assets/login/js/production.js"></script>
 
-</body>
+    </body>
 </html>
+<script src="assets/new_login/vendor/jquery/jquery-3.2.1.min.js"></script>
+
+<script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
 <script>
+
   $(function(){
+	function errortoast(message = '', timertoast = 3000){
+		const Toast = Swal.mixin({
+		toast: true,
+		position: 'top',
+		showConfirmButton: false,
+		timer: timertoast
+		});
+
+		Toast.fire({
+		icon: 'error',
+		title: message
+		})
+	}
+
+	console.log('message = <?=$this->session->flashdata('message');?>')
+
     <?php if($this->session->flashdata('message')){ ?>
-      $('#error_div').show()
-      $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
+		errortoast("<?=$this->session->flashdata('message')?>");
+    //   $('#error_div').show()
+    //   $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
     <?php
       $this->session->set_flashdata('message', null);
     } ?>
@@ -153,9 +268,22 @@
     })
   }
 
-  function hideError(){
-    $('#error_div').hide()
-    $('#error_div').html('')
-  }
+  $('#showpassword').on('click', function(){
+	  $('#div_showpassword').show()
+	  $('#div_notshowpassword').hide()
+  })
+
+  $('#notshowpassword').on('click', function(){
+	$('#div_showpassword').hide()
+	  $('#div_notshowpassword').show()
+  })
+
+  $('#input_notshowpassword').on('input', function(){
+	  $('#input_showpassword').val($(this).val())
+  })
+
+  $('#input_showpassword').on('input', function(){
+	  $('#input_notshowpassword').val($(this).val())
+  })
+
 </script>
-<script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>

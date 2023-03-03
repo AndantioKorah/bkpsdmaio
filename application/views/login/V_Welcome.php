@@ -22,11 +22,11 @@
   }
 }
 </style>
-<div class="row" style="position: fixed;
-  top: 50%;
-  left: 53%;
-  transform: translate(-50%, -50%);">
+
+<div class="container-fluid p-0">
+<div class="row">
     <div class="col-12 text-center">
+    
     
           
        <style>
@@ -41,8 +41,9 @@
         }
 
         img.logo {
-          height: 150px; 
-          width: 300px; 
+          /* height: 150px;  */
+          height : auto;
+          width: 2509px; 
           /* height: 100%; 
           width: 200%; */
           /* margin-left: 50;  */
@@ -55,22 +56,18 @@
        </style>
        <!-- tyle="height: 150px; width: 400px; margin-bottom:20px;" -->
         <h3>Welcome to</h3>
-        <center>
-							<img class="logo" src="assets/new_login/images/logo-bidik-2.png" />
+        <center><div style="z-index:0;">
+							<img style="height : auto;
+                           width: 300px; 
+                            margin-bottom:20px;"  class="" src="assets/adminkit/img/logoSiladen.png" />
+              </div>
 						</center>
         <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
-        <img class="img-circle elevation-2" id="profile_pict" style="max-width: 150px; max-height: 150px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
+        <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
     </div>
     <div class="col-12 text-center">
         <h4 style="font-weight: bold;" id="live_date_time_welcome" class="nav-link"></h4>
     </div>
-    <!-- <div class="col-12 text-center mt-3">
-        <div class="row">
-            <?php foreach($list_role as $lr){ ?>
-                <div class="col-2">
-                    <button class="btn btn-navy btn-block"><?=$lr['nama']?></button>
-                </div>
-            <?php } ?>
-        </div>
-    </div> -->
 </div>
+</div>
+

@@ -15,7 +15,7 @@ class C_Login extends CI_Controller
         //     redirect(base_url($this->session->userdata('landing_page')));
         // } else {
             $this->session->set_userdata(['user_logged_in' => null, 'test' => null, 'params' => null]);
-            $this->load->view('login/V_LoginNew', null);
+            $this->load->view('login/V_Login', null);
             // $this->load->view('login/V_Login', null);
         // }
     }
@@ -28,9 +28,9 @@ class C_Login extends CI_Controller
     }
 
     public function welcomePage(){
-        if(!$this->general_library->isNotMenu()){
-            redirect('logout');
-        };
+        // if(!$this->general_library->isNotMenu()){
+        //     redirect('logout');
+        // };
         render('login/V_Welcome', '', '', null);
     }
 
@@ -41,6 +41,7 @@ class C_Login extends CI_Controller
             redirect('developer');
         }
         $username = $this->input->post('username');
+        // dd($this->input->post());
         // $username = 'prog';
         $password = $this->general_library->encrypt($username, $this->input->post('password'));
         // dd($password);

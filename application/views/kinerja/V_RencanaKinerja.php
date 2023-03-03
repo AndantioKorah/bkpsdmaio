@@ -1,13 +1,13 @@
 <div class="card card-default">
     <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Penetapan Sasaran Kerja</h3>
+    <b><h3 class="card-title">Penetapan Sasaran Kerja</h3></b>
     </div>
     <div class="card-body" style="display: block;">
     
     <form method="post" id="form_tambah_rencana_kinerja">
     
   <div class="form-group" >
-    <label for="exampleFormControlInput1">Uraian Tugas</label>
+    <label for="exampleFormControlInput1"><b>Uraian Tugas</b></label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
     <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
       <datalist id="tugasjabatan">
@@ -76,6 +76,7 @@
         <option >Pegawai</option>
         <option >SKPD</option>
         <option >Hari</option>
+        <option >Tugas</option>
       </datalist>
    
     </div>
@@ -86,8 +87,9 @@
     <label>Target Kualitas (%)</label>
     <input  class="form-control" type="text" id="target_kualitas" name="target_kualitas" value="100" readonly/>
   </div>
-  <div class="form-group">
-     <button class="btn btn-block btn-navy" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+<br>
+  <div class="d-grid gap-1">
+     <button class="btn btn-block btn-primary" id="btn_upload"><i class="fa fa-primary"></i> SIMPAN</button>
  </div>
 </form> 
 

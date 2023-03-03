@@ -11,7 +11,7 @@ function render($pageContent, $parent_active, $active, $data)
     $data['page_content'] = $pageContent;
     $data['parent_active'] = $parent_active;
     $data['active'] = $active;
-    $CI->load->view('base/V_BaseLayout', $data);
+    $CI->load->view('adminkit/base/V_BaseLayout', $data);
 }
 
 function formatNip($nip){

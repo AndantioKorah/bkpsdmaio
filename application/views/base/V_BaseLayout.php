@@ -478,6 +478,7 @@ var TableFilter = (function() {
   }
 
   function divLoaderNavy(message = 'Loading'){
+    alert(2)
     return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
   }
 

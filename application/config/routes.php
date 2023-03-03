@@ -67,3 +67,6 @@ $route['kinerja/rencana'] = 'kinerja/C_Kinerja/rencanaKinerja';
 $route['kinerja/rekap'] = 'kinerja/C_Kinerja/rekapKinerja';
 $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 
+
+// Kepegawaian
+$route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';

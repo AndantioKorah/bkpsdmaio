@@ -19,7 +19,7 @@
        
             $this->db->select('dokumen_upload.*,pegawai.nama, dokumen.nama_dokumen, m_user.nama,dokumen_status.nama_status ');
             // $this->db->from('dokumen_upload');
-            $this->db->join('db_simpeg.pegawai ', 'REPLACE(TRIM(pegawai.nipbaru)," ","") = dokumen_upload.nip', 'left');
+            $this->db->join('db_pegawai.pegawai ', 'REPLACE(TRIM(pegawai.nipbaru)," ","") = dokumen_upload.nip', 'left');
             $this->db->join('db_siladen.dokumen', 'dokumen.id_dokumen = dokumen_upload.id_dokumen', 'left');
             // $this->db->join('db_siladen.users', 'users.id = dokumen_upload.upload_by', 'left');
             $this->db->join('m_user', 'm_user.id = dokumen_upload.upload_by', 'left');

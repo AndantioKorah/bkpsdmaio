@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.css">
 
-<link rel="stylesheet" href="<?=base_url('assets/css/datatable.css')?>">
+<!-- <link rel="stylesheet" href="<?=base_url('assets/css/datatable.css')?>">
 	<link rel="stylesheet" href="<?=base_url('assets/css/jquery.dataTables.min.css')?>">
 	<link rel="stylesheet" href="<?=base_url('assets/css/responsive.dataTables.min.css')?>">
-	<link rel="stylesheet" href="<?=base_url('assets/css/datatable.bootstrap.min.css')?>">
+	<link rel="stylesheet" href="<?=base_url('assets/css/datatable.bootstrap.min.css')?>"> -->
 
 
 
@@ -22,6 +22,8 @@
                                     <input type="hidden" id="token" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" style="display: none">
 
             </form>
+			<br>
+			<button class="btn btn-primary"></button>
             </div>
         </div>
     </div>
@@ -167,6 +169,7 @@
 
 
 
+		<script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script>
                          
 <script type="text/javascript">
 

@@ -81,10 +81,10 @@
 		</div>
 	</div>
  
-  <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script>
+  <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->
 	<script src="<?=base_url('')?>assets/adminkit/js/app.js"></script>
   
-  <script src="<?=base_url()?>assets/js/jquery.dataTables.min.js"></script> 
+  <!-- <script src="<?=base_url()?>assets/js/jquery.dataTables.min.js"></script>  -->
 	
 <script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
 <script src="<?=base_url('plugins/chart.js/Chart.min.js')?>"></script>
@@ -100,7 +100,8 @@
 <script src="<?=base_url('assets/js/adminlte.js')?>"></script>
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/demo.js')?>"></script> -->
-<script src="<?=base_url();?>assets/js/jquery.dataTables.min.js"></script>
+<!-- <script src="<?=base_url();?>assets/js/jquery.dataTables.min.js"></script> -->
+<script src="<?=base_url('assets/js/jquery.dataTables.min.js')?>"></script>
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
 
 <script>

@@ -134,7 +134,7 @@
                 $this->db->where('dokumen_upload.last_unor',$unor);
             }
             $query = $this->db->get('dokumen_upload');
-            return $query;
+            return $query->result();
             
         }
 

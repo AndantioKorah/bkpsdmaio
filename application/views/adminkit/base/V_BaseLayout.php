@@ -416,6 +416,7 @@ $('.datepicker').datepicker({
     monthName[11] = "November";
     monthName[12] = "Desember";
 
+    // var today = new Date('<?=$this->general_library->getServerDateTime()?>');
     var today = new Date();
     var D = String(today.getDate()).padStart(2, '0');
     var M = String(today.getMonth() + 1).padStart(2, '0');

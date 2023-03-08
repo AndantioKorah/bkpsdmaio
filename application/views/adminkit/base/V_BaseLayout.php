@@ -37,16 +37,162 @@
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
   <script src="<?=base_url('assets/css/general.css')?>"></script>
 
-	<link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
-  <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datepicker.css')?>">
-  <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
-  <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
-  <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+  <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
+<script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
+<link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
+<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
 
 	<title>Siladen</title>
 
 	<link href="<?=base_url('')?>assets/adminkit/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	
+  <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datepicker.css')?>">
+  <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
+  <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
+	<style>
+.tableFixHead { overflow-y: auto; height: 600px; }
+
+.content_table{
+                   font-size: 13px;
+                   /* text-align: center; */
+                      }
+
+.tableFixHead table { 
+            border: 1px solid #fff;
+            font-size: 13px;
+          } 
+          
+  .tableFixHead th { 
+            background-color: #464646;
+            color: #d1d1d1;
+            border-top: 5px;
+            padding: 8px 15px; 
+            font-weight: normal;
+          } 
+
+
+      .tableFixHead tr:nth-child(even) th[scope=row] {
+      background-color: #f2f2f2;
+      color: black;
+      }
+
+  
+      .tableFixHead tr:nth-child(odd) th[scope=row] {
+      background-color: #fff;
+      
+      }
+
+      .tableFixHead tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .tableFixHead tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .tableFixHead td:nth-of-type(2) {
+      width: 100px;
+      }
+
+      .tableFixHead th:nth-of-type(3),
+      td:nth-of-type(3) {
+      /* text-align: center; */
+      } 
+
+
+
+     /* @media screen and (width> 600px) {
+      .tableFixHead th[scope=row] {
+      position: -webkit-sticky;
+      position: sticky;
+      left: 0;
+      z-index: 0;
+      }
+     } */
+
+
+      /* .tableFixHead th[scope=row] {
+      vertical-align: top;
+      color: inherit;
+      background-color: inherit;
+      background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
+      z-index: 0;
+      }
+       */
+
+      /* .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
+      left: 0;
+      z-index: 0;
+      background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
+      } */
+
+
+      /* .tableFixHead th[scope=row] + td {
+
+      }
+
+      .tableFixHead th[scope=row] {
+      z-index: 0;
+      min-width: 20em;
+      } */
+
+
+      .cd-search{
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      border-radius: 0px;
+                 }
+
+      .tableFixHead tr:nth-child(odd) td {
+          background: white;
+         
+      }
+
+      .tableFixHead tr:nth-child(even) td {
+          background: #f2f2f2;
+      }
+
+      /* @media screen and (width> 600px) {
+      .tableFixHead tr>td:first-child + td {
+      position: sticky;
+      left: 0;
+      min-width: 20em;
+      }
+     } */
+
+     .cd-search{
+        padding: 10px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border-radius: 0px;
+        }
+
+        .customButton {
+            background-color: #222e3c;
+            --bs-btn-hover-bg: #20364a;
+        }
+
+        .customButton:hover {
+        background-color: #20364a; /* Green */
+        color: white;
+        }
+
+		.progress {
+  		background-color: #d6d6d6;
+		}
+
+		.customInput{
+		height:40px; 
+		margin-bottom:10px;
+		}
+
+	</style>
 </head>
 
 <body>
@@ -93,11 +239,11 @@
 <!-- <script src="<?=base_url('plugins/jqvmap/maps/jquery.vmap.usa.js')?>"></script> -->
 <script src="<?=base_url('plugins/jquery-knob/jquery.knob.min.js')?>"></script>
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
-<script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
-<script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script>
+<!-- <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script> -->
+<!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
 <script src="<?=base_url('plugins/summernote/summernote-bs4.min.js')?>"></script>
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
-<script src="<?=base_url('assets/js/adminlte.js')?>"></script>
+<!-- <script src="<?=base_url('assets/js/adminlte.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/demo.js')?>"></script> -->
 <!-- <script src="<?=base_url();?>assets/js/jquery.dataTables.min.js"></script> -->
@@ -105,7 +251,74 @@
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
 
 <script>
+   function divLoaderNavy(message = 'Loading'){
  
+    return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
+  }
+
+  function getFirstDayOfMonth(year, month) {
+  return new Date(year, month, 1);
+}
+
+  var date = new Date();
+var firstDay = getFirstDayOfMonth(
+  date.getFullYear(),
+  date.getMonth(),
+);
+
+  $('.datetimepickerthis').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    startDate: firstDay,
+    endDate: new Date()
+  })
+
+  $('.yearpicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    autoclose: true
+});
+  
+
+
+
+  
+  var live_date_time = ''
+  var timertoast = 2500
+
+  function errortoast(message = ''){
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top',
+      showConfirmButton: false,
+      timer: timertoast
+    });
+
+    Toast.fire({
+      icon: 'error',
+      title: message
+    })
+  }
+
+  function successtoast(message = ''){
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top',
+      showConfirmButton: false,
+      timer: timertoast
+    });
+
+    Toast.fire({
+      icon: 'success',
+      title: message
+    })
+  }
+
+
     
 </script>
 </body>

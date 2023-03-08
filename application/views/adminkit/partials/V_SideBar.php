@@ -22,29 +22,29 @@
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="<?= base_url();?>/kepegawaian/upload">
-              <i class="align-middle" data-feather="square"></i> <span class="align-middle">Upload Dokumen</span>
-            </a>
+						<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Upload Dokumen</span>
+            			</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="ui-forms.html">
+						<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
+           				 </a>
 					</li>
 
 					<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="ui-forms.html">
-              <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Kenaikan Pangkat</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
 						<a class="sidebar-link" href="ui-cards.html">
               <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Gaji Berkala</span>
             </a>
-					</li>
+					</li> -->
 
-					<li class="sidebar-item">
+					<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="ui-typography.html">
               <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Pensiun</span>
             </a>
-					</li>
+					</li> -->
 
-					<li class="sidebar-item">
+					<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="icons-feather.html">
               <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Cuti</span>
             </a>

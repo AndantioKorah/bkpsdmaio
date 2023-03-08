@@ -1,23 +1,122 @@
+<style>
+ .thCustom { 
+              background-color: #464646 
+              color: #d1d1d1;
+              border-top: 5px;
+              padding: 8px 15px; 
+              font-weight: normal;
+            } 
+            
+ .tdCustom {
+              background-color: #464646;
+              color: #d1d1d1;
+              border-top: 5px;
+              padding: 8px 15px; 
+              font-weight: normal;
+ }
+
+ .tableFixHead2 { overflow-y: auto; height: 100%; }
+
+.content_table{
+                   font-size: 13px;
+                   /* text-align: center; */
+                      }
+
+.tableFixHead2 table { 
+            border: 1px solid #fff;
+            font-size: 13px;
+          } 
+          
+  .tableFixHead2 th { 
+            background-color: #464646;
+            color: #d1d1d1;
+            border-top: 5px;
+            padding: 8px 15px; 
+            font-weight: normal;
+          } 
+
+
+      .tableFixHead2 tr:nth-child(even) th[scope=row] {
+      background-color: #f2f2f2;
+      color: black;
+      }
+
+  
+      .tableFixHead2 tr:nth-child(odd) th[scope=row] {
+      background-color: #fff;
+      
+      }
+
+      .tableFixHead2 tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .tableFixHead2 tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .tableFixHead2 td:nth-of-type(2) {
+      width: 100px;
+      }
+
+      .tableFixHead2 th:nth-of-type(3),
+      td:nth-of-type(3) {
+      /* text-align: center; */
+      } 
+
+
+
+      .cd-search{
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      border-radius: 0px;
+                 }
+
+      .tableFixHead tr:nth-child(odd) td {
+          background: white;
+         
+      }
+
+      .tableFixHead tr:nth-child(even) td {
+          background: #f2f2f2;
+      }
+
+
+
+    
+
+    </style>
 <?php if($list_rekap_kinerja){ ?>
-    <div class="col-12 table-responsive">
-    <table border="2"  class="table table-hover table-striped" id="table_rekap_kinerja">
-    <tbody><tr height="20" style="height:15.0pt">
-    <th rowspan="2" class="table-danger" height="40" >No</th>
-    <th rowspan="2" class="table-danger">Uraian Tugas</th>
-    <th rowspan="2" class="table-danger">Sasaran Kerja</th>
-    <th rowspan="2" class="table-danger">Tahun</th>
-    <th rowspan="2" class="table-danger">Bulan</th>
-    <th colspan="3" class="text-center table-danger" width="265" style="border-left:none;width:199pt">Target<span style="mso-spacerun:yes">&nbsp;</span></th>
-    <th colspan="3" class="text-center table-danger" width="192" style="border-left:none;width:144pt">Realisasi</th>
+
+<style>
+      .progress {
+  		background-color: #d6d6d6;
+		}
+</style>
+
+
+    <div class="col-12 tableFixHead2">
+    <table border="2"  class="table table-bordered" id="table_rekap_kinerja">
+    <tbody >
+        <tr height="20" style="height:15.0pt">
+    <th rowspan="2" class="thCustom" height="40" >No</th>
+    <th rowspan="2" class="thCustom">Uraian Tugas</th>
+    <th rowspan="2" class="thCustom">Sasaran Kerja</th>
+    <th rowspan="2" class="thCustom">Tahun</th>
+    <th rowspan="2" class="thCustom">Bulan</th>
+    <th colspan="3" class="text-center thCustom" width="265" style="border-left:none;width:199pt">Target<span style="mso-spacerun:yes">&nbsp;</span></th>
+    <th colspan="3" class="text-center thCustom" width="192" style="border-left:none;width:144pt">Realisasi</th>
     </tr>
     <tr height="20" style="height:15.0pt">
-    <td height="20" class="xl67 table-danger" style="height:15.0pt;border-top:none;border-left:
-    none"> <b>Kuantitas</b></td>
-    <td class="xl67 table-danger" style="border-top:none;border-left:none"><b>Satuan</b></td>
-    <td class="xl67 table-danger" style="border-top:none;border-left:none"><b>Capaian</b></td>
-    <td class="xl67 table-danger" style="border-top:none;border-left:none"><b>Kuantitas</b></td>
-    <td class="xl67 table-danger" style="border-top:none;border-left:none"><b>Satuan</b></td>
-    <td class="xl67 table-danger" style="border-top:none;border-left:none;width:144pt"><b>Capaian</b></td>
+    <td height="20" style="background-color: #464646;" class="tdCustom"> Kuantitas</td>
+    <td style="background-color: #464646;color:#d1d1d1;"  >Satuan</td>
+    <td style="background-color: #464646;color:#d1d1d1;"  >Capaian</td>
+    <td style="background-color: #464646;color:#d1d1d1;"  >Kuantitas</td>
+    <td style="background-color: #464646;color:#d1d1d1;" >Satuan</td>
+    <td style="background-color: #464646;color:#d1d1d1;" >Capaian</td>
     </tr>
   
     <!--[if supportMisalignedColumns]-->
@@ -29,6 +128,9 @@
                 
                 // $realisasi_kualitas = $lp['realisasi_target_kuantitas']/$lp['target_kuantitas'] * 100;
                 $progress = (floatval($lp['realisasi_target_kuantitas'])/floatval($lp['target_kuantitas'])) * 100;
+                if($progress > 100){
+                    $progress = 100;
+                }
                 $progress = formatTwoMaxDecimal($progress);
                 ?>
                     <tr onclick="openListKegiatan('<?=$lp['id']?>')">
@@ -44,10 +146,11 @@
                             <?=$lp['realisasi_target_kuantitas'] == '' ? '0' : $lp['realisasi_target_kuantitas']?></td>
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left">
-                        <div class="progress progress-sm">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress.'%'?>; background-color: <?=getProgressBarColor($progress)?>;">
+                        <div class="progress progress-sm" style="height:10px;">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100"  style="height:10px; width: <?=$progress;?>%; background-color: <?=getProgressBarColor($progress)?>;">
                             </div>
                         </div>
+                       
                         <small style="font-size: 90% !important; font-weight: bold !important;">
                             <?=$progress.' % selesai'?>
                         </small>

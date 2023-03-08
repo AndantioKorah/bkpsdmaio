@@ -1,18 +1,13 @@
 
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
-  <link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- <link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css"> -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script> -->
 
   <style>
 
-@media screen and (width> 600px) {
-	.md-body {
-				height: 100px;	
-			}
-}
 
-		/* @media (max-width: 1280px){
+		@media (max-width: 1280px){
 			.md-dialog  {
 				height:630px;
 				width:800px;
@@ -20,13 +15,14 @@
 			.md-body {
 				height: 500px;	
 			}
-		} */
+		}
 		/* .md-dialog  {
 				height:630px;
 				width:800px;
 			}
 			.md-body {
 				height: 500px;	
+                width:800px;
 			} */
 
         @media (max-width< 1280px){
@@ -63,7 +59,9 @@
         }
         </style>
 
-     
+       
+                            
+
 
   <table id="table_rencana_kinerja" class="table table-striped ">
 									<thead>
@@ -122,10 +120,10 @@
                 </td>
                     <td class="text-left"><?=$lk->first_name;?></td>
                     <td>
-                    <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
+                   
+                    <a class="nav-icon dropdown-toggle" href="#"  data-bs-toggle="dropdown">
 								<div class="position-relative">
-								<i class="fa fa-ellipsis-v"></i>
-								<!-- </div> -->
+                                <i class="fa fa-lg fa-ellipsis-v" style="font-size:22px" aria-hidden="true"></i>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="#" data-id="?id=<?=$lk->nip;?>&f=<?=$lk->orig_name;?>" data-toggle="modal" data-target="#skModal"><i class="fa fa-search m-r-5"></i> Lihat</a>
@@ -143,36 +141,35 @@
 
                               </table>
 
-       <!-- BEGIN primary modal -->
       
 <div class="container">
+     <!-- Modal -->
+     <div class="modal fade" id="skModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Dokumen Kepegawaian</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="height:500px;">
+                                        <iframe   id="frame" width="100%" height="100%" frameborder="0" ></iframe>	
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    <!-- tutup modal  -->
 
-  <!-- Modal -->
-  <div class="modal fade" id="skModal" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg md-dialog ">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body md-body" style="height: 500px;">
-        <div class="" style="height:100%">
-							<iframe   id="frame" width="100%" height="100%" frameborder="0" ></iframe>	
-						</div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-</div>
-									<!-- END  modal -->
+  
+
 <script>
+    $(document).ready(function() {
  $('#table_rencana_kinerja').DataTable({
     "ordering": false,
-   
  });
 
 
@@ -183,7 +180,9 @@
 					console.log(url);
 					iframe.attr('src', url+id);			
 				});
-</script>  
 
+
+});          
+</script>  
 
 

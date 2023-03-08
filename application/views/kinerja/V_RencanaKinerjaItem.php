@@ -34,7 +34,7 @@
 
 <?php if($list_rencana_kinerja){ ?>
     <div class="col-12 tableFixHead">
-        <table class="table table-striped" id="table_rencana_kinerja">
+        <table class="table table-striped table-bordered" id="table_rencana_kinerja">
             <thead>
                 <th class="text-center table-success">No</th>
                 <th class="text-left table-success">Uraian Tugas</th>
@@ -61,13 +61,12 @@
                         <td class="text-center">
                         <?php if($lp['count'] != 0 ){ ?>
                             <?php } else { ?>
-                                <span href="#edit_rencana_kinerja" data-toggle="modal"  >
+                                <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
+                            <?php } ?>
+                            <span href="#edit_rencana_kinerja" data-toggle="modal"  >
                                 <button href="#edit_rencana_kinerja" data-toggle="tooltip" class="btn btn-sm btn-navy"  data-placement="top" title="Edit" 
                                  onclick="openModalEditRencanaKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button>
                                  </span>
-                                <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
-                            
-                            <?php } ?>
                         </td>
                         
                     </tr>

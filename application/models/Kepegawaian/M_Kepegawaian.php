@@ -138,9 +138,217 @@
             
         }
 
-       
 
-       
+        function getDokumen()
+        {
+            $this->db->where('aktif',1);
+            $this->db->ORDER_BY('nama_dokumen');
+            return $this->db->get('dokumen');	
+        }
 
+        function isArsip($data)
+	{
+	    $r = FALSE;
+		$find    = $data;
+		
+	    $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from dokumen ) a
+            WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
+            
+		if($query->num_rows() > 0){
+		    $r 		= TRUE;
+		}
+        return $r;
 	}
+
+    function isFormatOK($file)
+	{
+		$r = FALSE;
+		$raw_file  		= str_replace('.pdf', '', $file);
+		$format_file 	= explode("_",$raw_file);
+		
+		$sql="SELECT panjang FROM (SELECT *,locate(nama_dokumen,'$file') result from dokumen ) a
+        WHERE a.result = 1 AND a.aktif IS NOT NULL";
+		$row = $this->db->query($sql)->row();
+		if(count($format_file) === intval($row->panjang))
+		{
+		   $r = TRUE;
+		}
+		
+		return $r;
+		
+	}
+    
+    function isMinorOK($file)
+	{
+		$raw_file  		= str_replace('.pdf', '', $file);
+		$format_file 	= explode("_",$raw_file);
+		$arr1			= array('KODE','TAHUN');
+		
+		$r = TRUE;
+		if(count($format_file) == 4)
+		{
+			$number  = $this->_extract_numbers($format_file[3]);
+			if(count($number) > 0)
+			{
+				$r = TRUE;		
+			}
+			else
+			{
+				$r = FALSE;
+			}		
+		}
+		
+		
+		return $r;
+	}
+
+    function isAllowSize($file)
+	{
+		$file_name  = $file['name'];
+		$file_size  = $file['size'];
+		
+		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from dokumen ) a
+ WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
+		
+		if($query->num_rows() > 0){
+		    
+			$row 			= $query->row();
+			$file_size      = round($file_size/1024, 2);
+			
+			if ($file_size > $row->file_size)
+			{
+				$data['pesan']  		= " File Dokumen Jenis ".$row->nama_dokumen." Hanya diizinkan Maksimal ".round($row->file_size/1024,2)." MB";
+				$data['response'] 		= FALSE;
+			}
+			else
+			{
+				$data ['pesan']     = " File diizinkan";
+   				$data ['response']  = TRUE;
+			}
+		}
+		else
+		{
+			$data ['pesan']     = " File bukan arsip kepegawaian yang disyaratkan";
+   			$data ['response']  = FALSE;
+		}
+		
+		return $data;
+	}
+
+    function insertUpload($data)
+	{
+       
+		$data['id_dokumen']		= $this->_getIdDokumen($data);
+		$data['upload_by']      = $this->_getIdPeg();
+		$data['last_unor']      = $this->getLastSKPDByIdPegawai();
+		$number 				= $this->_extract_numbers($data['raw_name']);
+		
+		foreach($number as $value){
+		    if (strlen($value) == 18){
+                $data['nip']    = $value;
+            }
+            else
+            {
+			    $data['minor_dok']    = $value;
+            }		
+	    }   
+		
+		
+		$db_debug 			= $this->db->db_debug; 
+		$this->db->db_debug = FALSE; 
+			
+		if (!$this->db->insert('dokumen_upload', $data))
+		{
+			$error = $this->db->error();
+			if(!empty($error))
+			{
+                $data['pesan']		= $error;   
+				$data['response'] 	= FALSE;
+			}
+            	
+        }
+		else
+		{
+			$data['pesan']		= "Dokumen Berhasil Tersimpan";
+			$data['response']	= TRUE;
+		}	
+        $this->db->db_debug = $db_debug; //restore setting	
+        return $data;		
+		
+	}
+
+    function  updateFile($data)
+	{
+		$this->db->where('raw_name',$data['raw_name']);
+		$this->db->set('flag_update',1);
+		$this->db->set('update_by',$this->session->userdata('user_id'));
+		$this->db->set('update_date','NOW()',FALSE);
+		return $this->db->update('dokumen_upload');
+	
+    }
+
+    function _getIdDokumen($data)
+	{
+	    $r = NULL;
+		$find    = $data['raw_name'];
+		
+		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from dokumen ) a
+         WHERE a.result = 1 AND a.aktif IS NOT NULL "); 	
+		if($query->num_rows() > 0){
+		    $row 	= $query->row();
+			$r 		= $row->id_dokumen;
+		}
+		
+		return $r;
+	}
+
+    function _getIdPeg()
+	{
+           
+            $username = $this->general_library->getUserName();
+            $this->db->select('*')
+                ->from('users as a')
+                ->where('a.username', $username)
+                ->where('a.active', 1)
+                ->limit(1);
+                $query = $this->db->get();
+                foreach ($query->result() as $row)
+                    {
+                            $idPeg = $row->id;
+                    
+                    }
+                return $idPeg;
+        
+	}
+
+
+    function getLastSKPDByIdPegawai()
+	{
+		$id_peg  = $this->session->userdata('id_peg');
+		
+		$sql="SELECT skpd FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
+		
+		$query    = $this->db->query($sql);
+		
+		if($query->num_rows() > 0)
+		{
+			$row    			= $query->row();
+			$skpd        		= $row->skpd;			
+		}
+		else
+		{
+			$skpd           = NULL;	
+		}		
+		
+		return $skpd;
+	}
+
+    function _extract_numbers($string)
+	{
+	    preg_match_all('/([\d]+)/', $string, $match);
+	    return $match[0];
+	}
+	
+
+	}	
 ?>

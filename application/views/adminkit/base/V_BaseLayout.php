@@ -100,44 +100,6 @@
       /* text-align: center; */
       } 
 
-
-
-     /* @media screen and (width> 600px) {
-      .tableFixHead th[scope=row] {
-      position: -webkit-sticky;
-      position: sticky;
-      left: 0;
-      z-index: 0;
-      }
-     } */
-
-
-      /* .tableFixHead th[scope=row] {
-      vertical-align: top;
-      color: inherit;
-      background-color: inherit;
-      background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
-      z-index: 0;
-      }
-       */
-
-      /* .tableFixHead table:nth-of-type(2)  th:not([scope=row]):first-child {
-      left: 0;
-      z-index: 0;
-      background: linear-gradient(90deg, #666 0%, #666 calc(100% - .05em), #ccc calc(100% - .05em), #ccc 100%);
-      } */
-
-
-      /* .tableFixHead th[scope=row] + td {
-
-      }
-
-      .tableFixHead th[scope=row] {
-      z-index: 0;
-      min-width: 20em;
-      } */
-
-
       .cd-search{
       padding: 10px;
       border: 1px solid #ccc;
@@ -156,14 +118,7 @@
           background: #f2f2f2;
       }
 
-      /* @media screen and (width> 600px) {
-      .tableFixHead tr>td:first-child + td {
-      position: sticky;
-      left: 0;
-      min-width: 20em;
-      }
-     } */
-
+   
      .cd-search{
         padding: 10px;
         border: 1px solid #ccc;
@@ -187,10 +142,15 @@
   		background-color: #d6d6d6;
 		}
 
-		.customInput{
-		height:40px; 
+
+    .customInput{
+		height:35px; 
 		margin-bottom:10px;
 		}
+
+ 
+
+  
 
 	</style>
 </head>

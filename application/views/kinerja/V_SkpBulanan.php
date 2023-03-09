@@ -25,10 +25,10 @@
                 </div>
                 <div class="col-lg-4 col-md-12">
                     <label>Pilih Tahun</label>  
-                    <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                    <input style="height:38px;" readonly autocomplete="off" class="form-control yearpicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
                 </div>
-                <div class="col-lg-4 col-md-12" style="margin-top: 28px;">
-                    <button type="submit" class="btn btn-block btn-navy"><i class="fa fa-file-export"></i> Submit</button>
+                <div class="col-lg-4 col-md-12" style="margin-top: 25px;">
+                    <button type="submit" class="btn btn-block customButton" style="color:#fff;"><i class="fa fa-file-export"></i> Submit</button>
                 </div>
             </div>
         </form>

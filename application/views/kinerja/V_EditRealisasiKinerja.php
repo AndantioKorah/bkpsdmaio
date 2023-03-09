@@ -39,7 +39,7 @@
 
             <div class="col-md-4">
                 <label>Realisasi Target (Kuantitas)</label>
-                <input required autocomplete="off" id="edit_realisasi_target_kuantitas"  class="form-control form-control-sm" name="edit_realisasi_target_kuantitas" value="<?=$realisasi['realisasi_target_kuantitas']?>" />
+                <input required type="number" autocomplete="off" id="edit_realisasi_target_kuantitas"  class="form-control form-control-sm" name="edit_realisasi_target_kuantitas" value="<?=$realisasi['realisasi_target_kuantitas']?>" />
             </div>
 
         
@@ -47,6 +47,7 @@
             <div class="col-md-12"><hr></div>
             <div class="col-md-12 text-right">
                 <button type="submit" id="btn_simpan_edit" accesskey="s" class="btn btn-block btn-primary customButton"><i class="fa fa-save"></i> <u>S</u>IMPAN</button>
+                
             </div>
         </div>
     </form>
@@ -83,7 +84,6 @@
                    let res = JSON.parse(datares)
                    if(res.code == 0){
                         successtoast('Data Berhasil Disimpan')
-            
                             $('#edit_realisasi_kinerja').modal('hide')
                             loadListKegiatan(tahun,bulan)
                    } else {

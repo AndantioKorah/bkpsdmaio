@@ -1,4 +1,4 @@
-<table border=1 style="padding: 2px; width: <?=$width?>%;">
+<table border=1 style="padding: 2px; width: <?=$width?>%;" class="table-bordered">
     <tr>
         <td style="padding: 5px; font-weight: bold; width: 5%;" class="text-center">No</td>
         <td style="padding: 5px; font-weight: bold; width: 45%;"class="text-center" colspan=2>ATASAN LANGSUNG</td>

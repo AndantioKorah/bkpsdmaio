@@ -16,7 +16,7 @@
         <?php $data['width'] = '100'; $this->load->view('kinerja/V_HeaderSkpBulanan', $data); ?>
     </div>
     <div class="mt-4" id="konten_skp">
-        <table border=1 style="width: 100%;">
+        <table border=1 style="width: 100%;" class="table-bordered">
             <tr>
                 <td style="padding: 5px; font-weight: bold; width: 5%" class="text-center" rowspan=2>No</td>
                 <td style="padding: 5px; font-weight: bold; width: 45%" class="text-center" rowspan=2>Uraian Tugas</td>
@@ -55,7 +55,7 @@
         <?php $data['width'] = '100'; $this->load->view('kinerja/V_HeaderSkpBulanan', $data); ?>
     </div>
     <div class="mt-4" id="konten_skp">
-        <table border=1 style="width: 100%;">
+        <table border=1 style="width: 100%;" class="table-bordered">
             <tr>
                 <td style="padding: 5px; font-weight: bold; width: 5%" class="text-center" rowspan=2>No</td>
                 <td style="padding: 5px; font-weight: bold; width: 30%" class="text-center" rowspan=2>Uraian Tugas</td>
@@ -127,7 +127,7 @@
         <?php $data['width'] = '100'; $this->load->view('kinerja/V_HeaderSkpBulanan', $data); ?>
     </div>
     <div class="mt-4" id="konten_skp">
-        <table border=1 style="width: 100%;">
+        <table border=1 style="width: 100%;" class="table-bordered">
         <!-- <?php $no=1; 
            foreach($list_perilaku_kerja as $lp){ ?>
             <tr>

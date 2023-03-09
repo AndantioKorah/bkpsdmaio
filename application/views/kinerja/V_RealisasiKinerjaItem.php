@@ -127,6 +127,7 @@
      <br>
     </div>
         <div id="" class="row">
+          
         <?php if($list_kegiatan){ ?>
         <div class="col-12 tableFixHead">
         <table  class="table table-striped table-bordered" id="table_realisasi_kinerja" width="100%">
@@ -196,17 +197,24 @@
                         </div>
                            
                         </td>
-                        
-                        <td class="text-center">
-                      
+                        <style>
+                          .customWidthTD{
+                            width:10%;
+                          }
+                        </style>
+                        <td class="customWidthTD" >
                        
+                        <div class="btn-group" role="group" aria-label="Basic example">
                         <?php if($lp['id_status_verif'] != 1){ ?>
-                            <span href="#edit_realisasi_kinerja" data-toggle="modal" >
-                            <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-navy" data-placement="top" title="Edit" 
+                            <span href="#edit_realisasi_kinerja" data-toggle="modal" style="display: inline;">
+                            <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
                              onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button>
-                                 </span>  
-                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-trash" ></i></button>
+                            </span>  
+                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
                             <?php } ?>
+                      </div>
+
+                      
                         </td>
                         
                     </tr>

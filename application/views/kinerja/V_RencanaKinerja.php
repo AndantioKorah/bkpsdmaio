@@ -1,7 +1,6 @@
+<h1 class="h3 mb-3">Penetapan Sasaran Kerja</h1>
 <div class="card card-default">
-    <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Penetapan Sasaran Kerja</h3>
-    </div>
+
     <div class="card-body" style="display: block;">
     
     <form method="post" id="form_tambah_rencana_kinerja">
@@ -9,7 +8,7 @@
   <div class="form-group" >
     <label for="exampleFormControlInput1">Uraian Tugas</label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
-    <input class="form-control"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
+    <input class="form-control customInput"  type="text" list="tugasjabatan" id="tugas_jabatan" name="tugas_jabatan" autocomplete="off" required/>
       <datalist id="tugasjabatan">
       <?php if($list_rencana_kinerja){
                                 foreach($list_rencana_kinerja as $ls){
@@ -23,7 +22,7 @@
 
   <div class="form-group" >
     <label for="exampleFormControlInput1">Sasaran Kerja</label>
-    <input required class="form-control" list="sasarankerja"  id="sasaran_kerja" name="sasaran_kerja" autocomplete="off">
+    <input required class="form-control customInput" list="sasarankerja"  id="sasaran_kerja" name="sasaran_kerja" autocomplete="off">
     <datalist id="sasarankerja">
       <?php if($list_sasaran_kerja){
                                 foreach($list_sasaran_kerja as $ls){
@@ -37,12 +36,12 @@
 
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tahun</label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?= date('Y');?>">
+    <input  class="form-control datepicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
   </div>
 
     <div class="form-group" >
     <label for="exampleFormControlInput1">Bulan</label>
-    <select class="form-control select2-navy" style="width: 100%"
+    <select class="form-control select2-navy customInput" style="width: 100%"
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
                  <option selected>- Pilih Bulan -</option>
                  <option <?=date('m') == 1 ? 'selected' : '';?> value="1">Januari</option>
@@ -65,11 +64,11 @@
     <div class="row">
     <div class="col">
     <label >Target Kuantitas</label>
-      <input required type="text" class="form-control" name="target_kuantitas" id="target_kuantitas" autocomplete="off">
+      <input required type="text" class="form-control customInput" name="target_kuantitas" id="target_kuantitas" autocomplete="off">
     </div>
     <div class="col">
     <label >Satuan</label>
-      <input required type="text" class="form-control" name="satuan" id="satuan" autocomplete="off" list="sat" >
+      <input required type="text" class="form-control customInput" name="satuan" id="satuan" autocomplete="off" list="sat" >
       <datalist id="sat">
         <option >Dokumen</option>
         <option >Data</option>
@@ -85,16 +84,18 @@
 
   <div class="form-group">
     <label>Target Kualitas (%)</label>
-    <input  class="form-control" type="text" id="target_kualitas" name="target_kualitas" value="100" readonly/>
+    <input  class="form-control customInput" type="text" id="target_kualitas" name="target_kualitas" value="100" readonly/>
   </div>
   <div class="form-group">
-     <button class="btn btn-block btn-navy" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton" style="width:100%" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
 
     </div>
 </div>
 
+
+<h1 class="h3 mb-3">List Sasaran Kerja</h1>
 <div class="card card-default" id="list_rencana_kinerja">
     
 </div>

@@ -64,14 +64,15 @@ if($list_menu){
 					<?php foreach($list_menu as $l){ ?>
 						<?php if(!$l['child']){ ?>
 							<li class="sidebar-item">
+						
 						<a class="sidebar-link" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
-						<i class="align-middle me-2" data-feather="bar-chart-2"></i><span class="align-middle"><?=$l['nama_menu']?></span>
-					</a>
+						<i class="align-middle me-2" data-feather="<?= $l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
+					    </a>
 							</li>
 							<?php } ?>
 							<?php if($l['child']){ ?>
 								<a  data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
-							<i class="align-middle" data-feather="layers"></i> <span class="align-middle">
+							<i class="align-middle" data-feather="<?= $l['icon']?>"></i> <span class="align-middle">
 							<?=$l['nama_menu']?>
 							<i class="align-middle me-2" style="border: solid;
                                                         border-width: 0 0.075rem 0.075rem 0;
@@ -100,27 +101,5 @@ if($list_menu){
 					</li>
 
 					<?php } ?>
-					<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>kinerja/rencana">
-					<i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Sasaran Kerja</span>
-					</a>
-					</li> -->
-
-
-
-					<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>kinerja/realisasi">
-					<i class="align-middle" data-feather="map"></i> <span class="align-middle">Realisasi Kerja</span>
-					</a>
-					</li>
-                    <li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>kinerja/rekap">
-					<i class="align-middle" data-feather="map"></i> <span class="align-middle">Rekap Sasaran Kerja</span>
-					</a>
-					</li>
-                    <li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>kinerja/skp-bulanan">
-					<i class="align-middle" data-feather="map"></i> <span class="align-middle">Hasil SKBP</span>
-					</a>
-					</li> -->
-				</ul>
+					</ul>
+					<div class="mt-5"><p></p></div>

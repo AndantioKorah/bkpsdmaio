@@ -111,11 +111,11 @@
 						<!-- role  -->
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-                <i class="align-middle" data-feather="settings"></i>
+                <i class="align-middle" data-feather="user-check"></i>
               </a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-							<i class="align-middle" data-feather="settings"></i> <span class="text-dark"><?=$active_role['nama']?></span>
+							<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"><?=$active_role['nama']?></span>
               				</a>
 
 							<div class="dropdown-menu dropdown-menu-end">
@@ -131,7 +131,7 @@
 
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-							<i class="align-middle" data-feather="user"></i>
+							<i class="align-middle" data-feather="settings"></i>
 						</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">

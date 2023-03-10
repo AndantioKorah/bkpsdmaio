@@ -55,10 +55,10 @@
 					</li>
 
 					<?php 
-$active_role = $this->session->userdata('active_role');
-$list_menu = $this->session->userdata('list_menu'); 
-if($list_menu){  
-    ?>
+					$active_role = $this->session->userdata('active_role');
+					$list_menu = $this->session->userdata('list_menu'); 
+					if($list_menu){  
+						?>
 
 					<li class="sidebar-item ">
 					<?php foreach($list_menu as $l){ ?>

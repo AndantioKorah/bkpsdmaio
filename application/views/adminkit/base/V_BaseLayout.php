@@ -149,7 +149,15 @@
 		}
 
  
+    .btn-primary{
+      background-color: #20364a !important;
+      color: white !important;
+    }
 
+    .btn-navy{
+      background-color: #20364a !important;
+      color: white !important;
+    }
   
 
 	</style>
@@ -201,7 +209,7 @@
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
 <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
 <!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
-<script src="<?=base_url('plugins/summernote/summernote-bs4.min.js')?>"></script>
+<script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script>
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
 <!-- <script src="<?=base_url('assets/js/adminlte.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->
@@ -249,6 +257,15 @@ var firstDay = getFirstDayOfMonth(
     orientation: 'bottom',
     autoclose: true
 });
+
+$('.datepicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    autoclose: true
+});
+
   
 
 

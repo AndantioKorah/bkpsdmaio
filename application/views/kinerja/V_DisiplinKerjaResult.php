@@ -6,9 +6,9 @@
 </style>
 
 <div class="card card-default">
-    <div class="card-header">
+    <!-- <div class="card-header">
         <h5>Data Dokumen Pendukung</h5>
-    </div>
+    </div> -->
     <div class="mt-3">
         <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
             <li class="nav-item">

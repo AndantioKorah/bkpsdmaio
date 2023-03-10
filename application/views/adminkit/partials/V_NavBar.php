@@ -7,6 +7,9 @@
           <i class="hamburger align-self-center"></i>
           </a>
 
+		  <span id="live_date_time"></span>
+      
+
 				<div class="navbar-collapse collapse">
 					
 					<ul class="navbar-nav navbar-align">
@@ -156,6 +159,11 @@
 			</nav>
 
 			<script>
+
+		$(function(){
+
+		})
+
 	function setActiveRole(id){
       $.ajax({
           url: '<?=base_url("user/C_User/setActiveRole")?>'+'/'+id,
@@ -168,4 +176,7 @@
           }
       })
     }
+
+	
+
 			</script>

@@ -199,7 +199,7 @@
 <!-- <script src="<?=base_url('plugins/jqvmap/maps/jquery.vmap.usa.js')?>"></script> -->
 <script src="<?=base_url('plugins/jquery-knob/jquery.knob.min.js')?>"></script>
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
-<!-- <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script> -->
+<script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
 <!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
 <script src="<?=base_url('plugins/summernote/summernote-bs4.min.js')?>"></script>
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
@@ -211,6 +211,13 @@
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
 
 <script>
+
+$(function(){
+
+    startTime()
+    // startRealTimeDate()
+    // startCountDownExpireApp()
+  })
    function divLoaderNavy(message = 'Loading'){
  
     return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
@@ -276,6 +283,53 @@ var firstDay = getFirstDayOfMonth(
       icon: 'success',
       title: message
     })
+  }
+
+
+  function startTime() {
+    var weekday = new Array(7);
+    weekday[0] = "Minggu";
+    weekday[1] = "Senin";
+    weekday[2] = "Selasa";
+    weekday[3] = "Rabu";
+    weekday[4] = "Kamis";
+    weekday[5] = "Jumat";
+    weekday[6] = "Sabtu";
+
+    var monthName = new Array(12);
+    monthName[1] = "Januari";
+    monthName[2] = "Februari";
+    monthName[3] = "Maret";
+    monthName[4] = "April";
+    monthName[5] = "Mei";
+    monthName[6] = "Juni";
+    monthName[7] = "Juli";
+    monthName[8] = "Agustus";
+    monthName[9] = "September";
+    monthName[10] = "Oktober";
+    monthName[11] = "November";
+    monthName[12] = "Desember";
+
+    var today = new Date();
+    var D = String(today.getDate()).padStart(2, '0');
+    var M = String(today.getMonth() + 1).padStart(2, '0');
+    var Y = today.getFullYear();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    h = checkTime(h);
+    live_date_time = weekday[today.getDay()] + ', ' + D + ' ' + monthName[today.getMonth() + 1] + ' ' + Y + ' / ' + h + ":" + m + ":" + s
+    $('#live_date_time').html(live_date_time)
+    $('#live_date_time_welcome').html(live_date_time)
+    var t = setTimeout(startTime, 500);
+    
+  }
+
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
   }
 
 

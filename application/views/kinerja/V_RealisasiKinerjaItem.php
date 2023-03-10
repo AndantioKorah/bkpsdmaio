@@ -102,10 +102,10 @@
     <form class="form-inline" method="post">
   <div class="form-group">
     <label for="email" class="mr-2">Tahun  </label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
+    <input  class="form-control datepicker customInput" id="tahun" name="tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
   </div>
   <div class="form-group">
-    <label for="pwd" class="mr-2 ml-3"> Bulan</label>
+    <label for="pwd" class="mr-2 "> Bulan</label>
     <select class="form-control select2-navy" 
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan" required>
                  <option <?=$bulan == 1 ? 'selected' : '';?> value="1">Januari</option>

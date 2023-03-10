@@ -57,14 +57,18 @@
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left"><?=$lp['target_kualitas']?></td>                        
                         <td class="text-center">
-                        <?php if($lp['count'] != 0 ){ ?>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                        <span href="#edit_rencana_kinerja" data-toggle="modal"  >
+                                <button href="#edit_rencana_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1"  data-placement="top" title="Edit" 
+                                 onclick="openModalEditRencanaKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button>
+                                 </span>
+                            <?php if($lp['count'] != 0 ){ ?>
                             <?php } else { ?>
                                 <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
                             <?php } ?>
-                            <span href="#edit_rencana_kinerja" data-toggle="modal"  >
-                                <button href="#edit_rencana_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary"  data-placement="top" title="Edit" 
-                                 onclick="openModalEditRencanaKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button>
-                                 </span>
+                            
+                            
+                            </div>
                         </td>
                         
                     </tr>

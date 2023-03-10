@@ -73,7 +73,7 @@
                 <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih Tahun</label>
-                        <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                        <input readonly autocomplete="off" class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?=date('Y')?>" />
                     </div>
                 </div>
                 <div class="col-lg-12">

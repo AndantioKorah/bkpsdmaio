@@ -22,12 +22,12 @@
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="<?= base_url();?>/kepegawaian/upload">
-						<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Upload Dokumen</span>
+						<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
             			</a>
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="ui-forms.html">
+						<a class="sidebar-link" href="#">
 						<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
            				 </a>
 					</li>
@@ -66,13 +66,13 @@ if($list_menu){
 							<li class="sidebar-item">
 						
 						<a class="sidebar-link" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
-						<i class="align-middle me-2" data-feather="<?= $l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
+						<i class="align-middle me-2 fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
 					    </a>
 							</li>
 							<?php } ?>
 							<?php if($l['child']){ ?>
 								<a  data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
-							<i class="align-middle" data-feather="<?= $l['icon']?>"></i> <span class="align-middle">
+								<i class="align-middle me-2 fas fa-fw <?=$l['icon']?>"></i> <span class="align-middle">
 							<?=$l['nama_menu']?>
 							<i class="align-middle me-2" style="border: solid;
                                                         border-width: 0 0.075rem 0.075rem 0;
@@ -92,7 +92,7 @@ if($list_menu){
                         <?php foreach($l['child'] as $ch){ ?>
 						<ul id="menu<?=$l['id']?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 						<li class="sidebar-item "><a class="sidebar-link" href="<?=base_url($ch['url'])?>">
-                        <i class="align-middle me-2" data-feather="circle"></i><?=$ch['nama_menu']?></a></li>
+                        <i class="align-middle me-2 fas fa-fw fa-chevron-right"></i><?=$ch['nama_menu']?></a></li>
 						</ul>
 						<?php } ?>
 						<?php } ?>

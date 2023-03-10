@@ -36,7 +36,7 @@
 
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tahun</label>
-    <input  class="form-control datepicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
+    <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
   </div>
 
     <div class="form-group" >

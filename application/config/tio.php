@@ -26,4 +26,4 @@ $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
 $route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
 $route['master/tpp'] = 'master/C_Master/tpp';
 
-$route['dashboard'] = 'dashboard/C_Dashboard/dashboard';  
+$route['dashboard'] = 'dashboard/C_Dashboard/dashboard';

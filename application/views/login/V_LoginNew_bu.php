@@ -7,7 +7,7 @@
 <!--===============================================================================================-->	
 	<link rel="shortcut icon" href="<?=base_url('assets/new_login/images/logo-bidik-2.png')?>" />
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="assets/new_login/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/new_login/vendor/bootstrap/sbootstrap.min.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="assets/new_login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->

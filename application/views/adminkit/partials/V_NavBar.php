@@ -138,7 +138,7 @@
 						</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-							<img src="<?=base_url('')?>assets/adminkit/img/avatars/user.png" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark"><?=$this->general_library->getNamaUser();?></span>
+							<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark"><?=$this->general_library->getNamaUser();?></span>
 						</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>

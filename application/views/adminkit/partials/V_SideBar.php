@@ -21,7 +21,7 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>/kepegawaian/upload">
+						<a class="sidebar-link" href="<?= base_url();?>kepegawaian/upload">
 						<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
             			</a>
 					</li>

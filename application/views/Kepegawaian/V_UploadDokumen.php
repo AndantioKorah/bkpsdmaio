@@ -17,9 +17,7 @@
     <div class="col-12">
         
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Upload</h5>
-            </div>
+       
             <div class="card-body">
                 
             <form id="upload" action="<?php echo site_url()?>Kepegawaian/C_Kepegawaian/doUpload" class="dropzone">						
@@ -75,9 +73,9 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
+            <!-- <div class="card-header">
                 <h5 class="card-title mb-0">Upload</h5>
-            </div>
+            </div> -->
             <div class="card-body">
             
             <div class="col-12 tableFixHead">

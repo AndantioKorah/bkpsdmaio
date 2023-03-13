@@ -243,5 +243,15 @@
             $req = $this->telegramlib->send_curl_exec('GET', 'sendMessage', '713399901', $data_telegram);
         }
 
+
+        public function getIdPeg($username){
+            $query = $this->db->select('a.id_peg')
+            ->from('db_siladen.users a')
+            ->where('username', $username)
+            ->get()->row_array();
+            // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+            return $query['id_peg'];
+        }
+
 	}
 ?>

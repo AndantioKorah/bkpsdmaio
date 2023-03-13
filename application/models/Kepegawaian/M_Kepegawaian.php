@@ -15,15 +15,15 @@
         {
             
             // $idunor  = $this->arsip->getIdPerangkatDaerah();
-            $idunor  = 4018000;
-            // var_dump($idunor);
-            // die();
-            $this->db->select('dokumen_upload.*,pegawai.nama, dokumen.nama_dokumen, users.first_name,dokumen_status.nama_status ');
+            $idunor  = $this->general_library->getUnitKerjaPegawai();
+       
+            $this->db->select('dokumen_upload.*,pegawai.nama, dokumen.nama_dokumen, m_user.nama,dokumen_status.nama_status ');
             // $this->db->from('dokumen_upload');
             $this->db->join('simpeg_manado.pegawai ', 'REPLACE(TRIM(pegawai.nipbaru)," ","") = dokumen_upload.nip', 'left');
-            $this->db->join('dokumen', 'dokumen.id_dokumen = dokumen_upload.id_dokumen', 'left');
-            $this->db->join('users', 'users.id = dokumen_upload.upload_by', 'left');
-            $this->db->join('dokumen_status', 'dokumen_status.id_status = dokumen_upload.status_dokumen', 'left');	
+            $this->db->join('db_siladen.dokumen', 'dokumen.id_dokumen = dokumen_upload.id_dokumen', 'left');
+            // $this->db->join('db_siladen.users', 'users.id = dokumen_upload.upload_by', 'left');
+            $this->db->join('m_user', 'm_user.id = dokumen_upload.upload_by', 'left');
+            $this->db->join('db_siladen.dokumen_status', 'dokumen_status.id_status = dokumen_upload.status_dokumen', 'left');	
             $this->db->or_where('dokumen_upload.nip',$cariName);
             if ($idunor <> NULL)
             {
@@ -133,7 +133,7 @@
             {
                 $this->db->where('dokumen_upload.last_unor',$unor);
             }
-            $query = $this->db->get('dokumen_upload');
+            $query = $this->db->get('db_siladen.dokumen_upload');
             return $query->result();
             
         }
@@ -143,7 +143,7 @@
         {
             $this->db->where('aktif',1);
             $this->db->ORDER_BY('nama_dokumen');
-            return $this->db->get('dokumen');	
+            return $this->db->get('db_siladen.dokumen');	
         }
 
         function isArsip($data)
@@ -151,7 +151,7 @@
 	    $r = FALSE;
 		$find    = $data;
 		
-	    $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from dokumen ) a
+	    $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen ) a
             WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
             
 		if($query->num_rows() > 0){
@@ -166,7 +166,7 @@
 		$raw_file  		= str_replace('.pdf', '', $file);
 		$format_file 	= explode("_",$raw_file);
 		
-		$sql="SELECT panjang FROM (SELECT *,locate(nama_dokumen,'$file') result from dokumen ) a
+		$sql="SELECT panjang FROM (SELECT *,locate(nama_dokumen,'$file') result from db_siladen.dokumen ) a
         WHERE a.result = 1 AND a.aktif IS NOT NULL";
 		$row = $this->db->query($sql)->row();
 		if(count($format_file) === intval($row->panjang))
@@ -207,8 +207,8 @@
 		$file_name  = $file['name'];
 		$file_size  = $file['size'];
 		
-		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from dokumen ) a
- WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
+		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from db_siladen.dokumen ) a
+        WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
 		
 		if($query->num_rows() > 0){
 		    
@@ -237,10 +237,10 @@
 
     function insertUpload($data)
 	{
-       
+
 		$data['id_dokumen']		= $this->_getIdDokumen($data);
-		$data['upload_by']      = $this->_getIdPeg();
-		$data['last_unor']      = $this->getLastSKPDByIdPegawai();
+		$data['upload_by']      = $this->general_library->getId();
+		$data['last_unor']      = $this->general_library->getUnitKerjaPegawai();
 		$number 				= $this->_extract_numbers($data['raw_name']);
 		
 		foreach($number as $value){
@@ -257,7 +257,7 @@
 		$db_debug 			= $this->db->db_debug; 
 		$this->db->db_debug = FALSE; 
 			
-		if (!$this->db->insert('dokumen_upload', $data))
+		if (!$this->db->insert('db_siladen.dokumen_upload', $data))
 		{
 			$error = $this->db->error();
 			if(!empty($error))
@@ -281,9 +281,9 @@
 	{
 		$this->db->where('raw_name',$data['raw_name']);
 		$this->db->set('flag_update',1);
-		$this->db->set('update_by',$this->session->userdata('user_id'));
+		$this->db->set('update_by',$this->general_library->getId());
 		$this->db->set('update_date','NOW()',FALSE);
-		return $this->db->update('dokumen_upload');
+		return $this->db->update('db_siladen.dokumen_upload');
 	
     }
 
@@ -291,9 +291,17 @@
 	{
 	    $r = NULL;
 		$find    = $data['raw_name'];
+
 		
-		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from dokumen ) a
-         WHERE a.result = 1 AND a.aktif IS NOT NULL "); 	
+		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen) a
+         WHERE a.result = 1 AND a.aktif IS NOT NULL "); 
+
+        // $query = $this->db->select('*')
+        // ->from('db_siladen.dokumen a')
+        // ->where('a.aktif is not null')
+        // ->like('a.nama_dokumen', $find)
+        // ->get()->num_rows();
+
 		if($query->num_rows() > 0){
 		    $row 	= $query->row();
 			$r 		= $row->id_dokumen;
@@ -302,46 +310,46 @@
 		return $r;
 	}
 
-    function _getIdPeg()
-	{
+    // function _getIdPeg()
+	// {
            
-            $username = $this->general_library->getUserName();
-            $this->db->select('*')
-                ->from('users as a')
-                ->where('a.username', $username)
-                ->where('a.active', 1)
-                ->limit(1);
-                $query = $this->db->get();
-                foreach ($query->result() as $row)
-                    {
-                            $idPeg = $row->id;
+    //         $username = $this->general_library->getUserName();
+    //         $this->db->select('a.id')
+    //             ->from('db_siladen.users as a')
+    //             ->where('a.username', $username)
+    //             ->where('a.active', 1)
+    //             ->limit(1);
+    //             $query = $this->db->get();
+    //             foreach ($query->result() as $row)
+    //                 {
+    //                         $idPeg = $row->id;
                     
-                    }
-                return $idPeg;
+    //                 }
+    //             return $idPeg;
         
-	}
+	// }
 
 
-    function getLastSKPDByIdPegawai()
-	{
-		$id_peg  = $this->session->userdata('id_peg');
+    // function getLastSKPDByIdPegawai()
+	// {
+	// 	$id_peg  = $this->session->userdata('id_peg');
 		
-		$sql="SELECT skpd FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
+	// 	$sql="SELECT skpd FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
 		
-		$query    = $this->db->query($sql);
+	// 	$query    = $this->db->query($sql);
 		
-		if($query->num_rows() > 0)
-		{
-			$row    			= $query->row();
-			$skpd        		= $row->skpd;			
-		}
-		else
-		{
-			$skpd           = NULL;	
-		}		
+	// 	if($query->num_rows() > 0)
+	// 	{
+	// 		$row    			= $query->row();
+	// 		$skpd        		= $row->skpd;			
+	// 	}
+	// 	else
+	// 	{
+	// 		$skpd           = NULL;	
+	// 	}		
 		
-		return $skpd;
-	}
+	// 	return $skpd;
+	// }
 
     function _extract_numbers($string)
 	{

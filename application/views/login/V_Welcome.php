@@ -53,8 +53,11 @@
      
        }
 
+
+
        </style>
        <!-- tyle="height: 150px; width: 400px; margin-bottom:20px;" -->
+       
         <h3>Welcome to</h3>
         <center><div style="z-index:0;">
 							<img style="height : auto;
@@ -66,6 +69,8 @@
         <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
     </div>
     <div class="col-12 text-center">
+      
+  
         <!-- <h4 style="font-weight: bold;" id="live_date_time_welcome" class="nav-link"></h4> -->
     </div>
     

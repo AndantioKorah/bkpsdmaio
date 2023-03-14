@@ -51,6 +51,8 @@
   <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
 	<style>
+
+    
 .tableFixHead { overflow-y: auto; height: 600px; }
 
 .content_table{
@@ -138,17 +140,111 @@
         color: white;
         }
 
-		.progress {
-  		background-color: #d6d6d6;
-		}
+        .progress {
+          background-color: #d6d6d6;
+        }
 
 
-    .customInput{
+    /* .customInput{
 		height:35px; 
 		margin-bottom:10px;
+		} */
+
+    .form-control{
+		height:35px !important;
+		margin-bottom:10px !important;
 		}
 
+
  
+    .btn-primary{
+      background-color: #20364a !important;
+      color: white !important;
+    }
+
+    .btn-navy{
+      background-color: #20364a !important;
+      color: white !important;
+    }
+
+      /* FIXED LEFT COLOUM WITH HEADER */
+      .div_maintb {
+    /* height: calc(100vh - 180px);
+    width: calc(100vw - 100px);
+    overflow: scroll;
+    border: 1px solid #6f6f6f; */
+    overflow-y: auto; height: 600px;
+
+}
+
+.div_maintb table { 
+      border: 1px solid #fff;
+      font-size: 14px;
+      width: 100%;
+  } 
+  
+.div_maintb thead {
+            position: sticky;
+            top: 0;
+            z-index: 400;
+            }
+   
+
+.div_maintb th {
+        background: #464646;
+        color: #d1d1d1;
+        width: 100px;
+        min-width: 100px;
+        padding: 6px;
+        /* outline: 1px solid #7a7a7a; */
+        font-weight: normal;
+        margin-bottom:50px;
+    }
+
+    /* .div_maintb td {
+        padding: 6px;
+        outline: 1px solid #c3c3c3;
+    } */
+
+        /* .div_maintb th:nth-child(1),
+        .div_maintb td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            width: 130px;
+            min-width: 130px;
+        } */
+
+   @media screen and (width> 600px) {
+          .div_maintb th:nth-child(2),
+          .div_maintb td:nth-child(2) {
+            position: sticky;
+            left: 0;
+            width: 50px;
+            min-width: 50px;
+        }
+         }
+
+
+        
+    .div_maintb td:nth-child(2) {
+              z-index: 200;
+              min-width: 20em;
+          }
+
+      .div_maintb th:nth-child(1),
+      .div_maintb th:nth-child(2) {
+          z-index: 300;
+      }
+
+      .div_maintb tr:nth-child(odd) td {
+      background: white;
+    
+      }
+
+      .div_maintb tr:nth-child(even) td {
+          background: #f2f2f2;
+      }
+        /* TUTUP FIXED LEFT COLOUM WITH HEADER  */
 
   
 
@@ -201,7 +297,7 @@
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
 <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
 <!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
-<script src="<?=base_url('plugins/summernote/summernote-bs4.min.js')?>"></script>
+<script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script>
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
 <!-- <script src="<?=base_url('assets/js/adminlte.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->
@@ -213,6 +309,7 @@
 <script>
 
 $(function(){
+  $('.select2_this').select2()
 
     startTime()
     // startRealTimeDate()
@@ -249,6 +346,15 @@ var firstDay = getFirstDayOfMonth(
     orientation: 'bottom',
     autoclose: true
 });
+
+$('.datepicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    autoclose: true
+});
+
   
 
 
@@ -310,6 +416,7 @@ var firstDay = getFirstDayOfMonth(
     monthName[11] = "November";
     monthName[12] = "Desember";
 
+    // var today = new Date('<?=$this->general_library->getServerDateTime()?>');
     var today = new Date();
     var D = String(today.getDate()).padStart(2, '0');
     var M = String(today.getMonth() + 1).padStart(2, '0');

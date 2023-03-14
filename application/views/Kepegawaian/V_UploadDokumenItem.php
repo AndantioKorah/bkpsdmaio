@@ -118,7 +118,7 @@
                     <b><?=$lk->nama_status;?></b><br>
                     <?=$lk->update_date;?>
                 </td>
-                    <td class="text-left"><?=$lk->first_name;?></td>
+                    <td class="text-left"><?=$lk->nama;?></td>
                     <td>
                    
                     <a class="nav-icon dropdown-toggle" href="#"  data-bs-toggle="dropdown">

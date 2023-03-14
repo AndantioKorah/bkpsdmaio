@@ -90,7 +90,7 @@ define('DEVELOPMENT_MODE', '1');
 define('DB_HOST', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'db_siladen');
+define('DB_NAME', 'db_efort');
 
 
 define('KODE_TRANSAKSI', '01');
@@ -99,11 +99,11 @@ define('KODE_TRANSAKSI_PEMBAYARAN', '02');
 define('KODE_TRANSAKSI_UANG_MUKA', '03');
 
 define('VERSION', 'Version 1.0');
-define('TITLES', 'BIDIK - ASN Juara | BKPSDM Kota Manado');
-define('TITLE_SECOND', 'BIDIK - ASN Juara');
-define('TITLE_THIRD', 'BIDIK - ASN Juara');
+define('TITLES', 'SILADEN | BKPSDM Kota Manado');
+define('TITLE_SECOND', 'SILADEN');
+define('TITLE_THIRD', 'SILADEN');
 define('PROGRAMMER_PHONE', '00000000');
-define('COPYRIGHT', 'Copyright &copy; 2022 <strong>BKPSDM Manado</strong>');
+define('COPYRIGHT', 'Copyright &copy; 2023 <strong>BKPSDM Kota Manado</strong>');
 // define('COPYRIGHT', 'Copyright &copy; '.date('Y').' <strong>PATRA LAB</strong>');
 define('TRANSAKSI_TABLE_VIEW', 1);
 define('USE_PRINT', '0');

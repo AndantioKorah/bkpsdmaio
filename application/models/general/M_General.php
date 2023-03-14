@@ -246,10 +246,9 @@
 
         public function getIdPeg($username){
             $query = $this->db->select('a.id_peg')
-            ->from('db_siladen.users a')
-            ->where('username', $username)
+            ->from('db_pegawai.pegawai a')
+            ->where('nipbaru_ws', $username)
             ->get()->row_array();
-            // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
             return $query['id_peg'];
         }
 

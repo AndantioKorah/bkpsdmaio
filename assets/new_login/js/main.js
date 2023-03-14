@@ -2,6 +2,7 @@
 (function ($) {
     "use strict";
 
+
     /*==================================================================
     [ Focus Contact2 ]*/
     $('.input100').each(function(){
@@ -14,21 +15,8 @@
             }
         })    
     })
-
-
-    /*==================================================================
-    [ Validate after type ]*/
-    $('.validate-input .input100').each(function(){
-        $(this).on('blur', function(){
-            if(validate(this) == false){
-                showValidate(this);
-            }
-            else {
-                $(this).parent().addClass('true-validate');
-            }
-        })    
-    })
-
+  
+  
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');
@@ -50,7 +38,6 @@
     $('.validate-form .input100').each(function(){
         $(this).focus(function(){
            hideValidate(this);
-           $(this).parent().removeClass('true-validate');
         });
     });
 
@@ -79,6 +66,5 @@
         $(thisAlert).removeClass('alert-validate');
     }
     
-
 
 })(jQuery);

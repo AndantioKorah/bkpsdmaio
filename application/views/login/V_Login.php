@@ -163,71 +163,7 @@
         <div class="bg--dark-gray align--center pt1 pb1" style="height:500px;">
 
           <!-- tes  -->
-    <style>
-      h1{
-  color: #484848;
-  font-size: 50px;
-  font-weight: bold;
-  font-family: monospace;
-  letter-spacing: 7px;
-  cursor: pointer
-}
-h1 span{
-  transition: .5s linear
-}
-h1:hover span:nth-child(1){
-  margin-right: 5px
-}
-h1:hover span:nth-child(1):after{
-  content: "'";
-}
-h1:hover span:nth-child(2){
-  margin-left: 30px
-}
-h1:hover span{
-  color: #fff;
-  text-shadow: 0 0 10px #fff,
-               0 0 20px #fff, 
-               0 0 40px #fff;
-}
-
-p{
-    text-shadow: 0 0 10px #fff,
-               0 0 20px #fff, 
-               0 0 40px #fff;
-}
-
-.btn-shine
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%,-50%)
-  padding: 12px 48px
-  color: #ffffff
-  background: linear-gradient(to right, #4d4d4d 0, white 10%, #4d4d4d 20%)
-  background-position: 0
-  -webkit-background-clip: text
-  -webkit-text-fill-color: transparent
-  animation: shine 3s infinite linear
-  animation-fill-mode: forwards
-  -webkit-text-size-adjust: none
-  font-weight: 600
-  font-size: 16px
-  text-decoration: none
-  white-space: nowrap
     
-@keyframes shine
-  0%
-    background-position: 0
-  60%
-    background-position: 180px
-  100%
-    background-position: 180px
-    </style>
-    <h1><span>I</span>M<span>POSSIBLE</span></h1>
-
-    <a href="https://usecheck.com/" class="btn-shine" target="_blank">Get early access</a>
-    <!-- tutup tes  -->
 
             <div class="container pt2 pb2">
                 <!-- <img class="cta-image mb1 reveal-on-scroll is-revealing" src="<?=base_url()?>assets/login/img/logo_pemkot.png" alt="Text the app"> -->

@@ -1,3 +1,34 @@
+<style>
+	.sidebar-header{
+		padding: 0.5rem 0.5rem 0.375rem !important;
+		color: rgba(233,236,239,.5) !important;
+		font-size: .9rem !important;
+	}
+
+	.sidebar-link{
+		padding: 0.125rem 0.625rem !important;
+		color: #ababab !important;
+		font-size: .8rem;
+		font-weight: bold !important;
+	}
+
+	.sidebar-link:hover{
+		color: #222e3c !important;
+		transition: .1s;
+		background-color: white !important;
+	}
+
+	.sidebar-link:hover i, .sidebar-link:hover span{
+		color: #222e3c !important;
+		transition: .1s;
+		background-color: white !important;
+	}
+
+	.sidebar-link-child{
+		padding-left: 1.3rem !important;
+	}
+</style>
+
 <ul class="sidebar-nav">
 					<li class="sidebar-header">
 						Main
@@ -66,35 +97,30 @@
 							<li class="sidebar-item">
 						
 						<a class="sidebar-link" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
-						<i class="align-middle me-2 fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
+						<i class="align-middle fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
 					    </a>
 							</li>
 							<?php } ?>
 							<?php if($l['child']){ ?>
-								<a  data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
-								<i class="align-middle me-2 fas fa-fw <?=$l['icon']?>"></i> <span class="align-middle">
-							<?=$l['nama_menu']?>
-							<i class="align-middle me-2" style="border: solid;
-                                                        border-width: 0 0.075rem 0.075rem 0;
-                                                        content: 
-                                                        display: inline-block;
-                                                        padding: 2px;
-                                                        position: absolute;
-                                                        right: 1.5rem;
-                                                        top: 1.2rem;
-                                                        transform: rotate(45deg);
-                                                        transition: all .2s ease-out;" ></i>
+								<a data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
+								<i class="align-middle me-2 fa fa-fw <?=$l['icon']?>"></i> <span class="align-middle">
+								<?=trim($l['nama_menu'])?>
+								<i class="fa fa-chevron-down" 
+								style="
+									position: absolute;
+									right: 0;
+									margin-top: .2rem;"></i>
 							<?php } ?>
 							</span>
 						</a>
 						
 						<?php if($l['child']){ ?>
-                        <?php foreach($l['child'] as $ch){ ?>
-						<ul id="menu<?=$l['id']?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-						<li class="sidebar-item "><a class="sidebar-link" href="<?=base_url($ch['url'])?>">
-                        <i class="align-middle me-2 fas fa-fw fa-chevron-right"></i><?=$ch['nama_menu']?></a></li>
-						</ul>
-						<?php } ?>
+							<?php foreach($l['child'] as $ch){ ?>
+								<ul id="menu<?=$l['id']?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+								<li class="sidebar-item "><a class="sidebar-link sidebar-link-child" href="<?=base_url($ch['url'])?>">
+								<i class="align-middle me-2 far fa-circle"></i><?=$ch['nama_menu']?></a></li>
+							</ul>
+							<?php } ?>
 						<?php } ?>
 						<?php } ?>
 

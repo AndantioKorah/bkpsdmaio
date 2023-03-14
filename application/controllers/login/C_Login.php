@@ -28,9 +28,9 @@ class C_Login extends CI_Controller
     }
 
     public function welcomePage(){
-        // if(!$this->general_library->isNotMenu()){
-        //     redirect('logout');
-        // };
+        if(!$this->general_library->isNotMenu()){
+            redirect('logout');
+        };
         render('login/V_Welcome', '', '', null);
     }
 

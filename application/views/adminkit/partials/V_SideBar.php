@@ -45,9 +45,9 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
-            </a>
+						<a class="sidebar-link" href="<?=base_url();?>/kepegawaian/profil">
+             			 <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+            			</a>
 					</li>
 
 

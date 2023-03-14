@@ -35,7 +35,6 @@
 
   <link href="<?=base_url('assets/css/select2.min.css')?>" rel="stylesheet" />
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
-  <script src="<?=base_url('assets/css/general.css')?>"></script>
 
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
 <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
@@ -44,6 +43,7 @@
 
 	<title>Siladen</title>
 
+  <link rel="stylesheet" src="<?=base_url('assets/css/general.css')?>">
 	<link href="<?=base_url('')?>assets/adminkit/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	
@@ -52,7 +52,14 @@
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
 	<style>
 
-    
+:root{
+  --primary-color: #20364a;
+}
+
+.content{
+  padding: .5rem !important;
+}
+
 .tableFixHead { overflow-y: auto; height: 600px; }
 
 .content_table{
@@ -144,7 +151,84 @@
           background-color: #d6d6d6;
         }
 
+    .bg-green {
+      background-color: #28a745!important;
+    }
 
+    .info-box {
+      box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+      border-radius: 0.25rem;
+      background: #fff;
+      display: -ms-flexbox;
+      display: flex;
+      margin-bottom: 1rem;
+      min-height: 80px;
+      padding: 0.5rem;
+      position: relative;
+      width: 100%;
+    }
+
+    .info-box .info-box-content {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-pack: center;
+      justify-content: center;
+      line-height: 120%;
+      -ms-flex: 1;
+      flex: 1;
+      padding: 0 10px;
+    }
+
+    .info-box .info-box-icon {
+      border-radius: 0.25rem;
+      -ms-flex-align: center;
+      align-items: center;
+      display: -ms-flexbox;
+      display: flex;
+      color: white;
+      font-size: 1.875rem;
+      -ms-flex-pack: center;
+      justify-content: center;
+      text-align: center;
+      width: 70px;
+    }
+
+    .info-box .info-box-text, .info-box .progress-description {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .info-box .info-box-number {
+      display: block;
+      margin-top: 0.25rem;
+      font-weight: 700;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey; 
+      border-radius: 5px;
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color); 
+      border-radius: 5px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b30000; 
+    }
     /* .customInput{
 		height:35px; 
 		margin-bottom:10px;
@@ -153,18 +237,33 @@
     .form-control{
 		height:35px !important;
 		margin-bottom:10px !important;
-		}
+    }
+    
+    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+      background-color: var(--primary-color) !important;
+      color: white;
+    }
 
-
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: #444;
+      line-height: 35px;
+    }
  
     .btn-primary{
-      background-color: #20364a !important;
+      background-color: var(--primary-color) !important;
       color: white !important;
     }
 
     .btn-navy{
-      background-color: #20364a !important;
-      color: white !important;
+        color: white;
+        background-color: var(--primary-color) !important;
+        text-decoration: none;
+    }
+
+    .btn-navy:hover{
+        color: white;
+        background-color: #05519e !important;
+        text-decoration: none;
     }
 
       /* FIXED LEFT COLOUM WITH HEADER */

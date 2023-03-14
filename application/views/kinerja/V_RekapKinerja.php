@@ -1,9 +1,8 @@
 
-<div class="card card-default">
-    <div class="card-header">
-        <h3 class="card-title">Rekap Sasaran Kerja</h3>
-    </div>
 
+
+<h1 class="h3 mb-3">Rekap Sasaran Kerja</h1>                  
+<div class="card card-default">
     
     <div class="card-body">
     <div class="row">
@@ -11,10 +10,10 @@
         <form id="formSearchRekapKinerja" class="form-inline" method="post" action="#">
   <div class="form-group">
     <label for="email" class="mr-2">Tahun </label>
-    <input  class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y');?>">
+    <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?=date('Y');?>">
   </div>
   <div class="form-group">
-    <label for="pwd" class="mr-2 ml-3"> Bulan</label>
+    <label for="pwd" class="mr-2"> Bulan</label>
     <select class="form-control select2-navy" 
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan" id="bulan" required>
                  <option value="" selected>- Pilih Bulan -</option>
@@ -37,6 +36,7 @@
 
         </div>
         </div>
+       
     <div id="list_rekap_kinerja" class="row">   
     </div>
 
@@ -59,13 +59,6 @@
         })
     }
 
-$('.datepicker2').datepicker({
-    format: 'yyyy-mm-dd',
-    startView: "months", 
-    orientation: 'bottom',
-    autoclose: true,
-    todayBtn: true
-});
 
 $('#bulan').on('change', function(){
     searchListKegiatan();

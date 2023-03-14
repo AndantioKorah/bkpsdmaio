@@ -19,7 +19,9 @@
                         <td><?=$rs['nama_menu'];?></td>
                         <td><?=$rs['url'];?></td>
                         <td><?=$rs['nama_menu_parent'];?></td>
-                        <td><i class="<?=$rs['icon'] ? $rs['icon'] : 'far fa-circle'?>"></i> <?=$rs['icon'] ? $rs['icon'] : 'default-icon';?></td>
+                        <!-- <td><i class="<?=$rs['icon'] ? $rs['icon'] : 'far fa-circle'?>"></i> <?=$rs['icon'] ? $rs['icon'] : 'default-icon';?></td> -->
+                        <td><i class="align-middle me-2 fas fa-fw <?=$rs['icon'] ? $rs['icon'] : 'fa-circle'?>"></i> <?=$rs['icon'] ? $rs['icon'] : 'default-icon';?></td>
+
                         <td><?=$rs['keterangan'];?></td>
                         <?php if($this->general_library->isProgrammer()) { ?>
                             <td>

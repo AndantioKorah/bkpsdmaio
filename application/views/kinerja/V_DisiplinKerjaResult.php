@@ -6,9 +6,9 @@
 </style>
 
 <div class="card card-default">
-    <div class="card-header">
+    <!-- <div class="card-header">
         <h5>Data Dokumen Pendukung</h5>
-    </div>
+    </div> -->
     <div class="mt-3">
         <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
             <li class="nav-item">
@@ -55,10 +55,10 @@
         openListData(1)
         $('#table_disiplin_kerja_result').dataTable()
 
-        $('#count_pengajuan').html('<?=count($result['pengajuan'])?>')
-        $('#count_diterima').html('<?=count($result['diterima'])?>')
-        $('#count_ditolak').html('<?=count($result['ditolak'])?>')
-        $('#count_batal').html('<?=count($result['batal'])?>')
+        // $('#count_pengajuan').html('<?=count($result['pengajuan'])?>')
+        // $('#count_diterima').html('<?=count($result['diterima'])?>')
+        // $('#count_ditolak').html('<?=count($result['ditolak'])?>')
+        // $('#count_batal').html('<?=count($result['batal'])?>')
     })
 
     function openListData(status){
@@ -77,7 +77,9 @@
             $.ajax({
                 url: '<?=base_url("kinerja/C_Kinerja/deleteDataDisiplinKerja")?>'+'/'+id,
                 method: 'post',
-                data: null,
+                data: {
+                    list_id : $('#btn_delete_detail_'+id).data('list_id')
+                },
                 success: function(data){
                     let rs = JSON.parse(data)
                     console.log(rs)

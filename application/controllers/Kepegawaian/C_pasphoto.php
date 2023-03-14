@@ -1,72 +1,32 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
 
-class Simpeg extends CI_Controller
+//namespace App\Controllers;
+
+class C_pasphoto extends CI_Controller
 {
-
-
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('simpeg/simpeg_model', 'simpeg');
+		$this->load->model('simpeg/m_pasphoto', 'simpeg');
 	}
-
-	/**
-	 * * @AclName Arsip
-	 */
-
-	public function index()
-	{
-		$dokumen         	= $this->simpeg->getDokumen();
-		$this->setLayout('simpeg/lihatPNS');
-		$this->render('', ['dokumen' => $dokumen]);
-	}
-
-
-	/**
-	 * * @AclName LihatArsipASN
-	 */
-	public function lihatASN()
-	{
-		// header menu message
-		$nip_baru		 = $this->simpeg->getNipbaru();
-		$nm_pangkat		 = $this->simpeg->getPangkat();
-		$jabatan		 = $this->simpeg->getJabatan();
-		$agama		 	= $this->simpeg->getAgama();
-		$pendidikan		 = $this->simpeg->getPendidikan();
-		$nm_unitkerja		 = $this->simpeg->getNamaPerangkatDaerah();
-		$query      =  $this->simpeg->getNama();
-		$asn            = $query->row();
-		$rpangkat         	= $this->simpeg->getRPangkat();
-		$rpendidikan         	= $this->simpeg->getRPendidikan();
-		$rjabatan         	= $this->simpeg->getRJabatan();
-		$rdiklat         	= $this->simpeg->getRDiklat();
-		$rberkala         	= $this->simpeg->getRBerkala();
-
-		$this->setLayout('simpeg/lihatPNS');
-
-		$this->render('', ['nip_baru' => $nip_baru, 'asn' => $asn, 'nm_pangkat' => $nm_pangkat, 'agama' => $agama, 'pendidikan' => $pendidikan, 'nama_jabatan' => $jabatan, 'nm_unitkerja' => $nm_unitkerja, 'rpangkat' => $rpangkat, 'rpendidikan' => $rpendidikan, 'rdiklat' => $rdiklat, 'rjabatan' => $rjabatan, 'rberkala' => $rberkala]);
-	}
-
 
 	public function pasPhoto()
 	{
 
-		$this->setLayout('simpeg/pasPhoto');
-		$id_pasphoto		 = $this->simpeg->getIDPasPhoto();
-		$nip_baru		 = $this->simpeg->getNipbaru();
-		$pesan           = '';
-
-		$this->render('', ['pesan' => $pesan, 'pasphoto' => $id_pasphoto, 'nip_baru' => $nip_baru]);
+		// $this->setLayout('simpeg/V_pasphoto');
+		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto();
+		$data['nip_baru']		 = $this->simpeg->getNipbaru();
+		$data['pesan']           = '';
+		render('simpeg/V_pasphoto', '', '', $data);
 	}
+
 
 	public function update()
 	{
 
-
 		if ($_FILES['filePengantar']['name'] == NULL) {
 			$data['response']		= FALSE;
-			$pesan			= '<div class="alert alert-danger" role="alert">!!! Foto Tidak Boleh Kosong, Format File Foto harus jpg atau jpeg!!!</div>';
+			$data['pesan']			= '<div class="alert alert-danger" role="alert">!!! Foto Tidak Boleh Kosong, Format File Foto harus jpg atau jpeg!!!</div>';
 		} else {
 
 
@@ -74,13 +34,13 @@ class Simpeg extends CI_Controller
 				$nip_baru		 = $this->simpeg->getNipbaru();
 				$target_dir  				= './uploads/' . $nip_baru;
 
-				// buat folde baru jika tidak ada
+				// buat folder baru jika tidak ada
 				if (!is_dir($target_dir)) {
 					mkdir($target_dir, 0777, TRUE);
 				}
 
 				$config['upload_path'] 	    = $target_dir;
-				$config['allowed_types']    = 'jpg|jpeg';
+				$config['allowed_types']    = 'jpg|jpeg|png';
 				$config['max_size'] 		= '1024';
 				$config['encrypt_name']		= TRUE;
 				$config['overwrite']		= TRUE;
@@ -89,9 +49,10 @@ class Simpeg extends CI_Controller
 				$this->load->library('upload', $config);
 
 				// validasi upload
+				// dd($this->upload->do_upload('filePengantar'));
 				if (!$this->upload->do_upload('filePengantar')) {
 					$error = strip_tags($this->upload->display_errors());
-					$pesan				= '<div class="alert alert-danger" role="alert">' . $error . '</div>';
+					$data['pesan']				= '<div class="alert alert-danger" role="alert">' . $error . '</div>';
 				} else {
 
 					$fileupload       				= $this->upload->data();
@@ -113,7 +74,7 @@ class Simpeg extends CI_Controller
 					}
 				} else {
 					$data['response']		= TRUE;
-					$pesan			= '<div class="alert alert-success" role="alert">Berhasil diupdate!</div>';
+					$data['pesan']			= '<div class="alert alert-success" role="alert">Berhasil diupdate!</div>';
 
 					// remove old file
 					if (file_exists($target_dir . "/" . $this->input->post('oldFile'))) {
@@ -130,26 +91,34 @@ class Simpeg extends CI_Controller
 					$error = $this->db->error();
 					if (!empty($error)) {
 						$data['response']		= FALSE;
-						$pesan			        = '<div class="alert alert-danger" role="alert">' . $error['message'] . '</div>';
+						$data['pesan']			        = '<div class="alert alert-danger" role="alert">' . $error['message'] . '</div>';
 					}
 				} else {
 					$data['response']		= TRUE;
-					$pesan			= '<div class="alert alert-success" role="alert">Berhasil diupdate!</div>';
+					$data['pesan']			= '<div class="alert alert-success" role="alert">Berhasil diupdate!</div>';
 				}
 
 				$this->db->db_debug = $db_debug; //restore setting	
 			}
 		}
 
-		$id_pasphoto		 = $this->simpeg->getIDPasPhoto();
-		$nip_baru		 = $this->simpeg->getNipbaru();
-		$show			 = FALSE;
+		// $this->setLayout('simpeg/V_pasphoto');
+		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto();
+		$data['nip_baru']		 = $this->simpeg->getNipbaru();
+		$data['show']           = FALSE;
+		render('simpeg/V_pasphoto', '', '', $data);
 
-		$this->setLayout('simpeg/pasPhoto');
-		$this->render('', ['show' => $show, 'pesan' => $pesan, 'pasphoto' => $id_pasphoto, 'nip_baru' => $nip_baru]);
+		//$id_pasphoto		 = $this->simpeg->getIDPasPhoto();
+		//$nip_baru		 = $this->simpeg->getNipbaru();
+		//$show			 = FALSE;
+
+		//$this->setLayout('simpeg/pasPhoto');
+		//$this->render('', ['show' => $show, 'pesan' => $pesan, 'pasphoto' => $id_pasphoto, 'nip_baru' => $nip_baru]);
 	}
 
 
+
+	//-------------------------------------------------------------------------------------------
 	//tambah usul idcard
 	public function tambahUsulIDCard()
 	{

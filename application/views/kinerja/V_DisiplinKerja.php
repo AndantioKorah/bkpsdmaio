@@ -1,11 +1,12 @@
+<h1 class="h3 mb-3">Upload Dokumen Pendukung Absensi</h1>  
 <div class="card card-default">
-    <div class="card-header">
+    <!-- <div class="card-header">
         <h4>Upload Dokumen Pendukung Absensi</h4>
-    </div>
+    </div> -->
     <div class="card-body">
         <div class="row">
             <div class="col-lg-2 col-md-12">
-                <button data-toggle="modal" onclick="tambahData()" href="#tambah_data_disiplin_kerja" type="button" class="btn btn-navy btn-block"><i class="fa fa-plus"></i> Tambah Baru</button>
+                <button  data-toggle="modal" onclick="tambahData()" href="#tambah_data_disiplin_kerja" class="btn btn-primary "><i class="align-middle me-2 fas fa-fw fa-plus-circle"></i> Tambah</button>           
             </div>
         </div>
         <form id="form_search_disiplin_kerja">
@@ -42,9 +43,9 @@
                 </div>
                 <div class="col-lg col-md-12">
                     <label>Pilih Tahun</label>  
-                    <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                    <input readonly autocomplete="off" class="form-control datepicker customInput"  id="tahun" name="tahun" value="<?=date('Y')?>" />
                 </div>
-                <div class="col-lg col-md-12" style="margin-top: 28px;">
+                <div class="col-lg col-md-12" style="margin-top: 23px;">
                     <button type="submit" class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
                 </div>
             </div>
@@ -60,12 +61,15 @@
               <span aria-hidden="true">&times;</span>
               </button>
           </div>
+          
           <div id="tambah_data_disiplin_kerja_content">
           </div>
       </div>
   </div>
 </div>
 <div class="row">
+<h1 class="h3 mb-3">Data Dokumen Pendukung</h1>  
+
     <div class="col-12" id="result">
     </div>
 </div>

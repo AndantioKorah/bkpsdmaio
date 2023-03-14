@@ -11,6 +11,118 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function insertLaporanKegiatan(){
+            // dd($_FILES);
+        $countfiles = count($_FILES['files']['name']);
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        $ress = 1;
+
+        $this->db->trans_begin();
+       
+        if(implode($_FILES['files']['name']) == ""){
+            
+            $nama_file = '[""]';
+            $image = $nama_file;
+            $dataPost = $this->input->post();
+            $this->createLaporanKegiatan($dataPost,$image);
+        } else {
+        for($i=0;$i<$countfiles;$i++){
+         
+            if(!empty($_FILES['files']['name'][$i])){
+      
+              // Define new $_FILES array - $_FILES['file']
+              $_FILES['file']['name'] = $this->general_library->getUserName().'_'.$_FILES['files']['name'][$i];
+              $_FILES['file']['type'] = $_FILES['files']['type'][$i];
+              $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
+              $_FILES['file']['error'] = $_FILES['files']['error'][$i];
+              $_FILES['file']['size'] = $_FILES['files']['size'][$i];
+            //   dd($_FILES['file']['type']);
+
+              if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
+                $ress = 0;
+                $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+                break;
+              }
+            
+                
+            //   if($_FILES['file']['size'] > 1048576){
+            //     $ress = 0;
+            //     $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
+            //     break;
+            //   }
+           
+              // Set preference
+              $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+              $config['upload_path'] = './assets/bukti_kegiatan'; 
+            //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
+              $config['allowed_types'] = '*';
+            //   $config['max_size'] = '5000'; // max_size in kb
+            //   $config['file_name'] = $this->getUserName().'_'.$_FILES['file']['name'];
+             
+              //Load upload library
+              $this->load->library('upload',$config); 
+            //   $res = array('msg' => 'something went wrong', 'success' => false);
+              // File upload
+              if($this->upload->do_upload('file')){
+               
+               $data = $this->upload->data(); 
+                 //    kompress
+            //    if($data['file_type'] == "image/png" || $data['file_type'] == "image/jpeg") {
+            //    $insert['name'] = $data['file_name'];
+            //    $config['image_library'] = 'gd2';
+            //    $config['source_image'] = './assets/bukti_kegiatan/'.$data["file_name"];
+            //    $config['create_thumb'] = FALSE;
+            //    $config['maintain_ratio'] = FALSE;
+               
+            //    if($data['file_size'] > 1000) {
+               
+            //     // $imgdata=exif_read_data($this->upload->upload_path.$this->upload->file_name, 'IFD0');
+            //     $tinggi = $data['image_height'] * 50 / 100;
+            //     $lebar  = $data['image_width'] * 50 / 100;
+            //     $config['height'] = round($tinggi);
+            //     $config['width'] = round($lebar);
+              
+            //    } 
+            // //    else {
+            // //     $config['height'] =600;  
+            // //     $config['width'] = 600;
+               
+            // //    }
+            //    $config['master_dim'] = 'auto';
+            //    $config['quality'] = "50%";
+
+
+            //    $this->load->library('image_lib');
+            //             $this->image_lib->initialize($config);
+            //             if (!$this->image_lib->resize()) {
+            //                 echo $this->image_lib->display_errors();
+            //             }
+            //     $this->image_lib->clear();
+            // tutup kompress
+            // }
+            
+              }
+            }
+            $nama_file[] = $data['file_name'];
+           }
+           if($ress == 1){
+            $image = json_encode($nama_file); 
+            $dataPost = $this->input->post();
+            $this->createLaporanKegiatan($dataPost,$image);
+           }   
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+        }
+
         public function createLaporanKegiatan($dataPost,$image){
   
         $this->db->trans_begin();
@@ -197,6 +309,7 @@
 
         $data["realisasi_target_kuantitas"] = $datapost["edit_realisasi_target_kuantitas"];
         $data["deskripsi_kegiatan"] = $datapost["edit_deskripsi_kegiatan"];
+        $data["tanggal_kegiatan"] = $datapost["edit_tanggal_kegiatan"];
 
 
         $this->db->where('id', $id_kegiatan)
@@ -228,7 +341,7 @@
     
         $data["target_kuantitas"] = $datapost["edit_target_kuantitas"];
         $data["satuan"] = $datapost["edit_satuan"];
-
+        $data["sasaran_kerja"] = $datapost["edit_sasaran_kerja"];
 
         $this->db->where('id', $id_rencana_kinerja)
                 ->update('t_rencana_kinerja', $data);
@@ -696,7 +809,42 @@
         if($this->general_library->isAdministrator() || $this->general_library->isProgrammer()){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         } 
+
+        if($result){
+            $temp = $result;
+            $result = null;
+            foreach($temp as $t){
+                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                    //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
+
+                    //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
+
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                } else {
+                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                }
+            }
+        }
+
         $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
+        // if($status == 1){
+        //     $count['pengajuan'] = count($result);
+        // } else if($status == 2){
+        //     $count['diterima'] = count($result);
+        // } else if($status == 3){
+        //     $count['ditolak'] = count($result);
+        // } else if($status == 4){
+        //     $count['batal'] = count($result);
+        // }
         return [$result, $count];
     }
 
@@ -822,7 +970,7 @@
         $rs['ditolak'] = 0;
         $rs['batal'] = 0;
 
-        $this->db->select('COUNT(a.id) as total, a.status')
+        $this->db->select('a.*')
                 ->from('t_dokumen_pendukung a')
                 ->join('m_status_dokumen_pendukung b', 'a.status = b.id')
                 ->join('m_user c', 'a.id_m_user = c.id')
@@ -830,7 +978,7 @@
                 ->where('a.bulan', floatval($bulan))
                 ->where('a.tahun', floatval($tahun))
                 ->where('a.flag_active', 1)
-                ->group_by('a.status');
+                ->group_by('a.status, a.dokumen_pendukung');
 
         if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1)){
             $this->db->where('d.skpd', $id);
@@ -838,22 +986,38 @@
             $this->db->where('a.id_m_user', $id);
         }
         
-        $count = $this->db->get()->result_array(); 
+        $tempdata = $this->db->get()->result_array(); 
+        $rs['pengajuan'] = 0;
+        $rs['diterima'] = 0;
+        $rs['ditolak'] = 0;
+        $rs['batal'] = 0;
 
-        if($count){
-            
-            foreach($count as $c){
-                if($c['status'] == 1){
-                    $rs['pengajuan'] = $c['total'];
-                } else if($c['status'] == 2){
-                    $rs['diterima'] = $c['total'];
-                } else if($c['status'] == 3){
-                    $rs['ditolak'] = $c['total'];
-                } else if($c['status'] == 4){
-                    $rs['batal'] = $c['total'];
+        if($tempdata){
+            foreach($tempdata as $t){
+                if($t['status'] == 1){
+                    $rs['pengajuan']++;
+                } else if($t['status'] == 2){
+                    $rs['diterima']++;
+                } else if($t['status'] == 3){
+                    $rs['ditolak']++;
+                } else if($t['status'] == 4){
+                    $rs['batal']++;
                 }
             }
         }
+        // if($count){
+        //     foreach($count as $c){
+        //         if($c['status'] == 1){
+        //             $rs['pengajuan'] = $c['total'];
+        //         } else if($c['status'] == 2){
+        //             $rs['diterima'] = $c['total'];
+        //         } else if($c['status'] == 3){
+        //             $rs['ditolak'] = $c['total'];
+        //         } else if($c['status'] == 4){
+        //             $rs['batal'] = $c['total'];
+        //         }
+        //     }
+        // }
 
         return $rs;
     }
@@ -865,7 +1029,7 @@
 
         $this->db->trans_begin();
 
-        $this->db->where('id', $id)
+        $this->db->where_in('id', $this->input->post('list_id'))
                 ->update('t_dokumen_pendukung', ['flag_active' => 0]);
         
         $tmp = $this->db->select('*')
@@ -1004,7 +1168,29 @@
         }
 
         $result = $this->db->get()->result_array();
+        if($result){
+            $temp = $result;
+            $result = null;
+            foreach($temp as $t){
+                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                    //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
 
+                    //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                } else {
+                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                }
+            }
+        }
         $id_count = $id_unitkerja;
         $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun, 1);
         return [$result, $count];
@@ -1023,7 +1209,7 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $this->db->where('id', $id)
+        $this->db->where_in('id', $this->input->post('list_id'))
                 ->update('t_dokumen_pendukung', $data_verif);
 
         $temp = $this->db->select('c.skpd, a.bulan, a.tahun')

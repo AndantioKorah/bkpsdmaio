@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Simpeg_model extends CI_Model
+class M_pasphoto extends CI_Model
 {
 
 
@@ -29,6 +29,9 @@ class Simpeg_model extends CI_Model
 	function getIDPasPhoto()
 	{
 		$id_peg  = $this->session->userdata('id_peg');
+
+
+
 		$sql = "SELECT pasphoto FROM users WHERE id_peg='$id_peg' ";
 		$query      = $this->db->query($sql);
 

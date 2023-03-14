@@ -6,15 +6,15 @@
   <title><?=TITLES?></title>
   <link rel="shortcut icon" href="<?=base_url('assets/new_login/images/logo-bidik-2.png')?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>">
+	<!-- <link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>"> -->
 	<!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-	<link rel="stylesheet" href="<?=base_url('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')?>">
-	<link rel="stylesheet" href="<?=base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css')?>">
-	<link rel="stylesheet" href="<?=base_url('plugins/jqvmap/jqvmap.min.css')?>">
+	<!-- <link rel="stylesheet" href="<?=base_url('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')?>"> -->
+	<!-- <link rel="stylesheet" href="<?=base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css')?>">
+	<link rel="stylesheet" href="<?=base_url('plugins/jqvmap/jqvmap.min.css')?>"> -->
 	<link rel="stylesheet" href="<?=base_url('assets/css/adminlte.min.css')?>">
-	<link rel="stylesheet" href="<?=base_url('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
+	<!-- <link rel="stylesheet" href="<?=base_url('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
 	<link rel="stylesheet" href="<?=base_url('plugins/daterangepicker/daterangepicker.css')?>">
-	<link rel="stylesheet" href="<?=base_url('plugins/summernote/summernote-bs4.css')?>">
+	<link rel="stylesheet" href="<?=base_url('plugins/summernote/summernote-bs4.css')?>"> -->
 	<!-- <link rel="stylesheet" href="<?php// echo base_url('assets/css/font.css')?>"> -->
 	<link rel="stylesheet" href="<?=base_url('assets/css/datatable.css')?>">
 	<link rel="stylesheet" href="<?=base_url('assets/css/jquery.dataTables.min.css')?>">
@@ -478,7 +478,6 @@ var TableFilter = (function() {
   }
 
   function divLoaderNavy(message = 'Loading'){
-    alert(2)
     return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
   }
 

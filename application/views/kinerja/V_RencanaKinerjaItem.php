@@ -1,16 +1,14 @@
-<div class="card-header">
-        <h3 class="card-title">List Sasaran Kerja</h3>
-    </div>
+
     <div class="card-body">
     <div class="col-12">
     <form class="form-inline" method="post">
   <div class="form-group">
     <label for="email" class="mr-2">Tahun  </label>
-    <input  class="form-control datepicker" id="search_tahun" name="search_tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
+    <input  class="form-control datepicker customInput" id="search_tahun" name="search_tahun" value="<?=$tahun != null ? $tahun : date('Y');?>">
   </div>
   <div class="form-group">
-    <label for="pwd" class="mr-2 ml-3"> Bulan</label>
-    <select class="form-control select2-navy" 
+    <label for="pwd" class="mr-2"> Bulan</label>
+    <select class="form-control select2-navy customInput" 
                  id="search_bulan" data-dropdown-css-class="select2-navy" name="search_bulan" required>
                  <option <?=$bulan == 1 ? 'selected' : '';?> value="1">Januari</option>
                  <option <?=$bulan == 2 ? 'selected' : '';?> value="2">Februari</option>
@@ -34,7 +32,7 @@
 
 <?php if($list_rencana_kinerja){ ?>
     <div class="col-12 tableFixHead">
-        <table class="table table-striped" id="table_rencana_kinerja">
+        <table class="table table-striped table-bordered" id="table_rencana_kinerja">
             <thead>
                 <th class="text-center table-success">No</th>
                 <th class="text-left table-success">Uraian Tugas</th>
@@ -59,15 +57,18 @@
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left"><?=$lp['target_kualitas']?></td>                        
                         <td class="text-center">
-                        <?php if($lp['count'] != 0 ){ ?>
-                            <?php } else { ?>
-                                <span href="#edit_rencana_kinerja" data-toggle="modal"  >
-                                <button href="#edit_rencana_kinerja" data-toggle="tooltip" class="btn btn-sm btn-navy"  data-placement="top" title="Edit" 
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                        <span href="#edit_rencana_kinerja" data-toggle="modal"  >
+                                <button href="#edit_rencana_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1"  data-placement="top" title="Edit" 
                                  onclick="openModalEditRencanaKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button>
                                  </span>
+                            <?php if($lp['count'] != 0 ){ ?>
+                            <?php } else { ?>
                                 <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
-                            
                             <?php } ?>
+                            
+                            
+                            </div>
                         </td>
                         
                     </tr>

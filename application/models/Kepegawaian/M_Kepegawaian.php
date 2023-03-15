@@ -93,9 +93,9 @@ class M_Kepegawaian extends CI_Model
         //     $order = $this->order_lihat_dokumen_pns;
         //     $this->db->order_by(key($order), $order[key($order)]);
         // }
-
-        if ($cariBy == 1) {
-            $this->db->where('dokumen_upload.nip', $cariName);
+            if ($cariBy == 1) {
+                $this->db->where('dokumen_upload.nip', $cariName);
+            }
         }
 
         function getProfilPegawai(){

@@ -1,3 +1,10 @@
+<style>
+	.text-dark{
+		font-weight: bold;
+		color: var(--primary-color);
+	}
+</style>
+
 <?php
   $list_role = $this->general_library->getListRole();
   $active_role = $this->general_library->getActiveRole();
@@ -7,7 +14,7 @@
           <i class="hamburger align-self-center"></i>
           </a>
 
-		  <span id="live_date_time"></span>
+		  <span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
       
 
 				<div class="navbar-collapse collapse">
@@ -138,7 +145,8 @@
 						</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-							<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark"><?=$this->general_library->getNamaUser();?></span>
+							<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="" /> 
+							<span class="text-dark"><?=$this->general_library->getNamaUser();?></span>
 						</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>

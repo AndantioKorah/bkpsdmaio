@@ -11,11 +11,34 @@ class C_Kepegawaian extends CI_Controller
         };
     }
 
-    public function uploadDokumen(){
+    public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
         render('kepegawaian/V_UploadDokumen', '', '', $data);
     }
+
+	public function uploadDokumen(){
+        // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+        $data['dokumen']         	= $this->kepegawaian->getDokumen();
+        render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    }
+
+	public function LoadFormDokPangkat(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+        $this->load->view('kepegawaian/V_FormUploadDokPangkat', null);
+    }
+
+	
+
+
+
+
+	public function profil(){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
+		// dd($data['pangkat']);
+		render('kepegawaian/V_LihatPNS', '', '', $data);
+	}
 
     public function loadDokumenPns(){
 

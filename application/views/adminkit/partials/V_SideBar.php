@@ -2,14 +2,18 @@
 	.sidebar-header{
 		padding: 0.5rem 0.5rem 0.375rem !important;
 		color: rgba(233,236,239,.5) !important;
-		font-size: .9rem !important;
+		font-size: 1.1rem !important;
 	}
 
 	.sidebar-link{
 		padding: 0.125rem 0.625rem !important;
 		color: #ababab !important;
-		font-size: .8rem;
+		font-size: 1rem;
 		font-weight: bold !important;
+
+		white-space: nowrap; 
+		overflow: hidden;
+		text-overflow: ellipsis; 
 	}
 
 	.sidebar-link:hover{
@@ -41,9 +45,9 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
-            </a>
+						<a class="sidebar-link" href="<?=base_url();?>/kepegawaian/profil">
+             			 <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+            			</a>
 					</li>
 
 
@@ -96,20 +100,20 @@
 						<?php if(!$l['child']){ ?>
 							<li class="sidebar-item">
 						
-						<a class="sidebar-link" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
+						<a class="sidebar-link" title="<?=$l['nama_menu']?>" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
 						<i class="align-middle fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
 					    </a>
 							</li>
 							<?php } ?>
 							<?php if($l['child']){ ?>
-								<a data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
+								<a title="<?=$l['nama_menu']?>" data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
 								<i class="align-middle me-2 fa fa-fw <?=$l['icon']?>"></i> <span class="align-middle">
 								<?=trim($l['nama_menu'])?>
 								<i class="fa fa-chevron-down" 
 								style="
 									position: absolute;
 									right: 0;
-									margin-top: .2rem;"></i>
+									margin-top: .35rem;"></i>
 							<?php } ?>
 							</span>
 						</a>
@@ -117,7 +121,8 @@
 						<?php if($l['child']){ ?>
 							<?php foreach($l['child'] as $ch){ ?>
 								<ul id="menu<?=$l['id']?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-								<li class="sidebar-item "><a class="sidebar-link sidebar-link-child" href="<?=base_url($ch['url'])?>">
+								<li class="sidebar-item ">
+								<a title="<?=$ch['nama_menu']?>" class="sidebar-link sidebar-link-child" href="<?=base_url($ch['url'])?>">
 								<i class="align-middle me-2 far fa-circle"></i><?=$ch['nama_menu']?></a></li>
 							</ul>
 							<?php } ?>

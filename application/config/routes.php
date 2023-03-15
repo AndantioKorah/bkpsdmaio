@@ -2,7 +2,7 @@
 require_once 'tio.php';
 require_once 'laporan.php';
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -68,6 +68,10 @@ $route['kinerja/rekap'] = 'kinerja/C_Kinerja/rekapKinerja';
 $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 
 
+
+
 // Kepegawaian
+$route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
 $route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/profil';

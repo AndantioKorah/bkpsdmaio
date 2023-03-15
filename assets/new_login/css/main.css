@@ -262,7 +262,11 @@ iframe {
   display: block;
   background-color: #222e3c;
   color: white;
-  padding: 135px 55px 55px 55px;
+  padding: 95px 55px 55px 55px;
+}
+
+.login-form-mobile{
+  padding: -95px -55px -55px -55px !important;
 }
 
 .login100-form-title {
@@ -516,6 +520,16 @@ input.input100 {
   }
 }
 
+/* .login-top-mobile{
+  background-color: var(--primary-color);
+  background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0)), url('../images/bg-02-mobile.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  z-index: 1;
+} */
+
 @media (max-width: 768px) {
   .login100-form {
     width: 100%;
@@ -528,12 +542,32 @@ input.input100 {
   /* .mobile-logo{
     display: block;
   } */
+
+  /* .login-form-web{
+    display: none;
+  }
+
+  .login-form-mobile{
+    display: block;
+  } */
 }
 
 @media (min-width: 768px) {
   .mobile-logo{
     display: none;
   }
+
+  /* .login-form-web{
+    display: block;
+  }
+
+  .login-form-mobile{
+    display: none;
+  } */
+/* 
+  .login-top-mobile{
+    display: none;
+  } */
 }
 
 @media (max-width: 576px) {

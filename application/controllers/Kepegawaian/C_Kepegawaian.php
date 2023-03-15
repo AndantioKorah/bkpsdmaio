@@ -11,6 +11,12 @@ class C_Kepegawaian extends CI_Controller
 			redirect('logout');
 		};
 	}
+
+	public function loadListPangkat(){
+		$data['result'] = $this->kepegawaian->getPangkatPegawai();
+		$this->load->view('kepegawaian/V_ListPangkat', $data);
+	}
+
 	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
@@ -22,7 +28,10 @@ class C_Kepegawaian extends CI_Controller
 	{
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
-		// dd($data['pangkat']);
+		$data['pendidikan'] = $this->kepegawaian->getPendidikan();
+		$data['jabatan'] = $this->kepegawaian->getJabatan();
+		// $data['tes'] = $this->general_library->getId();
+		// dd($data);
 		render('kepegawaian/V_LihatPNS', '', '', $data);
 	}
 

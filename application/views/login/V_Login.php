@@ -35,74 +35,67 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form" method="post" action="<?=base_url('login/C_Login/authenticateAdmin')?>">
-					<span class="login100-form-title p-b-43">
-						SELAMAT DATANG !
-					</span>
-					<table class="mobile-logo" style="width: 100%;">
-						<tr>
-							<td style="width: 50%;">
-								<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1" src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
-							</td>
-							<td style="width: 50%;">
-								<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1" src="<?=base_url('')?>assets/new_login/images/bkpsdm.png"/>
-							</td>
-						</tr>
-					</table>
-					
-					<div class="wrap-input100 validate-input" data-validate = "Username Anda">
-						<input class="input100" type="text" name="username">
-						<span class="focus-input100"></span>
-						<span class="label-input100">Username</span>
-					</div>
-					
-					
-					<div class="wrap-input100 validate-input" data-validate="Password Anda">
-						<input class="input100" type="password" name="password">
-						<span class="focus-input100"></span>
-						<span class="label-input100">Password</span>
-					</div>
-
-					<div class="flex-sb-m w-full p-t-3 p-b-32">
-						<!-- <div class="contact100-form-checkbox">
-							<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-							<label class="label-checkbox100" for="ckb1">
-								Remember me
-							</label>
+				<form class="login100-form  validate-form" method="post" action="<?=base_url('login/C_Login/authenticateAdmin')?>">
+					<div class="login-form-web">
+						<span class="login100-form-title p-b-10">
+							SELAMAT DATANG !
+						</span>
+						<center>
+							<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1" src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
+						</center>
+						<div class="wrap-input100 validate-input" data-validate = "Username Anda">
+							<input class="input100" type="text" name="username">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Username</span>
+						</div>
+						
+						
+						<div class="wrap-input100 validate-input" data-validate="Password Anda">
+							<input class="input100" type="password" name="password">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Password</span>
 						</div>
 
-						<div>
-							<a href="assets/new_login/#" class="txt1">
-								Forgot Password?
+						<div class="flex-sb-m w-full p-t-3 p-b-32">
+							<!-- <div class="contact100-form-checkbox">
+								<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+								<label class="label-checkbox100" for="ckb1">
+									Remember me
+								</label>
+							</div>
+
+							<div>
+								<a href="assets/new_login/#" class="txt1">
+									Forgot Password?
+								</a>
+							</div> -->
+						</div>
+				
+
+						<div class="container-login100-form-btn">
+							<button type="submit" class="login100-form-btn">
+								Login
+							</button>
+						</div>
+
+						<div class="text-center p-t-30">
+							<span class="txt2">
+								<?=COPYRIGHT?>
+							</span>
+						</div>
+
+						<!-- <div class="login100-form-social flex-c-m">
+							<a href="assets/new_login/#" class="login100-form-social-item flex-c-m bg1 m-r-5">
+								<i class="fa fa-facebook-f" aria-hidden="true"></i>
+							</a>
+
+							<a href="assets/new_login/#" class="login100-form-social-item flex-c-m bg2 m-r-5">
+								<i class="fa fa-twitter" aria-hidden="true"></i>
 							</a>
 						</div> -->
 					</div>
-			
-
-					<div class="container-login100-form-btn">
-						<button type="submit" class="login100-form-btn">
-							Login
-						</button>
-					</div>
-					
-					<div class="text-center p-t-30">
-						<span class="txt2">
-							<?=COPYRIGHT?>
-						</span>
-					</div>
-
-					<!-- <div class="login100-form-social flex-c-m">
-						<a href="assets/new_login/#" class="login100-form-social-item flex-c-m bg1 m-r-5">
-							<i class="fa fa-facebook-f" aria-hidden="true"></i>
-						</a>
-
-						<a href="assets/new_login/#" class="login100-form-social-item flex-c-m bg2 m-r-5">
-							<i class="fa fa-twitter" aria-hidden="true"></i>
-						</a>
-					</div> -->
 				</form>
-
-				<div class="login100-more" style="background-image: url('assets/new_login/images/bg-02.jpeg');">
+				<div class="login100-more" style="background-image: url('assets/new_login/images/bg-02.png');">
 				</div>
 			</div>
 		</div>

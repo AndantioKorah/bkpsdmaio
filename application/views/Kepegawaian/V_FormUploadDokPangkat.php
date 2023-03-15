@@ -80,10 +80,12 @@
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="image_file" name="file"   />
+    <span style="color:red;">* Format Penamaan File : SK_KP_NIP_KODE</span>
   </div>
 
   <div class="form-group col-lg-12">
-     <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+    <br>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
 

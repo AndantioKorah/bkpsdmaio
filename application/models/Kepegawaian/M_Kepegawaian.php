@@ -161,19 +161,38 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPangkatPegawai(){
-            return $this->db->select('*')
+            return $this->db->select('e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+                            c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpangkat c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
-                            ->where('a.id', 'b.id_peg')
+                            ->join('db_pegawai.jenispengangkatan e','c.jenispengangkatan = e.id_jenispengangkatan')
+                            ->where('a.id', $this->general_library->getId())
                             ->order_by('c.tglsk', 'desc')
                             ->get()->result_array();
+        }
 
-            // $this->db->select('a.*')
-            // ->from('db_pegawai.pegpangkat a')
-            // ->where('a.id_pegawai',$this->general_library->getId());
-            // return $this->db->get()->result_array();
+        function getPendidikan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.tktpendidikan d','c.tktpendidikan = d.id_tktpendidikan')
+                            ->where('a.id', 193)
+                            ->order_by('c.tglijasah','desc')
+                            ->get()->result_array();
+        }
+
+        function getJabatan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->where('a.id', 193)
+                            ->order_by('c.tmtjabatan','desc')
+                            ->get()->result_array();
         }
 
         function isArsip($data)

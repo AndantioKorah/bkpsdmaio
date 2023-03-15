@@ -1,17 +1,18 @@
 <?php
-	class M_Kepegawaian extends CI_Model
-	{
-		public function __construct()
-        {
-            parent::__construct();
-            $this->db = $this->load->database('main', true);
-        }
+class M_Kepegawaian extends CI_Model
+{
+    public function __construct()
+    {
+        parent::__construct();
+        // $this->db = $this->load->database('main', true);
+    }
 
-        public function insert($tablename, $data){
-            $this->db->insert($tablename, $data);
-        }
+    public function insert($tablename, $data)
+    {
+        $this->db->insert($tablename, $data);
+    }
 
-        public function get_datatables_lihat_dokumen_pns($cariBy,$cariName,$unor)
+    public function get_datatables_lihat_dokumen_pns($cariBy,$cariName,$unor)
         {
             
             // $idunor  = $this->arsip->getIdPerangkatDaerah();
@@ -145,7 +146,6 @@
             $this->db->ORDER_BY('nama_dokumen');
             return $this->db->get('db_siladen.dokumen');	
         }
-
         function getProfilPegawai(){
             $username = $this->general_library->getUserName();
             $this->db->select('a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
@@ -188,143 +188,110 @@
 		    $r 		= TRUE;
 		}
         return $r;
-	}
+    }
 
     function isFormatOK($file)
-	{
-		$r = FALSE;
-		$raw_file  		= str_replace('.pdf', '', $file);
-		$format_file 	= explode("_",$raw_file);
-		
-		$sql="SELECT panjang FROM (SELECT *,locate(nama_dokumen,'$file') result from db_siladen.dokumen ) a
+    {
+        $r = FALSE;
+        $raw_file          = str_replace('.pdf', '', $file);
+        $format_file     = explode("_", $raw_file);
+
+        $sql = "SELECT panjang FROM (SELECT *,locate(nama_dokumen,'$file') result from db_siladen.dokumen ) a
         WHERE a.result = 1 AND a.aktif IS NOT NULL";
-		$row = $this->db->query($sql)->row();
-		if(count($format_file) === intval($row->panjang))
-		{
-		   $r = TRUE;
-		}
-		
-		return $r;
-		
-	}
-    
+        $row = $this->db->query($sql)->row();
+        if (count($format_file) === intval($row->panjang)) {
+            $r = TRUE;
+        }
+
+        return $r;
+    }
+
     function isMinorOK($file)
-	{
-		$raw_file  		= str_replace('.pdf', '', $file);
-		$format_file 	= explode("_",$raw_file);
-		$arr1			= array('KODE','TAHUN');
-		
-		$r = TRUE;
-		if(count($format_file) == 4)
-		{
-			$number  = $this->_extract_numbers($format_file[3]);
-			if(count($number) > 0)
-			{
-				$r = TRUE;		
-			}
-			else
-			{
-				$r = FALSE;
-			}		
-		}
-		
-		
-		return $r;
-	}
+    {
+        $raw_file          = str_replace('.pdf', '', $file);
+        $format_file     = explode("_", $raw_file);
+        $arr1            = array('KODE', 'TAHUN');
+
+        $r = TRUE;
+        if (count($format_file) == 4) {
+            $number  = $this->_extract_numbers($format_file[3]);
+            if (count($number) > 0) {
+                $r = TRUE;
+            } else {
+                $r = FALSE;
+            }
+        }
+
+
+        return $r;
+    }
 
     function isAllowSize($file)
-	{
-		$file_name  = $file['name'];
-		$file_size  = $file['size'];
-		
-		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from db_siladen.dokumen ) a
-        WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
-		
-		if($query->num_rows() > 0){
-		    
-			$row 			= $query->row();
-			$file_size      = round($file_size/1024, 2);
-			
-			if ($file_size > $row->file_size)
-			{
-				$data['pesan']  		= " File Dokumen Jenis ".$row->nama_dokumen." Hanya diizinkan Maksimal ".round($row->file_size/1024,2)." MB";
-				$data['response'] 		= FALSE;
-			}
-			else
-			{
-				$data ['pesan']     = " File diizinkan";
-   				$data ['response']  = TRUE;
-			}
-		}
-		else
-		{
-			$data ['pesan']     = " File bukan arsip kepegawaian yang disyaratkan";
-   			$data ['response']  = FALSE;
-		}
-		
-		return $data;
-	}
+    {
+        $file_name  = $file['name'];
+        $file_size  = $file['size'];
+
+        $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from db_siladen.dokumen ) a
+        WHERE a.result = 1 AND a.aktif IS NOT NULL");
+
+        if ($query->num_rows() > 0) {
+
+            $row             = $query->row();
+            $file_size      = round($file_size / 1024, 2);
+
+            if ($file_size > $row->file_size) {
+                $data['pesan']          = " File Dokumen Jenis " . $row->nama_dokumen . " Hanya diizinkan Maksimal " . round($row->file_size / 1024, 2) . " MB";
+                $data['response']         = FALSE;
+            } else {
+                $data['pesan']     = " File diizinkan";
+                $data['response']  = TRUE;
+            }
+        } else {
+            $data['pesan']     = " File bukan arsip kepegawaian yang disyaratkan";
+            $data['response']  = FALSE;
+        }
+
+        return $data;
+    }
 
     function insertUpload($data)
-	{
+    {
+        
+       	
+        $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
+        $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
 
-		$data['id_dokumen']		= $this->_getIdDokumen($data);
-		$data['upload_by']      = $this->general_library->getId();
-		$data['last_unor']      = $this->general_library->getUnitKerjaPegawai();
-		$number 				= $this->_extract_numbers($data['raw_name']);
-		
-		foreach($number as $value){
-		    if (strlen($value) == 18){
-                $data['nip']    = $value;
-            }
-            else
-            {
-			    $data['minor_dok']    = $value;
-            }		
-	    }   
-		
-		
-		$db_debug 			= $this->db->db_debug; 
-		$this->db->db_debug = FALSE; 
-			
-		if (!$this->db->insert('db_siladen.dokumen_upload', $data))
-		{
-			$error = $this->db->error();
-			if(!empty($error))
-			{
-                $data['pesan']		= $error;   
-				$data['response'] 	= FALSE;
-			}
-            	
-        }
-		else
-		{
-			$data['pesan']		= "Dokumen Berhasil Tersimpan";
-			$data['response']	= TRUE;
-		}	
-        $this->db->db_debug = $db_debug; //restore setting	
-        return $data;		
-		
-	}
+        $dataInsert['id_pegawai']     = "1";
+        $dataInsert['jenispengangkatan']      = $this->input->post('jenis_pengangkatan');
+        $dataInsert['pangkat']      = $this->input->post('pangkat');
+        $dataInsert['masakerjapangkat']     =$this->input->post('masa_kerja');
+        $dataInsert['pejabat']      = $this->input->post('pejabat');
+        $dataInsert['nosk']      = $this->input->post('no_sk');
+        $dataInsert['tglsk']      = $tgl_sk;
+        $dataInsert['gambarsk']      = $data['file_name'];
+        $dataInsert['tmtpangkat']      = $tmt_pangkat;
+
+        $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
+        return $result;
+    }
 
     function  updateFile($data)
-	{
-		$this->db->where('raw_name',$data['raw_name']);
-		$this->db->set('flag_update',1);
-		$this->db->set('update_by',$this->general_library->getId());
-		$this->db->set('update_date','NOW()',FALSE);
-		return $this->db->update('db_siladen.dokumen_upload');
-	
+    {
+        $this->db->where('raw_name', $data['raw_name']);
+        $this->db->set('flag_update', 1);
+        $this->db->set('update_by', $this->general_library->getId());
+        $this->db->set('update_date', 'NOW()', FALSE);
+        return $this->db->update('db_siladen.dokumen_upload');
     }
 
     function _getIdDokumen($data)
-	{
-	    $r = NULL;
-		$find    = $data['raw_name'];
+    {
+        $r = NULL;
+        $find    = $data['raw_name'];
 
-		
-		$query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen) a
-         WHERE a.result = 1 AND a.aktif IS NOT NULL "); 
+
+        $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen) a
+         WHERE a.result = 1 AND a.aktif IS NOT NULL ");
 
         // $query = $this->db->select('*')
         // ->from('db_siladen.dokumen a')
@@ -332,17 +299,17 @@
         // ->like('a.nama_dokumen', $find)
         // ->get()->num_rows();
 
-		if($query->num_rows() > 0){
-		    $row 	= $query->row();
-			$r 		= $row->id_dokumen;
-		}
-		
-		return $r;
-	}
+        if ($query->num_rows() > 0) {
+            $row     = $query->row();
+            $r         = $row->id_dokumen;
+        }
+
+        return $r;
+    }
 
     // function _getIdPeg()
-	// {
-           
+    // {
+
     //         $username = $this->general_library->getUserName();
     //         $this->db->select('a.id')
     //             ->from('db_siladen.users as a')
@@ -353,40 +320,225 @@
     //             foreach ($query->result() as $row)
     //                 {
     //                         $idPeg = $row->id;
-                    
+
     //                 }
     //             return $idPeg;
-        
-	// }
+
+    // }
 
 
     // function getLastSKPDByIdPegawai()
-	// {
-	// 	$id_peg  = $this->session->userdata('id_peg');
-		
-	// 	$sql="SELECT skpd FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
-		
-	// 	$query    = $this->db->query($sql);
-		
-	// 	if($query->num_rows() > 0)
-	// 	{
-	// 		$row    			= $query->row();
-	// 		$skpd        		= $row->skpd;			
-	// 	}
-	// 	else
-	// 	{
-	// 		$skpd           = NULL;	
-	// 	}		
-		
-	// 	return $skpd;
-	// }
+    // {
+    // 	$id_peg  = $this->session->userdata('id_peg');
+
+    // 	$sql="SELECT skpd FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
+
+    // 	$query    = $this->db->query($sql);
+
+    // 	if($query->num_rows() > 0)
+    // 	{
+    // 		$row    			= $query->row();
+    // 		$skpd        		= $row->skpd;			
+    // 	}
+    // 	else
+    // 	{
+    // 		$skpd           = NULL;	
+    // 	}		
+
+    // 	return $skpd;
+    // }
 
     function _extract_numbers($string)
-	{
-	    preg_match_all('/([\d]+)/', $string, $match);
-	    return $match[0];
-	}
-	
+    {
+        preg_match_all('/([\d]+)/', $string, $match);
+        return $match[0];
+    }
 
-	}	
-?>
+    public function getAllWithOrder($tableName, $orderBy = 'created_date', $whatType = 'desc')
+    {
+        $this->db->select('*')
+        // ->where('id !=', 0)
+        // ->where('flag_active', 1)
+        ->order_by($orderBy, $whatType)
+        ->from($tableName);
+        return $this->db->get()->result_array(); 
+    }
+
+    public function doUpload()
+	{
+
+		// dd($_FILES['file']['name']);	
+		// validasi NIP
+		if (!$this->_isAdaNIP($_FILES['file']['name'])) {
+			// $data['error']    = 'Dokumen harus terdapat NIP';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+			// return FALSE;
+			$res = array('msg' => 'Dokumen harus terdapat NIP', 'success' => false);
+			return $res;
+		}
+
+		// validasi NIP apakah terdapat nip saya
+		if (!$this->_isAdaNIPSaya($_FILES['file']['name'])) {
+			// $data['error']    = 'Dokumen harus  NIP Saya, cek ulang NIP di nama Dokumen';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+			$res = array('msg' => 'Dokumen harus  NIP Saya, cek ulang NIP di nama Dokumen', 'success' => false);
+			return $res;
+		}
+		// dd($_FILES['file']['name']);
+		// cek apakah ada dalam daftar arsip
+
+		if (!$this->isArsip($_FILES['file']['name'])) {
+
+			// $data['error']    = 'File ini tidak ada dalam daftar arsip';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+                $res = array('msg' => 'File ini tidak ada dalam daftar arsip', 'success' => false);
+                return $res;
+		}
+
+
+		// cek apakah sudah sesuai format
+		if (!$this->isFormatOK($_FILES['file']['name'])) {
+
+			// $data['error']    = 'File ini belum sesuai format';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+                $res = array('msg' => 'File ini belum sesuai format', 'success' => false);
+                return $res;
+		}
+
+
+		// cek minor tidak ada kode atau tahun
+		if (!$this->isMinorOK($_FILES['file']['name'])) {
+			// $data['error']    = 'File ini KODE atau TAHUN belum sesuai format';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+                $res = array('msg' => 'File ini KODE atau TAHUN belum sesuai format', 'success' => false);
+                return $res;
+		}
+
+		// cek file size apa diperbolehkan		
+		$cekFile	= $this->isAllowSize($_FILES['file']);
+		$response   = $cekFile['response'];
+		if (!$response) {
+			// $data['error']    = $cekFile['pesan'];
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+                $res = array('msg' => $cekFile['pesan'], 'success' => false);
+                return $res;
+		}
+
+		$target_dir						= './uploads/' . $this->_getNip($_FILES['file']['name']);
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		//$config['max_size']             = 2048;
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE;
+
+		$this->load->library('upload', $config);
+
+		if (!file_exists($target_dir)) {
+			mkdir($target_dir, 0777);
+		}
+
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());
+			$data['token']    = $this->security->get_csrf_hash();
+			$this->output
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+		} else {
+			$dataFile 			= $this->upload->data();
+			$result		        = $this->insertUpload($dataFile);
+			// $result['token']    = $this->security->get_csrf_hash();
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            return $res;
+
+			// if ($result['response']) {
+			// 	$this->output
+			// 		->set_status_header(200)
+			// 		->set_content_type('application/json', 'utf-8')
+			// 		->set_output(json_encode($result));
+			// } else {
+			// 	$result['updated']  = $this->kepegawaian->updateFile($result);
+			// 	$result['error'] 	= 'File ini sudah ada, update file';
+			// 	$result['token']    = $this->security->get_csrf_hash();
+			// 	$this->output
+			// 		->set_status_header(200)
+			// 		->set_content_type('application/json', 'utf-8')
+			// 		->set_output(json_encode($result));
+			// }
+		}
+	}
+
+    function _isAdaNIP($string)
+	{
+		$number = $this->_extract_numbers($string);
+		$cek  = 0;
+		foreach ($number as $value) {
+			if (strlen($value) == 18) {
+				$cek |= TRUE;
+			} else {
+				$cek |= FALSE;
+			}
+		}
+
+		return boolval($cek);
+	}
+
+    function _isAdaNIPSaya($string)
+	{
+
+
+		$user_id  = $this->general_library->getUserName();
+
+		$number = $this->_extract_numbers($string);
+		$cek  = 0;
+		foreach ($number as $value) {
+			if ($value == $user_id) {
+				$cek |= TRUE;
+			} else {
+				$cek |= FALSE;
+			}
+		}
+
+		return boolval($cek);
+	}
+
+    function _getNip($string)
+	{
+		$number = $this->_extract_numbers($string);
+		$r      = 0;
+		foreach ($number as $value) {
+			if (strlen($value) == 18) {
+				$r  = $value;
+			}
+		}
+
+		return $r;
+	}
+}

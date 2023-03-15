@@ -17,6 +17,7 @@ h2{
   display:flex;
   flex-direction: column;
   align-items: left;
+  width:100%;
 }
 .tab{
   cursor: pointer;
@@ -32,11 +33,11 @@ h2{
   font-size : 12px;
 }
 .panels{
-  /* background:#000; */
+  /* background:#f2f4f8; */
   /* box-shadow: 0 2rem 2rem #00000080; */
   min-height:200px;
   width:100%;
-  max-width:500px;
+  /* max-width:500px; */
   border-radius:3px;
   overflow:hidden;
   padding:20px;  
@@ -103,8 +104,8 @@ h2{
         <div class="card">
        
             <div class="card-body">
-                
-<div class="warpper">
+           
+<div class="warpper" style="background-color:#fff;">
   <input class="radio" id="pangkat" name="group" type="radio" checked>
   <input class="radio" id="gb" name="group" type="radio">
   <input class="radio" id="pendidikan" name="group" type="radio">
@@ -134,7 +135,6 @@ h2{
   <label class="tab" id="arsip-tab" for="arsip">Arsip Lainnya</label>
     </div>
   <div class="panels">
-
   <div class="panel" id="pangkat-panel">
     <div class="panel-title">Pangkat</div>
     <div id="form_pangkat"></div>
@@ -188,6 +188,16 @@ h2{
 </div>
 
 
+
+
+          
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- tutup upload dokumen  -->
+
 <script>
 
 $(function(){
@@ -207,135 +217,4 @@ $(function(){
     $('#loader').hide()    
     })
 });
-</script>
-
-          
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-<!-- tutup upload dokumen  -->
-
-<!-- <div class="container-fluid p-0">
-<h1 class="h3 mb-3">Lihat Dokumen</h1>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <!-- <div class="card-header">
-                <h5 class="card-title mb-0">Upload</h5>
-            </div> -->
-            <div class="card-body">
-            
-            <div class="col-12 tableFixHead">
-			<div class="card card-default" id="list_dokumen_pns">
-			
-	</div>
-			
-</div>
-            </div>
-        </div>
-    </div>
-</div>
-</div> -->
-
- 
-
-
-
-		<script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script>
-                         
-<script type="text/javascript">
-
-$(function(){
-        loadDokumenPns()
-    })
-
-    function loadDokumenPns(){
-    
-
-        $('#list_dokumen_pns').html('')
-        // $('#list_dokumen_pns').append(divLoaderNavy)
-        $('#list_dokumen_pns').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDokumenPns")?>', function(){
-            // $('#loader').hide()
-        })
-    }
-
-		   
-			Dropzone.options.upload = {
-                
-				addRemoveLinks : true,
-				dictDefaultMessage: "Click atau Letakkan file disini",
-				success: function(file, response){
-					$('#token').val(response.token);
-					if(file.previewElement){
-						$(file.previewElement).addClass("dz-success").find('.dz-error-message').text(response.error);
-                    }
-                    loadDokumenPns()	
-				},
-				error: function(file, response){
-					$('#token').val(response.token);
-					if(file.previewElement){
-						$(file.previewElement).addClass("dz-error").find('.dz-error-message').text(response.error);
-                      
-					}	
-				}
-			};
-			
-			$('[data-tooltip="tooltip"]').tooltip();
-            
-
-//  Search table
-'use strict';
-
-var TableFilter = (function() {
- var Arr = Array.prototype;
-		var input;
-  
-		function onInputEvent(e) {
-			input = e.target;
-			var table1 = document.getElementsByClassName(input.getAttribute('data-table'));
-			Arr.forEach.call(table1, function(table) {
-				Arr.forEach.call(table.tBodies, function(tbody) {
-					Arr.forEach.call(tbody.rows, filter);
-				});
-			});
-		}
-
-		function filter(row) {
-			var text = row.textContent.toLowerCase();
-       //console.log(text);
-      var val = input.value.toLowerCase();
-      //console.log(val);
-			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
-		}
-
-		return {
-			init: function() {
-				var inputs = document.getElementsByClassName('table-filter');
-				Arr.forEach.call(inputs, function(input) {
-					input.oninput = onInputEvent;
-				});
-			}
-		};
- 
-	})();
- TableFilter.init(); 
- // Tutup Search table		
-		
-       function toggleFormatDok(){
-       
-                    var x = document.getElementById("format-dokumen");
-                    if (x.style.display === "none") {
-                        // x.style.display = "block";
-                        $("#format-dokumen").show('fast');
-                        $('#btn_format_dok').html('Lihat Format Dokumen <i class="fa fa-angle-up" aria-hidden="true"></i>')
-                    } else {
-                        $('#btn_format_dok').html('Lihat Format Dokumen <i class="fa fa-angle-down" aria-hidden="true"></i>')
-                        $("#format-dokumen").hide('fast');
-                        // x.style.display = "none";
-                    }
-                  
-                }
-
 </script>

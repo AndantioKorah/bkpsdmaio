@@ -396,7 +396,7 @@
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
 <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
 <!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
-<script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script>
+<!-- <script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script> -->
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
 <!-- <script src="<?=base_url('assets/js/adminlte.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->

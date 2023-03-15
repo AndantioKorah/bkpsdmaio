@@ -125,6 +125,28 @@ class M_Kepegawaian extends CI_Model
                             ->get()->result_array();
         }
 
+        function getPendidikan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.tktpendidikan d','c.tktpendidikan = d.id_tktpendidikan')
+                            ->where('a.id', 193)
+                            ->order_by('c.tglijasah','desc')
+                            ->get()->result_array();
+        }
+
+        function getJabatan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->where('a.id', 193)
+                            ->order_by('c.tmtjabatan','desc')
+                            ->get()->result_array();
+        }
+
         function isArsip($data)
 	{
 	    $r = FALSE;

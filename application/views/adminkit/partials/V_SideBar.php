@@ -140,8 +140,6 @@
 	<?php } ?>
 
 	</li>
-
-<?php } ?>
 </ul>
 <div class="mt-5">
 	<p></p>

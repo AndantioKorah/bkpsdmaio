@@ -27,7 +27,10 @@ class C_Kepegawaian extends CI_Controller
 	{
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
-		// dd($data['pangkat']);
+		$data['pendidikan'] = $this->kepegawaian->getPendidikan();
+		$data['jabatan'] = $this->kepegawaian->getJabatan();
+		// $data['tes'] = $this->general_library->getId();
+		// dd($data);
 		render('kepegawaian/V_LihatPNS', '', '', $data);
 	}
 

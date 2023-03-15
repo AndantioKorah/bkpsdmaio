@@ -1,3 +1,18 @@
+<style>
+  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .nav-link{
+    color: var(--primary-color);
+  }
+  
+  .nav-link:hover{
+    background-color: #e2e2e2;
+    transition: .1s;
+  }
+</style>
 <div class="card p-3">
   <div class="tabs-to-dropdown">
     <div class="nav-wrapper d-flex align-items-center justify-content-between">
@@ -161,6 +176,32 @@
           <p>Proin maximus iaculis rhoncus. Morbi ante nibh, facilisis semper faucibus consequat, facilisis ut ante. Mauris at nisl vitae justo auctor imperdiet. Cras sodales, justo sed tincidunt venenatis, ante erat ultricies eros, at mollis eros lorem ac mi. Fusce sagittis nibh nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec mollis eros sodales convallis faucibus. Vestibulum sit amet odio lectus. Duis eu dolor vitae est venenatis viverra eu sit amet nisl. Aenean vel sagittis odio. Quisque in lacus orci. Etiam ut odio lobortis odio consectetur ornare.</p>
         </div>
       </div>
+      <!-- <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-news-tab">
+      <table class="table table-striped table-bordered" style="width:100%;" id="data_table">
+                        <thead class="thead-dark">
+                          <th width="20">No</th>
+                          <th width="258">Jabatan</th>
+                          <th width="185">TMT Jabatan</th>
+                          <th width="205">PD</th>
+                          <th width="96">Nomor SK</th>
+                          <th width="184">Tanggal SK</th>
+                          <th width="60">File</th>
+                        </thead>	
+                        <tbody>
+                        <?php $no = 1; foreach($jabatan as $rs) {?>
+                        <tr>
+                          <td align="center"><?=$no++;?></td>
+                          <td><?=$rs['nm_jabatan'];?></td>
+                          <td><?=$rs['jurusan'];?></td>
+                          <td><?=$rs['fakultas']; ?></td>
+                          <td><?=$rs['namasekolah']; ?></td>
+                          <td><?=$rs['tahunlulus']; ?></td> 
+                          <td><?=$rs['gambarsk']; ?></td> 
+                        </tr>
+                        <?php } ?>
+                        </tbody>											
+      </table>
+      </div> -->
     </div>
   </div>
 </div>

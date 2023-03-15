@@ -166,7 +166,7 @@
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpangkat c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
-                            ->where('a.id', 'b.id_peg')
+                            ->where('a.id', 193)
                             ->order_by('c.tglsk', 'desc')
                             ->get()->result_array();
 
@@ -174,6 +174,28 @@
             // ->from('db_pegawai.pegpangkat a')
             // ->where('a.id_pegawai',$this->general_library->getId());
             // return $this->db->get()->result_array();
+        }
+
+        function getPendidikan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.tktpendidikan d','c.tktpendidikan = d.id_tktpendidikan')
+                            ->where('a.id', 193)
+                            ->order_by('c.tglijasah','desc')
+                            ->get()->result_array();
+        }
+
+        function getJabatan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->where('a.id', 193)
+                            ->order_by('c.tmtjabatan','desc')
+                            ->get()->result_array();
         }
 
         function isArsip($data)

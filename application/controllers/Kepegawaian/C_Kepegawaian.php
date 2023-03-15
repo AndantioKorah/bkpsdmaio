@@ -18,6 +18,14 @@ class C_Kepegawaian extends CI_Controller
 		render('kepegawaian/V_UploadDokumen', '', '', $data);
 	}
 
+	public function profil()
+	{
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
+		// dd($data['pangkat']);
+		render('kepegawaian/V_LihatPNS', '', '', $data);
+	}
+
 	public function loadDokumenPns()
 	{
 

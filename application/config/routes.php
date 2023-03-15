@@ -73,3 +73,5 @@ $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 // Kepegawaian
 $route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
+$route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/profil';

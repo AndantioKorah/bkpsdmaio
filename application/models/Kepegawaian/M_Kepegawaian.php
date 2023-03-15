@@ -98,32 +98,47 @@ class M_Kepegawaian extends CI_Model
             $this->db->where('dokumen_upload.nip', $cariName);
         }
 
-        if (!empty($unor)) {
-            $this->db->where('dokumen_upload.last_unor', $unor);
+        function getProfilPegawai(){
+            $username = $this->general_library->getUserName();
+            $this->db->select('a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
+                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                ->where('a.nipbaru_ws', $username)
+                ->limit(1);
+            return $this->db->get()->row_array();
         }
-        $query = $this->db->get('db_siladen.dokumen_upload');
-        return $query->result();
-    }
 
+        function getPangkatPegawai(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpangkat c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
+                            ->where('a.id', 'b.id_peg')
+                            ->order_by('c.tglsk', 'desc')
+                            ->get()->result_array();
 
-    function getDokumen()
-    {
-        $this->db->where('aktif', 1);
-        $this->db->ORDER_BY('nama_dokumen');
-        return $this->db->get('db_siladen.dokumen');
-    }
-
-    function isArsip($data)
-    {
-        $r = FALSE;
-        $find    = $data;
-
-        $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen ) a
-            WHERE a.result = 1 AND a.aktif IS NOT NULL");
-
-        if ($query->num_rows() > 0) {
-            $r         = TRUE;
+            // $this->db->select('a.*')
+            // ->from('db_pegawai.pegpangkat a')
+            // ->where('a.id_pegawai',$this->general_library->getId());
+            // return $this->db->get()->result_array();
         }
+
+        function isArsip($data)
+	{
+	    $r = FALSE;
+		$find    = $data;
+		
+	    $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen ) a
+            WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
+            
+		if($query->num_rows() > 0){
+		    $r 		= TRUE;
+		}
         return $r;
     }
 

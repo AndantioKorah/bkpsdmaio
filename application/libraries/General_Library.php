@@ -1,4 +1,7 @@
 <?php
+        
+// date_default_timezone_set("Asia/Singapore");
+date_default_timezone_set("America/Chicago");
 
 class General_library
 {
@@ -9,6 +12,7 @@ class General_library
 
     public function __construct()
     {
+        // dd(date('Y-m-d H:i:s'));
         $this->nikita = &get_instance();
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
@@ -18,6 +22,10 @@ class General_library
         date_default_timezone_set("Asia/Singapore");
         $this->nikita->load->model('general/M_General', 'm_general');
         $this->nikita->load->model('user/M_User', 'm_user');
+    }
+
+    public function getServerDateTime(){
+        return date('Y-m-d H:i:s');
     }
 
     public function logErrorTelegram($data){
@@ -54,7 +62,7 @@ class General_library
     }
 
     public function getProfilePicture(){
-        $photo = 'assets/img/user.png';
+        $photo = 'assets/img/user-icon.png';
         if($this->userLoggedIn['profile_picture']){
             $photo = 'assets/profile_picture/'.$this->userLoggedIn['profile_picture'];
         }
@@ -417,4 +425,7 @@ class General_library
         // $image['file_name'] = $resize_image;
         return ['code' => '0', 'data' => $image];
     }
+
+
+
 }

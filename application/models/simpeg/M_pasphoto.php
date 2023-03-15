@@ -11,7 +11,8 @@ class M_pasphoto extends CI_Model
 	function getNipbaru()
 	{
 
-		$id_peg  = $this->session->userdata('id_peg');
+		$username = $this->general_library->getUserName();
+		$id_peg  = $this->m_general->getIdPeg($username);
 		$sql = "SELECT  REPLACE(TRIM(nipbaru),' ','') nipbaru FROM simpeg_manado.pegawai WHERE id_peg='$id_peg' ";
 		$query      = $this->db->query($sql);
 
@@ -26,9 +27,9 @@ class M_pasphoto extends CI_Model
 
 
 
-	function getIDPasPhoto()
+	function getIDPasPhoto($id_peg)
 	{
-		$id_peg  = $this->session->userdata('id_peg');
+		// $id_peg  = $this->session->userdata('id_peg');
 
 
 
@@ -213,9 +214,9 @@ class M_pasphoto extends CI_Model
 		return $this->db->update('users', $data);
 	}
 
-	function updateUsulWithFile($fileupload)
+	function updateUsulWithFile($fileupload, $id_peg)
 	{
-		$id_peg  = $this->session->userdata('id_peg');
+		// $id_peg  = $this->session->userdata('id_peg');
 
 		$data['pasphoto']     = $fileupload['file_name'];
 

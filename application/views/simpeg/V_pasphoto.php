@@ -6,7 +6,7 @@
           <h3 class="card-title col-md-10">Pas Photo / Usul ID Card</h3>
 
           <div class="col-md-2">
-            <a href="<?php echo site_url() ?>/simpeg/tambahUsulIDCard" class="btn btn-block btn-danger btn-sm"><i class="fa fa-plus"></i> Usul ID Card</a>
+            <a href="<?php echo site_url() ?>kepegawaian/C_pasphoto/tambahUsulIDCard" class="btn btn-block btn-danger btn-sm"><i class="fa fa-plus"></i> Usul ID Card</a>
           </div>
         </div>
       </div>
@@ -29,9 +29,9 @@
 
                 </div>
               </td>
-              <td width="336" rowspan="17">
+              <td width="777" rowspan="7">
 
-                <div align="center"><img src="<?php echo base_url() ?>uploads/<?= $nip_baru ?>/<?= $id_pasphoto ?>" alt="" width="200" align="top"></div>
+                <div align="center"><img style="background-color:powderblue;" src="<?php echo base_url() ?>uploads/<?= $nip_baru ?>/<?= $id_pasphoto ?>" alt="" width="200" align="top"></div>
               </td>
             </tr>
 
@@ -71,7 +71,7 @@
                 </span></td>
             </tr>
             <tr>
-              <td width="199">JPT / Eselon II</td>
+              <td width="277">JPT / Eselon II</td>
               <td width="3">:</td>
               <td width="409">Warna Merah </td>
             </tr>

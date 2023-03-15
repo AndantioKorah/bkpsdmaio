@@ -8,14 +8,17 @@ class C_pasphoto extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('simpeg/m_pasphoto', 'simpeg');
+		$this->load->model('general/M_General', 'm_general');
 	}
 
 	public function pasPhoto()
 	{
 
 		// $this->setLayout('simpeg/V_pasphoto');
-		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto();
-		$data['nip_baru']		 = $this->simpeg->getNipbaru();
+		$username = $this->general_library->getUserName();
+		$id_peg = $this->m_general->getIdPeg($username);
+		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto($id_peg);
+		$data['nip_baru']		 = $this->general_library->getUserName();
 		$data['pesan']           = '';
 		render('simpeg/V_pasphoto', '', '', $data);
 	}
@@ -23,6 +26,8 @@ class C_pasphoto extends CI_Controller
 
 	public function update()
 	{
+		$username = $this->general_library->getUserName();
+		$id_peg = $this->m_general->getIdPeg($username);
 
 		if ($_FILES['filePengantar']['name'] == NULL) {
 			$data['response']		= FALSE;
@@ -31,7 +36,7 @@ class C_pasphoto extends CI_Controller
 
 
 			if ($_FILES['filePengantar']['name'] != NULL) {
-				$nip_baru		 = $this->simpeg->getNipbaru();
+				$nip_baru		 = $this->general_library->getUserName();
 				$target_dir  				= './uploads/' . $nip_baru;
 
 				// buat folder baru jika tidak ada
@@ -61,7 +66,7 @@ class C_pasphoto extends CI_Controller
 				$db_debug 			= $this->db->db_debug;
 				$this->db->db_debug = FALSE;
 
-				if (!$this->simpeg->updateUsulWithFile($fileupload)) {
+				if (!$this->simpeg->updateUsulWithFile($fileupload, $id_peg)) {
 					$error = $this->db->error();
 					if (!empty($error)) {
 						$data['response']		= FALSE;
@@ -103,8 +108,10 @@ class C_pasphoto extends CI_Controller
 		}
 
 		// $this->setLayout('simpeg/V_pasphoto');
-		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto();
-		$data['nip_baru']		 = $this->simpeg->getNipbaru();
+		$username = $this->general_library->getUserName();
+		$id_peg = $this->m_general->getIdPeg($username);
+		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto($id_peg);
+		$data['nip_baru']		 = $this->general_library->getUserName();
 		$data['show']           = FALSE;
 		render('simpeg/V_pasphoto', '', '', $data);
 
@@ -118,11 +125,12 @@ class C_pasphoto extends CI_Controller
 
 
 
+
 	//-------------------------------------------------------------------------------------------
 	//tambah usul idcard
 	public function tambahUsulIDCard()
 	{
-
+		/*
 		// header menu message
 		$nip_baru		 = $this->simpeg->getNipbaru();
 		$nm_pangkat		 = $this->simpeg->getPangkat();
@@ -137,7 +145,24 @@ class C_pasphoto extends CI_Controller
 		$this->setLayout('simpeg/tambah');
 
 		$this->render('', ['nip_baru' => $nip_baru, 'asn' => $asn, 'nm_pangkat' => $nm_pangkat, 'nama_jabatan' => $jabatan, 'nm_unitkerja' => $nm_unitkerja, 'pesan' => $pesan, 'pasphoto' => $id_pasphoto, 'dokumen' => $dokumen]);
+*/
+		$username = $this->general_library->getUserName();
+		$id_peg = $this->m_general->getIdPeg($username);
+		// header menu message
+		$data['nip_baru']		 = $this->simpeg->getNipbaru();
+		$data['nm_pangkat']		 = $this->simpeg->getPangkat();
+		$data['jabatan'] 		 = $this->simpeg->getJabatan();
+		$data['nm_unitkerja']		 = $this->simpeg->getNamaPerangkatDaerah();
+		$data['id_pasphoto']		 = $this->simpeg->getIDPasPhoto($id_peg);
+		$data['query']      =  $this->simpeg->getNama();
+		//$data['asn']            = $query->row();
+		$data['dokumen']         	= $this->simpeg->getDokumen();
+		$data['pesan']           = '';
+
+
+		render('simpeg/V_tambah', '', '', $data);
 	}
+
 
 
 	public function kirimUsul()

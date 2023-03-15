@@ -9,7 +9,12 @@ class C_Kepegawaian extends CI_Controller
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
-    }
+	}
+	
+	public function loadListPangkat(){
+		$data['result'] = $this->kepegawaian->getPangkatPegawai();
+		$this->load->view('kepegawaian/V_ListPangkat', $data);
+	}
 
     public function uploadDokumen(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()

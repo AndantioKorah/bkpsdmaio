@@ -41,7 +41,7 @@
 <link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
 <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
 
-	<title>Siladen</title>
+	<title><?=TITLES?></title>
 
   <link rel="stylesheet" src="<?=base_url('assets/css/general.css')?>">
 	<link href="<?=base_url('')?>assets/adminkit/css/app.css" rel="stylesheet">
@@ -53,7 +53,7 @@
 	<style>
 
 :root{
-  --primary-color: #20364a;
+  --primary-color: #222e3c;
 }
 
 .content{
@@ -252,6 +252,19 @@
     .btn-primary{
       background-color: var(--primary-color) !important;
       color: white !important;
+    }
+
+    .btn-navy-outline{
+        color: var(--primary-color) !important;
+        background-color: white !important;
+        border-color: var(--primary-color) !important;
+        text-decoration: none;
+    }
+
+    .btn-navy-outline:hover{
+        color: white !important;
+        background-color: var(--primary-color) !important;
+        text-decoration: none;
     }
 
     .btn-navy{

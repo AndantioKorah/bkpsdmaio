@@ -34,66 +34,66 @@
 </style>
 
 <ul class="sidebar-nav">
-					<li class="sidebar-header">
-						Main
-					</li>
+	<li class="sidebar-header">
+		Main
+	</li>
+
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="#">
+			<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+		</a>
+	</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="<?=base_url();?>/kepegawaian/profil">
+						<a class="sidebar-link" href="<?=base_url();?>kepegawaian/profil">
              			 <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
 
 
-					<li class="sidebar-header">
-						Kepegawaian
-					</li>
+	<li class="sidebar-header">
+		Kepegawaian
+	</li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="<?= base_url();?>kepegawaian/upload">
-						<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
-            			</a>
-					</li>
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?= base_url(); ?>/kepegawaian/upload">
+			<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
+		</a>
+	</li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-						<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
-           				 </a>
-					</li>
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="#">
+			<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
+		</a>
+	</li>
 
-					<!-- <li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="ui-cards.html">
               <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Gaji Berkala</span>
             </a>
 					</li> -->
 
-					<!-- <li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="ui-typography.html">
               <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Pensiun</span>
             </a>
 					</li> -->
 
-					<!-- <li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="icons-feather.html">
               <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Cuti</span>
             </a>
 					</li> -->
 
-					<li class="sidebar-header">
-						Kinerja
-					</li>
+	<li class="sidebar-header">
+		Kinerja
+	</li>
 
-					<?php 
-					$active_role = $this->session->userdata('active_role');
-					$list_menu = $this->session->userdata('list_menu'); 
-					if($list_menu){  
-						?>
+	<?php
+	$active_role = $this->session->userdata('active_role');
+	$list_menu = $this->session->userdata('list_menu');
+	if ($list_menu) {
+	?>
 
 					<li class="sidebar-item ">
 					<?php foreach($list_menu as $l){ ?>
@@ -129,8 +129,18 @@
 						<?php } ?>
 						<?php } ?>
 
-					</li>
+		<?php if ($l['child']) { ?>
+			<?php foreach ($l['child'] as $ch) { ?>
+				<ul id="menu<?= $l['id'] ?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+					<li class="sidebar-item "><a class="sidebar-link" href="<?= base_url($ch['url']) ?>">
+							<i class="align-middle me-2 fas fa-fw fa-chevron-right"></i><?= $ch['nama_menu'] ?></a></li>
+				</ul>
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
 
-					<?php } ?>
-					</ul>
-					<div class="mt-5"><p></p></div>
+	</li>
+</ul>
+<div class="mt-5">
+	<p></p>
+</div>

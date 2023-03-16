@@ -2,26 +2,27 @@
 
 class C_Kepegawaian extends CI_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
-        if(!$this->general_library->isNotMenu()){
-            redirect('logout');
-        };
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+		$this->load->model('general/M_General', 'general');
+		if (!$this->general_library->isNotMenu()) {
+			redirect('logout');
+		};
 	}
-	
+
 	public function loadListPangkat(){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai();
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
-	public function uploadDokumen()
-	{
-		// $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
-		$data['dokumen']         	= $this->kepegawaian->getDokumen();
-		render('kepegawaian/V_UploadDokumen', '', '', $data);
-	}
+	public function uploadDokumenOld(){
+        // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+        $data['dokumen']         	= $this->kepegawaian->getDokumen();
+        render('kepegawaian/V_UploadDokumen', '', '', $data);
+    }
+
 
 	public function profil()
 	{
@@ -65,19 +66,26 @@ class C_Kepegawaian extends CI_Controller
 		readfile($flok);
 	}
 
+	public function doUpload2()
+	{ 
+		echo json_encode( $this->kepegawaian->doUpload());
+	}
+
 	public function doUpload()
 	{
 
-
+		// dd($_FILES['file']['name']);	
 		// validasi NIP
 		if (!$this->_isAdaNIP($_FILES['file']['name'])) {
-			$data['error']    = 'Dokumen harus terdapat NIP';
-			$data['token']    = $this->security->get_csrf_hash();
-			$this->output
-				->set_status_header(406)
-				->set_content_type('application/json', 'utf-8')
-				->set_output(json_encode($data));
-			return FALSE;
+			// $data['error']    = 'Dokumen harus terdapat NIP';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+			// return FALSE;
+			$res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+			return $res;
 		}
 
 		// validasi NIP apakah terdapat nip saya
@@ -187,20 +195,7 @@ class C_Kepegawaian extends CI_Controller
 		}
 	}
 
-	function _isAdaNIP($string)
-	{
-		$number = $this->_extract_numbers($string);
-		$cek  = 0;
-		foreach ($number as $value) {
-			if (strlen($value) == 18) {
-				$cek |= TRUE;
-			} else {
-				$cek |= FALSE;
-			}
-		}
-
-		return boolval($cek);
-	}
+	
 
 	function _extract_numbers($string)
 	{
@@ -208,36 +203,25 @@ class C_Kepegawaian extends CI_Controller
 		return $match[0];
 	}
 
-	function _isAdaNIPSaya($string)
-	{
+	
 
 
-		$user_id  = $this->general_library->getUserName();
-
-		$number = $this->_extract_numbers($string);
-		$cek  = 0;
-		foreach ($number as $value) {
-			if ($value == $user_id) {
-				$cek |= TRUE;
-			} else {
-				$cek |= FALSE;
-			}
-		}
-
-		return boolval($cek);
-	}
+	
 
 
-	function _getNip($string)
-	{
-		$number = $this->_extract_numbers($string);
-		$r      = 0;
-		foreach ($number as $value) {
-			if (strlen($value) == 18) {
-				$r  = $value;
-			}
-		}
+	public function uploadDokumen(){
+        // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+        $data['dokumen']         	= $this->kepegawaian->getDokumen();
+        render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    }
 
-		return $r;
-	}
+	public function LoadFormDokPangkat(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadDokPangkat', $data);
+    }
+
+
 }

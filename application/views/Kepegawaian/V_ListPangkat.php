@@ -1,6 +1,6 @@
 <?php if($result){ ?>
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12 table-responsive">
       <table class="table table-striped">
         <thead>
           <th class="text-center">No</th>
@@ -34,10 +34,10 @@
       </table>
     </div>
   </div>
-
+ 
 <script>
   function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }
 </script>
 <?php } else { ?>

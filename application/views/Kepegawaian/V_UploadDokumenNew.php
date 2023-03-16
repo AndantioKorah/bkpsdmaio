@@ -28,9 +28,10 @@ h2{
   display:inline-block;
   color:#fff;
   border-radius:3px 3px 0px 0px;
-  box-shadow: 0 0.5rem 0.8rem #00000080;
+  /* box-shadow: 0 0.5rem 0.8rem #00000080; */
   margin-bottom: 10px;
   font-size : 12px;
+  border-color : #000;
 }
 .panels{
   /* background:#f2f4f8; */
@@ -41,6 +42,7 @@ h2{
   border-radius:3px;
   overflow:hidden;
   padding:20px;  
+  margin-top:-20px;
 }
 .panel{
   display:none;
@@ -91,23 +93,24 @@ h2{
 #arsip:checked ~ .tabs #arsip-tab{
   background:#fffffff6;
   color:#000;
-  border-top: 3px solid #000;
+  border-top: 3px solid #222e3c;
+  border-bottom: 2px solid #222e3c;
 }
      </style>
 
 <!-- upload dokumen  -->
 <div class="container-fluid p-0">
-<h1 class="h3 mb-3">Upload Dokumen</h1>
+<!-- <h1 class="h3 mb-3">Upload Dokumen</h1> -->
 <div class="row">
     <div class="col-12">
         
         <div class="card">
        
             <div class="card-body">
-           
+         
 <div class="warpper" style="background-color:#fff;">
-  <input class="radio" id="pangkat" name="group" type="radio" checked>
-  <input class="radio" id="gb" name="group" type="radio">
+  <input onclick="loadFormPangkat()" class="radio" id="pangkat" name="group" type="radio" checked>
+  <input onclick="loadFormGajiBerkala()" class="radio" id="gb" name="group" type="radio">
   <input class="radio" id="pendidikan" name="group" type="radio">
   <input class="radio" id="jabatan" name="group" type="radio">
   <input class="radio" id="diklat" name="group" type="radio">
@@ -119,6 +122,7 @@ h2{
   <input class="radio" id="penugasan" name="group" type="radio">
   <input class="radio" id="cuti" name="group" type="radio">
   <input class="radio" id="arsip" name="group" type="radio">
+  
   <div class="tabs">
   <label class="tab" id="pangkat-tab" for="pangkat">Pangkat</label>
   <label class="tab" id="gb-tab" for="gb">Gaji Berkala</label>
@@ -134,6 +138,7 @@ h2{
   <label class="tab" id="cuti-tab" for="cuti">Cuti</label>
   <label class="tab" id="arsip-tab" for="arsip">Arsip Lainnya</label>
     </div>
+    <hr>
   <div class="panels">
   <div class="panel" id="pangkat-panel">
     <div class="panel-title">Pangkat</div>
@@ -142,6 +147,7 @@ h2{
 
   <div class="panel" id="gb-panel">
     <div class="panel-title">Gaji Berkala</div>
+    <div id="form_gaji_berkala"></div>
   </div>
 
   <div class="panel" id="pendidikan-panel">
@@ -200,9 +206,11 @@ h2{
 
 <script>
 
+
+
 $(function(){
   $('#form_pangkat').html(' ')
-    // $('#form_pangkat').append(divLoaderNavy)
+    $('#form_pangkat').append(divLoaderNavy)
     $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>', function(){
     $('#loader').hide()    
     })
@@ -210,11 +218,24 @@ $(function(){
         
   })
 
-  $('#pangkat').click(function(e) {  
-    $('#form_pangkat').html(' ')
-    // $('#form_pangkat').append(divLoaderNavy)
+ function loadFormPangkat(){
+  $('#form_pangkat').html(' ')
+    $('#form_pangkat').append(divLoaderNavy)
     $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>', function(){
     $('#loader').hide()    
     })
-});
+ }
+
+ function loadFormGajiBerkala(){
+  
+  $('#form_gaji_berkala').html(' ')
+    $('#form_gaji_berkala').append(divLoaderNavy)
+    $('#form_gaji_berkala').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormGajiBerkala/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+
+
+
 </script>

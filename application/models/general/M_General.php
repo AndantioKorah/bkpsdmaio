@@ -245,12 +245,16 @@
 
 
         public function getIdPeg($username){
-            $query = $this->db->select('a.id_peg')
-            ->from('db_pegawai.pegawai a')
-            ->where('nipbaru_ws', $username)
+            $query = $this->db->select('b.id_peg')
+            // ->from('db_pegawai.pegawai a')
+            // ->where('nipbaru_ws', $username)
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->where('a.id', $this->general_library->getId())
             ->get()->row_array();
             return $query['id_peg'];
         }
+
 
 	}
 ?>

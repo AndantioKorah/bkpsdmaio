@@ -95,35 +95,6 @@ class M_Kepegawaian extends CI_Model
     
             $i = 0;		
         
-            // foreach ($this->column_search_lihat_dokumen_pns as $item) // loop column 
-            // {
-            //     if($_GET['search']['value']) // if datatable send POST for search
-            //     {				
-            //         if($i===0) // first loop
-            //         {
-            //             $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-            //             $this->db->like($item, $_GET['search']['value']);
-            //         }
-            //         else
-            //         {
-            //             $this->db->or_like($item, $_GET['search']['value']);
-            //         }
-    
-            //         if(count($this->column_search_lihat_dokumen_pns) - 1 == $i) //last loop
-            //             $this->db->group_end(); //close bracket
-            //     }
-            //     $i++;
-            // }
-            
-            // if(isset($_GET['order'])) // here order processing
-            // {
-            //     $this->db->order_by($this->column_order_lihat_dokumen_pns[$_GET['order']['0']['column']], $_GET['order']['0']['dir']);
-            // } 
-            // else if(isset($this->order_lihat_dokumen_pns))
-            // {
-            //     $order = $this->order_lihat_dokumen_pns;
-            //     $this->db->order_by(key($order), $order[key($order)]);
-            // }
             
             if($cariBy == 1)
             {
@@ -195,13 +166,13 @@ class M_Kepegawaian extends CI_Model
                             ->get()->result_array();
         }
 
-        function isArsip($data)
+        function isArsip($data, $id_dok)
 	{
 	    $r = FALSE;
 		$find    = $data;
 		
 	    $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$find') result from db_siladen.dokumen ) a
-            WHERE a.result = 1 AND a.aktif IS NOT NULL"); 
+            WHERE a.result = 1 and a.id_dokumen = $id_dok AND a.aktif IS NOT NULL"); 
             
 		if($query->num_rows() > 0){
 		    $r 		= TRUE;
@@ -245,21 +216,21 @@ class M_Kepegawaian extends CI_Model
         return $r;
     }
 
-    function isAllowSize($file)
+    function isAllowSize($file, $id_dok)
     {
         $file_name  = $file['name'];
         $file_size  = $file['size'];
 
-        $query = $this->db->query("SELECT * FROM (SELECT *,locate(nama_dokumen,'$file_name') result from db_siladen.dokumen ) a
-        WHERE a.result = 1 AND a.aktif IS NOT NULL");
+        $query = $this->db->query("SELECT * FROM  db_siladen.dokumen  a
+        WHERE a.id_dokumen = $id_dok  AND a.aktif IS NOT NULL");
+        // dd($query->num_rows());
 
         if ($query->num_rows() > 0) {
 
             $row             = $query->row();
             $file_size      = round($file_size / 1024, 2);
-
             if ($file_size > $row->file_size) {
-                $data['pesan']          = " File Dokumen Jenis " . $row->nama_dokumen . " Hanya diizinkan Maksimal " . round($row->file_size / 1024, 2) . " MB";
+                $data['pesan']          = " File Dokumen Hanya diizinkan Maksimal " . round($row->file_size / 1024, 2) . " MB";
                 $data['response']         = FALSE;
             } else {
                 $data['pesan']     = " File diizinkan";
@@ -275,22 +246,46 @@ class M_Kepegawaian extends CI_Model
 
     function insertUpload($data)
     {
-        
-       	
+       
         $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
-        $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
+      
 
-        $dataInsert['id_pegawai']     = "1";
+            $query = $this->db->select('b.id_peg')
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->where('a.id', $this->general_library->getId())
+            ->get()->row_array();
+            $id_peg =  $query['id_peg'];
+        $id_dok  = $this->input->post('id_dokumen');
+        // dd($id_dok);
+        if($id_dok == 4){
+             //PANGKAT   
+        $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
+        $dataInsert['id_pegawai']     = $id_peg;
         $dataInsert['jenispengangkatan']      = $this->input->post('jenis_pengangkatan');
         $dataInsert['pangkat']      = $this->input->post('pangkat');
         $dataInsert['masakerjapangkat']     =$this->input->post('masa_kerja');
         $dataInsert['pejabat']      = $this->input->post('pejabat');
         $dataInsert['nosk']      = $this->input->post('no_sk');
         $dataInsert['tglsk']      = $tgl_sk;
-        $dataInsert['gambarsk']      = $data['file_name'];
+        $dataInsert['gambarsk']      = $data['nama_file'];
         $dataInsert['tmtpangkat']      = $tmt_pangkat;
-
         $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
+          // PANGKAT
+        } else if($id_dok == 7){
+            $tmt_gaji_berkala = date("Y-m-d", strtotime($this->input->post('tmt_gaji_berkala')));
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['pangkat']      = $this->input->post('pangkat');
+            $dataInsert['masakerja']     =$this->input->post('masa_kerja');
+            $dataInsert['pejabat']      = $this->input->post('pejabat');
+            $dataInsert['nosk']      = $this->input->post('no_sk');
+            $dataInsert['tglsk']      = $tgl_sk;
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $dataInsert['tmtgajiberkala']      = $tmt_gaji_berkala;
+            $result = $this->db->insert('db_pegawai.peggajiberkala', $dataInsert);
+        }
+      
+
         return $result;
     }
 
@@ -383,86 +378,26 @@ class M_Kepegawaian extends CI_Model
         return $this->db->get()->result_array(); 
     }
 
+    public function getOne($tableName, $fieldName, $fieldValue)
+    {
+        $this->db->select('*')
+        ->from($tableName)
+        ->where($fieldName, $fieldValue);
+        return $this->db->get()->row_array();
+    }
+
     public function doUpload()
 	{
 
-		// dd($_FILES['file']['name']);	
-		// validasi NIP
-		if (!$this->_isAdaNIP($_FILES['file']['name'])) {
-			// $data['error']    = 'Dokumen harus terdapat NIP';
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
-			// return FALSE;
-			$res = array('msg' => 'Dokumen harus terdapat NIP', 'success' => false);
-			return $res;
-		}
-
-		// validasi NIP apakah terdapat nip saya
-		if (!$this->_isAdaNIPSaya($_FILES['file']['name'])) {
-			// $data['error']    = 'Dokumen harus  NIP Saya, cek ulang NIP di nama Dokumen';
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
-			$res = array('msg' => 'Dokumen harus  NIP Saya, cek ulang NIP di nama Dokumen', 'success' => false);
-			return $res;
-		}
-		// dd($_FILES['file']['name']);
-		// cek apakah ada dalam daftar arsip
-
-		if (!$this->isArsip($_FILES['file']['name'])) {
-
-			// $data['error']    = 'File ini tidak ada dalam daftar arsip';
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
-                $res = array('msg' => 'File ini tidak ada dalam daftar arsip', 'success' => false);
-                return $res;
-		}
+        $id_dok = $this->input->post('id_dokumen');
 
 
-		// cek apakah sudah sesuai format
-		if (!$this->isFormatOK($_FILES['file']['name'])) {
-
-			// $data['error']    = 'File ini belum sesuai format';
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
-                $res = array('msg' => 'File ini belum sesuai format', 'success' => false);
-                return $res;
-		}
-
-
-		// cek minor tidak ada kode atau tahun
-		if (!$this->isMinorOK($_FILES['file']['name'])) {
-			// $data['error']    = 'File ini KODE atau TAHUN belum sesuai format';
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
-                $res = array('msg' => 'File ini KODE atau TAHUN belum sesuai format', 'success' => false);
-                return $res;
-		}
-
+        $nama_file =  $this->prosesName($id_dok);
+       
 		// cek file size apa diperbolehkan		
-		$cekFile	= $this->isAllowSize($_FILES['file']);
+		$cekFile	= $this->isAllowSize($_FILES['file'], $id_dok);
 		$response   = $cekFile['response'];
 		if (!$response) {
-			// $data['error']    = $cekFile['pesan'];
-			// $data['token']    = $this->security->get_csrf_hash();
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
                 $res = array('msg' => $cekFile['pesan'], 'success' => false);
                 return $res;
 		}
@@ -470,7 +405,6 @@ class M_Kepegawaian extends CI_Model
 		$target_dir						= './uploads/' . $this->_getNip($_FILES['file']['name']);
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
-		//$config['max_size']             = 2048;
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
@@ -492,25 +426,11 @@ class M_Kepegawaian extends CI_Model
 				->set_output(json_encode($data));
 		} else {
 			$dataFile 			= $this->upload->data();
+            $dataFile['nama_file'] =  $nama_file;
 			$result		        = $this->insertUpload($dataFile);
 			// $result['token']    = $this->security->get_csrf_hash();
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             return $res;
-
-			// if ($result['response']) {
-			// 	$this->output
-			// 		->set_status_header(200)
-			// 		->set_content_type('application/json', 'utf-8')
-			// 		->set_output(json_encode($result));
-			// } else {
-			// 	$result['updated']  = $this->kepegawaian->updateFile($result);
-			// 	$result['error'] 	= 'File ini sudah ada, update file';
-			// 	$result['token']    = $this->security->get_csrf_hash();
-			// 	$this->output
-			// 		->set_status_header(200)
-			// 		->set_content_type('application/json', 'utf-8')
-			// 		->set_output(json_encode($result));
-			// }
 		}
 	}
 
@@ -560,4 +480,34 @@ class M_Kepegawaian extends CI_Model
 
 		return $r;
 	}
+
+    function prosesName($id_dok)
+    {
+       
+        $query = $this->db->select('*')
+        ->from('db_siladen.dokumen a')
+        ->where('a.id_dokumen', $id_dok)
+        ->get()->row_array();
+
+        $name = null;
+        if($query){
+            $format = $query['format'];
+            $nip = $this->general_library->getUserName();
+        if($id_dok == 4){
+            $pangkat = $this->input->post('pangkat');
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("KODE",$pangkat,$name);
+        } else if($id_dok == 7){
+           
+            $date = $this->input->post('tmt_gaji_berkala');
+            $tahun = explode('-', $date);
+            $tahun = $tahun[2];
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("TAHUN",$tahun,$name);
+        }
+
+       }
+    return $name;
+    }
+
 }

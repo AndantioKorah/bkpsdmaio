@@ -50,7 +50,7 @@
 								</div>
 							</div>
 						</li>
-						<li class="nav-item dropdown">
+						<!-- <li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
 								<div class="position-relative">
 									<i class="align-middle" data-feather="message-square"></i>
@@ -116,7 +116,7 @@
 									<a href="#" class="text-muted">Show all messages</a>
 								</div>
 							</div>
-						</li>
+						</li> -->
 						
 						<!-- role  -->
 						<li class="nav-item dropdown">
@@ -146,9 +146,11 @@
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
 							<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="" /> 
-							<span class="text-dark"><?=$this->general_library->getNamaUser();?></span>
+							<!-- <span class="text-dark"><?=$this->general_library->getNamaUser();?></span> -->
 						</a>
 							<div class="dropdown-menu dropdown-menu-end">
+								<a class="dropdown-item" href="#"><i class="align-middle me-1"></i><?=$this->general_library->getNamaUser();?> </a>
+								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
 								<!-- <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
 								<div class="dropdown-divider"></div>

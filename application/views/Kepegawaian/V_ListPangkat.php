@@ -1,7 +1,7 @@
 <?php if($result){ ?>
   <div class="row">
-    <div class="col-lg-12 table-responsive">
-      <table class="table table-striped">
+    <div class="col-lg-12">
+      <table class="table table-striped" id="datatable">
         <thead>
           <th class="text-center">No</th>
           <th class="text-center">Jenis</th>
@@ -36,6 +36,10 @@
   </div>
  
 <script>
+  $(function(){
+    $('#datatable').dataTable()
+  })
+
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }

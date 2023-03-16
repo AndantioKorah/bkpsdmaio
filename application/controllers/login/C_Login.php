@@ -31,7 +31,10 @@ class C_Login extends CI_Controller
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
-        render('login/V_Welcome', '', '', null);
+        $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+        // $data = null;
+
+        render('login/V_Welcome', '', '', $data);
     }
 
     public function authenticateAdmin()

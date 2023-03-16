@@ -22,6 +22,8 @@ class General_library
         date_default_timezone_set("Asia/Singapore");
         $this->nikita->load->model('general/M_General', 'm_general');
         $this->nikita->load->model('user/M_User', 'm_user');
+        $this->nikita->load->model('kinerja/M_Kinerja', 'm_kinerja');
+        $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
     }
 
     public function getServerDateTime(){
@@ -347,6 +349,23 @@ class General_library
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();
         return $this->userLoggedIn['id_m_bidang'];
+    }
+
+    public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
+        return $this->nikita->m_rekap->getProduktivitasKerjaPegawai($id, $bulan, $tahun);
+    }
+
+    public function countHariKerjaBulanan($bulan, $tahun){
+        return $this->nikita->m_user->countHariKerjaBulanan($bulan, $tahun);
+    }
+
+    public function getPaguTppPegawai($bulan, $tahun){
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($this->getId());
+        $data['id_unitkerja'] = $this->userLoggedIn['skpd'];
+        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $this->getId());
+        // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
+        $produktivitas_kerja = $this->getProduktivitasKerjaPegawai($this->getId(), $bulan, $tahun);
+        return $this->nikita->m_user->getTppPegawai($this->getId(), $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
     }
 
     public function test(){

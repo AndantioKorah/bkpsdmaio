@@ -1359,7 +1359,8 @@
         return $result;
     }
 
-    public function countPaguTpp($data){
+    public function countPaguTpp($data, $id_pegawai = null){
+        
         $result = null;
 
         $unitkerja = $this->db->select('*')
@@ -1481,6 +1482,9 @@
                     $result[$i]['pagu_tpp'] = $result[$i]['pagu_tpp'] * 0.8;
                 }
 
+                if($id_pegawai != null && $p['nipbaru_ws'] == $this->general_library->getUserName()){
+                    return $result[$i];
+                }
                 $i++;
             }
         }

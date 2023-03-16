@@ -63,6 +63,7 @@
         {
             $this->db->select('*, a.nama as nama_user')
                         ->from('m_user a')
+                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('a.flag_active', 1);

@@ -2,13 +2,13 @@
 	.sidebar-header{
 		padding: 0.5rem 0.5rem 0.375rem !important;
 		color: rgba(233,236,239,.5) !important;
-		font-size: 1.1rem !important;
+		font-size: 1rem !important;
 	}
 
 	.sidebar-link{
 		padding: 0.125rem 0.625rem !important;
 		color: #ababab !important;
-		font-size: 1rem;
+		font-size: .9rem;
 		font-weight: bold !important;
 
 		white-space: nowrap; 
@@ -31,9 +31,56 @@
 	.sidebar-link-child{
 		padding-left: 1.3rem !important;
 	}
+
+	.sidebar-divider{
+		margin: 0 !important;
+	}
+
+	.div_live_tpp{
+		padding-top: 5px;
+		padding-bottom: 5px;
+		/* display: none; */
+	}
+
+	.div_live_tpp:hover{
+		cursor: pointer;
+		background-color: #37495e;
+		transition: .2s;
+	}
 </style>
 
 <ul class="sidebar-nav">
+	<div><hr class="sidebar-divider"></div>
+	<div class="div_live_tpp" title="Klik untuk melihat detail">
+		<li class="">
+			<span class="" style="
+				font-size: .7rem !important;
+				padding-left: .5rem;
+				color: white;
+				font-weight: 500;">CAPAIAN TPP</span>
+		</li>
+		<li class="live_tpp">
+			<center>
+				<span class="align-middle" style="
+					font-size: 1.1rem;
+					color: white;
+					font-weight: bold;
+					margin-top: -5px;
+					margin-bottom: 10px;
+				">
+					<?=formatCurrency($tpp['capaian_tpp'])?>
+				</span>
+				<span style="
+					font-size: .9rem;
+					color: #ababab;
+					vertical-align: bottom;
+				">
+					/ <?=formatCurrencyWithoutRp($tpp['pagu_tpp']['pagu_tpp'])?>
+				</span>
+			</center>			
+		</li>
+	</div>
+	<div><hr class="sidebar-divider"></div>
 	<li class="sidebar-header">
 		Main
 	</li>
@@ -128,15 +175,6 @@
 							<?php } ?>
 						<?php } ?>
 						<?php } ?>
-
-		<?php if ($l['child']) { ?>
-			<?php foreach ($l['child'] as $ch) { ?>
-				<ul id="menu<?= $l['id'] ?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-					<li class="sidebar-item "><a class="sidebar-link" href="<?= base_url($ch['url']) ?>">
-							<i class="align-middle me-2 fas fa-fw fa-chevron-right"></i><?= $ch['nama_menu'] ?></a></li>
-				</ul>
-			<?php } ?>
-		<?php } ?>
 	<?php } ?>
 
 	</li>

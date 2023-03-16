@@ -31,6 +31,12 @@
                             ->get()->result_array();
         }
 
+        public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
+            $result['komponen_kinerja'] = $this->getKomponenKinerja($id, $bulan, $tahun);
+            $result['kinerja'] = $this->getKinerjaPegawai($id, $bulan, $tahun);
+            return $result;
+        }
+
         public function rekapPenilaianSearch($data){
            
             $result = null;

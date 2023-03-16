@@ -49,6 +49,10 @@
 	}
 </style>
 
+<?php
+	$tpp = $this->session->userdata('live_tpp');
+?>
+
 <ul class="sidebar-nav">
 	<div><hr class="sidebar-divider"></div>
 	<div class="div_live_tpp" title="Klik untuk melihat detail">

@@ -34,14 +34,14 @@
       </table>
     </div>
   </div>
-
+ 
 <script>
   $(function(){
     $('#datatable').dataTable()
   })
 
   function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }
 </script>
 <?php } else { ?>

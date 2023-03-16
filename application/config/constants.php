@@ -157,3 +157,5 @@ define('TARGET_BOBOT_PRODUKTIVITAS_KERJA', 60);
 define('TARGET_BOBOT_DISIPLIN_KERJA', 40);
 define('BOBOT_NILAI_SKBP', 0.3);
 define('BOBOT_NILAI_KOMPONEN_KINERJA', 0.3);
+
+define('URL_FILE', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/');

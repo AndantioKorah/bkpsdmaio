@@ -219,8 +219,18 @@ class C_Kepegawaian extends CI_Controller
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
         $this->load->view('kepegawaian/V_FormUploadDokPangkat', $data);
+    }
+
+	public function LoadFormGajiBerkala(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 7);
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadGajiBerkala', $data);
     }
 
 

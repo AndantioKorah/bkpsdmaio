@@ -85,7 +85,10 @@
         <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="la la-certificate"></i> Diklat</a>      </li>
 		  <li class="nav-item" role="presentation">
         <a class="nav-link" id="pills-berkala-tab" data-toggle="pill" href="#pills-berkala" role="tab" aria-controls="pills-berkala" aria-selected="false"><i class="la la-money"></i> Gaji Berkala</a>      </li>
-    </ul>
+    
+        
+    
+      </ul>
   </div>
 
   <div class="tab-content" id="pills-tabContent">

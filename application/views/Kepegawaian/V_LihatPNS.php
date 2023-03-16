@@ -35,6 +35,10 @@
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Gaji Berkala</a>
         </li>
+
+        
+
+        
       </ul>
     </div>
     <hr>

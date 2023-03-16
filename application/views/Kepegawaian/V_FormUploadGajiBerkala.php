@@ -13,34 +13,15 @@
 <td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
 </tr>
  <tr>
-<td>NIP</td>
-<td>:</td>
-<td><?=$this->general_library->getUserName();?></td>
-</tr>
-
-<tr>
-<td>Pangkat Terakhir </td>
-<td>:</td>
-<td><?= $profil_pegawai['nm_pangkat'];?></td>
-</tr>
-
-<tr>
-<td style="vertical-align: top;">TMT Pangkat </td>
+<td style="vertical-align: top;">NIP</td>
 <td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?= formatDateNamaBulan($profil_pegawai['tmtpangkat']);?></td>
-</tr> 
+<td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
+</tr>
+
 </table>
-   <form method="post" id="upload_form" enctype="multipart/form-data" >
+   <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
-    <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Pengangkatan</label>
-    <select  class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
-                    <option value="" disabled selected>Pilih Item</option>
-                    <?php if($jenis_pengangkatan){ foreach($jenis_pengangkatan as $r){ ?>
-                        <option value="<?=$r['id_jenispengangkatan']?>"><?=$r['nm_jenispengangkatan']?></option>
-                    <?php } } ?>
-</select>
-    </div>
+    
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
@@ -49,15 +30,10 @@
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
                     <?php } } ?>
-</select>
+    </select>
     </div>
    
 
-   <div class="form-group">
-    <label>TMT Pangkat</label>
-    <input  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" required/>
-  </div>
-  
   <div class="form-group">
     <label>Masa Kerja</label>
     <input class="form-control customInput" type="text" id="masa_kerja" name="masa_kerja"  required/>
@@ -79,8 +55,13 @@
   </div>
 
   <div class="form-group">
+    <label>TMT Gaji Berkala</label>
+    <input  class="form-control datepicker"   id="tmt_gaji_berkala" name="tmt_gaji_berkala" required/>
+  </div>
+
+  <div class="form-group">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="pdf_file_berkala" name="file"   />
     <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
   </div>
 
@@ -115,7 +96,7 @@
 
 $(function(){
         $('.select2').select2()
-        loadListPangkat()
+        // loadListPangkat()
     })
 
     $('.datepicker').datepicker({
@@ -127,13 +108,13 @@ $(function(){
 });
 
     
-        $('#upload_form').on('submit', function(e){  
+        $('#upload_form_gaji_berkala').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form');
+        var formvalue = $('#upload_form_gaji_berkala');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file').files.length;
+        var ins = document.getElementById('pdf_file_berkala').files.length;
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
@@ -156,8 +137,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form").reset();
-                loadFormPangkat()
+                document.getElementById("upload_form_gaji_berkala").reset();
+                loadFormGajiBerkala()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -168,13 +149,13 @@ $(function(){
           
         }); 
 
-    function loadListPangkat(){
-    $('#list_pangkat').html('')
-    $('#list_pangkat').append(divLoaderNavy)
-    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-      $('#loader').hide()
-    })
-  }
+//     function loadListPangkat(){
+//     $('#list_pangkat').html('')
+//     $('#list_pangkat').append(divLoaderNavy)
+//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
+//       $('#loader').hide()
+//     })
+//   }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

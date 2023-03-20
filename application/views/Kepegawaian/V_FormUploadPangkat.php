@@ -4,6 +4,14 @@
 		margin-bottom:10px !important;
     }
 </style>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
+  Tambah Data Pangkat
+</button>
+
+
+
 <table width="100%" border="0" class="" align="left">
 <tr>
 <td height="8px;" width="20%">Nama</td>
@@ -28,11 +36,26 @@
 <td style="vertical-align: top;" height="40px;" ><?= formatDateNamaBulan($profil_pegawai['tmtpangkat']);?></td>
 </tr> 
 </table>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">Data Pangkat</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+
    <form method="post" id="upload_form" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
-    <div class="form-group" style="margin-bottom:10px !important;">
+
+
+    <div class="form-group " style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Jenis Pengangkatan</label>
-    <select  class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
+    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_pengangkatan){ foreach($jenis_pengangkatan as $r){ ?>
                         <option value="<?=$r['id_jenispengangkatan']?>"><?=$r['nm_jenispengangkatan']?></option>
@@ -42,13 +65,15 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" required>
+    <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
                     <?php } } ?>
 </select>
     </div>
+
+    
    
 
    <div class="form-group">
@@ -84,10 +109,18 @@
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
-<hr>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- tutup modal  -->
+
 <div id="list_pangkat">
 
 </div>
@@ -112,7 +145,14 @@
 
 
 $(function(){
-        $('.select2').select2()
+        // $('.select2').select2()
+
+   $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
+  
         $('#datatable').dataTable()
         loadListPangkat()
     })
@@ -156,7 +196,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form").reset();
-                loadFormPangkat()
+                loadListPangkat()
               } else {
                 errortoast(result.msg)
                 return false;

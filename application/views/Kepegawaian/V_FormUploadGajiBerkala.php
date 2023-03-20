@@ -6,6 +6,13 @@
 		margin-bottom:10px !important;
     }
 </style>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
+  Tambah Data Gaji Berkala
+</button>
+
+
 <table width="100%" border="0" class="" align="left">
 <tr>
 <td height="8px;" width="20%">Nama</td>
@@ -19,7 +26,19 @@
 </tr>
 
 </table>
-   <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
+
+<!-- Modal -->
+<div class="modal fade" id="modalBerkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Data Gaji Berkala</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
     
 
@@ -70,7 +89,16 @@
      <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
-<hr>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+   
 <div id="list_pangkat">
 
 </div>
@@ -94,7 +122,11 @@
 
 
 $(function(){
-        $('.select2').select2()
+  $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
         // loadListPangkat()
     })
 
@@ -137,7 +169,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_gaji_berkala").reset();
-                loadFormGajiBerkala()
+                // loadFormGajiBerkala()
               } else {
                 errortoast(result.msg)
                 return false;

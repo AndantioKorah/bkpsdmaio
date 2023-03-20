@@ -126,24 +126,34 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPendidikan(){
-            return $this->db->select('*')
+            return $this->db->select('d.nm_tktpendidikanb, c.jurusan, c.fakultas, c.namasekolah, c.tahunlulus, c.noijasah, c.tglijasah, c.gambarsk')
                             ->from('m_user a')
-                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.tktpendidikan d','c.tktpendidikan = d.id_tktpendidikan')
-                            ->where('a.id', 193)
+                            ->join('db_pegawai.tktpendidikanb d','c.tktpendidikan = d.id_tktpendidikanb')
+                            ->where('a.id', $this->general_library->getId())
                             ->order_by('c.tglijasah','desc')
                             ->get()->result_array();
         }
 
         function getJabatan(){
-            return $this->db->select('*')
+            return $this->db->select('c.nm_jabatan, c.tmtjabatan, c.skpd, c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
-                            ->where('a.id', 193)
+                            ->where('a.id', $this->general_library->getId())
                             ->order_by('c.tmtjabatan','desc')
+                            ->get()->result_array();
+        }
+
+        function getDiklat(){
+            return $this->db->select('c.nm_diklat, c.penyelenggara, c.jam , c.tglmulai, c.tglselesai, c.nosttpp, c.tglsttpp, c.gambarsk')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegdiklat c','b.id_peg = c.id_pegawai')
+                            ->where('a.id', $this->general_library->getId())
+                            ->order_by('c.tglselesai','desc')
                             ->get()->result_array();
         }
 

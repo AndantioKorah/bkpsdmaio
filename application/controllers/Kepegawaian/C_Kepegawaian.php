@@ -26,12 +26,31 @@ class C_Kepegawaian extends CI_Controller
 	public function profil()
 	{
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
-		$data['pendidikan'] = $this->kepegawaian->getPendidikan();
-		$data['jabatan'] = $this->kepegawaian->getJabatan();
+		$data['result'] = $this->kepegawaian->getPendidikan();
+		$data['results'] = $this->kepegawaian->getPangkatPegawai();
 		// $data['tes'] = $this->general_library->getId();
 		// dd($data);
 		render('kepegawaian/V_LihatPNS', '', '', $data);
+	}
+
+	public function loadListPendidikan(){
+		$data['result'] = $this->kepegawaian->getPendidikan();
+		$this->load->view('kepegawaian/V_ListPendidikan', $data);
+	}
+
+	public function loadListJabatan(){
+		$data['result'] = $this->kepegawaian->getJabatan();
+		$this->load->view('kepegawaian/V_ListJabatan', $data);
+	}
+
+	public function loadListDiklat(){
+		$data['result'] = $this->kepegawaian->getDiklat();
+		$this->load->view('kepegawaian/V_ListDiklat', $data);
+	}
+
+	public function loadListProfil(){
+		$data['result'] = $this->kepegawaian->getProfilPegawai();
+		$this->load->view('kepegawaian/V_ListProfil', $data);
 	}
 
 	public function loadDokumenPns()

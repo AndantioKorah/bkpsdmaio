@@ -12,68 +12,74 @@
 <td width="">:</td>
 <td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
 </tr>
- <tr>
+
+<tr>
 <td style="vertical-align: top;">NIP</td>
 <td style="vertical-align: top;">:</td>
 <td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
 </tr>
 
+
 </table>
-   <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
-    <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
-    
+   <form method="post" id="upload_form_organisasi" enctype="multipart/form-data" >
+   
+   <input type="hidden" id="id_pegorganisasi" name="id_pegorganisasi" value="">
+   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
+    <label for="exampleFormControlInput1">Jenis Organisasi </label>
+    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_organisasi" id="jenis_organisasi" required>
                     <option value="" disabled selected>Pilih Item</option>
-                    <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
-                        <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
+                    <?php if($jenis_organisasi){ foreach($jenis_organisasi as $r){ ?>
+                        <option value="<?=$r['id_organisasi']?>"><?=$r['nm_organisasi']?></option>
                     <?php } } ?>
     </select>
     </div>
-   
 
   <div class="form-group">
-    <label>Masa Kerja</label>
-    <input class="form-control customInput" type="text" id="gb_masa_kerja" name="gb_masa_kerja"  required/>
+    <label>Nama Organisasi</label>
+    <input class="form-control customInput" type="text" id="nama_organisasi" name="nama_organisasi"  required/>
   </div>
 
   <div class="form-group">
-    <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control customInput" type="text" id="gb_pejabat" name="gb_pejabat"  required/>
+    <label>Kedudukan / Jabatan</label>
+    <input class="form-control customInput" type="text" id="jabatan_organisasi" name="jabatan_organisasi"  required/>
+  </div>
+
+  
+  <div class="form-group">
+    <label>Tanggal Mulai</label>
+    <input  class="form-control datepicker"   id="tglmulai" name="tglmulai" required/>
   </div>
 
   <div class="form-group">
-    <label>Nomor SK</label>
-    <input class="form-control customInput" type="text" id="gb_no_sk" name="gb_no_sk"  required/>
+    <label>Tanggal Berakhir</label>
+    <input  class="form-control datepicker"   id="tglselesai" name="tglselesai" required/>
   </div>
 
   <div class="form-group">
-    <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
+    <label>Nama Pimpinan</label>
+    <input class="form-control customInput" type="text" id="pemimpin" name="pemimpin"  required/>
   </div>
 
   <div class="form-group">
-    <label>TMT Gaji Berkala</label>
-    <input  class="form-control datepicker"   id="tmt_gaji_berkala" name="tmt_gaji_berkala" required/>
+    <label>Tempat</label>
+    <input class="form-control customInput" type="text" id="tempat" name="tempat"  required/>
   </div>
 
-  <div class="form-group">
-    <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_berkala" name="file"   />
-    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
-  </div>
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
 <hr>
 <div id="list_pangkat">
 
 </div>
+
+
+
 
 
 <div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -99,7 +105,7 @@ $(function(){
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -107,18 +113,17 @@ $(function(){
 });
 
     
-        $('#upload_form_gaji_berkala').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        $('#upload_form_organisasi').on('submit', function(e){  
+
         e.preventDefault();
-        var formvalue = $('#upload_form_gaji_berkala');
+        var formvalue = $('#upload_form_organisasi');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_berkala').files.length;
+        // var ins = document.getElementById('organisasi_pdf_file').files.length;
         
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
        
       
       
@@ -136,8 +141,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_gaji_berkala").reset();
-                loadFormGajiBerkala()
+                document.getElementById("upload_form_organisasi").reset();
+                loadFormOrganisasi()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -160,22 +165,13 @@ $(function(){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }
 
-  $("#pdf_file_berkala").change(function (e) {
+  
 
-        var extension = pdf_file_berkala.value.split('.')[1];
-      
-        var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>
-     
-        if (extension != "pdf"){
-          errortoast("Harus File PDF")
-          $(this).val('');
-        }
-
-        if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
-          $(this).val('');
-        }
-
+        $('.yearpicker').datepicker({
+            format: 'yyyy',
+            viewMode: "years", 
+            minViewMode: "years",
+            orientation: 'bottom',
+            autoclose: true
         });
 </script>

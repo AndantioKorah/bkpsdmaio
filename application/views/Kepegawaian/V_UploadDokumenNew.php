@@ -107,15 +107,95 @@ h2{
         <div class="card">
        
             <div class="card-body">
-         
+
+            <style>
+              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+              background-color: #222e3c;
+              color: #fff;
+              }
+              .nav-pills .nav-link {
+              color: #000;
+              border: 0;
+              border-radius: var(--bs-nav-pills-border-radius);
+          }
+            </style>
+
+  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPangkat()" class="nav-link active" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button  onclick="loadFormGajiBerkala()" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPendidikan()" class="nav-link" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormJabatan()" class="nav-link" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormDiklat()" class="nav-link" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormOrganisasi()" class="nav-link" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPenghargaan()" class="nav-link" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+  </li>
+</ul>
+<hr>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+  <div id="form_pangkat"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
+  <div id="form_gaji_berkala"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
+  <div id="form_pendidikan"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
+  <div id="form_jabatan"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
+  <div id="form_diklat"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-organisasi" role="tabpanel" aria-labelledby="pills-organisasi-tab">
+  <div id="form_organisasi"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-penghargaan" role="tabpanel" aria-labelledby="pills-penghargaan-tab">
+  <div id="form_penghargaan"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">...</div>
+  <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
+  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
+  <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
+  <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
+</div>
+
+<!--          
 <div class="warpper" style="background-color:#fff;">
-  <input onclick="loadFormPangkat()" class="radio" id="pangkat" name="group" type="radio" checked>
-  <input onclick="loadFormGajiBerkala()" class="radio" id="gb" name="group" type="radio">
-  <input class="radio" id="pendidikan" name="group" type="radio">
-  <input class="radio" id="jabatan" name="group" type="radio">
-  <input class="radio" id="diklat" name="group" type="radio">
-  <input class="radio" id="disiplin" name="group" type="radio">
-  <input class="radio" id="organisasi" name="group" type="radio">
+  <input  class="radio" id="pangkat" name="group" type="radio" checked>
+  <input class="radio" id="gb" name="group" type="radio">
+  <input  class="radio" id="pendidikan" name="group" type="radio">
+  <input  class="radio" id="jabatan" name="group" type="radio">
+  <input  class="radio" id="diklat" name="group" type="radio">
+  <input  class="radio" id="organisasi" name="group" type="radio">
   <input class="radio" id="penghargaan" name="group" type="radio">
   <input class="radio" id="sj" name="group" type="radio">
   <input class="radio" id="keluarga" name="group" type="radio">
@@ -129,7 +209,6 @@ h2{
   <label class="tab" id="pendidikan-tab" for="pendidikan">Pendidikan</label>
   <label class="tab" id="jabatan-tab" for="jabatan">Jabatan</label>
   <label class="tab" id="diklat-tab" for="diklat">Diklat</label>
-  <label class="tab" id="disiplin-tab" for="disiplin">Disiplin</label> 
   <label class="tab" id="organisasi-tab" for="organisasi">Organisasi</label>
   <label class="tab" id="penghargaan-tab" for="penghargaan">Penghargaan</label>
   <label class="tab" id="sj-tab" for="sj">Sumpah/Janji</label>
@@ -142,28 +221,33 @@ h2{
   <div class="panels">
   <div class="panel" id="pangkat-panel">
     <div class="panel-title">Pangkat</div>
-    <div id="form_pangkat"></div>
+   
   </div>
 
   <div class="panel" id="gb-panel">
     <div class="panel-title">Gaji Berkala</div>
-    <div id="form_gaji_berkala"></div>
+  
   </div>
 
   <div class="panel" id="pendidikan-panel">
     <div class="panel-title">Pendidikan</div>
+   
   </div>
 
   <div class="panel" id="jabatan-panel">
     <div class="panel-title">Jabatan</div>
+  
   </div>
 
   <div class="panel" id="diklat-panel">
     <div class="panel-title">Diklat</div>
+  
   </div>
+
 
   <div class="panel" id="organisasi-panel">
     <div class="panel-title">Organisasi</div>
+   
   </div>
 
   <div class="panel" id="penghargaan-panel">
@@ -192,6 +276,8 @@ h2{
 
   </div>
 </div>
+ -->
+
 
 
 
@@ -227,13 +313,56 @@ $(function(){
  }
 
  function loadFormGajiBerkala(){
-  
   $('#form_gaji_berkala').html(' ')
     $('#form_gaji_berkala').append(divLoaderNavy)
     $('#form_gaji_berkala').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormGajiBerkala/')?>', function(){
     $('#loader').hide()    
     })
  }
+
+ function loadFormPendidikan(){
+  $('#form_gaji_berkala').html(' ')
+    $('#form_pendidikan').append(divLoaderNavy)
+    $('#form_pendidikan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormPendidikan/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormJabatan(){
+  $('#form_jabatan').html(' ')
+    $('#form_jabatan').append(divLoaderNavy)
+    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormDiklat(){
+  $('#form_diklat').html(' ')
+    $('#form_diklat').append(divLoaderNavy)
+    $('#form_diklat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDiklat/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormOrganisasi(){
+  $('#form_organisasi').html(' ')
+    $('#form_organisasi').append(divLoaderNavy)
+    $('#form_organisasi').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormOrganisasi/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormPenghargaan(){
+  $('#form_penghargaan').html(' ')
+    $('#form_penghargaan').append(divLoaderNavy)
+    $('#form_penghargaan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormPenghargaan/')?>', function(){
+    $('#loader').hide()    
+    })
+ }
+
+
+
+ 
 
 
 

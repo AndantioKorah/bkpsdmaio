@@ -351,6 +351,18 @@ class General_library
         return $this->userLoggedIn['id_m_bidang'];
     }
 
+    public function getNamaSKPDUser(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->userLoggedIn['nm_unitkerja'];
+    }
+
+    public function getIdPegSimpeg(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->userLoggedIn['id_peg'];
+    }
+
     public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
         return $this->nikita->m_rekap->getProduktivitasKerjaPegawai($id, $bulan, $tahun);
     }

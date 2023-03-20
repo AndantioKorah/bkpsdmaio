@@ -267,6 +267,13 @@ class C_Kepegawaian extends CI_Controller
     }
 
 
+	public function layanan(){
+        // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+        $data['dokumen']         	= $this->kepegawaian->getDokumen();
+        render('kepegawaian/V_layanan', '', '', $data);
+    }
+
+
 	
 
 

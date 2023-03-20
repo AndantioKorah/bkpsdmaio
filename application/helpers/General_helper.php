@@ -75,7 +75,11 @@ function countNilaiSkp($data)
         foreach ($data as $d) {
             $nilai_capaian = 0;
             if (floatval($d['total_realisasi']) > 0) {
-                $nilai_capaian = (floatval($d['total_realisasi']) / floatval($d['target_kuantitas'])) * 100;
+                if(floatval($d['target_kuantitas']) == 0){
+                    $nilai_capaian = 0;
+                } else {
+                    $nilai_capaian = (floatval($d['total_realisasi']) / floatval($d['target_kuantitas'])) * 100;
+                }
             }
             $akumulasi_nilai_capaian += $nilai_capaian;
         }

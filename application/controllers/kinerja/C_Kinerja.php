@@ -9,6 +9,7 @@ class C_Kinerja extends CI_Controller
         $this->load->model('master/M_Master', 'master');
         $this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('kinerja/M_VerifKinerja', 'verifkinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
@@ -43,6 +44,20 @@ class C_Kinerja extends CI_Controller
     {
         $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerjaBU();
         render('kinerja/V_RekapKinerja', '', '', $data);
+    }
+
+    public function loadRekapKinerjaUser($bulan, $tahun){
+        $data['tpp'] = $this->session->userdata('search_detail_tpp_pegawai');
+        $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun, $bulan);
+        $data['list_rekap_komponen_kinerja'] = $this->rekap->getKomponenKinerja($this->general_library->getId(), $bulan, $tahun);
+        $this->load->view('user/V_RekapKinerjaUser', $data);
+    }
+
+    public function loadRekapDisiplinKerjaUser($bulan, $tahun){
+        // $data['result'] = $this->general_library->getPaguTppPegawai($bulan, $tahun);
+        $data['result'] = $this->session->userdata('search_detail_tpp_pegawai');
+        $data['list_disiplin_kerja'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'keterangan', 'asc');
+        $this->load->view('user/V_RekapDisiplinKerjaUser', $data);
     }
 
     public function LoadRekapKinerja($tahun, $bulan)

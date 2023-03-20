@@ -56,6 +56,44 @@
   --primary-color: #222e3c;
 }
 
+.progress {
+  --bs-progress-height: 1rem;
+  --bs-progress-font-size: 0.65625rem;
+  --bs-progress-bg: #e9ecef;
+  --bs-progress-border-radius: 0.2rem;
+  --bs-progress-box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+  --bs-progress-bar-color: #fff;
+  --bs-progress-bar-bg: #3b7ddd;
+  --bs-progress-bar-transition: width 0.6s ease;
+  background-color: var(--bs-progress-bg);
+  border-radius: var(--bs-progress-border-radius);
+  font-size: var(--bs-progress-font-size);
+  height: var(--bs-progress-height);
+}
+
+.progress-bar {
+  background-color: var(--bs-progress-bar-bg);
+  color: var(--bs-progress-bar-color);
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transition: var(--bs-progress-bar-transition);
+  white-space: nowrap;
+}
+
+.bg-success-light {
+  background: #a5f1db;
+}
+
+.progress, .progress-bar {
+  display: flex;
+  overflow: hidden;
+}
+
+.progress-sm {
+  height: 0.4rem;
+}
+
 .content{
   padding: .5rem !important;
 }

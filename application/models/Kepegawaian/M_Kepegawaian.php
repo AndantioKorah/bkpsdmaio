@@ -246,10 +246,6 @@ class M_Kepegawaian extends CI_Model
 
     function insertUpload($data)
     {
-       
-        $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
-      
-
             $query = $this->db->select('b.id_peg')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -260,6 +256,7 @@ class M_Kepegawaian extends CI_Model
         // dd($id_dok);
         if($id_dok == 4){
              //PANGKAT   
+        $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
         $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
         $dataInsert['id_pegawai']     = $id_peg;
         $dataInsert['jenispengangkatan']      = $this->input->post('jenis_pengangkatan');
@@ -273,16 +270,70 @@ class M_Kepegawaian extends CI_Model
         $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
           // PANGKAT
         } else if($id_dok == 7){
+            $tgl_sk = date("Y-m-d", strtotime($this->input->post('gb_tanggal_sk')));
             $tmt_gaji_berkala = date("Y-m-d", strtotime($this->input->post('tmt_gaji_berkala')));
             $dataInsert['id_pegawai']     = $id_peg;
-            $dataInsert['pangkat']      = $this->input->post('pangkat');
-            $dataInsert['masakerja']     =$this->input->post('masa_kerja');
-            $dataInsert['pejabat']      = $this->input->post('pejabat');
-            $dataInsert['nosk']      = $this->input->post('no_sk');
+            $dataInsert['pangkat']      = $this->input->post('gb_pangkat');
+            $dataInsert['masakerja']     =$this->input->post('gb_masa_kerja');
+            $dataInsert['pejabat']      = $this->input->post('gb_pejabat');
+            $dataInsert['nosk']      = $this->input->post('gb_no_sk');
             $dataInsert['tglsk']      = $tgl_sk;
             $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['tmtgajiberkala']      = $tmt_gaji_berkala;
             $result = $this->db->insert('db_pegawai.peggajiberkala', $dataInsert);
+        } else if($id_dok == 6){
+            $tgl_ijazah = date("Y-m-d", strtotime($this->input->post('pendidikan_tanggal_ijazah')));
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['tktpendidikan']      = $this->input->post('pendidikan_tingkat');
+            $dataInsert['jurusan']      = $this->input->post('pendidikan_jurusan');
+            $dataInsert['fakultas']     =$this->input->post('pendidikan_fakultas');
+            $dataInsert['namasekolah']      = $this->input->post('pendidikan_nama_sekolah_universitas');
+            $dataInsert['pimpinansekolah']      = $this->input->post('pendidikan_nama_pimpinan');
+            $dataInsert['tahunlulus']      = $this->input->post('pendidikan_tahun_lulus');
+            $dataInsert['noijasah']      = $this->input->post('pendidikan_tahun_lulus');
+            $dataInsert['tglijasah']      = $tgl_ijazah;
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $result = $this->db->insert('db_pegawai.pegpendidikan', $dataInsert);
+        } else if($id_dok == 8){
+
+            $str = $this->input->post('jabatan_nama');
+            $newStr = explode(",", $str);
+            $id_jabatan = $newStr[0];
+            $nama_jabatan = $newStr[1];
+            
+            $tgl_sk = date("Y-m-d", strtotime($this->input->post('jabatan_tanggal_sk')));
+            $tmt_jabatan = date("Y-m-d", strtotime($this->input->post('jabatan_tmt')));
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['nm_jabatan']      = $nama_jabatan;
+            $dataInsert['id_jabatan']      = $id_jabatan;
+            $dataInsert['tmtjabatan']     =$tmt_jabatan;
+            $dataInsert['jenisjabatan']      = $this->input->post('jabatan_jenis');
+            $dataInsert['pejabat']      = $this->input->post('jabatan_pejabat');
+            $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
+            $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
+            $dataInsert['tglsk']      = $tgl_sk;
+            $dataInsert['skpd']      = $this->general_library->getNamaSKPDUser();
+            $dataInsert['alamatskpd']      = "";
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+        } else if($id_dok == 20){            
+            $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
+            $tgl_mulai = date("Y-m-d", strtotime($this->input->post('diklat_tangal_mulai')));
+            $tgl_selesai = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_selesai')));
+           
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['jenisdiklat']      = $this->input->post('diklat_jenis');
+            $dataInsert['nm_diklat']      = $this->input->post('diklat_nama');
+            $dataInsert['tptdiklat']     = $this->input->post('diklat_tempat');
+            $dataInsert['penyelenggara']      = $this->input->post('diklat_penyelenggara');
+            $dataInsert['angkatan']      = $this->input->post('diklat_angkatan');
+            $dataInsert['jam']      = $this->input->post('diklat_jam');
+            $dataInsert['tglmulai']      = $tgl_mulai;
+            $dataInsert['tglselesai']      = $tgl_selesai;
+            $dataInsert['nosttpp']      =$this->input->post('diklat_no_sttpp');
+            $dataInsert['tglsttpp']      = $tgl_sttpp;
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $result = $this->db->insert('db_pegawai.pegdiklat', $dataInsert);
         }
       
 
@@ -389,9 +440,9 @@ class M_Kepegawaian extends CI_Model
     public function doUpload()
 	{
 
+        $this->db->trans_begin();
+        if($_FILES){         
         $id_dok = $this->input->post('id_dokumen');
-
-
         $nama_file =  $this->prosesName($id_dok);
        
 		// cek file size apa diperbolehkan		
@@ -402,12 +453,13 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-		$target_dir						= './uploads/' . $this->_getNip($_FILES['file']['name']);
+		$target_dir						= './uploads/' . $this->general_library->getUserName();
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
+        $config['file_name']            = "$nama_file.pdf";
 
 		$this->load->library('upload', $config);
 
@@ -420,18 +472,41 @@ class M_Kepegawaian extends CI_Model
 
 			$data['error']    = strip_tags($this->upload->display_errors());
 			$data['token']    = $this->security->get_csrf_hash();
-			$this->output
-				->set_status_header(406)
-				->set_content_type('application/json', 'utf-8')
-				->set_output(json_encode($data));
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            return $res;
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
 		} else {
 			$dataFile 			= $this->upload->data();
-            $dataFile['nama_file'] =  $nama_file;
+            $dataFile['nama_file'] =  "$nama_file.pdf";
 			$result		        = $this->insertUpload($dataFile);
-			// $result['token']    = $this->security->get_csrf_hash();
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             return $res;
 		}
+    } else {
+        $dataPost = $this->input->post();
+        if($this->input->post('jenis_organisasi')){
+            $result = $this->insert('db_pegawai.pegorganisasi',$dataPost);
+        } else if($this->input->post('nm_pegpenghargaan')){
+            $result = $this->insert('db_pegawai.pegpenghargaan',$dataPost);
+        }
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+      
+    }
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+
 	}
 
     function _isAdaNIP($string)
@@ -498,13 +573,48 @@ class M_Kepegawaian extends CI_Model
             $name = str_replace("NIP",$nip,$format);
             $name = str_replace("KODE",$pangkat,$name);
         } else if($id_dok == 7){
-           
             $date = $this->input->post('tmt_gaji_berkala');
             $tahun = explode('-', $date);
             $tahun = $tahun[2];
             $name = str_replace("NIP",$nip,$format);
             $name = str_replace("TAHUN",$tahun,$name);
-        }
+        } else if($id_dok == 6){
+            $tkt_pendidikan = $this->input->post('pendidikan_tingkat');
+            if($tkt_pendidikan == "0000"){
+                $kode = "05";
+            } else if($tkt_pendidikan == "1000"){
+                $kode = "10";
+            } else if($tkt_pendidikan == "2000"){
+                $kode = "15";
+            } else if($tkt_pendidikan == "3000"){
+                $kode = "20";
+            } else if($tkt_pendidikan == "4000"){
+                $kode = "25";
+            } else if($tkt_pendidikan == "5000"){
+                $kode = "30";
+            } else if($tkt_pendidikan == "6000"){
+                $kode = "35";
+            } else if($tkt_pendidikan == "7000"){
+                $kode = "40";
+            } else if($tkt_pendidikan == "8000"){
+                $kode = "45";
+            } else if($tkt_pendidikan == "9000"){
+                $kode = "50";
+            }
+            
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("KODE",$kode,$name);
+        } else if($id_dok == 8){
+            $date = $this->input->post('jabatan_tmt');
+            $tahun = explode('-', $date);
+            $tahun = $tahun[2];
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("TAHUN",$tahun,$name);
+        } else if($id_dok == 20){
+            $name = str_replace("NIP",$nip,$format);
+        }  
+
+        
 
        }
     return $name;

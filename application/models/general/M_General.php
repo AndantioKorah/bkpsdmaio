@@ -64,6 +64,7 @@
             $this->db->select('*, a.nama as nama_user')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('a.flag_active', 1);

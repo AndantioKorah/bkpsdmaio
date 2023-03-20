@@ -1,5 +1,3 @@
-
-
 <style>
     .form-control{
 		height:35px !important;
@@ -60,17 +58,17 @@
   
   <div class="form-group">
     <label>Masa Kerja</label>
-    <input class="form-control customInput" type="text" id="masa_kerja" name="masa_kerja"  required/>
+    <input class="form-control" type="text" id="masa_kerja" name="masa_kerja"  required/>
   </div>
 
   <div class="form-group">
     <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control customInput" type="text" id="pejabat" name="pejabat"  required/>
+    <input class="form-control" type="text" id="pejabat" name="pejabat"  required/>
   </div>
 
   <div class="form-group">
     <label>Nomor SK</label>
-    <input class="form-control customInput" type="text" id="no_sk" name="no_sk"  required/>
+    <input class="form-control" type="text" id="no_sk" name="no_sk"  required/>
   </div>
 
   <div class="form-group">
@@ -81,7 +79,7 @@
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file" name="file"   />
-    <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
+    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
   <div class="form-group col-lg-12">
@@ -102,7 +100,7 @@
         DOKUMEN
       </div> -->
       <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe  style="width: 100%; height: 80vh;"   id="iframe_view_file"  frameborder="0" ></iframe>	
       </div>
     </div>
   </div>
@@ -115,6 +113,7 @@
 
 $(function(){
         $('.select2').select2()
+        $('#datatable').dataTable()
         loadListPangkat()
     })
 
@@ -177,7 +176,8 @@ $(function(){
   }
 
   function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
+    var nip = <?=$this->general_library->getUserName()?>;
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
   }
 
   $("#pdf_file").change(function (e) {

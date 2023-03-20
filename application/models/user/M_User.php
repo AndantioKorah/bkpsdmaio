@@ -1213,14 +1213,17 @@
             $list_hari_kerja = null;
 
             $jhk = 0;
+            $hk = 0;
             foreach($list_hari as $lh){
                 if(!isset($hari_libur[$lh]) && getNamaHari($lh) != 'Sabtu' && getNamaHari($lh) != 'Minggu'){
                     $list_hari_kerja[$lh] = $lh;
                     $jhk++;
+                    if($lh <= date('Y-m-d')){
+                        $hk++;
+                    }
                 }
             }
-
-            return [$jhk, $hari_libur, $list_hari, $list_hari_kerja];
+            return [$jhk, $hari_libur, $list_hari, $list_hari_kerja, $hk];
         }
 
         public function getTppPegawai($id_pegawai, $tpp, $pk, $bulan, $tahun, $unitkerja){
@@ -1228,7 +1231,7 @@
             $result['pagu_tpp'] = $tpp;
             $result['pagu_pk'] = (floatval(TARGET_BOBOT_PRODUKTIVITAS_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
             $result['pagu_dk'] = (floatval(TARGET_BOBOT_DISIPLIN_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
-            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
+            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
 
             $bobot_komponen_kinerja = 0;
             if($pk['komponen_kinerja']){
@@ -1242,9 +1245,12 @@
                 $bobot_skp = $pk['nilai_skp']['bobot'];
             }
             $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
-            $result['capaian_pk'] = ($bobot_pk * $result['pagu_pk']) / 100;
+            $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
             $result['capaian_dk'] = 0;
             $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
+            $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
 
             //data absen
             $list_data_absen = $this->db->select('*')
@@ -1419,8 +1425,16 @@
             // echo 'pagu_pengurangan: '.(($result['pengurangan_dk'] / 100) * $result['pagu_dk']).'<br>';
             // dd('');
 
+            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
             $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            if($result['capaian_dk'] < 0){
+                $result['capaian_dk'] = 0;
+            }
+            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
             $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
+            $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
+            $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+            $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
 
             return $result;
         }

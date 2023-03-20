@@ -55,7 +55,7 @@
 
 <ul class="sidebar-nav">
 	<div><hr class="sidebar-divider"></div>
-	<div class="div_live_tpp" title="Klik untuk melihat detail">
+	<div onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
 			<span class="" style="
 				font-size: .7rem !important;
@@ -186,3 +186,9 @@
 <div class="mt-5">
 	<p></p>
 </div>
+
+<script>
+	function openDetailTppPegawai(){
+		window.location = "<?=base_url('pegawai/tpp/detail')?>"
+	}
+</script>

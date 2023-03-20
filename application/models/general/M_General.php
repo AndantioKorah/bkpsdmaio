@@ -63,6 +63,8 @@
         {
             $this->db->select('*, a.nama as nama_user')
                         ->from('m_user a')
+                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('a.flag_active', 1);
@@ -245,12 +247,16 @@
 
 
         public function getIdPeg($username){
-            $query = $this->db->select('a.id_peg')
-            ->from('db_pegawai.pegawai a')
-            ->where('nipbaru_ws', $username)
+            $query = $this->db->select('b.id_peg')
+            // ->from('db_pegawai.pegawai a')
+            // ->where('nipbaru_ws', $username)
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->where('a.id', $this->general_library->getId())
             ->get()->row_array();
             return $query['id_peg'];
         }
+
 
 	}
 ?>

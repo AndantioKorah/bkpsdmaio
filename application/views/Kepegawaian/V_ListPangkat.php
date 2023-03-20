@@ -1,7 +1,8 @@
 <?php if($result){ ?>
   <div class="row">
-    <div class="col-lg-12">
-      <table class="table table-striped">
+    <div class="col-lg-12 table-responsive">
+      <tr><button class="btn"><i class="fa fa-plus"></i> Tambah</button></tr>
+      <table class="table table-striped" id="datatable">
         <thead>
           <th class="text-center">No</th>
           <th class="text-center">Jenis</th>
@@ -34,10 +35,15 @@
       </table>
     </div>
   </div>
-
+ 
 <script>
+  $(function(){
+    $('#datatable').dataTable()
+  })
+
   function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
+    var nip = "<?=$this->general_library->getUserName()?>";
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
   }
 </script>
 <?php } else { ?>

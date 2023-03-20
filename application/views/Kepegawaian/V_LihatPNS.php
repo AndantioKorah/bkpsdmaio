@@ -32,6 +32,10 @@
         <li class="nav-item" role="presentation">
           <a onclick="loadListDiklat()" class="nav-link" id="" data-toggle="pill" href="#tab_diklat" role="tab" aria-controls="pills-product" aria-selected="false">Diklat</a>
         </li>
+
+        
+
+        
       </ul>
     </div>
     <hr>

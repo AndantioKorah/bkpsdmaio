@@ -321,4 +321,19 @@ class C_User extends CI_Controller
     public function importPegawaiByUnitKerjaMaster($id_unitkerjamaster){
         echo json_encode($this->user->importPegawaiByUnitKerjaMaster($id_unitkerjamaster));
     }
+
+    public function detailTppPegawai(){
+        
+        render('user/V_TppPegawai', null, null, null);
+    }
+
+    public function searchDetailTppPegawai(){
+        $data = $this->input->post();
+        $data['tpp'] = $this->general_library->getPaguTppPegawai($data['bulan'], $data['tahun']);
+        $this->session->set_userdata('search_detail_tpp_pegawai', $data['tpp']);
+        if($data['bulan'] == date('m') && $data['tahun'] == date('Y')){
+            $this->session->set_userdata('live_tpp', $data['tpp']);
+        }
+        $this->load->view('user/V_DetailTppPegawai', $data);
+    }
 }

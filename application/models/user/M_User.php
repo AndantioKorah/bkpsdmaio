@@ -1179,6 +1179,265 @@
                 echo "nothing to insert";
             }
         }
+
+        public function getUnitKerjaByPegawai($id_pegawai){
+            return $this->db->select('c.*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->where('a.id', $id_pegawai)
+                            ->get()->row_array();
+        }
+
+        public function countHariKerjaBulanan($bulan, $tahun){
+            $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+            // $bulan = floatval($bulan) < 10 ? '0'.$bulan : $bulan;
+            $tanggal_awal = $tahun.'-'.$bulan.'-'.'01';
+            $tanggal_akhir = $tahun.'-'.$bulan.'-'.$jumlah_hari;
+
+            $list_hari_libur = $this->db->select('*')
+                                        ->from('t_hari_libur')
+                                        ->where('bulan', floatval($bulan))
+                                        ->where('tahun', floatval($tahun))
+                                        ->where('flag_active', 1)
+                                        ->where('flag_hari_libur_nasional', 1)
+                                        ->get()->result_array();
+            $hari_libur = null;
+            if($list_hari_libur){
+                foreach($list_hari_libur as $lhl){
+                    $hari_libur[$lhl['tanggal']] = $lhl;
+                }
+            }
+
+            $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
+            $list_hari_kerja = null;
+
+            $jhk = 0;
+            $hk = 0;
+            foreach($list_hari as $lh){
+                if(!isset($hari_libur[$lh]) && getNamaHari($lh) != 'Sabtu' && getNamaHari($lh) != 'Minggu'){
+                    $list_hari_kerja[$lh] = $lh;
+                    $jhk++;
+                    if($lh <= date('Y-m-d')){
+                        $hk++;
+                    }
+                }
+            }
+            return [$jhk, $hari_libur, $list_hari, $list_hari_kerja, $hk];
+        }
+
+        public function getTppPegawai($id_pegawai, $tpp, $pk, $bulan, $tahun, $unitkerja){
+            $result = null;
+            $result['pagu_tpp'] = $tpp;
+            $result['pagu_pk'] = (floatval(TARGET_BOBOT_PRODUKTIVITAS_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
+            $result['pagu_dk'] = (floatval(TARGET_BOBOT_DISIPLIN_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
+            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
+
+            $bobot_komponen_kinerja = 0;
+            if($pk['komponen_kinerja']){
+                list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
+                $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
+            }
+            
+            $bobot_skp = 0;
+            if($pk['kinerja']){
+                $pk['nilai_skp'] = countNilaiSkp($pk['kinerja']);
+                $bobot_skp = $pk['nilai_skp']['bobot'];
+            }
+            $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
+            $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_dk'] = 0;
+            $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
+            $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
+
+            //data absen
+            $list_data_absen = $this->db->select('*')
+                                    ->from('db_sip.absen a')
+                                    ->where('a.user_id', $this->general_library->getId())
+                                    ->where('MONTH(tgl)', $bulan)
+                                    ->where('YEAR(tgl)', $tahun)
+                                    ->order_by('tgl')
+                                    ->get()->result_array(0);
+
+            $data_absen = null;
+            if($list_data_absen){
+                foreach($list_data_absen as $lda){
+                    $data_absen[$lda['tgl']] = $lda;
+                }
+            }
+
+            //get jam kerja
+            $jskpd = 1;
+            if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
+                $jskpd = 2;
+            } else if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+                $jskpd = 4;
+            }
+            $jam_kerja = $this->db->select('*')
+                    ->from('t_jam_kerja')
+                    ->where('id_m_jenis_skpd', $jskpd)
+                    ->where('flag_event', 0)
+                    ->where('flag_active', 1)
+                    ->get()->row_array();
+            $result['jam_kerja'] = $jam_kerja;
+
+            //cek jika ada jam kerja event
+            $jam_kerja_event = $this->db->select('*')
+                    ->from('t_jam_kerja')
+                    ->where('id_m_jenis_skpd', $jskpd)
+                    ->where('(MONTH(berlaku_dari) = '.$bulan.' OR
+                            MONTH(berlaku_sampai) = '.$bulan.')')
+                    ->where('(YEAR(berlaku_dari) = '.$tahun.' OR
+                            YEAR(berlaku_sampai) = '.$tahun.')')
+                    ->where('flag_event', 1)
+                    ->where('flag_active', 1)
+                    ->get()->result_array();
+
+            $result['jam_kerja_event'] = null;
+            if($jam_kerja_event){
+                foreach($jam_kerja_event as $jke){
+                    $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
+                    foreach($list_hari_kerja_event as $lhke){
+                        $result['jam_kerja_event'][$lhke] = $jke;
+                    }
+                }
+            }
+
+            //get dokumen pendukung
+            $result['dokpen'] = null;
+            $list_dokpen = $this->db->select('a.*, b.keterangan as kode_dokpen')
+                                ->from('t_dokumen_pendukung a')
+                                ->join('m_jenis_disiplin_kerja b', 'a.id_m_jenis_disiplin_kerja = b.id')
+                                ->where('a.id_m_user', $id_pegawai)
+                                ->where('a.status', 2)
+                                ->where('a.bulan', $bulan)
+                                ->where('a.tahun', $tahun)
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+            if($list_dokpen){
+                foreach($list_dokpen as $ld){
+                    $tanggal_dok = $ld['tanggal'] < 10 ? '0'.$ld['tanggal'] : $ld['tanggal'];
+                    $bulan_dok = $ld['bulan'] < 10 ? '0'.$ld['bulan'] : $ld['bulan'];
+                    $date_dok = $ld['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
+
+                    $result['dokpen'][$date_dok] = $ld;
+                    $result['rincian_pengurangan_dk'][$ld['kode_dokpen']] = 0;
+                }
+            }
+
+            $result['pengurangan_dk'] = 0;
+            $result['rincian_pengurangan_dk']['TK'] = 0;
+            $result['rincian_pengurangan_dk']['tmk1'] = 0;
+            $result['rincian_pengurangan_dk']['tmk2'] = 0;
+            $result['rincian_pengurangan_dk']['tmk3'] = 0;
+            $result['rincian_pengurangan_dk']['pksw1'] = 0;
+            $result['rincian_pengurangan_dk']['pksw2'] = 0;
+            $result['rincian_pengurangan_dk']['pksw3'] = 0;
+            foreach($result['list_hari'] as $tga){
+                // echo $result['pengurangan_dk'].';'.$tga.'<br>';
+                if($tga <= date('Y-m-d') && isset($result['list_hari_kerja'][$tga])){
+                    if(isset($data_absen[$tga])){ //cek jika ada data absen di tanggal $tga
+                        // set waktu jam masuk dan jam pulang
+                        $jam_masuk = $result['jam_kerja']['wfo_masuk'];
+                        $jam_pulang = $result['jam_kerja']['wfo_pulang'];
+                        if(getNamaHari($tga) == 'Jumat'){ //jika hari jumat, ambil jam kerja wfoj
+                            $jam_masuk = $result['jam_kerja']['wfoj_masuk'];
+                            $jam_pulang = $result['jam_kerja']['wfoj_pulang'];
+                            if(isset($result['jam_kerja_event'][$tga])){ //jika ada event, ambil jam kerja event
+                                $jam_masuk = $result['jam_kerja_event'][$tga]['wfoj_masuk'];
+                                $jam_pulang = $result['jam_kerja_event'][$tga]['wfoj_pulang'];
+                            }
+                        } else if(isset($result['jam_kerja_event'][$tga])) { //jika ada event, ambil jam kerja event
+                            $jam_masuk = $result['jam_kerja_event'][$tga]['wfo_masuk'];
+                            $jam_pulang = $result['jam_kerja_event'][$tga]['wfo_pulang'];
+                        }
+
+                        //cek data absen
+                        if($data_absen[$tga]['masuk'] == '00:00:00'){ //cek jika tidak ada data absen masuk
+                            $result['pengurangan_dk'] += 10;
+                            $result['rincian_pengurangan_dk']['TK']++;
+
+                            // tambah capaian disiplin kerja
+                            $result['capaian_dk'] += $result['pagu_harian'];
+                        } else { //kalau ada, cek keterlambatan
+
+                            // tambah capaian disiplin kerja
+                            $result['capaian_dk'] += $result['pagu_harian'];
+                            
+                            $diff_masuk = strtotime($data_absen[$tga]['masuk']) - strtotime($jam_masuk.'+ 59 seconds');
+                            $ket_masuk = floatval($diff_masuk / 1800);
+                            if($ket_masuk <= 1){
+                                $result['pengurangan_dk'] += 1;
+                                $result['rincian_pengurangan_dk']['tmk1']++;
+                                // echo $result['pengurangan_dk'].'<br>';
+                                // dd($result['_dkrincian_pengurangan']);
+                            } else if($ket_masuk > 1 && $ket_masuk <= 2){
+                                $result['pengurangan_dk'] += 2;
+                                $result['rincian_pengurangan_dk']['tmk2']++;
+                            } else if($ket_masuk > 2) {
+                                $result['pengurangan_dk'] += 3;
+                                $result['rincian_pengurangan_dk']['tmk3']++;
+                            }
+
+                            if($data_absen[$tga]['pulang'] == '00:00:00'){ //cek jika tidak absen pulang
+                                $result['pengurangan_dk'] += 3;
+                                $result['rincian_pengurangan_dk']['pksw3']++;
+                            } else {
+                                $diff_pulang = strtotime($jam_pulang) - strtotime($data_absen[$tga]['pulang']);
+                                $ket_pulang = floatval($diff_pulang / 1800);
+                                if($ket_pulang <= 1){
+                                    $result['pengurangan_dk'] += 1;
+                                    $result['rincian_pengurangan_dk']['pksw1']++;
+                                } else if($ket_pulang > 1 && $ket_pulang <= 2){
+                                    $result['pengurangan_dk'] += 2;
+                                    $result['rincian_pengurangan_dk']['pksw2']++;
+                                } else if($ket_pulang > 2) {
+                                    $result['pengurangan_dk'] += 3;
+                                    $result['rincian_pengurangan_dk']['pksw3']++;
+                                }
+                            }
+                        }
+                    } else if(isset($result['dokpen'][$tga])){ //cek jika ada data dokumen pendukung
+                        if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
+                            // tambah capaian disiplin kerja
+                            $result['capaian_dk'] += $result['pagu_harian'];
+                        }
+                        $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
+                        $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
+                    } else if(isset($result['hari_libur'][$tga])){ //cek jika hari libur
+                        
+                    } else { // asumsi tidak masuk kerja
+                        // tambah capaian disiplin kerja
+                        $result['capaian_dk'] += $result['pagu_harian'];
+
+                        $result['pengurangan_dk'] += 10;
+                        $result['rincian_pengurangan_dk']['TK']++;
+                    }
+                }
+                // echo $data_absen[$tga]['masuk'].'<br>';
+                // dd($result['pengurangan_dk']);
+            }
+            // echo 'capaian_dk: '.$result['capaian_dk'].'<br>';
+            // echo 'pengurangan_dk: '.$result['pengurangan_dk'].'<br>';
+            // echo 'pagu_dk: '.$result['pagu_dk'].'<br>';
+            // echo 'pagu_pengurangan: '.(($result['pengurangan_dk'] / 100) * $result['pagu_dk']).'<br>';
+            // dd('');
+
+            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
+            $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            if($result['capaian_dk'] < 0){
+                $result['capaian_dk'] = 0;
+            }
+            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
+            $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
+            $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+            $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
+
+            return $result;
+        }
 	}
 
 

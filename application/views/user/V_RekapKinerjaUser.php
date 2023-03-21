@@ -101,7 +101,7 @@
                         </tr>
                         <tr>
                             <td class="text-right" style="font-weight: bold;">Capaian</td>
-                            <td class="text-center" style="font-weight: bold;"><?=$bobot_rekap_komponen[0]?></td>
+                            <td class="text-center" style="font-weight: bold;"><?=isset($bobot_rekap_komponen[0]) ? $bobot_rekap_komponen[0] : 0?></td>
                         </tr>
                         <tr>
                             <td class="text-right" style="font-weight: bold;">
@@ -112,7 +112,7 @@
                                     <a style="font-size: 10px;">*jika capaian >= 679, bobot = 30%</a>
                                 </span>
                             </td>
-                            <td class="text-center" style="font-weight: bold; font-size: 1rem;"><?=($bobot_rekap_komponen[1]).' %'?></td>
+                            <td class="text-center" style="font-weight: bold; font-size: 1rem;"><?=isset($bobot_rekap_komponen[1]) ? $bobot_rekap_komponen[1].' %' : '0 %'?></td>
                         </tr>
                 </tbody>
             <?php } else { ?>
@@ -151,9 +151,9 @@
                 </tr>
                 <tr>
                     <td class="text-center" style="font-size: .8rem;"><?=formatCurrency($tpp['pagu_tpp']['pagu_tpp'])?></td>
-                    <td class="text-center" style="font-size: .8rem;"><?=formatTwoMaxDecimal($bobot_rekap['bobot']).' %'?></td>
+                    <td class="text-center" style="font-size: .8rem;"><?=isset($bobot_rekap['bobot']) ? formatTwoMaxDecimal($bobot_rekap['bobot']).' %' : '0 %'?></td>
                     <td class="text-center" style="font-size: .8rem;"><?=formatCurrency($tpp['capaian_skp'])?></td>
-                    <td class="text-center" style="font-size: .8rem;"><?=formatTwoMaxDecimal($bobot_rekap_komponen[1]).' %'?></td>
+                    <td class="text-center" style="font-size: .8rem;"><?=isset($bobot_rekap_komponen[1]) ? formatTwoMaxDecimal($bobot_rekap_komponen[1]).' %' : '0 %'?></td>
                     <td class="text-center" style="font-size: .8rem;"><?=formatCurrency($tpp['capaian_komponen_kinerja'])?></td>
                     <td class="text-center" style="font-size: .8rem;"><?=formatCurrency($tpp['capaian_pk'])?></td>
                 </tr>

@@ -937,6 +937,11 @@
                     $insert_data[$i]['tanggal'] = $date[2];
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
                     if($disiplin[0] == 14){
+                        if($data['jenis_tugas_luar'] == 'Tugas Luar Pagi'){
+                            $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 19;
+                        } else if($data['jenis_tugas_luar'] == 'Tugas Luar Sore'){
+                            $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 20;
+                        }
                         $insert_data[$i]['keterangan'] = $data['jenis_tugas_luar'];
                     } else {
                         $insert_data[$i]['keterangan'] = $disiplin[1];
@@ -978,7 +983,7 @@
                 ->where('a.bulan', floatval($bulan))
                 ->where('a.tahun', floatval($tahun))
                 ->where('a.flag_active', 1)
-                ->group_by('a.status, a.dokumen_pendukung');
+                ->group_by('a.status, a.dokumen_pendukung, a.id_m_jenis_disiplin_kerja, a.id_m_user');
 
         if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1)){
             $this->db->where('d.skpd', $id);
@@ -991,7 +996,7 @@
         $rs['diterima'] = 0;
         $rs['ditolak'] = 0;
         $rs['batal'] = 0;
-
+        
         if($tempdata){
             foreach($tempdata as $t){
                 if($t['status'] == 1){
@@ -1149,7 +1154,7 @@
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -1172,22 +1177,22 @@
             $temp = $result;
             $result = null;
             foreach($temp as $t){
-                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                if(isset($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']])){
                     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
                     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['list_id'][] = $t['id'];
                 } else {
-                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
-                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']] = $t;
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                 }
             }
         }

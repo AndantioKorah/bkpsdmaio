@@ -1267,6 +1267,7 @@
                     $data_absen[$lda['tgl']] = $lda;
                 }
             }
+            $result['data_absen'] = $data_absen;
 
             //get jam kerja
             $jskpd = 1;
@@ -1297,6 +1298,7 @@
 
             $result['jam_kerja_event'] = null;
             if($jam_kerja_event){
+                $result['jam_kerja_event'][0] = $jam_kerja_event[0];
                 foreach($jam_kerja_event as $jke){
                     $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
                     foreach($list_hari_kerja_event as $lhke){
@@ -1336,6 +1338,7 @@
             $result['rincian_pengurangan_dk']['pksw2'] = 0;
             $result['rincian_pengurangan_dk']['pksw3'] = 0;
             foreach($result['list_hari'] as $tga){
+                $keterangan = null;
                 // echo $result['pengurangan_dk'].';'.$tga.'<br>';
                 if($tga <= date('Y-m-d') && isset($result['list_hari_kerja'][$tga])){
                     if(isset($data_absen[$tga])){ //cek jika ada data absen di tanggal $tga
@@ -1361,6 +1364,8 @@
 
                             // tambah capaian disiplin kerja
                             $result['capaian_dk'] += $result['pagu_harian'];
+
+                            $keterangan[] = "TK";
                         } else { //kalau ada, cek keterlambatan
 
                             // tambah capaian disiplin kerja
@@ -1368,34 +1373,46 @@
                             
                             $diff_masuk = strtotime($data_absen[$tga]['masuk']) - strtotime($jam_masuk.'+ 59 seconds');
                             $ket_masuk = floatval($diff_masuk / 1800);
-                            if($ket_masuk <= 1){
+                            if($ket_masuk <= 1 && $ket_masuk > 0){
                                 $result['pengurangan_dk'] += 1;
                                 $result['rincian_pengurangan_dk']['tmk1']++;
+                                $keterangan[] = "tmk1";
                                 // echo $result['pengurangan_dk'].'<br>';
                                 // dd($result['_dkrincian_pengurangan']);
                             } else if($ket_masuk > 1 && $ket_masuk <= 2){
                                 $result['pengurangan_dk'] += 2;
                                 $result['rincian_pengurangan_dk']['tmk2']++;
+                                $keterangan[] = "tmk2";
                             } else if($ket_masuk > 2) {
                                 $result['pengurangan_dk'] += 3;
                                 $result['rincian_pengurangan_dk']['tmk3']++;
+                                $keterangan[] = "tmk3";
                             }
 
                             if($data_absen[$tga]['pulang'] == '00:00:00'){ //cek jika tidak absen pulang
-                                $result['pengurangan_dk'] += 3;
-                                $result['rincian_pengurangan_dk']['pksw3']++;
+                                if(isset($result['dokpen'][$tga])){ //cek jika ada tugas luar sore
+                                    $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
+                                    $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
+                                } else if($tga != date('Y-m-d')){ //jika tidak ada absen pulang selain hari ini
+                                    $result['pengurangan_dk'] += 3;
+                                    $result['rincian_pengurangan_dk']['pksw3']++;
+                                    $keterangan[] = "pksw3";
+                                }
                             } else {
                                 $diff_pulang = strtotime($jam_pulang) - strtotime($data_absen[$tga]['pulang']);
                                 $ket_pulang = floatval($diff_pulang / 1800);
-                                if($ket_pulang <= 1){
+                                if($ket_pulang <= 1 && $ket_pulang > 0){
                                     $result['pengurangan_dk'] += 1;
                                     $result['rincian_pengurangan_dk']['pksw1']++;
+                                    $keterangan[] = "pksw1";
                                 } else if($ket_pulang > 1 && $ket_pulang <= 2){
                                     $result['pengurangan_dk'] += 2;
                                     $result['rincian_pengurangan_dk']['pksw2']++;
+                                    $keterangan[] = "pksw2";
                                 } else if($ket_pulang > 2) {
                                     $result['pengurangan_dk'] += 3;
                                     $result['rincian_pengurangan_dk']['pksw3']++;
+                                    $keterangan[] = "pksw3";
                                 }
                             }
                         }
@@ -1406,6 +1423,8 @@
                         }
                         $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
                         $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
+
+                        $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
                     } else if(isset($result['hari_libur'][$tga])){ //cek jika hari libur
                         
                     } else { // asumsi tidak masuk kerja
@@ -1414,8 +1433,14 @@
 
                         $result['pengurangan_dk'] += 10;
                         $result['rincian_pengurangan_dk']['TK']++;
+                        $keterangan[] = "TK";
                     }
+
                 }
+                // echo $tga.'  ';
+                // dd($keterangan);
+                $result['data_absen']['keterangan'][$tga] = $keterangan;
+
                 // echo $data_absen[$tga]['masuk'].'<br>';
                 // dd($result['pengurangan_dk']);
             }

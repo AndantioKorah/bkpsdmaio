@@ -620,4 +620,13 @@ class M_Kepegawaian extends CI_Model
     return $name;
     }
 
+
+    public function getJenisLayanan()
+    {
+        $this->db->select('*')
+        ->where('aktif', 'YA')
+        ->from('db_siladen.jenis_layanan');
+        return $this->db->get()->result_array(); 
+    }
+
 }

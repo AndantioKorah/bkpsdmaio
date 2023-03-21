@@ -113,7 +113,7 @@
 	</li>
 
 	<li class="sidebar-item">
-		<a class="sidebar-link" href="#">
+		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
 			<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>

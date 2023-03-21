@@ -267,6 +267,17 @@ class C_Kepegawaian extends CI_Controller
     }
 
 
+	public function layanan(){
+		$data['jenis_layanan'] = $this->kepegawaian->getJenisLayanan();
+        render('kepegawaian/V_layanan', '', '', $data);
+    }
+
+	public function LoadListUsulLayanan(){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
+    }
+
+
 	
 
 

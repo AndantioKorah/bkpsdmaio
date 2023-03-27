@@ -115,7 +115,7 @@ class M_Kepegawaian extends CI_Model
         {
             $this->db->where('aktif',1);
             $this->db->ORDER_BY('nama_dokumen');
-            return $this->db->get('db_siladen.dokumen');	
+            return $this->db->get('db_siladen.dokumen');
         }
         function getProfilPegawai(){
             $username = $this->general_library->getUserName();
@@ -628,15 +628,6 @@ class M_Kepegawaian extends CI_Model
 
        }
     return $name;
-    }
-
-
-    public function getJenisLayanan()
-    {
-        $this->db->select('*')
-        ->where('aktif', 'YA')
-        ->from('db_siladen.jenis_layanan');
-        return $this->db->get()->result_array(); 
     }
 
 }

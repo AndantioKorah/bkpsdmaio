@@ -6,7 +6,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus" ></i>
   Tambah Data Pangkat
 </button>
 

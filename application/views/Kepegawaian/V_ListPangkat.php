@@ -1,7 +1,7 @@
 <?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
-      <tr><button class="btn"><i class="fa fa-plus"></i> Tambah</button></tr>
+      <!-- <tr><button class="btn"><i class="fa fa-plus" ></i> Tambah</button></tr> -->
       <table class="table table-striped" id="datatable">
         <thead>
           <th class="text-center">No</th>

@@ -17,6 +17,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
+	public function loadListPenugasan(){
+		$data['result'] = $this->kepegawaian->getPenugasan();
+		$this->load->view('kepegawaian/V_ListPenugasan', $data);
+	}
+
 	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
@@ -232,6 +237,13 @@ class C_Kepegawaian extends CI_Controller
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
         render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    }
+
+	public function LoadFormDokPenugasan(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_penugasan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenistugas', 'id_jenistugas', 'desc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
     }
 
 	public function LoadFormDokPangkat(){

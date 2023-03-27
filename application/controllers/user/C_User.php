@@ -323,7 +323,6 @@ class C_User extends CI_Controller
     }
 
     public function detailTppPegawai(){
-        
         render('user/V_TppPegawai', null, null, null);
     }
 
@@ -335,5 +334,19 @@ class C_User extends CI_Controller
             $this->session->set_userdata('live_tpp', $data['tpp']);
         }
         $this->load->view('user/V_DetailTppPegawai', $data);
+    }
+
+    public function absensiPegawai(){
+        render('user/V_AbsensiPegawai', null, null, null);
+    }
+
+    public function searchDetailAbsenPegawai(){
+        $dt = $this->input->post();
+        $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        $data['result']['param'] = $dt;
+        if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y')){
+            $this->session->set_userdata('live_tpp', $data['result']);
+        }
+        return $this->load->view('user/V_DetailAbsensiPegawai', $data);
     }
 }

@@ -3,7 +3,7 @@
         min-height: 48vh;
     }
 </style>
-<h4>DETAIL TPP PEGAWAI BULAN <?=strtoupper(getNamaBulan(date('m')))?> TAHUN <?=date('Y')?></h4>
+<!-- <h4>DETAIL TPP PEGAWAI BULAN <?=strtoupper(getNamaBulan(date('m')))?> TAHUN <?=date('Y')?></h4> -->
 <?php if($tpp){ ?>
     <div class="row">
         <div class="col-lg-4 col-md-4">

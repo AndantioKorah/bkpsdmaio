@@ -12,6 +12,17 @@ class C_Master extends CI_Controller
         };
     }
 
+    public function masterSkpd(){
+        $data['master'] = $this->master->getAllMasterSkpd();
+        render('master/V_MasterSkpd', '', '', $data);
+    }
+
+    public function loadUnitKerjaByIdUnitKerjaMaster($ukmaster){
+        $data['ukmaster'] = $ukmaster;
+        $data['result'] = $this->master->getAllUnitKerjaByIdUnitKerjaMasterNew($ukmaster);
+        $this->load->view('master/V_MasterSkpdItem', $data);
+    }
+
     public function jenisPesan(){
         render('master/V_MasterJenispesan', '', '', null);
     }

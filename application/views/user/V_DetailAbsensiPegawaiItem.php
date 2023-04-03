@@ -125,7 +125,7 @@
                     <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
                 <?php } ?>
             <?php } else if($keterangan && in_array('TK', $keterangan)) { //jika alpa ?>
-                <span class="span_absen span_tk">Alpa</span>
+                <span class="span_absen span_tk">Tidak Masuk Kerja</span>
             <?php } else if($hari_libur){ //jika hari libur ?>
                 <span class="span_absen span_libur"><?=$hari_libur['keterangan']?></span>
             <?php } ?>

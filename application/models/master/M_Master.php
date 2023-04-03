@@ -12,6 +12,21 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function getAllUnitKerjaByIdUnitKerjaMasterNew($ukmaster){
+            return $this->db->select('*,
+            (SELECT count(aa.nipbaru_ws)
+            FROM db_pegawai.pegawai aa
+            WHERE aa.skpd = a.id_unitkerja) as total,
+            (SELECT count(bb.nipbaru_ws)
+            FROM db_pegawai.pegawai bb
+            WHERE bb.skpd = a.id_unitkerja
+            AND bb.jk = "Laki-laki") as total_laki')
+                            ->from('db_pegawai.unitkerja a')
+                            ->where('a.id_unitkerjamaster', $ukmaster)
+                            ->order_by('a.nm_unitkerja', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getAllUnitKerjaByIdUnitKerjaMaster($ukmaster = '0000000'){
             return $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
@@ -407,6 +422,15 @@
             }
 
             return $rs;
+        }
+
+        public function getAllMasterSkpd(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+                            ->order_by('id_unitkerjamaster', 'asc')
+                            ->get()->result_array();
         }
 	}
 ?>

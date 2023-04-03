@@ -293,21 +293,24 @@ h2{
 <script>
 
 
-
+var jenis_user = 1; 
 $(function(){
+ 
   $('#form_pangkat').html(' ')
     $('#form_pangkat').append(divLoaderNavy)
-    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>', function(){
+    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
     $('#loader').hide()    
     })
 
         
   })
 
+ 
+
  function loadFormPangkat(){
   $('#form_pangkat').html(' ')
     $('#form_pangkat').append(divLoaderNavy)
-    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>', function(){
+    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
     $('#loader').hide()    
     })
  }

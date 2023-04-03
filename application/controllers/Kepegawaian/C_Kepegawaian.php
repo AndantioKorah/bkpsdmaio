@@ -215,12 +215,19 @@ class C_Kepegawaian extends CI_Controller
         render('kepegawaian/V_UploadDokumenNew', '', '', $data);
     }
 
-	public function LoadFormDokPangkat(){
+	public function LoadFormDokPangkat($jenis_user,$nip=null){
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_user'] = $jenis_user;
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($jenis_user == 1){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+
+		}
         $this->load->view('kepegawaian/V_FormUploadPangkat', $data);
     }
 
@@ -238,12 +245,19 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadPendidikan', $data);
     }
 
-	public function LoadFormJabatan(){
+	public function LoadFormJabatan($jenis_user,$nip){
+		$data['jenis_user'] = $jenis_user;
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['nama_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan', 'id_jabatanpeg', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($jenis_user == 1){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+
+		}
         $this->load->view('kepegawaian/V_FormUploadJabatan', $data);
     }
 
@@ -272,10 +286,99 @@ class C_Kepegawaian extends CI_Controller
         render('kepegawaian/V_layanan', '', '', $data);
     }
 
-	public function LoadListUsulLayanan(){
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-        $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
+
+	public function insertUsulLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayanan());
+	}
+
+	public function loadListUsulLayananCuti(){
+		$data['result'] = $this->kepegawaian->getListUsulLayananCuti();
+		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
+	}
+
+	public function Adminlayanan(){
+		$data['result'] = $this->kepegawaian->getAllUsulLayanan();
+        render('kepegawaian/V_AllUsulLayanan', '', '', $data);
     }
+
+	public function CetakSurat($id_usul){
+		$this->load->library('pdf');
+		// $data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
+  			
+
+		$html = $this->output->get_output();
+
+		// $options = new Options();
+		// $options->setIsRemoteEnabled(true);
+		// $dompdf = new Dompdf\Dompdf();
+        // $dompdf->set_options('isRemoteEnabled', TRUE);
+		// $dompdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
+		// $dompdf->setPaper('A4', 'landscape');	
+		// $dompdf->render();
+		// $dompdf->stream();
+		 
+
+        
+        // Load HTML content
+        $this->pdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
+        
+        // (Optional) Setup the paper size and orientation
+        $this->pdf->setPaper('A4', 'landscape');
+        
+        // Render the HTML as PDF
+        $this->pdf->render();
+        
+        // Output the generated PDF (1 = download and 0 = preview)
+        $this->pdf->stream("welcome.pdf", array("Attachment"=>false));
+
+		// use Dompdf\Dompdf;
+		// use Dompdf\Options;
+		// require 'vendor/autoload.php';
+		// $options = new Options();
+		// $options->set('chroot', realpath(''));
+		// $dompdf = new Dompdf($options);
+		// $dompdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
+		// $dompdf->setPaper('A4', 'landscape');	
+		// $dompdf->stream("welcome.pdf", array("Attachment"=>false));
+
+    }
+
+
+	public function verifikasiLayanan($id_usul){
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		$data['pangkat'] = array(3);
+		$data['gaji_berkala'] =  array(0);
+		$data['pendidikan'] = array(0);
+		$data['jabatan'] = array(3);
+		$data['diklat'] = array(0);
+		$data['organisasi'] = array(0);
+		$data['penghargaan'] = array(0);
+		$data['sj'] = array(0);
+		$data['keluarga'] = array(0);
+		$data['penugasan'] = array(0);
+		$data['cuti'] = array(0);
+		$data['arsip'] = array(0);
+		
+			render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
+    }
+
+	public function loadFormLayanan($id){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($id == 3){
+			$this->load->view('kepegawaian/V_FormCuti', $data);
+		}
+    }
+
+	public function getFile()
+    {
+        $data = $this->kepegawaian->getFile();
+        echo json_encode($data);
+    }
+
+	
+
 
 
 	

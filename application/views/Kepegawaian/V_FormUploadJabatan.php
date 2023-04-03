@@ -9,10 +9,11 @@
 
 
 <!-- Button trigger modal -->
+<?php if($jenis_user == 1) { ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
   Tambah Data Jabatan
 </button>
-
+<?php } ?>
 
 <table width="100%" border="0" class="" align="left">
 <tr>

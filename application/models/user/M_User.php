@@ -60,6 +60,41 @@
             return ['message' => '0'];
         }
 
+        public function searchPegawai($data){
+            $result = null;
+
+            if($data['search_param'] != ''){
+                $nama = $this->db->select('a.*, c.nm_unitkerja')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->like('a.nama', $data['search_param'])
+                                ->where('a.flag_active', 1)
+                                ->limit(5)
+                                ->get()->result_array();
+
+                $nip = $this->db->select('a.*, c.nm_unitkerja')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->like('a.username', $data['search_param'])
+                                ->where('a.flag_active', 1)
+                                ->limit(5)
+                                ->get()->result_array();
+
+                foreach($nama as $nm){
+                    $result[] = $nm;
+                }
+
+                foreach($nip as $np){
+                    $result[] = $np;
+                }
+
+            }
+
+            return $result;
+        }
+
         public function deleteUser($id_m_user){
             $this->db->where('id', $id_m_user)
                 ->update('m_user', ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);

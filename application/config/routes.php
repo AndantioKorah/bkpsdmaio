@@ -76,3 +76,4 @@ $route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
 $route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/profil';
 $route['kepegawaian/layanan'] = 'Kepegawaian/C_Kepegawaian/layanan';
+$route['kepegawaian/profil-pegawai/$1'] = 'user/C_User/profilPegawai/(:any)';

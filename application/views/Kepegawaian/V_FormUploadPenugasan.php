@@ -11,21 +11,6 @@
 </button>
 
 
-
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
- <tr>
-<td>NIP</td>
-<td>:</td>
-<td><?=$this->general_library->getUserName();?></td>
-</tr>
-</table>
-
-
 <div class="modal fade" id="modal_penugasan" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -53,7 +38,7 @@
 
 <div class="form-group">
 <label>Tempat/Negara Tujuan</label>
-<input  class="form-control datepicker"   id="tujuan" name="tujuan" required/>
+<input  class="form-control"   id="tujuan" name="tujuan" required/>
 </div>
 
 <div class="form-group">
@@ -119,12 +104,12 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file').files.length;
+        // var ins = document.getElementById('pdf_file').files.length;
         
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
        
       
       
@@ -162,27 +147,27 @@ $(function(){
     })
   }
 
-  function openFilePenugasan(filename){
-    var nip = <?=$this->general_library->getUserName()?>;
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
-  }
+  // function openFilePenugasan(filename){
+  //   var nip = <?=$this->general_library->getUserName()?>;
+  //   $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
+  // }
 
-  $("#pdf_file").change(function (e) {
+  // $("#pdf_file").change(function (e) {
 
-        var extension = pdf_file.value.split('.')[1];
+  //       var extension = pdf_file.value.split('.')[1];
       
-        var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>
+  //       var fileSize = this.files[0].size/1024;
+  //       var MaxSize = <?=$format_dok['file_size']?>
      
-        if (extension != "pdf"){
-          errortoast("Harus File PDF")
-          $(this).val('');
-        }
+  //       if (extension != "pdf"){
+  //         errortoast("Harus File PDF")
+  //         $(this).val('');
+  //       }
 
-        if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
-          $(this).val('');
-        }
+  //       if (fileSize > MaxSize ){
+  //         errortoast("Maksimal Ukuran File 2 MB")
+  //         $(this).val('');
+  //       }
 
-        });
+  //       });
 </script>

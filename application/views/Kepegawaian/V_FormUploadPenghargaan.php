@@ -12,22 +12,6 @@
   Tambah Data Penghargaan
 </button>
 
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
-
-<tr>
-<td style="vertical-align: top;">NIP</td>
-<td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
-</tr>
-
-
-</table>
-
 
 <!-- Modal -->
 <div class="modal fade" id="modalPenghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,7 +74,7 @@
 
    
 
-<div id="list_pangkat">
+<div id="list_penghargaan">
 
 </div>
 
@@ -111,17 +95,24 @@
   </div>
 </div>                      
 
-
 <script type="text/javascript">
 
 
 $(function(){
-        $('.select2').select2()
-        // loadListPangkat()
+        // $('.select2').select2()
+
+   $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
+  
+        $('#datatable').dataTable()
+        loadListPenghargaan()
     })
 
     $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd-mm-yyyy',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -129,17 +120,18 @@ $(function(){
 });
 
     
-        $('#upload_form_penghargaan').on('submit', function(e){  
-
+        $('#upload_form').on('submit', function(e){  
+        //     document.getElementById('btn_upload').disabled = true;
+        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form_penghargaan');
+        var formvalue = $('#upload_form');
         var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('organisasi_pdf_file').files.length;
+        var ins = document.getElementById('pdf_file').files.length;
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
        
       
       
@@ -157,8 +149,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_penghargaan").reset();
-                loadFormPenghargaan()
+                document.getElementById("upload_form").reset();
+                loadListPenghargaan()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -169,24 +161,35 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
-
-  function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
+    function loadListPenghargaan(){
+    $('#list_penghargaan').html('')
+    $('#list_penghargaan').append(divLoaderNavy)
+    $('#list_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>', function(){
+      $('#loader').hide()
+    })
   }
 
+  function openFilePenghargaan(filename){
+    var nip = <?=$this->general_library->getUserName()?>;
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
+  }
 
-        $('.yearpicker').datepicker({
-            format: 'yyyy',
-            viewMode: "years", 
-            minViewMode: "years",
-            orientation: 'bottom',
-            autoclose: true
+  $("#pdf_file").change(function (e) {
+
+        var extension = pdf_file.value.split('.')[1];
+      
+        var fileSize = this.files[0].size/1024;
+        var MaxSize = <?=$format_dok['file_size']?>
+     
+        if (extension != "pdf"){
+          errortoast("Harus File PDF")
+          $(this).val('');
+        }
+
+        if (fileSize > MaxSize ){
+          errortoast("Maksimal Ukuran File 2 MB")
+          $(this).val('');
+        }
+
         });
 </script>

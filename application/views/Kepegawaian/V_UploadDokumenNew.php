@@ -119,8 +119,145 @@ h2{
               border-radius: var(--bs-nav-pills-border-radius);
           }
             </style>
+  <div class="row">
+  <div class="col-lg-12">
+  <table width="100%" border="0">
+          <p>
+              <tr>
+                <td width="152">Nama</td>
+                <td width="13">:</td>
+                <td width="806">
+          <?= getNamaPegawaiFull($profil_pegawai) ?></td>
+              </tr>
+              <tr>
+                <td>Tempat/Tgl Lahir </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['tptlahir']?> / <?= formatDateNamaBulan($profil_pegawai['tgllahir'])?><td>
+              </tr>
+              <tr>
+                <td>NIP</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nipbaru']?></td>
+              </tr>
+              <tr>
+                <td>Jenis Kelamin </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['jk']?></td>
+              </tr>
+              <tr>
+                <td>Alamat</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['alamat']?></td>
+              </tr>
+              <tr>
+                <td>Agama</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nm_agama']?></td>
+              </tr>
+              <tr>
+                <td>Pendidikan</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nm_tktpendidikan']?></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
 
-  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              </tr>
+              <tr>
+                <td>Pangkat / TMT </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nm_pangkat']?> /
+                  <?php 
+                        if ($profil_pegawai['tmtpangkat'] =='0000-00-00')
+                        {
+                        echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan(date($profil_pegawai['tmtpangkat'])); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>TMT Gaji Berkala </td>
+                <td>:</td>
+                <td><?php 
+                        if ($profil_pegawai['tmtgjberkala']=='0000-00-00')
+                        {
+                        
+                          echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan($profil_pegawai['tmtgjberkala']); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>Jabatan / TMT </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nama_jabatan']?> /
+                  <?php 
+                        if ($profil_pegawai['tmtjabatan']=='0000-00-00')
+                        {
+                        echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan($profil_pegawai['tmtjabatan']); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>Unit Kerja </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nm_unitkerja']?></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                </tr>
+              <tr>
+                <td>NIK </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nik']?></td>
+              </tr>
+              <tr>
+                <td>No HP </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['handphone']?></td>
+              </tr>
+              <tr>
+                <td>Email </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['email'] ?></td>
+              </tr>
+          </p>
+        </table>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="card">
+       
+            <div class="card-body">
+
+            <style>
+              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+              background-color: #222e3c;
+              color: #fff;
+              }
+              .nav-pills .nav-link {
+              color: #000;
+              border: 0;
+              border-radius: var(--bs-nav-pills-border-radius);
+          }
+            </style>
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
   <li class="nav-item" role="presentation">
     <button onclick="loadFormPangkat()" class="nav-link active" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
   </li>
@@ -188,122 +325,19 @@ h2{
   </div>
   <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
-</div>
-
-<!--          
-<div class="warpper" style="background-color:#fff;">
-  <input  class="radio" id="pangkat" name="group" type="radio" checked>
-  <input class="radio" id="gb" name="group" type="radio">
-  <input  class="radio" id="pendidikan" name="group" type="radio">
-  <input  class="radio" id="jabatan" name="group" type="radio">
-  <input  class="radio" id="diklat" name="group" type="radio">
-  <input  class="radio" id="organisasi" name="group" type="radio">
-  <input class="radio" id="penghargaan" name="group" type="radio">
-  <input class="radio" id="sj" name="group" type="radio">
-  <input class="radio" id="keluarga" name="group" type="radio">
-  <input class="radio" id="penugasan" name="group" type="radio">
-  <input class="radio" id="cuti" name="group" type="radio">
-  <input class="radio" id="arsip" name="group" type="radio">
-  
-  <div class="tabs">
-  <label class="tab" id="pangkat-tab" for="pangkat">Pangkat</label>
-  <label class="tab" id="gb-tab" for="gb">Gaji Berkala</label>
-  <label class="tab" id="pendidikan-tab" for="pendidikan">Pendidikan</label>
-  <label class="tab" id="jabatan-tab" for="jabatan">Jabatan</label>
-  <label class="tab" id="diklat-tab" for="diklat">Diklat</label>
-  <label class="tab" id="organisasi-tab" for="organisasi">Organisasi</label>
-  <label class="tab" id="penghargaan-tab" for="penghargaan">Penghargaan</label>
-  <label class="tab" id="sj-tab" for="sj">Sumpah/Janji</label>
-  <label class="tab" id="keluarga-tab" for="keluarga">Keluarga</label>
-  <label class="tab" id="penugasan-tab" for="penugasan">Penugasan</label>
-  <label class="tab" id="cuti-tab" for="cuti">Cuti</label>
-  <label class="tab" id="arsip-tab" for="arsip">Arsip Lainnya</label>
-    </div>
-    <hr>
-  <div class="panels">
-  <div class="panel" id="pangkat-panel">
-    <div class="panel-title">Pangkat</div>
-   
-  </div>
-
-  <div class="panel" id="gb-panel">
-    <div class="panel-title">Gaji Berkala</div>
-  
-  </div>
-
-  <div class="panel" id="pendidikan-panel">
-    <div class="panel-title">Pendidikan</div>
-   
-  </div>
-
-  <div class="panel" id="jabatan-panel">
-    <div class="panel-title">Jabatan</div>
-  
-  </div>
-
-  <div class="panel" id="diklat-panel">
-    <div class="panel-title">Diklat</div>
-  
-  </div>
-
-
-  <div class="panel" id="organisasi-panel">
-    <div class="panel-title">Organisasi</div>
-   
-  </div>
-
-  <div class="panel" id="penghargaan-panel">
-    <div class="panel-title">Penghargaan</div>
-  </div>
-
-  <div class="panel" id="sj-panel">
-    <div class="panel-title">Sumpah/Janji</div>
-  </div>
-
-  <div class="panel" id="keluarga-panel">
-    <div class="panel-title">Keluarga</div>
-  </div>
-
-  <div class="panel" id="penugasan-panel">
-    <div class="panel-title">Penugasan</div>
-  </div>
-
-  <div class="panel" id="cuti-panel">
-    <div class="panel-title">Cuti</div>
-  </div>
-
-  <div class="panel" id="arsip-panel">
-    <div class="panel-title">Arsip Lainnya</div>
-  </div>
-
-  </div>
-</div>
- -->
-
-
-
-
-
-          
+</div>       
             </div>
         </div>
     </div>
+        </div>
+        </div>
 </div>
 </div>
 <!-- tutup upload dokumen  -->
 
 <script>
-
-
-
-$(function(){
-  $('#form_pangkat').html(' ')
-    $('#form_pangkat').append(divLoaderNavy)
-    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>', function(){
-    $('#loader').hide()    
-    })
-
-        
+ $(function(){
+    loadFormPangkat()
   })
 
  function loadFormPangkat(){

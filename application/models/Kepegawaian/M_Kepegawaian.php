@@ -166,6 +166,17 @@ class M_Kepegawaian extends CI_Model
                             ->get()->result_array();
         }
 
+        function getGajiBerkala(){
+            return $this->db->select('d.nm_pangkat, c.masakerja, c.pejabat, c.nosk, c.tglsk, c.tmtgajiberkala, c.gambarsk')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.peggajiberkala c','b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
+                            ->where('a.id', $this->general_library->getId())
+                            ->order_by('c.tmtgajiberkala','desc')
+                            ->get()->result_array();
+        }
+
         function getDiklat(){
             return $this->db->select('c.nm_diklat, c.penyelenggara, c.jam , c.tglmulai, c.tglselesai, c.nosttpp, c.tglsttpp, c.gambarsk')
                             ->from('m_user a')
@@ -173,6 +184,16 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegdiklat c','b.id_peg = c.id_pegawai')
                             ->where('a.id', $this->general_library->getId())
                             ->order_by('c.tglselesai','desc')
+                            ->get()->result_array();
+        }
+
+        function getPenghargaan(){
+            return $this->db->select('c.nm_pegpenghargaan, c.nosk, c.tglsk , c.tahunpenghargaan, c.asal')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpenghargaan c','b.id_peg = c.id_pegawai')
+                            ->where('a.id', $this->general_library->getId())
+                            ->order_by('c.tahunpenghargaan','desc')
                             ->get()->result_array();
         }
 
@@ -501,6 +522,8 @@ class M_Kepegawaian extends CI_Model
             $result = $this->insert('db_pegawai.pegorganisasi',$dataPost);
         } else if($this->input->post('nm_pegpenghargaan')){
             $result = $this->insert('db_pegawai.pegpenghargaan',$dataPost);
+        } else if($this->input->post('db_pegawai.pegdatalain')){
+            $result = $this->insert('db_pegawai.pegdatalain',$dataPost);
         }
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
       

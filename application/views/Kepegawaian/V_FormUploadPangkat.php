@@ -12,30 +12,7 @@
 
 
 
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
- <tr>
-<td>NIP</td>
-<td>:</td>
-<td><?=$this->general_library->getUserName();?></td>
-</tr>
 
-<tr>
-<td>Pangkat Terakhir </td>
-<td>:</td>
-<td><?= $profil_pegawai['nm_pangkat'];?></td>
-</tr>
-
-<tr>
-<td style="vertical-align: top;">TMT Pangkat </td>
-<td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?= formatDateNamaBulan($profil_pegawai['tmtpangkat']);?></td>
-</tr> 
-</table>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">

@@ -18,7 +18,7 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nm_tktpendidikan']?></td>
+              <td class="text-left"><?=$rs['nm_tktpendidikanb']?></td>
            
               <td class="text-left"><?=$rs['namasekolah']?></td>
               <td class="text-left"><?=$rs['fakultas']?></td>

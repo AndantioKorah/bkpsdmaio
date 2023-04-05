@@ -101,10 +101,9 @@ h2{
 <!-- upload dokumen  -->
 <div class="container-fluid p-0">
 <!-- <h1 class="h3 mb-3">Upload Dokumen</h1> -->
-
-
-<div class="card">
-       
+<div class="row">
+    <div class="col-12">
+        <div class="card">
             <div class="card-body">
 
             <style>
@@ -323,8 +322,7 @@ h2{
     </div>
         </div>
         </div>
-</div>
-</div>
+
 <!-- tutup upload dokumen  -->
 
 <script>
@@ -369,7 +367,7 @@ $(function(){
  }
 
  function loadFormPendidikan(){
-  $('#form_gaji_berkala').html(' ')
+  $('#form_pendidikan').html(' ')
     $('#form_pendidikan').append(divLoaderNavy)
     $('#form_pendidikan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormPendidikan/')?>', function(){
     $('#loader').hide()    

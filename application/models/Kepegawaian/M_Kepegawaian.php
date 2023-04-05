@@ -159,7 +159,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPendidikan(){
-            return $this->db->select('d.nm_tktpendidikan,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan')
+            return $this->db->select('e.nm_tktpendidikanb,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
@@ -200,6 +200,7 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
                             ->where('a.id', $this->general_library->getId())
+                            ->order_by('c.tglsk','desc')
                             ->get()->result_array();
         }
 
@@ -490,7 +491,16 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-		$target_dir						= './uploads/' . $this->general_library->getUserName();
+
+        // dd($this->input->post());
+        if($this->input->post('id_dokumen') == 4){
+            $target_dir						= './arsipelektronik/';
+        } else if($this->input->post('id_dokumen') == 7){
+            $target_dir						= './arsipgjberkala/';
+        } else {
+            $target_dir						= './uploads/';
+        }
+		
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;

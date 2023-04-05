@@ -154,7 +154,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_gaji_berkala").reset();
-                // loadFormGajiBerkala()
+                loadListGajiBerkala()
               } else {
                 errortoast(result.msg)
                 return false;

@@ -115,7 +115,7 @@ class M_Kepegawaian extends CI_Model
         {
             $this->db->where('aktif',1);
             $this->db->ORDER_BY('nama_dokumen');
-            return $this->db->get('db_siladen.dokumen');	
+            return $this->db->get('db_siladen.dokumen');
         }
 
 
@@ -161,7 +161,7 @@ class M_Kepegawaian extends CI_Model
         function getPendidikan(){
             return $this->db->select('d.nm_tktpendidikan,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan')
                             ->from('m_user a')
-                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.tktpendidikan d','b.pendidikan = d.id_tktpendidikan')
                             ->join('db_pegawai.tktpendidikanb e','c.tktpendidikan = e.id_tktpendidikanb')
@@ -528,6 +528,8 @@ class M_Kepegawaian extends CI_Model
             $result = $this->insert('db_pegawai.pegorganisasi',$dataPost);
         } else if($this->input->post('nm_pegpenghargaan')){
             $result = $this->insert('db_pegawai.pegpenghargaan',$dataPost);
+        } else if($this->input->post('db_pegawai.pegdatalain')){
+            $result = $this->insert('db_pegawai.pegdatalain',$dataPost);
         }
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
       

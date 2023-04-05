@@ -13,17 +13,6 @@
 <?php } ?>
 
 
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
- <tr>
-<td>NIP</td>
-<td>:</td>
-<td><?=$this->general_library->getUserName();?></td>
-</tr>
 
 <!-- <tr>
 <td>Pangkat Terakhir </td>

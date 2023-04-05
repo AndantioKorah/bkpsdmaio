@@ -43,6 +43,11 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 
+	public function loadListPenugasan(){
+		$data['result'] = $this->kepegawaian->getPenugasan();
+		$this->load->view('kepegawaian/V_ListPenugasan', $data);
+	}
+
 	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
@@ -53,12 +58,28 @@ class C_Kepegawaian extends CI_Controller
 	public function profil()
 	{
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-		$data['pangkat'] = $this->kepegawaian->getPangkatPegawai();
-		$data['pendidikan'] = $this->kepegawaian->getPendidikan();
-		$data['jabatan'] = $this->kepegawaian->getJabatan();
+		$data['result'] = $this->kepegawaian->getPendidikan();
+		$data['results'] = $this->kepegawaian->getPangkatPegawai();
 		// $data['tes'] = $this->general_library->getId();
 		// dd($data);
 		render('kepegawaian/V_LihatPNS', '', '', $data);
+	}
+
+
+	public function loadListProfil(){
+		$data['result'] = $this->kepegawaian->getProfilPegawai();
+		$this->load->view('kepegawaian/V_ListProfil', $data);
+	}
+
+	public function loadListBerkala(){
+		$data['result'] = $this->kepegawaian->getGajiBerkala();
+		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+	}
+
+	public function loadListPenghargaan(){
+		$data['result'] = $this->kepegawaian->getPenghargaan();
+		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
+		
 	}
 
 	public function loadDokumenPns()
@@ -242,7 +263,20 @@ class C_Kepegawaian extends CI_Controller
         render('kepegawaian/V_UploadDokumenNew', '', '', $data);
     }
 
-	public function LoadFormDokPangkat($jenis_user,$nip=null){
+	// public function LoadFormDokPangkat($jenis_user,$nip=null){
+	// 	$data['result'] = $this->kepegawaian->getPendidikan();
+	// 	$data['results'] = $this->kepegawaian->getPangkatPegawai();
+    //     render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    // }
+
+	public function LoadFormDokPenugasan(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_penugasan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenistugas', 'id_jenistugas', 'desc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
+    }
+
+	public function LoadFormDokPangkat($jenis_user){
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
 		$data['jenis_user'] = $jenis_user;
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');

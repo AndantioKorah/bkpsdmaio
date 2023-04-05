@@ -101,10 +101,9 @@ h2{
 <!-- upload dokumen  -->
 <div class="container-fluid p-0">
 <!-- <h1 class="h3 mb-3">Upload Dokumen</h1> -->
-<div class="row">
-    <div class="col-12">
-        
-        <div class="card">
+
+
+<div class="card">
        
             <div class="card-body">
 
@@ -119,8 +118,7 @@ h2{
               border-radius: var(--bs-nav-pills-border-radius);
           }
             </style>
-
-  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
   <li class="nav-item" role="presentation">
           <a class="nav-link active" id="pills-company-tab" data-toggle="pill" href="#pills-company" role="tab" aria-controls="pills-company" aria-selected="true">Profil</a>
         </li>
@@ -152,7 +150,7 @@ h2{
     <button class="nav-link" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
+    <button onclick="loadFormPenugasan()" class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
@@ -312,111 +310,19 @@ h2{
   </div>
   <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">...</div>
   <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
-  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
+  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">
+  <div id="form_penugasan"></div>
+  </div>
   <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
   <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">skp</div>
   <div class="tab-pane fade" id="pills-assesment" role="tabpanel" aria-labelledby="pills-assesment-tab">assesment</div>
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
-</div>
-
-<!--          
-<div class="warpper" style="background-color:#fff;">
-  <input  class="radio" id="pangkat" name="group" type="radio" checked>
-  <input class="radio" id="gb" name="group" type="radio">
-  <input  class="radio" id="pendidikan" name="group" type="radio">
-  <input  class="radio" id="jabatan" name="group" type="radio">
-  <input  class="radio" id="diklat" name="group" type="radio">
-  <input  class="radio" id="organisasi" name="group" type="radio">
-  <input class="radio" id="penghargaan" name="group" type="radio">
-  <input class="radio" id="sj" name="group" type="radio">
-  <input class="radio" id="keluarga" name="group" type="radio">
-  <input class="radio" id="penugasan" name="group" type="radio">
-  <input class="radio" id="cuti" name="group" type="radio">
-  <input class="radio" id="arsip" name="group" type="radio">
-  
-  <div class="tabs">
-  <label class="tab" id="pangkat-tab" for="pangkat">Pangkat</label>
-  <label class="tab" id="gb-tab" for="gb">Gaji Berkala</label>
-  <label class="tab" id="pendidikan-tab" for="pendidikan">Pendidikan</label>
-  <label class="tab" id="jabatan-tab" for="jabatan">Jabatan</label>
-  <label class="tab" id="diklat-tab" for="diklat">Diklat</label>
-  <label class="tab" id="organisasi-tab" for="organisasi">Organisasi</label>
-  <label class="tab" id="penghargaan-tab" for="penghargaan">Penghargaan</label>
-  <label class="tab" id="sj-tab" for="sj">Sumpah/Janji</label>
-  <label class="tab" id="keluarga-tab" for="keluarga">Keluarga</label>
-  <label class="tab" id="penugasan-tab" for="penugasan">Penugasan</label>
-  <label class="tab" id="cuti-tab" for="cuti">Cuti</label>
-  <label class="tab" id="arsip-tab" for="arsip">Arsip Lainnya</label>
-    </div>
-    <hr>
-  <div class="panels">
-  <div class="panel" id="pangkat-panel">
-    <div class="panel-title">Pangkat</div>
-   
-  </div>
-
-  <div class="panel" id="gb-panel">
-    <div class="panel-title">Gaji Berkala</div>
-  
-  </div>
-
-  <div class="panel" id="pendidikan-panel">
-    <div class="panel-title">Pendidikan</div>
-   
-  </div>
-
-  <div class="panel" id="jabatan-panel">
-    <div class="panel-title">Jabatan</div>
-  
-  </div>
-
-  <div class="panel" id="diklat-panel">
-    <div class="panel-title">Diklat</div>
-  
-  </div>
-
-
-  <div class="panel" id="organisasi-panel">
-    <div class="panel-title">Organisasi</div>
-   
-  </div>
-
-  <div class="panel" id="penghargaan-panel">
-    <div class="panel-title">Penghargaan</div>
-  </div>
-
-  <div class="panel" id="sj-panel">
-    <div class="panel-title">Sumpah/Janji</div>
-  </div>
-
-  <div class="panel" id="keluarga-panel">
-    <div class="panel-title">Keluarga</div>
-  </div>
-
-  <div class="panel" id="penugasan-panel">
-    <div class="panel-title">Penugasan</div>
-  </div>
-
-  <div class="panel" id="cuti-panel">
-    <div class="panel-title">Cuti</div>
-  </div>
-
-  <div class="panel" id="arsip-panel">
-    <div class="panel-title">Arsip Lainnya</div>
-  </div>
-
-  </div>
-</div>
- -->
-
-
-
-
-
-          
+</div>       
             </div>
         </div>
     </div>
+        </div>
+        </div>
 </div>
 </div>
 <!-- tutup upload dokumen  -->
@@ -442,6 +348,14 @@ $(function(){
   $('#form_pangkat').html(' ')
     $('#form_pangkat').append(divLoaderNavy)
     $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormPenugasan(){
+  $('#form_penugasan').html(' ')
+    $('#form_penugasan').append(divLoaderNavy)
+    $('#form_penugasan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPenugasan/')?>', function(){
     $('#loader').hide()    
     })
  }

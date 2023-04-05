@@ -15,22 +15,6 @@
 </button>
 <?php } ?>
 
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
-
-<tr>
-<td style="vertical-align: top;">NIP</td>
-<td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
-</tr>
-
-
-</table>
-
 <!-- Modal -->
 <div class="modal fade" id="modalJabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">

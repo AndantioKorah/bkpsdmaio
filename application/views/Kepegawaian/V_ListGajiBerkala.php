@@ -1,4 +1,4 @@
-dafa<?php if($result){ ?>
+<?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
       <table class="table table-striped datatable" id="datatable">

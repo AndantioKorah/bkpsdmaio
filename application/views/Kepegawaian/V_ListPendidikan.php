@@ -1,11 +1,10 @@
-dafa<?php if($result){ ?>
+<?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
       <table class="table table-striped datatable" id="datatable">
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Tingkat Pendidikan</th>
-         
           <th class="text-left">Nama Sekolah</th>
           <th class="text-left">Fakultas</th>
           <th class="text-left">Jurusan</th>

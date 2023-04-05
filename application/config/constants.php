@@ -146,6 +146,7 @@ define('URL_API_HARI_LIBUR', 'https://api-harilibur.vercel.app/api');
 define('LIST_UNIT_KERJA_KHUSUS', [4011000, 4026000, 4012000, 4018000, 1010400, 1030750, 1020500, 7005010, 7005020]);
 define('LIST_UNIT_KERJA_MASTER_SEKOLAH', [8000000, 8010000, 8020000, 8030000]);
 define('LIST_UNIT_KERJA_MASTER_KECAMATAN', [5001000, 5002000, 5003000, 5004000, 5005000, 5006000, 5007000, 5008000, 5009000, 5010001, 5011001]);
+define('LIST_UNIT_KERJA_MASTER_EXCLUDE', [0000000, 7000000, 9000000, 9050000]);
 define('LIST_UNIT_KERJA_KECAMATAN', [50010001, 50020001, 50030001, 50040001, 50050001, 50060001, 50070001, 50080001, 50090001, 50100011, 50110011]);
 define('LIST_ROLE_KHUSUS', ['lurah', 'camat']);
 define('ID_BIDANG_PEKIN', 166);
@@ -159,5 +160,6 @@ define('BOBOT_NILAI_SKBP', 0.3);
 define('BOBOT_NILAI_KOMPONEN_KINERJA', 0.3);
 
 // define('URL_FILE', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/');
-define('URL_FILE', 'http://localhost/bkpsdmaio/uploads/');
+define('URL_FILE', 'http://localhost/bkpsdmaio/arsipelektronik/');
+
 

@@ -14,8 +14,34 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadListPangkat(){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai();
+		// dd($data);
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
+
+	public function loadListPendidikan(){
+		$data['result'] = $this->kepegawaian->getPendidikan();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListPendidikan', $data);
+	}
+
+	public function loadListDiklat(){
+		$data['result'] = $this->kepegawaian->getDiklat();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListDiklat', $data);
+	}
+
+	public function loadListJabatan(){
+		$data['result'] = $this->kepegawaian->getJabatan();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListJabatan', $data);
+	}
+
+	public function loadListGajiBerkala(){
+		$data['result'] = $this->kepegawaian->getGajiBerkala();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+	}
+
 
 	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
@@ -212,6 +238,7 @@ class C_Kepegawaian extends CI_Controller
 	public function uploadDokumen(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
         render('kepegawaian/V_UploadDokumenNew', '', '', $data);
     }
 
@@ -245,7 +272,7 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadPendidikan', $data);
     }
 
-	public function LoadFormJabatan($jenis_user,$nip){
+	public function LoadFormJabatan($jenis_user,$nip=null){
 		$data['jenis_user'] = $jenis_user;
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['nama_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan', 'id_jabatanpeg', 'asc');
@@ -292,8 +319,9 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayanan());
 	}
 
-	public function loadListUsulLayananCuti(){
-		$data['result'] = $this->kepegawaian->getListUsulLayananCuti();
+	public function loadListUsulLayanan($id){
+		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
+		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
 		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
 	}
 
@@ -303,51 +331,38 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function CetakSurat($id_usul){
-		$this->load->library('pdf');
-		// $data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
-		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
+		// $this->load->library('pdf');
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		// dd($data);
+		$this->load->view('kepegawaian/surat/V_SuratCuti', $data);
   			
 
-		$html = $this->output->get_output();
+		$this->load->library('pdfgenerator');
+        
+        // title dari pdf
+        // $this->data['title_pdf'] = 'Laporan Penjualan Toko Kita';
+        
+        // filename dari pdf ketika didownload
+        $file_pdf = "surat_cuti_".$data['result'][0]['nip'];
+        // setting paper
+        $paper = 'F4';
+        //orientasi paper potrait / landscape
+        $orientation = "portrait";
+        
+		$html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	    
+        
+        // run dompdf
+        $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
 
-		// $options = new Options();
-		// $options->setIsRemoteEnabled(true);
-		// $dompdf = new Dompdf\Dompdf();
-        // $dompdf->set_options('isRemoteEnabled', TRUE);
-		// $dompdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
-		// $dompdf->setPaper('A4', 'landscape');	
-		// $dompdf->render();
-		// $dompdf->stream();
-		 
-
-        
-        // Load HTML content
-        $this->pdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
-        
-        // (Optional) Setup the paper size and orientation
-        $this->pdf->setPaper('A4', 'landscape');
-        
-        // Render the HTML as PDF
-        $this->pdf->render();
-        
-        // Output the generated PDF (1 = download and 0 = preview)
-        $this->pdf->stream("welcome.pdf", array("Attachment"=>false));
-
-		// use Dompdf\Dompdf;
-		// use Dompdf\Options;
-		// require 'vendor/autoload.php';
-		// $options = new Options();
-		// $options->set('chroot', realpath(''));
-		// $dompdf = new Dompdf($options);
-		// $dompdf->loadHtml('<img src="http://localhost/bkpsdmaio/assets/images/kop_surat.png">');
-		// $dompdf->setPaper('A4', 'landscape');	
-		// $dompdf->stream("welcome.pdf", array("Attachment"=>false));
+	
+		
 
     }
 
 
 	public function verifikasiLayanan($id_usul){
 		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		// dd($data['result']);
 		$data['pangkat'] = array(3);
 		$data['gaji_berkala'] =  array(0);
 		$data['pendidikan'] = array(0);
@@ -366,6 +381,8 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadFormLayanan($id){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
+
 		if($id == 3){
 			$this->load->view('kepegawaian/V_FormCuti', $data);
 		}
@@ -376,6 +393,35 @@ class C_Kepegawaian extends CI_Controller
         $data = $this->kepegawaian->getFile();
         echo json_encode($data);
     }
+
+	public function deleteUsulLayanan($id){
+        $this->general->delete('id_usul', $id, 'db_siladen.usul_layanan');
+    }
+
+
+	public function getAllUsulLayananAdmin($id){
+		$data['result'] = $this->kepegawaian->getAllUsulLayananAdmin($id);
+		// dd($data);
+		$this->load->view('kepegawaian/V_LayananItem', $data);
+	}
+
+	public function submitVerifikasiLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiLayanan());
+	}
+
+	public function batalVerifikasiLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiLayanan());
+	}
+
+	public function submitNomorTglSurat()
+	{ 
+		echo json_encode( $this->kepegawaian->submitNomorTglSurat());
+	}
+
+
+	
 
 	
 

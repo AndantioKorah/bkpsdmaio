@@ -17,7 +17,6 @@
 
 
 
-
 <div class="container-fluid pt-2" style="background-color:#fff;">
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
@@ -32,8 +31,9 @@
  
   </ul>
       <hr>
+      
 					<iframe id="" style="width: 100%; height: 80vh;"
-						src="http://localhost/bkpsdmaio/dokumen_layanan/cuti/199401042020121011/pengantar_199401042020121011_2023-03-01.pdf"></iframe>
+						src="http://localhost/bkpsdmaio/dokumen_layanan/<?= $result['0']['nama'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
 
 				</div>
 				<div class="col-md-6" >
@@ -158,17 +158,22 @@
       
 	
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button id="btn_verifikasi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelVerif">
 Verifikasi
 </button>
-
+<form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
+<input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_usul'];?>">
+<button  id="btn_tolak_verifikasi"  class="btn btn-danger" >
+Batal Verif
+</button>
+</form>
 <style>
 </style>
 
     
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modelVerif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -178,22 +183,23 @@ Verifikasi
         </button>
       </div>
       <div class="modal-body">
-      <form>
+      <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
+        <input type="hidden" name="id_usul" id="id_usul" value="<?= $result[0]['id_usul'];?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
-        <select class="form-select" aria-label="Default select example">
+        <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
         <option value="1">ACC</option>
-        <option value="2">BTL</option>
-        <option value="3">TMS</option>
+        <option value="2">TOLAK</option>
+        <!-- <option value="3">TMS</option> -->
       </select>
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Catatan</label>
-        <textarea class="form-control customTextarea" name="" id="" rows="3"></textarea>
+        <textarea class="form-control customTextarea" name="keterangan" id="keterangan" rows="3"></textarea>
       </div>
     
-      <button type="submit" class="btn btn-primary" style="float: right;">Simpan</button>
+      <button id="btn_verif" class="btn btn-primary" style="float: right;">Simpan</button>
     </form>
       </div>
       <!-- <div class="modal-footer">
@@ -209,11 +215,25 @@ Verifikasi
 		</div>
 	</div>
 </div>
-
 <script>
 
 var jenis_user = 2; 
 var nip = "<?= $result[0]['nip'];?>"; 
+var status = "<?= $result[0]['status'];?>"; 
+
+$(function(){
+  
+   if(status == 0){
+    $('#btn_tolak_verifikasi').hide()
+    $('#btn_verifikasi').show()
+   } else if(status == 1) {
+    $('#btn_tolak_verifikasi').show()
+    $('#btn_verifikasi').hide()
+   } else if(status == 2) {
+    $('#btn_tolak_verifikasi').show()
+    $('#btn_verifikasi').hide()
+   }
+  })
 
 
   function getFile(file) {
@@ -221,7 +241,6 @@ var nip = "<?= $result[0]['nip'];?>";
         var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
         var id_peg = "<?=$result[0]['id_peg'];?>";
         var base_url = "<?= base_url();?>";
-       
         
         $.ajax({
         type : "POST",
@@ -231,9 +250,14 @@ var nip = "<?= $result[0]['nip'];?>";
         success: function(data){
         console.log(data)
         if(data != ""){
-          $('#view_file_verif').attr('src', 'http://localhost/bkpsdmaio/uploads/199401042020121011/SK_KP_199401042020121011_31.pdf')
-          $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
+          if(data[0].gambarsk != ""){
+            $('#view_file_verif').attr('src', base_url+'uploads/'+nip+'/'+data[0].gambarsk)
+          // $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
           $('#ket').html('');
+          } else {
+            $('#view_file_verif').attr('src', '')
+            $('#ket').html('Tidak ada data');
+          }
         } else {
         // errortoast('tidak ada data')
         $('#view_file_verif').attr('src', '')
@@ -242,6 +266,53 @@ var nip = "<?= $result[0]['nip'];?>";
         }
         });
         }
+
+
+
+
+        $('#form_verifikasi_layanan').on('submit', function(e){
+          var status = $('#status').val()
+        
+          if(status == "--"){
+            errortoast('Silahkan Pilih Status')
+          return false;
+        }
+
+            e.preventDefault()
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiLayanan")?>',
+                method: 'post',
+                data: $(this).serialize(),
+                success: function(datares){
+                  successtoast('Data Berhasil Diverifikasi')
+                 
+                  $('#btn_tolak_verifikasi').show()
+                  $('#btn_verifikasi').hide()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        })
+
+        $('#form_batal_verifikasi_layanan').on('submit', function(e){
+          
+            e.preventDefault()
+            if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiLayanan")?>',
+                method: 'post',
+                data: $(this).serialize(),
+                success: function(datares){
+                  successtoast('Berhasil batal verifikasi ')
+                  $('#btn_tolak_verifikasi').hide()
+                  $('#btn_verifikasi').show()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+          }
+        })
+
 
   
 

@@ -186,8 +186,7 @@
   
     $('#list_usul_layanan').html('')
     $('#list_usul_layanan').append(divLoaderNavy)
-   
-    $('#list_usul_layanan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListUsulLayananCuti/")?>', function(){
+    $('#list_usul_layanan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>'+val, function(){
       $('#loader').hide()
     })
   }

@@ -98,6 +98,17 @@ function countNilaiSkp($data)
     return $result;
 }
 
+function getListDateByMonth($month, $year){
+    $list=array();
+    for($d=1; $d<=31; $d++)
+    {
+        $time=mktime(12, 0, 0, $month, $d, $year);          
+        if (date('m', $time)==$month)       
+            $list[]=date('Y-m-d', $time);
+    }
+    return $list;
+}
+
 function getDateBetweenDates($startDate, $endDate)
 {
     $rangArray = [];

@@ -119,7 +119,7 @@
 
   
 
-<div id="list_pangkat">
+<div id="list_pendidikan">
 
 </div>
 
@@ -143,7 +143,7 @@
 
 $(function(){
         $('.select2pendidikan').select2()
-        // loadListPangkat()
+        loadListPendidikan()
     })
 
     $('.datepicker').datepicker({
@@ -195,13 +195,13 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListPendidikan(){
+    $('#list_pendidikan').html('')
+    $('#list_pendidikan').append(divLoaderNavy)
+    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>', function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

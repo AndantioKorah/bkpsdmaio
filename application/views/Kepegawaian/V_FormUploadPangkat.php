@@ -25,7 +25,7 @@
 <td><?=$this->general_library->getUserName();?></td>
 </tr>
 
-<tr>
+<!-- <tr>
 <td>Pangkat Terakhir </td>
 <td>:</td>
 <td><?= $profil_pegawai['nm_pangkat'];?></td>
@@ -35,7 +35,7 @@
 <td style="vertical-align: top;">TMT Pangkat </td>
 <td style="vertical-align: top;">:</td>
 <td style="vertical-align: top;" height="40px;" ><?= formatDateNamaBulan($profil_pegawai['tmtpangkat']);?></td>
-</tr> 
+</tr>  -->
 </table>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

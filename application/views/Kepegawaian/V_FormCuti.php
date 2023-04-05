@@ -1,31 +1,25 @@
 <form method="post" id="form_cuti" enctype="multipart/form-data">
     <input type="hidden" name="jenis_layanan" id="jenis_layanan" value="3">
-	<div class="mb-3">
+	<!-- <div class="mb-3">
 		<label for="exampleInputPassword1" class="form-label">Nomor Usul</label>
 		<input type="text" class="form-control" id="nomor_usul" name="nomor_usul">
-	</div>
+	</div> -->
 
 	<div class="mb-3">
 		<label for="" class="form-label ">Tanggal Usul</label>
-		<input type="text" class="form-control datepicker" id="tanggal_usul" name="tanggal_usul"
+		<input type="hidden" class="form-control datepicker" id="tanggal_usul" name="tanggal_usul"
 			value="<?= date('Y-m-d');?>">
 	</div>
 
 
 	<div class="mb-3">
 		<label for="exampleInputEmail1" class="form-label">Jenis Cuti </label>
-		<select  class="form-control select2"
+		<select onchange="openform()" class="form-control select2"
 			data-dropdown-css-class="select2-navy" name="jenis_cuti" id="jenis_cuti" required>
 			<option value="" disabled selected>Pilih Item</option>
-			<option value="1">Cuti Tahunan</option>
-			<option value="2">Cuti Besar</option>
-			<option value="3">Cuti Sakit</option>
-			<option value="4">Cuti Bersalin</option>
-			<option value="5">Cuti Alasan Penting</option>
-			<option value="6">Cuti Diluar Tanggungan Negara</option>
-			<!-- <?php if($jenis_layanan){ foreach($jenis_layanan as $r){ ?>
-                        <option value="<?=$r['kode']?>"><?=$r['nama']?></option>
-                    <?php } } ?> -->
+			<?php if($jenis_cuti){ foreach($jenis_cuti as $r){ ?>
+                        <option value="<?=$r['id_cuti']?>"><?=$r['nm_cuti']?></option>
+                    <?php } } ?>
 		</select>
 	</div>
 
@@ -55,6 +49,7 @@
 		</div>
 	</div>
 
+  <div id="haripertahun" style="display:none">
 	<div class="row align-items-center">
 		<label for="" class="form-label ">Tahun
 			<?= date('Y') ;?>
@@ -111,6 +106,7 @@
 			</span>
 		</div>
 	</div>
+  </div>
 
 	<div class="mb-3">
 		<label for="" class="form-label ">Tanggal Mulai</label>
@@ -156,8 +152,27 @@
         }
 
         var lama_cuti = $('#lama_cuti').val();
+        var radioValue = $("input[name='jenis_lama_cuti']:checked").val();
+        var jenis_cuti = $('#jenis_cuti').find(":selected").val();
+        
+
         var tanggal_mulai = $('#tanggal_mulai').val();
         var tanggal_selesai = $('#tanggal_selesai').val();
+
+        var tahun1 = $('#tahun1').val()
+        var tahun2 = $('#tahun2').val()
+        var tahun3 = $('#tahun3').val()
+
+        if(tahun1 == ""){
+        tahun1 = 0;
+        }
+
+        if(tahun2 == ""){
+          tahun2 = 0;
+        }
+        if(tahun3 == ""){
+          tahun3 = 0;
+        }
      
         var jenis_layanan = $('#jenis_layanan').find(":selected").val();
         if(jenis_layanan == 3){
@@ -173,9 +188,25 @@
             errortoast("Tanggal Selesai belum di isi")
             return false
           }
+
+
+          if( $('input[name="jenis_lama_cuti"]').is(':checked') ){
+            if(jenis_cuti == 0){
+              var total_semua_tahun = parseInt(tahun1)+parseInt(tahun2)+parseInt(tahun3);
+              if(parseInt(total_semua_tahun) < parseInt(lama_cuti)){
+              errortoast('Totah hari belum sesuai')
+              }  
+            }
+            
+           } else{
+           errortoast("Hari atau Bulan belum di pilih");
+          }
+          
           
         
-        }    
+        } 
+       
+        
       
       
         $.ajax({  
@@ -193,7 +224,7 @@
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("form_cuti").reset();
-                loadListUsulLayanan()
+                // loadListUsulLayanan()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -217,23 +248,23 @@
       });
 
       function hitungTotalHari(){
-  var total_hari = $('#lama_cuti').val()
-  var radioValue = $("input[name='jenis_lama_cuti']:checked").val();
+      var total_hari = $('#lama_cuti').val()
+      var radioValue = $("input[name='jenis_lama_cuti']:checked").val();
 
-  var tahun1 = $('#tahun1').val()
-  var tahun2 = $('#tahun2').val()
-  var tahun3 = $('#tahun3').val()
+      var tahun1 = $('#tahun1').val()
+      var tahun2 = $('#tahun2').val()
+      var tahun3 = $('#tahun3').val()
 
-  if(tahun1 == ""){
-     tahun1 = 0;
-  }
+      if(tahun1 == ""){
+        tahun1 = 0;
+      }
 
-  if(tahun2 == ""){
-     tahun2 = 0;
-  }
-  if(tahun3 == ""){
-     tahun3 = 0;
-  }
+      if(tahun2 == ""){
+        tahun2 = 0;
+      }
+      if(tahun3 == ""){
+        tahun3 = 0;
+      }
   
  
   if(radioValue == 1){
@@ -263,6 +294,17 @@
     document.getElementById("tahun3").disabled = true;
 
   }
+}
+
+
+function openform(){
+  var jenis_cuti = $('#jenis_cuti').val()
+  if(jenis_cuti == 0){
+   $('#haripertahun').show('fast')
+  } else {
+    $('#haripertahun').hide('fast')
+  }
+ 
 }
 
 

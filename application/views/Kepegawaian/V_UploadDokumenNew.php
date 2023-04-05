@@ -122,7 +122,10 @@ h2{
 
   <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button onclick="loadFormPangkat()" class="nav-link active" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
+          <a class="nav-link active" id="pills-company-tab" data-toggle="pill" href="#pills-company" role="tab" aria-controls="pills-company" aria-selected="true">Profil</a>
+        </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPangkat()" class="nav-link" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
   </li>
   <li class="nav-item" role="presentation">
     <button  onclick="loadFormGajiBerkala()" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
@@ -155,11 +158,137 @@ h2{
     <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
   </li>
   <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
+  </li>
+  <li class="nav-item" role="presentation">
     <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
   </li>
 </ul>
 <hr>
 <div class="tab-content" id="pills-tabContent">
+<div class="tab-pane fade show active" id="pills-company" role="tabpanel" aria-labelledby="pills-company-tab">
+        <div class="container-fluid">
+        <table width="100%" border="0">
+          <p>
+              <tr>
+                <td width="152">Nama</td>
+                <td width="13">:</td>
+                <td width="806">
+          <?= getNamaPegawaiFull($profil_pegawai) ?></td>
+              </tr>
+              <tr>
+                <td>Tempat/Tgl Lahir </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['tptlahir']?> / <?= formatDateNamaBulan($profil_pegawai['tgllahir'])?><td>
+              </tr>
+              <tr>
+                <td>NIP</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nipbaru']?></td>
+              </tr>
+              <tr>
+                <td>Jenis Kelamin </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['jk']?></td>
+              </tr>
+              <tr>
+                <td>Alamat</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['alamat']?></td>
+              </tr>
+              <tr>
+                <td>Agama</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nm_agama']?></td>
+              </tr>
+              <tr>
+                <td>Pendidikan</td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nm_tktpendidikan']?></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+
+              </tr>
+              <tr>
+                <td>Pangkat / TMT </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nm_pangkat']?> /
+                  <?php 
+                        if ($profil_pegawai['tmtpangkat'] =='0000-00-00')
+                        {
+                        echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan(date($profil_pegawai['tmtpangkat'])); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>TMT Gaji Berkala </td>
+                <td>:</td>
+                <td><?php 
+                        if ($profil_pegawai['tmtgjberkala']=='0000-00-00')
+                        {
+                        
+                          echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan($profil_pegawai['tmtgjberkala']); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>Jabatan / TMT </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nama_jabatan']?> /
+                  <?php 
+                        if ($profil_pegawai['tmtjabatan']=='0000-00-00')
+                        {
+                        echo "-";
+                        }
+                        else
+                        {
+                        echo formatDateNamaBulan($profil_pegawai['tmtjabatan']); 
+                        }
+                        ?></td>
+              </tr>
+              <tr>
+                <td>Unit Kerja </td>
+                <td>:</td>
+                <td><?php echo $profil_pegawai['nm_unitkerja']?></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                </tr>
+              <tr>
+                <td>NIK </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['nik']?></td>
+              </tr>
+              <tr>
+                <td>No HP </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['handphone']?></td>
+              </tr>
+              <tr>
+                <td>Email </td>
+                <td>:</td>
+                <td><?= $profil_pegawai['email'] ?></td>
+              </tr>
+          </p>
+        </table>
+        </div>
+      </div>
   <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
   <div id="form_pangkat"></div>
   </div>
@@ -185,6 +314,8 @@ h2{
   <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
   <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
   <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
+  <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">skp</div>
+  <div class="tab-pane fade" id="pills-assesment" role="tabpanel" aria-labelledby="pills-assesment-tab">assesment</div>
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
 </div>
 
@@ -296,11 +427,11 @@ h2{
 var jenis_user = 1; 
 $(function(){
  
-  $('#form_pangkat').html(' ')
-    $('#form_pangkat').append(divLoaderNavy)
-    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
-    $('#loader').hide()    
-    })
+  // $('#form_pangkat').html(' ')
+  //   $('#form_pangkat').append(divLoaderNavy)
+  //   $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
+  //   $('#loader').hide()    
+  //   })
 
         
   })
@@ -334,7 +465,7 @@ $(function(){
  function loadFormJabatan(){
   $('#form_jabatan').html(' ')
     $('#form_jabatan').append(divLoaderNavy)
-    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>', function(){
+    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+jenis_user, function(){
     $('#loader').hide()    
     })
  }

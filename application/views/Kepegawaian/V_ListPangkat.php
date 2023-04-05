@@ -3,28 +3,30 @@
     <div class="col-lg-12 table-responsive">
       <table class="table table-striped" id="datatable">
         <thead>
-          <th class="text-center">No</th>
-          <th class="text-center">Jenis</th>
-          <th class="text-center">Masa Kerja</th>
-          <th class="text-center">Pangkat, Gol/Ruang</th>
-          <th class="text-center">TMT Pangkat</th>
-          <th class="text-center">Pejabat</th>
-          <th class="text-center">No. SK</th>
-          <th class="text-center">Tanggal SK</th>
-          <th class="text-center">Dokumen</th>
+          <th class="text-left">No</th>
+          <th class="text-left">Jenis</th>
+         
+          <th class="text-left">Pangkat, Gol/Ruang</th>
+          <th class="text-left">TMT Pangkat</th>
+          <th class="text-left">Pejabat</th>
+          <th class="text-left">Masa Kerja</th>
+          <th class="text-left">No. SK</th>
+          <th class="text-left">Tanggal SK</th>
+          <th class="text-left">Dokumen</th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
-              <td class="text-center"><?=$no++;?></td>
+              <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_jenispengangkatan']?></td>
-              <td class="text-left"><?=$rs['masakerjapangkat']?></td>
+           
               <td class="text-left"><?=$rs['nm_pangkat']?></td>
-              <td class="text-center"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
+              <td class="text-left"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
               <td class="text-left"><?=strtoupper($rs['pejabat'])?></td>
-              <td class="text-center"><?=($rs['nosk'])?></td>
-              <td class="text-center"><?=formatDateNamaBulan($rs['tglsk'])?></td>
-              <td class="text-center">
+              <td class="text-left"><?=$rs['masakerjapangkat']?></td>
+              <td class="text-left"><?=($rs['nosk'])?></td>
+              <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
+              <td class="text-left">
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
@@ -42,7 +44,7 @@
 
   function openFilePangkat(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
+    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }
 </script>
 <?php } else { ?>

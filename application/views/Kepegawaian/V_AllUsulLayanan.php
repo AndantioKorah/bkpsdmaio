@@ -27,6 +27,7 @@
 }
 </style>
 <div class="container-fluid p-0">
+  
 
 <div class="row">
     <div class="col-12">
@@ -34,52 +35,45 @@
         <div class="card">
        
             <div class="card-body">
-            <h1 class="h3 mb-3">Usul Layanan</h1>
+            <h1 class="h3 mb-3">Verifikasi Layanan</h1>
+            <style>
+              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+              background-color: #222e3c;
+              color: #fff;
+              }
+              .nav-pills .nav-link {
+              color: #000;
+              border: 0;
+              border-radius: var(--bs-nav-pills-border-radius);
+          }
+            </style>
 
-            <?php if($result){ ?>
-  <div class="row">
-    <div class="col-lg-12 table-responsive">
-      <table class="table table-striped" id="datatable" border="0">
-        <thead>
-          <th class="">No</th>
-          <th class="">Jenis Layanan</th>
-          <th class="">Tanggal Usul</th>
-          <th class="">Nama Pegawai</th>
-          <th class="">Unit Organisasi</th>
-          <th class="">Pengantar</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <?php $no = 1; foreach($result as $rs){ ?>
-            <tr>
-              <td class=""><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nama_layanan']?></td>
-              <td class=""><?=formatDateNamaBulan($rs['tanggal_usul'])?></td>
-              <td class="text-left"><?=$rs['nama_pegawai']?></td>
-              <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-              <td class="">
-                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-success">
-                Lihat <i class="fa fa-search"></i></button>
-                
-              </td>
-             
-              <td>
-                <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id_usul']?>">
-                <button  class="btn btn-sm btn-primary">
-                Verifikasi</button>
-                </a>
-              
-                <!-- <a href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>" target="_blank">View in PDF</a></td> -->
-              <!-- <button href="#modal_cetak_file" onclick="LoadModalcetakSurat('<?=$rs['id_usul']?>','<?=$rs['nip']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Cetak Surat Cuti <i class="fa fa-print"></i></button> -->
-              </td>
-            </tr>
-          
-          <?php } ?>
-        </tbody>
-      </table>
-    </div>
+  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button onclick="loadListUsulLayanan(0)" class="nav-link active" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Belum diverifikasi</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button  onclick="loadListUsulLayanan(1)" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Sudah diverifikasi</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadListUsulLayanan(2)" class="nav-link" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Ditolak</button>
+  </li>
+ 
+</ul>
+<hr>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+  <div id="belum_verif"></div>
   </div>
+  <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
+  <div id="sudah_verif"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
+  <div id="tolak">bds</div>
+  </div>
+  
+</div>
+
 
 
 	
@@ -131,10 +125,44 @@
 
 
 
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_detail_cuti">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detail Cuti</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="post" id="form_nomor_surat" enctype="multipart/form-data" >
+        <input type="hidden" id="id_usul" name="id_usul" >
+  <div class="mb-3">
+    <label for="nomor_surat" class="form-label">Jenis Cuti</label>
+    <input type="text" class="form-control" id="jenis_cuti" name="jenis_cuti" readonly>
+  </div>
+  <div class="mb-3">
+    <label for="tanggal_surat" class="form-label">Tanggal Mulai</label>
+    <input type="text" class="form-control " id="tanggal_mulai" name="tanggal_mulai" readonly>
+  </div>
+
+  <div class="mb-3">
+    <label for="tanggal_surat" class="form-label">Tanggal Selesai</label>
+    <input type="text" class="form-control " id="tanggal_selesai" name="tanggal_selesai" readonly>
+  </div>
+ 
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <script>
   $(function(){
     $('#datatable').dataTable()
+    loadListUsulLayanan(0)
   })
 
   function openFile(filename,nip,layanan){
@@ -184,17 +212,24 @@ function printGrid() {
     window.frames["printf"].print();
   }
 
+  function loadListUsulLayanan(val){
   
+  if(val == 0){
+    var div = '#belum_verif';
+  } else if(val == 1){
+    var div = '#sudah_verif';
+  }  else {
+    var div = '#tolak';
+  }
  
+  $(div).html('')
+  $(div).append(divLoaderNavy)
+  $(div).load('<?=base_url("Kepegawaian/C_Kepegawaian/getAllUsulLayananAdmin/")?>'+val, function(){
+    $('#loader').hide()
+  })
+}
 
 </script>
-<?php } else { ?>
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h4>DATA TIDAK DITEMUKAN <i class="fa fa-exclamation"></i></h4>
-    </div>
-  </div>
-<?php } ?>
 
 </div>
 </div>

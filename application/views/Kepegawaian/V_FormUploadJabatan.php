@@ -36,7 +36,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Jabatan</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -133,7 +133,7 @@
 
    
 
-<div id="list_pangkat">
+<div id="list_jabatan">
 
 </div>
 
@@ -161,7 +161,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        // loadListPangkat()
+        loadListJabatan()
     })
 
     $('.datepicker').datepicker({
@@ -213,13 +213,13 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListJabatan(){
+    $('#list_jabatan').html('')
+    $('#list_jabatan').append(divLoaderNavy)
+    $('#list_jabatan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListJabatan/")?>', function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

@@ -99,7 +99,7 @@
 </div>
 
    
-<div id="list_pangkat">
+<div id="list_gaji_berkala">
 
 </div>
 
@@ -127,7 +127,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        // loadListPangkat()
+      loadListGajiBerkala()
     })
 
     $('.datepicker').datepicker({
@@ -180,13 +180,13 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListGajiBerkala(){
+    $('#list_gaji_berkala').html('')
+    $('#list_gaji_berkala').append(divLoaderNavy)
+    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>', function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

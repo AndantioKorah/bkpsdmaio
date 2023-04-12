@@ -32,10 +32,11 @@ class C_Login extends CI_Controller
             redirect('logout');
         };
         $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+        $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
         $this->session->set_userdata('live_tpp', $data['tpp']);
         // $data = null;
 
-        render('login/V_Welcome', '', '', null);
+        render('login/V_Welcome', '', '', $data);
     }
 
     public function authenticateAdmin()

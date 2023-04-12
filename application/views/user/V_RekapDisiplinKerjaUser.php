@@ -18,7 +18,7 @@
                 <tbody>
                     <?php foreach($list_disiplin_kerja as $l){
                         $bgcolor = '';
-                        if(isset($result['rincian_pengurangan_dk'][$l['keterangan']])){
+                        if(isset($result['rincian_pengurangan_dk'][$l['keterangan']]) && $result['rincian_pengurangan_dk'][$l['keterangan']] > 0){
                             $bgcolor = '#ffc0c0';
                         }
                         $pengurangan = 0;

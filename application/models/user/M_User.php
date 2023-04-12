@@ -1424,7 +1424,7 @@
                                 $keterangan[] = "tmk3";
                             }
 
-                            if($data_absen[$tga]['pulang'] == '00:00:00'){ //cek jika tidak absen pulang
+                            if($data_absen[$tga]['pulang'] == '00:00:00' || $data_absen[$tga]['pulang'] == null){ //cek jika tidak absen pulang
                                 if(isset($result['dokpen'][$tga])){ //cek jika ada tugas luar sore
                                     $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
                                     $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];

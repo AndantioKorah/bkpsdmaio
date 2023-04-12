@@ -1,4 +1,4 @@
-<?php if($this->general_library->getRole() == 'programmer') { ?>
+<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
     <div class="card card-default">
         <div class="card-header">
             <div class="row">
@@ -60,7 +60,7 @@
 </style>
 <div class="card card-default">
     <div class="card-header">
-        <?php if($this->general_library->getRole() == 'programmer') { ?>
+        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
             <h3 class="card-title mb-2"><strong>PILIH SKPD</strong></h3>
             <select class="form-control select2-navy" style="width: 100%;"
                 id="select_search_skpd" data-dropdown-css-class="select2-navy" name="select_search_skpd">
@@ -184,7 +184,7 @@
 
     function loadUsers(){
         let parameter = '<?=$pegawai['skpd']?>'
-        <?php if($this->general_library->getRole() == 'programmer') { ?>
+        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
             parameter = $('#select_search_skpd').val()
         <?php } ?>
         $('#list_users').html('')

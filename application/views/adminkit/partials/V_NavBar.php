@@ -141,23 +141,25 @@
 	<a class="sidebar-toggle js-sidebar-toggle">
 		<i class="hamburger align-self-center"></i>
 	</a>
-	<form class="form-inline mr-3">
-		<div class="row">
-			<div class="div_search_bar">
-			<input id="search_navbar" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai" aria-label="Search">
-				<!-- <div class="input-group-append"> -->
-					<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
-					<i class="fas fa-search"></i>
-					</button> -->
-					<!-- <button style="display: none;" id="button_fa_loading" class="btn btn-navbar" type="button">
-					<i class="fas fa-spin fa-spinner"></i>
-					</button> -->
-				<!-- </div> -->
+	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
+		<form class="form-inline mr-3">
+			<div class="row">
+				<div class="div_search_bar">
+				<input id="search_navbar" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai" aria-label="Search">
+					<!-- <div class="input-group-append"> -->
+						<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
+						<i class="fas fa-search"></i>
+						</button> -->
+						<!-- <button style="display: none;" id="button_fa_loading" class="btn btn-navbar" type="button">
+						<i class="fas fa-spin fa-spinner"></i>
+						</button> -->
+					<!-- </div> -->
+				</div>
 			</div>
-		</div>
-		<div class="row" id="div_search_result">
-		</div>
-	</form>
+			<div class="row" id="div_search_result">
+			</div>
+		</form>
+	<?php } ?>
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">
 		<ul class="navbar-nav navbar-align">

@@ -128,6 +128,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isAdminAplikasi(){
+        return $this->getActiveRoleName() == 'admin_adplikasi';
+    }
+
     public function isAdministrator(){
         return $this->getActiveRoleName() == 'administrator';
     }

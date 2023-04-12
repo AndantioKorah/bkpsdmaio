@@ -6,11 +6,11 @@
 </style>
 
 <!-- Button trigger modal -->
-<?php if($jenis_user == 1) { ?>
+
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>
-<?php } ?>
+
 
 
 

@@ -101,90 +101,30 @@ h2{
 <!-- upload dokumen  -->
 <div class="container-fluid p-0">
 <!-- <h1 class="h3 mb-3">Upload Dokumen</h1> -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
 
-            <style>
-              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-              background-color: #222e3c;
-              color: #fff;
-              }
-              .nav-pills .nav-link {
-              color: #000;
-              border: 0;
-              border-radius: var(--bs-nav-pills-border-radius);
-          }
-            </style>
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-  <li class="nav-item" role="presentation">
-          <a onclick="loadProfil()" class="nav-link active" id="pills-company-tab" data-toggle="pill" href="#pills-company" role="tab" aria-controls="pills-company" aria-selected="true">Profil</a>
-        </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPangkat()" class="nav-link" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button  onclick="loadFormGajiBerkala()" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPendidikan()" class="nav-link" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormJabatan()" class="nav-link" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormDiklat()" class="nav-link" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormOrganisasi()" class="nav-link" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPenghargaan()" class="nav-link" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormKeluarga()" class="nav-link" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPenugasan()" class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormSkp()" class="nav-link" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormAssesment()" class="nav-link" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
-  </li>
-</ul>
-<hr>
-<div class="tab-content" id="pills-tabContent">
-<div class="tab-pane fade show active" id="pills-company" role="tabpanel" aria-labelledby="pills-company-tab">
-        <div class="container-fluid">
-        <table width="100%" border="0">
-          <p>
+<div class="row">
+    <div class="col-lg-12">
+      <div class="card card-default">
+        <div class="card-body">
+          <h4>PROFIL PEGAWAI</h4>
+          <hr>
+          <table width="100%" border="0">
+            <p>
               <tr>
                 <td width="152">Nama</td>
                 <td width="13">:</td>
-                <td width="806">
-          <?= getNamaPegawaiFull($profil_pegawai) ?></td>
+                <td width="806" style="font-size: 1rem; font-weight: bold;">
+                <?= getNamaPegawaiFull($profil_pegawai) ?></td>
+              </tr>
+              <tr>
+                <td>NIP</td>
+                <td>:</td>
+                <td style="font-size: 1rem; font-weight: bold;"><?= $profil_pegawai['nipbaru']?></td>
               </tr>
               <tr>
                 <td>Tempat/Tgl Lahir </td>
                 <td>:</td>
                 <td><?= $profil_pegawai['tptlahir']?> / <?= formatDateNamaBulan($profil_pegawai['tgllahir'])?><td>
-              </tr>
-              <tr>
-                <td>NIP</td>
-                <td>:</td>
-                <td><?= $profil_pegawai['nipbaru']?></td>
               </tr>
               <tr>
                 <td>Jenis Kelamin </td>
@@ -282,11 +222,80 @@ h2{
                 <td>:</td>
                 <td><?= $profil_pegawai['email'] ?></td>
               </tr>
-          </p>
-        </table>
+            </p>
+          </table>
         </div>
       </div>
-  <div class="tab-pane fade" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+            <style>
+              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+              background-color: #222e3c;
+              color: #fff;
+              }
+              .nav-pills .nav-link {
+              color: #000;
+              border: 0;
+              border-radius: var(--bs-nav-pills-border-radius);
+          }
+            </style>
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <!-- <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="pills-company-tab" data-toggle="pill" href="#pills-company" role="tab" aria-controls="pills-company" aria-selected="true">Profil</a>
+  </li> -->
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPangkat()" class="nav-link active" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button  onclick="loadFormGajiBerkala()" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPendidikan()" class="nav-link" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormJabatan()" class="nav-link" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormDiklat()" class="nav-link" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormOrganisasi()" class="nav-link" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPenghargaan()" class="nav-link" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormPenugasan()" class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormSkp()" class="nav-link" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormAssesment()" class="nav-link" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+  </li>
+</ul>
+<hr>
+<div class="tab-content" id="pills-tabContent">
+  <!-- <div class="tab-pane fade show active" id="pills-company" role="tabpanel" aria-labelledby="pills-company-tab">
+      
+  </div> -->
+  <div class="tab-pane show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
   <div id="form_pangkat"></div>
   </div>
   <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
@@ -335,8 +344,9 @@ h2{
 
 
 var jenis_user = 1; 
+var nip = "<?= $this->general_library->getUsername();?>" 
 $(function(){
- 
+  $('#pills-pangkat-tab').click()
   // $('#form_pangkat').html(' ')
   //   $('#form_pangkat').append(divLoaderNavy)
   //   $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
@@ -351,7 +361,7 @@ $(function(){
  function loadFormPangkat(){
   $('#form_pangkat').html(' ')
     $('#form_pangkat').append(divLoaderNavy)
-    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+jenis_user, function(){
+    $('#form_pangkat').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormDokPangkat/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

@@ -41,7 +41,9 @@
 							SELAMAT DATANG !
 						</span>
 						<center>
-							<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1" src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
+							<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+							data-src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
+
 						</center>
 						<div class="wrap-input100 validate-input" data-validate = "Username Anda">
 							<input class="input100" type="text" name="username">
@@ -95,7 +97,7 @@
 						</div> -->
 					</div>
 				</form>
-				<div class="login100-more" style="background-image: url('assets/new_login/images/bg-02.png');">
+				<div class="login100-more b-lazy" data-src="assets/new_login/images/bg-02.png">
 				</div>
 			</div>
 		</div>
@@ -126,9 +128,35 @@
 </html>
 <script src="assets/new_login/vendor/jquery/jquery-3.2.1.min.js"></script>
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/blazy.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
 	$(function(){
+		function errortoast(message = '', timertoast = 3000){
+			const Toast = Swal.mixin({
+			toast: true,
+			position: 'top',
+			showConfirmButton: false,
+			timer: timertoast
+			});
+
+			Toast.fire({
+			icon: 'error',
+			title: message
+			})
+		}
+
+		console.log('message = <?=$this->session->flashdata('message');?>')
+		<?php if($this->session->flashdata('message')){ ?>
+			errortoast("<?=$this->session->flashdata('message')?>");
+		//   $('#error_div').show()
+		//   $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
+		<?php
+		$this->session->set_flashdata('message', null);
+		} ?>
+	})
+
 	function errortoast(message = '', timertoast = 3000){
 		const Toast = Swal.mixin({
 		toast: true,
@@ -143,28 +171,10 @@
 		})
 	}
 
-	console.log('message = <?=$this->session->flashdata('message');?>')
-
-    <?php if($this->session->flashdata('message')){ ?>
-		errortoast("<?=$this->session->flashdata('message')?>");
-    //   $('#error_div').show()
-    //   $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
-    <?php
-      $this->session->set_flashdata('message', null);
-    } ?>
-  })
-
-  function errortoast(message = '', timertoast = 3000){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top',
-      showConfirmButton: false,
-      timer: timertoast
-    });
-
-    Toast.fire({
-      icon: 'error',
-      title: message
-    })
-  }
+	window.bLazy = new Blazy({
+		container: '.container',
+		success: function(element){
+			console.log("Element loaded: ", element.nodeName);
+		}
+	});
 </script>

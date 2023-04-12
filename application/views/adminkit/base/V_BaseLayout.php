@@ -273,8 +273,17 @@
 		} */
 
     .form-control{
-		height:35px !important;
-		margin-bottom:10px !important;
+      height: 35px !important;
+      margin-bottom:10px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      /* line-height: 30px; */
+      /* height: 30px !important; */
+    }
+
+    .select2-container .select2-selection--single{
+      height: 35px !important;
     }
     
     .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
@@ -285,6 +294,7 @@
     .select2-container--default .select2-selection--single .select2-selection__rendered {
       color: #444;
       line-height: 35px;
+      height: 30px !important;
     }
  
     .btn-primary{
@@ -432,7 +442,8 @@
            
 		</div>
 	</div>
- 
+  <div id="print_div" style="display:none;"></div>
+  <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
   <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->
 	<script src="<?=base_url('')?>assets/adminkit/js/app.js"></script>
   
@@ -455,6 +466,8 @@
 <!-- <script src="<?=base_url();?>assets/js/jquery.dataTables.min.js"></script> -->
 <script src="<?=base_url('assets/js/jquery.dataTables.min.js')?>"></script>
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/blazy.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
 

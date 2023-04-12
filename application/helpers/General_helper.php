@@ -98,6 +98,10 @@ function countNilaiSkp($data)
     return $result;
 }
 
+function stringStartWith($string, $string_check){
+    return substr($string_check, 0, strlen($string)) == $string;
+}
+
 function getListDateByMonth($month, $year){
     $list=array();
     for($d=1; $d<=31; $d++)

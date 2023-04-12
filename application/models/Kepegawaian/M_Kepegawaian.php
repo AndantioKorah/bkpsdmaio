@@ -131,8 +131,11 @@ class M_Kepegawaian extends CI_Model
                 ->limit(1);
             return $this->db->get()->row_array();
         }
-        function getProfilPegawai(){
+        function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
+            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                $username = $nip;
+            }
             $this->db->select('a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')

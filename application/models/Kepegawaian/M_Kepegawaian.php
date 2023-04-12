@@ -135,6 +135,9 @@ class M_Kepegawaian extends CI_Model
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $username = $nip;
+                if(!$username){
+                    $username = $this->general_library->getUserName();
+                }
             }
             $this->db->select('a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')

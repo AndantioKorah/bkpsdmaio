@@ -106,15 +106,21 @@
 		Kepegawaian
 	</li>
 
-	<li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 		<a class="sidebar-link" href="<?= base_url(); ?>kepegawaian/upload">
 			<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
 		</a>
-	</li>
+	</li> -->
 
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
 			<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
+		</a>
+	</li>
+
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/teknis">
+		<i class="fa fa-check-square" aria-hidden="true"></i> <span class="align-middle">Verifikasi Layanan</span>
 		</a>
 	</li>
 

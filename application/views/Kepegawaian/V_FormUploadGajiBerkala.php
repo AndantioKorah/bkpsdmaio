@@ -12,21 +12,6 @@
   Tambah Data Gaji Berkala
 </button>
 
-
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
- <tr>
-<td style="vertical-align: top;">NIP</td>
-<td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
-</tr>
-
-</table>
-
 <!-- Modal -->
 <div class="modal fade" id="modalBerkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -99,7 +84,7 @@
 </div>
 
    
-<div id="list_pangkat">
+<div id="list_gaji_berkala">
 
 </div>
 
@@ -127,7 +112,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        // loadListPangkat()
+      loadListGajiBerkala()
     })
 
     $('.datepicker').datepicker({
@@ -169,7 +154,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_gaji_berkala").reset();
-                // loadFormGajiBerkala()
+                loadListGajiBerkala()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -180,13 +165,13 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListGajiBerkala(){
+    $('#list_gaji_berkala').html('')
+    $('#list_gaji_berkala').append(divLoaderNavy)
+    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>', function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

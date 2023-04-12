@@ -71,9 +71,13 @@ $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 
 
 // Kepegawaian
-$route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
+// $route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
 $route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
-$route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/profil';
+$route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/layanan'] = 'Kepegawaian/C_Kepegawaian/layanan';
+$route['kepegawaian/teknis'] = 'Kepegawaian/C_Kepegawaian/Adminlayanan';
+$route['kepegawaian/cetak/'] = 'Kepegawaian/C_Kepegawaian/CetakSurat';
+$route['kepegawaian/verifikasi/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1';
+
 $route['kepegawaian/profil-pegawai/$1'] = 'user/C_User/profilPegawai/(:any)';

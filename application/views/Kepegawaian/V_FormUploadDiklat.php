@@ -12,28 +12,12 @@
   Tambah Data Diklat
 </button>
 
-<table width="100%" border="0" class="" align="left">
-<tr>
-<td height="8px;" width="20%">Nama</td>
-<td width="">:</td>
-<td width=""> <?= $profil_pegawai['gelar1'];?> <?= $profil_pegawai['nama'];?> <?= $profil_pegawai['gelar2'];?> </td>
-</tr>
-
-<tr>
-<td style="vertical-align: top;">NIP</td>
-<td style="vertical-align: top;">:</td>
-<td style="vertical-align: top;" height="40px;" ><?=$this->general_library->getUserName();?></td>
-</tr>
-
-
-</table>
-
 <!-- Modal -->
 <div class="modal fade" id="modalDiklat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Diklat</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -120,7 +104,7 @@
 
   
 
-<div id="list_pangkat">
+<div id="list_diklat">
 
 </div>
 
@@ -148,7 +132,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        // loadListPangkat()
+        loadListDiklat()
     })
 
     $('.datepicker').datepicker({
@@ -200,13 +184,13 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListDiklat(){
+    $('#list_diklat').html('')
+    $('#list_diklat').append(divLoaderNavy)
+    $('#list_diklat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListDiklat/")?>', function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

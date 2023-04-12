@@ -398,6 +398,9 @@
             $result['golongan'][4]['nama'] = 'Golongan IV';
             $result['golongan'][4]['jumlah'] = 0;
 
+            $result['golongan'][5]['nama'] = 'Golongan V';
+            $result['golongan'][5]['jumlah'] = 0;
+
             // $temp_pangkat = $this->db->select('*')
             //                     ->from('db_pegawai.pangkat')
             //                     ->get()->result_array();

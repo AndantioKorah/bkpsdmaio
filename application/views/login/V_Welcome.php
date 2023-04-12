@@ -430,4 +430,14 @@
       
   </div>
 </div>
-
+<script>
+  $(function(){
+    <?php if($this->session->userdata('apps_error')){ ?>
+			errortoast("<?=$this->session->userdata('apps_error')?>");
+		//   $('#error_div').show()
+		//   $('#error_div').append('<label>'+'<?=$this->session->userdata('apps_error')?>'+'</label>')
+		<?php
+		$this->session->set_userdata('apps_error', null);
+		} ?>
+  })
+</script>

@@ -254,7 +254,15 @@ class C_Kepegawaian extends CI_Controller
 
 
 	
-
+	public function profilPegawai($nip){
+		if(!$this->general_library->isProgrammer() || !$this->general_library->isProgrammer()){
+			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
+			redirect('welcome');
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+			render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+		}
+	}
 
 	public function uploadDokumen(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
@@ -282,7 +290,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
-		if($jenis_user == 1){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 
 		} else {

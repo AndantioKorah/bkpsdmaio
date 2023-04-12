@@ -80,4 +80,4 @@ $route['kepegawaian/teknis'] = 'Kepegawaian/C_Kepegawaian/Adminlayanan';
 $route['kepegawaian/cetak/'] = 'Kepegawaian/C_Kepegawaian/CetakSurat';
 $route['kepegawaian/verifikasi/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1';
 
-$route['kepegawaian/profil-pegawai/$1'] = 'user/C_User/profilPegawai/(:any)';
+$route['kepegawaian/profil-pegawai/(:any)'] = 'Kepegawaian/C_Kepegawaian/profilPegawai/$1';

@@ -3,17 +3,17 @@
     <div class="col-lg-12">
       <table class="table table-striped">
         <thead>
-          <th class="text-center">No</th>
-          <th class="text-center">Nama Penghargaan</th>
-          <th class="text-center">No. SK</th>
-          <th class="text-center">Tgl SK</th>
-          <th class="text-center">Tahun</th>
-          <th class="text-center">Asal Perolehan</th>
+          <th class="text-left">No</th>
+          <th class="text-left">Nama Penghargaan</th>
+          <th class="text-left">No. SK</th>
+          <th class="text-left">Tgl SK</th>
+          <th class="text-left">Tahun</th>
+          <th class="text-left">Asal Perolehan</th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
-              <td class="text-center"><?=$no++;?></td>
+              <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_pegpenghargaan']?></td>
               <td class="text-left"><?=$rs['nosk']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>

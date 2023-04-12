@@ -174,22 +174,5 @@ $(function(){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
   }
 
-  $("#pdf_file").change(function (e) {
-
-        var extension = pdf_file.value.split('.')[1];
-      
-        var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>
-     
-        if (extension != "pdf"){
-          errortoast("Harus File PDF")
-          $(this).val('');
-        }
-
-        if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
-          $(this).val('');
-        }
-
-        });
+  
 </script>

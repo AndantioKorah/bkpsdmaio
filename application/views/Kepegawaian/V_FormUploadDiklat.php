@@ -90,7 +90,7 @@
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+    <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -173,7 +173,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_diklat").reset();
-                // loadFormDiklat()
+                loadListDiklat()
               } else {
                 errortoast(result.msg)
                 return false;

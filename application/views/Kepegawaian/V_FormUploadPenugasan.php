@@ -6,7 +6,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modal_penugasan"><i class="fa fa-plus" ></i>
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modal_penugasan">
   Tambah Data Penugasan
 </button>
 
@@ -24,11 +24,13 @@
         DOKUMEN
       </div> -->
       <div class="modal-body" id="modal_view_file_content">
-      <form method="post" id="upload_form" enctype="multipart/form-data" >
+      <form method="post" id="upload_form_penugasan" enctype="multipart/form-data" >
+        
+      <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
 
 <div class="form-group " style="margin-bottom:10px !important;">
 <label for="exampleFormControlInput1">Jenis Penugasan</label>
-<select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_penugasan" id="jenis_penugasan" required>
+<select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenispenugasan" id="jenispenugasan" required>
                 <option value="" disabled selected>Pilih Jenis Penugasan</option>
                 <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
                   <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
@@ -48,17 +50,17 @@
 
 <div class="form-group">
 <label>Nomor SK</label>
-<input class="form-control" type="text" id="no_sk" name="no_sk"  required/>
+<input class="form-control" type="text" id="nosk" name="nosk"  required/>
 </div>
 
 <div class="form-group">
 <label>Tanggal SK</label>
-<input  class="form-control datepicker"   id="tanggal_sk" name="tanggal_sk" required/>
+<input  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
 </div>
 
 <div class="form-group">
 <label>Lamanya</label>
-<input class="form-control" type="text" id="lama" name="lama"  required/>
+<input class="form-control" type="text" id="lamanya" name="lamanya"  required/>
 </div>
 
 <div class="form-group col-lg-12">
@@ -70,6 +72,11 @@
     </div>
   </div>
 </div>                      
+
+
+<div id="list_penugasan">
+
+</div>
 
 
 
@@ -90,7 +97,7 @@ $(function(){
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -98,11 +105,11 @@ $(function(){
 });
 
     
-        $('#upload_form').on('submit', function(e){  
+        $('#upload_form_penugasan').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form');
+        var formvalue = $('#upload_form_penugasan');
         var form_data = new FormData(formvalue[0]);
         // var ins = document.getElementById('pdf_file').files.length;
         
@@ -111,7 +118,6 @@ $(function(){
         // return false;
         // }
        
-      
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -127,7 +133,7 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form").reset();
+                document.getElementById("upload_form_penugasan").reset();
                 loadListPenugasan()
               } else {
                 errortoast(result.msg)
@@ -140,34 +146,12 @@ $(function(){
         }); 
 
     function loadListPenugasan(){
-    $('#list_Penugasan').html('')
-    $('#list_Penugasan').append(divLoaderNavy)
-    $('#list_Penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>', function(){
+    $('#list_penugasan').html('')
+    $('#list_penugasan').append(divLoaderNavy)
+    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>', function(){
       $('#loader').hide()
     })
   }
 
-  // function openFilePenugasan(filename){
-  //   var nip = <?=$this->general_library->getUserName()?>;
-  //   $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
-  // }
-
-  // $("#pdf_file").change(function (e) {
-
-  //       var extension = pdf_file.value.split('.')[1];
-      
-  //       var fileSize = this.files[0].size/1024;
-  //       var MaxSize = <?=$format_dok['file_size']?>
-     
-  //       if (extension != "pdf"){
-  //         errortoast("Harus File PDF")
-  //         $(this).val('');
-  //       }
-
-  //       if (fileSize > MaxSize ){
-  //         errortoast("Maksimal Ukuran File 2 MB")
-  //         $(this).val('');
-  //       }
-
-  //       });
+  
 </script>

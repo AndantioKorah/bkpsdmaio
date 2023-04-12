@@ -18,6 +18,33 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
+	public function loadListSkp(){
+		$data['result'] = $this->kepegawaian->getSkp();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListSkp', $data);
+	}
+
+
+	public function loadListOrganisasi(){
+		$data['result'] = $this->kepegawaian->getOrganisasi();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListOrganisasi', $data);
+	}
+
+
+	public function loadListAssesment(){
+		$data['result'] = $this->kepegawaian->getAssesment();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListAssesment', $data);
+	}
+
+	public function loadListKeluarga(){
+		$data['result'] = $this->kepegawaian->getKeluarga();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListKeluarga', $data);
+	}
+	
+
 	public function loadListPendidikan(){
 		$data['result'] = $this->kepegawaian->getPendidikan();
 		// dd($data);
@@ -116,6 +143,11 @@ class C_Kepegawaian extends CI_Controller
 	public function doUpload2()
 	{ 
 		echo json_encode( $this->kepegawaian->doUpload());
+	}
+
+	public function doUploadAssesment()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadAssesment());
 	}
 
 	public function doUpload()
@@ -309,7 +341,9 @@ class C_Kepegawaian extends CI_Controller
 	public function LoadFormJabatan($jenis_user,$nip=null){
 		$data['jenis_user'] = $jenis_user;
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
-		$data['nama_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan', 'id_jabatanpeg', 'asc');
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		if($jenis_user == 1){
@@ -340,6 +374,26 @@ class C_Kepegawaian extends CI_Controller
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
         $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
     }
+
+	public function loadFormSkp(){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadSkp', $data);
+    }
+
+	public function loadFormAssesment(){
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadAssesment', $data);
+    }
+
+	public function loadFormKeluarga(){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['hubungan_keluarga'] = $this->kepegawaian->getAllWithOrder('db_pegawai.keluarga', 'id_keluarga', 'asc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadKeluarga', $data);
+    }
+
 
 
 	public function layanan(){
@@ -454,6 +508,19 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitNomorTglSurat());
 	}
 
+
+	public function getNomorTanggalSurat()
+    {
+        $data = $this->kepegawaian->getNomorTanggalSurat();
+        echo json_encode($data);
+    }
+
+	public function getDataJabatan($id_unitkerja)
+    {
+        $searchTerm = $this->input->post('searchTerm');
+        $response   = $this->kepegawaian->getDataJabatan($id_unitkerja, $searchTerm);
+        echo json_encode($response);
+    }
 
 	
 

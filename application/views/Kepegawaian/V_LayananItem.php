@@ -49,7 +49,7 @@
                 &nbsp;
                 <?php if($rs['nomor_surat'] != "") { ?>
               <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>">
-              <button href=""  class="btn btn-sm btn-warning">
+              <button id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button></a>
                <?php } ?>
              <?php } ?>
@@ -101,8 +101,16 @@
     <input type="text" class="form-control datepicker" id="tanggal_surat" name="tanggal_surat" autocomplete="off">
   </div>
  
-  <button id="btn_simpan" class="btn btn-primary" style="float: right;">Simpan</button>
+  <button id="btn_simpan" class="btn btn-primary" style="float: left;">Simpan</button>
 </form>
+<form id="my-form" action="/submit-form.php" method="post">
+  <!-- form elements go here -->
+  <button id="btn_pdf" class="btn btn-warning" style="float: right;"> <i class="fa fa-file-pdf"></i> Download PDF</button>
+
+</form>
+<script>
+
+</script>
       </div>
     </div>
   </div>
@@ -136,27 +144,37 @@
 
 $(function(){
     $('.datatable').dataTable()
+    $('#btn_pdf').hide(); 
   })
 
       $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
-        todayBtn: true,
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
         autoclose: true
 });
 
-
+var form = document.getElementById('my-form');
+var base_url = "<?=base_url();?>"
+   
+    form.addEventListener('submit', function(event) {
+      var id_usul =   $('#id_usul').val(); 
+    event.preventDefault();
+    window.open(base_url+'Kepegawaian/C_Kepegawaian/CetakSurat/'+id_usul, '_blank');
+  });
 
 $('#form_nomor_surat').on('submit', function(e){
+  
             e.preventDefault()
             $.ajax({
                 url: '<?=base_url("kepegawaian/C_Kepegawaian/submitNomorTglSurat")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){
-                  successtoast('Data Berhasil Diverifikasi')
+                  successtoast('Data Berhasil disimpan')
+                  $('#btn_pdf').show();
+                  // loadListUsulLayanan()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }
@@ -165,17 +183,36 @@ $('#form_nomor_surat').on('submit', function(e){
 
 
       $('#modal_input_nomor_surat').on('hidden.bs.modal', function () {
-          loadListUsulLayanan(1)
+          // loadListUsulLayanan(1)
       });
 
 
     $(document).on("click", ".open-AddBookDialog", function () {
+    var base_url = "<?=base_url();?>"
      var nomor = $(this).data('nomor');
      var tanggal = $(this).data('tanggal');
      var id = $(this).data('id');
-     $(".modal-body #nomor_surat").val( nomor );
-     $(".modal-body #tanggal_surat").val( tanggal );
+    
+    
      $(".modal-body #id_usul").val( id );
+   
+     $.ajax({
+        type : "POST",
+        url  : base_url + 'kepegawaian/C_Kepegawaian/getNomorTanggalSurat',
+        dataType : "JSON",
+        data : {id:id},
+        success: function(data){
+          if(data[0].nomor_surat == null){
+            $('#btn_pdf').hide();
+          } else {
+            $('#btn_pdf').show();
+          }
+
+          $(".modal-body #nomor_surat").val( data[0].nomor_surat );
+          $(".modal-body #tanggal_surat").val( data[0].tanggal_surat );
+         }
+        });
+        
     });
 
     $(document).on("click", ".open-DetailCuti", function () {

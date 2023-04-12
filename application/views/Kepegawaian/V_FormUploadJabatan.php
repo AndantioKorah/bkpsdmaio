@@ -29,6 +29,43 @@
       <form method="post" id="upload_form_jabatan" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
     
+    <div class="form-group" style="margin-bottom:10px !important;">
+    <label for="exampleFormControlInput1">Unit Kerja </label>
+    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_unitkerja" id="jabatan_unitkerja" required>
+                    <option value="" disabled selected>Pilih Unit Kerja</option>
+                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                        <option <?php if($this->general_library->getUnitKerjaPegawai() == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                    <?php } } ?>
+    </select>
+    </div>
+
+    <script>
+          
+        //      $("#jabatan_unitkerja").change(function() {
+        //     var id_unitkerja = $("#jabatan_unitkerja").val();
+        //     $("#jabatan_nama").select2({
+        //         ajax: {
+        //             url: '<?= base_url() ?>kepegawaian/C_Kepegawaian/getDataJabatan/' + id_unitkerja,
+        //             type: "post",
+        //             dataType: 'json',
+        //             delay: 200,
+        //             data: function(params) {
+        //                 return {
+        //                     searchTerm: params.term
+        //                 };
+        //             },
+        //             processResults: function(response) {
+        //                 return {
+        //                     results: response
+        //                 };
+        //             },
+        //             cache: true
+        //         }
+        //     });
+        // });
+    </script>
+
+
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Jenis Jabatan </label>
@@ -42,6 +79,9 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Nama Jabatan </label>
+    <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
+                        <option value="" selected>Pilih Jabatan</option>
+                    </select> -->
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
@@ -186,7 +226,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_jabatan").reset();
-                // loadFormJabatan()
+                loadListJabatan()
               } else {
                 errortoast(result.msg)
                 return false;

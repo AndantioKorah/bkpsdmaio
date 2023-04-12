@@ -204,6 +204,69 @@ class M_Kepegawaian extends CI_Model
                             ->get()->result_array();
         }
 
+        function getSkp(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegskp c', 'b.id_peg = c.id_pegawai')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getPenugasan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegdatalain c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.jenistugas d', 'c.jenispenugasan = d.id_jenistugas')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getAssesment(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegassesment c', 'b.id_peg = c.id_pegawai')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getKeluarga(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegkeluarga c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.keluarga d', 'c.hubkel = d.id_keluarga')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getOrganisasi(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegorganisasi c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.organisasi d', 'c.jenis_organisasi = d.id_organisasi')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getPenghargaan(){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
+                            ->where('a.id', $this->general_library->getId())
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
         function isArsip($data, $id_dok)
 	{
 	    $r = FALSE;
@@ -372,6 +435,16 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['tglsttpp']      = $tgl_sttpp;
             $dataInsert['gambarsk']      = $data['nama_file'];
             $result = $this->db->insert('db_pegawai.pegdiklat', $dataInsert);
+        } else if($id_dok == 5){   
+            // dd(1);         
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['tahun']      = $this->input->post('skp_tahun');
+            $dataInsert['predikat']      = $this->input->post('skp_predikat');
+            $dataInsert['file']      = $data['nama_file'];
+            $dataInsert['created_by']      = $this->general_library->getId();;
+            $dataInsert['updated_by']      = $this->general_library->getId();;
+            // dd($dataInsert);
+            $result = $this->db->insert('db_pegawai.pegskp', $dataInsert);
         }
       
 
@@ -478,7 +551,7 @@ class M_Kepegawaian extends CI_Model
     public function doUpload()
 	{
 
-        $this->db->trans_begin();
+        // $this->db->trans_begin();
         if($_FILES){         
         $id_dok = $this->input->post('id_dokumen');
         $nama_file =  $this->prosesName($id_dok);
@@ -491,15 +564,22 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-
         // dd($this->input->post());
+        // dd($nama_file);
         if($this->input->post('id_dokumen') == 4){
             $target_dir						= './arsipelektronik/';
         } else if($this->input->post('id_dokumen') == 7){
             $target_dir						= './arsipgjberkala/';
+        } else if($this->input->post('id_dokumen') == 5){
+            $target_dir						= './arsipskp/';
+        } else if($this->input->post('id_dokumen') == 20){
+            $target_dir						= './arsipdiklat/';
+        } else if($this->input->post('id_dokumen') == 8){
+            $target_dir						= './arsipjabatan/';
         } else {
             $target_dir						= './uploads/';
         }
+        // dd($target_dir);
 		
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
@@ -530,21 +610,86 @@ class M_Kepegawaian extends CI_Model
             $dataFile['nama_file'] =  "$nama_file.pdf";
 			$result		        = $this->insertUpload($dataFile);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-            return $res;
+   
 		}
+        
     } else {
         $dataPost = $this->input->post();
+        // dd($dataPost);
         if($this->input->post('jenis_organisasi')){
             $result = $this->insert('db_pegawai.pegorganisasi',$dataPost);
         } else if($this->input->post('nm_pegpenghargaan')){
             $result = $this->insert('db_pegawai.pegpenghargaan',$dataPost);
-        } else if($this->input->post('db_pegawai.pegdatalain')){
+        } else if($this->input->post('hubkel')){
+            $result = $this->insert('db_pegawai.pegkeluarga',$dataPost);
+        } else if($this->input->post('jenispenugasan')){
             $result = $this->insert('db_pegawai.pegdatalain',$dataPost);
-        }
+        } 
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
       
     }
+    
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
 
+    return $res;
+        
+
+	}
+
+    public function doUploadAssesment()
+	{
+
+        $this->db->trans_begin();
+            
+        $target_dir						= './arsipassesment/';
+        
+        // dd($target_dir);
+		
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE;
+        // $config['file_name']            = "$nama_file.pdf";
+
+		$this->load->library('upload', $config);
+
+		if (!file_exists($target_dir)) {
+			mkdir($target_dir, 0777);
+		}
+
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());
+			$data['token']    = $this->security->get_csrf_hash();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            return $res;
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+		} else {
+			$dataFile 			= $this->upload->data();
+
+            $dataInsert['id_pegawai']     = $this->general_library->getIdPegSimpeg();
+            $dataInsert['nm_assesment']      = $this->input->post('nm_assesment');
+            $dataInsert['file']         = $dataFile['file_name'];
+            $dataInsert['created_by']      = $this->general_library->getId();;
+            $dataInsert['updated_by']      = $this->general_library->getId();;
+            $result = $this->db->insert('db_pegawai.pegassesment', $dataInsert);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+   
+		}
+        
+     
+    
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $rs['code'] = 1;
@@ -661,6 +806,10 @@ class M_Kepegawaian extends CI_Model
             $name = str_replace("TAHUN",$tahun,$name);
         } else if($id_dok == 20){
             $name = str_replace("NIP",$nip,$format);
+        } else if($id_dok == 5){
+            $tahun = $this->input->post('skp_tahun');
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("TAHUN",$tahun,$name);
         }  
 
         
@@ -773,11 +922,13 @@ class M_Kepegawaian extends CI_Model
 
 
     function getAllUsulLayanan(){
-        return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+        // return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+        return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-                        ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+                        // ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
                         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
                         ->where('c.jenis_layanan', 3)
@@ -786,7 +937,7 @@ class M_Kepegawaian extends CI_Model
     }
 
     function getDataUsulLayanan($id_usul){
-        return $this->db->select('d.jenis_cuti,d.nomor_surat,d.tanggal_surat,j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan,h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai,c.id_usul,e.nama,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+        return $this->db->select('d.jenis_lama_cuti,d.jenis_cuti,d.nomor_surat,d.tanggal_surat,j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan,h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai,c.id_usul,e.nama,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
@@ -826,7 +977,7 @@ class M_Kepegawaian extends CI_Model
     }
 
     function getAllUsulLayananAdmin($id){
-        return $this->db->select('g.nm_cuti,d.nomor_surat,d.tanggal_surat,c.jenis_layanan,c.status,f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+        return $this->db->select('d.*,g.nm_cuti,d.nomor_surat,d.tanggal_surat,c.jenis_layanan,c.status,f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
@@ -919,6 +1070,43 @@ class M_Kepegawaian extends CI_Model
         return $res;
     }
 
+    public function getNomorTanggalSurat()
+    {      
+        $id = $this->input->post('id');
+        $this->db->select('*')
+            ->from('db_siladen.nominatif_usul as a')
+            ->where('a.id_usul', $id)
+            ->limit(1);
+            return $this->db->get()->result_array();
+    }
+
+
+    function getDataJabatan($id_unitkerja, $searchTerm = "")
+    {        
+        $this->db->select('*');
+        $this->db->where('id_unitkerja', $id_unitkerja);
+        // $this->db->where("nama like '%" . $searchTerm . "%' ");    
+        $this->db->order_by('id_unitkerja', 'asc');
+        $fetched_records = $this->db->get('db_pegawai.jabatan');
+        $datajab = $fetched_records->result_array();
+ 
+        $data = array();
+        foreach ($datajab as $jab) {
+            $data[] = array("id" => $jab['id_jabatanpeg'], "text" => $jab['nama_jabatan']);
+        }
+        return $data;
+    }
+
+     
+function getNamaJabatan(){
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+
+}
     
 
 

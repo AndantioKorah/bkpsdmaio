@@ -29,7 +29,7 @@ header("Content-Disposition: attachment; filename=$filename");
                     <th style="text-align: center";>Pangkat</th>
                     <th style="text-align: center";>Jabatan</th>
                     <th style="text-align: center";>Unit Kerja</th>
-                    <th style="text-align: center";>TMT Naik Pangkat</th>
+                    <!-- <th style="text-align: center";>TMT Naik Pangkat</th> -->
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -46,7 +46,7 @@ header("Content-Disposition: attachment; filename=$filename");
                             </td>
                             <td style="text-align: left" class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td style="text-align: left" class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                            <td style="text-align: left" class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td>
+                            <!-- <td style="text-align: left" class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>
                     <?php } ?>
                 </tbody>

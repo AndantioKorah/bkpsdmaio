@@ -287,7 +287,7 @@ class C_Kepegawaian extends CI_Controller
 
 	
 	public function profilPegawai($nip){
-		if(!$this->general_library->isProgrammer() || !$this->general_library->isProgrammer()){
+		if(!$this->general_library->isProgrammer() && !$this->general_library->AdminAplikasi()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {

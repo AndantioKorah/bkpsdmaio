@@ -9,7 +9,7 @@
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
-  Tambah Data Penghargaan
+  Tambah Data Sumpah Janji
 </button>
 
 
@@ -18,42 +18,42 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Penghargaan</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Sumpah Janji</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_penghargaan" enctype="multipart/form-data" >
+    <form method="post" id="upload_form_sumpah_janji" enctype="multipart/form-data" >
    
-   <input type="hidden" id="id_pegpenghargaan" name="id_pegpenghargaan" value="">
-   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
+    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
-
-  <div class="form-group">
-    <label>Nama Penghargaan</label>
-    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  required/>
-  </div>
-
-  <div class="form-group">
-    <label>Nomor SK</label>
-    <input class="form-control customInput" type="text" id="nosk" name="nosk"  required/>
-  </div>
 
   
   <div class="form-group">
-    <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
+    <label>Sumpah / Janji</label>
+    <select class="form-control select2"
+			data-dropdown-css-class="select2-navy" name="sumpahpeg" id="sumpahpeg" required>
+			<option value="" disabled selected>Pilih Item</option>
+			<?php if($jenis_sumpah){ foreach($jenis_sumpah as $r){ ?>
+                        <option value="<?=$r['id_sumpah']?>"><?=$r['nm_sumpah']?></option>
+                    <?php } } ?>
+		</select>
   </div>
 
   <div class="form-group">
-    <label>Tahun</label>
-    <input  class="form-control yearpicker" autocomplete="off"   id="tahun_penghargaan" name="tahun_penghargaan" required/>
+    <label>Yang Mengambil Sumpah</label>
+    <input  class="form-control yearpicker" autocomplete="off"   id="pejabat" name="pejabat" required/>
   </div>
 
   <div class="form-group">
-    <label>Asal Perolehan</label>
-    <input class="form-control customInput" type="text" id="asal" name="asal"  required/>
+    <label>Nomor Berita Acara</label>
+    <input class="form-control customInput" type="text" id="noba" name="noba"  required/>
+  </div>
+
+  <div class="form-group">
+    <label>Tanggal Berita Acara</label>
+    <input class="form-control datepicker" autocomplete="off" type="text" id="tglba" name="tglba"  required/>
   </div>
 
 
@@ -74,7 +74,7 @@
 
    
 
-<div id="list_penghargaan">
+<div id="list_sumpah_janji">
 
 </div>
 
@@ -108,11 +108,11 @@ $(function(){
 	});
   
         $('#datatable').dataTable()
-        loadListPenghargaan()
+        loadListSumpahJanji()
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -120,19 +120,13 @@ $(function(){
 });
 
     
-        $('#upload_form').on('submit', function(e){  
+        $('#upload_form_sumpah_janji').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form');
+        var formvalue = $('#upload_form_sumpah_janji');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file').files.length;
-        
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
-       
+   
       
       
         $.ajax({  
@@ -149,8 +143,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form").reset();
-                loadListPenghargaan()
+                document.getElementById("upload_form_sumpah_janji").reset();
+                loadListSumpahJanji()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -161,19 +155,15 @@ $(function(){
           
         }); 
 
-    function loadListPenghargaan(){
+    function loadListSumpahJanji(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#list_penghargaan').html('')
-    $('#list_penghargaan').append(divLoaderNavy)
-    $('#list_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip, function(){
+    $('#list_sumpah_janji').html('')
+    $('#list_sumpah_janji').append(divLoaderNavy)
+    $('#list_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip, function(){
       $('#loader').hide()
     })
   }
 
-  function openFilePenghargaan(filename){
-    var nip = <?=$this->general_library->getUserName()?>;
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
-  }
 
   
 </script>

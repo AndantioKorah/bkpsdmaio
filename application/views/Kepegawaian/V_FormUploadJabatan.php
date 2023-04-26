@@ -9,11 +9,11 @@
 
 
 <!-- Button trigger modal -->
-<?php if($jenis_user == 1) { ?>
+
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
   Tambah Data Jabatan
 </button>
-<?php } ?>
+
 
 <!-- Modal -->
 <div class="modal fade" id="modalJabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -156,7 +156,6 @@
 
 
    
-
 <div id="list_jabatan">
 
 </div>
@@ -238,9 +237,10 @@ $(function(){
         }); 
 
     function loadListJabatan(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
-    $('#list_jabatan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListJabatan/")?>', function(){
+    $('#list_jabatan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

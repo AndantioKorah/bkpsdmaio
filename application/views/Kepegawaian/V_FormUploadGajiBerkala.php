@@ -166,9 +166,10 @@ $(function(){
         }); 
 
     function loadListGajiBerkala(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_gaji_berkala').html('')
     $('#list_gaji_berkala').append(divLoaderNavy)
-    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>', function(){
+    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

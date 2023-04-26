@@ -24,7 +24,7 @@
       </div>
       <div class="modal-body">
       <form method="post" id="upload_form_keluarga" enctype="multipart/form-data" >
-   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
+   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
   <div class="form-group">
     <label>Hubungan Keluarga</label>
@@ -147,9 +147,10 @@ $(function(){
         }); 
 
     function loadListKeluarga(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_keluarga').html('')
     $('#list_keluarga').append(divLoaderNavy)
-    $('#list_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>', function(){
+    $('#list_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip, function(){
       $('#loader').hide()
     })
     }

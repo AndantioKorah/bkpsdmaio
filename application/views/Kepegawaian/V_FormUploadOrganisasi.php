@@ -26,7 +26,7 @@
       <form method="post" id="upload_form_organisasi" enctype="multipart/form-data" >
    
    <input type="hidden" id="id_pegorganisasi" name="id_pegorganisasi" value="">
-   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
+   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Jenis Organisasi </label>
@@ -171,9 +171,10 @@ $(function(){
         }); 
 
     function loadListOrganisasi(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_organisasi').html('')
     $('#list_organisasi').append(divLoaderNavy)
-    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>', function(){
+    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

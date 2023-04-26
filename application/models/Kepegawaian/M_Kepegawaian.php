@@ -151,7 +151,7 @@ class M_Kepegawaian extends CI_Model
             return $this->db->get()->row_array();
         }
 
-        function getPangkatPegawai(){
+        function getPangkatPegawai($nip){
             return $this->db->select('e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                             c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
@@ -159,63 +159,69 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegpangkat c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
                             ->join('db_pegawai.jenispengangkatan e','c.jenispengangkatan = e.id_jenispengangkatan')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->order_by('c.tglsk', 'desc')
                             ->get()->result_array();
         }
 
-        function getPendidikan(){
+        function getPendidikan($nip){
             return $this->db->select('e.nm_tktpendidikanb,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.tktpendidikan d','b.pendidikan = d.id_tktpendidikan')
                             ->join('db_pegawai.tktpendidikanb e','c.tktpendidikan = e.id_tktpendidikanb')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->order_by('c.tglijasah','desc')
                             ->get()->result_array();
         }
 
-        function getJabatan(){
+        function getJabatan($nip){
             return $this->db->select('d.nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
                             ->join('db_pegawai.eselon e','c.eselon = e.id_eselon')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->order_by('c.tmtjabatan','desc')
                             ->get()->result_array();
         }
 
 
-        function getDiklat(){
+        function getDiklat($nip){
             return $this->db->select('d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.diklat d','c.jenisdiklat = d.id_diklat')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->get()->result_array();
         }
 
-        function getGajiBerkala(){
+        function getGajiBerkala($nip){
             return $this->db->select('c.masakerja,d.nm_pangkat,c.pejabat,c.nosk,c.tglsk,c.tmtgajiberkala,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->order_by('c.tglsk','desc')
                             ->get()->result_array();
         }
 
-        function getSkp(){
+        function getSkp($nip){
             return $this->db->select('*')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegskp c', 'b.id_peg = c.id_pegawai')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             // ->order_by('c.tglsk','desc')
                             ->get()->result_array();
         }
@@ -241,35 +247,63 @@ class M_Kepegawaian extends CI_Model
                             ->get()->result_array();
         }
 
-        function getKeluarga(){
+        function getKeluarga($nip){
             return $this->db->select('*')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegkeluarga c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.keluarga d', 'c.hubkel = d.id_keluarga')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             // ->order_by('c.tglsk','desc')
                             ->get()->result_array();
         }
 
-        function getOrganisasi(){
+        function getOrganisasi($nip){
             return $this->db->select('*')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegorganisasi c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.organisasi d', 'c.jenis_organisasi = d.id_organisasi')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
+
                             // ->order_by('c.tglsk','desc')
                             ->get()->result_array();
         }
 
-        function getPenghargaan(){
+        function getPenghargaan($nip){
             return $this->db->select('*')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
-                            ->where('a.id', $this->general_library->getId())
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getCuti($nip){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegcuti c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.cuti d', 'c.jeniscuti = d.id_cuti')
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
+
+                            // ->order_by('c.tglsk','desc')
+                            ->get()->result_array();
+        }
+
+        function getSumpahJanji($nip){
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegsumpah c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.sumpah d', 'c.sumpahpeg = d.id_sumpah')
+                            ->where('a.username', $nip)
+                            ->where('a.flag_active', 1)
                             ->get()->result_array();
         }
 
@@ -451,6 +485,20 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['updated_by']      = $this->general_library->getId();;
             // dd($dataInsert);
             $result = $this->db->insert('db_pegawai.pegskp', $dataInsert);
+        } else if($id_dok == 17){   
+                 
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['jeniscuti']      = $this->input->post('cuti_jenis');
+            $dataInsert['lamacuti']      = "0";
+            $dataInsert['tglmulai']      = $this->input->post('cuti_tglmulai');
+            $dataInsert['tglselesai']      = $this->input->post('cuti_tglselesai');
+            $dataInsert['nosttpp']      = $this->input->post('cuti_nosurat');
+            $dataInsert['tglsttpp']      = $this->input->post('cuti_tglsurat');
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            // $dataInsert['created_by']      = $this->general_library->getId();
+            // $dataInsert['updated_by']      = $this->general_library->getId();
+            // dd($dataInsert);
+            $result = $this->db->insert('db_pegawai.pegcuti', $dataInsert);
         }
       
 
@@ -582,6 +630,8 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsipdiklat/';
         } else if($this->input->post('id_dokumen') == 8){
             $target_dir						= './arsipjabatan/';
+        } else if($this->input->post('id_dokumen') == 17){
+            $target_dir						= './arsipcuti/';
         } else {
             $target_dir						= './uploads/';
         }
@@ -630,6 +680,9 @@ class M_Kepegawaian extends CI_Model
             $result = $this->insert('db_pegawai.pegkeluarga',$dataPost);
         } else if($this->input->post('jenispenugasan')){
             $result = $this->insert('db_pegawai.pegdatalain',$dataPost);
+        } else if($this->input->post('sumpahpeg')){
+            // dd($dataPost);
+            $result = $this->insert('db_pegawai.pegsumpah',$dataPost);
         } 
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
       
@@ -763,7 +816,7 @@ class M_Kepegawaian extends CI_Model
         ->from('db_siladen.dokumen a')
         ->where('a.id_dokumen', $id_dok)
         ->get()->row_array();
-
+        
         $name = null;
         if($query){
             $format = $query['format'];
@@ -816,7 +869,14 @@ class M_Kepegawaian extends CI_Model
             $tahun = $this->input->post('skp_tahun');
             $name = str_replace("NIP",$nip,$format);
             $name = str_replace("TAHUN",$tahun,$name);
-        }  
+        }  else if($id_dok == 17){
+            $date = $this->input->post('cuti_tglmulai');
+            $tahun = explode('-', $date);
+            $tahun = $tahun[0];
+            $name = str_replace("NIP",$nip,$format);
+            $name = str_replace("TAHUN",$this->input->post('cuti_tglmulai'),$name);
+            
+        } 
 
         
 

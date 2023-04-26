@@ -127,9 +127,10 @@ $(function(){
         }); 
 
     function loadListAssesment(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_assesment').html('')
     $('#list_assesment').append(divLoaderNavy)
-    $('#list_assesment').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListAssesment/")?>', function(){
+    $('#list_assesment').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip, function(){
       $('#loader').hide()
     })
     }

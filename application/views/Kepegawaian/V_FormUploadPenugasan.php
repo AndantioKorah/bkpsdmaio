@@ -26,7 +26,7 @@
       <div class="modal-body" id="modal_view_file_content">
       <form method="post" id="upload_form_penugasan" enctype="multipart/form-data" >
         
-      <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
+      <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
 <div class="form-group " style="margin-bottom:10px !important;">
 <label for="exampleFormControlInput1">Jenis Penugasan</label>
@@ -146,9 +146,10 @@ $(function(){
         }); 
 
     function loadListPenugasan(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_penugasan').html('')
     $('#list_penugasan').append(divLoaderNavy)
-    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>', function(){
+    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

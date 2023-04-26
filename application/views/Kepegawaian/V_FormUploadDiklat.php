@@ -185,9 +185,10 @@ $(function(){
         }); 
 
     function loadListDiklat(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_diklat').html('')
     $('#list_diklat').append(divLoaderNavy)
-    $('#list_diklat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListDiklat/")?>', function(){
+    $('#list_diklat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListDiklat/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

@@ -198,9 +198,10 @@ $(function(){
         }); 
 
     function loadListPangkat(){
+    var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pangkat').html('')
     $('#list_pangkat').append(divLoaderNavy)
-    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
+    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

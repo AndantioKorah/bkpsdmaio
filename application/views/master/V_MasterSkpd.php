@@ -9,6 +9,9 @@
                 <div class="col-lg-12">
                     <select class="form-control select2-navy" style="width: 100%"
                     id="ukmaster" data-dropdown-css-class="select2-navy" name="ukmaster">
+                        <option value="0" selected>
+                            Cari Perangkat Daerah
+                        </option>
                         <?php if($master){
                             foreach($master as $m){
                             ?>
@@ -41,11 +44,13 @@
     })
 
     function refreshUnitKerja(){
-        $('#list_skpd').html('')
-        $('#list_skpd').append(divLoaderNavy)
-        $('#list_skpd').load('<?=base_url("master/C_Master/loadUnitKerjaByIdUnitKerjaMaster/")?>'+$('#ukmaster').val(), function(){
-            $('#loader').hide()
-        })
+        if($('#ukmaster').val() != '0'){
+            $('#list_skpd').html('')
+            $('#list_skpd').append(divLoaderNavy)
+            $('#list_skpd').load('<?=base_url("master/C_Master/loadUnitKerjaByIdUnitKerjaMaster/")?>'+$('#ukmaster').val(), function(){
+                $('#loader').hide()
+            })
+        }
     }
 
     $('#ukmaster').on('change', function(){

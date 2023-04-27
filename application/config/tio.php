@@ -11,6 +11,7 @@ $route['pesan/send/bulk'] = 'message/C_Message/bulkMessage';
 $route['master/bidang'] = 'master/C_Master/masterBidang';
 $route['master/bidang/sub'] = 'master/C_Master/masterSubBidang';
 $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
+$route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 
 
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';

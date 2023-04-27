@@ -1,9 +1,9 @@
-<div class="col-lg-7">
-  <div class="chart chart-sm" style="max-height: 150px !important; min-height: 150px !important;">
+<div class="col-lg-5">
+  <div class="chart chart-sm" style="max-height: 120px !important; min-height: 120px !important;">
     <canvas id="<?=$id_chart?>"></canvas>
   </div>
 </div>
-<div class="col-lg-5">
+<div class="col-lg-7">
   <table>
     <?php 
     $i = 0;

@@ -71,6 +71,14 @@ class General_library
         return base_url().$photo;
     }
 
+    public function getFotoPegawai($url){
+        $photo = 'assets/img/user-icon.png';
+        if(file_exists($url)){
+            $photo = $url;
+        }
+        return base_url().$photo;
+    }
+
     public function getParams($parameter_name = ''){
         return $this->nikita->session->userdata($parameter_name);
         // $this->params = $this->nikita->session->userdata('params');

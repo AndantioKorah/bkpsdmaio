@@ -309,8 +309,10 @@
                   let values = [];
                   let temp = Object.keys(dt.result)
                   temp.forEach(function(i) {
-                    labels.push(dt.result[i].nama)
-                    values.push(dt.result[i].jumlah)
+                    if(dt.result[i].jumlah > 0){
+                      labels.push(dt.result[i].nama)
+                      values.push(dt.result[i].jumlah)
+                    }
                   })
                   console.log(labels)
 
@@ -351,7 +353,7 @@
               function getJumlahPensiun(){
                 $('#h1_pensiun').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiPensiunByYear/1")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiPensiunByYear/0")?>',
                   method: 'post',
                   data: {
                     eselon: 0,
@@ -372,7 +374,7 @@
               function getJumlahNaikpangkat(){
                 $('#h1_pangkat').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiNaikPangkatByYear/1")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiNaikPangkatByYear/0")?>',
                   method: 'post',
                   data: {
                     eselon: 0,
@@ -393,7 +395,7 @@
               function getJumlahGajiBerkala(){
                 $('#h1_gaji_berkala').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/1")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/0")?>',
                   method: 'post',
                   data: {
                     eselon: 0,

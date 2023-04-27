@@ -8,64 +8,65 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
-  Tambah Data Gaji Berkala
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalCuti">
+  Tambah Data Cuti
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="modalBerkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCuti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Gaji Berkala</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Cuti</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
+      <form method="post" id="upload_form_cuti" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
-                    <option value="" disabled selected>Pilih Item</option>
-                    <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
-                        <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
+    <label for="exampleFormControlInput1">Jenis Cuti </label>
+    <select class="form-control select2"
+			data-dropdown-css-class="select2-navy" name="cuti_jenis" id="cuti_jenis" required>
+			<option value="" disabled selected>Pilih Item</option>
+			<?php if($jenis_cuti){ foreach($jenis_cuti as $r){ ?>
+                        <option value="<?=$r['id_cuti']?>"><?=$r['nm_cuti']?></option>
                     <?php } } ?>
-    </select>
+		</select>
     </div>
    
 
+
+
   <div class="form-group">
-    <label>Masa Kerja</label>
-    <input class="form-control customInput" type="text" id="gb_masa_kerja" name="gb_masa_kerja"  required/>
+    <label>Tanggal Mulai</label>
+    <input  class="form-control datepicker" autocomplete="off"   id="cuti_tglmulai" name="cuti_tglmulai" required/>
   </div>
 
   <div class="form-group">
-    <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control customInput" type="text" id="gb_pejabat" name="gb_pejabat"  required/>
+    <label>Tanggal Selesai</label>
+    <input  class="form-control datepicker" autocomplete="off"   id="cuti_tglselesai" name="cuti_tglselesai" required/>
+  </div>
+
+  
+  <div class="form-group">
+    <label>Nomor Surat Ijin</label>
+    <input class="form-control customInput" type="text" id="cuti_nosurat" name="cuti_nosurat"  required/>
   </div>
 
   <div class="form-group">
-    <label>Nomor SK</label>
-    <input class="form-control customInput" type="text" id="gb_no_sk" name="gb_no_sk"  required/>
+    <label>Tanggal Surat Ijin</label>
+    <input  class="form-control datepicker" autocomplete="off"   id="cuti_tglsurat" name="cuti_tglsurat" required/>
   </div>
 
-  <div class="form-group">
-    <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
-  </div>
+
 
   <div class="form-group">
-    <label>TMT Gaji Berkala</label>
-    <input  class="form-control datepicker"   id="tmt_gaji_berkala" name="tmt_gaji_berkala" required/>
-  </div>
-
-  <div class="form-group">
-    <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_berkala" name="file"   />
+    <label>File Cuti</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_cuti" name="file"   />
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
@@ -112,11 +113,11 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-      loadListGajiBerkala()
+      loadListCuti()
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -124,13 +125,13 @@ $(function(){
 });
 
     
-        $('#upload_form_gaji_berkala').on('submit', function(e){  
+        $('#upload_form_cuti').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form_gaji_berkala');
+        var formvalue = $('#upload_form_cuti');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_berkala').files.length;
+        var ins = document.getElementById('pdf_file_cuti').files.length;
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
@@ -153,8 +154,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_gaji_berkala").reset();
-                loadListGajiBerkala()
+                document.getElementById("upload_form_cuti").reset();
+                loadListCuti()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -165,22 +166,20 @@ $(function(){
           
         }); 
 
-    function loadListGajiBerkala(){
+    function loadListCuti(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_gaji_berkala').html('')
     $('#list_gaji_berkala').append(divLoaderNavy)
-    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip, function(){
+    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip, function(){
       $('#loader').hide()
     })
   }
 
-  function openFilePangkat(filename){
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
-  }
 
-  $("#pdf_file_berkala").change(function (e) {
 
-        var extension = pdf_file_berkala.value.split('.')[1];
+  $("#pdf_file_cuti").change(function (e) {
+
+        var extension = pdf_file_cuti.value.split('.')[1];
       
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>

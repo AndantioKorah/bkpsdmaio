@@ -122,9 +122,9 @@
 
 
 <script>
-  function openFilePendidikan(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
-  }
+  // function openFilePendidikan(filename){
+  //   $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
+  // }
 </script>
 <?php } else { ?>
   <div class="row">

@@ -87,7 +87,7 @@
     <tr>
         <td style="width:25%;">Lamanya</td>
         <td style="text-align: center;">:</td>
-        <td style="width:50%;"> <?= $result['0']['lama_cuti'] ?> (<?= penyebut($result['0']['lama_cuti']) ?>) Hari Kerja</td>
+        <td style="width:50%;"> <?= $result['0']['lama_cuti'] ?> (<?= penyebut($result['0']['lama_cuti']) ?>) <?php if($result['0']['jenis_lama_cuti'] == 1) echo "Hari Kerja"; else echo "Bulan";?></td>
     </tr>
     <tr>
         <td style="width:25%;">Terhitung Mulai</td>

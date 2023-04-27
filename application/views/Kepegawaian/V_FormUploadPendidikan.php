@@ -29,7 +29,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Tingkat Pendidikan </label>
-    <select class="form-control select2pendidikan" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
+    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_tingkat_pendidikan){ foreach($list_tingkat_pendidikan as $r){ ?>
                         <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
@@ -179,9 +179,10 @@ $(function(){
         }); 
 
     function loadListPendidikan(){
+    var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pendidikan').html('')
     $('#list_pendidikan').append(divLoaderNavy)
-    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>', function(){
+    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

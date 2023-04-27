@@ -12,35 +12,82 @@ class C_Kepegawaian extends CI_Controller
 		};
 	}
 
-	public function loadListPangkat(){
-		$data['result'] = $this->kepegawaian->getPangkatPegawai();
+	public function loadListPangkat($nip){
+		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip);
 		// dd($data);
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
-	public function loadListPendidikan(){
-		$data['result'] = $this->kepegawaian->getPendidikan();
+	public function loadListSkp($nip){
+		$data['result'] = $this->kepegawaian->getSkp($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListSkp', $data);
+	}
+
+
+	public function loadListOrganisasi($nip){
+		$data['result'] = $this->kepegawaian->getOrganisasi($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListOrganisasi', $data);
+	}
+
+
+	public function loadListAssesment(){
+		$data['result'] = $this->kepegawaian->getAssesment();
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListAssesment', $data);
+	}
+
+	public function loadListKeluarga($nip){
+		$data['result'] = $this->kepegawaian->getKeluarga($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListKeluarga', $data);
+	}
+	
+
+	public function loadListPendidikan($nip){
+		$data['result'] = $this->kepegawaian->getPendidikan($nip);
 		// dd($data);
 		$this->load->view('kepegawaian/V_ListPendidikan', $data);
 	}
 
-	public function loadListDiklat(){
-		$data['result'] = $this->kepegawaian->getDiklat();
+	public function loadListDiklat($nip){
+		$data['result'] = $this->kepegawaian->getDiklat($nip);
 		// dd($data);
 		$this->load->view('kepegawaian/V_ListDiklat', $data);
 	}
 
-	public function loadListJabatan(){
-		$data['result'] = $this->kepegawaian->getJabatan();
+	public function loadListJabatan($nip){
+		$data['result'] = $this->kepegawaian->getJabatan($nip);
 		// dd($data);
 		$this->load->view('kepegawaian/V_ListJabatan', $data);
 	}
 
-	public function loadListGajiBerkala(){
-		$data['result'] = $this->kepegawaian->getGajiBerkala();
+	public function loadListGajiBerkala($nip){
+		$data['result'] = $this->kepegawaian->getGajiBerkala($nip);
 		// dd($data);
 		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
 	}
+
+	
+	public function loadListPenghargaan($nip){
+		$data['result'] = $this->kepegawaian->getPenghargaan($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
+	}
+
+	public function loadListCuti($nip){
+		$data['result'] = $this->kepegawaian->getCuti($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListCuti', $data);
+	}
+
+	public function loadListSumpahJanji($nip){
+		$data['result'] = $this->kepegawaian->getSumpahJanji($nip);
+		// dd($data);
+		$this->load->view('kepegawaian/V_ListSumpahJanji', $data);
+	}
+
 
 
 	public function loadListPenugasan(){
@@ -76,11 +123,7 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
 	}
 
-	public function loadListPenghargaan(){
-		$data['result'] = $this->kepegawaian->getPenghargaan();
-		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
-		
-	}
+
 
 	public function loadDokumenPns()
 	{
@@ -116,6 +159,11 @@ class C_Kepegawaian extends CI_Controller
 	public function doUpload2()
 	{ 
 		echo json_encode( $this->kepegawaian->doUpload());
+	}
+
+	public function doUploadAssesment()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadAssesment());
 	}
 
 	public function doUpload()
@@ -259,6 +307,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
+			$data['nip'] = $nip;
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 			render('kepegawaian/V_UploadDokumenNew', '', '', $data);
 		}
@@ -268,6 +317,8 @@ class C_Kepegawaian extends CI_Controller
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		
+		$data['nip'] = $this->general_library->getUserName();
         render('kepegawaian/V_UploadDokumenNew', '', '', $data);
     }
 
@@ -284,70 +335,157 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
     }
 
-	public function LoadFormDokPangkat($jenis_user){
+	public function LoadFormDokPangkat($nip){
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
-		$data['jenis_user'] = $jenis_user;
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
+		
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-
-		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
-
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+			
 		}
         $this->load->view('kepegawaian/V_FormUploadPangkat', $data);
     }
 
-	public function LoadFormGajiBerkala(){
+	public function LoadFormGajiBerkala($nip){
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 7);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadGajiBerkala', $data);
     }
 
-	public function LoadFormPendidikan(){
+	public function LoadFormPendidikan($nip){
 		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadPendidikan', $data);
     }
 
-	public function LoadFormJabatan($jenis_user,$nip=null){
-		$data['jenis_user'] = $jenis_user;
+	public function LoadFormJabatan($nip){
+		// dd($nip);
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
-		$data['nama_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan', 'id_jabatanpeg', 'asc');
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
-		if($jenis_user == 1){
-			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-
-		} else {
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
-
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
         $this->load->view('kepegawaian/V_FormUploadJabatan', $data);
     }
 
-	public function LoadFormDiklat(){
+	public function LoadFormDiklat($nip){
 		$data['jenis_diklat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.diklat', 'id_diklat', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 20);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadDiklat', $data);
     }
 
-	public function LoadFormOrganisasi(){
+	public function LoadFormOrganisasi($nip){
 		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'id_organisasi', 'asc');
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', null);
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadOrganisasi', $data);
     }
 
-	public function LoadFormPenghargaan(){
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+	public function LoadFormPenghargaan($nip){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
     }
+
+	public function loadFormSkp($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadSkp', $data);
+    }
+
+	public function loadFormAssesment($nip){
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadAssesment', $data);
+    }
+
+	public function loadFormKeluarga($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['hubungan_keluarga'] = $this->kepegawaian->getAllWithOrder('db_pegawai.keluarga', 'id_keluarga', 'asc');
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadKeluarga', $data);
+    }
+
+	public function LoadFormCuti($nip){
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 17);
+		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_pegawai.cuti', 'id_cuti', 'asc');
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadCuti', $data);
+    }
+
+	public function LoadFormSumpahJanji($nip){
+		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadSumpahJanji', $data);
+    }
+
+
 
 
 	public function layanan(){
@@ -462,6 +600,19 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitNomorTglSurat());
 	}
 
+
+	public function getNomorTanggalSurat()
+    {
+        $data = $this->kepegawaian->getNomorTanggalSurat();
+        echo json_encode($data);
+    }
+
+	public function getDataJabatan($id_unitkerja)
+    {
+        $searchTerm = $this->input->post('searchTerm');
+        $response   = $this->kepegawaian->getDataJabatan($id_unitkerja, $searchTerm);
+        echo json_encode($response);
+    }
 
 	
 

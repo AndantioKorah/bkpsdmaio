@@ -241,6 +241,14 @@ $(function(){
         var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
         var id_peg = "<?=$result[0]['id_peg'];?>";
         var base_url = "<?= base_url();?>";
+
+        if(file == "pangkat"){
+          dir = "arsipelektronik/";
+        } else if(file == "jabatan"){
+          dir = "arsipjabatan/";
+        } else {
+          dir = "uploads/";
+        }
         
         $.ajax({
         type : "POST",
@@ -251,7 +259,7 @@ $(function(){
         console.log(data)
         if(data != ""){
           if(data[0].gambarsk != ""){
-            $('#view_file_verif').attr('src', base_url+'uploads/'+nip+'/'+data[0].gambarsk)
+            $('#view_file_verif').attr('src', base_url+dir+data[0].gambarsk)
           // $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
           $('#ket').html('');
           } else {
@@ -285,7 +293,7 @@ $(function(){
                 data: $(this).serialize(),
                 success: function(datares){
                   successtoast('Data Berhasil Diverifikasi')
-                 
+                  // loadListUsulLayanan(1)
                   $('#btn_tolak_verifikasi').show()
                   $('#btn_verifikasi').hide()
                 }, error: function(e){

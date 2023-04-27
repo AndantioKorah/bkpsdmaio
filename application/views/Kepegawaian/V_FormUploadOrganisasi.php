@@ -26,7 +26,7 @@
       <form method="post" id="upload_form_organisasi" enctype="multipart/form-data" >
    
    <input type="hidden" id="id_pegorganisasi" name="id_pegorganisasi" value="">
-   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?=$this->general_library->getIdPegSimpeg();?>">
+   <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="exampleFormControlInput1">Jenis Organisasi </label>
@@ -87,7 +87,7 @@
 
    
 
-<div id="list_pangkat">
+<div id="list_organisasi">
 
 </div>
 
@@ -118,7 +118,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        // loadListPangkat()
+        loadListOrganisasi()
     })
 
     $('.datepicker').datepicker({
@@ -170,13 +170,14 @@ $(function(){
           
         }); 
 
-//     function loadListPangkat(){
-//     $('#list_pangkat').html('')
-//     $('#list_pangkat').append(divLoaderNavy)
-//     $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
-//       $('#loader').hide()
-//     })
-//   }
+    function loadListOrganisasi(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#list_organisasi').html('')
+    $('#list_organisasi').append(divLoaderNavy)
+    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip, function(){
+      $('#loader').hide()
+    })
+  }
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

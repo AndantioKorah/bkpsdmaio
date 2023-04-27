@@ -117,13 +117,16 @@
 			<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>
-
+ 
+	<?php 
+	$active_role = $this->session->userdata('active_role');
+	if($active_role['role_name'] == "programmer") { ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/teknis">
 		<i class="fa fa-check-square" aria-hidden="true"></i> <span class="align-middle">Verifikasi Layanan</span>
 		</a>
 	</li>
-
+	<?php } ?>
 	<!-- <li class="sidebar-item">
 						<a class="sidebar-link" href="ui-cards.html">
               <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Gaji Berkala</span>

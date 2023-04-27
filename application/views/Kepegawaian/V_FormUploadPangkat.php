@@ -6,11 +6,11 @@
 </style>
 
 <!-- Button trigger modal -->
-<?php if($jenis_user == 1) { ?>
+
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>
-<?php } ?>
+
 
 
 
@@ -198,9 +198,10 @@ $(function(){
         }); 
 
     function loadListPangkat(){
+    var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pangkat').html('')
     $('#list_pangkat').append(divLoaderNavy)
-    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>', function(){
+    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip, function(){
       $('#loader').hide()
     })
   }

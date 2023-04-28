@@ -77,22 +77,22 @@
                                         <td style="width: 65%;">
                                             <div class="row ml-3">
                                                 <div class="col-lg-12" style="font-size: .8rem;">Nama Perangkat Daerah:</div>
-                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['kepala_skpd']['nm_unitkerja']?></div>
+                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['list_pegawai'][0]['nm_unitkerja'] ? $result['list_pegawai'][0]['nm_unitkerja'] : '-' ?></div>
                                                 <div class="col-lg-12" style="margin: -10px;"><hr></div>
                                             </div>
                                             <div class="row ml-3">
                                                 <div class="col-lg-12" style="font-size: .8rem;">Alamat:</div>
-                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['kepala_skpd']['alamat_uk']?></div>
+                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['list_pegawai'][0]['alamat_uk'] ? $result['list_pegawai'][0]['alamat_uk'] : '-' ?></div>
                                                 <div class="col-lg-12" style="margin: -10px;"><hr></div>
                                             </div>
                                             <div class="row ml-3">
                                                 <div class="col-lg-12" style="font-size: .8rem;">Nomor Telepon:</div>
-                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['kepala_skpd']['notelp_uk'] ? $result['kepala_skpd']['notelp_uk'] : '-' ?></div>
+                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['list_pegawai'][0]['notelp_uk'] ? $result['list_pegawai'][0]['notelp_uk'] : '-' ?></div>
                                                 <div class="col-lg-12" style="margin: -10px;"><hr></div>
                                             </div>
                                             <div class="row ml-3">
                                                 <div class="col-lg-12" style="font-size: .8rem;">Email:</div>
-                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['kepala_skpd']['email_uk']?></div>
+                                                <div class="col-lg-12 fw-bold" style="font-size: 1rem;"><?=$result['list_pegawai'][0]['email_uk'] ? $result['list_pegawai'][0]['email_uk'] : '-' ?></div>
                                                 <div class="col-lg-12" style="margin: -10px;"><hr></div>
                                             </div>
                                         </td>

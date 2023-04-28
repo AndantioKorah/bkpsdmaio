@@ -38,6 +38,22 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
+    public function readAbsensiAars(){
+        $data['result'] = $this->rekap->readAbsensiAars($this->input->post());
+        $data['flag_print'] = 0;
+        $data['skpd'] = $data['result']['skpd'];
+        $data['jam_kerja'] = $data['result']['jam_kerja'];
+        $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];
+        $data['hari_libur'] = $data['result']['hari_libur'];
+        $data['info_libur'] = $data['result']['info_libur'];
+        $data['periode'] = $data['result']['periode'];
+        $data['disiplin_kerja'] = $data['result']['disiplin_kerja'];
+        $data['list_hari'] = $data['result']['list_hari'];
+        $data['flag_rekap_aars'] = true;
+        // $this->load->view('rekap/V_RekapAbsensiAars', $data);
+        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+    }
+
     public function readAbsensiExcel()
     {
         $data = $this->rekap->readAbsensiExcel();

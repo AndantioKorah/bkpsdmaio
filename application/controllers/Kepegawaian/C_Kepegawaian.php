@@ -290,17 +290,63 @@ class C_Kepegawaian extends CI_Controller
 		}
 	}
 
-	
+	public function openDetailDokumen($id, $jd){
+		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
+		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
+		$this->load->view('Kepegawaian/V_VerifikasiDokumenDetail', $data);
+	}
+
+	public function searchDokumenUsul(){
+		$data['result'] = $this->kepegawaian->searchDokumenUsul($this->input->post());
+		$ld = $this->session->userdata('list_dokumen');
+		$jenis_dok = $ld[$this->input->post('jenisdokumen')];
+		$data['param'] = $this->input->post();
+		$data['param']['jenisdokumen'] = $jenis_dok;
+		$this->session->set_userdata('list_dokumen_selected', $jenis_dok);
+
+		$this->load->view('Kepegawaian/V_VerifikasiDokumenSearch', $data);
+	}
+
+	public function verifikasiDokumen(){
+		$data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+		$data['list_dokumen']['pegpangkat']['db'] = 'pegpangkat';
+		$data['list_dokumen']['pegpangkat']['nama'] = 'Pangkat';
+		$data['list_dokumen']['pegpangkat']['value'] = 'pangkat';
+
+		$data['list_dokumen']['pegjabatan']['db'] = 'pegjabatan';
+		$data['list_dokumen']['pegjabatan']['nama'] = 'Jabatan';
+		$data['list_dokumen']['pegjabatan']['value'] = 'jabatan';
+
+		$data['list_dokumen']['pegpendidikan']['db'] = 'pegpendidikan';
+		$data['list_dokumen']['pegpendidikan']['nama'] = 'Pendidikan';
+		$data['list_dokumen']['pegpendidikan']['value'] = 'pendidikan';
+
+		$data['list_dokumen']['peggajiberkala']['db'] = 'peggajiberkala';
+		$data['list_dokumen']['peggajiberkala']['nama'] = 'Gajiberkala';
+		$data['list_dokumen']['peggajiberkala']['value'] = 'gajiberkala';
+
+		$data['list_dokumen']['pegdiklat']['db'] = 'pegdiklat';
+		$data['list_dokumen']['pegdiklat']['nama'] = 'Diklat';
+		$data['list_dokumen']['pegdiklat']['value'] = 'diklat';
+
+		$data['list_dokumen']['pegorganisasi']['db'] = 'pegorganisasi';
+		$data['list_dokumen']['pegorganisasi']['nama'] = 'Organisasi';
+		$data['list_dokumen']['pegorganisasi']['value'] = 'organisasi';
+
+		$data['list_dokumen']['pegpenghargaan']['db'] = 'pegpenghargaan';
+		$data['list_dokumen']['pegpenghargaan']['nama'] = 'Penghargaan';
+		$data['list_dokumen']['pegpenghargaan']['value'] = 'penghargaan';
+
+		
+		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
+        render('kepegawaian/V_VerifikasiDokumen', '', '', $data);
+	}
 
 	function _extract_numbers($string)
 	{
 		preg_match_all('/([\d]+)/', $string, $match);
 		return $match[0];
 	}
-
-	
-
-
 	
 	public function profilPegawai($nip){
 		if(!$this->general_library->isProgrammer() && !$this->general_library->AdminAplikasi()){

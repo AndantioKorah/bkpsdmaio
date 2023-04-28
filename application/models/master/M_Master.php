@@ -427,7 +427,7 @@
         public function getAllMasterSkpd(){
             return $this->db->select('*')
                             ->from('db_pegawai.unitkerjamaster')
-                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                            // ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
                             ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
                             ->order_by('id_unitkerjamaster', 'asc')
                             ->get()->result_array();

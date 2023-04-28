@@ -66,7 +66,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col mt-0 ml-0">
-                      <h5 class="card-title">JUMLAH PEGAWAI</h5>
+                      <h5 class="card-title">Jumlah Pegawai</h5>
                     </div>
                     <div class="col-auto">
                       <div class="stat text-primary">
@@ -77,7 +77,7 @@
                   <h1 class="mt-1 mb-3" id="h1_total_pegawai"><?=$chart['total']?></h1>
                   <div class="mb-0">
                     <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                    <span class="text-muted">Per Tahun <?=date('Y')?></span>
+                    <span class="text-muted">Per Hari Ini</span>
                   </div>
                 </div>
               </div>
@@ -353,7 +353,7 @@
               function getJumlahPensiun(){
                 $('#h1_pensiun').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiPensiunByYear/0")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiPensiunByYear/1")?>',
                   method: 'post',
                   data: {
                     eselon: 0,
@@ -374,7 +374,7 @@
               function getJumlahNaikpangkat(){
                 $('#h1_pangkat').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiNaikPangkatByYear/0")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiNaikPangkatByYear/1")?>',
                   method: 'post',
                   data: {
                     eselon: 0,
@@ -395,7 +395,7 @@
               function getJumlahGajiBerkala(){
                 $('#h1_gaji_berkala').html('<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/0")?>',
+                  url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/1")?>',
                   method: 'post',
                   data: {
                     eselon: 0,

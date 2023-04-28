@@ -472,6 +472,10 @@
 <script>
 
 $(function(){
+  $(".daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
+
   $('.select2_this').select2()
 
     startTime()
@@ -539,6 +543,10 @@ $('.datepicker').datepicker({
       title: message
     })
   }
+
+  $("#daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
 
   function successtoast(message = ''){
     const Toast = Swal.mixin({

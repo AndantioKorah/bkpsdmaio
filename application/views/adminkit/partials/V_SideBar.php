@@ -89,106 +89,170 @@
 		Main
 	</li>
 
-	<li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 		<a class="sidebar-link" href="#">
 			<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 		</a>
+	</li> -->
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/profil">
+			<i class="fa fa-user"></i> <span class="align-middle">Profile</span>
+		</a>
 	</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="<?=base_url();?>kepegawaian/profil">
-             			 <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
-            			</a>
-					</li>
+	<!-- MENU MAIN UNTUK PROGRAMMER -->
+	<?php if($this->general_library->isProgrammer()){ ?>
+		<li class="sidebar-item ">
+			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
+				<span class="align-middle">
+					Master
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="master" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<li class="sidebar-item ">
+					<a title="Perangkat Daerah" class="sidebar-link sidebar-link-child" href="<?=base_url('master/perangkat-daerah')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Perangkat Daerah
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Bidang/Bagian" class="sidebar-link sidebar-link-child" href="<?=base_url('master/bidang')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Bidang/Bagian
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Sub Bidang/Sub Bagian" class="sidebar-link sidebar-link-child" href="<?=base_url('master/bidang/sub')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Sub Bidang/Sub Bagian
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Jam Kerja" class="sidebar-link sidebar-link-child" href="<?=base_url('master/jam-kerja')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Jam Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hari-libur')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hari Libur
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="sidebar-item ">
+			<a title="Manajemen User" data-bs-target="#user-management" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa-users"></i> 
+				<span class="align-middle">
+					Manajemen User
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="user-management" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<li class="sidebar-item ">
+					<a title="User" class="sidebar-link sidebar-link-child" href="<?=base_url('users')?>">
+						<i class="align-middle me-2 far fa-circle"></i>User
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Roles" class="sidebar-link sidebar-link-child" href="<?=base_url('roles')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Roles
+					</a>
+				</li>
+			</ul>
+		</li>
+	<?php } ?>
 
 
 	<li class="sidebar-header">
 		Kepegawaian
 	</li>
 
-	<!-- <li class="sidebar-item">
-		<a class="sidebar-link" href="<?= base_url(); ?>kepegawaian/upload">
-			<i class="align-middle me-2" data-feather="file-text"></i> <span class="align-middle">Dokumen</span>
-		</a>
-	</li> -->
-
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
-			<i class="align-middle me-2" data-feather="grid"></i> <span class="align-middle">Layanan</span>
+			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>
  
 	<?php 
-	$active_role = $this->session->userdata('active_role');
-	if($active_role['role_name'] == "programmer") { ?>
-	<li class="sidebar-item">
-		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/teknis">
-		<i class="fa fa-check-square" aria-hidden="true"></i> <span class="align-middle">Verifikasi Layanan</span>
-		</a>
-	</li>
+	if($this->general_library->isProgrammer()) { ?>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
+				<span class="align-middle">
+					Verifikasi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="verifikasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<li class="sidebar-item ">
+					<a title="Layanan" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/teknis')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Dokumen Upload" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Dokumen Upload
+					</a>
+				</li>
+			</ul>
+		</li>
 	<?php } ?>
-	<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="ui-cards.html">
-              <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Gaji Berkala</span>
-            </a>
-					</li> -->
-
-	<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="ui-typography.html">
-              <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Pensiun</span>
-            </a>
-					</li> -->
-
-	<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="icons-feather.html">
-              <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Cuti</span>
-            </a>
-					</li> -->
+	
 
 	<li class="sidebar-header">
 		Kinerja
 	</li>
 
 	<?php
-	$active_role = $this->session->userdata('active_role');
-	$list_menu = $this->session->userdata('list_menu');
-	if ($list_menu) {
+		$active_role = $this->session->userdata('active_role');
+		$list_menu = $this->session->userdata('list_menu');
+		if ($list_menu) {
 	?>
 
-					<li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<?php foreach($list_menu as $l){ ?>
 						<?php if(!$l['child']){ ?>
 							<li class="sidebar-item">
 						
 						<a class="sidebar-link" title="<?=$l['nama_menu']?>" href="<?=$l['url'] == '#' || $l['url'] == '' ? '#' : base_url($l['url'])?>">
-						<i class="align-middle fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
+							<i class="align-middle fas fa-fw <?=$l['icon']?>"></i><span class="align-middle"><?=$l['nama_menu']?></span>
 					    </a>
-							</li>
-							<?php } ?>
-							<?php if($l['child']){ ?>
-								<a title="<?=$l['nama_menu']?>" data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
-								<i class="align-middle me-2 fa fa-fw <?=$l['icon']?>"></i> <span class="align-middle">
-								<?=trim($l['nama_menu'])?>
-								<i class="fa fa-chevron-down" 
-								style="
-									position: absolute;
-									right: 0;
-									margin-top: .35rem;"></i>
-							<?php } ?>
+				</li>
+						<?php } if($l['child']){ ?>
+							<a title="<?=$l['nama_menu']?>" data-bs-target="#menu<?=$l['id']?>" data-bs-toggle="collapse" class="sidebar-link">
+							<i class="align-middle me-2 fa fa-fw <?=$l['icon']?>"></i> 
+							<span class="align-middle">
+							<?=trim($l['nama_menu'])?>
+							<i class="fa fa-chevron-down" 
+							style="
+								position: absolute;
+								right: 0;
+								margin-top: .35rem;"></i>
+						<?php } ?>
 							</span>
 						</a>
 						
 						<?php if($l['child']){ ?>
 							<?php foreach($l['child'] as $ch){ ?>
 								<ul id="menu<?=$l['id']?>" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-								<li class="sidebar-item ">
-								<a title="<?=$ch['nama_menu']?>" class="sidebar-link sidebar-link-child" href="<?=base_url($ch['url'])?>">
-								<i class="align-middle me-2 far fa-circle"></i><?=$ch['nama_menu']?></a></li>
-							</ul>
+									<li class="sidebar-item ">
+										<a title="<?=$ch['nama_menu']?>" class="sidebar-link sidebar-link-child" href="<?=base_url($ch['url'])?>">
+									<i class="align-middle me-2 far fa-circle"></i><?=$ch['nama_menu']?></a></li>
+								</ul>
 							<?php } ?>
 						<?php } ?>
-						<?php } ?>
-	<?php } ?>
+					<?php } ?>
+		<?php } ?>
 
 	</li>
 </ul>

@@ -873,17 +873,29 @@
 
         $data['jam_kerja'] = $jam_kerja;
 
-        $jam_kerja_event = $this->db->select('*')
+        $jam_kerja_event = null;
+        $temp_jam_kerja_event = $this->db->select('*')
                 ->from('t_jam_kerja')
                 ->where('id_m_jenis_skpd', $jskpd)
-                ->where('(MONTH(berlaku_dari) = '.$data['bulan'].' OR
-                        MONTH(berlaku_sampai) = '.$data['bulan'].')')
-                ->where('(YEAR(berlaku_dari) = '.$data['tahun'].' OR
-                        YEAR(berlaku_sampai) = '.$data['tahun'].')')
+                // ->where('(MONTH(berlaku_dari) = '.$data['bulan'].' OR
+                //         MONTH(berlaku_sampai) = '.$data['bulan'].')')
+                // ->where('(YEAR(berlaku_dari) = '.$data['tahun'].' OR
+                //         YEAR(berlaku_sampai) = '.$data['tahun'].')')
                 ->where_in('flag_event', [1,2])
                 ->where('flag_active', 1)
                 ->get()->result_array();
 
+        if($temp_jam_kerja_event){
+            foreach($temp_jam_kerja_event as $tjke){
+                if((($list_hari[0]) >= ($tjke['berlaku_dari'])) &&
+                    ($list_hari[0]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal awal masuk dalam jam kerja event
+                        $jam_kerja_event[] = $tjke;
+                } else if((($list_hari[count($list_hari)-1]) >= ($tjke['berlaku_dari'])) &&
+                    ($list_hari[count($list_hari)-1]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal akhir masuk dalam jam kerja event
+                    $jam_kerja_event[] = $tjke;
+            }
+            }
+        }
         if($jam_kerja_event){
             $data['jam_kerja_event'] = $jam_kerja_event;
         }
@@ -991,7 +1003,7 @@
             } 
             // $i++;
         }
-        
+
         foreach($tempresult as $tr){
             if(isset($lp[$tr['nip']])){
                 $lp[$tr['nip']] = $tr;

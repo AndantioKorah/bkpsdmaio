@@ -24,14 +24,24 @@
                 <center>
                 <h5 style="font-size: 20px;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
-                    <?=strtoupper($periode)?>
+                    <?php if(isset($flag_rekap_aars)){ ?>
+                        <?="BULAN ".strtoupper($periode)?>
+                    <?php } else { ?>
+                        <?=strtoupper($periode)?>
+                    <?php } ?>
                 </h5>
                 <?php if(isset($flag_print) && $flag_print == 0){ ?>
-                    <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
-                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
-                    </form>
+                    <?php if(isset($flag_rekap_aars)){ ?>
+                        <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars')?>">
+                            <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
+                        </form>
+                    <?php } else { ?>
+                        <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
+                            <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
+                        </form>
+                    <?php } ?>
+                    
                     <br>
-                   
                     <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></span>
                     <table style="width: 50%; margin-bottom: 10px;" border=1>
                         <thead>

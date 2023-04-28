@@ -5,7 +5,7 @@ class C_Kepegawaian extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+		$this->load->model('Kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -15,96 +15,96 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPangkat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip,$kode);
 		// dd($kode);
-		$this->load->view('kepegawaian/V_ListPangkat', $data);
+		$this->load->view('Kepegawaian/V_ListPangkat', $data);
 	}
 
 	public function loadListSkp($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getSkp($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListSkp', $data);
+		$this->load->view('Kepegawaian/V_ListSkp', $data);
 	}
 
 
 	public function loadListOrganisasi($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getOrganisasi($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListOrganisasi', $data);
+		$this->load->view('Kepegawaian/V_ListOrganisasi', $data);
 	}
 
 
 	public function loadListAssesment($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getAssesment($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListAssesment', $data);
+		$this->load->view('Kepegawaian/V_ListAssesment', $data);
 	}
 
 	public function loadListKeluarga($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getKeluarga($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListKeluarga', $data);
+		$this->load->view('Kepegawaian/V_ListKeluarga', $data);
 	}
 	
 
 	public function loadListPendidikan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPendidikan($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListPendidikan', $data);
+		$this->load->view('Kepegawaian/V_ListPendidikan', $data);
 	}
 
 	public function loadListDiklat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getDiklat($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListDiklat', $data);
+		$this->load->view('Kepegawaian/V_ListDiklat', $data);
 	}
 
 	public function loadListJabatan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getJabatan($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListJabatan', $data);
+		$this->load->view('Kepegawaian/V_ListJabatan', $data);
 	}
 
 	public function loadListGajiBerkala($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getGajiBerkala($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+		$this->load->view('Kepegawaian/V_ListGajiBerkala', $data);
 	}
 
 	
 	public function loadListPenghargaan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPenghargaan($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
+		$this->load->view('Kepegawaian/V_ListPenghargaan', $data);
 	}
 
 	public function loadListCuti($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getCuti($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListCuti', $data);
+		$this->load->view('Kepegawaian/V_ListCuti', $data);
 	}
 
 	public function loadListArsip($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getArsip($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListArsip', $data);
+		$this->load->view('Kepegawaian/V_ListArsip', $data);
 	}
 
 	public function loadListSumpahJanji($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getSumpahJanji($nip,$kode);
 		// dd($data);
-		$this->load->view('kepegawaian/V_ListSumpahJanji', $data);
+		$this->load->view('Kepegawaian/V_ListSumpahJanji', $data);
 	}
 
 
 
 	public function loadListPenugasan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPenugasan($nip,$kode);
-		$this->load->view('kepegawaian/V_ListPenugasan', $data);
+		$this->load->view('Kepegawaian/V_ListPenugasan', $data);
 	}
 
 	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
-        render('kepegawaian/V_UploadDokumen', '', '', $data);
+        render('Kepegawaian/V_UploadDokumen', '', '', $data);
     }
 
 
@@ -115,18 +115,18 @@ class C_Kepegawaian extends CI_Controller
 		$data['results'] = $this->kepegawaian->getPangkatPegawai();
 		// $data['tes'] = $this->general_library->getId();
 		// dd($data);
-		render('kepegawaian/V_LihatPNS', '', '', $data);
+		render('Kepegawaian/V_LihatPNS', '', '', $data);
 	}
 
 
 	public function loadListProfil(){
 		$data['result'] = $this->kepegawaian->getProfilPegawai();
-		$this->load->view('kepegawaian/V_ListProfil', $data);
+		$this->load->view('Kepegawaian/V_ListProfil', $data);
 	}
 
 	public function loadListBerkala(){
 		$data['result'] = $this->kepegawaian->getGajiBerkala();
-		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+		$this->load->view('Kepegawaian/V_ListGajiBerkala', $data);
 	}
 
 
@@ -143,7 +143,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_dokumen'] = $this->kepegawaian->get_datatables_lihat_dokumen_pns($cariBy, $cariName, $unor);
 		//    var_dump($list);
 		//    die();
-		$this->load->view('kepegawaian/V_UploadDokumenItem', $data);
+		$this->load->view('Kepegawaian/V_UploadDokumenItem', $data);
 	}
 
 	public function getInline()
@@ -350,7 +350,7 @@ class C_Kepegawaian extends CI_Controller
 
 		
 		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
-        render('kepegawaian/V_VerifikasiDokumen', '', '', $data);
+        render('Kepegawaian/V_VerifikasiDokumen', '', '', $data);
 	}
 
 	function _extract_numbers($string)
@@ -360,13 +360,13 @@ class C_Kepegawaian extends CI_Controller
 	}
 	
 	public function profilPegawai($nip){
-		if(!$this->general_library->isProgrammer() && !$this->general_library->AdminAplikasi()){
+		if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
 			$data['nip'] = $nip;
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
-			render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+			render('Kepegawaian/V_UploadDokumenNew', '', '', $data);
 		}
 	}
 
@@ -376,20 +376,20 @@ class C_Kepegawaian extends CI_Controller
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		
 		$data['nip'] = $this->general_library->getUserName();
-        render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+        render('Kepegawaian/V_UploadDokumenNew', '', '', $data);
     }
 
 	// public function LoadFormDokPangkat($jenis_user,$nip=null){
 	// 	$data['result'] = $this->kepegawaian->getPendidikan();
 	// 	$data['results'] = $this->kepegawaian->getPangkatPegawai();
-    //     render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    //     render('Kepegawaian/V_UploadDokumenNew', '', '', $data);
     // }
 
 	public function LoadFormDokPenugasan(){
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
 		$data['jenis_penugasan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenistugas', 'id_jenistugas', 'desc');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-        $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
+        $this->load->view('Kepegawaian/V_FormUploadPenugasan', $data);
     }
 
 	public function LoadFormDokPangkat($nip){
@@ -405,7 +405,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 			
 		}
-        $this->load->view('kepegawaian/V_FormUploadPangkat', $data);
+        $this->load->view('Kepegawaian/V_FormUploadPangkat', $data);
     }
 
 	public function LoadFormGajiBerkala($nip){
@@ -417,7 +417,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadGajiBerkala', $data);
+        $this->load->view('Kepegawaian/V_FormUploadGajiBerkala', $data);
     }
 
 	public function LoadFormPendidikan($nip){
@@ -431,7 +431,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadPendidikan', $data);
+        $this->load->view('Kepegawaian/V_FormUploadPendidikan', $data);
     }
 
 	public function LoadFormJabatan($nip){
@@ -448,7 +448,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadJabatan', $data);
+        $this->load->view('Kepegawaian/V_FormUploadJabatan', $data);
     }
 
 	public function LoadFormDiklat($nip){
@@ -460,7 +460,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadDiklat', $data);
+        $this->load->view('Kepegawaian/V_FormUploadDiklat', $data);
     }
 
 	public function LoadFormOrganisasi($nip){
@@ -472,7 +472,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadOrganisasi', $data);
+        $this->load->view('Kepegawaian/V_FormUploadOrganisasi', $data);
     }
 
 	public function LoadFormPenghargaan($nip){
@@ -482,7 +482,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
+        $this->load->view('Kepegawaian/V_FormUploadPenghargaan', $data);
     }
 
 	public function loadFormSkp($nip){
@@ -493,7 +493,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadSkp', $data);
+        $this->load->view('Kepegawaian/V_FormUploadSkp', $data);
     }
 
 	public function loadFormAssesment($nip){
@@ -504,7 +504,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadAssesment', $data);
+        $this->load->view('Kepegawaian/V_FormUploadAssesment', $data);
     }
 
 	public function loadFormKeluarga($nip){
@@ -516,7 +516,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadKeluarga', $data);
+        $this->load->view('Kepegawaian/V_FormUploadKeluarga', $data);
     }
 
 	public function LoadFormCuti($nip){
@@ -530,7 +530,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadCuti', $data);
+        $this->load->view('Kepegawaian/V_FormUploadCuti', $data);
     }
 
 	public function LoadFormSumpahJanji($nip){
@@ -541,7 +541,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadSumpahJanji', $data);
+        $this->load->view('Kepegawaian/V_FormUploadSumpahJanji', $data);
     }
 
 	public function LoadFormArsip($nip){
@@ -553,7 +553,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadArsipLainnya', $data);
+        $this->load->view('Kepegawaian/V_FormUploadArsipLainnya', $data);
     }
 
 
@@ -561,7 +561,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function layanan(){
 		$data['jenis_layanan'] = $this->kepegawaian->getJenisLayanan();
-        render('kepegawaian/V_layanan', '', '', $data);
+        render('Kepegawaian/V_layanan', '', '', $data);
     }
 
 
@@ -573,19 +573,19 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListUsulLayanan($id){
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
-		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
+		$this->load->view('Kepegawaian/V_ListUsulLayanan', $data);
 	}
 
 	public function Adminlayanan(){
 		$data['result'] = $this->kepegawaian->getAllUsulLayanan();
-        render('kepegawaian/V_AllUsulLayanan', '', '', $data);
+        render('Kepegawaian/V_AllUsulLayanan', '', '', $data);
     }
 
 	public function CetakSurat($id_usul){
 		// $this->load->library('pdf');
 		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
 		// dd($data);
-		$this->load->view('kepegawaian/surat/V_SuratCuti', $data);
+		$this->load->view('Kepegawaian/surat/V_SuratCuti', $data);
   			
 
 		$this->load->library('pdfgenerator');
@@ -600,7 +600,7 @@ class C_Kepegawaian extends CI_Controller
         //orientasi paper potrait / landscape
         $orientation = "portrait";
         
-		$html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	    
+		$html = $this->load->view('Kepegawaian/surat/V_SuratCuti',$data, true);	    
         
         // run dompdf
         $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
@@ -627,7 +627,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['cuti'] = array(0);
 		$data['arsip'] = array(0);
 		
-			render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
+			render('Kepegawaian/V_Verifikasi_Layanan', '', '', $data);
     }
 
 	public function loadFormLayanan($id){
@@ -635,7 +635,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
 
 		if($id == 3){
-			$this->load->view('kepegawaian/V_FormCuti', $data);
+			$this->load->view('Kepegawaian/V_FormCuti', $data);
 		}
     }
 
@@ -653,7 +653,7 @@ class C_Kepegawaian extends CI_Controller
 	public function getAllUsulLayananAdmin($id){
 		$data['result'] = $this->kepegawaian->getAllUsulLayananAdmin($id);
 		// dd($data);
-		$this->load->view('kepegawaian/V_LayananItem', $data);
+		$this->load->view('Kepegawaian/V_LayananItem', $data);
 	}
 
 	public function submitVerifikasiLayanan()

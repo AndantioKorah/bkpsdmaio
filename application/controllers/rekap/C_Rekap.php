@@ -50,7 +50,15 @@ class C_Rekap extends CI_Controller
         $data['disiplin_kerja'] = $data['result']['disiplin_kerja'];
         $data['list_hari'] = $data['result']['list_hari'];
         $data['flag_rekap_aars'] = true;
-        // $this->load->view('rekap/V_RekapAbsensiAars', $data);
+        $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
+        $this->session->set_userdata('rekap_absen_aars', $data);
+        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+    }
+
+    public function downloadRekapAbsensiAars(){
+        $data = $this->session->userdata('rekap_absen_aars');
+        $data['flag_print'] = 1;
+        // dd($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 

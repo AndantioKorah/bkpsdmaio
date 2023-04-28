@@ -137,7 +137,7 @@ class General_library
     }
 
     public function isAdminAplikasi(){
-        return $this->getActiveRoleName() == 'admin_adplikasi';
+        return $this->getActiveRoleName() == 'admin_aplikasi';
     }
 
     public function isAdministrator(){

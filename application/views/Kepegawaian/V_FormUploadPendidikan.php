@@ -12,6 +12,50 @@
   Tambah Data Pendidikan
 </button>
 
+<button onclick="loadRiwayatUsulPendidikan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPendidikan">
+  Riwayat Usul Pendidikan
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalPendidikan">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_pendidikan"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_view_file_pendidikan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_pendidikan" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalPendidikan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -32,7 +76,7 @@
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_tingkat_pendidikan){ foreach($list_tingkat_pendidikan as $r){ ?>
-                        <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
+                        <option value="<?=$r['id_tktpendidikanb']?>"><?=$r['nm_tktpendidikanb']?></option>
                     <?php } } ?>
     </select>
     </div>
@@ -60,7 +104,7 @@
 
   <div class="form-group">
     <label>Tahun Lulus</label>
-    <input class="form-control yearpicker" type="text" id="pendidikan_tahun_lulus" name="pendidikan_tahun_lulus"  required/>
+    <input autocomplete="off" class="form-control yearpicker" type="text" id="pendidikan_tahun_lulus" name="pendidikan_tahun_lulus"  required/>
   </div>
 
   <div class="form-group">
@@ -70,7 +114,7 @@
 
   <div class="form-group">
     <label>Tgl. STTB/Ijazah</label>
-    <input  class="form-control datepicker"   id="pendidikan_tanggal_ijazah" name="pendidikan_tanggal_ijazah" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="pendidikan_tanggal_ijazah" name="pendidikan_tanggal_ijazah" required/>
   </div>
 
   <div class="form-group">
@@ -101,19 +145,17 @@
 
 </div>
 
-
+<!-- 
 <div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
+ 
       <div class="modal-body" id="modal_view_file_content">
         <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
     </div>
   </div>
-</div>                      
+</div>                       -->
 
 
 <script type="text/javascript">
@@ -167,7 +209,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_pendidikan").reset();
-                loadFormPendidikan()
+                loadListPendidikan()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -182,10 +224,21 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pendidikan').html('')
     $('#list_pendidikan').append(divLoaderNavy)
-    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip, function(){
+    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
+
+  function loadRiwayatUsulPendidikan(){
+    var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_pendidikan').html('')
+    $('#riwayat_usul_pendidikan').append(divLoaderNavy)
+    $('#riwayat_usul_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+
+  
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

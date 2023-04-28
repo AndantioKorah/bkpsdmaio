@@ -1,23 +1,27 @@
 <?php if($result){ ?>dsfs
   <div class="row">
     <div class="col-lg-12 table-responsive">
-      <table class="table table-striped datatable" id="datatable">
+      <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Sumpah Janji</th>
           <th class="text-left">Yang Mengambil Sumpah</th>
           <th class="text-left">No Berita Acara </th>
           <th class="text-left">Tanggal Berita Acara</th>
+          <th class="text-left">Keterangan</th>
      
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr>
+            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_sumpah']?></td>
               <td class="text-left"><?= $rs['pejabat']?></td>
               <td class="text-left"><?=$rs['noba']?></td>
               <td class="text-left"><?=$rs['tglba']?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+
             </tr>
           <?php } ?>
         </tbody>

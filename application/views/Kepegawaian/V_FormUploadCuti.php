@@ -12,6 +12,51 @@
   Tambah Data Cuti
 </button>
 
+
+
+<button onclick="loadRiwayatUsulCuti()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalCuti">
+  Riwayat Usul Cuti
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalCuti">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_cuti"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_view_file_cuti" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_cuti" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalCuti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -85,23 +130,12 @@
 </div>
 
    
-<div id="list_gaji_berkala">
+<div id="list_cuti">
 
 </div>
 
 
-<div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
-      <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-    </div>
-  </div>
-</div>                      
+                
 
 
 <script type="text/javascript">
@@ -168,13 +202,25 @@ $(function(){
 
     function loadListCuti(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#list_gaji_berkala').html('')
-    $('#list_gaji_berkala').append(divLoaderNavy)
-    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip, function(){
+    $('#list_cuti').html('')
+    $('#list_cuti').append(divLoaderNavy)
+    $('#list_cuti').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
 
+  function loadRiwayatUsulCuti(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_cuti').html('')
+    $('#riwayat_usul_cuti').append(divLoaderNavy)
+    $('#riwayat_usul_cuti').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+
+
+
+  
 
 
   $("#pdf_file_cuti").change(function (e) {

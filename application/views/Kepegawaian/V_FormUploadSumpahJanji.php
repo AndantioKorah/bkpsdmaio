@@ -13,6 +13,36 @@
 </button>
 
 
+<button onclick="loadRiwayatUsulSumpahJanji()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalSumpahJanji">
+  Riwayat Usul Sumpah Janji
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalSumpahJanji">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_sumpah_janji"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalPenghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -159,10 +189,22 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_sumpah_janji').html('')
     $('#list_sumpah_janji').append(divLoaderNavy)
-    $('#list_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip, function(){
+    $('#list_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
+
+  function loadRiwayatUsulSumpahJanji(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_sumpah_janji').html('')
+    $('#riwayat_usul_sumpah_janji').append(divLoaderNavy)
+    $('#riwayat_usul_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+
+
+  
 
 
   

@@ -10,6 +10,47 @@
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>
+<button onclick="loadRiwayatUsulListPangkat()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModal">
+  Riwayat Usul Pangkat
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModal">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_pangkat"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_view_file" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+        <iframe  style="width: 100%; height: 80vh;"   id="iframe_view_file"  frameborder="0" ></iframe>	
+         </div>
+        </div>
+      </div>
+    </div>
+</div>
 
 
 
@@ -122,13 +163,26 @@
       <!-- <div class="modal-header">
         DOKUMEN
       </div> -->
-      <div class="modal-body" id="modal_view_file_content">
+      <!-- <div class="modal-body" id="modal_view_file_content">
         <iframe  style="width: 100%; height: 80vh;"   id="iframe_view_file"  frameborder="0" ></iframe>	
-      </div>
+      </div> -->
     </div>
   </div>
 </div>                      
 
+
+<div class="modal fade" id="modalRiwayatUsulPangkat" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        DOKUMEN
+      </div> -->
+      <div class="modal-body" id="">
+       
+      </div>
+    </div>
+  </div>
+</div>  
 
 
 <script type="text/javascript">
@@ -201,7 +255,16 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pangkat').html('')
     $('#list_pangkat').append(divLoaderNavy)
-    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip, function(){
+    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/1', function(){
+      $('#loader').hide()
+    })
+  }
+
+  function loadRiwayatUsulListPangkat(){
+    var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_pangkat').html('')
+    $('#riwayat_usul_pangkat').append(divLoaderNavy)
+    $('#riwayat_usul_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

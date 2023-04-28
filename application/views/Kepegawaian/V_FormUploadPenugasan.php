@@ -11,6 +11,36 @@
 </button>
 
 
+<button onclick="loadRiwayatUsulPenugasan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPenugasan">
+  Riwayat Usul Penugasan
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalPenugasan">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_penugasan"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+
+
+
 <div class="modal fade" id="modal_penugasan" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -149,10 +179,20 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_penugasan').html('')
     $('#list_penugasan').append(divLoaderNavy)
-    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip, function(){
+    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
+
+  function loadRiwayatUsulPenugasan(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_penugasan').html('')
+    $('#riwayat_usul_penugasan').append(divLoaderNavy)
+    $('#riwayat_usul_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+  
 
   
 </script>

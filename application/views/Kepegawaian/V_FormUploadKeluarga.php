@@ -12,6 +12,37 @@
   Tambah Data Keluarga
 </button>
 
+
+<button onclick="loadRiwayatUsulKeluarga()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalKeluarga">
+  Riwayat Usul Keluarga
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalKeluarga">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_keluarga"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalBerkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -150,10 +181,21 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_keluarga').html('')
     $('#list_keluarga').append(divLoaderNavy)
-    $('#list_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip, function(){
+    $('#list_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
     }
 
+    function loadRiwayatUsulKeluarga(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_keluarga').html('')
+    $('#riwayat_usul_keluarga').append(divLoaderNavy)
+    $('#riwayat_usul_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+    }
+
+
+    
 
 </script>

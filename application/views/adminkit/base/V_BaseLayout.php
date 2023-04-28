@@ -339,7 +339,7 @@
 
 .div_maintb table { 
       border: 1px solid #fff;
-      font-size: 14px;
+      font-size: 12px;
       width: 100%;
   } 
   
@@ -348,6 +348,10 @@
             top: 0;
             z-index: 400;
             }
+
+.div_maintb td {
+             font-size: 12px;
+            } 
    
 
 .div_maintb th {
@@ -470,6 +474,54 @@
 <script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
+function fixedHeaderTable() {
+  var $th = $('.tableFixHead').find('thead th')
+  $('.tableFixHead').on('scroll', function() {
+  $th.css('transform', 'translateY('+ this.scrollTop +'px)');
+  $th.css('zIndex', '60');
+  $th.css({ 'position': 'relative' });
+  });
+
+
+
+// Search table
+'use strict';
+
+var TableFilter = (function() {
+ var Arr = Array.prototype;
+		var input;
+  
+		function onInputEvent(e) {
+			input = e.target;
+			var table1 = document.getElementsByClassName(input.getAttribute('data-table'));
+			Arr.forEach.call(table1, function(table) {
+				Arr.forEach.call(table.tBodies, function(tbody) {
+					Arr.forEach.call(tbody.rows, filter);
+				});
+			});
+		}
+
+		function filter(row) {
+			var text = row.textContent.toLowerCase();
+       //console.log(text);
+      var val = input.value.toLowerCase();
+      //console.log(val);
+			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+		}
+
+		return {
+			init: function() {
+				var inputs = document.getElementsByClassName('table-filter');
+				Arr.forEach.call(inputs, function(input) {
+					input.oninput = onInputEvent;
+				});
+			}
+		};
+ 
+	})();
+ TableFilter.init(); 
+ // Tutup Search table
+}
 
 $(function(){
   $(".daterangepickerthis").daterangepicker({

@@ -8,14 +8,14 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSkp">
-  Tambah Data SKP
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalCuti">
+  Tambah Data Arsip Lainnya
 </button>
 
 
 
-<button onclick="loadRiwayatUsulSkp()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalSkp">
-  Riwayat Usul SKP
+<button onclick="loadRiwayatUsulArsip()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalArsip">
+  Riwayat Usul Arsip Lainnya
 </button>
 
 <style>
@@ -27,7 +27,7 @@
 }
    
 </style>
-<div class="modal fade" id="myModalSkp">
+<div class="modal fade" id="myModalArsip">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -35,13 +35,13 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div><div class="container"></div>
         <div class="modal-body">
-        <div id="riwayat_usul_skp"></div>
+        <div id="riwayat_usul_arsip_lainnya"></div>
         </div>
        
       </div>
     </div>
 </div>
-<div class="modal fade" id="modal_view_file_skp" data-backdrop="static">
+<div class="modal fade" id="modal_view_file_arsip" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -49,43 +49,44 @@
           </div>
         <div class="modal-body">
         <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_skp" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe id="iframe_view_file_arsip" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
         </div>
       </div>
     </div>
 </div>
 
-
 <!-- Modal -->
-<div class="modal fade" id="modalSkp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCuti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data SKP</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Arsip Lainnya</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_skp" enctype="multipart/form-data" >
-    <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
+      <form method="post" id="upload_form_arsip_lainnya" enctype="multipart/form-data" >
+    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
     
+
+
+
+  
   <div class="form-group">
-    <label>Tahun</label>
-    <input class="form-control yearpicker" type="text" id="gb_masa_kerja" name="skp_tahun" autocomplete="off"  required/>
+    <label>Nama Arsip</label>
+    <input class="form-control customInput" type="text" id="nama_arsip" name="nama_arsip"  required/>
   </div>
 
-  <div class="form-group">
-    <label>Predikat</label>
-    <input class="form-control customInput" type="text" id="gb_pejabat" name="skp_predikat"  required/>
-  </div>
 
- 
+
+
+
   <div class="form-group">
-    <label>File SKP</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_skp" name="file"   />
-    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+    <label>File Arsip</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_arsip_lainnya" name="file"   />
+    <!-- <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br> -->
   </div>
 
   <div class="form-group col-lg-12">
@@ -103,9 +104,10 @@
 </div>
 
    
-<div id="list_skp">
+<div id="list_arsip_lainnya">
 
 </div>
+
 
 
 <script type="text/javascript">
@@ -117,33 +119,25 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-      loadListSkp()
+    loadListArsip()
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
     autoclose: true
-    });
-
-    $('.yearpicker').datepicker({
-    format: 'yyyy',
-    viewMode: "years", 
-    minViewMode: "years",
-    orientation: 'bottom',
-    autoclose: true
 });
 
     
-        $('#upload_form_skp').on('submit', function(e){  
+        $('#upload_form_arsip_lainnya').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form_skp');
+        var formvalue = $('#upload_form_arsip_lainnya');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_skp').files.length;
+        var ins = document.getElementById('pdf_file_arsip_lainnya').files.length;
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
@@ -153,7 +147,7 @@ $(function(){
       
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadArsipLainnya")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -166,8 +160,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_skp").reset();
-                loadListSkp()
+                document.getElementById("upload_form_arsip_lainnya").reset();
+                loadListArsip()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -178,40 +172,36 @@ $(function(){
           
         }); 
 
-    function loadListSkp(){
+    function loadListArsip(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#list_skp').html('')
-    $('#list_skp').append(divLoaderNavy)
-    $('#list_skp').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSkp/")?>'+nip+'/1', function(){
+    $('#list_arsip_lainnya').html('')
+    $('#list_arsip_lainnya').append(divLoaderNavy)
+    $('#list_arsip_lainnya').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
-    }
+  }
 
-    function loadRiwayatUsulSkp(){
+  function loadRiwayatUsulArsip(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#riwayat_usul_skp').html('')
-    $('#riwayat_usul_skp').append(divLoaderNavy)
-    $('#riwayat_usul_skp').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSkp/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_arsip_lainnya').html('')
+    $('#riwayat_usul_arsip_lainnya').append(divLoaderNavy)
+    $('#riwayat_usul_arsip_lainnya').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
-    }
+  }
 
-    
+  
 
-  $("#pdf_file_skp").change(function (e) {
 
-        var extension = pdf_file_skp.value.split('.')[1];
+  $("#pdf_file_arsip_lainnya").change(function (e) {
+
+        var extension = pdf_file_arsip_lainnya.value.split('.')[1];
       
         var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>
+       
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")
-          $(this).val('');
-        }
-
-        if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
 

@@ -13,6 +13,50 @@
 </button>
 
 
+<button onclick="loadRiwayatUsulPenghargaan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPenghargaan">
+  Riwayat Usul Penghargaan
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalPenghargaan">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_penghargaan"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_view_file_penghargaan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_penghargaan" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalPenghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -165,11 +209,21 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_penghargaan').html('')
     $('#list_penghargaan').append(divLoaderNavy)
-    $('#list_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip, function(){
+    $('#list_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
 
+  function loadRiwayatUsulPenghargaan(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_penghargaan').html('')
+    $('#riwayat_usul_penghargaan').append(divLoaderNavy)
+    $('#riwayat_usul_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+
+  
   function openFilePenghargaan(filename){
     var nip = <?=$this->general_library->getUserName()?>;
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)

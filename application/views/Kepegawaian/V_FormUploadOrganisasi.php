@@ -12,6 +12,51 @@
   Tambah Data Organisasi
 </button>
 
+
+<button onclick="loadRiwayatUsulOrganisasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalOrganisasi">
+  Riwayat Usul Organisasi
+</button>
+
+<style>
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+   
+</style>
+<div class="modal fade" id="myModalOrganisasi">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Riwayat Usul</h4>    
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div><div class="container"></div>
+        <div class="modal-body">
+        <div id="riwayat_usul_organisasi"></div>
+        </div>
+       
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_view_file_organisasi" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_organisasi" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalOrganisasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -93,22 +138,6 @@
 
 
 
-
-
-<div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
-      <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-    </div>
-  </div>
-</div>                      
-
-
 <script type="text/javascript">
 
 
@@ -174,10 +203,21 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_organisasi').html('')
     $('#list_organisasi').append(divLoaderNavy)
-    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip, function(){
+    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
+
+  function loadRiwayatUsulOrganisasi(){
+      var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+    $('#riwayat_usul_organisasi').html('')
+    $('#riwayat_usul_organisasi').append(divLoaderNavy)
+    $('#riwayat_usul_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/2', function(){
+      $('#loader').hide()
+    })
+  }
+
+  
 
   function openFilePangkat(filename){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)

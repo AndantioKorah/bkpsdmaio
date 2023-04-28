@@ -287,7 +287,7 @@ h2{
     <button onclick="loadFormAssesment()" class="nav-link" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+    <button  onclick="LoadFormArsip()" class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
   </li>
 </ul>
 <hr>
@@ -334,7 +334,9 @@ h2{
   <div class="tab-pane fade" id="pills-assesment" role="tabpanel" aria-labelledby="pills-assesment-tab">
   <div id="form_assesment"></div>
   </div>
-  <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
+  <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
+    <div id="form_arsip"></div>
+  </div>
 </div>       
             </div>
         </div>
@@ -465,6 +467,16 @@ $(function(){
     $('#loader').hide()    
     })
  }
+
+ function LoadFormArsip(){
+  $('#form_arsip').html(' ')
+    $('#form_arsip').append(divLoaderNavy)
+    $('#form_arsip').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormArsip/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ 
 
  
 

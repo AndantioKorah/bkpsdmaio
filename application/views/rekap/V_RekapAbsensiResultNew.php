@@ -20,9 +20,13 @@
                 header("Content-Disposition: attachment; filename=\"$filename\""); 
             }
         ?>
-        <body>
-                <center>
-                <h5 style="font-size: 20px;">
+        <?php if(isset($flag_print) && $flag_print == 1){ ?>
+            <body style="font-family: Tahoma">
+        <?php } else { ?>
+            <body>
+        <?php } ?>
+            <center>
+                <h5 style="font-size: 20px; text-align: center;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
                     <?php if(isset($flag_rekap_aars)){ ?>
                         <?="BULAN ".strtoupper($periode)?>
@@ -32,13 +36,31 @@
                 </h5>
                 <?php if(isset($flag_print) && $flag_print == 0){ ?>
                     <?php if(isset($flag_rekap_aars)){ ?>
-                        <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars')?>">
-                            <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
-                        </form>
+                        <div class="row">
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars')?>">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-file-excel"></i> Download as Excel</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars/1')?>">
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+                                </form>
+                            </div>
+                        </div>
                     <?php } else { ?>
-                        <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
-                            <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
-                        </form>
+                        <div class="row">
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-file-excel"></i> Download as Excel</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew/1')?>">
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+                                </form>
+                            </div>
+                        </div>
                     <?php } ?>
                     
                     <br>
@@ -63,7 +85,7 @@
                         </tbody>
                     </table>
 
-                    <?php if(isset($jam_kerja_event)){
+                    <?php if(isset($jam_kerja_event) && count($jam_kerja_event) > 0){
                         foreach($jam_kerja_event as $jke){
                     ?>
                         <br>
@@ -114,24 +136,20 @@
                 <?php } ?>
                 </center>
                
-                <br>
-
-                <!-- tes  -->
-   
-
-    <br /><br />
-    <?php if(isset($flag_print) && $flag_print == 0){ ?>
+    <?php if(isset($flag_print) && $flag_print == 0 && isset($flag_rekap_aars)){ ?>
+        <br /><br /><br>
+    <?php } if(isset($flag_print) && $flag_print == 0){ ?>
         <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
     <?php } ?>
     <div class="div_maintb">
-    <table class="rekap-table table"  border="1" id="table_rekap_absenx">
-            <thead>
+    <table class="rekap-table table" style="border-collapse: collapse;" border="1" id="table_rekap_absenx">
+        <thead>
             <tr> 
-                        <?php $i=0; 
+                    <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){
                             foreach($disiplin_kerja as $dk){
-                                if($dk['keterangan']){
+                                if($dk['keterangan'] && $dk['keterangan'] == 'TK'){
                                     $list_dk[] = $dk['keterangan'];
                                 }
                             }
@@ -231,7 +249,13 @@
                                       <?php } else if(in_array($a['ket'], $list_dk)){ ?>
                                           <span style="color: <?=$txtcolordisker?>;"><?=$a['ket']?></span>
                                       <?php } else { ?>
-                                          <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span> - <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
+                                          <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span>
+                                          <?php if(isset($flag_print) && $flag_print == 1 && isset($flag_pdf) && $flag_pdf == 1) { ?>
+                                            <br>-<br>
+                                          <?php } else { ?>
+                                            -
+                                          <?php } ?>
+                                          <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
                                       <?php } ?>
                                   </td>
                                   <?php } ?>

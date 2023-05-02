@@ -3,7 +3,8 @@
         <thead>
             <th class="text-center">No</th>
             <th class="text-center">Tanggal</th>
-            <th class="text-left">Keterangan</th>
+            <th class="text-left">Nama</th>
+            <th class="text-center">Keterangan</th>
             <th class="text-center">Pilihan</th>
         </thead>
         <tbody>
@@ -12,6 +13,7 @@
                     <td class="text-center"><?=$no++;?></td>
                     <td class="text-center"><?=formatDateNamaBulan(formatDateOnly($rs['tanggal']))?></td>
                     <td class="text-left"><?=$rs['keterangan']?></td>
+                    <td class="text-left"><?=$rs['flag_hari_libur_nasional'] == 1 ? 'Libur' : '-';?></td>
                     <td class="text-center">
                         <button onclick="deleteHariLibur('<?=$rs['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                     </td>

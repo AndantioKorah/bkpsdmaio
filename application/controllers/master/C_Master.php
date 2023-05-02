@@ -181,7 +181,8 @@ class C_Master extends CI_Controller
     }
 
     public function jamKerja(){
-        render('master/V_JamKerja', '', '', null);
+        $data['jenis_skpd'] = $this->general->getAll('m_jenis_skpd');
+        render('master/V_JamKerja', '', '', $data);
     }
 
     public function loadJamKerja(){
@@ -189,8 +190,22 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_JamKerjaResult', $data);
     }
 
-    public function deleteJamKerja(){
+    public function deleteJamKerja($id){
         echo json_encode($this->master->deleteJamKerja($id));
+    }
+
+    public function editJamKerja($id){
+        $data['result'] = $this->general->getOne('t_jam_kerja', 'id', $id, 1);
+        $data['jenis_skpd'] = $this->general->getAll('m_jenis_skpd');
+        $this->load->view('master/V_JamKerjaEdit', $data);
+    }
+
+    public function tambahJamKerja(){
+        echo json_encode($this->master->tambahJamKerja($this->input->post()));
+    }
+
+    public function saveEditJamKerja($id){
+        echo json_encode($this->master->saveEditJamKerja($id, $this->input->post()));
     }
 
     public function tpp(){

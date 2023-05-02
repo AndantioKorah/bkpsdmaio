@@ -334,9 +334,46 @@
             }
         }
 
-        public function deleteJamKerja(){
+        public function deleteJamKerja($id){
             $this->db->where('id', $id)
-                    ->update('t_hari_libur', ['flag_active' => 0]); 
+                    ->update('t_jam_kerja', ['flag_active' => 0]); 
+        }
+
+        public function tambahJamKerja($data){
+            $res['code'] = 0;
+            $res['message'] = '';
+            
+            $this->db->trans_begin();
+
+            $this->db->insert('t_jam_kerja', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+            return $res;
+        }
+
+        public function saveEditJamKerja($id, $data){
+            $res['code'] = 0;
+            $res['message'] = '';
+            
+            $this->db->trans_begin();
+
+            $this->db->where('id', $id)
+                    ->update('t_jam_kerja', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+            return $res;
         }
 
         public function getAllJamKerja(){

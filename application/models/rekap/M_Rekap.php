@@ -806,8 +806,8 @@
             $data_absen = null;
             if($list_data_absen){
                 foreach($list_data_absen as $lda){
-                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = $lda['masuk'];
-                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = $lda['pulang'];
+                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = formatTimeAbsen($lda['masuk']);
+                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = formatTimeAbsen($lda['pulang']);
                 }
                 $data_absen = $tlp;
                 // dd(json_encode($data_absen));
@@ -1086,7 +1086,7 @@
                             }
                             
                             if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ""){
-                                $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "00:00:00";
+                                $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "00:00";
                             }
                             $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
                             if($diff_keluar > 0){

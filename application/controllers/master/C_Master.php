@@ -17,6 +17,27 @@ class C_Master extends CI_Controller
         render('master/V_MasterSkpd', '', '', $data);
     }
 
+    public function detailMasterSkpd($id_unitkerja){
+        $data['result'] = $this->master->getDetailMasterSkpd($id_unitkerja);
+        $this->session->set_userdata('list_pegawai_detail_skpd', $data['result']);
+        render('master/V_MasterSkpdDetail', '', '', $data);
+    }
+
+    public function loadSkpdDetailPegawai(){
+        $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
+    }
+
+    public function searchPegawaiSkpdByFilter(){
+        $data['result']['list_pegawai'] = $this->master->searchPegawaiSkpdByFilter($this->input->post());
+        return $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
+    }
+
+    public function openListPegawaiDetailSkpd(){
+        $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        $this->load->view('master/V_MasterSkpdDetailPegawai', $data);
+    }
+
     public function loadUnitKerjaByIdUnitKerjaMaster($ukmaster){
         $data['ukmaster'] = $ukmaster;
         $data['result'] = $this->master->getAllUnitKerjaByIdUnitKerjaMasterNew($ukmaster);
@@ -160,7 +181,8 @@ class C_Master extends CI_Controller
     }
 
     public function jamKerja(){
-        render('master/V_JamKerja', '', '', null);
+        $data['jenis_skpd'] = $this->general->getAll('m_jenis_skpd');
+        render('master/V_JamKerja', '', '', $data);
     }
 
     public function loadJamKerja(){
@@ -168,8 +190,22 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_JamKerjaResult', $data);
     }
 
-    public function deleteJamKerja(){
+    public function deleteJamKerja($id){
         echo json_encode($this->master->deleteJamKerja($id));
+    }
+
+    public function editJamKerja($id){
+        $data['result'] = $this->general->getOne('t_jam_kerja', 'id', $id, 1);
+        $data['jenis_skpd'] = $this->general->getAll('m_jenis_skpd');
+        $this->load->view('master/V_JamKerjaEdit', $data);
+    }
+
+    public function tambahJamKerja(){
+        echo json_encode($this->master->tambahJamKerja($this->input->post()));
+    }
+
+    public function saveEditJamKerja($id){
+        echo json_encode($this->master->saveEditJamKerja($id, $this->input->post()));
     }
 
     public function tpp(){

@@ -274,6 +274,10 @@
             if($data['pangkat'] != "0"){
                 $this->db->where('d.id_pangkat', $data['pangkat']);
             }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
+            }
             $query = $this->db->get()->result_array();
 
             if($query){
@@ -306,6 +310,10 @@
             if($data['pangkat'] != "0"){
                 $this->db->where('d.id_pangkat', $data['pangkat']);
             }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
+            }
             $query = $this->db->get()->result_array();
 
             if($query){
@@ -336,6 +344,10 @@
 
             if($data['pangkat'] != "0"){
                 $this->db->where('d.id_pangkat', $data['pangkat']);
+            }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
             }
             $query = $this->db->get()->result_array();
 

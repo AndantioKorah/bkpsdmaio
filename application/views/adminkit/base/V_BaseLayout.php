@@ -37,9 +37,13 @@
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
-<script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
-<link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
-<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+  <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
+
+  <link rel="stylesheet" href="<?=base_url('assets/js/timepicker/jquery.timepicker.min.css')?>">
+  <script src="<?=base_url('assets/js/timepicker/jquery.timepicker.min.js')?>"></script>
+
+  <link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
+  <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
 
 	<title><?=TITLES?></title>
 
@@ -524,6 +528,10 @@ var TableFilter = (function() {
 }
 
 $(function(){
+  $(".daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
+
   $('.select2_this').select2()
 
     startTime()
@@ -592,6 +600,10 @@ $('.datepicker').datepicker({
     })
   }
 
+  $("#daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
+
   function successtoast(message = ''){
     const Toast = Swal.mixin({
       toast: true,
@@ -648,6 +660,13 @@ $('.datepicker').datepicker({
     var t = setTimeout(startTime, 500);
     
   }
+
+  window.bLazy = new Blazy({
+    container: '.container',
+    success: function(element){
+        console.log("Element loaded: ", element.nodeName);
+    }
+  });
 
   function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10

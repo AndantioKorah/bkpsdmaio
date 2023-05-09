@@ -110,6 +110,57 @@ class M_Kepegawaian extends CI_Model
             
         }
 
+        public function openDetailDokumen($id, $jd){
+            if($jd == 'pangkat'){
+                return $this->db->select('*, a.id as id_dokumen')
+                                ->from('db_pegawai.pegpangkat a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                                ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            }
+        }
+
+        public function searchDokumenUsul($data){
+            $tanggal = explodeRangeDate($data['tanggal']);
+            $tanggal_awal = explode("-", $tanggal[0]);
+            $taw = $tanggal_awal[0].'-'.$tanggal_awal[2].'-'.$tanggal_awal[1];
+
+            $tanggal_akhir = explode("-", $tanggal[1]);
+            $tak = $tanggal_akhir[0].'-'.$tanggal_akhir[2].'-'.$tanggal_akhir[1];
+            $this->db->select('*, a.id as id_dokumen')
+                        ->from('db_pegawai.'.$data['jenisdokumen'].' a')
+                        ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->where('a.flag_active', 1)
+                        ->where('a.created_date >=', $taw.' 00:00:00')
+                        ->where('a.created_date <=', $tak.' 23:59:59')
+                        ->order_by('a.created_date', 'asc');
+
+            if($data['status'] != '0'){
+                $this->db->where('a.status', $data['status']);
+            }
+
+            if($data['unitkerja'] != '0'){
+                $this->db->where('b.skpd', $data['unitkerja']);
+            }
+
+            if($data['status'] != '0'){
+                $this->db->where('b.status', $data['status']);
+            }
+
+            if($data['nama']){
+                $this->db->like('b.nama', $data['nama']);
+            }
+
+            if($data['nip']){
+                $this->db->like('b.nipbaru_ws', $data['nip']);
+            }
+
+            // $res = $this->db->get()->result_array();
+            return $this->db->get()->result_array();
+        }
+
 
         function getDokumen()
         {

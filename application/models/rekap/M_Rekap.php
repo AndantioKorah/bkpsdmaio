@@ -751,13 +751,87 @@
         return $data;
     }
 
-    public function buildDataAbsensi($data){
+    public function buildDataAbsensi($data, $flag_absen_aars = 0){
         $rs = null;
-        if(!$data['unitkerja']){
-            return $data;
-        }
+        $periode = null;
+        $list_hari = null;
         $raw_data_excel = json_encode($data);
-        $rs['id_unitkerja'] = $data['unitkerja']['id_unitkerja'];
+        
+        if($flag_absen_aars == 1){
+            $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
+                            ->where('a.skpd', $data['id_unitkerja'])
+                            ->order_by('b.eselon, a.nama')
+                            ->get()->result_array();
+        }
+
+        if($flag_absen_aars == 1){
+            $temp['skpd'] = $data['nm_unitkerja'];
+            $temp['bulan'] = $data['bulan'];
+            $temp['tahun'] = $data['tahun'];
+            $temp['id_unitkerja'] = $data['id_unitkerja'];
+            $temp['periode'] = getNamaBulan($data['bulan']).' '.$data['tahun'];
+            $periode = $temp['periode'];
+            $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, $data['bulan'], $data['tahun']);
+            $tanggal_awal = $data['tahun'].'-'.$data['bulan'].'-'.'01';
+            $tanggal_akhir = $data['tahun'].'-'.$data['bulan'].'-'.$jumlah_hari;
+            $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
+
+            $tlp = null;
+            foreach($list_pegawai as $lpw){
+                $tlp[$lpw['nip']]['nama_pegawai'] = getNamaPegawaiFull($lpw);
+                $tlp[$lpw['nip']]['nip'] = ($lpw['nip']);
+                $tlp[$lpw['nip']]['absen'] = null;
+                foreach($list_hari as $lh){
+                    $tlp[$lpw['nip']]['absen'][$lh]['tanggal'] = $lh;
+                    $tlp[$lpw['nip']]['absen'][$lh]['jam_masuk'] = "";
+                    $tlp[$lpw['nip']]['absen'][$lh]['jam_pulang'] = "";
+                    $tlp[$lpw['nip']]['absen'][$lh]['ket'] = "";
+                    $tlp[$lpw['nip']]['absen'][$lh]['ket_masuk'] = "";
+                    $tlp[$lpw['nip']]['absen'][$lh]['ket_pulang'] = "";
+                }
+            }
+
+            $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')
+                        ->from('db_sip.absen a')
+                        ->join('m_user b', 'a.user_id = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->where('MONTH(a.tgl)', $data['bulan'])
+                        ->where('YEAR(a.tgl)', $data['tahun'])
+                        ->where('c.skpd', $data['id_unitkerja'])
+                        ->group_by('a.id')
+                        ->get()->result_array();
+
+            $data_absen = null;
+            if($list_data_absen){
+                foreach($list_data_absen as $lda){
+                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = formatTimeAbsen($lda['masuk']);
+                    $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = formatTimeAbsen($lda['pulang']);
+                }
+                $data_absen = $tlp;
+                // dd(json_encode($data_absen));
+            } else {
+                return null;
+            }
+
+            if($data_absen){
+                $data = $temp;
+                $data['result'] = $data_absen;
+                $data['list_hari'] = $list_hari;
+                // $raw_data_excel = json_encode($data);
+            } else {
+                return null;
+            }
+
+        } else {
+            if(!$data['unitkerja']){
+                return $data;
+            }
+            $periode = explode(" ", $data['periode']);
+            $list_hari = getDateBetweenDates($periode[0], $periode[2]);
+        }
+        $rs['id_unitkerja'] = $flag_absen_aars == 0 ? $data['unitkerja']['id_unitkerja'] : $data['id_unitkerja'];
         $rs['bulan'] = $data['bulan'];
         $rs['tahun'] = $data['tahun'];
         $rs['created_by'] = $this->general_library->getId();
@@ -766,12 +840,15 @@
                         ->from('db_pegawai.unitkerja a')
                         ->where('a.id_unitkerja', $rs['id_unitkerja'])
                         ->get()->row_array();
-                        
-        $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
+
+        if($flag_absen_aars == 0){
+            $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
                             ->from('db_pegawai.pegawai a')
-                            ->where('a.skpd', $data['unitkerja']['id_unitkerja'])
-                            ->order_by('a.nama')
+                            ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
+                            ->where('a.skpd', $rs['id_unitkerja'])
+                            ->order_by('b.eselon, a.nama')
                             ->get()->result_array();
+        }
         $lp = null;
         if($list_pegawai){
             foreach($list_pegawai as $l){
@@ -785,25 +862,40 @@
         } else if(in_array($uker['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
             $jskpd = 4;
         }
+
         $jam_kerja = $this->db->select('*')
                 ->from('t_jam_kerja')
                 ->where('id_m_jenis_skpd', $jskpd)
                 ->where('flag_event', 0)
                 ->where('flag_active', 1)
+                ->order_by('created_date')
                 ->get()->row_array();
+
         $data['jam_kerja'] = $jam_kerja;
 
-        $jam_kerja_event = $this->db->select('*')
+        $jam_kerja_event = null;
+        $temp_jam_kerja_event = $this->db->select('*')
                 ->from('t_jam_kerja')
                 ->where('id_m_jenis_skpd', $jskpd)
-                ->where('(MONTH(berlaku_dari) = '.$data['bulan'].' OR
-                        MONTH(berlaku_sampai) = '.$data['bulan'].')')
-                ->where('(YEAR(berlaku_dari) = '.$data['tahun'].' OR
-                        YEAR(berlaku_sampai) = '.$data['tahun'].')')
-                ->where('flag_event', 1)
+                // ->where('(MONTH(berlaku_dari) = '.$data['bulan'].' OR
+                //         MONTH(berlaku_sampai) = '.$data['bulan'].')')
+                // ->where('(YEAR(berlaku_dari) = '.$data['tahun'].' OR
+                //         YEAR(berlaku_sampai) = '.$data['tahun'].')')
+                ->where_in('flag_event', [1,2])
                 ->where('flag_active', 1)
-                ->get()->row_array();
+                ->get()->result_array();
 
+        if($temp_jam_kerja_event){
+            foreach($temp_jam_kerja_event as $tjke){
+                if((($list_hari[0]) >= ($tjke['berlaku_dari'])) &&
+                    ($list_hari[0]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal awal masuk dalam jam kerja event
+                        $jam_kerja_event[] = $tjke;
+                } else if((($list_hari[count($list_hari)-1]) >= ($tjke['berlaku_dari'])) &&
+                    ($list_hari[count($list_hari)-1]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal akhir masuk dalam jam kerja event
+                    $jam_kerja_event[] = $tjke;
+            }
+            }
+        }
         if($jam_kerja_event){
             $data['jam_kerja_event'] = $jam_kerja_event;
         }
@@ -812,14 +904,26 @@
                 ->from('t_hari_libur')
                 ->where('flag_active', 1)
                 ->where('flag_hari_libur_nasional', 1)
+                ->where('bulan', $data['bulan'])
+                ->where('tahun', $data['tahun'])
+                ->order_by('tanggal')
                 ->get()->result_array();
         $tmp_hari_libur = $hari_libur;
+        $data['info_libur'] = null;
         if($tmp_hari_libur){
             $hari_libur = null;
             foreach($tmp_hari_libur as $h){
+                if(!isset($data['info_libur'][$h['keterangan']])){
+                    $data['info_libur'][$h['keterangan']]['keterangan'] = $h['keterangan'];
+                    $data['info_libur'][$h['keterangan']]['tanggal_awal'] = $h['tanggal'];
+                    $data['info_libur'][$h['keterangan']]['tanggal_akhir'] = $h['tanggal'];
+                } else {
+                    $data['info_libur'][$h['keterangan']]['tanggal_akhir'] = $h['tanggal'];
+                }
                 $hari_libur[$h['tanggal']] = $h;
             }
         }
+        $data['hari_libur'] = $hari_libur;
 
         $data['disiplin_kerja'] = $this->db->select('keterangan')
                 ->from('m_jenis_disiplin_kerja')
@@ -856,43 +960,50 @@
         }
         $tempresult = $data['result'];
         $data['result'] = null;
-        $periode = explode(" ", $data['periode']);
-        $list_hari = getDateBetweenDates($periode[0], $periode[2]);
+        
         $i = 0;
         $format_hari = null;
-        
         foreach($list_hari as $lh){
+            $data_jam_kerja[$lh] = $jam_kerja;
+            if($jam_kerja_event){
+                foreach($jam_kerja_event as $jke){
+                    if((($lh) >= ($jke['berlaku_dari'])) &&
+                        ($lh) <= ($jke['berlaku_sampai'])){  
+                        $data_jam_kerja[$lh] = $jke;
+                    }
+                }
+            }
+            
             $format_hari[$lh]['tanggal'] = $lh;
             $format_hari[$lh]['jam_masuk'] = '';
             $format_hari[$lh]['jam_pulang'] = '';
             if(getNamaHari($lh) != 'Jumat' && getNamaHari($lh) != 'Sabtu' && getNamaHari($lh) != 'Minggu'){
-                $format_hari[$lh]['jam_masuk'] = $jam_kerja['wfo_masuk'];
-                $format_hari[$lh]['jam_pulang'] = $jam_kerja['wfo_pulang'];
+                $format_hari[$lh]['jam_masuk'] = $data_jam_kerja[$lh]['wfo_masuk'];
+                $format_hari[$lh]['jam_pulang'] = $data_jam_kerja[$lh]['wfo_pulang'];
+                // if($jam_kerja_event){
+                //     if((($lh) >= ($jam_kerja_event['berlaku_dari'])) &&
+                //         ($lh) <= ($jam_kerja_event['berlaku_sampai'])){
 
-                if($jam_kerja_event){
-                    if((($lh) >= ($jam_kerja_event['berlaku_dari'])) &&
-                        ($lh) <= ($jam_kerja_event['berlaku_sampai'])){
-
-                        $format_hari[$lh]['jam_masuk'] = $jam_kerja_event['wfo_masuk'];
-                        $format_hari[$lh]['jam_pulang'] = $jam_kerja_event['wfo_pulang'];
-                    }
-                }
+                //         $format_hari[$lh]['jam_masuk'] = $jam_kerja_event['wfo_masuk'];
+                //         $format_hari[$lh]['jam_pulang'] = $jam_kerja_event['wfo_pulang'];
+                //     }
+                // }
             } else if(getNamaHari($lh) == 'Jumat'){
-                $format_hari[$lh]['jam_masuk'] = $jam_kerja['wfoj_masuk'];
-                $format_hari[$lh]['jam_pulang'] = $jam_kerja['wfoj_pulang'];
+                $format_hari[$lh]['jam_masuk'] = $data_jam_kerja[$lh]['wfoj_masuk'];
+                $format_hari[$lh]['jam_pulang'] = $data_jam_kerja[$lh]['wfoj_pulang'];
 
-                if($jam_kerja_event){
-                    if((($lh) >= ($jam_kerja_event['berlaku_dari'])) &&
-                        ($lh) <= ($jam_kerja_event['berlaku_sampai'])){
+                // if($jam_kerja_event){
+                //     if((($lh) >= ($jam_kerja_event['berlaku_dari'])) &&
+                //         ($lh) <= ($jam_kerja_event['berlaku_sampai'])){
 
-                        $format_hari[$lh]['jam_masuk'] = $jam_kerja_event['wfo_masuk'];
-                        $format_hari[$lh]['jam_pulang'] = $jam_kerja_event['wfo_pulang'];
-                    }
-                }
+                //         $format_hari[$lh]['jam_masuk'] = $jam_kerja_event['wfo_masuk'];
+                //         $format_hari[$lh]['jam_pulang'] = $jam_kerja_event['wfo_pulang'];
+                //     }
+                // }
             } 
             // $i++;
         }
-      
+
         foreach($tempresult as $tr){
             if(isset($lp[$tr['nip']])){
                 $lp[$tr['nip']] = $tr;
@@ -934,14 +1045,26 @@
                         }
                 // Tutup Surat Tugas
                         
-
-                    
-                        if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A'){
-                            
+                        if(!isset($lp[$tr['nip']]['absen'][$l])){
+                            dd($lp[$tr['nip']]);
+                        }
+                        if($lp[$tr['nip']]['absen'][$l]['ket'] == 'A' && $flag_absen_aars == 0){
                             if(isset($dokpen[$tr['nip']][$l])){  
                                 $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                                 $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                             } else {
+                                $lp[$tr['nip']]['rekap']['TK']++;
+                            }
+                        } else if((!$lp[$tr['nip']]['absen'][$l]['jam_masuk'] || 
+                        $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "") && $flag_absen_aars == 1){
+                            if(isset($dokpen[$tr['nip']][$l])){  
+                                $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
+                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                            } else {
+                                $lp[$tr['nip']]['absen'][$l]['ket'] = 'A';
+                                if($tr['nip'] == '199502182020121013'){
+
+                                }
                                 $lp[$tr['nip']]['rekap']['TK']++;
                             }
                         } else {
@@ -962,7 +1085,9 @@
                                 }
                             }
                             
-                        
+                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ""){
+                                $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "00:00";
+                            }
                             $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
                             if($diff_keluar > 0){
                                 $ket_pulang = floatval($diff_keluar) / 1800;
@@ -988,8 +1113,10 @@
       
         $data['result'] = $lp;
         $rs['json_result'] = json_encode($lp);
-        $data['raw_data_excel'] = $raw_data_excel;
-
+        if($flag_absen_aars == 0){
+            $data['raw_data_excel'] = $raw_data_excel;
+        }
+        
         return $data;
     }
 
@@ -1447,6 +1574,32 @@
         }
 
         return $result;
+    }
+
+    public function readAbsensiAars($param){
+        $result = null;
+        $skpd = explode(";", $param['skpd']);
+
+        $param['id_unitkerja'] = $skpd[0];
+        $param['nm_unitkerja'] = $skpd[1];
+        return $this->buildDataAbsensi($param, 1);
+        
+        // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')
+        //                 ->from('db_sip.absen a')
+        //                 ->join('m_user b', 'a.user_id = b.id')
+        //                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        //                 ->where('MONTH(a.tgl)', $param['bulan'])
+        //                 ->where('YEAR(a.tgl)', $param['tahun'])
+        //                 ->where('c.skpd', $skpd[0])
+        //                 ->order_by('a.tgl')
+        //                 ->get()->result_array();
+
+        // if($list_data_absen){
+        //     foreach($list_data_absen as $ld){
+        //         $result['data_absen'][$ld['nip']][$ld['tgl']] = $ld;
+        //     }
+        // }
+        // dd($result['data_absen']);
     }
 }
 ?>

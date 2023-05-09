@@ -65,7 +65,7 @@
 
             if($data['search_param'] != ''){
                 $nama = $this->db->select('a.*, c.nm_unitkerja')
-                                ->from('m_user a')
+                                ->from('m_users a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->like('a.nama', $data['search_param'])

@@ -417,6 +417,15 @@ function getNamaHari($date)
     return getNamaHariFromNumber($dayofweek);
 }
 
+function formatTimeAbsen($value){
+    $expl = explode(":", $value);
+    if(count($expl) > 1){
+        return $expl[0].':'.$expl[1];
+    } else {
+        return $value;  
+    }
+}
+
 function countDiffDateLengkap($date1, $date2, $params = '')
 {
     $total_waktu = "";

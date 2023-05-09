@@ -7,7 +7,7 @@
   <table>
     <?php 
     $i = 0;
-    $colors = (CHART_COLORS);
+    $colors = CHART_COLORS;
     foreach($result as $rs){
       if($rs['jumlah'] > 0){
     ?>

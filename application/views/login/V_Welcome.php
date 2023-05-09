@@ -66,7 +66,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col mt-0 ml-0">
-                      <h5 class="card-title">JUMLAH PEGAWAI</h5>
+                      <h5 class="card-title">Jumlah Pegawai</h5>
                     </div>
                     <div class="col-auto">
                       <div class="stat text-primary">
@@ -77,7 +77,7 @@
                   <h1 class="mt-1 mb-3" id="h1_total_pegawai"><?=$chart['total']?></h1>
                   <div class="mb-0">
                     <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                    <span class="text-muted">Per Tahun <?=date('Y')?></span>
+                    <span class="text-muted">Per Hari Ini</span>
                   </div>
                 </div>
               </div>
@@ -309,8 +309,10 @@
                   let values = [];
                   let temp = Object.keys(dt.result)
                   temp.forEach(function(i) {
-                    labels.push(dt.result[i].nama)
-                    values.push(dt.result[i].jumlah)
+                    if(dt.result[i].jumlah > 0){
+                      labels.push(dt.result[i].nama)
+                      values.push(dt.result[i].jumlah)
+                    }
                   })
                   console.log(labels)
 

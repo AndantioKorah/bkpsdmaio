@@ -20,8 +20,8 @@
                     <td rowspan=2 colspan=1 class="text-center">Jumlah Pegawai</td>
                 </tr>
                 <tr>
-                    <td rowspan=1 colspan=1 class="text-center">Laki-laki</td>
-                    <td rowspan=1 colspan=1 class="text-center">Perempuan</td>
+                    <td style="border-bottom: 1px solid;" rowspan=1 colspan=1 class="text-center">Laki-laki</td>
+                    <td style="border-bottom: 1px solid;" rowspan=1 colspan=1 class="text-center">Perempuan</td>
                 </tr>
             </thead>
             <tbody>
@@ -37,4 +37,13 @@
             </tbody>
         </table>
     <?php } ?>
+    <script>
+        $(function(){
+            $('#table_result').dataTable()
+        })
+
+        function openDetailSkpd(id){
+            window.location="<?=base_url('master/perangkat-daerah/detail/')?>"+id
+        }
+    </script>
 <?php } ?>

@@ -4,8 +4,9 @@
 require FCPATH . 'vendor/autoload.php';
 // use PhpOffice\PhpSpreadSheet\Spreadsheet;
 // use PhpOffice\PhpSpreadSheet\IOFactory;
-require FCPATH . 'vendor/autoload.php';
+require FCPATH . '/vendor/autoload.php';
 
+// use mpdf\mpdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -38,6 +39,41 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
+    public function readAbsensiAars(){
+        $data['result'] = $this->rekap->readAbsensiAars($this->input->post());
+        $data['flag_print'] = 0;
+        if($data['result']){
+            $data['skpd'] = $data['result']['skpd'];
+            $data['jam_kerja'] = $data['result']['jam_kerja'];
+            $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];
+            $data['hari_libur'] = $data['result']['hari_libur'];
+            $data['info_libur'] = $data['result']['info_libur'];
+            $data['periode'] = $data['result']['periode'];
+            $data['disiplin_kerja'] = $data['result']['disiplin_kerja'];
+            $data['list_hari'] = $data['result']['list_hari'];
+            $data['flag_rekap_aars'] = true;
+            $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
+            $this->session->set_userdata('rekap_absen_aars', $data);
+        }
+        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+    }
+
+    public function downloadRekapAbsensiAars($flag_pdf = 0){
+        $data = $this->session->userdata('rekap_absen_aars');
+        $data['flag_print'] = 1;
+        if($flag_pdf == 1){
+            $data['flag_pdf'] = 1;
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-L'
+            ]);
+            $html = $this->load->view('rekap/V_RekapAbsensiResultNew', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->Output('Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf', 'D');
+        } else {
+            $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+        }
+    }
+
     public function readAbsensiExcel()
     {
         $data = $this->rekap->readAbsensiExcel();
@@ -63,11 +99,21 @@ class C_Rekap extends CI_Controller
         $this->load->view('rekap/V_RekapAbsensiResult', $data);
     }
 
-    public function downloadAbsensiNew()
+    public function downloadAbsensiNew($flag_pdf = 0)
     {
         $data = $this->session->userdata('data_read_absensi_excel');
         $data['flag_print'] = 1;
-        $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+        if($flag_pdf == 0){
+            $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
+        } else {
+            $data['flag_pdf'] = 1;
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-L'
+            ]);
+            $html = $this->load->view('rekap/V_RekapAbsensiResultNew', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->Output('Rekap Absensi '.$data['skpd'].' periode '.$data['periode'].'.pdf', 'D');
+        }
     }
 
     public function readAbsensiFromDb()

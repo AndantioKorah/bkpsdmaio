@@ -341,25 +341,28 @@
     }
 
 	$('#search_navbar').on('input', function(){
-      $('#div_search_result').html('')
-      if($(this).val() != ''){
-        // $('#button_fa_search').hide()
-        // $('#button_fa_loading').show()
-        $.ajax({
-            url: '<?=base_url("user/C_User/searchPegawaiNavbar")?>',
-            method: 'post',
-            data: {
-              search_param: $(this).val()
-            },
-            success: function(datares){
-                $('#div_search_result').html('')
-                $('#div_search_result').append(datares)
-                // $('#button_fa_search').show()
-                // $('#button_fa_loading').hide()
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-            }
-        })
-      }
+		$('#div_search_result').html('')
+		setTimeout(()=> {
+			if($(this).val() != ''){
+				// $('#button_fa_search').hide()
+				// $('#button_fa_loading').show()
+				$.ajax({
+					url: '<?=base_url("user/C_User/searchPegawaiNavbar")?>',
+					method: 'post',
+					data: {
+					search_param: $(this).val()
+					},
+					success: function(datares){
+						$('#div_search_result').html('')
+						$('#div_search_result').append(datares)
+						// $('#button_fa_search').show()
+						// $('#button_fa_loading').hide()
+					}, error: function(e){
+						errortoast('Terjadi Kesalahan')
+					}
+				})
+			}
+		}
+      ,500);
     })
 </script>

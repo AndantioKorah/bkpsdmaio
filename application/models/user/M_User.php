@@ -65,7 +65,7 @@
 
             if($data['search_param'] != ''){
                 $nama = $this->db->select('a.*, c.nm_unitkerja')
-                                ->from('m_users a')
+                                ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->like('a.nama', $data['search_param'])
@@ -1323,22 +1323,31 @@
             $jam_kerja_event = $this->db->select('*')
                     ->from('t_jam_kerja')
                     ->where('id_m_jenis_skpd', $jskpd)
-                    ->where('(MONTH(berlaku_dari) = '.$bulan.' OR
-                            MONTH(berlaku_sampai) = '.$bulan.')')
-                    ->where('(YEAR(berlaku_dari) = '.$tahun.' OR
-                            YEAR(berlaku_sampai) = '.$tahun.')')
-                    ->where('flag_event', 1)
+                    // ->where('(MONTH(berlaku_dari) = '.$bulan.' OR
+                    //         MONTH(berlaku_sampai) = '.$bulan.')')
+                    // ->where('(YEAR(berlaku_dari) = '.$tahun.' OR
+                    //         YEAR(berlaku_sampai) = '.$tahun.')')
+                    ->where_in('flag_event', [1,2])
                     ->where('flag_active', 1)
                     ->get()->result_array();
 
             $result['jam_kerja_event'] = null;
+            $result['list_jam_kerja_event'] = null;;
             if($jam_kerja_event){
-                $result['jam_kerja_event'][0] = $jam_kerja_event[0];
+                // $result['jam_kerja_event'][0] = $jam_kerja_event[0];
+                $result['list_jam_kerja_event'] = $jam_kerja_event;
                 foreach($jam_kerja_event as $jke){
-                    $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
-                    foreach($list_hari_kerja_event as $lhke){
-                        $result['jam_kerja_event'][$lhke] = $jke;
+                    foreach($result['list_hari'] as $rlh){
+                        if((($rlh) >= ($jke['berlaku_dari'])) &&
+                            ($rlh) <= ($jke['berlaku_sampai'])){  //cek jika tanggal masuk dalam jam kerja event
+                                // $jam_kerja_event[] = $jke;
+                                $result['jam_kerja_event'][$rlh] = $jke;
+                        }
                     }
+                    // $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
+                    // foreach($list_hari_kerja_event as $lhke){
+                    //     $result['jam_kerja_event'][$lhke] = $jke;
+                    // }
                 }
             }
 

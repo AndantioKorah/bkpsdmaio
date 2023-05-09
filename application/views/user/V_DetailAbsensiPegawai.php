@@ -59,26 +59,26 @@
                     <tbody>
                         <tr>
                             <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja']['wfo_masuk']?></td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja']['wfo_pulang']?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($result['jam_kerja']['wfo_masuk'])?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($result['jam_kerja']['wfo_pulang'])?></td>
                         </tr>
                         <tr>
                             <td style="font-size: 14px; text-align: center;">Jumat</td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja']['wfoj_masuk']?></td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja']['wfoj_pulang']?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($result['jam_kerja']['wfoj_masuk'])?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($result['jam_kerja']['wfoj_pulang'])?></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     <?php } ?>
-    <?php if($result['jam_kerja_event']){ ?>
+    <?php if(isset($result['list_jam_kerja_event'])) { foreach($result['list_jam_kerja_event'] as $jke){ ?>
         <div class="col">
             <div class="card card-default p-3">
-                <span style="font-size: 1rem;" class="text-center">JAM KERJA <?=strtoupper($result['jam_kerja_event'][0]['nama_jam_kerja'])?></span>
+                <span style="font-size: 1rem;" class="text-center">JAM KERJA <?=strtoupper($jke['nama_jam_kerja'])?></span>
                 <span style="font-size: .8rem;" class="text-center">
-                    <?=formatDateNamaBulan($result['jam_kerja_event'][0]['berlaku_dari'])?> - 
-                    <?=formatDateNamaBulan($result['jam_kerja_event'][0]['berlaku_sampai'])?>
+                    <?=formatDateNamaBulan($jke['berlaku_dari'])?> - 
+                    <?=formatDateNamaBulan($jke['berlaku_sampai'])?>
                 </span>
                 <table class="table-jam-kerja">
                     <thead>
@@ -89,19 +89,19 @@
                     <tbody>
                         <tr>
                             <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja_event'][0]['wfo_masuk']?></td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja_event'][0]['wfo_pulang']?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_masuk'])?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_pulang'])?></td>
                         </tr>
                         <tr>
                             <td style="font-size: 14px; text-align: center;">Jumat</td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja_event'][0]['wfoj_masuk']?></td>
-                            <td style="text-align: center; font-size: 14px;"><?=$result['jam_kerja_event'][0]['wfoj_pulang']?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_masuk'])?></td>
+                            <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_pulang'])?></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    <?php } ?>
+    <?php } } ?>
 </div>
 <div class="card card-default p-3 table-responsive">
     <div class="text-center">
@@ -168,8 +168,8 @@
                                         $text_pulang = $result['data_absen'][$dates]['pulang'];
                                     }
                                     
-                                    $temp['text_masuk'] = $text_masuk;
-                                    $temp['text_pulang'] = $text_pulang;
+                                    $temp['text_masuk'] = formatTimeAbsen($text_masuk);
+                                    $temp['text_pulang'] = formatTimeAbsen($text_pulang);
                                     $temp['tanggal'] = $tanggal;
                                     $temp['dates'] = $dates;
                                     $temp['keterangan'] = $result['data_absen']['keterangan'][$dates];

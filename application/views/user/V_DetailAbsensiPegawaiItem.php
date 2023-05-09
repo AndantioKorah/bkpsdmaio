@@ -93,10 +93,10 @@
                 $span_pulang = 'span_pksw1';
             } else if(in_array('pksw2', $keterangan)){
                 $span_pulang = 'span_pksw2';
-            } else if(in_array('pksw3', $keterangan) || $text_pulang == '00:00:00' || $text_pulang == ''){
+            } else if(in_array('pksw3', $keterangan) || $text_pulang == '00:00' || $text_pulang == ''){
                 $span_pulang = 'span_pksw3';
                 if($text_pulang == ''){
-                    $text_pulang = '00:00:00';
+                    $text_pulang = '00:00';
                 }
             }
         }
@@ -116,12 +116,12 @@
         <?php } } else { ?>
             <?php if(!$keterangan && !$hari_libur && $flag_tidak_print == 0){ //tidak ada pelanggaran absensi ?> 
                 <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                <?php if(($dates != date('Y-m-d')) || ($text_pulang != '' && $text_pulang != '00:00:00')){ //cek jika bukan hari ini dan jam pulang sudah ada ?>
+                <?php if(($dates != date('Y-m-d')) || ($text_pulang != '' && $text_pulang != '00:00')){ //cek jika bukan hari ini dan jam pulang sudah ada ?>
                     <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
                 <?php } ?>
             <?php } if($keterangan && !in_array('TK', $keterangan)){ //jika ada pelanggaran absensi dan bukan alpa ?>
                 <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                <?php if(($text_pulang != '00:00:00' || $text_pulang != '')){ ?>
+                <?php if(($text_pulang != '00:00' || $text_pulang != '')){ ?>
                     <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
                 <?php } ?>
             <?php } else if($keterangan && in_array('TK', $keterangan)) { //jika alpa ?>

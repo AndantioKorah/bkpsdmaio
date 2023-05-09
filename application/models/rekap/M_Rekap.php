@@ -893,7 +893,7 @@
                 } else if((($list_hari[count($list_hari)-1]) >= ($tjke['berlaku_dari'])) &&
                     ($list_hari[count($list_hari)-1]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal akhir masuk dalam jam kerja event
                     $jam_kerja_event[] = $tjke;
-            }
+                }
             }
         }
         if($jam_kerja_event){

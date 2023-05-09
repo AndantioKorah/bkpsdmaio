@@ -74,13 +74,13 @@
                         <tbody>
                             <tr>
                                 <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_masuk']?></td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_pulang']?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfo_masuk'])?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfo_pulang'])?></td>
                             </tr>
                             <tr>
                                 <td style="font-size: 14px; text-align: center;">Jumat</td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_masuk']?></td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_pulang']?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfoj_masuk'])?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfoj_pulang'])?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -101,13 +101,13 @@
                             <tbody>
                                 <tr>
                                     <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
-                                    <td style="text-align: center; font-size: 14px;"><?=$jke['wfo_masuk']?></td>
-                                    <td style="text-align: center; font-size: 14px;"><?=$jke['wfo_pulang']?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_masuk'])?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_pulang'])?></td>
                                 </tr>
                                 <tr>
                                     <td style="font-size: 14px; text-align: center;">Jumat</td>
-                                    <td style="text-align: center; font-size: 14px;"><?=$jke['wfoj_masuk']?></td>
-                                    <td style="text-align: center; font-size: 14px;"><?=$jke['wfoj_pulang']?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_masuk'])?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_pulang'])?></td>
                                 </tr>
                             </tbody>
                         </table>

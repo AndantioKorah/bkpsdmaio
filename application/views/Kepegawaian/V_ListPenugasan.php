@@ -10,8 +10,10 @@
           <th class="text-left">Nomor SK</th>
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">Lamanya</th>
+          <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
-
+          <th class="text-left">  </th>
+          <?php } ?>
 
 
         </thead>
@@ -26,8 +28,14 @@
               <td class="text-left"><?= $rs['nosk']?></td> 
               <td class="text-left"><?= $rs['tglsk']?></td> 
               <td class="text-left"><?= $rs['lamanya']?></td> 
+              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
-              
+              <td>
+              <?php if($rs['status'] == 1) { ?>
+              <button onclick="deleteKegiatan('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+               <?php } ?>
+              </td>
+              <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -41,6 +49,23 @@
   $(function(){
     $('.datatable').dataTable()
   })
+
+  function deleteKegiatan(id,file){
+                   
+                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegdatalain/',
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data sudah terhapus')
+                               loadRiwayatUsulPenugasan()
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
 
 
 </script>

@@ -87,7 +87,7 @@
   
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
   </div>
 
   <div class="form-group">
@@ -156,7 +156,7 @@ $(function(){
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -164,18 +164,13 @@ $(function(){
 });
 
     
-        $('#upload_form').on('submit', function(e){  
+        $('#upload_form_penghargaan').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#upload_form');
+        var formvalue = $('#upload_form_penghargaan');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file').files.length;
-        
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+       
        
       
       
@@ -193,8 +188,8 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form").reset();
-                loadListPenghargaan()
+                document.getElementById("upload_form_penghargaan").reset();
+                // loadListPenghargaan()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -209,7 +204,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_penghargaan').html('')
     $('#list_penghargaan').append(divLoaderNavy)
-    $('#list_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/1', function(){
+    $('#list_penghargaan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -218,7 +213,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_penghargaan').html('')
     $('#riwayat_usul_penghargaan').append(divLoaderNavy)
-    $('#riwayat_usul_penghargaan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_penghargaan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPenghargaan/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }
@@ -229,5 +224,12 @@ $(function(){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
   }
 
+  $('.yearpicker').datepicker({
+            format: 'yyyy',
+            viewMode: "years", 
+            minViewMode: "years",
+            orientation: 'bottom',
+            autoclose: true
+        });
   
 </script>

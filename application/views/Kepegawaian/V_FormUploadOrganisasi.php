@@ -96,12 +96,12 @@
   
   <div class="form-group">
     <label>Tanggal Mulai</label>
-    <input  class="form-control datepicker"   id="tglmulai" name="tglmulai" required/>
+    <input  autocomplete="off"  class="form-control datepicker"   id="tglmulai" name="tglmulai" required/>
   </div>
 
   <div class="form-group">
     <label>Tanggal Berakhir</label>
-    <input  class="form-control datepicker"   id="tglselesai" name="tglselesai" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tglselesai" name="tglselesai" required/>
   </div>
 
   <div class="form-group">
@@ -203,7 +203,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_organisasi').html('')
     $('#list_organisasi').append(divLoaderNavy)
-    $('#list_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/1', function(){
+    $('#list_organisasi').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -212,7 +212,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_organisasi').html('')
     $('#riwayat_usul_organisasi').append(divLoaderNavy)
-    $('#riwayat_usul_organisasi').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_organisasi').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListOrganisasi/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

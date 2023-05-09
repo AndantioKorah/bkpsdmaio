@@ -109,7 +109,7 @@
 
    <div class="form-group">
     <label>TMT Pangkat</label>
-    <input  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" required/>
   </div>
   
   <div class="form-group">
@@ -129,7 +129,7 @@
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="tanggal_sk" name="tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tanggal_sk" name="tanggal_sk" required/>
   </div>
 
   <div class="form-group">
@@ -255,7 +255,7 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pangkat').html('')
     $('#list_pangkat').append(divLoaderNavy)
-    $('#list_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/1', function(){
+    $('#list_pangkat').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -264,7 +264,7 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_pangkat').html('')
     $('#riwayat_usul_pangkat').append(divLoaderNavy)
-    $('#riwayat_usul_pangkat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_pangkat').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPangkat/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

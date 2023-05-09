@@ -12,8 +12,10 @@
           <th class="text-left">No / Tanggal SK</th>
           <th class="text-left">Ket</th>
           <th class="text-left">File SK</th>
+          <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
-          <th></th>
+          <th class="text-left">  </th>
+          <?php } ?>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -31,12 +33,14 @@
                 <button href="#modal_view_file_jabatan" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
+              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
+              <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -53,7 +57,7 @@
 
   function openFilePangkat(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_jabatan').attr('src', 'http://localhost/bkpsdmaio/arsipjabatan/'+filename)
+    $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
   }
 
 

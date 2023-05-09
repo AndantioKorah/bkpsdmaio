@@ -8,7 +8,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalKeluarga">
   Tambah Data Keluarga
 </button>
 
@@ -44,7 +44,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalBerkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalKeluarga" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -59,8 +59,9 @@
     
   <div class="form-group">
     <label>Hubungan Keluarga</label>
-    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="hubkel" id="hubkel" required>
+    <select  class="form-control " data-dropdown-css-class="select2-navy" name="hubkel" id="hubkel" required>
                     <option value="" disabled selected>Pilih Item</option>
+                    
                     <?php if($hubungan_keluarga){ foreach($hubungan_keluarga as $r){ ?>
                         <option value="<?=$r['id_keluarga']?>"><?=$r['nm_keluarga']?></option>
                     <?php } } ?>
@@ -79,7 +80,7 @@
 
   <div class="form-group">
     <label>Tanggal Lahir</label>
-    <input class="form-control datepicker" type="text" id="tgllahir" name="tgllahir"  required/>
+    <input autocomplete="off" class="form-control datepicker" type="text" id="tgllahir" name="tgllahir"  required/>
   </div>
 
   <div class="form-group">
@@ -116,13 +117,27 @@
 
 
 $(function(){
-  $(".select2").select2({   
+        // $('.select2').select2()
+
+   $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-      loadListKeluarga()
-    })
+  
+  $('#datatable').dataTable()
+  loadListKeluarga()
+
+  })
+
+
+// $(function(){
+
+//   $(".select2").select2();
+
+//     loadListKeluarga()
+
+//     })
 
     $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
@@ -181,7 +196,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_keluarga').html('')
     $('#list_keluarga').append(divLoaderNavy)
-    $('#list_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/1', function(){
+    $('#list_keluarga').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
     }
@@ -190,7 +205,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_keluarga').html('')
     $('#riwayat_usul_keluarga').append(divLoaderNavy)
-    $('#riwayat_usul_keluarga').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_keluarga').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListKeluarga/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
     }

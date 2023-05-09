@@ -273,7 +273,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
-    $('#list_jabatan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1', function(){
+    $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -282,7 +282,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_jabatan').html('')
     $('#riwayat_usul_jabatan').append(divLoaderNavy)
-    $('#riwayat_usul_jabatan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

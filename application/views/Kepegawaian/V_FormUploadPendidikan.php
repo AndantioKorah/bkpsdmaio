@@ -224,7 +224,7 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_pendidikan').html('')
     $('#list_pendidikan').append(divLoaderNavy)
-    $('#list_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/1', function(){
+    $('#list_pendidikan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -233,7 +233,7 @@ $(function(){
     var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_pendidikan').html('')
     $('#riwayat_usul_pendidikan').append(divLoaderNavy)
-    $('#riwayat_usul_pendidikan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_pendidikan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPendidikan/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

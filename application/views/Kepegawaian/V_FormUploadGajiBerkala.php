@@ -211,7 +211,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_gaji_berkala').html('')
     $('#list_gaji_berkala').append(divLoaderNavy)
-    $('#list_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip+'/1', function(){
+    $('#list_gaji_berkala').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -220,7 +220,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_gaji_berkala').html('')
     $('#riwayat_usul_gaji_berkala').append(divLoaderNavy)
-    $('#riwayat_usul_gaji_berkala').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_gaji_berkala').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListGajiBerkala/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

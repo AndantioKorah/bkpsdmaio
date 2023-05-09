@@ -110,12 +110,12 @@
 
   <div class="form-group">
     <label>Tanggal Mulai</label>
-    <input  class="form-control datepicker"   id="diklat_tangal_mulai" name="diklat_tangal_mulai" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="diklat_tangal_mulai" name="diklat_tangal_mulai" required/>
   </div>
 
   <div class="form-group">
     <label>Tanggal Selesai</label>
-    <input  class="form-control datepicker"   id="diklat_tanggal_selesai" name="diklat_tanggal_selesai" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="diklat_tanggal_selesai" name="diklat_tanggal_selesai" required/>
   </div>
 
   <div class="form-group">
@@ -125,7 +125,7 @@
 
   <div class="form-group">
     <label>Tanggal STTPP</label>
-    <input  class="form-control datepicker"   id="diklat_tanggal_sttpp" name="diklat_tanggal_sttpp" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="diklat_tanggal_sttpp" name="diklat_tanggal_sttpp" required/>
   </div>
 
   <div class="form-group">
@@ -221,7 +221,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_diklat').html('')
     $('#list_diklat').append(divLoaderNavy)
-    $('#list_diklat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListDiklat/")?>'+nip+'/1', function(){
+    $('#list_diklat').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListDiklat/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -230,7 +230,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_diklat').html('')
     $('#riwayat_usul_diklat').append(divLoaderNavy)
-    $('#riwayat_usul_diklat').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListDiklat/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_diklat').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListDiklat/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

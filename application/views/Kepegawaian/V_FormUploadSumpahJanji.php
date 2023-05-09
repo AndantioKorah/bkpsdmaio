@@ -8,7 +8,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSumpahJanji">
   Tambah Data Sumpah Janji
 </button>
 
@@ -44,7 +44,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalPenghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalSumpahJanji" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -62,8 +62,7 @@
   
   <div class="form-group">
     <label>Sumpah / Janji</label>
-    <select class="form-control select2"
-			data-dropdown-css-class="select2-navy" name="sumpahpeg" id="sumpahpeg" required>
+    <select class="form-control " name="sumpahpeg" id="sumpahpeg" required>
 			<option value="" disabled selected>Pilih Item</option>
 			<?php if($jenis_sumpah){ foreach($jenis_sumpah as $r){ ?>
                         <option value="<?=$r['id_sumpah']?>"><?=$r['nm_sumpah']?></option>
@@ -189,7 +188,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_sumpah_janji').html('')
     $('#list_sumpah_janji').append(divLoaderNavy)
-    $('#list_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/1', function(){
+    $('#list_sumpah_janji').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -198,7 +197,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_sumpah_janji').html('')
     $('#riwayat_usul_sumpah_janji').append(divLoaderNavy)
-    $('#riwayat_usul_sumpah_janji').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_sumpah_janji').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListSumpahJanji/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

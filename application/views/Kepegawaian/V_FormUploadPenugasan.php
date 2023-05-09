@@ -60,7 +60,7 @@
 
 <div class="form-group " style="margin-bottom:10px !important;">
 <label for="exampleFormControlInput1">Jenis Penugasan</label>
-<select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenispenugasan" id="jenispenugasan" required>
+<select  class="form-control  "  name="jenispenugasan" id="jenispenugasan" required>
                 <option value="" disabled selected>Pilih Jenis Penugasan</option>
                 <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
                   <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
@@ -85,7 +85,7 @@
 
 <div class="form-group">
 <label>Tanggal SK</label>
-<input  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
+<input autocomplete="off"  class="form-control datepicker"   id="tglsk" name="tglsk" required/>
 </div>
 
 <div class="form-group">
@@ -114,13 +114,13 @@
 
 
 $(function(){
-        // $('.select2').select2()
+        $('.select2penugasan').select2()
 
-   $(".select2").select2({   
-		width: '100%',
-		dropdownAutoWidth: true,
-		allowClear: true,
-	});
+  //  $(".select2").select2({   
+	// 	width: '100%',
+	// 	dropdownAutoWidth: true,
+	// 	allowClear: true,
+	// });
   
         $('#datatable').dataTable()
         loadListPenugasan()
@@ -179,7 +179,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_penugasan').html('')
     $('#list_penugasan').append(divLoaderNavy)
-    $('#list_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/1', function(){
+    $('#list_penugasan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -188,7 +188,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_penugasan').html('')
     $('#riwayat_usul_penugasan').append(divLoaderNavy)
-    $('#riwayat_usul_penugasan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_penugasan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPenugasan/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

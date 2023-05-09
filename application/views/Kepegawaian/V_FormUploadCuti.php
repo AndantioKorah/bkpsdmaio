@@ -204,7 +204,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_cuti').html('')
     $('#list_cuti').append(divLoaderNavy)
-    $('#list_cuti').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/1', function(){
+    $('#list_cuti').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -213,7 +213,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_cuti').html('')
     $('#riwayat_usul_cuti').append(divLoaderNavy)
-    $('#riwayat_usul_cuti').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_cuti').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListCuti/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

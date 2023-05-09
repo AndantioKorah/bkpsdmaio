@@ -29,6 +29,7 @@
               <div class="btn-group" role="group" aria-label="Basic example">
               <a data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" data-tgl_selesai="<?=$rs['tanggal_selesai']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> </a>
               &nbsp;
+             
               <?php if($rs['status'] == 0) { ?> 
               <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id_usul']?>">
                 <button  class="btn btn-sm btn-primary">
@@ -62,6 +63,17 @@
           <?php } ?>
         </tbody>
       </table>
+
+      <script>
+                 $(document).on("click", ".open-DetailCuti", function () {
+     var jenis = $(this).data('jenis');
+     var tgl_mulai = $(this).data('tgl_mulai');
+     var tgl_selesai = $(this).data('tgl_selesai');
+     $(".modal-body #jenis_cuti").val( jenis );
+     $(".modal-body #tanggal_mulai").val( tgl_mulai );
+     $(".modal-body #tanggal_selesai").val( tgl_selesai );
+    });
+              </script>
 
 <?php } else { ?>
   <div class="row">

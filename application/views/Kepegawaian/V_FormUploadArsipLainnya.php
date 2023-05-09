@@ -8,7 +8,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalCuti">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalArsipLainnya">
   Tambah Data Arsip Lainnya
 </button>
 
@@ -57,7 +57,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalCuti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalArsipLainnya" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -176,7 +176,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_arsip_lainnya').html('')
     $('#list_arsip_lainnya').append(divLoaderNavy)
-    $('#list_arsip_lainnya').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/1', function(){
+    $('#list_arsip_lainnya').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
   }
@@ -185,7 +185,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_arsip_lainnya').html('')
     $('#riwayat_usul_arsip_lainnya').append(divLoaderNavy)
-    $('#riwayat_usul_arsip_lainnya').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_arsip_lainnya').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListArsip/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
   }

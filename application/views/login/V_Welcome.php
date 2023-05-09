@@ -284,7 +284,7 @@
             </div>
           </div>
 
-          <script src="<?=base_url('')?>assets/adminkit/js/app.js"></script>
+          <!-- <script src="<?=base_url('')?>assets/adminkit/js/app.js"></script> -->
           <!-- <script src="js/app.js"></script> -->
           
           <script>
@@ -414,17 +414,19 @@
               }
           </script>
         <?php } else { ?>
-          <h3>Welcome to</h3>
+         
           <center>
+          <h3>Welcome to</h3>
             <div style="z-index:0;">
               <img style="height : auto;
                         width: 300px; 
                           margin-bottom:20px;"  class="" src="assets/adminkit/img/logoSiladen.png" />
             </div>
-          </center>
+         
           <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
           <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
-        <?php } ?>
+          </center>
+          <?php } ?>
       </div>
       <div class="col-12 text-center">
           <!-- <h4 style="font-weight: bold;" id="live_date_time_welcome" class="nav-link"></h4> -->

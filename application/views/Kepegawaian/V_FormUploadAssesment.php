@@ -175,7 +175,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#list_assesment').html('')
     $('#list_assesment').append(divLoaderNavy)
-    $('#list_assesment').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/1', function(){
+    $('#list_assesment').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
     }
@@ -184,7 +184,7 @@ $(function(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_assesment').html('')
     $('#riwayat_usul_assesment').append(divLoaderNavy)
-    $('#riwayat_usul_assesment').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_assesment').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
     }

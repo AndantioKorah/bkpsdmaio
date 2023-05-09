@@ -276,10 +276,10 @@
 		margin-bottom:10px;
 		} */
 
-    .form-control{
+    /* .form-control{
       height: 35px !important;
       margin-bottom:10px !important;
-    }
+    } */
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
       /* line-height: 30px; */

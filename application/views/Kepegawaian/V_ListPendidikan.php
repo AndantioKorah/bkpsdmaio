@@ -13,8 +13,10 @@
           <th class="text-left">No. STTB/Ijazah</th>
           <th class="text-left">Tgl STTB/Ijazah</th>
           <th class="text-left">Ijazah</th>
+          <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
-          <th></th>
+          <th class="text-left">  </th>
+          <?php } ?>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -34,12 +36,14 @@
                 <button href="#modal_view_file_pendidikan" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
+              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
+              <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -65,7 +69,7 @@
 
   function openFilePangkat(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_pendidikan').attr('src', 'http://localhost/bkpsdmaio/arsippendidikan/'+filename)
+    $('#iframe_view_file_pendidikan').attr('src', '<?=base_url();?>arsippendidikan/'+filename)
   }
 
 

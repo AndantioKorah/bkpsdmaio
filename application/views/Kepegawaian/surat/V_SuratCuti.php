@@ -25,7 +25,7 @@
 </style>
  <title>Surat Cuti</title>
 <div class="header" >
-<?php $this->load->view('Kepegawaian/surat/V_Kopsurat.php');?>
+<?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?>
 </div>
 <center>
         <p style="margin-top:25px;"> SURAT IZIN <?= strtoupper($result['0']['nm_cuti']);?></p>
@@ -168,7 +168,7 @@ Tembusan Yth.:<br>
 4. Kepala Badan Keuangan dan Aset Daerah Kota Manado;<br>
 5. Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado;<br>
 6. Arsip.
-<img src="http://localhost/bkpsdmaio/assets/images/footer.png" alt="" style="width: 100%;margin-topx: -55px;">
+<img src="<?=base_url();?>assets/images/footer.png" alt="" style="width: 100%;margin-topx: -55px;">
 </span>
 
 

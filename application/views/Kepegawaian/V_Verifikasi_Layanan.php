@@ -33,7 +33,7 @@
       <hr>
       
 					<iframe id="" style="width: 100%; height: 80vh;"
-						src="http://localhost/bkpsdmaio/dokumen_layanan/<?= $result['0']['nama'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
+						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
 
 				</div>
 				<div class="col-md-6" >
@@ -151,7 +151,7 @@
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
 </div>
 <span id="ket"></span>
-<iframe id="view_file_verif" src="" style="width: 100%; height: 80vh;"></iframe>
+<iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe>
 
 				</div>
 			</div>
@@ -237,7 +237,7 @@ $(function(){
 
 
   function getFile(file) {
-    
+  
         var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
         var id_peg = "<?=$result[0]['id_peg'];?>";
         var base_url = "<?= base_url();?>";
@@ -249,6 +249,7 @@ $(function(){
         } else {
           dir = "uploads/";
         }
+        
         
         $.ajax({
         type : "POST",

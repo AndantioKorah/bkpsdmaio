@@ -6,7 +6,7 @@
 	</div> -->
 
 	<div class="mb-3">
-		<label for="" class="form-label ">Tanggal Usul</label>
+		<!-- <label for="" class="form-label ">Tanggal Usul</label> -->
 		<input type="hidden" class="form-control datepicker" id="tanggal_usul" name="tanggal_usul"
 			value="<?= date('Y-m-d');?>">
 	</div>
@@ -122,7 +122,12 @@
 
 
 	<div class="form-group">
-		<label>File Pengantar</label>
+		<label>File Pengantar <br>
+    Surat Keterangan Sakit/Dokter (bagi ASN yang mengajukan cuti sakit) <br>
+ Surat Keterangan dari Pihak yang berwenang (bagi ASN yang mengajukan cuti karena alasan penting) <br>
+ <b style="color:red">*File diatas dijadikan 1 dalam bentuk PDF</b>
+
+    </label>
 		<input class="form-control my-image-field" type="file" id="file_pengantar" name="file" />
 	</div>
 
@@ -224,7 +229,7 @@
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("form_cuti").reset();
-                // loadListUsulLayanan()
+                loadListUsulLayanan(3)
               } else {
                 errortoast(result.msg)
                 return false;

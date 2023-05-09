@@ -173,7 +173,7 @@
   function LoadModalcetakSurat(id_usul,nip){
     $('#printableArea').html('')
     $('#printableArea').append(divLoaderNavy)
-    $('#printableArea').load('<?=base_url("Kepegawaian/C_Kepegawaian/CetakSurat/")?>'+id_usul+'/'+nip, function(){
+    $('#printableArea').load('<?=base_url("kepegawaian/C_Kepegawaian/CetakSurat/")?>'+id_usul+'/'+nip, function(){
       $('#loader').hide()
     })
 
@@ -224,7 +224,7 @@ function printGrid() {
  
   $(div).html('')
   $(div).append(divLoaderNavy)
-  $(div).load('<?=base_url("Kepegawaian/C_Kepegawaian/getAllUsulLayananAdmin/")?>'+val, function(){
+  $(div).load('<?=base_url("kepegawaian/C_Kepegawaian/getAllUsulLayananAdmin/")?>'+val, function(){
     $('#loader').hide()
   })
 }

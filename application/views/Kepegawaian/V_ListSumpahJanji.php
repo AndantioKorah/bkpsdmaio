@@ -8,7 +8,10 @@
           <th class="text-left">Yang Mengambil Sumpah</th>
           <th class="text-left">No Berita Acara </th>
           <th class="text-left">Tanggal Berita Acara</th>
+          <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
+          <th class="text-left">  </th>
+          <?php } ?>
      
         </thead>
         <tbody>
@@ -20,8 +23,14 @@
               <td class="text-left"><?= $rs['pejabat']?></td>
               <td class="text-left"><?=$rs['noba']?></td>
               <td class="text-left"><?=$rs['tglba']?></td>
+              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
-
+              <td>
+              <?php if($rs['status'] == 1) { ?>
+              <button onclick="deleteKegiatan('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+               <?php } ?>
+              </td>
+              <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -29,18 +38,6 @@
     </div>
   </div>
 
-  <div class="modal fade" id="modal_view_file_cuti" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
-      <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_cuti" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-    </div>
-  </div>
-</div>                      
 
  
 <script>
@@ -48,10 +45,25 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_cuti').attr('src', 'http://localhost/bkpsdmaio/arsipcuti/'+filename)
-  }
+
+
+  function deleteKegiatan(id,file){
+                   
+                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegsumpah/',
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data sudah terhapus')
+                               loadRiwayatUsulSumpahJanji()
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
+
 </script>
 <?php } else { ?>
   <div class="row">

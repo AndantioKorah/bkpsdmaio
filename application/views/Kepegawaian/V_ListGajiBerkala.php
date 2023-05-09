@@ -11,8 +11,10 @@
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">TMT Gaji Berkala</th>
           <th class="text-left">SK</th>
+          <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
-          <th></th>
+          <th class="text-left">  </th>
+          <?php } ?>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -30,12 +32,14 @@
                 <button href="#modal_view_file_gaji_berkala" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
+              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
            <td>
            <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
            </td>
+           <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -62,7 +66,7 @@
 
   function openFilePangkat(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_gaji_berkala').attr('src', 'http://localhost/bkpsdmaio/arsipgjberkala/'+filename)
+    $('#iframe_view_file_gaji_berkala').attr('src', '<?=base_url();?>arsipgjberkala/'+filename)
   }
 
 

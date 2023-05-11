@@ -222,7 +222,8 @@ var nip = "<?= $result[0]['nip'];?>";
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
-  
+  $('.sidebar').hide()
+
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()
     $('#btn_verifikasi').show()

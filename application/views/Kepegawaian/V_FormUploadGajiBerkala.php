@@ -99,12 +99,12 @@
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
   </div>
 
   <div class="form-group">
     <label>TMT Gaji Berkala</label>
-    <input  class="form-control datepicker"   id="tmt_gaji_berkala" name="tmt_gaji_berkala" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tmt_gaji_berkala" name="tmt_gaji_berkala" required/>
   </div>
 
   <div class="form-group">

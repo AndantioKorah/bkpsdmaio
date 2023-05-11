@@ -305,6 +305,7 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
+		// dd($data);
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);
 	}
 
@@ -348,6 +349,35 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_dokumen']['pegpenghargaan']['db'] = 'pegpenghargaan';
 		$data['list_dokumen']['pegpenghargaan']['nama'] = 'Penghargaan';
 		$data['list_dokumen']['pegpenghargaan']['value'] = 'penghargaan';
+
+		$data['list_dokumen']['pegsumpah']['db'] = 'pegsumpah';
+		$data['list_dokumen']['pegsumpah']['nama'] = 'Sumpah / Janji';
+		$data['list_dokumen']['pegsumpah']['value'] = 'sumpahjanji';
+
+		$data['list_dokumen']['pegkeluarga']['db'] = 'pegkeluarga';
+		$data['list_dokumen']['pegkeluarga']['nama'] = 'Keluarga';
+		$data['list_dokumen']['pegkeluarga']['value'] = 'keluarga';
+
+		$data['list_dokumen']['pegdatalain']['db'] = 'pegdatalain';
+		$data['list_dokumen']['pegdatalain']['nama'] = 'Penugasan';
+		$data['list_dokumen']['pegdatalain']['value'] = 'penugasan';
+
+		$data['list_dokumen']['pegcuti']['db'] = 'pegcuti';
+		$data['list_dokumen']['pegcuti']['nama'] = 'Cuti';
+		$data['list_dokumen']['pegcuti']['value'] = 'cuti';
+
+		$data['list_dokumen']['pegskp']['db'] = 'pegskp';
+		$data['list_dokumen']['pegskp']['nama'] = 'SKP';
+		$data['list_dokumen']['pegskp']['value'] = 'skp';
+
+		$data['list_dokumen']['pegassesment']['db'] = 'pegassesment';
+		$data['list_dokumen']['pegassesment']['nama'] = 'Assesment';
+		$data['list_dokumen']['pegassesment']['value'] = 'assesment';
+
+
+		$data['list_dokumen']['pegarsip']['db'] = 'pegarsip';
+		$data['list_dokumen']['pegarsip']['nama'] = 'Arsip Lainnya';
+		$data['list_dokumen']['pegarsip']['value'] = 'arsip';
 
 		
 		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
@@ -660,6 +690,9 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitVerifikasiLayanan());
 	}
 
+
+	
+
 	public function batalVerifikasiLayanan()
 	{ 
 		echo json_encode( $this->kepegawaian->batalVerifikasiLayanan());
@@ -689,6 +722,17 @@ class C_Kepegawaian extends CI_Controller
 		
         $this->kepegawaian->delete('id', $id, "db_pegawai.".$table,$file);
     }
+
+	public function submitVerifikasiDokumen()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiDokumen());
+	}
+
+	public function batalSubmitVerifikasiDokumen()
+	{ 
+		echo json_encode( $this->kepegawaian->batalSubmitVerifikasiDokumen());
+	}
+
 
 
 }

@@ -9,6 +9,7 @@
           <th class="text-left">No Berita Acara </th>
           <th class="text-left">Tanggal Berita Acara</th>
           <?php if($kode == 2) { ?>
+            <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
           <?php } ?>
@@ -16,7 +17,8 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+            <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
 
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_sumpah']?></td>
@@ -24,7 +26,8 @@
               <td class="text-left"><?=$rs['noba']?></td>
               <td class="text-left"><?=$rs['tglba']?></td>
               <?php if($kode == 2) { ?>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+                <td><?=formatDateNamaBulan($rs['created_date'])?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteKegiatan('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

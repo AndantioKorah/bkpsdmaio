@@ -79,10 +79,7 @@
 	
 	<!-- Script to print the content of a div -->
 	
-				
-
-
-
+			
   <div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -90,15 +87,11 @@
         DOKUMEN
       </div> -->
       <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe id="iframe_view_filex" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
     </div>
   </div>
 </div>  
-
-
-
-
 
 <div class="modal fade" id="modal_cetak_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
@@ -114,10 +107,6 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" onclick="cetak()" value="Test print"/> <i class="fa fa-print"></i> Print</button>
-        <script>
-
- </script>
-
       </div>
     </div>
   </div>
@@ -126,7 +115,7 @@
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modal_detail_cuti">
-  <div class="modal-dialog" role="document">
+<div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Detail Cuti</h5>
@@ -135,7 +124,21 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="form_nomor_surat" enctype="multipart/form-data" >
+      <div class="row">
+      <div class="col-lg-6 text-left">
+        <span style="color: grey; font-size .8rem; font-style: italic;">Nama</span><br>
+        <span id="nama_pegawai" style="font-size: 1rem; font-weight: bold;"></span>
+      </div>
+      <div class="col-lg-6 text-right">
+        <span style="color: grey; font-size .8rem; font-style: italic;">NIP</span><br>
+        <span id="nip" style="font-size: 1rem; font-weight: bold;"></span>
+      </div>
+      <div class="col-lg-12"><hr></div>
+    </div>
+
+        <div class="row">
+        <div class="col-lg-6">
+        <form method="post" id="form_nomor_surat" enctype="multipart/form-data" >
         <input type="hidden" id="id_usul" name="id_usul" >
   <div class="mb-3">
     <label for="nomor_surat" class="form-label">Jenis Cuti</label>
@@ -152,6 +155,13 @@
   </div>
  
 </form>
+        </div>
+        <div class="col-lg-6">
+        <iframe id="iframe_view_file" style="height: 50vh; width: 100%;" src=""></iframe>
+        </div>
+        </div>
+     
+      
       </div>
     </div>
   </div>

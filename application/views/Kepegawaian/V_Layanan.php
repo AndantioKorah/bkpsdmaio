@@ -154,7 +154,7 @@
         DOKUMEN
       </div> -->
       <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe id="iframe_view_filex" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
     </div>
   </div>

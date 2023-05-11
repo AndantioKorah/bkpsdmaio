@@ -78,7 +78,7 @@ $route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/layanan'] = 'Kepegawaian/C_Kepegawaian/layanan';
 $route['kepegawaian/teknis'] = 'Kepegawaian/C_Kepegawaian/Adminlayanan';
 $route['kepegawaian/cetak/'] = 'Kepegawaian/C_Kepegawaian/CetakSurat';
-$route['kepegawaian/verifikasi/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1';
+$route['kepegawaian/verifikasi/(:any)/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1/$2';
 $route['kepegawaian/dokumen/verifikasi'] = 'Kepegawaian/C_Kepegawaian/verifikasiDokumen';
 
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';

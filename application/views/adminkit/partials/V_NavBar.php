@@ -137,10 +137,11 @@
   $list_role = $this->general_library->getListRole();
   $active_role = $this->general_library->getActiveRole();
 ?>
-<nav class="navbar navbar-expand navbar-light navbar-bg">
+<nav class="navbar navbar-expand navbar-light navbar-bgx">
 	<a class="sidebar-toggle js-sidebar-toggle">
-		<i class="hamburger align-self-center"></i>
+		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
+	
 	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
 		<form class="form-inline mr-3">
 			<div class="row">

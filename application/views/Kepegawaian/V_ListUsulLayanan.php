@@ -3,26 +3,26 @@
     <div class="col-lg-12 table-responsive">
       <table class="table table-striped" id="datatable">
         <thead>
-          <th class="text-center">No</th>
-          <th class="text-center">Jenis Layanan</th>
-          <th class="text-center">Tanggal Usul</th>
-          <!-- <th class="text-center">Lama Hari Cuti</th>
-          <th class="text-center">Tanggal Mulai</th>
-          <th class="text-center">Tanggal Selesai</th> -->
-          <th class="text-center">Surat Pengantar</th>
-          <th class="text-center">Status</th>
+          <th class="text-left">No</th>
+          <th class="text-left">Jenis Layanan</th>
+          <th class="text-left">Tanggal Usul</th>
+          <!-- <th class="text-left">Lama Hari Cuti</th>
+          <th class="text-left">Tanggal Mulai</th>
+          <th class="text-left">Tanggal Selesai</th> -->
+          <th class="text-left">Surat Pengantar</th>
+          <th class="text-left">Status</th>
           <th></th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
-              <td class="text-center"><?=$no++;?></td>
+              <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nama']?></td>
-              <td class="text-center"><?=formatDateNamaBulan($rs['tanggal_usul'])?></td>
+              <td class="text-left"><?=formatDateNamaBulan($rs['tanggal_usul'])?></td>
               <!-- <td class="text-left"><?=$rs['lama_cuti']?></td>
               <td class="text-left"><?=$rs['tanggal_mulai']?></td>
               <td class="text-left"><?=$rs['tanggal_selesai']?></td> -->
-              <td class="text-center">
+              <td class="text-left">
               <?php if($rs['jenis_layanan'] == 3) { ?>
                 <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>

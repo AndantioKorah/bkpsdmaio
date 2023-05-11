@@ -13,6 +13,7 @@
           <th class="text-left">Ket</th>
           <th class="text-left">File SK</th>
           <?php if($kode == 2) { ?>
+          <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
           <?php } ?>
@@ -34,7 +35,9 @@
                 Lihat <i class="fa fa-search"></i></button>
               </td>
               <?php if($kode == 2) { ?>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+                <td><?=formatDateNamaBulan($rs['created_date'])?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

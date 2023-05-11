@@ -3,12 +3,12 @@
    
   <table class="table table-striped datatable" id="" border="0">
         <thead>
-          <th class="">No </th>
-          <th class="">Jenis Layanan</th>
-          <th class="">Tanggal Usul</th>
-          <th class="">Nama Pegawai</th>
-          <th class="">Unit Organisasi</th>
-          <th class="">Pengantar</th>
+          <th class="text-left">No </th>
+          <th class="text-left">Jenis Layanan</th>
+          <th class="text-left">Tanggal Usul</th>
+          <th class="text-left">Nama Pegawai</th>
+          <th class="text-left">Unit Organisasi</th>
+          <th class="text-left">Pengantar</th>
           <th></th>
         </thead>
         <tbody>

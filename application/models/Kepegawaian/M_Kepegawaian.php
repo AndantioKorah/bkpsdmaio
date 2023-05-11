@@ -112,14 +112,101 @@ class M_Kepegawaian extends CI_Model
 
         public function openDetailDokumen($id, $jd){
             if($jd == 'pangkat'){
-                return $this->db->select('*, a.id as id_dokumen')
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegpangkat a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
                                 ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
                                 ->where('a.id', $id)
                                 ->get()->row_array();
+            } else if($jd == 'gajiberkala'){
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.peggajiberkala a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'jabatan'){
+                return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegjabatan a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.jabatan c','a.id_jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.eselon d','a.eselon = d.id_eselon')
+                                ->join('db_pegawai.jenisjab e','a.jenisjabatan = e.id_jenisjab')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'diklat'){
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegdiklat a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.diklat c','a.jenisdiklat = c.id_diklat')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'organisasi'){
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegorganisasi a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.organisasi c','a.jenis_organisasi = c.id_organisasi')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'penghargaan'){
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegpenghargaan a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'sumpahjanji'){
+                return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegsumpah a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.sumpah c', 'a.sumpahpeg = c.id_sumpah')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'keluarga'){
+                return $this->db->select('*,a.pendidikan as pendidikan_kel, a.tptlahir as tempat_lahir, a.tgllahir as tanggal_lahir, a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegkeluarga a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.keluarga c', 'a.hubkel = c.id_keluarga')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'penugasan'){
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegdatalain a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.jenistugas c', 'a.jenispenugasan = c.id_jenistugas')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'cuti'){
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegcuti a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.cuti c', 'a.jeniscuti = c.id_cuti')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'skp'){
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegskp a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'assesment'){
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegassesment a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'arsip'){
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.pegarsip a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->where('a.id', $id)
+                                ->get()->row_array();
             }
+            
+
+            
+            
+            
         }
 
         public function searchDokumenUsul($data){
@@ -145,9 +232,9 @@ class M_Kepegawaian extends CI_Model
                 $this->db->where('b.skpd', $data['unitkerja']);
             }
 
-            if($data['status'] != '0'){
-                $this->db->where('b.status', $data['status']);
-            }
+            // if($data['status'] != '0'){
+            //     $this->db->where('b.status', $data['status']);
+            // }
 
             if($data['nama']){
                 $this->db->like('b.nama', $data['nama']);
@@ -203,7 +290,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPangkatPegawai($nip,$kode){
-             $this->db->select('c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+             $this->db->select('c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                             c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -245,7 +332,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('c.id,c.status,d.nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+              $this->db->select('c.created_date,c.id,c.status,d.nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -265,7 +352,7 @@ class M_Kepegawaian extends CI_Model
 
 
         function getDiklat($nip,$kode){
-             $this->db->select('c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk')
+             $this->db->select('c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
@@ -283,7 +370,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getGajiBerkala($nip,$kode){
-             $this->db->select('c.id,c.status,c.masakerja,d.nm_pangkat,c.pejabat,c.nosk,c.tglsk,c.tmtgajiberkala,c.gambarsk')
+             $this->db->select('c.created_date,c.id,c.status,c.masakerja,d.nm_pangkat,c.pejabat,c.nosk,c.tglsk,c.tmtgajiberkala,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
@@ -389,8 +476,8 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
-                            ->where('a.flag_active', 1);
-                            // ->order_by('c.tglsk','desc')
+                            ->where('a.flag_active', 1)
+                            ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
                             }
@@ -439,7 +526,8 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.sumpah d', 'c.sumpahpeg = d.id_sumpah')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
-                            ->where('a.flag_active', 1);
+                            ->where('a.flag_active', 1)
+                            ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
                             }
@@ -1473,6 +1561,124 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
 
 
 
+}
+
+public function submitVerifikasiDokumen(){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+    $datapost = $this->input->post();
+   
+    $this->db->trans_begin();
+    $id = $datapost['id'];
+    $data["status"] = $datapost["verif"];
+    $data["keterangan"] = $datapost["keterangan"];
+    $data["tanggal_verif"] = date('Y-m-d h:i:s');
+    $data["id_m_user_verif"] = $this->general_library->getId();
+
+    $this->db->where('id', $id)
+        ->update('db_pegawai.'.$datapost['db_dokumen'], $data);
+
+
+    // if(trim($datapost["jenis_dokumen"]) == "pangkat"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegpangkat', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "gajiberkala"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.peggajiberkala', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "jabatan"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegjabatan', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "diklat"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegdiklat', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "organisasi"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegorganisasi', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "penghargaan"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegpenghargaan', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "sumpahjanji"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegsumpah', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "keluarga"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegkeluarga', $data);
+    // } else if(trim($datapost["jenis_dokumen"]) == "penugasan"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegpenugasan', $data);
+    // }
+   
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res['code'] = 1;
+        $res['message'] = 'Terjadi Kesalahan';
+        $res['data'] = null;
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+}
+
+
+
+
+
+public function batalSubmitVerifikasiDokumen(){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+    $datapost = $this->input->post();
+   
+    $this->db->trans_begin();
+    $id = $datapost['id_batal'];
+    $data["status"] = 1;
+    $data["keterangan"] = "";
+    // $data["tanggal_verif"] = date('Y-m-d h:i:s');
+    // $data["id_m_user_verif"] = $this->general_library->getId();
+    // dd($datapost);
+
+    // if(trim($datapost["jenis_dokumen_batal"]) == "pangkat"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegpangkat', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "gajiberkala"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.peggajiberkala', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "jabatan"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegjabatan', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "diklat"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegdiklat', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "organisasi"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegorganisasi', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "penghargaan"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegpenghargaan', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "sumpahjanji"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegsumpah', $data);
+    // } else if(trim($datapost["jenis_dokumen_batal"]) == "keluarga"){
+    //     $this->db->where('id', $id)
+    //     ->update('db_pegawai.pegkeluarga', $data);
+    // }
+   
+    $this->db->where('id', $id)
+    ->update('db_pegawai.'.$datapost['db_dokumen_batal'], $data);
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res['code'] = 1;
+        $res['message'] = 'Terjadi Kesalahan';
+        $res['data'] = null;
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
 }
     
 

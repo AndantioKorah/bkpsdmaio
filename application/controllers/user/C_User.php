@@ -350,6 +350,10 @@ class C_User extends CI_Controller
         return $this->load->view('user/V_DetailAbsensiPegawai', $data);
     }
 
+    public function loadHeaderCetakan(){
+        $this->load->view('adminkit/partials/V_HeaderRekapAbsen', null);
+    }
+
     public function searchPegawaiNavbar(){
         $data['result'] = $this->user->searchPegawai($this->input->post());
         $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);

@@ -64,10 +64,12 @@ class C_Rekap extends CI_Controller
         if($flag_pdf == 1){
             $data['flag_pdf'] = 1;
             $mpdf = new \Mpdf\Mpdf([
-                'format' => 'Legal-L'
+                'format' => 'Legal-L',
+                'debug' => true
             ]);
             $html = $this->load->view('rekap/V_RekapAbsensiResultNew', $data, true);
             $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
             $mpdf->Output('Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf', 'D');
         } else {
             $this->load->view('rekap/V_RekapAbsensiResultNew', $data);

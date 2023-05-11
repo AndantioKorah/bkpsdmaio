@@ -14,7 +14,7 @@
             </style>
         </head>
         <?php
-            if(isset($flag_print) && $flag_print == 1){
+            if(isset($flag_print) && $flag_print == 1 && !isset($flag_pdf)){
                 $filename = $nama_file;
                 header("Content-type: application/vnd-ms-excel");
                 header("Content-Disposition: attachment; filename=\"$filename\""); 
@@ -25,6 +25,10 @@
         <?php } else { ?>
             <body>
         <?php } ?>
+            <?php if(isset($flag_print) && $flag_print == 1 && isset($flag_pdf) && $flag_pdf == 1){
+                $this->load->view('adminkit/partials/V_HeaderRekapAbsen', '');
+            ?>
+            <?php } ?>
             <center>
                 <h5 style="font-size: 20px; text-align: center;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>

@@ -1,18 +1,29 @@
 <style>
-              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-              background-color: #222e3c;
-              color: #fff;
-              }
-              .nav-pills .nav-link {
-              color: #000;
-              border: 0;
-              border-radius: var(--bs-nav-pills-border-radius);
-          }
+  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #222e3c;
+    color: #fff;
+  }
+  .nav-pills .nav-link {
+    color: #000;
+    border: 0;
+    border-radius: var(--bs-nav-pills-border-radius);
+  }
 
-        .customTextarea { width: 100% !important; height: 75px!important; }
-       
+  .nav-link-layanan{
+    padding: 5px !important;
+    font-size: .7rem;
+    color: black;
+    border-right: .5px solid var(--primary-color) !important;
+    border-radius: 0px !important;
+    border-bottom-left-radius: 0px;
+  }
 
-         
+  .nav-item-layanan:hover, .nav-link-layanan:hover{
+    color: white !important;
+    background-color: #222e3c91;
+    border-color: 1px solid var(--primary-color) !important;
+  }
+  .customTextarea { width: 100% !important; height: 75px!important; }
 </style>
 
 
@@ -26,11 +37,10 @@
           <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
  
  <a href="<?= base_url('kepegawaian/teknis');?>">
-    <button  class="btn btn-primary nav-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
-    </a>
- 
+    <button class="btn btn-primary nav-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
+  </a>
   </ul>
-      <hr>
+      <hr style="margin-top: 6px;">
       
 					<iframe id="" style="width: 100%; height: 80vh;"
 						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
@@ -49,79 +59,79 @@
 
   <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
   <?php if (in_array($result[0]['jenis_layanan'], $pangkat)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="getFile(file='pangkat')" class="nav-link" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $gaji_berkala)) { ?>
-  <li class="nav-item" role="presentation">
-    <button  onclick="loadFormGajiBerkala()" class="nav-link" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button  onclick="loadFormGajiBerkala()" class="nav-link nav-link-layanan" id="pills-berkala-tab" data-bs-toggle="pill" data-bs-target="#pills-berkala" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Gaji Berkala</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $pendidikan)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPendidikan()" class="nav-link" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormPendidikan()" class="nav-link nav-link-layanan" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $jabatan)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="getFile(file='jabatan')" class="nav-link" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='jabatan')" class="nav-link nav-link-layanan" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
   </li>
   <?php } ?>
 
  <?php if (in_array($result[0]['jenis_layanan'], $diklat)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormDiklat()" class="nav-link" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormDiklat()" class="nav-link nav-link-layanan" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $organisasi)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormOrganisasi()" class="nav-link" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormOrganisasi()" class="nav-link nav-link-layanan" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $penghargaan)) { ?>
-  <li class="nav-item" role="presentation">
-    <button onclick="loadFormPenghargaan()" class="nav-link" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormPenghargaan()" class="nav-link nav-link-layanan" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
   </li>
   <?php } ?>
 
  <?php if (in_array($result[0]['jenis_layanan'], $sj)) { ?>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $keluarga)) { ?>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $penugasan)) { ?>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $cuti)) { ?>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
   </li>
   <?php } ?>
 
   <?php if (in_array($result[0]['jenis_layanan'], $arsip)) { ?>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
   </li>
   <?php } ?>
 
 </ul>
-<hr>
+<hr style="margin-top: 10px;">
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
   <div id="form_pangkat" style="margin-left:10px;"></div>
@@ -151,6 +161,8 @@
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
 </div>
 <span id="ket"></span>
+<div id="divloader" class="col-lg-12 text-center">
+</div>
 <iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe>
 
 				</div>
@@ -223,7 +235,6 @@ var status = "<?= $result[0]['status'];?>";
 
 $(function(){
   $('.sidebar').hide()
-
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()
     $('#btn_verifikasi').show()
@@ -238,7 +249,8 @@ $(function(){
 
 
   function getFile(file) {
-  
+        $('#divloader').append(divLoaderNavy)
+        $('#view_file_verif').attr('src','');
         var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
         var id_peg = "<?=$result[0]['id_peg'];?>";
         var base_url = "<?= base_url();?>";
@@ -258,6 +270,7 @@ $(function(){
         dataType : "JSON",
         data : {id_peg:id_peg,jenis_layanan:jenis_layanan,file:file},
         success: function(data){
+        $('#divloader').html('')
         console.log(data)
         if(data != ""){
           if(data[0].gambarsk != ""){

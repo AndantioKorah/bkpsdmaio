@@ -392,6 +392,15 @@ class General_library
         return $this->nikita->m_user->getTppPegawai($this->getId(), $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
     }
 
+    public function getPaguTppPegawaiByIdPegawai($id_m_user, $bulan, $tahun){
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($id_m_user);
+        $data['id_unitkerja'] = $unitkerja['id_unitkerja'];
+        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $id_m_user);
+        // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
+        $produktivitas_kerja = $this->getProduktivitasKerjaPegawai($id_m_user, $bulan, $tahun);
+        return $this->nikita->m_user->getTppPegawai($id_m_user, $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
+    }
+
     public function test(){
         return 'tiokors';
     }

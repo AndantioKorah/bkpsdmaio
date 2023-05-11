@@ -24,6 +24,27 @@
     border-color: 1px solid var(--primary-color) !important;
   }
   .customTextarea { width: 100% !important; height: 75px!important; }
+
+  .sp_profil{
+    font-size: .9rem;
+    font-weight: bold;
+  }
+
+  .sp_profil_sm{
+    font-size: .8rem;
+    font-weight: bold;
+  }
+
+  .sp_label{
+    font-size: .6rem;
+    font-style: italic;
+    font-weight: 600;
+    color: grey;
+  }
+
+  .div_label{
+    margin-bottom: -5px;
+  }
 </style>
 
 
@@ -58,6 +79,14 @@
 </style>
 
   <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
+    data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="openPresensiTab()" class="nav-link nav-link-layanan" id="pills-presensi-tab"
+    data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-presensi" aria-selected="false">Presensi</button>
+  </li>
   <?php if (in_array($result[0]['jenis_layanan'], $pangkat)) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='pangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pangkat</button>
@@ -159,6 +188,160 @@
   <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
   <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">...</div>
+  <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab"></div>
+  <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <?php if($result[0]['statuspeg'] == 1){ ?>
+            <div class="col-lg-12 text-left">
+              <h3><span class="badge badge-danger">CPNS</span></h3>
+            </div>
+          <?php } ?>
+          <div class="col-lg-12 text-center">
+            <img style="width: 120px; height: 120px" class="img-fluid rounded-circle mb-2 b-lazy"
+              src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
+              data-src="<?=$this->general_library->getFotoPegawai($result[0]['fotopeg'])?>" />
+          </div>
+          <div class="col-lg-12 text-center">
+            <span class="sp_profil">
+              <?=$result[0]['gelar1'] != '' ? $result[0]['gelar1'].' ' : ''.$result[0]['nama_pegawai'].$result[0]['gelar2']?>
+            </span>
+          </div>
+          <div class="col-lg-12 text-center" >
+            <span class="sp_profil">
+              <?=formatNip($result[0]['nipbaru_ws'])?>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-12 div_label text-left">
+            <span class="sp_label">
+              Perangkat Daerah
+            </span>
+          </div>
+          <div class="col-lg-12 text-left" >
+            <span class="sp_profil_sm">
+              <?=($result[0]['nm_unitkerja'])?>
+            </span>
+          </div>
+          <div class="col-lg-12"></div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Pangkat / Gol. Ruang
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($result[0]['nm_pangkat'])?>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  TMT Pangkat
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nama_jabatan'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtjabatan'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  NIK (Nomor Induk Kependudukan)
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nik'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  Agama
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nm_agama'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Tempat, Tanggal Lahir
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                  <?=($result[0]['tptlahir'].', '.formatDateNamaBulan($result[0]['tgllahir']))?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  Jenis Kelamin / Umur
+                </span>
+              </div>
+              <div class="col-lg-12 text-right">
+                <span class="sp_profil_sm">
+                  <?=$result[0]['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $result[0]['tgllahir'], ['tahun', 'bulan'])?>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 div_label text-left">
+            <span class="sp_label">
+              Alamat
+            </span>
+          </div>
+          <div class="col-lg-12 text-left">
+            <span class="sp_profil_sm sp_profil_alamat">
+              <?=($result[0]['alamat'])?>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
@@ -234,7 +417,8 @@ var nip = "<?= $result[0]['nip'];?>";
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
-  $('.sidebar').hide()
+  $('#view_file_verif').hide()
+  // $('.sidebar').toggle()
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()
     $('#btn_verifikasi').show()
@@ -247,8 +431,21 @@ $(function(){
    }
   })
 
+function openProfileTab(){
+  $('#view_file_verif').hide()
+}
+
+function openPresensiTab(){
+  $('#view_file_verif').hide()
+  $('#pills-presensi').html('')
+  $('#pills-presensi').append(divLoaderNavy)
+  $('#pills-presensi').load('<?=base_url("kepegawaian/C_Kepegawaian/openPresensiTab/".$result[0]['id_m_user'])?>', function(){
+    $('#loader').hide()
+  })
+}
 
   function getFile(file) {
+        $('#view_file_verif').show()
         $('#divloader').append(divLoaderNavy)
         $('#view_file_verif').attr('src','');
         var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";

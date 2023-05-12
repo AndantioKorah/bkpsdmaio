@@ -19,6 +19,7 @@ function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper->load->model('user/M_User', 'm_user');
 
     $list_hari_libur = $helper->m_user->getListHariLibur($tanggal_awal, $tanggal_akhir);
+    dd($list_hari_libur);
     $hari_libur = null;
     if($list_hari_libur){
         foreach($list_hari_libur as $lhl){

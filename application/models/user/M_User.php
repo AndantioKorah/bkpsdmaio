@@ -1228,33 +1228,16 @@
             $explode_awal = explode("-", $tanggal_awal);
             $explode_akhir = explode("-", $tanggal_akhir);
             
-            $list_hari_libur_awal = $this->db->select('*')
-                                        ->from('t_hari_libur')
-                                        ->where('bulan', floatval($explode_awal[1]))
-                                        ->where('tahun', floatval($explode_awal[2]))
-                                        ->where('flag_active', 1)
-                                        ->where('flag_hari_libur_nasional', 1)
-                                        ->get()->result_array();
-
-            $list_hari_libur_akhir = $this->db->select('*')
-                                        ->from('t_hari_libur')
-                                        ->where('bulan', floatval($explode_akhir[1]))
-                                        ->where('tahun', floatval($explode_akhir[2]))
-                                        ->where('flag_active', 1)
-                                        ->where('flag_hari_libur_nasional', 1)
-                                        ->get()->result_array();
-                                        
-            $result = $list_hari_libur_awal;
-
-            if($result){
-                foreach($list_hari_libur_akhir as $lhla){
-                    $result[] = $lhla;
-                }
-            } else {
-                $result = $list_hari_libur_akhir;
-            }
-
-            return $result;
+            return $this->db->select('*')
+                        ->from('t_hari_libur')
+                        ->where('bulan >=', floatval($explode_awal[1]))
+                        ->where('bulan <=', floatval($explode_akhir[1]))
+                        ->where('tahun >=', floatval($explode_awal[0]))
+                        ->where('tahun <=', floatval($explode_akhir[0]))
+                        ->where('flag_active', 1)
+                        ->where('flag_hari_libur_nasional', 1)
+                        ->order_by('tanggal', 'asc')
+                        ->get()->result_array();
         }
 
         public function countHariKerjaBulanan($bulan, $tahun){

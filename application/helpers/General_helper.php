@@ -14,6 +14,35 @@ function render($pageContent, $parent_active, $active, $data)
     $CI->load->view('adminkit/base/V_BaseLayout', $data);
 }
 
+function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
+    $helper = &get_instance();
+    $helper->load->model('user/M_User', 'm_user');
+
+    $list_hari_libur = $helper->m_user->getListHariLibur($tanggal_awal, $tanggal_akhir);
+    $hari_libur = null;
+    if($list_hari_libur){
+        foreach($list_hari_libur as $lhl){
+            $hari_libur[$lhl['tanggal']] = $lhl;
+        }
+    }
+
+    $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
+    $list_hari_kerja = null;
+
+    $jhk = 0;
+    $hk = 0;
+    foreach($list_hari as $lh){
+        if(!isset($hari_libur[$lh]) && getNamaHari($lh) != 'Sabtu' && getNamaHari($lh) != 'Minggu'){
+            $list_hari_kerja[$lh] = $lh;
+            $jhk++;
+            if($lh <= date('Y-m-d')){
+                $hk++;
+            }
+        }
+    }
+    return [$jhk, $hari_libur, $list_hari, $list_hari_kerja, $hk];
+}
+
 function formatNip($nip)
 {
     $str = strlen($nip);

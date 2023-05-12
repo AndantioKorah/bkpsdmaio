@@ -1224,6 +1224,22 @@
                             ->get()->row_array();
         }
 
+        public function getListHariLibur($tanggal_awal, $tanggal_akhir){
+            $explode_awal = explode("-", $tanggal_awal);
+            $explode_akhir = explode("-", $tanggal_akhir);
+            
+            return $this->db->select('*')
+                        ->from('t_hari_libur')
+                        ->where('bulan >=', floatval($explode_awal[1]))
+                        ->where('bulan <=', floatval($explode_akhir[1]))
+                        ->where('tahun >=', floatval($explode_awal[0]))
+                        ->where('tahun <=', floatval($explode_akhir[0]))
+                        ->where('flag_active', 1)
+                        ->where('flag_hari_libur_nasional', 1)
+                        ->order_by('tanggal', 'asc')
+                        ->get()->result_array();
+        }
+
         public function countHariKerjaBulanan($bulan, $tahun){
             $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
             // $bulan = floatval($bulan) < 10 ? '0'.$bulan : $bulan;

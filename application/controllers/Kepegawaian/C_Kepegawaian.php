@@ -614,7 +614,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function CetakSurat($id_usul){
 		// $this->load->library('pdf');
-		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan=null);
 		// dd($data);
 		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
   			
@@ -654,8 +654,24 @@ class C_Kepegawaian extends CI_Controller
 		$data['arsip'] = array(0);
 		$data['jenis_layanan'] = $jenis_layanan;
 		
-			render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
-    }
+	
+
+		render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
+	}
+
+	public function openPresensiTab($id){
+		$data['id_pegawai'] = $id;
+		$this->load->view('kepegawaian/V_VerifikasiLayananPresensi', $data);
+	}
+	
+	public function getDataPresensiPegawai($id)
+	{
+		$data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id, $this->input->post('bulan'), $this->input->post('tahun'));
+		$data['result']['param']['bulan'] = $this->input->post('bulan');
+		$data['result']['param']['tahun'] = $this->input->post('tahun');
+        return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+		// $this->load->view('kepegawaian/V_DetailPresensiPegawai', $data);
+	}
 
 	public function loadFormLayanan($id){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();

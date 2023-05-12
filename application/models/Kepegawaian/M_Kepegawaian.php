@@ -1333,22 +1333,42 @@ class M_Kepegawaian extends CI_Model
                         ->get()->result_array();
     }
 
-    function getDataUsulLayanan($id_usul,$jenis_layanan){
-        if($jenis_layanan == 3){
-            return $this->db->select('j.nm_cuti,d.jenis_lama_cuti,d.jenis_cuti,d.nomor_surat,d.tanggal_surat,j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan,h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
-            ->from('m_user a')
-            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-            ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-            ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
-            ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-            ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
-            ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
-            ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
-            ->join('db_siladen.m_cuti j', 'd.jenis_cuti = j.id_cuti')
-            ->where('c.id_usul', $id_usul)
-            ->get()->result_array();
-        }
+    // function getDataUsulLayanan($id_usul,$jenis_layanan){
+    //     if($jenis_layanan == 3){
+    //         return $this->db->select('j.nm_cuti,d.jenis_lama_cuti,d.jenis_cuti,d.nomor_surat,d.tanggal_surat,j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan,h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+    //         ->from('m_user a')
+    //         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    //         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+    //         ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+    //         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+    //         ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+    //         ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+    //         ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+    //         ->join('db_siladen.m_cuti j', 'd.jenis_cuti = j.id_cuti')
+    //         ->where('c.id_usul', $id_usul)
+    //         ->get()->result_array();
+    //     }
+    // }
         
+    function getDataUsulLayanan($id_usul,$jenis_layanan){
+        return $this->db->select('d.jenis_lama_cuti,d.jenis_cuti,d.nomor_surat,d.tanggal_surat,
+                        j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan, b.nik, i.nm_agama,
+                        h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
+                        c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,
+                        c.file_pengantar,a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
+                        a.id as id_m_user, b.jk, b.alamat')
+                        ->from('m_user a')
+                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                        ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+                        ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+                        ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+                        ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+                        ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+                        ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+                        ->join('db_siladen.m_cuti j', 'd.jenis_cuti = j.id_cuti')
+                        ->join('db_pegawai.agama i', 'b.agama = id_agama')
+                        ->where('c.id_usul', $id_usul)
+                        ->get()->result_array();
     }
 
 

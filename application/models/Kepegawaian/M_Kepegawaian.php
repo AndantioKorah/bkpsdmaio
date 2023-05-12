@@ -1241,10 +1241,11 @@ class M_Kepegawaian extends CI_Model
             $datacuti['tanggal_mulai']      = $this->input->post('tanggal_mulai');
             $datacuti['tanggal_selesai']      = $this->input->post('tanggal_selesai');
             $datacuti['jenis_cuti']      = $this->input->post('jenis_cuti');
-            // $datacuti['file_pengantar']      = "$nama_file.pdf";
-            $datacuti['usul_by']      = $this->general_library->getId();
-            // $datacuti['id_user']      = $this->general_library->getId();
-            $this->db->insert('db_siladen.nominatif_usul', $datacuti);
+            $datacuti['file_pengantar']      = "$nama_file.pdf";
+            // $datacuti['usul_by']      = $this->general_library->getId();
+            $datacuti['id_user']      = $this->general_library->getId();
+            $datacuti['created_by']      = $this->general_library->getId();
+            $this->db->insert('db_siladen.t_cuti', $datacuti);
             } 
         
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -1291,7 +1292,7 @@ class M_Kepegawaian extends CI_Model
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-            ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+            ->join('db_siladen.t_cuti d', 'c.id_usul = d.id_usul')
             ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
             ->join('m_status_verif f', 'c.status = f.id')
             ->join('db_siladen.m_cuti g', 'g.id_cuti = d.jenis_cuti')
@@ -1400,15 +1401,28 @@ class M_Kepegawaian extends CI_Model
         
     }
 
+    // function getAllUsulLayananAdmin($id){
+    //     return $this->db->select('d.*,g.nm_cuti,d.nomor_surat,d.tanggal_surat,c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+    //                     ->from('m_user a')
+    //                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    //                     ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+    //                     ->join('db_siladen.t_cuti d', 'c.id_usul = d.id_usul')
+    //                     ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+    //                     ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
+    //                     ->join('db_siladen.m_cuti g', 'd.jenis_cuti = g.id_cuti')
+    //                     ->where('c.jenis_layanan', 3)
+    //                     ->where('c.status', $id)
+    //                     ->order_by('c.id_usul', 'desc')
+    //                     ->get()->result_array();
+    // }
+
     function getAllUsulLayananAdmin($id){
-        return $this->db->select('d.*,g.nm_cuti,d.nomor_surat,d.tanggal_surat,c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+        return $this->db->select('c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-                        ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
                         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
-                        ->join('db_siladen.m_cuti g', 'd.jenis_cuti = g.id_cuti')
                         ->where('c.jenis_layanan', 3)
                         ->where('c.status', $id)
                         ->order_by('c.id_usul', 'desc')
@@ -1498,7 +1512,7 @@ class M_Kepegawaian extends CI_Model
     {      
         $id = $this->input->post('id');
         $this->db->select('*')
-            ->from('db_siladen.nominatif_usul as a')
+            ->from('db_siladen.t_cuti as a')
             ->where('a.id_usul', $id)
             ->limit(1);
             return $this->db->get()->result_array();
@@ -1696,6 +1710,20 @@ public function batalSubmitVerifikasiDokumen(){
     }
 
     return $res;
+}
+
+public function getDetailLayanan()
+{      
+    $id = $this->input->post('id_usul');
+    if($this->input->post('layanan') == "Cuti"){
+        $this->db->select('*')
+        ->from('db_siladen.t_cuti as a')
+        ->join('db_siladen.m_cuti b', 'b.id_cuti = a.jenis_cuti')
+        ->where('a.id_usul', $id)
+        ->limit(1);
+        return $this->db->get()->result_array();
+    } 
+
 }
     
 

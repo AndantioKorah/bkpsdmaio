@@ -134,9 +134,9 @@
   })
 
   function openFile(filename){
-    var url = "http://localhost/bkpsdmaio/dokumen_layanan/cuti/"
+    var url = "<?=base_url();?>dokumen_layanan/cuti/"
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file').attr('src', url+nip+'/'+filename)
+    $('#iframe_view_file_pengantar').attr('src', url+nip+'/'+filename)
   }
 
   function deleteUsulLayanan(id,jenis_layanan){

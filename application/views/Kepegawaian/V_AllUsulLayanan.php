@@ -176,7 +176,7 @@
   })
 
   function openFile(filename,nip,layanan){
-    var url = "http://localhost/bkpsdmaio/dokumen_layanan/"+layanan+"/"
+    var url = "<?=base_url();?>dokumen_layanan/"+layanan+"/"
     $('#iframe_view_file').attr('src', url+nip+'/'+filename)
   }
 

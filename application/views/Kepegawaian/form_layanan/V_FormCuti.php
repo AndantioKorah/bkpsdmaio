@@ -121,16 +121,19 @@
 	</div>
 
 
-	<div class="form-group">
-		<label>File Pengantar <br>
-    Surat Keterangan Sakit/Dokter (bagi ASN yang mengajukan cuti sakit) <br>
- Surat Keterangan dari Pihak yang berwenang (bagi ASN yang mengajukan cuti karena alasan penting) <br>
- <b style="color:red">*File diatas dijadikan 1 dalam bentuk PDF</b>
-
-    </label>
+	<div class="mb-3">
+		<label>File Pengantar</label>
 		<input class="form-control my-image-field" type="file" id="file_pengantar" name="file" />
 	</div>
 
+  <div class="form-group">
+		<label>Surat Keterangan Sakit/Dokter (bagi ASN yang mengajukan cuti sakit) <br>
+          Surat Keterangan dari Pihak yang berwenang (bagi ASN yang mengajukan cuti karena alasan penting) <br>
+    </label>
+		<input class="form-control my-image-field" type="file" id="" name="" />
+	</div>
+
+<br>
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

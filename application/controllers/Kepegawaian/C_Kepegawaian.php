@@ -602,6 +602,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function loadListUsulLayanan($id){
+		// dd($jenis_layanan);
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
 		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
@@ -749,6 +750,12 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->batalSubmitVerifikasiDokumen());
 	}
+
+	public function getDetailLayanan()
+    {
+        $data = $this->kepegawaian->getDetailLayanan();
+        echo json_encode($data);
+    }
 
 
 

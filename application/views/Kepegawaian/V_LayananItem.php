@@ -20,9 +20,9 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs)?> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="">
-              <a onclick="openFile('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>')" 
-              data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" 
-              data-tgl_selesai="<?=$rs['tanggal_selesai']?>" 
+              <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')" 
+              data-toggle="modal" 
+             
               data-nama_pegawai="<?=getNamaPegawaiFull($rs)?>" 
               data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a>
 
@@ -68,7 +68,7 @@
       </table>
 
       <script>
-                 $(document).on("click", ".open-DetailCuti", function () {
+    $(document).on("click", ".open-DetailCuti", function () {
      var jenis = $(this).data('jenis');
      var tgl_mulai = $(this).data('tgl_mulai');
      var tgl_selesai = $(this).data('tgl_selesai');
@@ -244,5 +244,27 @@ $('#form_nomor_surat').on('submit', function(e){
     });
 
 
+
+    function openDetailLayanan(filename,nip,layanan,id_usul){
+    // alert(id_usul)
+
+    $.ajax({
+        type : "POST",
+        url  : base_url + 'kepegawaian/C_Kepegawaian/getDetailLayanan',
+        dataType : "JSON",
+        data : {id_usul:id_usul,layanan:layanan},
+        success: function(data){
+
+        $(".modal-body #jenis_cuti").val( data[0].nm_cuti );
+        $(".modal-body #tanggal_mulai").val( data[0].tanggal_mulai );
+        $(".modal-body #tanggal_selesai").val( data[0].tanggal_selesai );
+
+          
+         }
+        });
+
+    var url = "<?=base_url();?>dokumen_layanan/"+layanan+"/"
+    $('#iframe_view_file').attr('src', url+nip+'/'+filename)
+  }
 
 </script>

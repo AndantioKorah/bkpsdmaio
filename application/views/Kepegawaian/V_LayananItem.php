@@ -8,7 +8,7 @@
           <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Nama Pegawai</th>
           <th class="text-left">Unit Organisasi</th>
-          <th class="text-left">Pengantar</th>
+          <th class="text-left">Pengantar </th>
           <th></th>
         </thead>
         <tbody>
@@ -17,21 +17,24 @@
               <td class=""><?=$no++;?></td>
               <td class="text-left"><?=$rs['nama_layanan']?></td>
               <td class=""><?=formatDateNamaBulan($rs['tanggal_usul'])?></td>
-              <td class="text-left"><?=$rs['nama_pegawai']?></td>
+              <td class="text-left"> <?=getNamaPegawaiFull($rs)?> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="">
-                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-success">
-                Lihat <i class="fa fa-search"></i></button>
+              <a onclick="openFile('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>')" 
+              data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" 
+              data-tgl_selesai="<?=$rs['tanggal_selesai']?>" 
+              data-nama_pegawai="<?=getNamaPegawaiFull($rs)?>" 
+              data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a>
+
               </td>
              
               <td>
 
               <div class="btn-group" role="group" aria-label="Basic example">
-              <a data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" data-tgl_selesai="<?=$rs['tanggal_selesai']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> </a>
               &nbsp;
              
               <?php if($rs['status'] == 0) { ?> 
-              <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id_usul']?>">
+              <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>
@@ -69,9 +72,13 @@
      var jenis = $(this).data('jenis');
      var tgl_mulai = $(this).data('tgl_mulai');
      var tgl_selesai = $(this).data('tgl_selesai');
+     var nama_pegawai = $(this).data('nama_pegawai');
+     var nip = $(this).data('nip');
      $(".modal-body #jenis_cuti").val( jenis );
      $(".modal-body #tanggal_mulai").val( tgl_mulai );
      $(".modal-body #tanggal_selesai").val( tgl_selesai );
+     $(".modal-body #nama_pegawai").html( nama_pegawai );
+     $(".modal-body #nip").html( nip );
     });
               </script>
 

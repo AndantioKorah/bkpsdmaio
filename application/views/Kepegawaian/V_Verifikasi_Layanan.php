@@ -52,19 +52,45 @@
 <div class="container-fluid pt-2" style="background-color:#fff;">
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
+   <div class="12">
+   <a href="<?= base_url('kepegawaian/teknis');?>">
+    <button  class="btn btn-primary nav-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
+  </a>
+  
+  <?php if($jenis_layanan == 3) { ?>
+   <table style="width: 100%;" class="table table_dok_detail">
+          <tr>
+            <td class="td-lab-dd">Jenis Cuti</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"> <?=$result[0]['nm_cuti'];?></td>
+          </tr>
+          <tr>
+            <td class="td-lab-dd">Tanggal Mulai</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"><?=$result[0]['tanggal_mulai'];?></td>
+          </tr>
+          <tr>
+            <td class="td-lab-dd">Tanggal Selesai</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"><?=$result[0]['tanggal_selesai'];?></td>
+          </tr>
+        </table>
+        <?php } ?>
+   </div>
+
+
 			<div class="row">
 				<div class="col-md-6" style="border-right: 5px solid black;">
 					<!-- <span class="headerSection">Surat Pengantar</span> -->
-          <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
- 
- <a href="<?= base_url('kepegawaian/teknis');?>">
-    <button class="btn btn-primary nav-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
-  </a>
+  <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
+  <li class="nav-item nav-item-layanan " role="presentation">
+    <button class="nav-link nav-link-layanan active"  data-bs-toggle="pill" type="button" role="tab"  aria-selected="true">File Pengantar</button>
+  </li>
   </ul>
-      <hr style="margin-top: 6px;">
+      <hr style="margin-top: 10px;">
       
 					<iframe id="" style="width: 100%; height: 80vh;"
-						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
+						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
 
 				</div>
 				<div class="col-md-6" >
@@ -417,8 +443,9 @@ var nip = "<?= $result[0]['nip'];?>";
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
-  $('#view_file_verif').hide()
-  // $('.sidebar').toggle()
+
+  $( "#sidebar_toggle" ).trigger( "click" );
+
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()
     $('#btn_verifikasi').show()

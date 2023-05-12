@@ -614,7 +614,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function CetakSurat($id_usul){
 		// $this->load->library('pdf');
-		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan=null);
 		// dd($data);
 		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
   			
@@ -637,8 +637,8 @@ class C_Kepegawaian extends CI_Controller
     }
 
 
-	public function verifikasiLayanan($id_usul){
-		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul);
+	public function verifikasiLayanan($id_usul,$jenis_layanan){
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
 		// dd($data['result']);
 		$data['pangkat'] = array(3);
 		$data['gaji_berkala'] =  array(0);
@@ -652,6 +652,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['penugasan'] = array(0);
 		$data['cuti'] = array(0);
 		$data['arsip'] = array(0);
+		$data['jenis_layanan'] = $jenis_layanan;
+		
+	
 
 		render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
 	}

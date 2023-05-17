@@ -14,12 +14,20 @@ function render($pageContent, $parent_active, $active, $data)
     $CI->load->view('adminkit/base/V_BaseLayout', $data);
 }
 
+function validateKey($arr_needed, $arr_request){
+    foreach($arr_request as $ar){
+        if(!array_key_exists($ar, $arr_needed)){
+            return ['code' => 1, 'message' => "Unknown Key '".$ar."'"];
+        }
+    }
+    return ['code' => 0, 'message' => ''];
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');
 
     $list_hari_libur = $helper->m_user->getListHariLibur($tanggal_awal, $tanggal_akhir);
-    dd($list_hari_libur);
     $hari_libur = null;
     if($list_hari_libur){
         foreach($list_hari_libur as $lhl){

@@ -23,19 +23,21 @@
               <td class="text-left"><?=$rs['tanggal_mulai']?></td>
               <td class="text-left"><?=$rs['tanggal_selesai']?></td> -->
               <td class="text-left">
-              <?php if($rs['jenis_layanan'] == 3) { ?>
-                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+              
+                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>')" 
+                data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
-                <?php } ?>
+                
               </td>
               <td><?=$rs['status_verif']?></td>
               <td>
-              <?php if($rs['status'] == 0) { ?>
               <?php if($rs['jenis_layanan'] == 3) { ?>
               <a data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" data-tgl_selesai="<?=$rs['tanggal_selesai']?>" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> </a>
               <?php } else if($rs['jenis_layanan'] == 12) { ?>
               <a data-toggle="modal" data-ket="<?=$rs['keterangan_perbaikan']?>" class="open-DetailPerbaikanDataKepeg btn btn-sm btn-info" href="#modal_detail_perbaikan_data"><i class="fa fa-search"></i> </a>
               <?php } ?>
+              <?php if($rs['status'] == 0) { ?>
+              
               <div class="btn-group" role="group" aria-label="Basic example">
                         <!-- <span href="#modal_detail_layanan" data-toggle="modal"  >
                                 <button href="#modal_detail_layanan" data-toggle="tooltip" class="btn btn-sm btn-info mr-1"  data-placement="top" title="Edit" 
@@ -177,6 +179,31 @@
      var ket = $(this).data('ket');
      $(".modal-body #keterangan_perbaikan").val( ket );
     });
+
+
+    function openDetailLayanan(filename,nip,layanan,id_usul){
+    // alert(id_usul)
+
+    $.ajax({
+        type : "POST",
+        url  : base_url + 'kepegawaian/C_Kepegawaian/getDetailLayanan',
+        dataType : "JSON",
+        data : {id_usul:id_usul,layanan:layanan},
+        success: function(data){
+       
+        $(".modal-body #jenis_cuti").val( data[0].nm_cuti );
+        $(".modal-body #tanggal_mulai").val( data[0].tanggal_mulai );
+        $(".modal-body #tanggal_selesai").val( data[0].tanggal_selesai );
+        $(".modal-body #nomor_surat").val( data[0].nomor_surat );
+        $(".modal-body #tanggal_surat").val( data[0].tanggal_surat );
+        $('.modal-body #id_usul').val(data[0].id_usul); 
+        $('.modal-body #jenis_layanan').val(data[0].jenis_layanan);   
+         }
+        });
+
+    var url = "<?=base_url();?>dokumen_layanan/"+layanan+"/"
+    $('#iframe_view_file').attr('src', url+nip+'/'+filename)
+  }
 
     
 

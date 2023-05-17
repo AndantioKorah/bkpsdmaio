@@ -246,6 +246,9 @@
                 <button onclick="loadFormAssesment()" class="nav-link nav-link-profile" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & PNS</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button  onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
             </ul>
@@ -291,6 +294,10 @@
               <div class="tab-pane fade" id="pills-assesment" role="tabpanel" aria-labelledby="pills-assesment-tab">
                 <div id="form_assesment"></div>
               </div>
+              <div class="tab-pane fade" id="pills-berkaspns" role="tabpanel" aria-labelledby="pills-berkaspns-tab">
+              <div id="form_berkaspns"></div>
+              </div>
+              
               <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
                 <div id="form_arsip"></div>
               </div>
@@ -423,6 +430,15 @@
     $('#loader').hide()    
     })
  }
+
+ function loadFormBerkasPns(){
+  $('#form_berkaspns').html(' ')
+    $('#form_berkaspns').append(divLoaderNavy)
+    $('#form_berkaspns').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormBerkasPns/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+ 
 
  
 

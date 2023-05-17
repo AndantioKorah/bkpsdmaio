@@ -541,6 +541,24 @@
         <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsiplain/').$result['gambarsk']?>"></iframe>
       </div>
     </div>
+    <?php } else if($param['jenisdokumen']['value'] == 'berkaspns') { ?>
+      <div class="row">
+      <div class="col-lg-6">
+        <table style="width: 100%;" class="table table_dok_detail">
+          <tr>
+            <td class="td-lab-dd">Jenis SK</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?php if($result['jenissk'] == 1) echo 'SK CPNS'; else echo 'SK PNS';?> </td>
+          </tr>
+   
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <span style="font-weight: bold;">File</span>
+        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipberkaspns/').$result['file']?>"></iframe>
+      </div>
+    </div>
       <?php } ?>
     <div class="row">
    

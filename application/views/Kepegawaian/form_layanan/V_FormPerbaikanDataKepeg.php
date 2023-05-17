@@ -11,12 +11,16 @@
 			value="<?= date('Y-m-d');?>">
 	</div>
 
-
+<!-- 
 	<div class="mb-3">
 		<label heigt="200px;" for="" class="form-label ">Perbaikan data yang dimaksud</label>
 		<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="keterangan_perbaikan" id="keterangan_perbaikan"></textarea>
-	</div>
+	</div> -->
 
+  <div class="mb-3">
+		<label>File Pengantar</label>
+		<input class="form-control my-image-field" type="file" id="file_pengantar" name="berkas[]" />
+	</div>
 
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
@@ -36,12 +40,12 @@
         e.preventDefault();
         var formvalue = $('#form_perbaikan_data');
         var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('file_pengantar').files.length;
+        var ins = document.getElementById('file_pengantar').files.length;
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }       
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }       
       
       
         $.ajax({  

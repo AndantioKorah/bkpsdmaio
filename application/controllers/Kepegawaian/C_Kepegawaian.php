@@ -24,6 +24,13 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListSkp', $data);
 	}
 
+	public function loadListBerkasPns($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getBerkasPns($nip,$kode);
+		// dd($data);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListBerkasPns', $data);
+	}
+
 
 	public function loadListOrganisasi($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getOrganisasi($nip,$kode);
@@ -379,6 +386,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_dokumen']['pegarsip']['nama'] = 'Arsip Lainnya';
 		$data['list_dokumen']['pegarsip']['value'] = 'arsip';
 
+		$data['list_dokumen']['pegberkaspns']['db'] = 'pegberkaspns';
+		$data['list_dokumen']['pegberkaspns']['nama'] = 'SK CPNS & PNS';
+		$data['list_dokumen']['pegberkaspns']['value'] = 'berkaspns';
+
 		
 		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
         render('kepegawaian/V_VerifikasiDokumen', '', '', $data);
@@ -527,6 +538,17 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadSkp', $data);
     }
 
+	public function loadFormBerkasPns($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 2);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadBerkasPns', $data);
+    }
+
 	public function loadFormAssesment($nip){
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -592,7 +614,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function layanan(){
 		$data['jenis_layanan'] = $this->kepegawaian->getJenisLayanan();
-        render('kepegawaian/V_layanan', '', '', $data);
+        render('kepegawaian/V_Layanan', '', '', $data);
     }
 
 
@@ -613,9 +635,9 @@ class C_Kepegawaian extends CI_Controller
         render('kepegawaian/V_AllUsulLayanan', '', '', $data);
     }
 
-	public function CetakSurat($id_usul){
+	public function CetakSurat($id_usul,$jenis_layanan){
 		// $this->load->library('pdf');
-		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan=null);
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
 		// dd($data);
 		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
   			
@@ -641,9 +663,9 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayanan($id_usul,$jenis_layanan){
 		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
 		// dd($data['result']);
-		$data['pangkat'] = array(3);
+		$data['pangkat'] = array(3,12);
 		$data['gaji_berkala'] =  array(0);
-		$data['pendidikan'] = array(0);
+		$data['pendidikan'] = array(12);
 		$data['jabatan'] = array(3);
 		$data['diklat'] = array(0);
 		$data['organisasi'] = array(0);
@@ -653,7 +675,13 @@ class C_Kepegawaian extends CI_Controller
 		$data['penugasan'] = array(0);
 		$data['cuti'] = array(0);
 		$data['arsip'] = array(0);
+		
 		$data['jenis_layanan'] = $jenis_layanan;
+		if($jenis_layanan == 3){
+			$data['folder'] = "cuti";
+		} else if($jenis_layanan){
+			$data['folder'] = "perbaikan_data";
+		}
 		
 	
 
@@ -689,6 +717,7 @@ class C_Kepegawaian extends CI_Controller
 	public function getFile()
     {
         $data = $this->kepegawaian->getFile();
+		// dd($data);
         echo json_encode($data);
     }
 

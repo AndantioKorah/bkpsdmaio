@@ -123,14 +123,14 @@
 
 	<div class="mb-3">
 		<label>File Pengantar</label>
-		<input class="form-control my-image-field" type="file" id="file_pengantar" name="file" />
+		<input class="form-control my-image-field" type="file" id="file_pengantar" name="berkas[]" />
 	</div>
 
   <div class="form-group">
 		<label>Surat Keterangan Sakit/Dokter (bagi ASN yang mengajukan cuti sakit) <br>
           Surat Keterangan dari Pihak yang berwenang (bagi ASN yang mengajukan cuti karena alasan penting) <br>
     </label>
-		<input class="form-control my-image-field" type="file" id="" name="" />
+		<input class="form-control my-image-field" type="file" id="surat_keterangan" name="berkas[]" />
 	</div>
 
 <br>
@@ -252,8 +252,19 @@
         $(this).val('');
       }
 
-
       });
+
+      
+      $("#surat_keterangan").change(function (e) {
+
+        var extension = surat_keterangan.value.split('.')[1];
+
+        if (extension != "pdf"){
+          errortoast("Harus File PDF")
+          $(this).val('');
+        }
+
+        });
 
       function hitungTotalHari(){
       var total_hari = $('#lama_cuti').val()

@@ -385,6 +385,7 @@ class C_Kinerja extends CI_Controller
 
     public function insertDisiplinKerja()
     {
+        
         $this->load->library('image_lib');
         $countfiles = count($_FILES['files']['name']);
 
@@ -415,6 +416,14 @@ class C_Kinerja extends CI_Controller
 
                     //Load upload library
                     $this->load->library('upload', $config);
+                    if ( ! $this->upload->do_upload('file'))
+                    {
+                            $error = array('error' => $this->upload->display_errors());
+                            $res = array('msg' => $error, 'success' => false);
+                            return $res;
+                    }
+
+                  
                     if ($this->upload->do_upload('file')) {
 
                         $data = $this->upload->data();

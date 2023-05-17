@@ -12,7 +12,7 @@
         }
 
         public function insertLaporanKegiatan(){
-            // dd($_FILES);
+           
         $countfiles = count($_FILES['files']['name']);
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         $ress = 1;
@@ -36,7 +36,7 @@
               $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
               $_FILES['file']['error'] = $_FILES['files']['error'][$i];
               $_FILES['file']['size'] = $_FILES['files']['size'][$i];
-            //   dd($_FILES['file']['type']);
+              
 
               if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
                 $ress = 0;
@@ -53,7 +53,7 @@
            
               // Set preference
               $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-              $config['upload_path'] = './assets/bukti_kegiatan'; 
+              $config['upload_path'] = '../siladen/assets/bukti_kegiatan'; 
             //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
               $config['allowed_types'] = '*';
             //   $config['max_size'] = '5000'; // max_size in kb
@@ -63,6 +63,16 @@
               $this->load->library('upload',$config); 
             //   $res = array('msg' => 'something went wrong', 'success' => false);
               // File upload
+
+            //   dd($this->upload->do_upload('file'));
+              if ( ! $this->upload->do_upload('file'))
+              {
+                      $error = array('error' => $this->upload->display_errors());
+                      $res = array('msg' => $error, 'success' => false);
+                      return $res;
+                    //   dd($error);
+              }
+
               if($this->upload->do_upload('file')){
                
                $data = $this->upload->data(); 

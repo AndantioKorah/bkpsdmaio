@@ -49,13 +49,14 @@
               </button>
               </form>  &nbsp;
 
-                <a data-toggle="modal" data-id="<?=$rs['id_usul']?>" data-nomor="<?=$rs['nomor_surat']?>" data-tanggal="<?=$rs['tanggal_surat']?>" title="Input Nomor dan Tanggal Surat" class="open-AddBookDialog btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </a>
+                <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
+                data-toggle="modal"   title="Input Nomor dan Tanggal Surat" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </a>
                 &nbsp;
-                <?php if($rs['nomor_surat'] != "") { ?>
-              <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>">
+               
+              <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
               <button id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button></a>
-               <?php } ?>
+               
              <?php } ?>
              <?php } ?>
              </div>
@@ -111,6 +112,7 @@
       <div class="modal-body">
       <form method="post" id="form_nomor_surat" enctype="multipart/form-data" >
         <input type="hidden" id="id_usul" name="id_usul" >
+        <input type="hidden" id="jenis_layanan" name="jenis_layanan" >
   <div class="mb-3">
     <label for="nomor_surat" class="form-label">Nomor Surat</label>
     <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" >
@@ -122,10 +124,8 @@
  
   <button id="btn_simpan" class="btn btn-primary" style="float: left;">Simpan</button>
 </form>
-<form id="my-form" action="/submit-form.php" method="post">
-  <!-- form elements go here -->
+<form id="my-form" action="#" method="post">
   <button id="btn_pdf" class="btn btn-warning" style="float: right;"> <i class="fa fa-file-pdf"></i> Download PDF</button>
-
 </form>
 <script>
 
@@ -179,8 +179,9 @@ var base_url = "<?=base_url();?>"
    
     form.addEventListener('submit', function(event) {
       var id_usul =   $('#id_usul').val(); 
+      var jenis_layanan =   $('#jenis_layanan').val(); 
     event.preventDefault();
-    window.open(base_url+'Kepegawaian/C_Kepegawaian/CetakSurat/'+id_usul, '_blank');
+    window.open(base_url+'Kepegawaian/C_Kepegawaian/CetakSurat/'+id_usul+'/'+jenis_layanan, '_blank');
   });
 
 $('#form_nomor_surat').on('submit', function(e){
@@ -206,33 +207,33 @@ $('#form_nomor_surat').on('submit', function(e){
       });
 
 
-    $(document).on("click", ".open-AddBookDialog", function () {
-    var base_url = "<?=base_url();?>"
-     var nomor = $(this).data('nomor');
-     var tanggal = $(this).data('tanggal');
-     var id = $(this).data('id');
+    // $(document).on("click", ".open-AddBookDialog", function () {
+    // var base_url = "<?=base_url();?>"
+    //  var nomor = $(this).data('nomor');
+    //  var tanggal = $(this).data('tanggal');
+    //  var id = $(this).data('id');
     
     
-     $(".modal-body #id_usul").val( id );
+    //  $(".modal-body #id_usul").val( id );
    
-     $.ajax({
-        type : "POST",
-        url  : base_url + 'kepegawaian/C_Kepegawaian/getNomorTanggalSurat',
-        dataType : "JSON",
-        data : {id:id},
-        success: function(data){
-          if(data[0].nomor_surat == null){
-            $('#btn_pdf').hide();
-          } else {
-            $('#btn_pdf').show();
-          }
+    //  $.ajax({
+    //     type : "POST",
+    //     url  : base_url + 'kepegawaian/C_Kepegawaian/getNomorTanggalSurat',
+    //     dataType : "JSON",
+    //     data : {id:id},
+    //     success: function(data){
+    //       if(data[0].nomor_surat == null){
+    //         $('#btn_pdf').hide();
+    //       } else {
+    //         $('#btn_pdf').show();
+    //       }
 
-          $(".modal-body #nomor_surat").val( data[0].nomor_surat );
-          $(".modal-body #tanggal_surat").val( data[0].tanggal_surat );
-         }
-        });
+    //       $(".modal-body #nomor_surat").val( data[0].nomor_surat );
+    //       $(".modal-body #tanggal_surat").val( data[0].tanggal_surat );
+    //      }
+    //     });
         
-    });
+    // });
 
     $(document).on("click", ".open-DetailCuti", function () {
      var jenis = $(this).data('jenis');
@@ -254,12 +255,14 @@ $('#form_nomor_surat').on('submit', function(e){
         dataType : "JSON",
         data : {id_usul:id_usul,layanan:layanan},
         success: function(data){
-
+       
         $(".modal-body #jenis_cuti").val( data[0].nm_cuti );
         $(".modal-body #tanggal_mulai").val( data[0].tanggal_mulai );
         $(".modal-body #tanggal_selesai").val( data[0].tanggal_selesai );
-
-          
+        $(".modal-body #nomor_surat").val( data[0].nomor_surat );
+        $(".modal-body #tanggal_surat").val( data[0].tanggal_surat );
+        $('.modal-body #id_usul').val(data[0].id_usul); 
+        $('.modal-body #jenis_layanan').val(data[0].jenis_layanan);   
          }
         });
 

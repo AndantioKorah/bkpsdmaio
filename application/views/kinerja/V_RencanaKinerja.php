@@ -131,7 +131,7 @@
 
         $('#list_rencana_kinerja').html('')
         $('#list_rencana_kinerja').append(divLoaderNavy)
-        $('#list_rencana_kinerja').load('<?=base_url("kinerja/C_kinerja/loadRencanaKinerja")?>'+'/'+bulan+'/'+tahun, function(){
+        $('#list_rencana_kinerja').load('<?=base_url("kinerja/C_Kinerja/loadRencanaKinerja")?>'+'/'+bulan+'/'+tahun, function(){
             $('#loader').hide()
         })
     }

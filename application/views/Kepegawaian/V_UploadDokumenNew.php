@@ -281,10 +281,13 @@ h2{
     <button onclick="loadFormCuti()" class="nav-link" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button onclick="loadFormSkp()" class="nav-link" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
+    <button onclick="loadFormSkp()" class="nav-link" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-skp" aria-selected="false">SKP</button>
   </li>
   <li class="nav-item" role="presentation">
     <button onclick="loadFormAssesment()" class="nav-link" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button onclick="loadFormBerkasPns()" class="nav-link" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & SK PNS</button>
   </li>
   <li class="nav-item" role="presentation">
     <button  onclick="LoadFormArsip()" class="nav-link" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
@@ -333,6 +336,9 @@ h2{
   </div>
   <div class="tab-pane fade" id="pills-assesment" role="tabpanel" aria-labelledby="pills-assesment-tab">
   <div id="form_assesment"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-berkaspns" role="tabpanel" aria-labelledby="pills-berkaspns-tab">
+  <div id="form_berkaspns"></div>
   </div>
   <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
     <div id="form_arsip"></div>
@@ -476,6 +482,13 @@ $(function(){
     })
  }
 
+ function loadFormBerkasPns(){
+  $('#form_berkaspns').html(' ')
+    $('#form_berkaspns').append(divLoaderNavy)
+    $('#form_berkaspns').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormBerkasPns/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
  
 
  

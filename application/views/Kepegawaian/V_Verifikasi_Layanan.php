@@ -48,7 +48,6 @@
 </style>
 
 
-
 <div class="container-fluid pt-2" style="background-color:#fff;">
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
@@ -84,15 +83,32 @@
 					<!-- <span class="headerSection">Surat Pengantar</span> -->
   <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
   <li class="nav-item nav-item-layanan " role="presentation">
-    <button class="nav-link nav-link-layanan active"  data-bs-toggle="pill" type="button" role="tab"  aria-selected="true">File Pengantar</button>
+    <button class="nav-link nav-link-layanan active"  data-bs-toggle="pill" data-bs-target="#pills-supen" type="button" role="tab" aria-controls="pills-supen" aria-selected="false">Surat Pengantar</button>
   </li>
+  <?php if($result[0]['jenis_layanan'] == 3) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan " id="pills-profil-tab"
+    data-bs-toggle="pill" data-bs-target="#pills-suket" type="button" role="tab" aria-controls="pills-suket" aria-selected="false">Surat Keterangan</button>
+  </li>
+  <?php } ?>
   </ul>
       <hr style="margin-top: 10px;">
-      
-					<iframe id="" style="width: 100%; height: 80vh;"
-						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
+					
+   
+  <div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-supen" role="tabpanel" aria-labelledby="pills-supen-tab">
+  <iframe id="" style="width: 100%; height: 80vh;"
+						src="<?=base_url();?>dokumen_layanan/<?= $folder;?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
+  </div>
+ 
+  <div class="tab-pane fade show " id="pills-suket" role="tabpanel" aria-labelledby="pills-suket-tab">
+  <iframe id="" style="width: 100%; height: 80vh;"
+						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['surat_keterangan'];?>"></iframe>
+  </div>
 
-				</div>
+ 
+  </div>    
+          </div>
 				<div class="col-md-6" >
   
 <!-- upload dokumen  -->
@@ -127,7 +143,7 @@
 
   <?php if (in_array($result[0]['jenis_layanan'], $pendidikan)) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="loadFormPendidikan()" class="nav-link nav-link-layanan" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
+    <button onclick="getFile(file='pendidikan')" class="nav-link nav-link-layanan" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
   </li>
   <?php } ?>
 
@@ -483,9 +499,13 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "jabatan"){
           dir = "arsipjabatan/";
+        } else if(file == "pendidikan"){
+          dir = "arsippendidikan/";
         } else {
           dir = "uploads/";
         }
+
+        
         
         
         $.ajax({

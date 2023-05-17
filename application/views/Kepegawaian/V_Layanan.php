@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     background-color: #222e3c;
     color: #fff;
@@ -23,7 +23,20 @@
     background-color: #222e3c91;
     border-color: 1px solid var(--primary-color) !important;
   }
-</style>
+</style> -->
+
+
+<style>
+              .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+              background-color: #222e3c;
+              color: #fff;
+              }
+              .nav-pills .nav-link {
+              color: #000;
+              border: 0;
+              border-radius: var(--bs-nav-pills-border-radius);
+          }
+            </style>
 
 <div class="container-fluid p-0">
 

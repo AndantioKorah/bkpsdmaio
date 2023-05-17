@@ -124,22 +124,9 @@
               <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <form>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+       <div id="modal-body">
+        <div id="edit_realisasi_kinerja_content"></div>
+       </div>
       </div>
   </div>
 </div>
@@ -239,7 +226,7 @@
 
     
         $('#upload_form').on('submit', function(e){  
-        document.getElementById('btn_upload').disabled = true;
+        // document.getElementById('btn_upload').disabled = true;
         $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()

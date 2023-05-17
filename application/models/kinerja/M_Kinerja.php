@@ -9,6 +9,13 @@
 
         public function insert($tablename, $data){
             $this->db->insert($tablename, $data);
+            return $this->db->affected_rows();
+        }
+
+        public function deleteRencanaKerja($id, $id_m_user){
+            $this->db->where('id', $id)
+                    ->update('t_rencana_kinerja', ['flag_active' => 0, 'updated_by' => $id_m_user]);
+            return $this->db->affected_rows();
         }
 
         public function insertLaporanKegiatan(){
@@ -199,8 +206,10 @@
         }
 
 
-        public function loadRencanaKinerja($bulan, $tahun){
-            $id =  $this->general_library->getId();
+        public function loadRencanaKinerja($bulan, $tahun, $id = null){
+            if($id == null){
+                $id =  $this->general_library->getId();
+            }
             return $this->db->select('a.*,
             (select count(b.id) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as count')
                             ->from('t_rencana_kinerja a')

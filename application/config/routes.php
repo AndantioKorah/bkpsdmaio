@@ -82,3 +82,7 @@ $route['kepegawaian/verifikasi/(:any)/(:any)'] = 'Kepegawaian/C_Kepegawaian/veri
 $route['kepegawaian/dokumen/verifikasi'] = 'Kepegawaian/C_Kepegawaian/verifikasiDokumen';
 
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
+
+
+//api
+$route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';

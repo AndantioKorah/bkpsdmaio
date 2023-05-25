@@ -531,7 +531,7 @@
           <tr>
             <td class="td-lab-dd">Nama Arsip</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['nama_sk']?></td>
+            <td class="td-val-dd"><?=$result['name']?></td>
           </tr>
    
         </table>
@@ -555,8 +555,8 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">File</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipberkaspns/').$result['file']?>"></iframe>
+        <span style="font-weight: bold;">File </span>
+       <iframe  style="height: 50vh; width: 100%;" src="<?=base_url('arsipberkaspns/').$result['gambarsk'];?>"></iframe>
       </div>
     </div>
       <?php } ?>

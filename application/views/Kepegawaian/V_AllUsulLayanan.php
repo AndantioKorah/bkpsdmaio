@@ -69,7 +69,7 @@
   <div id="sudah_verif"></div>
   </div>
   <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
-  <div id="tolak">bds</div>
+  <div id="tolak"></div>
   </div>
   
 </div>
@@ -87,7 +87,8 @@
         DOKUMEN
       </div> -->
       <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_filex" style="width: 100%; height: 80vh;" src=""></iframe>
+        
+        <iframe id="iframe_view_file_pengantar" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
     </div>
   </div>

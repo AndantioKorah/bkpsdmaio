@@ -598,7 +598,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormArsip($nip){
-		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 17);
+		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
 		
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -663,19 +663,30 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayanan($id_usul,$jenis_layanan){
 		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
 		// dd($data['result']);
-		$data['pangkat'] = array(3,12);
-		$data['gaji_berkala'] =  array(0);
-		$data['pendidikan'] = array(12);
-		$data['jabatan'] = array(3);
-		$data['diklat'] = array(0);
+		$data['pangkat'] = array(1,3,7,10,12,13,15,16,17,20);
+		$data['gaji_berkala'] =  array(1);
+		$data['pendidikan'] = array(7,10,12,14,15,16);
+		$data['jabatan'] = array(3,15,16,17,20);
+		$data['diklat'] = array(14);
 		$data['organisasi'] = array(0);
 		$data['penghargaan'] = array(0);
 		$data['sj'] = array(0);
 		$data['keluarga'] = array(0);
 		$data['penugasan'] = array(0);
 		$data['cuti'] = array(0);
-		$data['arsip'] = array(0);
-		
+		$data['skpns'] = array(7,8,9,12,13,14,15,16);
+		$data['skcpns'] = array(7,10,12,13,14,15,16);
+		$data['skp'] = array(7,9,14,15,16,17,20);
+		$data['drp'] = array(7);
+		$data['honor'] = array(7);
+		$data['suket_lain'] = array(7);
+		$data['ibel'] = array(10,15,16);
+		$data['forlap'] = array(10);
+		$data['karya_tulis'] = array(10,15,16);
+		$data['tubel'] = array(15,16,20);
+		$data['mutasi'] = array(17);
+		$data['serkom'] = array(17);
+		$data['pak'] = array(17,20);
 		$data['jenis_layanan'] = $jenis_layanan;
 		if($jenis_layanan == 3){
 			$data['folder'] = "cuti";
@@ -708,9 +719,9 @@ class C_Kepegawaian extends CI_Controller
 		if($id == 3){
 		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
 		$this->load->view('kepegawaian/form_layanan/V_FormCuti', $data);
-		}
-		if($id == 12){
-			$this->load->view('kepegawaian/form_layanan/V_FormPerbaikanDataKepeg', $data);
+		} else {
+			$data['jenis_layanan'] = $id;
+			$this->load->view('kepegawaian/form_layanan/V_FormUsulLayanan', $data);
 		}
     }
 

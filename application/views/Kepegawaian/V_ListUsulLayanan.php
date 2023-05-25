@@ -23,18 +23,21 @@
               <td class="text-left"><?=$rs['tanggal_mulai']?></td>
               <td class="text-left"><?=$rs['tanggal_selesai']?></td> -->
               <td class="text-left">
-              
-                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>')" 
+              <?php if($rs['jenis_layanan'] == 3) { ?>
+                <button href="#modal_view_file" onclick="openFileCuti('<?=$rs['file_pengantar']?>')" 
                 data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
-                
+                <?php } else { ?>
+                <button href="#modal_view_file" onclick="openFile('<?=$rs['file_pengantar']?>')" 
+                data-toggle="modal" class="btn btn-sm btn-navy-outline">   Lihat <i class="fa fa-search"></i></button>
+                  <?php } ?>
               </td>
               <td><?=$rs['status_verif']?></td>
               <td>
               <?php if($rs['jenis_layanan'] == 3) { ?>
               <a data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" data-tgl_selesai="<?=$rs['tanggal_selesai']?>" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> </a>
               <?php } else if($rs['jenis_layanan'] == 12) { ?>
-              <a data-toggle="modal" data-ket="<?=$rs['keterangan_perbaikan']?>" class="open-DetailPerbaikanDataKepeg btn btn-sm btn-info" href="#modal_detail_perbaikan_data"><i class="fa fa-search"></i> </a>
+              <!-- <a data-toggle="modal" data-ket="<?=$rs['keterangan_perbaikan']?>" class="open-DetailPerbaikanDataKepeg btn btn-sm btn-info" href="#modal_detail_perbaikan_data"><i class="fa fa-search"></i> </a> -->
               <?php } ?>
               <?php if($rs['status'] == 0) { ?>
               
@@ -135,8 +138,14 @@
     $('#datatable').dataTable()
   })
 
-  function openFile(filename){
+  function openFileCuti(filename){
     var url = "<?=base_url();?>dokumen_layanan/cuti/"
+    var nip = "<?=$this->general_library->getUserName()?>";
+    $('#iframe_view_file_pengantar').attr('src', url+nip+'/'+filename)
+  }
+
+  function openFile(filename){
+    var url = "<?=base_url();?>dokumen_layanan/"
     var nip = "<?=$this->general_library->getUserName()?>";
     $('#iframe_view_file_pengantar').attr('src', url+nip+'/'+filename)
   }

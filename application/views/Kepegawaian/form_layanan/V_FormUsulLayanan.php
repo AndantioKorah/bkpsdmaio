@@ -1,5 +1,5 @@
 <form method="post" id="form_perbaikan_data" enctype="multipart/form-data">
-    <input type="hidden" name="jenis_layanan" id="jenis_layanan" value="12">
+    <input type="hidden" name="jenis_layanan" id="jenis_layanan" value="<?=$jenis_layanan;?>">
 	<!-- <div class="mb-3">
 		<label for="exampleInputPassword1" class="form-label">Nomor Usul</label>
 		<input type="text" class="form-control" id="nomor_usul" name="nomor_usul">
@@ -63,7 +63,7 @@
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("form_perbaikan_data").reset();
-                loadListUsulLayanan(12)
+                // loadListUsulLayanan(12)
               } else {
                 errortoast(result.msg)
                 return false;

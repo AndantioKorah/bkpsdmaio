@@ -14,7 +14,7 @@
 
 	<div class="mb-3">
 		<label for="exampleInputEmail1" class="form-label">Jenis Cuti </label>
-		<select onchange="openform()" class="form-control select2"
+		<select onchange="openform()" class="form-control select22"
 			data-dropdown-css-class="select2-navy" name="jenis_cuti" id="jenis_cuti" required>
 			<option value="" disabled selected>Pilih Item</option>
 			<?php if($jenis_cuti){ foreach($jenis_cuti as $r){ ?>
@@ -140,7 +140,12 @@
 <script>
        $(function(){
       // loadListUsulLayanan()
-        $('.select2').select2()
+        
+  $(".select22").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
         $('#datatable').dataTable()
         
     })

@@ -33,7 +33,7 @@
               <td class="text-left"><?=$rs['noijasah']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tglijasah'])?></td>
               <td class="text-left">
-                <button href="#modal_view_file_pendidikan" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <button href="#modal_view_file_pendidikan" onclick="openFilePendidikan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
               <?php if($kode == 2) { ?>
@@ -51,6 +51,24 @@
     </div>
   </div>
 
+
+  <div class="modal fade" id="modal_view_file_pendidikan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_pendidikan" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
   <!-- <div class="modal fade" id="modal_view_file_pendidikan" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -67,7 +85,7 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
+  function openFilePendidikan(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
     $('#iframe_view_file_pendidikan').attr('src', '<?=base_url();?>arsippendidikan/'+filename)
   }

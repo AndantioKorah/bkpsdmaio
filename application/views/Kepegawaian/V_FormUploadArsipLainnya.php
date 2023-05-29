@@ -74,10 +74,21 @@
 
 
   
-  <div class="form-group">
+    <div class="form-group">
+    <label>Jenis Arsip</label>
+    <select class="form-control select2" name="jenis_arsip" id="jenis_arsip" required>
+			<option value="" disabled selected>Pilih Item</option>
+			<?php if($jenis_arsip){ foreach($jenis_arsip as $r){ ?>
+                        <option value="<?=$r['id_dokumen']?>"><?=$r['name']?></option>
+                    <?php } } ?>
+		</select>
+  </div>
+
+
+  <!-- <div class="form-group">
     <label>Nama Arsip</label>
     <input class="form-control customInput" type="text" id="nama_arsip" name="nama_arsip"  required/>
-  </div>
+  </div> -->
 
 
 

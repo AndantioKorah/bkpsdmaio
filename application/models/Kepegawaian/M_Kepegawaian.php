@@ -196,9 +196,11 @@ class M_Kepegawaian extends CI_Model
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'arsip'){
-                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
+                return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen,
+                                        CONCAT(c.nama_dokumen, '.' , " / ", c.keterangan) AS name')
                                 ->from('db_pegawai.pegarsip a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_siladen.dokumen c', 'a.id_dokumen = c.id_dokumen')
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'berkaspns'){
@@ -228,7 +230,7 @@ class M_Kepegawaian extends CI_Model
                         ->where('a.flag_active', 1)
                         ->where('a.created_date >=', $taw.' 00:00:00')
                         ->where('a.created_date <=', $tak.' 23:59:59')
-                        ->order_by('a.created_date', 'asc');
+                        ->order_by('a.created_date', 'desc');
 
             if($data['status'] != '0'){
                 $this->db->where('a.status', $data['status']);
@@ -525,10 +527,11 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getArsip($nip,$kode){
-             $this->db->select('*')
+             $this->db->select('*,CONCAT(d.nama_dokumen, '.' , " / ", d.keterangan) AS name')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_siladen.dokumen d', 'c.id_dokumen = d.id_dokumen')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
@@ -730,7 +733,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['id_pegawai']     = $id_peg;
             $dataInsert['tahun']      = $this->input->post('skp_tahun');
             $dataInsert['predikat']      = $this->input->post('skp_predikat');
-            $dataInsert['file']      = $data['nama_file'];
+            $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();;
             $dataInsert['updated_by']      = $this->general_library->getId();;
             // dd($dataInsert);
@@ -753,7 +756,7 @@ class M_Kepegawaian extends CI_Model
                  
             $dataInsert['id_pegawai']      = $id_peg;
             $dataInsert['jenissk']         = $this->input->post('jenissk');
-            $dataInsert['file']            = $data['nama_file'];
+            $dataInsert['gambarsk']            = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();;
             $dataInsert['updated_by']      = $this->general_library->getId();;
             // dd($dataInsert);
@@ -1004,7 +1007,7 @@ class M_Kepegawaian extends CI_Model
 
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_assesment']      = $this->input->post('nm_assesment');
-            $dataInsert['file']         = $dataFile['file_name'];
+            $dataInsert['gambarsk']         = $dataFile['file_name'];
             $dataInsert['created_by']      = $this->general_library->getId();;
             $dataInsert['updated_by']      = $this->general_library->getId();;
             $result = $this->db->insert('db_pegawai.pegassesment', $dataInsert);
@@ -1063,7 +1066,7 @@ class M_Kepegawaian extends CI_Model
 			$dataFile 			= $this->upload->data();
 
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
-            $dataInsert['nama_sk']      = $this->input->post('nama_arsip');
+            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $dataFile['file_name'];
             $dataInsert['created_by']      = $this->general_library->getId();;
             $dataInsert['updated_by']      = $this->general_library->getId();;
@@ -1233,15 +1236,15 @@ class M_Kepegawaian extends CI_Model
         $tanggal_usul = $this->input->post('tanggal_mulai');
 
         // dd($_FILES['surat_keterangan']);
-      
+    
 
         if($_FILES){
         if($this->input->post('jenis_layanan') == 3){
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
             $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
-        } else if($this->input->post('jenis_layanan') == 12){
+        } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= './dokumen_layanan/perbaikan_data/' . $this->general_library->getUserName();
+            $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
         } 
 
         $config['upload_path']          = $target_dir;
@@ -1250,24 +1253,29 @@ class M_Kepegawaian extends CI_Model
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
         // $config['file_name']            = "$nama_file.pdf";
+
+        if (!file_exists($target_dir)) {
+			mkdir($target_dir, 0777);
+		}
         
 
 		$this->load->library('upload', $config);
         $nama_file = [];
         $jumlah_berkas = count($_FILES['berkas']['name']);
-        
         for($i = 0; $i < $jumlah_berkas;$i++)
 		{
             if(!empty($_FILES['berkas']['name'][$i])){
  
 				$_FILES['file']['name'] = $_FILES['berkas']['name'][$i];
+                // $nama_file[] = $_FILES['berkas']['name'][$i];
+                
 				$_FILES['file']['type'] = $_FILES['berkas']['type'][$i];
 				$_FILES['file']['tmp_name'] = $_FILES['berkas']['tmp_name'][$i];
 				$_FILES['file']['error'] = $_FILES['berkas']['error'][$i];
 				$_FILES['file']['size'] = $_FILES['berkas']['size'][$i];
 	   
 				if(!$this->upload->do_upload('file')){
-                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                    $res = array('msg' => 'Data gagal disimpan', 'error' => $this->upload->display_errors(), 'success' => false);
                     return $res;
 					// $uploadData = $this->upload->data();
 					// $data['nama_berkas'] = $uploadData['file_name'];
@@ -1278,19 +1286,17 @@ class M_Kepegawaian extends CI_Model
 				} else {
                     $uploadData = $this->upload->data();
 					$data['nama_berkas'] = $uploadData['file_name'];
+                    $nama_file[] = $data['nama_berkas'];
 					$data['tipe_berkas'] = $uploadData['file_ext'];
 					$data['ukuran_berkas'] = $uploadData['file_size'];
                 }
                 
 			}
-            $nama_file[] = $data['nama_berkas'];
+          
            
 		}
         
 
-		if (!file_exists($target_dir)) {
-			mkdir($target_dir, 0777);
-		}
        
 			$dataFile 			= $this->upload->data();
             $dataUsul['nomor_usul']     = $this->input->post('nomor_usul');
@@ -1299,8 +1305,11 @@ class M_Kepegawaian extends CI_Model
             $dataUsul['jenis_layanan']      = $this->input->post('jenis_layanan');
             if($this->input->post('jenis_layanan') == 3){
             $dataUsul['file_pengantar']      = $nama_file[0];
-            $dataUsul['surat_keterangan']      = $nama_file[1];
-            } else if($this->input->post('jenis_layanan') == 12) {
+            if(isset($nama_file[1])){
+                $dataUsul['surat_keterangan']      = $nama_file[1];
+            }
+           
+            } else  {
             $dataUsul['file_pengantar']      = $nama_file[0];
             }
            
@@ -1322,18 +1331,21 @@ class M_Kepegawaian extends CI_Model
             $datacuti['tanggal_selesai']      = $this->input->post('tanggal_selesai');
             $datacuti['jenis_cuti']      = $this->input->post('jenis_cuti');
             $datacuti['file_pengantar']      = $nama_file[0];
-            $datacuti['surat_keterangan']      = $nama_file[1];
-            // $datacuti['usul_by']      = $this->general_library->getId();
+            if(isset($nama_file[1])){
+                $datacuti['surat_keterangan']      = $nama_file[1];
+            }
+           
             $datacuti['id_user']      = $this->general_library->getId();
             $datacuti['created_by']      = $this->general_library->getId();
             $this->db->insert('db_siladen.t_cuti', $datacuti);
-            } else if($this->input->post('jenis_layanan') == 12){
-            $datacuti['id_usul']     = $id_usul;
-            $datacuti['file_pengantar']      = $nama_file[0];
-            $datacuti['id_user']      = $this->general_library->getId();
-            $datacuti['created_by']      = $this->general_library->getId();
-            $this->db->insert('db_siladen.t_perbaikan_data_pegawai', $datacuti);
-            }
+            } 
+            // else {
+            // $datacuti['id_usul']     = $id_usul;
+            // $datacuti['file_pengantar']      = $nama_file[0];
+            // $datacuti['id_user']      = $this->general_library->getId();
+            // $datacuti['created_by']      = $this->general_library->getId();
+            // $this->db->insert('db_siladen.t_perbaikan_data_pegawai', $datacuti);
+            // }
         
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
            
@@ -1388,12 +1400,12 @@ class M_Kepegawaian extends CI_Model
             ->where('c.flag_active', 1)
             ->order_by('c.id_usul','desc')
             ->get()->result_array();
-        } else if($id == 12) {
-            return $this->db->select('c.status,c.jenis_layanan,c.id_usul,f.status_verif,c.usul_status,e.nama,c.tanggal_usul,d.keterangan_perbaikan,c.file_pengantar')
+        } else {
+            return $this->db->select('c.status,c.jenis_layanan,c.id_usul,f.status_verif,c.usul_status,e.nama,c.tanggal_usul,c.file_pengantar')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-            ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
+            // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
             ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
             ->join('m_status_verif f', 'c.status = f.id')
             ->where('c.jenis_layanan', $id)
@@ -1458,7 +1470,7 @@ class M_Kepegawaian extends CI_Model
             ->join('db_pegawai.agama i', 'b.agama = id_agama')
             ->where('c.id_usul', $id_usul)
             ->get()->result_array();
-        } else if($jenis_layanan == 12){
+        } else {
             return $this->db->select('c.surat_keterangan,
             b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan, b.nik, i.nm_agama,
             h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
@@ -1468,7 +1480,7 @@ class M_Kepegawaian extends CI_Model
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-            ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
+            // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
             ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
             ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
             ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
@@ -1511,7 +1523,145 @@ class M_Kepegawaian extends CI_Model
                 ->order_by('a.tglijasah', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else {
+        } else if($this->input->post('file') == "skcpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 1)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 2)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "gajiberkala"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.peggajiberkala as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->order_by('a.tmtgajiberkala', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skp"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegskp as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->order_by('a.tahun', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "drp"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 42)
+                // ->order_by('a.tahun', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "honor"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 33)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suket_lain"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 16)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "ibel"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 13)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "forlap"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 12)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "diklat"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegdiklat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->order_by('a.tglsttpp', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "karya_tulis"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 43)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "tubel"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 14)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "mutasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 23)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "serkom"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 9)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pak"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->where('a.id_dokumen', 11)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else {
          return [''];
         }
         
@@ -1542,6 +1692,7 @@ class M_Kepegawaian extends CI_Model
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
                         // ->where('c.jenis_layanan', 3)
                         ->where('c.status', $id)
+                        ->where('c.flag_active', 1)
                         ->order_by('c.id_usul', 'desc')
                         ->get()->result_array();
     }
@@ -1842,6 +1993,21 @@ public function getDetailLayanan()
         return $this->db->get()->result_array();
     } 
 
+}
+
+
+public function getJenisArsip()
+{
+    $ignore = array(1,2,3,4,5,6,7,8,17,20,47);
+
+
+    $this->db->select('*, CONCAT(nama_dokumen, '.' , " / ", keterangan) AS name')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    ->order_by('id_dokumen', 'asc')
+    ->where_not_in('id_dokumen', $ignore)
+    ->from('db_siladen.dokumen');
+    return $this->db->get()->result_array(); 
 }
     
 

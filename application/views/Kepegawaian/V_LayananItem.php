@@ -20,12 +20,16 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs)?> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="">
+              <?php if ($rs['jenis_layanan'] == 3) { ?> 
               <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')" 
               data-toggle="modal" 
-             
               data-nama_pegawai="<?=getNamaPegawaiFull($rs)?>" 
               data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a>
-
+              <?php } else { ?>
+                <button href="#modal_view_file" 
+                onclick="openFile('<?=$rs['file_pengantar']?>')" 
+                data-toggle="modal" class="btn btn-sm btn-info"><i class="fa fa-search"></i> Lihat </button>
+                <?php } ?>
               </td>
              
               <td>
@@ -39,16 +43,17 @@
                 Verifikasi</button>
                 </a>
                 <?php } ?>
-                <?php if($rs['jenis_layanan'] == 3) { ?>
-              <?php if($rs['status'] == 1) { ?> 
-                  
-                <form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
-              <input type="hidden" name="id_batal" id="id_batal" value="<?= $rs['id_usul'];?>">
-              <button title="Batal Verifikasi"  id="btn_tolak_verifikasi"  class="btn btn-sm btn-danger" >
-              <i class="fa fa-times" aria-hidden="true"></i>
-              </button>
-              </form>  &nbsp;
 
+                <?php if($rs['status'] != 0) { ?> 
+              
+                <button title="Batal Verifikasi" onclick="batalVerif('<?= $rs['id_usul'];?>')"  class="btn btn-sm btn-danger">
+                <i class="fa fa-times" aria-hidden="true"></i></button>&nbsp;
+              
+                <?php } ?>
+               
+              
+              <?php if($rs['jenis_layanan'] == 3) { ?>
+              <?php if($rs['status'] == 1) { ?> 
                 <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
                 data-toggle="modal"   title="Input Nomor dan Tanggal Surat" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </a>
                 &nbsp;
@@ -81,6 +86,22 @@
      $(".modal-body #nama_pegawai").html( nama_pegawai );
      $(".modal-body #nip").html( nip );
     });
+
+    function batalVerif(id){
+  if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiLayanan")?>',
+              method: 'post',
+              data: {id_batal:id},
+              success: function(datares){
+                successtoast('Berhasil batal verifikasi ')
+                loadListUsulLayanan(2)
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+        }
+    }
               </script>
 
 <?php } else { ?>
@@ -136,7 +157,25 @@
 </div>
 
 
+
+
 <script>
+
+function batalVerif(id){
+  if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiLayanan")?>',
+              method: 'post',
+              data: {id_batal:id},
+              success: function(datares){
+                successtoast('Berhasil batal verifikasi ')
+                loadListUsulLayanan(1)
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+        }
+    }
   
   $('#form_batal_verifikasi_layanan').on('submit', function(e){
           e.preventDefault()
@@ -168,6 +207,7 @@ $(function(){
 
       $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
+        todayHighlight: true,
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -268,6 +308,12 @@ $('#form_nomor_surat').on('submit', function(e){
 
     var url = "<?=base_url();?>dokumen_layanan/"+layanan+"/"
     $('#iframe_view_file').attr('src', url+nip+'/'+filename)
+  }
+
+  function openFile(filename){
+    var url = "<?=base_url();?>dokumen_layanan/"
+    var nip = "<?=$this->general_library->getUserName()?>";
+    $('#iframe_view_file_pengantar').attr('src', url+nip+'/'+filename)
   }
 
 </script>

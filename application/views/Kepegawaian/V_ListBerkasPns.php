@@ -17,14 +17,15 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?php if($rs['jenissk'] == 1) echo 'SK CPNS'; else echo 'SK PNS';?></td>
               <td class="text-left">
-                <button href="#modal_view_file_skp" onclick="openFilePangkat('<?=$rs['file']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+
+              <button href="#modal_view_file_berkas_pns" onclick="openFileBerkas('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
                <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['file']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -35,22 +36,25 @@
     </div>
   </div>
 
-  
+
+
+
 <script>
   $(function(){
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
+  function openFileBerkas(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_skp').attr('src', '<?=base_url();?>arsipberkaspns/'+filename)
+    
+    $('#iframe_view_file_berkas_pns').attr('src', '<?=base_url();?>arsipberkaspns/'+filename)
   }
 
   function deleteKegiatan(id,file){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
-                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegskp/'+file,
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegberkaspns/'+file,
                            method: 'post',
                            data: null,
                            success: function(){

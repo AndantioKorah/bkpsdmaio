@@ -123,11 +123,12 @@
 <script>
     $(function(){
       // loadListUsulLayanan()
-      $(".select2").select2({   
+  $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
+
         $('#datatable').dataTable()
         
     })

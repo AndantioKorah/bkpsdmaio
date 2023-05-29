@@ -17,14 +17,14 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_assesment']?></td>
               <td class="text-left">
-                <button href="#modal_view_file_assesment" onclick="openFilePangkat('<?=$rs['file']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <button href="#modal_view_file_assesment" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['file']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>

@@ -8,7 +8,9 @@
           <th class="text-left">Predikat</th>
           <th class="text-left">File</th>
           <?php if($kode == 2) { ?>
+            <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
+         
           <th class="text-left">  </th>
           <?php } ?>
         </thead>
@@ -19,14 +21,15 @@
               <td class="text-left"><?=$rs['tahun']?></td>
               <td class="text-left"><?= $rs['predikat']?></td>          
               <td class="text-left">
-                <button href="#modal_view_file_skp" onclick="openFilePangkat('<?=$rs['file']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <button href="#modal_view_file_skp" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
                <?php if($kode == 2) { ?>
+                <td><?=formatDateNamaBulan($rs['created_date'])?></td>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['file']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>

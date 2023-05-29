@@ -8,13 +8,13 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSkp">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkasPns">
   Tambah Data SK CPNS & PNS
 </button>
 
 
 
-<button onclick="loadRiwayatUsulBerkasPns()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalSkp">
+<button onclick="loadRiwayatUsulBerkasPns()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalBerkasPns">
   Riwayat Usul SK CPNS & PNS
 </button>
 
@@ -27,7 +27,7 @@
 }
    
 </style>
-<div class="modal fade" id="myModalSkp">
+<div class="modal fade" id="myModalBerkasPns">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -41,24 +41,24 @@
       </div>
     </div>
 </div>
-<div class="modal fade" id="modal_view_file_skp" data-backdrop="static">
+
+<div class="modal fade" id="modal_view_file_berkas_pns" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div>
-        <div class="modal-body">
+        <div class="modal-body">cdcs
         <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_skp" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe id="iframe_view_file_berkas_pns" style="width: 100%; height: 80vh;" src="http://localhost/bkpsdmaio/arsipberkaspns/SK_CPNS_199401042020121011.pdf"></iframe>
       </div>
         </div>
       </div>
     </div>
 </div>
 
-
 <!-- Modal -->
-<div class="modal fade" id="modalSkp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalBerkasPns" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">

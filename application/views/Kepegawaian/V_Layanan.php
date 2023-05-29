@@ -1,7 +1,8 @@
-<!-- <style>
+<style>
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     background-color: #222e3c;
     color: #fff;
+    border-radius: 5px !important;
   }
   .nav-pills .nav-link {
     color: #000;
@@ -11,9 +12,9 @@
 
   .nav-link-layanan{
     padding: 5px !important;
-    font-size: .7rem;
+    font-size: .8rem;
     color: black;
-    border-right: .5px solid var(--primary-color) !important;
+    /* border-right: .5px solid var(--primary-color) !important; */
     border-radius: 0px !important;
     border-bottom-left-radius: 0px;
   }
@@ -22,8 +23,9 @@
     color: white !important;
     background-color: #222e3c91;
     border-color: 1px solid var(--primary-color) !important;
+    border-radius: 5px !important;
   }
-</style> -->
+</style>
 
 
 <style>

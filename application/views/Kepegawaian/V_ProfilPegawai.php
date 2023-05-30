@@ -74,11 +74,17 @@
                 </div>
               <?php } ?>
               <div class="col-lg-12 text-center">
-                <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
+                <!-- <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
                   src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
-                  data-src="<?=$this->general_library->getFotoPegawai($profil_pegawai['fotopeg'])?>" />
+                  data-src="<?=$this->general_library->getFotoPegawai($profil_pegawai['fotopeg'])?>" /> -->
+                  <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
+                  src="http://simpegserver/adm/fotopeg/<?=$profil_pegawai['fotopeg']?>" /> 
+                  
               </div>
-              <div class="col-lg-12 text-center">
+
+              
+
+              <!-- <div class="col-lg-12 text-center">
                 <span class="sp_profil">
                   <?=getNamaPegawaiFull($profil_pegawai)?>
                 </span>
@@ -87,9 +93,9 @@
                 <span class="sp_profil">
                   <?=formatNip($profil_pegawai['nipbaru_ws'])?>
                 </span>
-              </div>
+              </div> -->
               <div class="col-lg-12 text-center" >
-                <button data-toggle="modal" onclick="loadEditProfilModal()" class="btn btn-block btn-navy">
+                <button data-toggle="modal" onclick="loadEditProfilModal()" class="btn btn-block btn-navy"  data-toggle="modal" data-target="#editProfileModal">
                   <i class="fa fa-edit"></i> Edit Profil
                 </button>
               </div>
@@ -97,54 +103,42 @@
           </div>
           <div class="col-lg-8">
             <div class="row">
-              <div class="col-lg-12 div_label text-left">
+              <!-- profil  -->
+              <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button class="nav-link nav-link-profile active" id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button class="nav-link nav-link-profile" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button class="nav-link nav-link-profile" id="pills-data_lain-tab" data-bs-toggle="pill" data-bs-target="#pills-data_lain" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Data Lainnya</button>
+              </li>
+            </ul>
+
+            <div class="col-lg-12">
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane show active" id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
+                <div id="">
+                 <!-- data pribadi  -->
+                <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  Perangkat Daerah
+                  Nama Lengkap
                 </span>
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_unitkerja'])?>
+                <?=getNamaPegawaiFull($profil_pegawai)?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  Pangkat / Gol. Ruang
+                 NIP
                 </span>
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_pangkat'])?>
-                </span>
-              </div>
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  TMT Pangkat
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($profil_pegawai['tmtpangkat'])?>
-                </span>
-              </div>
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nama_jabatan'])?>
-                </span>
-              </div>
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  TMT Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($profil_pegawai['tmtjabatan'])?>
+                <?=formatNip($profil_pegawai['nipbaru_ws'])?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
@@ -197,6 +191,233 @@
                   <?=($profil_pegawai['alamat'])?>
                 </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Pendidikan Terakhir
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm sp_profil_alamat">
+                  <?=($profil_pegawai['nm_tktpendidikan'])?>
+                </span>
+              </div>
+              
+         
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Status Perkawinan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm sp_profil_alamat">
+                  <?=($profil_pegawai['nm_sk'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  No Telepon
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm sp_profil_alamat">
+                  <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Email
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm sp_profil_alamat">
+                  <?=($profil_pegawai['email'])?>
+                </span>
+              </div>
+
+             
+               <!-- end data pribadi  -->
+                </div>
+              </div>
+              <div class="tab-pane fade" id="pills-data_kepeg" role="tabpanel" aria-labelledby="pills-data_kepeg-tab">
+                <div id="">
+                 <!-- data kepegawaian  -->
+                <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Perangkat Daerah
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_unitkerja'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Status Kepegawaian
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_statuspeg'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jenis Kepegawaian
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_jenispeg'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Pangkat / Gol. Ruang
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_pangkat'])?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT Pangkat
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtpangkat'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT CPNS
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
+                </span>
+              </div>
+
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jenis Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_jenisjab'])?>
+                </span>
+              </div>
+
+              
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nama_jabatan'])?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtjabatan'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Eselon
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['eselon'])?>
+                </span>
+              </div>
+                 <!-- end data kepegawaian  -->
+
+             
+                </div>
+              </div>
+              <div class="tab-pane fade" id="pills-data_lain" role="tabpanel" aria-labelledby="pills-data_lain-tab">
+                <div id="">
+              <!--  data lainnya  -->
+
+                <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  No Seri Karpeg
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?= $profil_pegawai['karpeg'] != null ? $profil_pegawai['karpeg'] : '-'; ?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  No Taspen
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?= $profil_pegawai['taspen'] != null ? $profil_pegawai['taspen'] : '-'; ?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  No Kartu Karis
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?= $profil_pegawai['karis'] != null ? $profil_pegawai['karis'] : '-'; ?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  NPWP
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?= $profil_pegawai['npwp'] != null ? $profil_pegawai['npwp'] : '-'; ?>
+                </span>
+              </div>
+
+             <!-- end data lainnya  -->
+                </div>
+              </div>
+            
+            
+              
+             
+            </div>
+          </div>
+
+              
+
+               <!-- tutup profil  -->
             </div>
           </div>
         </div>
@@ -308,6 +529,210 @@
       </div>
     </div>
   </div>
+
+
+  
+<!-- Modal edit profil -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form>
+      <div class="row g-3 align-items-center">
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
+      </div>
+      <div class="col-lg-2">
+        <input type="text" id="gelar1" name="gelar1" class="form-control" value="<?=$profil_pegawai['gelar1']?>">
+      </div>
+      <div class="col-lg-6">
+        <input type="text" id="nama" name="nama" class="form-control" value="<?=$profil_pegawai['nama']?>">
+      </div>
+      <div class="col-lg-2">
+        <input type="text" id="gelar2" name="gelar2" class="form-control" value="<?=$profil_pegawai['gelar2']?>">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Nip Lama </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" value="<?=$profil_pegawai['niplama']?>" class="form-control">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Nip Baru </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="inputPassword6" class="form-control" value="<?=$profil_pegawai['nipbaru']?>">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Tempat / Tanggal Lahir </label>
+      </div>
+      <div class="col-lg-5">
+        <input type="text" id="" class="form-control" value="<?=$profil_pegawai['tptlahir']?>">
+      </div>
+      <div class="col-lg-5">
+        <input type="text" id="" class="form-control" value="<?=$profil_pegawai['tgllahir']?>">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jenis Kelamin </label>
+      </div>
+      <div class="col-lg-10">
+      <div class="form-check form-check-inline">
+      <input <?= $profil_pegawai['jk'] == 'Laki-Laki' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Laki-Laki">
+      <label class="form-check-label" for="inlineRadio1">Laki-laki</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input <?= $profil_pegawai['jk'] == 'Perempuan' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Perempuan">
+        <label class="form-check-label" for="inlineRadio2">Perempuan</label>
+      </div>
+
+      </div>
+      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Golongan Darah </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="inputPassword6" class="form-control">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Alamat </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="inputPassword6" class="form-control">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Unit Kerja / SKPD </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="inputPassword6" class="form-control">
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Agama </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Status Perkawinan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div> 
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Status Kepegawaian </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div> 
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jenis Kepegawaian </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jenis Jabatan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Status Jabatan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Pangkat </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> TMT Gaji Berkala </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> TMT CPNS </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Pendidikan Terakhir </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="password" id="" class="form-control" >
+      </div>
+
+      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jenis Jabatan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jabatan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> TMT Jabatan </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Eselon </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+
+      
+    </div>
+   
+      <button type="submit" class="btn btn-primary float-right">Submit</button>
+    </form>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal edit profil -->
   <script>
   var nip = "<?= $nip;?>"; 
   $(function(){
@@ -315,7 +740,6 @@
   })
 
   function loadEditProfilModal(){
-
   }
 
   function loadFormPangkat(){

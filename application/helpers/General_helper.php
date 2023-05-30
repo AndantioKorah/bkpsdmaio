@@ -23,6 +23,15 @@ function validateKey($arr_needed, $arr_request){
     return ['code' => 0, 'message' => ''];
 }
 
+function base64ToFile($base64_string, $output_file) {
+    $ifp = fopen( $output_file, 'wb' ); 
+    $data = explode(',', $base64_string );
+    fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+    fclose( $ifp );
+
+    return $output_file; 
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');

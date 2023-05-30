@@ -35,15 +35,19 @@
 
   <link href="<?=base_url('assets/css/select2.min.css')?>" rel="stylesheet" />
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
-  <script src="<?=base_url('assets/css/general.css')?>"></script>
 
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
-<script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
-<link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
-<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+  <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
 
-	<title>Siladen</title>
+  <link rel="stylesheet" href="<?=base_url('assets/js/timepicker/jquery.timepicker.min.css')?>">
+  <script src="<?=base_url('assets/js/timepicker/jquery.timepicker.min.js')?>"></script>
 
+  <link rel="stylesheet" href="<?php echo base_url()?>assets/adminkit/css/modal2.css">
+  <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+
+	<title><?=TITLES?></title>
+
+  <link rel="stylesheet" src="<?=base_url('assets/css/general.css')?>">
 	<link href="<?=base_url('')?>assets/adminkit/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	
@@ -51,6 +55,53 @@
   <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
 	<style>
+
+:root{
+  --primary-color: #222e3c;
+}
+
+.progress {
+  --bs-progress-height: 1rem;
+  --bs-progress-font-size: 0.65625rem;
+  --bs-progress-bg: #e9ecef;
+  --bs-progress-border-radius: 0.2rem;
+  --bs-progress-box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+  --bs-progress-bar-color: #fff;
+  --bs-progress-bar-bg: #3b7ddd;
+  --bs-progress-bar-transition: width 0.6s ease;
+  background-color: var(--bs-progress-bg);
+  border-radius: var(--bs-progress-border-radius);
+  font-size: var(--bs-progress-font-size);
+  height: var(--bs-progress-height);
+}
+
+.progress-bar {
+  background-color: var(--bs-progress-bar-bg);
+  color: var(--bs-progress-bar-color);
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transition: var(--bs-progress-bar-transition);
+  white-space: nowrap;
+}
+
+.bg-success-light {
+  background: #a5f1db;
+}
+
+.progress, .progress-bar {
+  display: flex;
+  overflow: hidden;
+}
+
+.progress-sm {
+  height: 0.4rem;
+}
+
+.content{
+  padding: .5rem !important;
+}
+
 .tableFixHead { overflow-y: auto; height: 600px; }
 
 .content_table{
@@ -138,26 +189,231 @@
         color: white;
         }
 
-		.progress {
-  		background-color: #d6d6d6;
-		}
+        .progress {
+          background-color: #d6d6d6;
+        }
 
+    .bg-green {
+      background-color: #28a745!important;
+    }
 
-    .customInput{
+    .info-box {
+      box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+      border-radius: 0.25rem;
+      background: #fff;
+      display: -ms-flexbox;
+      display: flex;
+      margin-bottom: 1rem;
+      min-height: 80px;
+      padding: 0.5rem;
+      position: relative;
+      width: 100%;
+    }
+
+    .info-box .info-box-content {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-pack: center;
+      justify-content: center;
+      line-height: 120%;
+      -ms-flex: 1;
+      flex: 1;
+      padding: 0 10px;
+    }
+
+    .info-box .info-box-icon {
+      border-radius: 0.25rem;
+      -ms-flex-align: center;
+      align-items: center;
+      display: -ms-flexbox;
+      display: flex;
+      color: white;
+      font-size: 1.875rem;
+      -ms-flex-pack: center;
+      justify-content: center;
+      text-align: center;
+      width: 70px;
+    }
+
+    .info-box .info-box-text, .info-box .progress-description {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .info-box .info-box-number {
+      display: block;
+      margin-top: 0.25rem;
+      font-weight: 700;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey; 
+      border-radius: 5px;
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color); 
+      border-radius: 5px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b30000; 
+    }
+    /* .customInput{
 		height:35px; 
 		margin-bottom:10px;
-		}
+		} */
 
+    /* .form-control{
+      height: 35px !important;
+      margin-bottom:10px !important;
+    } */
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      /* line-height: 30px; */
+      /* height: 30px !important; */
+    }
+
+    .select2-container .select2-selection--single{
+      height: 35px !important;
+    }
+    
+    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+      background-color: var(--primary-color) !important;
+      color: white;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: #444;
+      line-height: 35px;
+      height: 30px !important;
+    }
  
     .btn-primary{
-      background-color: #20364a !important;
+      background-color: var(--primary-color) !important;
       color: white !important;
+    }
+
+    .btn-navy-outline{
+        color: var(--primary-color) !important;
+        background-color: white !important;
+        border-color: var(--primary-color) !important;
+        text-decoration: none;
+    }
+
+    .btn-navy-outline:hover{
+        color: white !important;
+        background-color: var(--primary-color) !important;
+        text-decoration: none;
     }
 
     .btn-navy{
-      background-color: #20364a !important;
-      color: white !important;
+        color: white;
+        background-color: var(--primary-color) !important;
+        text-decoration: none;
     }
+
+    .btn-navy:hover{
+        color: white;
+        background-color: #05519e !important;
+        text-decoration: none;
+    }
+
+      /* FIXED LEFT COLOUM WITH HEADER */
+      .div_maintb {
+    /* height: calc(100vh - 180px);
+    width: calc(100vw - 100px);
+    overflow: scroll;
+    border: 1px solid #6f6f6f; */
+    overflow-y: auto; height: 600px;
+
+}
+
+.div_maintb table { 
+      border: 1px solid #fff;
+      font-size: 12px;
+      width: 100%;
+  } 
+  
+.div_maintb thead {
+            position: sticky;
+            top: 0;
+            z-index: 400;
+            }
+
+.div_maintb td {
+             font-size: 12px;
+            } 
+   
+
+.div_maintb th {
+        background: #464646;
+        color: #d1d1d1;
+        width: 100px;
+        min-width: 100px;
+        padding: 6px;
+        /* outline: 1px solid #7a7a7a; */
+        font-weight: normal;
+        margin-bottom:50px;
+    }
+
+    /* .div_maintb td {
+        padding: 6px;
+        outline: 1px solid #c3c3c3;
+    } */
+
+        /* .div_maintb th:nth-child(1),
+        .div_maintb td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            width: 130px;
+            min-width: 130px;
+        } */
+
+   @media screen and (width> 600px) {
+          .div_maintb th:nth-child(2),
+          .div_maintb td:nth-child(2) {
+            position: sticky;
+            left: 0;
+            width: 50px;
+            min-width: 50px;
+        }
+         }
+
+
+        
+    .div_maintb td:nth-child(2) {
+              z-index: 200;
+              min-width: 20em;
+          }
+
+      .div_maintb th:nth-child(1),
+      .div_maintb th:nth-child(2) {
+          z-index: 300;
+      }
+
+      .div_maintb tr:nth-child(odd) td {
+      background: white;
+    
+      }
+
+      .div_maintb tr:nth-child(even) td {
+          background: #f2f2f2;
+      }
+        /* TUTUP FIXED LEFT COLOUM WITH HEADER  */
+
   
 
 	</style>
@@ -194,7 +450,8 @@
            
 		</div>
 	</div>
- 
+  <div id="print_div" style="display:none;"></div>
+  <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
   <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->
 	<script src="<?=base_url('')?>assets/adminkit/js/app.js"></script>
   
@@ -209,7 +466,7 @@
 <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
 <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
 <!-- <script src="<?=base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')?>"></script> -->
-<script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script>
+<!-- <script src="<?=base_url('plyearpickugins/summernote/summernote-bs4.min.js')?>"></script> -->
 <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
 <!-- <script src="<?=base_url('assets/js/adminlte.js')?>"></script> -->
 <!-- <script src="<?=base_url('assets/js/pages/dashboard.js')?>"></script> -->
@@ -217,10 +474,65 @@
 <!-- <script src="<?=base_url();?>assets/js/jquery.dataTables.min.js"></script> -->
 <script src="<?=base_url('assets/js/jquery.dataTables.min.js')?>"></script>
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/blazy.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
+function fixedHeaderTable() {
+  var $th = $('.tableFixHead').find('thead th')
+  $('.tableFixHead').on('scroll', function() {
+  $th.css('transform', 'translateY('+ this.scrollTop +'px)');
+  $th.css('zIndex', '60');
+  $th.css({ 'position': 'relative' });
+  });
+
+
+
+// Search table
+'use strict';
+
+var TableFilter = (function() {
+ var Arr = Array.prototype;
+		var input;
+  
+		function onInputEvent(e) {
+			input = e.target;
+			var table1 = document.getElementsByClassName(input.getAttribute('data-table'));
+			Arr.forEach.call(table1, function(table) {
+				Arr.forEach.call(table.tBodies, function(tbody) {
+					Arr.forEach.call(tbody.rows, filter);
+				});
+			});
+		}
+
+		function filter(row) {
+			var text = row.textContent.toLowerCase();
+       //console.log(text);
+      var val = input.value.toLowerCase();
+      //console.log(val);
+			row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+		}
+
+		return {
+			init: function() {
+				var inputs = document.getElementsByClassName('table-filter');
+				Arr.forEach.call(inputs, function(input) {
+					input.oninput = onInputEvent;
+				});
+			}
+		};
+ 
+	})();
+ TableFilter.init(); 
+ // Tutup Search table
+}
 
 $(function(){
+  $(".daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
+
+  $('.select2_this').select2()
 
     startTime()
     // startRealTimeDate()
@@ -288,6 +600,10 @@ $('.datepicker').datepicker({
     })
   }
 
+  $("#daterangepickerthis").daterangepicker({
+      showDropdowns: true
+  });
+
   function successtoast(message = ''){
     const Toast = Swal.mixin({
       toast: true,
@@ -327,6 +643,7 @@ $('.datepicker').datepicker({
     monthName[11] = "November";
     monthName[12] = "Desember";
 
+    // var today = new Date('<?=$this->general_library->getServerDateTime()?>');
     var today = new Date();
     var D = String(today.getDate()).padStart(2, '0');
     var M = String(today.getMonth() + 1).padStart(2, '0');
@@ -343,6 +660,13 @@ $('.datepicker').datepicker({
     var t = setTimeout(startTime, 500);
     
   }
+
+  window.bLazy = new Blazy({
+    container: '.container',
+    success: function(element){
+        console.log("Element loaded: ", element.nodeName);
+    }
+  });
 
   function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10

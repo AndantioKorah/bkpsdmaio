@@ -10,6 +10,10 @@ $route['pesan/send/individu'] = 'message/C_Message/individuMessage';
 $route['pesan/send/bulk'] = 'message/C_Message/bulkMessage';
 $route['master/bidang'] = 'master/C_Master/masterBidang';
 $route['master/bidang/sub'] = 'master/C_Master/masterSubBidang';
+$route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
+$route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
+
+
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
 $route['kinerja/rekapitulasi-realisasi'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['kinerja/skp-bulanan'] = 'kinerja/C_Kinerja/skpBulanan';
@@ -26,4 +30,10 @@ $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
 $route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
 $route['master/tpp'] = 'master/C_Master/tpp';
 
-$route['dashboard'] = 'dashboard/C_Dashboard/dashboard';  
+$route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
+$route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
+$route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
+
+$route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
+$route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';
+$route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';

@@ -2,172 +2,302 @@
 
 class C_Kepegawaian extends CI_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
-        if(!$this->general_library->isNotMenu()){
-            redirect('logout');
-        };
-    }
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+		$this->load->model('general/M_General', 'general');
+		if (!$this->general_library->isNotMenu()) {
+			redirect('logout');
+		};
+	}
 
-    public function uploadDokumen(){
+	public function loadListPangkat($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListPangkat', $data);
+	}
+
+	public function loadListSkp($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getSkp($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListSkp', $data);
+	}
+
+	public function loadListBerkasPns($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getBerkasPns($nip,$kode);
+		// dd($data);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListBerkasPns', $data);
+	}
+
+
+	public function loadListOrganisasi($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getOrganisasi($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListOrganisasi', $data);
+	}
+
+
+	public function loadListAssesment($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getAssesment($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListAssesment', $data);
+	}
+
+	public function loadListKeluarga($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getKeluarga($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListKeluarga', $data);
+	}
+	
+
+	public function loadListPendidikan($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getPendidikan($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListPendidikan', $data);
+	}
+
+	public function loadListDiklat($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getDiklat($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListDiklat', $data);
+	}
+
+	public function loadListJabatan($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getJabatan($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListJabatan', $data);
+	}
+
+	public function loadListGajiBerkala($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getGajiBerkala($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+	}
+
+	
+	public function loadListPenghargaan($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getPenghargaan($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
+	}
+
+	public function loadListCuti($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getCuti($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListCuti', $data);
+	}
+
+	public function loadListArsip($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getArsip($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListArsip', $data);
+	}
+
+	public function loadListSumpahJanji($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getSumpahJanji($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListSumpahJanji', $data);
+	}
+
+
+
+	public function loadListPenugasan($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getPenugasan($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListPenugasan', $data);
+	}
+
+	public function uploadDokumenOld(){
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
         render('kepegawaian/V_UploadDokumen', '', '', $data);
     }
 
-    public function loadDokumenPns(){
 
-        // dd($this->general_library->getUserName());
-        
-        $cariBy = 1;
-        $cariName = $this->general_library->getUserName();
-        $unor  = null;
+	public function profil()
+	{
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['result'] = $this->kepegawaian->getPendidikan();
+		$data['results'] = $this->kepegawaian->getPangkatPegawai();
+		// $data['tes'] = $this->general_library->getId();
+		// dd($data);
+		render('kepegawaian/V_LihatPNS', '', '', $data);
+	}
 
-        $data['list_dokumen'] = $this->kepegawaian->get_datatables_lihat_dokumen_pns($cariBy,$cariName,$unor);
-    //    var_dump($list);
-    //    die();
-        $this->load->view('kepegawaian/V_UploadDokumenItem', $data);
-    }
 
-    public function getInline()
+	public function loadListProfil(){
+		$data['result'] = $this->kepegawaian->getProfilPegawai();
+		$this->load->view('kepegawaian/V_ListProfil', $data);
+	}
+
+	public function loadListBerkala(){
+		$data['result'] = $this->kepegawaian->getGajiBerkala();
+		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+	}
+
+
+
+	public function loadDokumenPns()
+	{
+
+		// dd($this->general_library->getUserName());
+
+		$cariBy = 1;
+		$cariName = $this->general_library->getUserName();
+		$unor  = null;
+
+		$data['list_dokumen'] = $this->kepegawaian->get_datatables_lihat_dokumen_pns($cariBy, $cariName, $unor);
+		//    var_dump($list);
+		//    die();
+		$this->load->view('kepegawaian/V_UploadDokumenItem', $data);
+	}
+
+	public function getInline()
 	{
 		$nip       =  $this->input->get('id');
 		$file      =  $this->input->get('f');
-		$flok      =  base_url().'uploads/'.$nip.'/'.$file;
-        // var_dump($flok);
-        // die();		
+		$flok      =  base_url() . 'uploads/' . $nip . '/' . $file;
+		// var_dump($flok);
+		// die();		
 		header('Pragma:public');
 		header('Cache-Control:no-store, no-cache, must-revalidate');
 		header('Content-type:application/pdf');
-		header('Content-Disposition:inline; filename='.$file);                      
-		header('Expires:0'); 
+		header('Content-Disposition:inline; filename=' . $file);
+		header('Expires:0');
 		ob_end_clean();
-		readfile($flok); 
+		readfile($flok);
 	}
 
-    public function doUpload()
-    {
-        
+	public function doUpload2()
+	{ 
+		echo json_encode( $this->kepegawaian->doUpload());
+	}
 
+	public function doUploadAssesment()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadAssesment());
+	}
+
+	public function doUploadArsipLainnya()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadArsipLainnya());
+	}
+
+	public function doUpload()
+	{
+
+		// dd($_FILES['file']['name']);	
 		// validasi NIP
-		if(! $this->_isAdaNIP($_FILES['file']['name']))
-		{	
-			$data['error']    = 'Dokumen harus terdapat NIP';
-			$data['token']    = $this->security->get_csrf_hash();
-			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;	
+		if (!$this->_isAdaNIP($_FILES['file']['name'])) {
+			// $data['error']    = 'Dokumen harus terdapat NIP';
+			// $data['token']    = $this->security->get_csrf_hash();
+			// $this->output
+			// 	->set_status_header(406)
+			// 	->set_content_type('application/json', 'utf-8')
+			// 	->set_output(json_encode($data));
+			// return FALSE;
+			$res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+			return $res;
 		}
-		
-			// validasi NIP apakah terdapat nip saya
-		if(!$this->_isAdaNIPSaya($_FILES['file']['name']))
-		{	
+
+		// validasi NIP apakah terdapat nip saya
+		if (!$this->_isAdaNIPSaya($_FILES['file']['name'])) {
 			$data['error']    = 'Dokumen harus  NIP Saya, cek ulang NIP di nama Dokumen';
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;	
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+			return FALSE;
 		}
 		// dd($_FILES['file']['name']);
 		// cek apakah ada dalam daftar arsip
-        
-	    if(!$this->kepegawaian->isArsip($_FILES['file']['name'])){
-            
+
+		if (!$this->kepegawaian->isArsip($_FILES['file']['name'])) {
+
 			$data['error']    = 'File ini tidak ada dalam daftar arsip';
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;			
-		}		
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+			return FALSE;
+		}
 
 
 		// cek apakah sudah sesuai format
-	    if(! $this->kepegawaian->isFormatOK($_FILES['file']['name'])){
-            
+		if (!$this->kepegawaian->isFormatOK($_FILES['file']['name'])) {
+
 			$data['error']    = 'File ini belum sesuai format';
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;			
-		}			
-		
-		
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+			return FALSE;
+		}
+
+
 		// cek minor tidak ada kode atau tahun
-		if(!$this->kepegawaian->isMinorOK($_FILES['file']['name']))
-		{
-		    $data['error']    = 'File ini KODE atau TAHUN belum sesuai format';
+		if (!$this->kepegawaian->isMinorOK($_FILES['file']['name'])) {
+			$data['error']    = 'File ini KODE atau TAHUN belum sesuai format';
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;		
-		}		
-		
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+			return FALSE;
+		}
+
 		// cek file size apa diperbolehkan		
 		$cekFile	= $this->kepegawaian->isAllowSize($_FILES['file']);
 		$response   = $cekFile['response'];
-		if(! $response)
-		{
+		if (!$response) {
 			$data['error']    = $cekFile['pesan'];
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));
-			return FALSE;	
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+			return FALSE;
 		}
-		
-		$target_dir						='./uploads/'.$this->_getNip($_FILES['file']['name']);		
+
+		$target_dir						= './uploads/' . $this->_getNip($_FILES['file']['name']);
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		//$config['max_size']             = 2048;
-		$config['encrypt_name']			= FALSE;	
-		$config['overwrite']			= TRUE;	
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
-		
-		$this->load->library('upload', $config);	
-		
-		if(!file_exists($target_dir)){
-			mkdir($target_dir,0777);
+
+		$this->load->library('upload', $config);
+
+		if (!file_exists($target_dir)) {
+			mkdir($target_dir, 0777);
 		}
-		
+
 		// coba upload file		
-		if ( ! $this->upload->do_upload('file'))
-		{			
-	       
+		if (!$this->upload->do_upload('file')) {
+
 			$data['error']    = strip_tags($this->upload->display_errors());
 			$data['token']    = $this->security->get_csrf_hash();
 			$this->output
-					->set_status_header(406)
-					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($data));				
-		}
-		else
-		{
+				->set_status_header(406)
+				->set_content_type('application/json', 'utf-8')
+				->set_output(json_encode($data));
+		} else {
 			$dataFile 			= $this->upload->data();
 			$result		        = $this->kepegawaian->insertUpload($dataFile);
-			$result['token']    = $this->security->get_csrf_hash();		
-			
-			if($result['response'])
-			{
+			$result['token']    = $this->security->get_csrf_hash();
+
+			if ($result['response']) {
 				$this->output
 					->set_status_header(200)
 					->set_content_type('application/json', 'utf-8')
-					->set_output(json_encode($result)); 
-			}
-			else
-			{
+					->set_output(json_encode($result));
+			} else {
 				$result['updated']  = $this->kepegawaian->updateFile($result);
 				$result['error'] 	= 'File ini sudah ada, update file';
 				$result['token']    = $this->security->get_csrf_hash();
@@ -175,74 +305,498 @@ class C_Kepegawaian extends CI_Controller
 					->set_status_header(200)
 					->set_content_type('application/json', 'utf-8')
 					->set_output(json_encode($result));
-
-			}	
-				
+			}
 		}
+	}
+
+	public function openDetailDokumen($id, $jd){
+		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
+		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
+		// dd($data);
+		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);
+	}
+
+	public function searchDokumenUsul(){
+		$data['result'] = $this->kepegawaian->searchDokumenUsul($this->input->post());
+		$ld = $this->session->userdata('list_dokumen');
+		$jenis_dok = $ld[$this->input->post('jenisdokumen')];
+		$data['param'] = $this->input->post();
+		$data['param']['jenisdokumen'] = $jenis_dok;
+		$this->session->set_userdata('list_dokumen_selected', $jenis_dok);
+
+		$this->load->view('kepegawaian/V_VerifikasiDokumenSearch', $data);
+	}
+
+	public function verifikasiDokumen(){
+		$data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+		$data['list_dokumen']['pegpangkat']['db'] = 'pegpangkat';
+		$data['list_dokumen']['pegpangkat']['nama'] = 'Pangkat';
+		$data['list_dokumen']['pegpangkat']['value'] = 'pangkat';
+
+		$data['list_dokumen']['pegjabatan']['db'] = 'pegjabatan';
+		$data['list_dokumen']['pegjabatan']['nama'] = 'Jabatan';
+		$data['list_dokumen']['pegjabatan']['value'] = 'jabatan';
+
+		$data['list_dokumen']['pegpendidikan']['db'] = 'pegpendidikan';
+		$data['list_dokumen']['pegpendidikan']['nama'] = 'Pendidikan';
+		$data['list_dokumen']['pegpendidikan']['value'] = 'pendidikan';
+
+		$data['list_dokumen']['peggajiberkala']['db'] = 'peggajiberkala';
+		$data['list_dokumen']['peggajiberkala']['nama'] = 'Gajiberkala';
+		$data['list_dokumen']['peggajiberkala']['value'] = 'gajiberkala';
+
+		$data['list_dokumen']['pegdiklat']['db'] = 'pegdiklat';
+		$data['list_dokumen']['pegdiklat']['nama'] = 'Diklat';
+		$data['list_dokumen']['pegdiklat']['value'] = 'diklat';
+
+		$data['list_dokumen']['pegorganisasi']['db'] = 'pegorganisasi';
+		$data['list_dokumen']['pegorganisasi']['nama'] = 'Organisasi';
+		$data['list_dokumen']['pegorganisasi']['value'] = 'organisasi';
+
+		$data['list_dokumen']['pegpenghargaan']['db'] = 'pegpenghargaan';
+		$data['list_dokumen']['pegpenghargaan']['nama'] = 'Penghargaan';
+		$data['list_dokumen']['pegpenghargaan']['value'] = 'penghargaan';
+
+		$data['list_dokumen']['pegsumpah']['db'] = 'pegsumpah';
+		$data['list_dokumen']['pegsumpah']['nama'] = 'Sumpah / Janji';
+		$data['list_dokumen']['pegsumpah']['value'] = 'sumpahjanji';
+
+		$data['list_dokumen']['pegkeluarga']['db'] = 'pegkeluarga';
+		$data['list_dokumen']['pegkeluarga']['nama'] = 'Keluarga';
+		$data['list_dokumen']['pegkeluarga']['value'] = 'keluarga';
+
+		$data['list_dokumen']['pegdatalain']['db'] = 'pegdatalain';
+		$data['list_dokumen']['pegdatalain']['nama'] = 'Penugasan';
+		$data['list_dokumen']['pegdatalain']['value'] = 'penugasan';
+
+		$data['list_dokumen']['pegcuti']['db'] = 'pegcuti';
+		$data['list_dokumen']['pegcuti']['nama'] = 'Cuti';
+		$data['list_dokumen']['pegcuti']['value'] = 'cuti';
+
+		$data['list_dokumen']['pegskp']['db'] = 'pegskp';
+		$data['list_dokumen']['pegskp']['nama'] = 'SKP';
+		$data['list_dokumen']['pegskp']['value'] = 'skp';
+
+		$data['list_dokumen']['pegassesment']['db'] = 'pegassesment';
+		$data['list_dokumen']['pegassesment']['nama'] = 'Assesment';
+		$data['list_dokumen']['pegassesment']['value'] = 'assesment';
+
+
+		$data['list_dokumen']['pegarsip']['db'] = 'pegarsip';
+		$data['list_dokumen']['pegarsip']['nama'] = 'Arsip Lainnya';
+		$data['list_dokumen']['pegarsip']['value'] = 'arsip';
+
+		$data['list_dokumen']['pegberkaspns']['db'] = 'pegberkaspns';
+		$data['list_dokumen']['pegberkaspns']['nama'] = 'SK CPNS & PNS';
+		$data['list_dokumen']['pegberkaspns']['value'] = 'berkaspns';
+
 		
+		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
+        render('kepegawaian/V_VerifikasiDokumen', '', '', $data);
+	}
+
+	function _extract_numbers($string)
+	{
+		preg_match_all('/([\d]+)/', $string, $match);
+		return $match[0];
+	}
+	
+	public function profilPegawai($nip){
+		if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
+			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
+			redirect('welcome');
+		} else {
+			$data['nip'] = $nip;
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+			render('kepegawaian/V_ProfilPegawai', '', '', $data);
+		}
+	}
+
+	public function uploadDokumen(){
+        // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+        $data['dokumen']         	= $this->kepegawaian->getDokumen();
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		
+		$data['nip'] = $this->general_library->getUserName();
+        render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
 
-    function _isAdaNIP($string)
-	{
-	    $number = $this->_extract_numbers($string);
-		$cek  = 0;
-		foreach($number as $value){
-		    if (strlen($value) == 18){
-                $cek |= TRUE;
-            }
-            else
-            {
-			    $cek |= FALSE;
-            }		
-	    }   
+	// public function LoadFormDokPangkat($jenis_user,$nip=null){
+	// 	$data['result'] = $this->kepegawaian->getPendidikan();
+	// 	$data['results'] = $this->kepegawaian->getPangkatPegawai();
+    //     render('kepegawaian/V_UploadDokumenNew', '', '', $data);
+    // }
+
+	public function LoadFormDokPenugasan(){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_penugasan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenistugas', 'id_jenistugas', 'desc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
+    }
+
+	public function LoadFormDokPangkat($nip){
+        // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		
-		return boolval($cek);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+			
+		}
+        $this->load->view('kepegawaian/V_FormUploadPangkat', $data);
+    }
+
+	public function LoadFormGajiBerkala($nip){
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 7);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadGajiBerkala', $data);
+    }
+
+	public function LoadFormPendidikan($nip){
+		// $data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
+		
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadPendidikan', $data);
+    }
+
+	public function LoadFormJabatan($nip){
+		// dd($nip);
+		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		
+		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadJabatan', $data);
+    }
+
+	public function LoadFormDiklat($nip){
+		$data['jenis_diklat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.diklat', 'id_diklat', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 20);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadDiklat', $data);
+    }
+
+	public function LoadFormOrganisasi($nip){
+		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'id_organisasi', 'asc');
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', null);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadOrganisasi', $data);
+    }
+
+	public function LoadFormPenghargaan($nip){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadPenghargaan', $data);
+    }
+
+	public function loadFormSkp($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadSkp', $data);
+    }
+
+	public function loadFormBerkasPns($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 2);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadBerkasPns', $data);
+    }
+
+	public function loadFormAssesment($nip){
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadAssesment', $data);
+    }
+
+	public function loadFormKeluarga($nip){
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['hubungan_keluarga'] = $this->kepegawaian->getAllWithOrder('db_pegawai.keluarga', 'id_keluarga', 'asc');
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadKeluarga', $data);
+    }
+
+	public function LoadFormCuti($nip){
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 17);
+		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_pegawai.cuti', 'id_cuti', 'asc');
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadCuti', $data);
+    }
+
+	public function LoadFormSumpahJanji($nip){
+		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
+		// dd($data);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadSumpahJanji', $data);
+    }
+
+	public function LoadFormArsip($nip){
+		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadArsipLainnya', $data);
+    }
+
+
+
+
+	public function layanan(){
+		$data['jenis_layanan'] = $this->kepegawaian->getJenisLayanan();
+        render('kepegawaian/V_Layanan', '', '', $data);
+    }
+
+
+	public function insertUsulLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayanan());
 	}
 
-    function _extract_numbers($string)
-	{
-	    preg_match_all('/([\d]+)/', $string, $match);
-	    return $match[0];
+	public function loadListUsulLayanan($id){
+		// dd($jenis_layanan);
+		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
+		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
+		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
 	}
 
-    function _isAdaNIPSaya($string)
-	{
+	public function Adminlayanan(){
+		$data['result'] = $this->kepegawaian->getAllUsulLayanan();
+        render('kepegawaian/V_AllUsulLayanan', '', '', $data);
+    }
+
+	public function CetakSurat($id_usul,$jenis_layanan){
+		// $this->load->library('pdf');
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
+		// dd($data);
+		// $this->load->view('kepegawaian/surat/V_SuratCuti', $data);
+  			
+
+		$this->load->library('pdfgenerator');
+        
+        // filename dari pdf ketika didownload
+        $file_pdf = "surat_cuti_".$data['result'][0]['nip'];
+        // setting paper
+        $paper = 'F4';
+        //orientasi paper potrait / landscape
+        $orientation = "portrait";
+        
+		$html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	    
+        
+        // run dompdf
+        $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
+
+
+    }
+
+
+	public function verifikasiLayanan($id_usul,$jenis_layanan){
+		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
+		// dd($data['result']);
+		$data['pangkat'] = array(1,3,7,10,12,13,15,16,17,20);
+		$data['gaji_berkala'] =  array(1);
+		$data['pendidikan'] = array(7,10,12,14,15,16);
+		$data['jabatan'] = array(3,15,16,17,20);
+		$data['diklat'] = array(14);
+		$data['organisasi'] = array(0);
+		$data['penghargaan'] = array(0);
+		$data['sj'] = array(0);
+		$data['keluarga'] = array(0);
+		$data['penugasan'] = array(0);
+		$data['cuti'] = array(0);
+		$data['skpns'] = array(7,8,9,12,13,14,15,16);
+		$data['skcpns'] = array(7,10,12,13,14,15,16);
+		$data['skp'] = array(7,9,14,15,16,17,20);
+		$data['drp'] = array(7);
+		$data['honor'] = array(7);
+		$data['suket_lain'] = array(7);
+		$data['ibel'] = array(10,15,16);
+		$data['forlap'] = array(10);
+		$data['karya_tulis'] = array(10,15,16);
+		$data['tubel'] = array(15,16,20);
+		$data['mutasi'] = array(17);
+		$data['serkom'] = array(17);
+		$data['pak'] = array(17,20);
+		$data['jenis_layanan'] = $jenis_layanan;
+		if($jenis_layanan == 3){
+			$data['folder'] = "cuti";
+		} else if($jenis_layanan){
+			$data['folder'] = "perbaikan_data";
+		}
+		
 	
-       
-		$user_id  = $this->general_library->getUserName();
-       
-	    $number = $this->_extract_numbers($string);
-		$cek  = 0;
-		foreach($number as $value){
-		    if ($value == $user_id){
-                $cek |= TRUE;
-            }
-            else
-            {
-			    $cek |= FALSE;
-            }		
-	    }   
-		
-		return boolval($cek);
+
+		render('kepegawaian/V_Verifikasi_Layanan', '', '', $data);
 	}
 
-
-    function _getNip($string)
+	public function openPresensiTab($id){
+		$data['id_pegawai'] = $id;
+		$this->load->view('kepegawaian/V_VerifikasiLayananPresensi', $data);
+	}
+	
+	public function getDataPresensiPegawai($id)
 	{
-	    $number = $this->_extract_numbers($string);
-		$r      = 0;
-		foreach($number as $value){
-		    if (strlen($value) == 18){
-                $r  = $value;
-            }            		
-	    }   
-		
-		return $r;
+		$data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id, $this->input->post('bulan'), $this->input->post('tahun'));
+		$data['result']['param']['bulan'] = $this->input->post('bulan');
+		$data['result']['param']['tahun'] = $this->input->post('tahun');
+        return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+		// $this->load->view('kepegawaian/V_DetailPresensiPegawai', $data);
+	}
+
+	public function loadFormLayanan($id){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+
+		if($id == 3){
+		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
+		$this->load->view('kepegawaian/form_layanan/V_FormCuti', $data);
+		} else {
+			$data['jenis_layanan'] = $id;
+			$this->load->view('kepegawaian/form_layanan/V_FormUsulLayanan', $data);
+		}
+    }
+
+	public function getFile()
+    {
+        $data = $this->kepegawaian->getFile();
+		// dd($data);
+        echo json_encode($data);
+    }
+
+	public function deleteUsulLayanan($id){
+        $this->general->delete('id_usul', $id, 'db_siladen.usul_layanan');
+    }
+
+
+	public function getAllUsulLayananAdmin($id){
+		$data['result'] = $this->kepegawaian->getAllUsulLayananAdmin($id);
+		// dd($data);
+		$this->load->view('kepegawaian/V_LayananItem', $data);
+	}
+
+	public function submitVerifikasiLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiLayanan());
 	}
 
 
-    
-    
+	
+
+	public function batalVerifikasiLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiLayanan());
+	}
+
+	public function submitNomorTglSurat()
+	{ 
+		echo json_encode( $this->kepegawaian->submitNomorTglSurat());
+	}
+
+
+	public function getNomorTanggalSurat()
+    {
+        $data = $this->kepegawaian->getNomorTanggalSurat();
+        echo json_encode($data);
+    }
+
+	public function getDataJabatan($id_unitkerja)
+    {
+        $searchTerm = $this->input->post('searchTerm');
+        $response   = $this->kepegawaian->getDataJabatan($id_unitkerja, $searchTerm);
+        echo json_encode($response);
+    }
+
+	public function deleteData($id,$table,$file = null)
+    {
+		
+        $this->kepegawaian->delete('id', $id, "db_pegawai.".$table,$file);
+    }
+
+	public function submitVerifikasiDokumen()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiDokumen());
+	}
+
+	public function batalSubmitVerifikasiDokumen()
+	{ 
+		echo json_encode( $this->kepegawaian->batalSubmitVerifikasiDokumen());
+	}
+
+	public function getDetailLayanan()
+    {
+        $data = $this->kepegawaian->getDetailLayanan();
+        echo json_encode($data);
+    }
+
 
 
 }

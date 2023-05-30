@@ -1,4 +1,7 @@
 <?php
+        
+// date_default_timezone_set("Asia/Singapore");
+date_default_timezone_set("America/Chicago");
 
 class General_library
 {
@@ -9,6 +12,7 @@ class General_library
 
     public function __construct()
     {
+        // dd(date('Y-m-d H:i:s'));
         $this->nikita = &get_instance();
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
@@ -18,6 +22,12 @@ class General_library
         date_default_timezone_set("Asia/Singapore");
         $this->nikita->load->model('general/M_General', 'm_general');
         $this->nikita->load->model('user/M_User', 'm_user');
+        $this->nikita->load->model('kinerja/M_Kinerja', 'm_kinerja');
+        $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
+    }
+
+    public function getServerDateTime(){
+        return date('Y-m-d H:i:s');
     }
 
     public function logErrorTelegram($data){
@@ -54,9 +64,17 @@ class General_library
     }
 
     public function getProfilePicture(){
-        $photo = 'assets/img/user.png';
+        $photo = 'assets/img/user-icon.png';
         if($this->userLoggedIn['profile_picture']){
             $photo = 'assets/profile_picture/'.$this->userLoggedIn['profile_picture'];
+        }
+        return base_url().$photo;
+    }
+
+    public function getFotoPegawai($url){
+        $photo = 'assets/img/user-icon.png';
+        if(file_exists($url)){
+            $photo = $url;
         }
         return base_url().$photo;
     }
@@ -116,6 +134,10 @@ class General_library
 
     public function isProgrammer(){
         return $this->getActiveRoleName() == 'programmer';
+    }
+
+    public function isAdminAplikasi(){
+        return $this->getActiveRoleName() == 'admin_aplikasi';
     }
 
     public function isAdministrator(){
@@ -341,6 +363,44 @@ class General_library
         return $this->userLoggedIn['id_m_bidang'];
     }
 
+    public function getNamaSKPDUser(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->userLoggedIn['nm_unitkerja'];
+    }
+
+    public function getIdPegSimpeg(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->userLoggedIn['id_peg'];
+    }
+
+    public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
+        return $this->nikita->m_rekap->getProduktivitasKerjaPegawai($id, $bulan, $tahun);
+    }
+
+    public function countHariKerjaBulanan($bulan, $tahun){
+        return $this->nikita->m_user->countHariKerjaBulanan($bulan, $tahun);
+    }
+
+    public function getPaguTppPegawai($bulan, $tahun){
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($this->getId());
+        $data['id_unitkerja'] = $this->userLoggedIn['skpd'];
+        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $this->getId());
+        // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
+        $produktivitas_kerja = $this->getProduktivitasKerjaPegawai($this->getId(), $bulan, $tahun);
+        return $this->nikita->m_user->getTppPegawai($this->getId(), $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
+    }
+
+    public function getPaguTppPegawaiByIdPegawai($id_m_user, $bulan, $tahun){
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($id_m_user);
+        $data['id_unitkerja'] = $unitkerja['id_unitkerja'];
+        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $id_m_user);
+        // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
+        $produktivitas_kerja = $this->getProduktivitasKerjaPegawai($id_m_user, $bulan, $tahun);
+        return $this->nikita->m_user->getTppPegawai($id_m_user, $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
+    }
+
     public function test(){
         return 'tiokors';
     }
@@ -417,5 +477,7 @@ class General_library
         // $image['file_name'] = $resize_image;
         return ['code' => '0', 'data' => $image];
     }
+
+
+
 }
-?>

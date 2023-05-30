@@ -313,4 +313,136 @@ class C_User extends CI_Controller
     public function getSubBidangByBidang($id){
         echo json_encode($this->master->getSubBidangByBidang($id));
     }
+
+    public function setRolesBulk(){
+        $this->user->setRolesBulk(null);
+    }
+
+    public function importPegawaiByUnitKerjaMaster($id_unitkerjamaster){
+        echo json_encode($this->user->importPegawaiByUnitKerjaMaster($id_unitkerjamaster));
+    }
+
+    public function detailTppPegawai(){
+        render('user/V_TppPegawai', null, null, null);
+    }
+
+    public function searchDetailTppPegawai(){
+        $data = $this->input->post();
+        $data['tpp'] = $this->general_library->getPaguTppPegawai($data['bulan'], $data['tahun']);
+        $this->session->set_userdata('search_detail_tpp_pegawai', $data['tpp']);
+        if($data['bulan'] == date('m') && $data['tahun'] == date('Y')){
+            $this->session->set_userdata('live_tpp', $data['tpp']);
+        }
+        $this->load->view('user/V_DetailTppPegawai', $data);
+    }
+
+    public function absensiPegawai(){
+        render('user/V_AbsensiPegawai', null, null, null);
+    }
+
+    public function searchDetailAbsenPegawai(){
+        $dt = $this->input->post();
+        $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        $data['result']['param'] = $dt;
+        if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y')){
+            $this->session->set_userdata('live_tpp', $data['result']);
+        }
+        return $this->load->view('user/V_DetailAbsensiPegawai', $data);
+    }
+
+    public function loadHeaderCetakan(){
+        $this->load->view('adminkit/partials/V_HeaderRekapAbsen', null);
+    }
+
+    public function searchPegawaiNavbar(){
+        $data['result'] = $this->user->searchPegawai($this->input->post());
+        $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);
+    }
+
+    public function profilPegawai(){
+        
+    }
+
+    public function pegawaiPensiun(){
+        $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        render('user/V_PegawaiPensiun', '', '', $data);
+    }
+
+    public function getListPegawaiPensiunByYear($flag_welcome_view = 0){
+        $data['result'] = $this->m_general->getListPegawaiPensiunByYear($this->input->post());
+        if($flag_welcome_view == 0){
+            $temp['result'] = $data['result'];
+            $temp['param'] = $this->input->post();
+            $this->session->set_userdata('data_pensiun', $temp);
+            $this->load->view('user/V_PegawaiPensiunItem', $data);
+        } else {
+            $count['total'] = count($data['result']);
+            echo json_encode($count);
+        }
+    }
+
+    public function pegawaiNaikPangkat(){
+        $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        render('user/V_PegawaiNaikpangkat', '', '', $data);
+    }
+
+    public function getListPegawaiNaikPangkatByYear($flag_welcome_view = 0){
+        $data['result'] = $this->m_general->getListPegawaiNaikPangkatByYear($this->input->post());
+        if($flag_welcome_view == 0){
+            $temp['result'] = $data['result'];
+            $temp['param'] = $this->input->post();
+            $this->session->set_userdata('data_naik_pangkat', $temp);
+            $this->load->view('user/V_PegawaiNaikpangkatItem', $data);
+        } else {
+            $count['total'] = count($data['result']);
+            echo json_encode($count);
+        }
+    }
+
+    public function pegawaiGajiBerkala(){
+        $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        render('user/V_PegawaiGajiBerkala', '', '', $data);
+    }
+
+    public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){
+        $data['result'] = $this->m_general->getListPegawaiGajiBerkalaByYear($this->input->post());
+        if($flag_welcome_view == 0){
+            $temp['result'] = $data['result'];
+            $temp['param'] = $this->input->post();
+            $this->session->set_userdata('data_gaji_berkala', $temp);
+            $this->load->view('user/V_PegawaiGajiBerkalaItem', $data);
+        } else {
+            $count['total'] = count($data['result']);
+            echo json_encode($count);
+        }
+    }
+
+    public function cetakNaikPangkat(){
+        $temp = $this->session->userdata('data_naik_pangkat');
+        $data['result'] = $temp['result'];
+        $data['param'] = $temp['param'];
+        $this->load->view('user/V_PrintNaikpangkat', $data);
+    }
+
+    public function cetakPensiun(){
+        $temp = $this->session->userdata('data_pensiun');
+        $data['result'] = $temp['result'];
+        $data['param'] = $temp['param'];
+        $this->load->view('user/V_PrintPensiun', $data);
+    }
+
+    public function cetakGajiBerkala(){
+        $temp = $this->session->userdata('data_gaji_berkala');
+        $data['result'] = $temp['result'];
+        $data['param'] = $temp['param'];
+        $this->load->view('user/V_PrintGajiBerkala', $data);
+    }
+
+    public function getDataChartDashboardAdmin(){
+        $result = $this->general->getDataChartDashboardAdmin();
+        echo json_encode($result);
+    }
 }

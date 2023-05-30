@@ -12,6 +12,21 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function getAllUnitKerjaByIdUnitKerjaMasterNew($ukmaster){
+            return $this->db->select('*,
+            (SELECT count(aa.nipbaru_ws)
+            FROM db_pegawai.pegawai aa
+            WHERE aa.skpd = a.id_unitkerja) as total,
+            (SELECT count(bb.nipbaru_ws)
+            FROM db_pegawai.pegawai bb
+            WHERE bb.skpd = a.id_unitkerja
+            AND bb.jk = "Laki-laki") as total_laki')
+                            ->from('db_pegawai.unitkerja a')
+                            ->where('a.id_unitkerjamaster', $ukmaster)
+                            ->order_by('a.nm_unitkerja', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getAllUnitKerjaByIdUnitKerjaMaster($ukmaster = '0000000'){
             return $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
@@ -319,9 +334,46 @@
             }
         }
 
-        public function deleteJamKerja(){
+        public function deleteJamKerja($id){
             $this->db->where('id', $id)
-                    ->update('t_hari_libur', ['flag_active' => 0]); 
+                    ->update('t_jam_kerja', ['flag_active' => 0]); 
+        }
+
+        public function tambahJamKerja($data){
+            $res['code'] = 0;
+            $res['message'] = '';
+            
+            $this->db->trans_begin();
+
+            $this->db->insert('t_jam_kerja', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+            return $res;
+        }
+
+        public function saveEditJamKerja($id, $data){
+            $res['code'] = 0;
+            $res['message'] = '';
+            
+            $this->db->trans_begin();
+
+            $this->db->where('id', $id)
+                    ->update('t_jam_kerja', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+            return $res;
         }
 
         public function getAllJamKerja(){
@@ -407,6 +459,185 @@
             }
 
             return $rs;
+        }
+
+        public function getAllMasterSkpd(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            // ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+                            ->order_by('id_unitkerjamaster', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getDetailMasterSkpd($id_unitkerja){
+            $result['total'] = null;
+            $result['kepala_skpd'] = null;
+            $result['list_pegawai'] = null;
+            $result['pangkat'] = null;
+            $result['eselon'] = null;
+            $result['agama'] = null;
+            $result['pendidikan'] = null;
+            $result['jenis_kelamin']['laki']['nama'] = 'Laki-laki';
+            $result['jenis_kelamin']['laki']['jumlah'] = 0;
+            $result['jenis_kelamin']['perempuan']['nama'] = 'Perempuan';
+            $result['jenis_kelamin']['perempuan']['jumlah'] = 0;
+            $result['statuspeg'] = null;
+
+            $result['golongan'][1]['nama'] = 'Golongan I';
+            $result['golongan'][1]['jumlah'] = 0;
+            $result['golongan'][1]['id_golongan'] = 1;
+
+            $result['golongan'][2]['nama'] = 'Golongan II';
+            $result['golongan'][2]['jumlah'] = 0;
+            $result['golongan'][2]['id_golongan'] = 2;
+
+            $result['golongan'][3]['nama'] = 'Golongan III';
+            $result['golongan'][3]['jumlah'] = 0;
+            $result['golongan'][3]['id_golongan'] = 3;
+
+            $result['golongan'][4]['nama'] = 'Golongan IV';
+            $result['golongan'][4]['jumlah'] = 0;
+            $result['golongan'][4]['id_golongan'] = 4;
+
+            $result['golongan'][5]['nama'] = 'Golongan V';
+            $result['golongan'][5]['jumlah'] = 0;
+            $result['golongan'][5]['id_golongan'] = 5;
+
+            // $temp_pangkat = $this->db->select('*')
+            //                     ->from('db_pegawai.pangkat')
+            //                     ->get()->result_array();
+
+            // foreach($temp_pangkat as $p){
+            //     $result['pangkat'][$p['id_pangkat']] = $p;
+            //     $result['pangkat'][$p['id_pangkat']]['nama'] = $p['nm_pangkat'];
+            //     $result['pangkat'][$p['id_pangkat']]['jumlah'] = 0;
+            // }
+
+            $temp_eselon = $this->db->select('*')
+                                ->from('db_pegawai.eselon')
+                                ->get()->result_array();
+            foreach($temp_eselon as $e){
+                $result['eselon'][$e['nm_eselon']] = $e;
+                $result['eselon'][$e['nm_eselon']]['nama'] = $e['nm_eselon'];
+                $result['eselon'][$e['nm_eselon']]['jumlah'] = 0;
+            }
+
+            $temp_agama = $this->db->select('*')
+                                ->from('db_pegawai.agama')
+                                ->get()->result_array();
+            foreach($temp_agama as $a){
+                $result['agama'][$a['id_agama']] = $a;
+                $result['agama'][$a['id_agama']]['nama'] = $a['nm_agama'];
+                $result['agama'][$a['id_agama']]['jumlah'] = 0;
+            }
+
+            $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+            foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['jumlah'] = 0;
+            }
+
+            $temp_statuspeg = $this->db->select('*')
+                                ->from('db_pegawai.statuspeg')
+                                ->get()->result_array();
+            foreach($temp_statuspeg as $sp){
+                $result['statuspeg'][$sp['id_statuspeg']] = $sp;
+                $result['statuspeg'][$sp['id_statuspeg']]['nama'] = $sp['nm_statuspeg'];
+                $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
+            }
+
+            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+            a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
+            a.fotopeg, b.id_unitkerja')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('a.skpd', $id_unitkerja)
+            ->order_by('c.eselon')
+            ->get()->result_array();
+
+            $result['total'] = count($pegawai);
+
+            foreach($pegawai as $peg){
+                if($peg['kepalaskpd'] == 1){
+                    $result['kepala_skpd'] = $peg;
+                }
+                $result['list_pegawai'][] = $peg;
+                // $result['pangkat'][$peg['id_pangkat']]['jumlah']++;
+                $result['golongan'][substr($peg['id_pangkat'], 0, 1)]['jumlah']++;
+                // $gol1 = [11, 12, 13, 14];
+                // $gol2 = [21, 22, 23, 24];
+                // $gol3 = [31, 32, 33, 34];
+                // $gol4 = [41, 42, 43, 44, 45];
+                if(!$peg['eselon']){
+                    $result['eselon']['Non Eselon']['jumlah']++;
+                } else {
+                    $result['eselon'][$peg['eselon']]['jumlah']++;
+                }
+                if($peg['pendidikan']){
+                    $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
+                }
+                $result['agama'][$peg['agama']]['jumlah']++;
+                if($peg['jk'] == 'Laki-Laki'){
+                    $result['jenis_kelamin']['laki']['jumlah']++;
+                } else {
+                    $result['jenis_kelamin']['perempuan']['jumlah']++;
+                }
+                $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+            }
+            // dd($result);
+            return $result;
+        }
+
+        public function searchPegawaiSkpdByFilter($data){
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+            a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
+            a.fotopeg, b.id_unitkerja')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('a.skpd', $data['id_unitkerja'])
+            ->order_by('c.eselon');
+
+            if($data['eselon'] != "0"){
+                $this->db->where('c.eselon', $data['eselon']);
+            }
+
+            if($data['jenis_kelamin'] != "0"){
+                $this->db->where('a.jk', $data['jenis_kelamin']);
+            }
+
+            if($data['agama'] != "0"){
+                $this->db->where('a.agama', $data['agama']);
+            }
+
+            if($data['status_pegawai'] != "0"){
+                $this->db->where('a.statuspeg', $data['status_pegawai']);
+            }
+
+            if($data['pendidikan'] != "0"){
+                $this->db->where('a.pendidikan', $data['pendidikan']);
+            }
+
+            if($data['golongan'] != "0"){
+                $this->db->where('substr(d.id_pangkat,1,1) = ', $data['golongan']);
+            }
+
+            if($data['nama_pegawai']){
+                $this->db->like('a.nama', $data['nama_pegawai']);
+            }
+
+            // $result = $this->db->get()->result_array();
+            // dd($result);
+            return $this->db->get()->result_array();
         }
 	}
 ?>

@@ -13,6 +13,10 @@
                 <a class="nav-link" id="custom-content-below-excel-tab" data-toggle="pill" 
                 href="#custom-content-below-excel" role="tab" aria-controls="custom-content-below-excel" aria-selected="false">Excel</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-content-below-aars-tab" data-toggle="pill" 
+                href="#custom-content-below-aars" role="tab" aria-controls="custom-content-below-aars" aria-selected="false">AARS</a>
+            </li>
         </ul>
         <div class="tab-content mt-3" id="custom-content-below-tabContent">
             <div class="tab-pane fade show active" id="custom-content-below-database" role="tabpanel" aria-labelledby="custom-content-below-database-tab">
@@ -55,7 +59,7 @@
                                 <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 text-right">
                             <div class="form-group">
                                 <button type="submit" style="margin-top: 8px;" class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
                             </div>
@@ -97,16 +101,69 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane fade" id="custom-content-below-aars" role="tabpanel" aria-labelledby="custom-content-below-aars-tab">
+                <form id="search_form_aars" enctype="multipart/form-data" method="post">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Pilih SKPD</label>
+                                <select class="form-control select2-navy" style="width: 100%"
+                                    data-dropdown-css-class="select2-navy" name="skpd">
+                                    <?php foreach($list_skpd as $s){ ?>
+                                        <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Pilih Bulan</label>
+                                <select class="form-control select2-navy" style="width: 100%"
+                                    data-dropdown-css-class="select2-navy" name="bulan">
+                                    <option <?=date('m') == '01' ? 'selected' : ''?> value="01">Januari</option>
+                                    <option <?=date('m') == '02' ? 'selected' : ''?> value="02">Feburari</option>
+                                    <option <?=date('m') == '03' ? 'selected' : ''?> value="03">Maret</option>
+                                    <option <?=date('m') == '04' ? 'selected' : ''?> value="04">April</option>
+                                    <option <?=date('m') == '05' ? 'selected' : ''?> value="05">Mei</option>
+                                    <option <?=date('m') == '06' ? 'selected' : ''?> value="06">Juni</option>
+                                    <option <?=date('m') == '07' ? 'selected' : ''?> value="07">Juli</option>
+                                    <option <?=date('m') == '08' ? 'selected' : ''?> value="08">Agustus</option>
+                                    <option <?=date('m') == '09' ? 'selected' : ''?> value="09">September</option>
+                                    <option <?=date('m') == '10' ? 'selected' : ''?> value="10">Oktober</option>
+                                    <option <?=date('m') == '11' ? 'selected' : ''?> value="11">November</option>
+                                    <option <?=date('m') == '12' ? 'selected' : ''?> value="12">Desember</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Pilih Tahun</label>
+                                <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-right">
+                            <div class="form-group">
+                                <button type="submit" style="margin-top: 8px;" class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-12">
+                    <hr>
+                    <div id="result_search_aars" class="row mt-3 table-responsive">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
     $(function(){
-        $('#jam_kerja').select2()
+        // $('#jam_kerja').select2()
         loadMenu()
-        $('#skpd').select2()
-        $('#bulan').select2()
+        $('.select2-navy').select2()
+        // $('#bulan').select2()
     })
 
     function loadMenu(){
@@ -128,6 +185,23 @@
             success: function(data){
                 $('#result_search').html('')
                 $('#result_search').html(data)
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
+    $('#search_form_aars').on('submit', function(e){
+        $('#result_search_aars').html('')
+        $('#result_search_aars').append(divLoaderNavy)
+        e.preventDefault();
+        $.ajax({
+            url: '<?=base_url("rekap/C_Rekap/readAbsensiAars")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                $('#result_search_aars').html('')
+                $('#result_search_aars').html(data)
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }

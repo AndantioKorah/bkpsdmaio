@@ -1,28 +1,73 @@
 <?php if(isset($skpd)){ ?>
     <html>
         <head>
-         
+            <style>
+                .nm_hrl{
+                    font-size: .9rem;
+                    font-weight: bold;
+                }
+
+                .tgl_hrl{
+                    font-size: .8rem;
+                    font-weight: 600;
+                }
+            </style>
         </head>
         <?php
-            if(isset($flag_print) && $flag_print == 1){
+            if(isset($flag_print) && $flag_print == 1 && !isset($flag_pdf)){
                 $filename = $nama_file;
                 header("Content-type: application/vnd-ms-excel");
                 header("Content-Disposition: attachment; filename=\"$filename\""); 
             }
         ?>
-        <body>
-                <center>
-                <h5 style="font-size: 20px;">
+        <?php if(isset($flag_print) && $flag_print == 1){ ?>
+            <body style="font-family: Tahoma">
+        <?php } else { ?>
+            <body>
+        <?php } ?>
+            <?php if(isset($flag_print) && $flag_print == 1 && isset($flag_pdf) && $flag_pdf == 1){
+                $this->load->view('adminkit/partials/V_HeaderRekapAbsen', '');
+            ?>
+            <?php } ?>
+            <center>
+                <h5 style="font-size: 20px; text-align: center;">
                     REKAP ABSENSI <?=strtoupper($skpd)?><br>
-                    <?=strtoupper($periode)?>
+                    <?php if(isset($flag_rekap_aars)){ ?>
+                        <?="BULAN ".strtoupper($periode)?>
+                    <?php } else { ?>
+                        <?=strtoupper($periode)?>
+                    <?php } ?>
                 </h5>
                 <?php if(isset($flag_print) && $flag_print == 0){ ?>
-                    <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
-                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as Excel</button>
-                    </form>
+                    <?php if(isset($flag_rekap_aars)){ ?>
+                        <div class="row">
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars')?>">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-file-excel"></i> Download as Excel</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadRekapAbsensiAars/1')?>">
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php } else { ?>
+                        <div class="row">
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew')?>">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-file-excel"></i> Download as Excel</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form target="_blank" action="<?=base_url('rekap/C_Rekap/downloadAbsensiNew/1')?>">
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    
                     <br>
-
-                   
                     <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jam_kerja['nama_jam_kerja']?></span>
                     <table style="width: 50%; margin-bottom: 10px;" border=1>
                         <thead>
@@ -33,52 +78,111 @@
                         <tbody>
                             <tr>
                                 <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_masuk']?></td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfo_pulang']?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfo_masuk'])?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfo_pulang'])?></td>
                             </tr>
                             <tr>
                                 <td style="font-size: 14px; text-align: center;">Jumat</td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_masuk']?></td>
-                                <td style="text-align: center; font-size: 14px;"><?=$jam_kerja['wfoj_pulang']?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfoj_masuk'])?></td>
+                                <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jam_kerja['wfoj_pulang'])?></td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <?php if(isset($jam_kerja_event) && count($jam_kerja_event) > 0){
+                        foreach($jam_kerja_event as $jke){
+                    ?>
+                        <br>
+                        <div>
+                        <span style="font-size: 14px; font-weight: bold;">Jadwal Jam Kerja <?=$jke['nama_jam_kerja']?></span><br>
+                        <span style="font-size: 14px; font-weight: normal;"><?='Berlaku dari '.formatDateNamaBulan($jke['berlaku_dari']).' - '.formatDateNamaBulan($jke['berlaku_sampai'])?></span>
+                        <table style="width: 50%; margin-bottom: 10px;" border=1>
+                            <thead>
+                                <th style="text-align: center; font-size: 14px;">Hari</th>
+                                <th style="text-align: center; font-size: 14px;">Jam Masuk</th>
+                                <th style="text-align: center; font-size: 14px;">Jam Pulang</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-size: 14px; text-align: center;">Senin - Kamis</td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_masuk'])?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfo_pulang'])?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 14px; text-align: center;">Jumat</td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_masuk'])?></td>
+                                    <td style="text-align: center; font-size: 14px;"><?=formatTimeAbsen($jke['wfoj_pulang'])?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <?php } } ?>
+                    <?php if(isset($info_libur)){ ?>
+                        <div class="row" style="width: 100%;">
+                            <div class="col-lg-12">
+                                <span style="font-weight: bold;">HARI LIBUR</span>
+                            </div>
+                            <?php $i = 0; foreach($info_libur as $il){ ?>
+                                <div style="line-height: 1rem;" class="mb-2 mt-2 col-lg-6 <?=fmod($i, 2) == 0 ? 'text-right' : 'text-left';?>">
+                                    <span class="nm_hrl"><?=$il['keterangan']?></span><br>
+                                    <?php
+                                        $tgl_libur = formatDateNamaBulan($il['tanggal_awal']);
+                                        if($il['tanggal_awal'] != $il['tanggal_akhir']){
+                                            $explode_awal = explode("-", $il['tanggal_awal']);
+                                            $explode_akhir = explode("-", $il['tanggal_akhir']);
+                                            $tgl_libur = $explode_awal[2].' - '.$explode_akhir[2].' '.getNamaBulan($explode_akhir[1]).' '.$explode_akhir[0];
+                                        }
+                                    ?>
+                                    <span class="tgl_hrl"><?=$tgl_libur?></span>
+                                </div>
+                            <?php $i++; } ?>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
                 </center>
                
-                <br>
-
-                <!-- tes  -->
-   
-
-    <br /><br />
-    <?php if(isset($flag_print) && $flag_print == 0){ ?>
+    <?php if(isset($flag_print) && $flag_print == 0 && isset($flag_rekap_aars)){ ?>
+        <br /><br /><br>
+    <?php } if(isset($flag_print) && $flag_print == 0){ ?>
         <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
     <?php } ?>
     <div class="div_maintb">
-    <table class="rekap-table table"  border="1" id="table_rekap_absenx">
-            <thead>
+    <table class="rekap-table table" style="border-collapse: collapse;" border="1" id="table_rekap_absenx">
+        <thead>
             <tr> 
-                        <?php $i=0; 
+                    <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){
                             foreach($disiplin_kerja as $dk){
-                                if($dk['keterangan']){
+                                if($dk['keterangan'] && $dk['keterangan'] == 'TK'){
                                     $list_dk[] = $dk['keterangan'];
                                 }
                             }
                         }
-                       
-                        foreach($header[0] as $h){
-                            $val = $h;
-                            $rowspan = 1;
-                            if($i !=0 || $i != 1){
-                                $val = $val.'<br>'.$header[1][$i];
+                        if(isset($flag_rekap_aars)){
+                        ?>
+                            <th style="text-align: center; ">No</th>
+                            <th style="text-align: center; ">Nama</th>
+                            <th style="text-align: center; ">NIP</th>
+                        <?php
+                            foreach($list_hari as $lh){
+                                $tanggal = explode("-", $lh);
+                                $val = getNamaHari($lh).'<br>'.$tanggal[2];
+                        ?>
+                            <th style="text-align: center; "><?= $val?></th>
+                        <?php
                             }
-                            if(strlen($val) >= 5){
-                        ?>  
-                        <th  style="text-align: center; "><?= $val?></th>
-                        <?php $i++; } }?>
+                        } else {
+                            foreach($header[0] as $h){
+                                $val = $h;
+                                $rowspan = 1;
+                                if($i !=0 || $i != 1){
+                                    $val = $val.'<br>'.$header[1][$i];
+                                }
+                                if(strlen($val) >= 5){
+                            ?>  
+                            <th style="text-align: center; "><?= $val?></th>
+                            <?php $i++; } }?>
+                        <?php } ?>
                         <th style="text-align: center; ">JHK</th>
                         <th style="text-align: center; ">Hadir</th>
                         <!-- <th style="text-align: center; ">Alpa</th> -->
@@ -97,9 +201,14 @@
 		</tr> 
             </thead>
             <tbody>
-            <?php  $no = 1; foreach($result as $rs){
-                          
-                          if(isset($rs['absen'])){
+            <?php
+                $data_foreach = $result;
+                if(isset($flag_rekap_aars)){
+                    $data_foreach = $result['result'];
+                    // dd(json_encode($data_foreach));
+                };
+                $no = 1; foreach($data_foreach as $rs){
+                        if(isset($rs['absen'])){
                           $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                           ?>
                               <tr class="<?=$bgtr?>">
@@ -136,13 +245,21 @@
                                           $txtcolorpulang = '#ff0000';
                                       }
                                   ?>
-                                  <td class="content_table" bgcolor="<?=$bgcolor?>">
-                                      <?php if($a['ket'] == "A"){ ?>
+                                  <td style="text-align: center;" class="content_table" bgcolor="<?=$bgcolor?>">
+                                      <?php if(isset($flag_rekap_aars) && isset($hari_libur[$a['tanggal']])){ ?>
+                                        <span style="color: black;">-</span>
+                                      <?php } else if($a['ket'] == "A"){ ?>
                                           <span style="color: <?=$textcolor?>;"><?=$a['ket']?></span>
                                       <?php } else if(in_array($a['ket'], $list_dk)){ ?>
                                           <span style="color: <?=$txtcolordisker?>;"><?=$a['ket']?></span>
                                       <?php } else { ?>
-                                          <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span> - <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
+                                          <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span>
+                                          <?php if(isset($flag_print) && $flag_print == 1 && isset($flag_pdf) && $flag_pdf == 1) { ?>
+                                            <br>-<br>
+                                          <?php } else { ?>
+                                            -
+                                          <?php } ?>
+                                          <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
                                       <?php } ?>
                                   </td>
                                   <?php } ?>

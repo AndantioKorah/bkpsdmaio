@@ -63,6 +63,8 @@
         {
             $this->db->select('*, a.nama as nama_user')
                         ->from('m_user a')
+                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('a.flag_active', 1);
@@ -242,6 +244,258 @@
             $data_telegram['message'] = '';
             $req = $this->telegramlib->send_curl_exec('GET', 'sendMessage', '713399901', $data_telegram);
         }
+
+
+        public function getIdPeg($username){
+            $query = $this->db->select('b.id_peg')
+            // ->from('db_pegawai.pegawai a')
+            // ->where('nipbaru_ws', $username)
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->where('a.id', $this->general_library->getId())
+            ->get()->row_array();
+            return $query['id_peg'];
+        }
+
+        public function getListPegawaiGajiBerkalaByYear($data){
+            $result = null;
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->order_by('a.tmtgjberkala');
+
+            if($data['eselon'] != "0"){
+                $this->db->where('c.eselon', $data['eselon']);
+            }
+
+            if($data['pangkat'] != "0"){
+                $this->db->where('d.id_pangkat', $data['pangkat']);
+            }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
+            }
+            $query = $this->db->get()->result_array();
+
+            if($query){
+                foreach($query as $q){
+                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
+                    $angka = explode(" ",$diff);
+                    if($diff >= 2){
+                        $result[] = $q;
+                    }
+                }
+            }
+            
+            return $result;
+        }
+
+        public function getListPegawaiNaikPangkatByYear($data){
+            $result = null;
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtpangkat')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->order_by('a.tmtpangkat');
+
+            if($data['eselon'] != "0"){
+                $this->db->where('c.eselon', $data['eselon']);
+            }
+
+            if($data['pangkat'] != "0"){
+                $this->db->where('d.id_pangkat', $data['pangkat']);
+            }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
+            }
+            $query = $this->db->get()->result_array();
+
+            if($query){
+                foreach($query as $q){
+                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
+                    $angka = explode(" ",$diff);
+                    if($diff >= 4){
+                        $result[] = $q;
+                    }
+                }
+            }
+            
+            return $result;
+        }
+
+        public function getListPegawaiPensiunByYear($data){
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+                    d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                    ->order_by('c.eselon');
+
+            if($data['eselon'] != "0"){
+                $this->db->where('c.eselon', $data['eselon']);
+            }
+
+            if($data['pangkat'] != "0"){
+                $this->db->where('d.id_pangkat', $data['pangkat']);
+            }
+
+            if(isset($data['skpd'])){
+                $this->db->where('a.skpd', $data['skpd']);
+            }
+            $query = $this->db->get()->result_array();
+
+            $result = null;
+            if($query){
+                foreach($query as $d){
+                    $temp = null;
+                    $tgl_lahir = explode("-", $d['tgllahir']);
+                    if(floatval($data['tahun']) - $tgl_lahir[0] >= 58){ //pejabat berumum lebih dari 58 tahun pada saat $data['tahun']
+                        $id_pangkat_ahli_madya = [41, 42, 43];
+                        $id_pangkat_ahli_utama = [44, 45];
+                        if(floatval($data['tahun']) - $tgl_lahir[0] >= 60){ //jika berumur 60 tahun
+                            if($d['eselon'] == 'II A' || $d['eselon'] == 'II B'){ // pejabat pimpinan tinggi
+                                $temp = $d;
+                            } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //fungsional ahli madya
+                                $temp = $d;
+                            } else if((stringStartWith('Guru', $d['nama_jabatan'])) && (stringStartWith('Dokter', $d['nama_jabatan']))){ //bukan guru atau dokter
+                                $temp = $d;
+                            }
+                        } else if((floatval($data['tahun']) - $tgl_lahir[0] >= 65) &&
+                            (in_array($d['id_pangkat'], $id_pangkat_ahli_madya))){ //umur 65 dan pejabat fungsional ahli utama
+                                $temp = $d;
+                        } else if($d['eselon'] != 'II A' && $d['eselon'] != 'II B' &&
+                            (!stringStartWith('Guru', $d['nama_jabatan']) &&
+                            !stringStartWith('Dokter', $d['nama_jabatan']))){ //umur 58, bukan guru dan bukan dokter
+                                $temp = $d;
+                        }
+                        $umur = floatval($data['tahun']) - $tgl_lahir[0];
+                        if($temp){
+                            $temp['umur'] = floatval($data['tahun']) - $tgl_lahir[0];
+                            $result[] = $temp;
+                        }
+                    }
+                }
+            }
+            return $result;
+        }
+
+        public function getDataChartDashboardAdmin(){
+            $result['total'] = null;
+            $result['pangkat'] = null;
+            $result['eselon'] = null;
+            $result['agama'] = null;
+            $result['pendidikan'] = null;
+            $result['jenis_kelamin']['laki']['nama'] = 'Laki-laki';
+            $result['jenis_kelamin']['laki']['jumlah'] = 0;
+            $result['jenis_kelamin']['perempuan']['nama'] = 'Perempuan';
+            $result['jenis_kelamin']['perempuan']['jumlah'] = 0;
+            $result['statuspeg'] = null;
+
+            $result['golongan'][1]['nama'] = 'Golongan I';
+            $result['golongan'][1]['jumlah'] = 0;
+
+            $result['golongan'][2]['nama'] = 'Golongan II';
+            $result['golongan'][2]['jumlah'] = 0;
+
+            $result['golongan'][3]['nama'] = 'Golongan III';
+            $result['golongan'][3]['jumlah'] = 0;
+
+            $result['golongan'][4]['nama'] = 'Golongan IV';
+            $result['golongan'][4]['jumlah'] = 0;
+
+            $result['golongan'][5]['nama'] = 'Golongan V';
+            $result['golongan'][5]['jumlah'] = 0;
+
+            // $temp_pangkat = $this->db->select('*')
+            //                     ->from('db_pegawai.pangkat')
+            //                     ->get()->result_array();
+
+            // foreach($temp_pangkat as $p){
+            //     $result['pangkat'][$p['id_pangkat']] = $p;
+            //     $result['pangkat'][$p['id_pangkat']]['nama'] = $p['nm_pangkat'];
+            //     $result['pangkat'][$p['id_pangkat']]['jumlah'] = 0;
+            // }
+
+            $temp_eselon = $this->db->select('*')
+                                ->from('db_pegawai.eselon')
+                                ->get()->result_array();
+            foreach($temp_eselon as $e){
+                $result['eselon'][$e['nm_eselon']] = $e;
+                $result['eselon'][$e['nm_eselon']]['nama'] = $e['nm_eselon'];
+                $result['eselon'][$e['nm_eselon']]['jumlah'] = 0;
+            }
+
+            $temp_agama = $this->db->select('*')
+                                ->from('db_pegawai.agama')
+                                ->get()->result_array();
+            foreach($temp_agama as $a){
+                $result['agama'][$a['id_agama']] = $a;
+                $result['agama'][$a['id_agama']]['nama'] = $a['nm_agama'];
+                $result['agama'][$a['id_agama']]['jumlah'] = 0;
+            }
+
+            $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+            foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['jumlah'] = 0;
+            }
+
+            $temp_statuspeg = $this->db->select('*')
+                                ->from('db_pegawai.statuspeg')
+                                ->get()->result_array();
+            foreach($temp_statuspeg as $sp){
+                $result['statuspeg'][$sp['id_statuspeg']] = $sp;
+                $result['statuspeg'][$sp['id_statuspeg']]['nama'] = $sp['nm_statuspeg'];
+                $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
+            }
+
+            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg, a.agama')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->get()->result_array();
+
+            $result['total'] = count($pegawai);
+
+            foreach($pegawai as $peg){
+                // $result['pangkat'][$peg['id_pangkat']]['jumlah']++;
+                $result['golongan'][substr($peg['id_pangkat'], 0, 1)]['jumlah']++;
+                // $gol1 = [11, 12, 13, 14];
+                // $gol2 = [21, 22, 23, 24];
+                // $gol3 = [31, 32, 33, 34];
+                // $gol4 = [41, 42, 43, 44, 45];
+                if(!$peg['eselon']){
+                    $result['eselon']['Non Eselon']['jumlah']++;
+                } else {
+                    $result['eselon'][$peg['eselon']]['jumlah']++;
+                }
+                if($peg['pendidikan']){
+                    $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
+                }
+                $result['agama'][$peg['agama']]['jumlah']++;
+                if($peg['jk'] == 'Laki-Laki'){
+                    $result['jenis_kelamin']['laki']['jumlah']++;
+                } else {
+                    $result['jenis_kelamin']['perempuan']['jumlah']++;
+                }
+                $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+            }
+            // dd($result);
+            return $result;
+        }
+
 
 	}
 ?>

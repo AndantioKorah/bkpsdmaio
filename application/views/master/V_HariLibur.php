@@ -15,14 +15,23 @@
                 </div>
                 <div class="col-lg-4 col-md-4">
                     <div class="form-group">
-                        <label class="bmd-label-floating">Keterangan Hari Libur</label>
+                        <label class="bmd-label-floating">Nama Hari</label>
                         <input class="form-control" autocomplete="off" name="keterangan" id="keterangan"/>
                     </div>
                 </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Keterangan</label>
+                        <select class="form-control select2-navy select2_this" style="width: 100%"
+                            data-dropdown-css-class="select2-navy" name="flag_hari_libur_nasional">
+                                <option value="0">Tidak Libur</option>
+                                <option selected value="1">Libur</option>
+                        </select>
+                    </div>
+                </div>
                 
-                <div class="col-lg-2 col-md-2 text-left">
-                    <label class="bmd-label-floating" style="color: white;">..</label>
-                    <button class="btn btn-block btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
+                <div class="col-lg-12 text-right">
+                    <button class="btn btn-block btn-navy mt-2" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
                 </div>
             </div>
         </form>

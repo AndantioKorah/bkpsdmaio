@@ -28,10 +28,15 @@ class C_Login extends CI_Controller
     }
 
     public function welcomePage(){
-        // if(!$this->general_library->isNotMenu()){
-        //     redirect('logout');
-        // };
-        render('login/V_Welcome', '', '', null);
+        if(!$this->general_library->isNotMenu()){
+            redirect('logout');
+        };
+        $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+        $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
+        $this->session->set_userdata('live_tpp', $data['tpp']);
+        // $data = null;
+
+        render('login/V_Welcome', '', '', $data);
     }
 
     public function authenticateAdmin()

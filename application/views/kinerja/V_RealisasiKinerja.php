@@ -124,8 +124,9 @@
               <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div id="edit_realisasi_kinerja_content">
-          </div>
+       <div id="modal-body">
+        <div id="edit_realisasi_kinerja_content"></div>
+       </div>
       </div>
   </div>
 </div>
@@ -225,7 +226,7 @@
 
     
         $('#upload_form').on('submit', function(e){  
-        document.getElementById('btn_upload').disabled = true;
+        // document.getElementById('btn_upload').disabled = true;
         $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()

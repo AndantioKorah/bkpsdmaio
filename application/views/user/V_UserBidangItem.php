@@ -1,5 +1,5 @@
 <div class="row p-3">
-    <?php if($rs['id_m_bidang'] != 0){
+    <?php if($rs){ if($rs['id_m_bidang'] != 0){
         // $nama_bidang = $rs['nama_bidang'];
         // if($rs['id_m_sub_bidang'] != "0"){
         //     $nama_bidang = $rs['nama_bidang']." (".$rs['nama_sub_bidang'].")";
@@ -25,7 +25,7 @@
         <div class="col-12 text-center">
             <h5><i class="fa fa-exclamation"></i> User ini belum ditentukan Bidang</h5>
         </div>
-    <?php } ?>
+    <?php } } ?>
 </div>
 
 <script>

@@ -2,7 +2,7 @@
 require_once 'tio.php';
 require_once 'laporan.php';
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -68,5 +68,21 @@ $route['kinerja/rekap'] = 'kinerja/C_Kinerja/rekapKinerja';
 $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 
 
+
+
 // Kepegawaian
+// $route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
 $route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/layanan'] = 'Kepegawaian/C_Kepegawaian/layanan';
+$route['kepegawaian/teknis'] = 'Kepegawaian/C_Kepegawaian/Adminlayanan';
+$route['kepegawaian/cetak/'] = 'Kepegawaian/C_Kepegawaian/CetakSurat';
+$route['kepegawaian/verifikasi/(:any)/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1/$2';
+$route['kepegawaian/dokumen/verifikasi'] = 'Kepegawaian/C_Kepegawaian/verifikasiDokumen';
+
+$route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
+
+
+//api
+$route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';

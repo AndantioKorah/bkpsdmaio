@@ -69,6 +69,7 @@
       <div class="modal-body">
       <form method="post" id="upload_form_gaji_berkala" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
+    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
 
     <div class="form-group" style="margin-bottom:10px !important;">

@@ -70,6 +70,7 @@
       <div class="modal-body">
       <form method="post" id="upload_form_berkas_pns" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
+    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
     <div class="form-group">
     <select class="form-select" aria-label="Default select example" name="jenissk" id="jenissk" required>

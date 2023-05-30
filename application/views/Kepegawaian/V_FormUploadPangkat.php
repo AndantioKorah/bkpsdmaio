@@ -45,7 +45,8 @@
           </div>
         <div class="modal-body">
            <div id="modal_view_file_content">
-        <iframe  style="width: 100%; height: 80vh;"   id="iframe_view_file"  frameborder="0" ></iframe>	
+            <h5 id="iframe_loader" class="text-center"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
          </div>
         </div>
       </div>

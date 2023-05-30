@@ -60,7 +60,47 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
+  
+  async function openFilePangkat(filename){
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+        'username': 'prog',
+        'password': '742141189Bidik.',
+        'filename': 'arsipelektronik/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+        $('#iframe_view_file').attr('src', res.data)
+        $('#iframe_view_file').on('load', function(){
+          $('#iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+          errortoast('Terjadi Kesalahan')
+      }
+    })
+  }
+
+  // function openFilePangkatbu1(filename) async () => {
+  //   const response = await fetch('http://siladen.manadokota.go.id/bidik/api/api/getDokumen', {
+  //     method: 'POST',
+  //     body: {
+  //       username: 'prog',
+  //       password: '742141189Bidik.',
+  //       filename: 'arsipelektronik/'.filename
+  //     }, // string or object
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   });
+  //   const myJson = await response.json(); //extract JSON from the http response
+  //   console.log(myJson);
+  // }
+
+  function openFilePangkatbu(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
     $('#iframe_view_file').attr('src', '<?=base_url();?>arsipelektronik/'+filename)
   }

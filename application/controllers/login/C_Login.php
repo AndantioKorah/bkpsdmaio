@@ -6,6 +6,7 @@ class C_Login extends CI_Controller
     {
         parent::__construct();
         $this->load->model('general/M_General', 'm_general');
+        // $this->load->library('libraries/Dokumenlib', 'doklib');
         $this->load->model('user/M_User', 'user');
     }
 
@@ -28,6 +29,13 @@ class C_Login extends CI_Controller
     }
 
     public function welcomePage(){
+        // $res = $this->dokumenlib->getDokumenWs('POST',[
+        //     'username' => 'prog',
+        //     'password' => '742141189Bidik.',
+        //     'filename' => 'arsipcuti/12155151SIC_Tahunan_2022_Marcelino_Lametige_sign.pdf'
+        // ]);
+        // file_get_contents(base64ToFile($res['response'], 'test.pdf'));
+        // dd($res);
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };

@@ -12,6 +12,12 @@ class C_Kepegawaian extends CI_Controller
 		};
 	}
 
+	public function fetchDokumenWs(){
+		$res = $this->dokumenlib->getDokumenWs('POST', $this->input->post());
+		$response = json_decode($res['response'], true);
+		echo json_encode($response);
+	}
+
 	public function loadListPangkat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip,$kode);
 		$data['kode'] = $kode;

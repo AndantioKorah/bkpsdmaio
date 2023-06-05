@@ -188,7 +188,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_organisasi").reset();
-                // loadFormOrganisasi()
+                loadListOrganisasi()
               } else {
                 errortoast(result.msg)
                 return false;

@@ -887,15 +887,24 @@
 
         if($temp_jam_kerja_event){
             foreach($temp_jam_kerja_event as $tjke){
-                if((($list_hari[0]) >= ($tjke['berlaku_dari'])) &&
-                    ($list_hari[0]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal awal masuk dalam jam kerja event
+                $i = 0;
+                foreach($list_hari as $lhr){
+                    $i++;
+                    if($lhr == $tjke['berlaku_dari'] || $lhr == $tjke['berlaku_sampai']){ //cek jika tanggal masuk dalam range tanggal jam kerja event
                         $jam_kerja_event[] = $tjke;
-                } else if((($list_hari[count($list_hari)-1]) >= ($tjke['berlaku_dari'])) &&
-                    ($list_hari[count($list_hari)-1]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal akhir masuk dalam jam kerja event
-                    $jam_kerja_event[] = $tjke;
+                        break;
+                    }
                 }
+                // if((($list_hari[0]) >= ($tjke['berlaku_dari'])) &&
+                //     ($list_hari[0]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal awal masuk dalam jam kerja event
+                //         $jam_kerja_event[] = $tjke;
+                // } else if((($list_hari[count($list_hari)-1]) >= ($tjke['berlaku_dari'])) &&
+                //     ($list_hari[count($list_hari)-1]) <= ($tjke['berlaku_sampai'])){  //cek jika tanggal akhir masuk dalam jam kerja event
+                //     $jam_kerja_event[] = $tjke;
+                // }
             }
         }
+        $data['jam_kerja_event'] = null;
         if($jam_kerja_event){
             $data['jam_kerja_event'] = $jam_kerja_event;
         }

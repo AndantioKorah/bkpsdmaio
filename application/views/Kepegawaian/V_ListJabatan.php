@@ -60,7 +60,8 @@
 
   function openFilePangkat(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
+    // $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
+    $('#iframe_view_file_jabatan').attr('src', 'http://simpegserver/adm/arsipjabatan/'+filename)
   }
 
 

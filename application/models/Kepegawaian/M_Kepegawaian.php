@@ -344,12 +344,12 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('c.created_date,c.id,c.status,d.nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+              $this->db->select('c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
-                            ->join('db_pegawai.eselon e','c.eselon = e.id_eselon')
+                            // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
@@ -925,10 +925,9 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-        // dd($this->input->post());
-        // dd($nama_file);
+      
         if($this->input->post('id_dokumen') == 4){
-            $target_dir						= './arsipelektronik/';
+            $target_dir						= './';
         } else if($this->input->post('id_dokumen') == 7){
             $target_dir						= './arsipgjberkala/';
         } else if($this->input->post('id_dokumen') == 5){
@@ -946,7 +945,7 @@ class M_Kepegawaian extends CI_Model
         }  else {
             $target_dir						= './uploads/';
         }
-        // dd($target_dir);
+
 		
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
@@ -969,13 +968,20 @@ class M_Kepegawaian extends CI_Model
 			$data['token']    = $this->security->get_csrf_hash();
             $res = array('msg' => 'Data gagal disimpan', 'success' => false);
             return $res;
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
+
 		} else {
 			$dataFile 			= $this->upload->data();
-          
+            $base64 = $this->fileToBase64($dataFile['full_path']);
+            // dd($base64);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => 'prog',
+                'password' => '742141189Bidik.',
+                'filename' => 'arsipelektronik/'.$dataFile['file_name'],
+                'docfile'  => $base64
+            ]);
+            
+            
+
             $dataFile['nama_file'] =  "$nama_file.pdf";
 			$result		        = $this->insertUpload($dataFile);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -1033,6 +1039,18 @@ class M_Kepegawaian extends CI_Model
     return $res;
         
 	}
+
+    function fileToBase64($pathfile){
+        if(file_exists($pathfile)){
+            $type = pathinfo($pathfile, PATHINFO_EXTENSION);
+            $data = file_get_contents($pathfile);
+            // $base64 = 'data:file\pdf' . $type . ';base64,' . base64_encode($data);
+            $base64 = 'data:file/' . $type . ';base64,' . base64_encode($data);
+            return $base64;
+        } 
+        return null;
+    }
+    
 
     public function doUploadAssesment()
 	{

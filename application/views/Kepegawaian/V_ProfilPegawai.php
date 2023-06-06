@@ -82,9 +82,9 @@
                   
               </div>
 
-              
+           
 
-              <!-- <div class="col-lg-12 text-center">
+              <div class="col-lg-12 text-center">
                 <span class="sp_profil">
                   <?=getNamaPegawaiFull($profil_pegawai)?>
                 </span>
@@ -93,7 +93,7 @@
                 <span class="sp_profil">
                   <?=formatNip($profil_pegawai['nipbaru_ws'])?>
                 </span>
-              </div> -->
+              </div>
               <div class="col-lg-12 text-center" >
                 <button data-toggle="modal" onclick="loadEditProfilModal()" class="btn btn-block btn-navy"  data-toggle="modal" data-target="#editProfileModal">
                   <i class="fa fa-edit"></i> Edit Profil
@@ -106,10 +106,10 @@
               <!-- profil  -->
               <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
               <li class="nav-item nav-item-profile" role="presentation">
-                <button class="nav-link nav-link-profile active" id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
+                <button class="nav-link nav-link-profile " id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button class="nav-link nav-link-profile" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
+                <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile" id="pills-data_lain-tab" data-bs-toggle="pill" data-bs-target="#pills-data_lain" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Data Lainnya</button>
@@ -118,7 +118,7 @@
 
             <div class="col-lg-12">
             <div class="tab-content" id="pills-tabContent">
-              <div class="tab-pane show active" id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
+              <div class="tab-pane " id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
                 <div id="">
                  <!-- data pribadi  -->
                 <div class="col-lg-12 div_label text-left">
@@ -240,7 +240,7 @@
                <!-- end data pribadi  -->
                 </div>
               </div>
-              <div class="tab-pane fade" id="pills-data_kepeg" role="tabpanel" aria-labelledby="pills-data_kepeg-tab">
+              <div class="tab-pane show active" id="pills-data_kepeg" role="tabpanel" aria-labelledby="pills-data_kepeg-tab">
                 <div id="">
                  <!-- data kepegawaian  -->
                 <div class="col-lg-12 div_label text-left">
@@ -594,28 +594,46 @@
         <input <?= $profil_pegawai['jk'] == 'Perempuan' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Perempuan">
         <label class="form-check-label" for="inlineRadio2">Perempuan</label>
       </div>
-
       </div>
       
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Golongan Darah </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="inputPassword6" class="form-control">
+      <div class="form-check form-check-inline">
+      <input <?= $profil_pegawai['goldarah'] == 'A' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Laki-Laki">
+      <label class="form-check-label" for="inlineRadio1">A</label>
       </div>
-
+      <div class="form-check form-check-inline">
+        <input <?= $profil_pegawai['goldarah'] == 'B' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Perempuan">
+        <label class="form-check-label" for="inlineRadio2">B</label>
+      </div>
+      <div class="form-check form-check-inline">
+      <input <?= $profil_pegawai['jk'] == 'O' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Laki-Laki">
+      <label class="form-check-label" for="inlineRadio1">O</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input <?= $profil_pegawai['jk'] == 'AB' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Perempuan">
+        <label class="form-check-label" for="inlineRadio2">AB</label>
+      </div>
+      </div>
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Alamat </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="inputPassword6" class="form-control">
+        <input type="text" id="inputPassword6" class="form-control" value="<?= $profil_pegawai['alamat']?>">
       </div>
 
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Unit Kerja / SKPD </label>
+        <label for="inputPassword6" class="col-form-label"> Unit Kerja / SKPD  </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="inputPassword6" class="form-control">
+      <select class="form-control select2unitkerja" data-dropdown-css-class="" name="edit_unit_kerja" id="edit_unit_kerja" required>
+                    <option value="" disabled selected>Pilih Unit Kerja</option>
+                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?>   value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                    <?php } } ?>
+    </select>
       </div>
 
       <div class="col-lg-2">
@@ -668,6 +686,13 @@
       </div>
 
       <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> TMT Pangkat </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+      <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> TMT Gaji Berkala </label>
       </div>
       <div class="col-lg-10">
@@ -690,7 +715,7 @@
 
       
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Jenis Jabatan </label>
+        <label for="inputPassword6" class="col-form-label"> Diklat Struktural </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="" class="form-control" >
@@ -698,28 +723,41 @@
 
       
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Jabatan </label>
+        <label for="inputPassword6" class="col-form-label"> NIK </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="" class="form-control" >
       </div>
 
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> TMT Jabatan </label>
+        <label for="inputPassword6" class="col-form-label"> No Seri Karpeg </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="" class="form-control" >
       </div>
 
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Eselon </label>
+        <label for="inputPassword6" class="col-form-label"> No Seri Karpeg </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="" class="form-control" >
       </div>
 
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> No Handphone </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
 
-      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Email </label>
+      </div>
+      <div class="col-lg-10">
+        <input type="text" id="" class="form-control" >
+      </div>
+
+         
     </div>
    
       <button type="submit" class="btn btn-primary float-right">Submit</button>
@@ -737,6 +775,14 @@
   var nip = "<?= $nip;?>"; 
   $(function(){
     $('#pills-pangkat-tab').click()
+
+    $('.select2unitkerja').select2()
+  //   $(".select2unitkerja").select2({   
+	// 	width: '100%',
+	// 	dropdownAutoWidth: true,
+	// 	allowClear: true,
+	// });
+
   })
 
   function loadEditProfilModal(){
@@ -886,3 +932,4 @@
     </div>
   </div>
 <?php } ?>
+

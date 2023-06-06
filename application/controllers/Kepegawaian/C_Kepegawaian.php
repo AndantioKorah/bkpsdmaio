@@ -412,6 +412,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
+		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['nip'] = $nip;
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 			render('kepegawaian/V_ProfilPegawai', '', '', $data);
@@ -422,7 +423,7 @@ class C_Kepegawaian extends CI_Controller
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-		
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$data['nip'] = $this->general_library->getUserName();
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }

@@ -60,6 +60,22 @@
     .div.dataTables_wrapper div.dataTables_filter input{
       height: 10px !important;
     }
+
+    #profile_pegawai{
+      width: 250px;
+      height: calc(250px * 1.25);
+      background-size: cover;
+      /* object-fit: contain; */
+      box-shadow: 5px 5px 10px #888888;
+      border-radius: 10%;
+    }
+
+    .badge{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: #ed1818;
+      border: 2px solid #ed1818;
+      color: white;
+    }
   </style>
 
   <div class="row">
@@ -70,14 +86,14 @@
             <div class="row">
               <?php if($profil_pegawai['statuspeg'] == 1){ ?>
                 <div class="col-lg-12 text-left">
-                  <h3><span class="badge badge-danger">CPNS</span></h3>
+                  <h3><span class="badge">CPNS</span></h3>
                 </div>
               <?php } ?>
               <div class="col-lg-12 text-center">
                 <!-- <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
                   src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
                   data-src="<?=$this->general_library->getFotoPegawai($profil_pegawai['fotopeg'])?>" /> -->
-                  <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
+                  <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
                   src="http://simpegserver/adm/fotopeg/<?=$profil_pegawai['fotopeg']?>" /> 
                   
               </div>
@@ -121,7 +137,7 @@
               <div class="tab-pane " id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
                 <div id="">
                  <!-- data pribadi  -->
-                <div class="col-lg-12 div_label text-left">
+              <!-- <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Nama Lengkap
                 </span>
@@ -140,7 +156,7 @@
                 <span class="sp_profil_sm">
                 <?=formatNip($profil_pegawai['nipbaru_ws'])?>
                 </span>
-              </div>
+              </div> -->
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   NIK (Nomor Induk Kependudukan)

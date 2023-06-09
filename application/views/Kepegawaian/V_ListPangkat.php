@@ -36,7 +36,7 @@
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left">
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                <i class="fa fa-file-pdf"></i></button> 
               </td>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
@@ -62,17 +62,21 @@
 
   
   async function openFilePangkat(filename){
+   
+    $('#iframe_view_file').hide()
+    $('#iframe_loader').show()  
     console.log(filename)
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
       method: 'POST',
       data: {
-        'username': 'prog',
-        'password': '742141189Bidik.',
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
         'filename': 'arsipelektronik/'+filename
       },
       success: function(data){
         let res = JSON.parse(data)
+        $(this).show()
         $('#iframe_view_file').attr('src', res.data)
         $('#iframe_view_file').on('load', function(){
           $('#iframe_loader').hide()

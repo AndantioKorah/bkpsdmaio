@@ -105,7 +105,7 @@ class Dokumenlib extends CI_Model{
         curl_setopt($session, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($session, CURLOPT_POSTFIELDS, $data_body);
         curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
+        // curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
         
         $result = curl_exec($session);
 
@@ -117,6 +117,10 @@ class Dokumenlib extends CI_Model{
         
         return ['request' => $data_body, 'response' => $result, 'message' => $message];
     }
+
+
+    
+
 }
 
 

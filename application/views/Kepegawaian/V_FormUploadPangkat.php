@@ -270,10 +270,10 @@ $(function(){
     })
   }
 
-  function openFilePangkat(filename){
-    var nip = <?=$this->general_library->getUserName()?>;
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
-  }
+  // function openFilePangkat(filename){
+  //   var nip = <?=$this->general_library->getUserName()?>;
+  //   $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
+  // }
 
   $("#pdf_file").change(function (e) {
 

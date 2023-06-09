@@ -259,12 +259,12 @@ function clearString($str)
 
 function formatCurrency($data)
 {
-    return "Rp " . number_format($data, 0, ",", ".");
+    return "Rp " . number_format($data, 2, ",", ".");
 }
 
 function formatCurrencyWithoutRp($data)
 {
-    return number_format($data, 0, ",", ".");
+    return number_format($data, 2, ",", ".");
 }
 
 function formatDateOnly($data)

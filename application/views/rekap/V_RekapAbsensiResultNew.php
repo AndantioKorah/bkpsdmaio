@@ -153,9 +153,9 @@
                         $list_dk = null;
                         if($disiplin_kerja){
                             foreach($disiplin_kerja as $dk){
-                                if($dk['keterangan'] && $dk['keterangan'] == 'TK'){
+                                // if($dk['keterangan'] && $dk['keterangan'] == 'TK'){
                                     $list_dk[] = $dk['keterangan'];
-                                }
+                                // }
                             }
                         }
                         if(isset($flag_rekap_aars)){
@@ -185,6 +185,7 @@
                         <?php } ?>
                         <th style="text-align: center; ">JHK</th>
                         <th style="text-align: center; ">Hadir</th>
+                        <th style="text-align: center; ">Anulir</th>
                         <!-- <th style="text-align: center; ">Alpa</th> -->
                         <th style="text-align: center; ">TMK 1</th>
                         <th style="text-align: center; ">TMK 2</th>
@@ -223,7 +224,7 @@
                                       $txtcolorpulang = 'black';
                                       $txtcolordisker = '#05ada5';
   
-                                      if($a['ket'] == "A"){
+                                      if($a['ket'] == "TK"){
                                           // $bgcolor = 'a3f0ec';
                                           $textcolor = '#05ada5';
                                       } else if(in_array($a['ket'], $list_dk)){
@@ -235,20 +236,28 @@
                                           $txtcolormasuk = '#d37c00';
                                       } else if($a['ket_masuk'] == 'tmk3'){
                                           $txtcolormasuk = '#ff0000';
-                                      }
-  
+                                      } else if($a['jam_masuk'] == 'TLP'){
+                                        $txtcolormasuk = '#05ada5';
+                                      } else if($a['jam_masuk'] == 'Anulir'){
+                                        $txtcolormasuk = '#bb01c7';
+                                      } 
+
                                       if($a['ket_pulang'] == 'pksw1'){
                                           $txtcolorpulang = '#d3b700';
                                       } else if($a['ket_pulang'] == 'pksw2'){
                                           $txtcolorpulang = '#d37c00';
                                       } else if($a['ket_pulang'] == 'pksw3'){
                                           $txtcolorpulang = '#ff0000';
-                                      }
+                                      } else if($a['jam_pulang'] == 'TLS'){
+                                        $txtcolorpulang = '#05ada5';
+                                      } else if($a['jam_pulang'] == 'Anulir'){
+                                        $txtcolorpulang = '#bb01c7';
+                                      } 
                                   ?>
-                                  <td style="text-align: center;" class="content_table" bgcolor="<?=$bgcolor?>">
+                                  <td style="text-align: center; padding: 0;" class="content_table" bgcolor="<?=$bgcolor?>">
                                       <?php if(isset($flag_rekap_aars) && isset($hari_libur[$a['tanggal']])){ ?>
                                         <span style="color: black;">-</span>
-                                      <?php } else if($a['ket'] == "A"){ ?>
+                                      <?php } else if($a['ket'] == "TK"){ ?>
                                           <span style="color: <?=$textcolor?>;"><?=$a['ket']?></span>
                                       <?php } else if(in_array($a['ket'], $list_dk)){ ?>
                                           <span style="color: <?=$txtcolordisker?>;"><?=$a['ket']?></span>
@@ -261,10 +270,20 @@
                                           <?php } ?>
                                           <span style="color: <?=$txtcolorpulang?>"><?=$a['jam_pulang']?></span>
                                       <?php } ?>
+                                      <?php if($a['status_absensi'] == 4 || $a['status_absensi'] == 5 || $a['status_absensi'] == 6){ ?>
+                                        <br>
+                                        <span style="
+                                            font-size: 8px;
+                                            color: #bb01c7;
+                                            font-weight: bold;
+                                        "
+                                        class="txt_keterangan_anulir">(<?=$a['ket_status_absensi']?>)</span>
+                                      <?php } ?>
                                   </td>
                                   <?php } ?>
                                   <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
                                   <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
+                                  <td style=" text-align: center; font-weight: bold; color: <?=$rs['jumlah_anulir'] > 0 ? '#bb01c7;' : '#aaaeb3;'?>"><?=$rs['jumlah_anulir']?></td>
                                   <!-- <td style=" text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
                                   <td style=" text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>

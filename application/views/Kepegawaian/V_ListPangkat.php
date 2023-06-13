@@ -67,8 +67,8 @@
       url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
       method: 'POST',
       data: {
-        'username': 'prog',
-        'password': '742141189Bidik.',
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
         'filename': 'arsipelektronik/'+filename
       },
       success: function(data){

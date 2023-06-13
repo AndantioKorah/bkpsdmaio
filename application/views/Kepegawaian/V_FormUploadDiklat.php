@@ -41,20 +41,6 @@
       </div>
     </div>
 </div>
-<div class="modal fade" id="modal_view_file_diklat" data-backdrop="static">
-<div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-        <div class="modal-body">
-        <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_diklat" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-        </div>
-      </div>
-    </div>
-</div>
 
 
 
@@ -75,7 +61,7 @@
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Diklat </label>
+    <label >Jenis Diklat </label>
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="diklat_jenis" id="diklat_jenis" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_diklat){ foreach($jenis_diklat as $r){ ?>

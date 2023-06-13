@@ -34,7 +34,7 @@
               <td class="text-left"><?= formatDateNamaBulan($rs['tglijasah'])?></td>
               <td class="text-left">
                 <button href="#modal_view_file_pendidikan" onclick="openFilePendidikan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                 <i class="fa fa-file-pdf"></i></button>
               </td>
               <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
@@ -60,7 +60,8 @@
           </div>
         <div class="modal-body">
         <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_pendidikan" style="width: 100%; height: 80vh;" src=""></iframe>
+        <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_pendidikan"  frameborder="0" ></iframe>	
       </div>
         </div>
       </div>
@@ -85,9 +86,43 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePendidikan(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_pendidikan').attr('src', '<?=base_url();?>arsippendidikan/'+filename)
+  // function openFilePendidikan(filename){
+  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   $('#iframe_view_file_pendidikan').attr('src', '<?=base_url();?>arsippendidikan/'+filename)
+  // }
+
+
+  async function openFilePendidikan(filename){
+    $('#iframe_view_file_pendidikan').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsippendidikan/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+
+
+        if(res == null){
+          $('.iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
+        }
+
+        $('#iframe_view_file_pendidikan').attr('src', res.data)
+        $('#iframe_view_file_pendidikan').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
   }
 
 

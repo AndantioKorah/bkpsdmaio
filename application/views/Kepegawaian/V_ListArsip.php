@@ -16,10 +16,10 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['name']?></td>
+              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['name'];?></td>
               <td class="text-left">
-                <button href="#modal_view_file_arsip" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
               </td>
               <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
@@ -36,6 +36,21 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modal_view_file_arsip" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_arsip"  frameborder="0" ></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
                 
 
  
@@ -44,9 +59,43 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_arsip').attr('src', '<?=base_url();?>arsiplain/'+filename)
+  // function openFileArsip(filename){
+  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   $('#iframe_view_file_arsip').attr('src', '<?=base_url();?>arsiplain/'+filename)
+  // }
+
+  
+  async function openFileArsip(filename){
+    $('#iframe_view_file_arsip').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsiplain/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+
+
+        if(res == null){
+          $('iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK')
+        }
+
+        $('#iframe_view_file_arsip').attr('src', res.data)
+        $('#iframe_view_file_arsip').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
   }
 
   function deleteKegiatan(id,file){

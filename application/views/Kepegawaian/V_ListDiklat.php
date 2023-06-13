@@ -35,8 +35,8 @@
               <td class="text-left"><?= formatDateNamaBulan($rs['tglmulai'])?> / <?= formatDateNamaBulan($rs['tglselesai'])?></td>
               <td class="text-left"><?=$rs['nosttpp']?> / <?=formatDateNamaBulan($rs['tglsttpp'])?></td>
               <td class="text-left">
-                <button href="#modal_view_file_diklat" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                <button href="#modal_view_file_diklat" onclick="openFileDiklat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
               </td>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
@@ -56,15 +56,66 @@
   </div>
 
 
+  <div class="modal fade" id="modal_view_file_diklat" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_diklat"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
  
 <script>
   $(function(){
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_diklat').attr('src', '<?=base_url();?>arsipdiklat/'+filename)
+  // function openFilePangkat(filename){
+  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   $('#iframe_view_file_diklat').attr('src', '<?=base_url();?>arsipdiklat/'+filename)
+  // }
+
+
+  async function openFileDiklat(filename){
+    $('#iframe_view_file_diklat').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsipdiklat/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+
+
+        if(res == null){
+          $('iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK')
+        }
+
+        $('#iframe_view_file_diklat').attr('src', res.data)
+        $('#iframe_view_file_diklat').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
   }
 
   function deleteKegiatan(id,file){

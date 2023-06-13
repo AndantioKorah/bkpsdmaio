@@ -59,7 +59,7 @@
       <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
 <div class="form-group " style="margin-bottom:10px !important;">
-<label for="exampleFormControlInput1">Jenis Penugasan</label>
+<label >Jenis Penugasan</label>
 <select  class="form-control  "  name="jenispenugasan" id="jenispenugasan" required>
                 <option value="" disabled selected>Pilih Jenis Penugasan</option>
                 <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>

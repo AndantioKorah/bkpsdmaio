@@ -60,7 +60,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Tingkat Pendidikan </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
+    <select class="form-control select2" data-dropdown-parent="#modalPendidikan" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_tingkat_pendidikan){ foreach($list_tingkat_pendidikan as $r){ ?>
                         <option value="<?=$r['id_tktpendidikanb']?>"><?=$r['nm_tktpendidikanb']?></option>

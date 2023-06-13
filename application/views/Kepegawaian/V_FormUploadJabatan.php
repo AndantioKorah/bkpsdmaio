@@ -44,10 +44,6 @@
 </div>
 
 
-
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="modalJabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -65,14 +61,11 @@
     
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_unitkerjaxx">Unit Kerja </label>
-    <select class="form-control select2x"  name="jabatan_unitkerjaxx" id="jabatan_unitkerjaxx" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="jabatan_unitkerjaxx" id="jabatan_unitkerjaxx" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
-                    <option value="" >1</option>
-                    <option value="" >2</option>
-                    <option value="" >3</option>
-                    <!-- <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
                         <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>,<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
-                    <?php } } ?> -->
+                    <?php } } ?>
     </select>
 
     </div>
@@ -107,7 +100,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_jenis">Jenis Jabatan </label>
-    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_jenis" id="jabatan_jenis" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_jenis" id="jabatan_jenis" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_jabatan){ foreach($jenis_jabatan as $r){ ?>
                         <option value="<?=$r['id_jenisjab']?>"><?=$r['nm_jenisjab']?></option>
@@ -120,7 +113,7 @@
     <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
                         <option value="" selected>Pilih Jabatan</option>
                     </select> -->
-    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
@@ -204,7 +197,7 @@
 
 
 $(function(){
-  $(".select2x").select2({   
+  $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,

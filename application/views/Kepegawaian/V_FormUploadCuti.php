@@ -74,7 +74,7 @@
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Cuti </label>
+    <label >Jenis Cuti </label>
     <select class="form-control select2"
 			data-dropdown-css-class="select2-navy" name="cuti_jenis" id="cuti_jenis" required>
 			<option value="" disabled selected>Pilih Item</option>

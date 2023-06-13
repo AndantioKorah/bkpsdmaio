@@ -64,17 +64,20 @@
     <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Unit Kerja </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_unitkerja" id="jabatan_unitkerja" required>
+    <label for="jabatan_unitkerjaxx">Unit Kerja </label>
+    <select class="form-control select2x"  name="jabatan_unitkerjaxx" id="jabatan_unitkerjaxx" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
-                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
-                        <option <?php if($this->general_library->getUnitKerjaPegawai() == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
-                    <?php } } ?>
+                    <option value="" >1</option>
+                    <option value="" >2</option>
+                    <option value="" >3</option>
+                    <!-- <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>,<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                    <?php } } ?> -->
     </select>
+
     </div>
 
-    <script>
-          
+    <script> 
         //      $("#jabatan_unitkerja").change(function() {
         //     var id_unitkerja = $("#jabatan_unitkerja").val();
         //     $("#jabatan_nama").select2({
@@ -84,6 +87,7 @@
         //             dataType: 'json',
         //             delay: 200,
         //             data: function(params) {
+        //               console.log(params)
         //                 return {
         //                     searchTerm: params.term
         //                 };
@@ -102,8 +106,8 @@
 
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Jabatan </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_jenis" id="jabatan_jenis" required>
+    <label for="jabatan_jenis">Jenis Jabatan </label>
+    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_jenis" id="jabatan_jenis" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_jabatan){ foreach($jenis_jabatan as $r){ ?>
                         <option value="<?=$r['id_jenisjab']?>"><?=$r['nm_jenisjab']?></option>
@@ -112,11 +116,11 @@
     </div>
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Nama Jabatan </label>
+    <label for="jabatan_jenis">Nama Jabatan </label>
     <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
                         <option value="" selected>Pilih Jabatan</option>
                     </select> -->
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
+    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
@@ -137,8 +141,8 @@
 
 
   <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Eselon </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jabatan_eselon" id="jabatan_eselon" required>
+    <label >Eselon </label>
+    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_eselon" id="jabatan_eselon" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($eselon){ foreach($eselon as $r){ ?>
                         <option value="<?=$r['id_eselon']?>"><?=$r['nm_eselon']?></option>
@@ -200,12 +204,13 @@
 
 
 $(function(){
-  $(".select2").select2({   
+  $(".select2x").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-        loadListJabatan()
+
+    loadListJabatan()
     })
 
     $('.datepicker').datepicker({

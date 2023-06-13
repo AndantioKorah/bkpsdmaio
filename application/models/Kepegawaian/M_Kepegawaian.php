@@ -716,7 +716,12 @@ class M_Kepegawaian extends CI_Model
             $newStr = explode(",", $str);
             $id_jabatan = $newStr[0];
             $nama_jabatan = $newStr[1];
-            
+
+            $skpd = $this->input->post('jabatan_unitkerja');
+            $newSkpd = explode(",", $skpd);
+            $id_skpd = $newSkpd[0];
+            $nama_skpd = $newSkpd[1];
+
             $tgl_sk = date("Y-m-d", strtotime($this->input->post('jabatan_tanggal_sk')));
             $tmt_jabatan = date("Y-m-d", strtotime($this->input->post('jabatan_tmt')));
             $dataInsert['id_pegawai']     = $id_peg;
@@ -728,7 +733,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
             $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
             $dataInsert['tglsk']      = $tgl_sk;
-            $dataInsert['skpd']      = $this->general_library->getNamaSKPDUser();
+            $dataInsert['skpd']      = $nama_skpd;
             $dataInsert['alamatskpd']      = "";
             $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
@@ -737,7 +742,26 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
             }
-            $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+           
+
+            $getJabatan = $this->db->select('*')
+            ->from('db_pegawai.pegjabatan a')
+            ->where('a.id_pegawai', $id_peg)
+            ->order_by('tmtjabatan', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+
+           
+            if(strtotime($tmt_jabatan) > strtotime($getJabatan['tmtjabatan'])){
+                $dataUpdate["skpd"] =  $id_skpd;
+                $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
+                $dataUpdate["jabatan"] =   $id_jabatan;
+                $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
+                $this->db->where('id_peg', $id_peg)
+                        ->update('db_pegawai.pegawai', $dataUpdate);
+            } 
+
+          $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
         } else if($id_dok == 20){            
             $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
             $tgl_mulai = date("Y-m-d", strtotime($this->input->post('diklat_tangal_mulai')));
@@ -973,14 +997,14 @@ class M_Kepegawaian extends CI_Model
 		} else {
 			$dataFile 			= $this->upload->data();
             $base64 = $this->fileToBase64($dataFile['full_path']);
-            dd($base64);
+            // dd($base64);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general->libary->getUsername(),
-                'password' => $this->general->libary->getPassword(),
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
                 'filename' => 'arsipelektronik/'.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
-            dd($res);
+            // dd($res);
             
 
             $dataFile['nama_file'] =  "$nama_file.pdf";

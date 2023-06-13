@@ -90,8 +90,8 @@
       url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
       method: 'POST',
       data: {
-        'username': <?=$this->general_library->getUserName()?>,
-        'password': <?=$this->general_library->getPassword()?>,
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
         'filename': 'arsipgjberkala/'+filename
       },
       success: function(data){

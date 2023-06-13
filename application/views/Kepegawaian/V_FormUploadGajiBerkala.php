@@ -59,7 +59,7 @@
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
+    <label >Pangkat - Gol/Ruang </label>
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>

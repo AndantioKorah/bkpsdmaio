@@ -60,7 +60,8 @@
           </div>
         <div class="modal-body">
         <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_jabatan" style="width: 100%; height: 80vh;" src=""></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	
       </div>
         </div>
       </div>
@@ -74,7 +75,7 @@
     $('.datatable').dataTable()
   })
 
-  // function openFilePangkat(filename){
+  // function openFileJabatan(filename){
   //   var nip = "<?=$this->general_library->getUserName()?>";
   //   // $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
   //   $('#iframe_view_file_jabatan').attr('src', 'http://simpegserver/adm/arsipjabatan/'+filename)
@@ -90,8 +91,8 @@
       url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
       method: 'POST',
       data: {
-        'username': <?=$this->general_library->getUserName()?>,
-        'password': <?=$this->general_library->getPassword()?>,
+       'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
         'filename': 'arsipjabatan/'+filename
       },
       success: function(data){
@@ -99,8 +100,8 @@
 
 
         if(res == null){
-          $('#iframe_loader').show()  
-          $('#iframe_loader').html('Tidak ada file SK Gaji Berkala')
+          $('iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK')
         }
 
         $('#iframe_view_file_jabatan').attr('src', res.data)

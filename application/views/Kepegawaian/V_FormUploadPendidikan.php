@@ -59,7 +59,7 @@
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Tingkat Pendidikan </label>
+    <label >Tingkat Pendidikan </label>
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_tingkat_pendidikan){ foreach($list_tingkat_pendidikan as $r){ ?>

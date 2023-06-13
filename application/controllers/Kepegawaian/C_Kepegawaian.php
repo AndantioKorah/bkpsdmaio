@@ -434,6 +434,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
 		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 			
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+
 		
 		$data['nip'] = $this->general_library->getUserName();
         render('kepegawaian/V_ProfilPegawai', '', '', $data);

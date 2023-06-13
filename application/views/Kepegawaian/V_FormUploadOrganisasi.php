@@ -74,7 +74,7 @@
    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Organisasi </label>
+    <label >Jenis Organisasi </label>
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_organisasi" id="jenis_organisasi" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_organisasi){ foreach($jenis_organisasi as $r){ ?>

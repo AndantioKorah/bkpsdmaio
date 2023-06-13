@@ -185,7 +185,7 @@
                         <?php } ?>
                         <th style="text-align: center; ">JHK</th>
                         <th style="text-align: center; ">Hadir</th>
-                        <th style="text-align: center; ">Anulir</th>
+                        <th style="text-align: center; ">Invalid</th>
                         <!-- <th style="text-align: center; ">Alpa</th> -->
                         <th style="text-align: center; ">TMK 1</th>
                         <th style="text-align: center; ">TMK 2</th>
@@ -238,7 +238,7 @@
                                           $txtcolormasuk = '#ff0000';
                                       } else if($a['jam_masuk'] == 'TLP'){
                                         $txtcolormasuk = '#05ada5';
-                                      } else if($a['jam_masuk'] == 'Anulir'){
+                                      } else if($a['jam_masuk'] == 'Invalid'){
                                         $txtcolormasuk = '#bb01c7';
                                       } 
 
@@ -250,7 +250,7 @@
                                           $txtcolorpulang = '#ff0000';
                                       } else if($a['jam_pulang'] == 'TLS'){
                                         $txtcolorpulang = '#05ada5';
-                                      } else if($a['jam_pulang'] == 'Anulir'){
+                                      } else if($a['jam_pulang'] == 'Invalid'){
                                         $txtcolorpulang = '#bb01c7';
                                       } 
                                   ?>

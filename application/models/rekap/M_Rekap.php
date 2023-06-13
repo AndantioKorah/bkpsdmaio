@@ -815,14 +815,14 @@
                     $tlp[$lda['nip']]['absen'][$lda['tgl']]['ket_status_absensi'] = $lda['alasan'];
                     if($lda['status_absensi'] == 4){
                         $tlp[$lda['nip']]['jumlah_anulir']++;
-                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = "Anulir";
+                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = "Invalid";
                     } else if($lda['status_absensi'] == 5){
                         $tlp[$lda['nip']]['jumlah_anulir']++;
-                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = "Anulir";
+                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = "Invalid";
                     } else if($lda['status_absensi'] == 6){
                         $tlp[$lda['nip']]['jumlah_anulir'] += 2;
-                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = "Anulir";
-                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = "Anulir";
+                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_masuk'] = "Invalid";
+                        $tlp[$lda['nip']]['absen'][$lda['tgl']]['jam_pulang'] = "Invalid";
                     }
                 }
                 $data_absen = $tlp;
@@ -1103,7 +1103,7 @@
                             // if(isset($dokpen[$tr['nip']][$l]) && $dokpen[$tr['nip']][$l] == 'TLP'){
                             //     dd($lp[$tr['nip']]['absen'][$l]);
                             // }
-                            if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "TLP" && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "Anulir"){
+                            if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "TLP" && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "Invalid"){
                                 $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
                                 if($diff_masuk > 0){
                                     $ket_masuk = floatval($diff_masuk) / 1800;
@@ -1124,7 +1124,7 @@
                                 }
                             }
 
-                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TLS" && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "Anulir"){
+                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TLS" && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "Invalid"){
                                 // if($tr['nip'] == '198307212010012005' && $l == '2023-06-08'){
                                 //     dd($lp[$tr['nip']]['absen'][$l]);
                                 // }

@@ -60,7 +60,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Pangkat - Gol/Ruang </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
+    <select class="form-control select2" data-dropdown-parent="#modalBerkala" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>

@@ -62,7 +62,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Jenis Diklat </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="diklat_jenis" id="diklat_jenis" required>
+    <select class="form-control select2" data-dropdown-parent="#modalDiklat" data-dropdown-css-class="select2-navy" name="diklat_jenis" id="diklat_jenis" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_diklat){ foreach($jenis_diklat as $r){ ?>
                         <option value="<?=$r['id_diklat']?>"><?=$r['nm_jdiklat']?></option>

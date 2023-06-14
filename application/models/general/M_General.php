@@ -330,6 +330,7 @@
         }
 
         public function getListPegawaiPensiunByYear($data){
+            // dd($data);
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru')
                     ->from('db_pegawai.pegawai a')
@@ -355,6 +356,7 @@
             if($query){
                 foreach($query as $d){
                     $temp = null;
+                    if($d['tgllahir'] != null){
                     $tgl_lahir = explode("-", $d['tgllahir']);
                     if(floatval($data['tahun']) - $tgl_lahir[0] >= 58){ //pejabat berumum lebih dari 58 tahun pada saat $data['tahun']
                         $id_pangkat_ahli_madya = [41, 42, 43];
@@ -382,6 +384,7 @@
                         }
                     }
                 }
+            }
             }
             return $result;
         }
@@ -413,6 +416,8 @@
             $result['golongan'][5]['nama'] = 'Golongan V';
             $result['golongan'][5]['jumlah'] = 0;
 
+       
+           
             // $temp_pangkat = $this->db->select('*')
             //                     ->from('db_pegawai.pangkat')
             //                     ->get()->result_array();
@@ -484,13 +489,21 @@
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }
-                $result['agama'][$peg['agama']]['jumlah']++;
+
+                if($peg['agama'] != null){
+                    $result['agama'][$peg['agama']]['jumlah']++;
+                }
+                
                 if($peg['jk'] == 'Laki-Laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {
                     $result['jenis_kelamin']['perempuan']['jumlah']++;
                 }
-                $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+
+                if($peg['statuspeg'] != null){
+                    $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+                }
+               
             }
             // dd($result);
             return $result;

@@ -76,6 +76,7 @@
       },
       success: function(data){
         let res = JSON.parse(data)
+        console.log(res)
         $(this).show()
         $('#iframe_view_file').attr('src', res.data)
         $('#iframe_view_file').on('load', function(){

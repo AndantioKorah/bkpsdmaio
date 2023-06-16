@@ -653,6 +653,7 @@ function openPresensiTab(){
 
 
   async function getFile(file){
+    $('#view_file_verif').hide()
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";

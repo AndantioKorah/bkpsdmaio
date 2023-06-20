@@ -699,6 +699,7 @@ function openPresensiTab(){
           }
         } else {
         // errortoast('tidak ada data')
+        $('.iframe_loader').hide()  
         $('#view_file_verif').attr('src', '')
         $('#ket').html('Tidak ada data');
         }

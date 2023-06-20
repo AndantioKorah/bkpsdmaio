@@ -9,6 +9,9 @@
           <th class="text-left">Tgl SK</th>
           <th class="text-left">Tahun</th>
           <th class="text-left">Asal Perolehan</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -26,6 +29,13 @@
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['tahun_penghargaan']?></td>
               <td class="text-left"><?=$rs['asal']?></td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <td>
+              <?php if($kode == 1) { ?>
+              <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <?php } ?>  
+            </td>
+               <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
 
@@ -33,7 +43,7 @@
 
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>',2)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -54,7 +64,7 @@
     $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
   }
 
-  function deleteKegiatan(id,file){
+  function deleteData(id,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -63,7 +73,12 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulPenghargaan()
+                               if(kode == 1) {
+                                loadListPenghargaan()
+                               } else {
+                                loadRiwayatUsulPenghargaan()
+                               }
+                              
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

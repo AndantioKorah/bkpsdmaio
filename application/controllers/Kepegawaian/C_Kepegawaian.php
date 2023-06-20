@@ -805,7 +805,6 @@ class C_Kepegawaian extends CI_Controller
 
 	public function deleteData($id,$table,$file = null)
     {
-		
         $this->kepegawaian->delete('id', $id, "db_pegawai.".$table,$file);
     }
 

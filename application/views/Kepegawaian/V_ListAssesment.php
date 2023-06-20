@@ -6,6 +6,9 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama Assesment</th>
           <th class="text-left">File</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
@@ -20,11 +23,18 @@
                 <button href="#modal_view_file_assesment" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <td>
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </td>
+              <?php } ?>
+               <?php } ?>
              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -48,7 +58,7 @@
   }
 
   
-  function deleteKegiatan(id,file){
+  function deleteData(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -57,7 +67,12 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulAssesment()
+                               if(kode == 1){
+                                loadListAssesment()
+                               } else {
+                                loadRiwayatUsulAssesment()
+                               }
+                               
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

@@ -9,6 +9,9 @@
           <th class="text-left">Tempat/Tanggal Lahir</th>
           <th class="text-left">Pendidikan</th>
           <th class="text-left">Pekerjaan</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -26,12 +29,19 @@
               <td class="text-left"><?= $rs['tptlahir']?></td>  
               <td class="text-left"><?= $rs['pendidikan']?></td>               
               <td class="text-left"><?= $rs['pekerjaan']?></td> 
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <td>
+              <?php if($kode == 1) { ?>
+              <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <?php } ?>
+               </td>
+               <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>',2)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -61,7 +71,7 @@
     $('.datatable').dataTable()
   })
 
-  function deleteKegiatan(id,file){
+  function deleteData(id,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -70,7 +80,12 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulKeluarga()
+                               if(kode == 1){
+                                loadListKeluarga()
+                               } else {
+                                loadRiwayatUsulKeluarga()
+                               }
+                              
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

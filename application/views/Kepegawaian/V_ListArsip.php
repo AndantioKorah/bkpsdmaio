@@ -6,6 +6,9 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama Arsip</th>
           <th class="text-left">File</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
@@ -21,11 +24,18 @@
                 <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                  <i class="fa fa-file-pdf"></i></button>
               </td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <td>
+              <?php if($kode == 1) { ?>
+              <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </td>
+               <?php } ?>
+               <?php } ?>
               <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -98,7 +108,7 @@
     })
   }
 
-  function deleteKegiatan(id,file){
+  function deleteArsip(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -107,13 +117,17 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulArsip()
+                               if(kode == 1){
+                                loadListArsip()
+                               } else {
+                                loadRiwayatUsulArsip()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
                        })
                    }
-               }
+  }
 </script>
 <?php } else { ?>
   <div class="row">

@@ -93,20 +93,18 @@ class Dokumenlib extends CI_Model{
                         "&docfile=".$data['docfile'];
 
         // dd($data_body);
-        $api_url = 'http://siladen.manadokota.go.id/bidik/api/api/saveDokumen';
-        $session = curl_init($api_url);
+        $session = curl_init();
 
         $header =  array(
             'Content-Type: application/x-www-form-urlencoded'
         );
 
         curl_setopt($session, CURLOPT_HTTPHEADER, $header);
-        // curl_setopt($session, CURLOPT_URL, "http://siladen.manadokota.go.id/bidik/api/api/saveDokumen");
+        curl_setopt($session, CURLOPT_URL, "http://siladen.manadokota.go.id/bidik/api/api/saveDokumen");
         curl_setopt($session, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($session, CURLOPT_POSTFIELDS, $data_body);
-        curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
-        
         $result = curl_exec($session);
 
         $message = "OK";

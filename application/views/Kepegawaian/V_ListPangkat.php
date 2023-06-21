@@ -15,7 +15,7 @@
           <th class="text-left">No. SK</th>
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">Dokumen</th>
-          <th></th>
+         
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -39,13 +39,9 @@
               <td class="text-left"><?=$rs['masakerjapangkat']?></td>
               <td class="text-left"><?=($rs['nosk'])?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
-              <td>
-              <!-- <iframe src="http://localhost/bkpsdmaio/arsipelektronik/SK_KP_199401042020121011_59.pdf" style="width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	 -->
-                <!-- <iframe src="data:file/pdf;base64,<?=$rs['base64']?>" style="width: 100%; height: 80vh;" type="application/pdf"  id=""  frameborder="0" ></iframe>	 -->
-   
-            </td>
+
               <td class="text-left">
-                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['base64']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button> 
               </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>

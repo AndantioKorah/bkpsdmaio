@@ -108,7 +108,7 @@
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     console.log(filename)
     $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs")?>',
       method: 'POST',
       data: {
         'username': '<?=$this->general_library->getUserName()?>',

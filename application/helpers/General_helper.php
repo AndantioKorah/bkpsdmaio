@@ -23,6 +23,12 @@ function validateKey($arr_needed, $arr_request){
     return ['code' => 0, 'message' => ''];
 }
 
+function fileToBytes($file){
+    $fh = fopen($file, 'rb');
+    $fbytes = fread($fh, filesize($file));
+    return array(base64_encode($fbytes));
+}
+
 function base64ToFile($base64_string, $output_file) {
     $ifp = fopen( $output_file, 'wb' ); 
     $data = explode(',', $base64_string );

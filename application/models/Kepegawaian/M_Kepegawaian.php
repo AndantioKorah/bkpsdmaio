@@ -1010,7 +1010,6 @@ class M_Kepegawaian extends CI_Model
                 'filename' => 'arsipelektronik/'.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
-            
 
             $dataFile['nama_file'] =  "$nama_file.pdf";
             $dataFile['base64'] =  $base64;

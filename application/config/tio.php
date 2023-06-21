@@ -17,6 +17,7 @@ $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterS
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
 $route['kinerja/rekapitulasi-realisasi'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['kinerja/skp-bulanan'] = 'kinerja/C_Kinerja/skpBulanan';
+$route['kinerja/skbp'] = 'kinerja/C_Kinerja/skbp';
 $route['kinerja/komponen'] = 'kinerja/C_Kinerja/komponenKinerja';
 // $route['kinerja/disiplin'] = 'kinerja/C_Kinerja/disiplinKerja';
 $route['dokumen-pendukung-absensi/upload'] = 'kinerja/C_Kinerja/disiplinKerja';

@@ -1521,5 +1521,106 @@
         // dd($result);
         return $result;
     }
+
+    function getAtasanPegawai($id_m_user){
+        $id_m_user = 203;
+        $user = $this->db->select('a.*, b.*, d.role_name, e.nm_unitkerja, e.id_unitkerjamaster, g.nama_bidang')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        ->join('m_user_role c', 'b.id = c.id_m_user')
+                        ->join('m_role d', 'c.id_m_role = d.id')
+                        ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+                        // ->join('db_pegawai.unitkerjamaster f', 'e.id_unitkerjamaster = f.id_unitkerjamaster')
+                        ->join('m_bidang g', 'b.id_m_bidang = g.id', 'left')
+                        // ->join('m_sub_bidang h', 'b.id_m_sub_bidang = h.id')
+                        ->where('b.id', $id_m_user)
+                        ->where('b.flag_active', 1)
+                        ->where('c.flag_active', 1)
+                        ->where_not_in('c.id_m_role', EXCLUDE_ID_ROLE_ATASAN)
+                        ->get()->row_array();
+
+        $atasan = "";
+        $flag_sekolah = false;
+        $flag_kelurahan = false;
+        $flag_kecamatan = false;
+        $explodeuk = explode(" ", $user['nm_unitkerja']);
+        $kepala_pd = "kepalabadan";
+
+        if($user['role_name'] == 'staffpelaksana' || $user['role_name'] == 'subkoordinator'){ //jika pelaksana atau kasub
+            $atasan = 'kepalabidang';
+            if($explodeuk[0] == 'Kelurahan'){
+                $flag_kelurahan = true;
+                $atasan = 'sekretarisbadan';
+                $kepala_pd = "lurah";
+            } else if($explodeuk[0] == 'Kecamatan'){
+                $flag_kecamatan = true;
+                $atasan = 'sekretarisbadan';
+                $kepala_pd = "camat";
+            }
+        }
+
+        if($user['nama_bidang'] == 'Sekretariat'){
+            $atasan = 'subkoordinator';
+        } else if($user['role_name'] == 'kepalabidang' || $user['role_name'] == 'sekretarisbadan'){
+            $atasan = 'kepalabadan';
+            if($explodeuk[0] == 'Kelurahan'){
+                $flag_kelurahan = true;
+                $atasan = 'lurah';
+                $kepala_pd = "camat";
+            } else if($explodeuk[0] == 'Kecamatan'){
+                $flag_kecamatan = true;
+                $atasan = 'camat';
+                $kepala_pd = "setda";
+            }
+        } else if($user['role_name'] == 'kepalabadan'){
+            $atasan = 'setda';
+        } else if($user['role_name'] == 'setda'){
+            $atasan = 'walikota';
+        } else if($user['role_name'] == 'gurusekolah'){
+            $atasan = 'kepalasekolah';
+            $flag_sekolah = true;
+        } else if($user['role_name'] == 'kepalasekolah'){
+            $atasan = 'kepalabidang';
+            $flag_sekolah = true;
+        } else if($user['role_name'] == 'lurah'){
+            $atasan = 'camat';
+            $kepala_pd = "setda";
+            $flag_kelurahan = true;
+        } else if($user['role_name'] == 'camat'){
+            $atasan = 'setda';
+            $kepala_pd = "setda";
+            $flag_kecamatan = true;
+        }
+
+        $this->db->select('a.*, b.*, d.role_name, e.nm_unitkerja, e.id_unitkerjamaster, g.nama_bidang')
+            ->from('db_pegawai.pegawai a')
+            ->join('m_user b', 'a.nipbaru_ws = b.username')
+            ->join('m_user_role c', 'b.id = c.id_m_user')
+            ->join('m_role d', 'c.id_m_role = d.id')
+            ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+            // ->join('db_pegawai.unitkerjamaster f', 'e.id_unitkerjamaster = f.id_unitkerjamaster')
+            ->join('m_bidang g', 'b.id_m_bidang = g.id')
+            // ->join('m_sub_bidang h', 'b.id_m_sub_bidang = h.id')
+            ->where('d.role_name', $atasan)
+            ->where('a.skpd', $user['skpd'])
+            // ->where('g.id', $user['id_m_bidang'])
+            ->where('b.flag_active', 1)
+            ->where('c.flag_active', 1)
+            ->where_not_in('c.id_m_role', EXCLUDE_ID_ROLE_ATASAN);
+
+        if(!$flag_sekolah){
+            if(($flag_kelurahan && $user['role_name'] != 'lurah') || //bukan lurah
+            ($flag_kecamatan && $user['role_name'] != 'camat')){
+                $this->db->where('g.id', $user['id_m_bidang']);
+            }
+        }
+
+        $atasan_pegawai = $this->db->get()->row_array();
+
+        dd($atasan_pegawai);
+    }
+
+    public function getDataAtasan($rolename, $id_unitkerja){
+        
+    }
 }
-?>

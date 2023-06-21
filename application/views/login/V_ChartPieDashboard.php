@@ -6,6 +6,7 @@
 <div class="col-lg-5">
   <table>
     <?php 
+    
     $i = 0;
     $colors = CHART_COLORS;
     foreach($result as $rs){

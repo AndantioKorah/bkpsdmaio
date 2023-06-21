@@ -493,7 +493,9 @@
 <div id="divloader" class="col-lg-12 text-center">
   
 </div>
-<iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe>
+<!-- <iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe> -->
+<h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
 
 				</div>
 			</div>
@@ -592,15 +594,73 @@ function openPresensiTab(){
   })
 }
 
-  function getFile(file) {
-        $('#view_file_verif').show()
-        $('#divloader').append(divLoaderNavy)
-        $('#view_file_verif').attr('src','');
-        var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
+  // function getFileOld(file) {
+  //       $('#view_file_verif').show()
+  //       $('#divloader').append(divLoaderNavy)
+  //       $('#view_file_verif').attr('src','');
+  //       var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
+  //       var id_peg = "<?=$result[0]['id_peg'];?>";
+  //       var base_url = "<?= base_url();?>";
+
+  //       if(file == "pangkat"){
+  //         dir = "arsipelektronik/";
+  //       } else if(file == "jabatan"){
+  //         dir = "arsipjabatan/";
+  //       } else if(file == "pendidikan"){
+  //         dir = "arsippendidikan/";
+  //       } else if(file == "skcpns"){
+  //         dir = "arsipberkaspns/";
+  //       } else if(file == "skpns"){
+  //         dir = "arsipberkaspns/";
+  //       } else if(file == "gajiberkala"){
+  //         dir = "arsipgjberkala/";
+  //       } else if(file == "skp"){
+  //         dir = "arsipskp/";
+  //       } else if(file == "diklat"){
+  //         dir = "arsipdiklat/";
+  //       } else if(file == "drp" || file == "honor" || file == "suket_lain" || file == "ibel" || file == "forlap" || file == "karya_tulis" || file == "tubel" || file == "mutasi" || file == "serkom" || file == "pak"){
+  //         dir = "arsiplain/";
+  //       }    else {
+  //         dir = "uploads/";
+  //       }
+
+        
+  //       $.ajax({
+  //       type : "POST",
+  //       url  : base_url + '/kepegawaian/C_Kepegawaian/getFile',
+  //       dataType : "JSON",
+  //       data : {id_peg:id_peg,jenis_layanan:jenis_layanan,file:file},
+  //       success: function(data){
+  //       $('#divloader').html('')
+  //       console.log(data)
+  //       if(data != ""){
+  //         if(data[0].gambarsk != ""){
+  //           $('#view_file_verif').attr('src', base_url+dir+data[0].gambarsk)
+  //         // $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
+  //         $('#ket').html('');
+  //         } else {
+  //           $('#view_file_verif').attr('src', '')
+  //           $('#ket').html('Tidak ada data');
+  //         }
+  //       } else {
+  //       // errortoast('tidak ada data')
+  //       $('#view_file_verif').attr('src', '')
+  //       $('#ket').html('Tidak ada data');
+  //       }
+  //       }
+  //       });
+  //       }
+
+
+  async function getFile(file){
+    $('#view_file_verif').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
         var id_peg = "<?=$result[0]['id_peg'];?>";
         var base_url = "<?= base_url();?>";
-
-        if(file == "pangkat"){
+    var filename = "";
+    if(file == "pangkat"){
           dir = "arsipelektronik/";
         } else if(file == "jabatan"){
           dir = "arsipjabatan/";
@@ -621,11 +681,9 @@ function openPresensiTab(){
         }    else {
           dir = "uploads/";
         }
+  
 
-        
-        
-        
-        $.ajax({
+   $.ajax({
         type : "POST",
         url  : base_url + '/kepegawaian/C_Kepegawaian/getFile',
         dataType : "JSON",
@@ -635,21 +693,46 @@ function openPresensiTab(){
         console.log(data)
         if(data != ""){
           if(data[0].gambarsk != ""){
-            $('#view_file_verif').attr('src', base_url+dir+data[0].gambarsk)
-          // $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
-          $('#ket').html('');
+            tes(data[0].gambarsk,dir)
           } else {
             $('#view_file_verif').attr('src', '')
             $('#ket').html('Tidak ada data');
           }
         } else {
         // errortoast('tidak ada data')
+        $('.iframe_loader').hide()  
         $('#view_file_verif').attr('src', '')
         $('#ket').html('Tidak ada data');
         }
         }
         });
-        }
+ }
+
+
+ function tes(filename,dir){
+  $.ajax({
+     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+     method: 'POST',
+     data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+       'password': '<?=$this->general_library->getPassword()?>',
+       'filename': dir+filename
+     },
+     success: function(data){
+       let res = JSON.parse(data)
+       console.log(res)
+       $(this).show()
+       $('#view_file_verif').attr('src', res.data)
+       $('#view_file_verif').on('load', function(){
+         $('.iframe_loader').hide()
+         $(this).show()
+       })
+       
+     }, error: function(e){
+         errortoast('Terjadi Kesalahan')
+     }
+   })
+ }
 
 
 

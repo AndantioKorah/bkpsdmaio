@@ -285,7 +285,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+            $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -296,13 +296,14 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg')
                 ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg')
                 ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab')
+                ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
 
         function getPangkatPegawai($nip,$kode){
-             $this->db->select('c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+             $this->db->select('c.base64,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                             c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -344,12 +345,12 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('c.created_date,c.id,c.status,d.nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+              $this->db->select('c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
-                            ->join('db_pegawai.eselon e','c.eselon = e.id_eselon')
+                            // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
@@ -535,7 +536,7 @@ class M_Kepegawaian extends CI_Model
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_siladen.dokumen d', 'c.id_dokumen = d.id_dokumen')
+                            ->join('db_siladen.dokumen d', 'c.id_dokumen = d.id_dokumen', 'left')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
@@ -664,6 +665,7 @@ class M_Kepegawaian extends CI_Model
         $dataInsert['nosk']      = $this->input->post('no_sk');
         $dataInsert['tglsk']      = $tgl_sk;
         $dataInsert['gambarsk']      = $data['nama_file'];
+        $dataInsert['base64']      = $data['base64'];
         $dataInsert['tmtpangkat']      = $tmt_pangkat;
         $dataInsert['created_by']      = $this->general_library->getId();
         if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -715,7 +717,12 @@ class M_Kepegawaian extends CI_Model
             $newStr = explode(",", $str);
             $id_jabatan = $newStr[0];
             $nama_jabatan = $newStr[1];
-            
+
+            $skpd = $this->input->post('jabatan_unitkerja');
+            $newSkpd = explode(",", $skpd);
+            $id_skpd = $newSkpd[0];
+            $nama_skpd = $newSkpd[1];
+
             $tgl_sk = date("Y-m-d", strtotime($this->input->post('jabatan_tanggal_sk')));
             $tmt_jabatan = date("Y-m-d", strtotime($this->input->post('jabatan_tmt')));
             $dataInsert['id_pegawai']     = $id_peg;
@@ -727,7 +734,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
             $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
             $dataInsert['tglsk']      = $tgl_sk;
-            $dataInsert['skpd']      = $this->general_library->getNamaSKPDUser();
+            $dataInsert['skpd']      = $nama_skpd;
             $dataInsert['alamatskpd']      = "";
             $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
@@ -736,7 +743,26 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
             }
-            $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+           
+
+            $getJabatan = $this->db->select('*')
+            ->from('db_pegawai.pegjabatan a')
+            ->where('a.id_pegawai', $id_peg)
+            ->order_by('tmtjabatan', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+
+           
+            if(strtotime($tmt_jabatan) > strtotime($getJabatan['tmtjabatan'])){
+                $dataUpdate["skpd"] =  $id_skpd;
+                $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
+                $dataUpdate["jabatan"] =   $id_jabatan;
+                $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
+                $this->db->where('id_peg', $id_peg)
+                        ->update('db_pegawai.pegawai', $dataUpdate);
+            } 
+
+          $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
         } else if($id_dok == 20){            
             $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
             $tgl_mulai = date("Y-m-d", strtotime($this->input->post('diklat_tangal_mulai')));
@@ -925,10 +951,9 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-        // dd($this->input->post());
-        // dd($nama_file);
+      
         if($this->input->post('id_dokumen') == 4){
-            $target_dir						= './arsipelektronik/';
+            $target_dir						= './arsipelektronik';
         } else if($this->input->post('id_dokumen') == 7){
             $target_dir						= './arsipgjberkala/';
         } else if($this->input->post('id_dokumen') == 5){
@@ -946,14 +971,14 @@ class M_Kepegawaian extends CI_Model
         }  else {
             $target_dir						= './uploads/';
         }
-        // dd($target_dir);
+
 		
 		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
+		$config['allowed_types']        = '*';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
-        $config['file_name']            = "$nama_file.pdf";
+        // $config['file_name']            = "$nama_file.pdf";
 
 
 		$this->load->library('upload', $config);
@@ -969,14 +994,27 @@ class M_Kepegawaian extends CI_Model
 			$data['token']    = $this->security->get_csrf_hash();
             $res = array('msg' => 'Data gagal disimpan', 'success' => false);
             return $res;
-			// $this->output
-			// 	->set_status_header(406)
-			// 	->set_content_type('application/json', 'utf-8')
-			// 	->set_output(json_encode($data));
+
 		} else {
 			$dataFile 			= $this->upload->data();
-          
+            // dd($dataFile);
+            // $base64 = $this->fileToBase64($dataFile['full_path']);
+            
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
+                'filename' => 'arsipelektronik/'.$dataFile['file_name'],
+                'docfile'  => $base64
+            ]);
+            dd($res);
+            
+
             $dataFile['nama_file'] =  "$nama_file.pdf";
+            $dataFile['base64'] =  $base64;
 			$result		        = $this->insertUpload($dataFile);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
@@ -1034,6 +1072,18 @@ class M_Kepegawaian extends CI_Model
         
 	}
 
+    function fileToBase64($pathfile){
+        if(file_exists($pathfile)){
+            $type = pathinfo($pathfile, PATHINFO_EXTENSION);
+            $data = file_get_contents($pathfile);
+            // $base64 = 'data:image/jpeg;base64,' . base64_encode($data);
+            $base64 = 'data:file/' . $type . ';base64,' . base64_encode($data);
+            return $base64;
+        } 
+        return null;
+    }
+    
+
     public function doUploadAssesment()
 	{
 
@@ -1076,9 +1126,9 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-                $dataPost['status']      = 2;
-                $dataPost['tanggal_verif']      = date('Y-m-d H:i:s');
-                $dataPost['id_m_user_verif']      = $this->general_library->getId();
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegassesment', $dataInsert);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -1141,9 +1191,9 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-                $dataPost['status']      = 2;
-                $dataPost['tanggal_verif']      = date('Y-m-d H:i:s');
-                $dataPost['id_m_user_verif']      = $this->general_library->getId();
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -1923,11 +1973,12 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         $path = './arsiplain/'.$file;
     }
 
-    
-    
-    if($path != null){
-        unlink($path);
-    }
+    // dd($fieldVafieldNamelue);
+
+
+    // if($path != null){
+    //     unlink($path);
+    // }
 
     $this->db->where($fieldName, $fieldValue)
          ->update($tableName, ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
@@ -2083,6 +2134,62 @@ public function getJenisArsip()
     ->where_not_in('id_dokumen', $ignore)
     ->from('db_siladen.dokumen');
     return $this->db->get()->result_array(); 
+}
+
+
+
+
+public function submitEditProfil(){
+    
+    $datapost = $this->input->post();
+    
+    $this->db->trans_begin();
+    $id_pegawai = $datapost['edit_id_pegawai'];
+    $data["gelar1"] = $datapost["edit_gelar1"];
+    $data["nama"] = $datapost["edit_nama"];
+    $data["gelar2"] = $datapost["edit_gelar2"];
+    $data["nipbaru"] = $datapost["edit_nip_baru"];
+    $data["tptlahir"] = $datapost["edit_tptlahir"];
+    $data["tgllahir"] = $datapost["edit_tgllahir"];
+    $data["alamat"] = $datapost["edit_alamat"];
+    $data["jk"] = $datapost["edit_jkelamin"];
+    $data["goldarah"] = $datapost["edit_goldar"];
+    $data["agama"] = $datapost["edit_agama"];
+    $data["skpd"] = $datapost["edit_unit_kerja"];
+    // $data["jabatan"] = $datapost["edit_gelar1"];
+    // $data["tmtjabatan"] = $datapost["edit_gelar1"];
+    $data["statusjabatan"] = $datapost["edit_status_jabatan"];
+    $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
+    $data["pangkat"] = $datapost["edit_pangkat"];
+    $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
+    $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
+    $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
+    // $data["pendidikan"] = $datapost["edit_gelar1"];
+    $data["statuspeg"] = $datapost["edit_status_pegawai"];
+    $data["jenispeg"] = $datapost["edit_jenis_pegawai"];
+    $data["nik"] = $datapost["edit_nik"];
+    $data["taspen"] = $datapost["edit_taspen"];
+    $data["handphone"] = $datapost["edit_no_hp"];
+    $data["email"] = $datapost["edit_email"];
+
+    // dd($data);
+    $this->db->where('id_peg', $id_pegawai)
+            ->update('db_pegawai.pegawai', $data);
+
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        // $res['code'] = 1;
+        // $res['message'] = 'Terjadi Kesalahan';
+        // $res['data'] = null;
+        $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
 }
     
 

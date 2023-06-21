@@ -184,6 +184,7 @@
                     <?php
                       $data_agama['result'] = $chart['agama'];
                       $data_agama['id_chart'] = 'chart_agama';
+                      // dd($data_agama);
                       $this->load->view('login/V_ChartPieDashboard', $data_agama);
                     ?>
                   </div>
@@ -362,7 +363,7 @@
                   },
                   success: function(data){
                     let rs = JSON.parse(data)
-                    // console.log(data)
+                    console.log(rs)
                     $('#h1_pensiun').html(rs.total)
                   }, error: function(e){
                       errortoast('Terjadi Kesalahan')

@@ -189,7 +189,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_penghargaan").reset();
-                // loadListPenghargaan()
+                loadListPenghargaan()
               } else {
                 errortoast(result.msg)
                 return false;

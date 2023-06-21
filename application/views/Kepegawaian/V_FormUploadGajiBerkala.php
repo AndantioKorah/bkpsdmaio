@@ -39,20 +39,6 @@
       </div>
     </div>
 </div>
-<div class="modal fade" id="modal_view_file_gaji_berkala" data-backdrop="static">
-<div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-        <div class="modal-body">
-           <div id="modal_view_file_content">
-        <iframe id="iframe_view_file_gaji_berkala"  style="width: 100%; height: 80vh;"   id="iframe_view_file"  frameborder="0" ></iframe>	
-         </div>
-        </div>
-      </div>
-    </div>
-</div>
 
 
 
@@ -73,8 +59,8 @@
     
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
-    <select class="form-control select2" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
+    <label >Pangkat - Gol/Ruang </label>
+    <select class="form-control select2" data-dropdown-parent="#modalBerkala" data-dropdown-css-class="select2-navy" name="gb_pangkat" id="gb_pangkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>

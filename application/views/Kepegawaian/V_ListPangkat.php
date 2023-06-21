@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-lg-12 table-responsive">
       <!-- <tr><button class="btn"><i class="fa fa-plus" ></i> Tambah</button></tr> -->
+      
       <table class="table table-hover datatable">
         <thead>
         <th class="text-left">No</th>
@@ -14,6 +15,10 @@
           <th class="text-left">No. SK</th>
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">Dokumen</th>
+          <th></th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -34,19 +39,32 @@
               <td class="text-left"><?=$rs['masakerjapangkat']?></td>
               <td class="text-left"><?=($rs['nosk'])?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
+              <td>
+              <!-- <iframe src="http://localhost/bkpsdmaio/arsipelektronik/SK_KP_199401042020121011_59.pdf" style="width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	 -->
+                <!-- <iframe src="data:file/pdf;base64,<?=$rs['base64']?>" style="width: 100%; height: 80vh;" type="application/pdf"  id=""  frameborder="0" ></iframe>	 -->
+   
+            </td>
               <td class="text-left">
-                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['base64']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <i class="fa fa-file-pdf"></i></button> 
               </td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <td>
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </td>
+              <?php } ?>
+               <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php  } ?>
+              
               </tr>
             
           <?php  } ?>
@@ -61,28 +79,33 @@
   })
 
   
-  async function openFilePangkat(filename){
-    console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-        'username': 'prog',
-        'password': '742141189Bidik.',
-        'filename': 'arsipelektronik/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
-        $('#iframe_view_file').attr('src', res.data)
-        $('#iframe_view_file').on('load', function(){
-          $('#iframe_loader').hide()
-          $(this).show()
-        })
-      }, error: function(e){
-          errortoast('Terjadi Kesalahan')
-      }
-    })
-  }
+  // async function openFilePangkat(filename){
+   
+  //   $('#iframe_view_file').hide()
+  //   $('#iframe_loader').show()  
+  //   console.log(filename)
+  //   $.ajax({
+  //     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+  //     method: 'POST',
+  //     data: {
+  //       'username': '<?=$this->general_library->getUserName()?>',
+  //       'password': '<?=$this->general_library->getPassword()?>',
+  //       'filename': 'arsipelektronik/'+filename
+  //     },
+  //     success: function(data){
+  //       let res = JSON.parse(data)
+  //       console.log(res.data)
+  //       $(this).show()
+  //       $('#iframe_view_file').attr('src', res.data)
+  //       $('#iframe_view_file').on('load', function(){
+  //         $('#iframe_loader').hide()
+  //         $(this).show()
+  //       })
+  //     }, error: function(e){
+  //         errortoast('Terjadi Kesalahan')
+  //     }
+  //   })
+  // }
 
   // function openFilePangkatbu1(filename) async () => {
   //   const response = await fetch('http://siladen.manadokota.go.id/bidik/api/api/getDokumen', {
@@ -100,13 +123,17 @@
   //   console.log(myJson);
   // }
 
-  function openFilePangkatbu(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file').attr('src', '<?=base_url();?>arsipelektronik/'+filename)
+  function openFilePangkat(filename){
+  
+    $('#iframe_view_file').attr('src', filename)
+    $('#iframe_view_file').on('load', function(){
+      $('#iframe_loader').hide()
+          $(this).show()
+        })
   }
 
 
-  function deleteKegiatan(id,file){
+  function deleteData(id,file,kode){
                    
             if(confirm('Apakah Anda yakin ingin menghapus data?')){
                 $.ajax({
@@ -115,7 +142,12 @@
                     data: null,
                     success: function(){
                         successtoast('Data sudah terhapus')
-                        loadRiwayatUsulListPangkat()
+                        if(kode == 1){
+                          loadListPangkat()
+                        } else {
+                          loadRiwayatUsulListPangkat()
+
+                        }
                     }, error: function(e){
                         errortoast('Terjadi Kesalahan')
                     }

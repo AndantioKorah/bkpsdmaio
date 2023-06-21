@@ -93,7 +93,6 @@ class Dokumenlib extends CI_Model{
                         "&docfile=".$data['docfile'];
 
         // dd($data_body);
-
         $session = curl_init();
 
         $header =  array(
@@ -106,7 +105,6 @@ class Dokumenlib extends CI_Model{
         curl_setopt($session, CURLOPT_POSTFIELDS, $data_body);
         curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
-        
         $result = curl_exec($session);
 
         $message = "OK";
@@ -117,6 +115,10 @@ class Dokumenlib extends CI_Model{
         
         return ['request' => $data_body, 'response' => $result, 'message' => $message];
     }
+
+
+    
+
 }
 
 

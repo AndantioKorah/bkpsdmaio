@@ -86,7 +86,7 @@
     <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
     <div class="form-group " style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Jenis Pengangkatan</label>
+    <label >Jenis Pengangkatan</label>
     <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_pengangkatan){ foreach($jenis_pengangkatan as $r){ ?>
@@ -96,7 +96,7 @@
     </div>
 
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="exampleFormControlInput1">Pangkat - Gol/Ruang </label>
+    <label >Pangkat - Gol/Ruang </label>
     <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
@@ -270,10 +270,6 @@ $(function(){
     })
   }
 
-  function openFilePangkat(filename){
-    var nip = <?=$this->general_library->getUserName()?>;
-    $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+nip+'/'+filename)
-  }
 
   $("#pdf_file").change(function (e) {
 

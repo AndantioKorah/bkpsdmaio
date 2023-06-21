@@ -41,20 +41,7 @@
       </div>
     </div>
 </div>
-<div class="modal fade" id="modal_view_file_arsip" data-backdrop="static">
-<div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-        <div class="modal-body">
-        <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file_arsip" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-        </div>
-      </div>
-    </div>
-</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="modalArsipLainnya" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -76,7 +63,7 @@
   
     <div class="form-group">
     <label>Jenis Arsip</label>
-    <select class="form-control select2" name="jenis_arsip" id="jenis_arsip" required>
+    <select class="form-control " name="jenis_arsip" id="jenis_arsip" required>
 			<option value="" disabled selected>Pilih Item</option>
 			<?php if($jenis_arsip){ foreach($jenis_arsip as $r){ ?>
                         <option value="<?=$r['id_dokumen']?>"><?=$r['name']?></option>

@@ -6,6 +6,9 @@
           <th class="text-left">No</th>
           <th class="text-left">Jenis SK</th>
           <th class="text-left">File</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
@@ -18,14 +21,21 @@
               <td class="text-left"><?php if($rs['jenissk'] == 1) echo 'SK CPNS'; else echo 'SK PNS';?></td>
               <td class="text-left">
 
-              <button href="#modal_view_file_berkas_pns" onclick="openFileBerkas('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+              <button href="#modal_view_file_berkas_pns" onclick="openFileBerkasPns('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 Lihat <i class="fa fa-search"></i></button>
               </td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <td>
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </td>
+              <?php } ?>
+               <?php } ?>
                <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -38,19 +48,33 @@
 
 
 
+  <div class="modal fade" id="modal_view_file_berkas_pns" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_berkas_pns" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
 
 <script>
   $(function(){
     $('.datatable').dataTable()
   })
 
-  function openFileBerkas(filename){
+  function openFileBerkasPns(filename){
     var nip = "<?=$this->general_library->getUserName()?>";
-    
     $('#iframe_view_file_berkas_pns').attr('src', '<?=base_url();?>arsipberkaspns/'+filename)
   }
 
-  function deleteKegiatan(id,file){
+  function deleteData(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -59,7 +83,12 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulBerkasPns()
+                               if(kode == 1){
+                                loadListBerkasPns()
+                               } else {
+                                loadRiwayatUsulBerkasPns()
+                               }
+                               
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

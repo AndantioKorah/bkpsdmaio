@@ -12,6 +12,9 @@
           <th class="text-left">No / Tanggal SK</th>
           <th class="text-left">Ket</th>
           <th class="text-left">File SK</th>
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
+            <?php } ?>
           <?php if($kode == 2) { ?>
           <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -31,16 +34,23 @@
               <td class="text-left"><?=$rs['nosk']?> / <?= formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['ket']?></td>
               <td class="text-left">
-                <button href="#modal_view_file_jabatan" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+                <button href="#modal_view_file_jabatan" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
               </td>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <td>
+              <?php if($kode == 1) { ?>
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <?php } ?>
+              </td>
+               <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
                 <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>' )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
               <?php } ?>
@@ -52,19 +62,70 @@
   </div>
 
 
+  <div class="modal fade" id="modal_view_file_jabatan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
  
 <script>
   $(function(){
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
+  // function openFileJabatan(filename){
+  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   // $('#iframe_view_file_jabatan').attr('src', '<?=base_url();?>arsipjabatan/'+filename)
+  //   $('#iframe_view_file_jabatan').attr('src', 'http://simpegserver/adm/arsipjabatan/'+filename)
+  // }
+
+
+  async function openFileJabatan(filename){
+    $('#iframe_view_file_jabatan').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsipjabatan/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+
+
+        if(res == null){
+          $('iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK')
+        }
+
+        $('#iframe_view_file_jabatan').attr('src', res.data)
+        $('#iframe_view_file_jabatan').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
   }
 
-
-  function deleteKegiatan(id,file){
+  function deleteData(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -73,7 +134,12 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               loadRiwayatUsulJabatan()
+                              if(kode == 1){
+                                loadListJabatan()
+                              } else {
+                                loadRiwayatUsulJabatan()
+                              }
+                              
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

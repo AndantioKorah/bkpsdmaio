@@ -41,6 +41,7 @@ class C_Login extends CI_Controller
         };
         $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
         $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
+        // dd($data);
         $this->session->set_userdata('live_tpp', $data['tpp']);
         // $data = null;
 

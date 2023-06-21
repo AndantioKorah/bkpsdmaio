@@ -90,7 +90,7 @@ class Dokumenlib extends CI_Model{
         $data_body  =   "username=".$data['username'].
                         "&password=".$data['password'].
                         "&filename=".$data['filename'].
-                        "&docfile=".$data['docfile'];
+                        "&docfile=".utf8_encode($data['docfile']);
 
         // dd($data_body);
         $session = curl_init();
@@ -106,7 +106,7 @@ class Dokumenlib extends CI_Model{
         curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
         $result = curl_exec($session);
-
+        
         $message = "OK";
         if(!$result){
             $message = curl_error($session);

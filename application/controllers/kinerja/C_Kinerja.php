@@ -538,4 +538,9 @@ class C_Kinerja extends CI_Controller
         $data['disker'] = $this->general->getAll('m_disiplin_kerja');
         $this->load->view('kinerja/V_ModalTambahDataDisker', $data);
     }
+
+    public function skbp(){
+        list($data['atasan'], $data['kepala_pd']) = $this->kinerja->getAtasanPegawai($this->general_library->getId());
+        render('kinerja/V_InputSkbp', '', '', $data);
+    }
 }

@@ -61,7 +61,7 @@
     
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_unitkerjaxx">Unit Kerja </label>
-    <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="jabatan_unitkerjaxx" id="jabatan_unitkerjaxx" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="jabatan_unitkerja" id="jabatan_unitkerja" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
                     <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
                         <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>,<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>

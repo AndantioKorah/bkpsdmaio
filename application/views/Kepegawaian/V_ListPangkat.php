@@ -75,33 +75,33 @@
   })
 
   
-  // async function openFilePangkat(filename){
+  async function openFilePangkat(filename){
    
-  //   $('#iframe_view_file').hide()
-  //   $('#iframe_loader').show()  
-  //   console.log(filename)
-  //   $.ajax({
-  //     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-  //     method: 'POST',
-  //     data: {
-  //       'username': '<?=$this->general_library->getUserName()?>',
-  //       'password': '<?=$this->general_library->getPassword()?>',
-  //       'filename': 'arsipelektronik/'+filename
-  //     },
-  //     success: function(data){
-  //       let res = JSON.parse(data)
-  //       console.log(res.data)
-  //       $(this).show()
-  //       $('#iframe_view_file').attr('src', res.data)
-  //       $('#iframe_view_file').on('load', function(){
-  //         $('#iframe_loader').hide()
-  //         $(this).show()
-  //       })
-  //     }, error: function(e){
-  //         errortoast('Terjadi Kesalahan')
-  //     }
-  //   })
-  // }
+    $('#iframe_view_file').hide()
+    $('#iframe_loader').show()  
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsipelektronik/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+        console.log(res.data)
+        $(this).show()
+        $('#iframe_view_file').attr('src', res.data)
+        $('#iframe_view_file').on('load', function(){
+          $('#iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+          errortoast('Terjadi Kesalahan')
+      }
+    })
+  }
 
   // function openFilePangkatbu1(filename) async () => {
   //   const response = await fetch('http://siladen.manadokota.go.id/bidik/api/api/getDokumen', {
@@ -119,14 +119,14 @@
   //   console.log(myJson);
   // }
 
-  function openFilePangkat(filename){
+  // function openFilePangkat(filename){
   
-    $('#iframe_view_file').attr('src', filename)
-    $('#iframe_view_file').on('load', function(){
-      $('#iframe_loader').hide()
-          $(this).show()
-        })
-  }
+  //   $('#iframe_view_file').attr('src', filename)
+  //   $('#iframe_view_file').on('load', function(){
+  //     $('#iframe_loader').hide()
+  //         $(this).show()
+  //       })
+  // }
 
 
   function deleteData(id,file,kode){

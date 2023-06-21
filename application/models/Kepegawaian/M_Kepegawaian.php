@@ -665,7 +665,6 @@ class M_Kepegawaian extends CI_Model
         $dataInsert['nosk']      = $this->input->post('no_sk');
         $dataInsert['tglsk']      = $tgl_sk;
         $dataInsert['gambarsk']      = $data['nama_file'];
-        $dataInsert['base64']      = $data['base64'];
         $dataInsert['tmtpangkat']      = $tmt_pangkat;
         $dataInsert['created_by']      = $this->general_library->getId();
         if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -951,9 +950,9 @@ class M_Kepegawaian extends CI_Model
                 return $res;
 		}
 
-      
+        $target_dir = null;
         if($this->input->post('id_dokumen') == 4){
-            $target_dir						= './arsipelektronik';
+            $target_dir						= './arsipelektronik/';
         } else if($this->input->post('id_dokumen') == 7){
             $target_dir						= './arsipgjberkala/';
         } else if($this->input->post('id_dokumen') == 5){
@@ -968,9 +967,13 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsippendidikan/';
         } else if($this->input->post('id_dokumen') == 2){
             $target_dir						= './arsipberkaspns/';
-        }  else {
-            $target_dir						= './uploads/';
-        }
+        }  
+
+       
+
+        // else {
+        //     $target_dir						= './uploads/';
+        // }
 
 		
 		$config['upload_path']          = $target_dir;
@@ -978,14 +981,14 @@ class M_Kepegawaian extends CI_Model
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
-        // $config['file_name']            = "$nama_file.pdf";
+        $config['file_name']            = "$nama_file.pdf";
 
 
 		$this->load->library('upload', $config);
 
-		if (!file_exists($target_dir)) {
-			mkdir($target_dir, 0777);
-		}
+		// if (!file_exists($target_dir)) {
+		// 	mkdir($target_dir, 0777);
+		// }
 
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
@@ -1003,19 +1006,56 @@ class M_Kepegawaian extends CI_Model
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            
+            $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
                 'username' => $this->general_library->getUsername(),
                 'password' => $this->general_library->getPassword(),
-                'filename' => 'arsipelektronik/'.$dataFile['file_name'],
+                'filename' => $path.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
-            dd($res);
+            // dd($res);
             
 
             $dataFile['nama_file'] =  "$nama_file.pdf";
             $dataFile['base64'] =  $base64;
 			$result		        = $this->insertUpload($dataFile);
+            
+            // if($tableName == "db_pegawai.pegpangkat"){
+            //     $path = './arsipelektronik/'.$file;
+            // } else if($tableName == "db_pegawai.peggajiberkala"){
+            //     $path = './arsipgjberkala/'.$file;
+            // } else if($tableName == "db_pegawai.pegpendidikan"){
+            //     $path = './arsippendidikan/'.$file;
+            // } else if($tableName == "db_pegawai.pegjabatan"){
+            //     $path = './arsipjabatan/'.$file;
+            // } else if($tableName == "db_pegawai.pegdiklat"){
+            //     $path = './arsipdiklat/'.$file;
+            // } else if($tableName == "db_pegawai.pegorganisasi"){
+            //     $path = null;
+            // } else if($tableName == "db_pegawai.pegpenghargaan"){
+            //     $path = null;
+            // } else if($tableName == "db_pegawai.pegsumpah"){
+            //     $path = null;
+            // } else if($tableName == "db_pegawai.pegkeluarga"){
+            //     $path = null;
+            // } else if($tableName == "db_pegawai.pegdatalain"){
+            //     $path = null;
+            // } else if($tableName == "db_pegawai.pegcuti"){
+            //     $path = './arsipcuti/'.$file;
+            // } else if($tableName == "db_pegawai.pegskp"){
+            //     $path = './arsipskp/'.$file;
+            // } else if($tableName == "db_pegawai.pegassesment"){
+            //     $path = './arsipassesment/'.$file;
+            // } else if($tableName == "db_pegawai.pegarsip"){
+            //     $path = './arsiplain/'.$file;
+            // }
+
+         
+           
+            if($target_dir != null){
+                unlink($target_dir."$nama_file.pdf");
+            }
+
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
 		}
@@ -1102,9 +1142,9 @@ class M_Kepegawaian extends CI_Model
 
 		$this->load->library('upload', $config);
 
-		if (!file_exists($target_dir)) {
-			mkdir($target_dir, 0777);
-		}
+		// if (!file_exists($target_dir)) {
+		// 	mkdir($target_dir, 0777);
+		// }
 
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
@@ -1120,6 +1160,17 @@ class M_Kepegawaian extends CI_Model
 		} else {
 			$dataFile 			= $this->upload->data();
 
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
+                'filename' => $path.$dataFile['file_name'],
+                'docfile'  => $base64
+            ]);
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_assesment']      = $this->input->post('nm_assesment');
             $dataInsert['gambarsk']         = $dataFile['file_name'];
@@ -1131,6 +1182,11 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegassesment', $dataInsert);
+
+            if($target_dir != null){
+                unlink($target_dir.$dataFile['file_name']);
+            }
+
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
 		}
@@ -1976,9 +2032,9 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
     // dd($fieldVafieldNamelue);
 
 
-    // if($path != null){
-    //     unlink($path);
-    // }
+    if($path != null){
+        unlink($path);
+    }
 
     $this->db->where($fieldName, $fieldValue)
          ->update($tableName, ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);

@@ -77,7 +77,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=URL_FILE.$result['gambarsk']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'gajiberkala') { ?>
@@ -123,7 +124,9 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipgjberkala/').$result['gambarsk']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'jabatan') { ?>
@@ -185,7 +188,9 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipjabatan/').$result['gambarsk']?>"></iframe>
+        <!-- <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipjabatan/').$result['gambarsk']?>"></iframe> -->
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'diklat') { ?>
@@ -248,7 +253,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipdiklat/').$result['gambarsk']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'organisasi') { ?>
@@ -294,11 +300,7 @@
           </tr>
         
         </table>
-      </div>
-      <!-- <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipdiklat/').$result['gambarsk']?>"></iframe>
-      </div> -->
+        </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'penghargaan') { ?>
       <div class="row">
@@ -332,11 +334,7 @@
           </tr>
       
         </table>
-      </div>
-      <!-- <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipdiklat/').$result['gambarsk']?>"></iframe>
-      </div> -->
+        </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'sumpahjanji') { ?>
       <div class="row">
@@ -482,7 +480,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipcuti/').$result['gambarsk']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'skp') { ?>
@@ -504,7 +503,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">GAMBAR SK</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipskp/').$result['file']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'assesment') { ?>
@@ -521,7 +521,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">File Assesment</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipassesment/').$result['file']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'arsip') { ?>
@@ -538,7 +539,8 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">File</span>
-        <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsiplain/').$result['gambarsk']?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'berkaspns') { ?>
@@ -556,17 +558,88 @@
       </div>
       <div class="col-lg-6">
         <span style="font-weight: bold;">File </span>
-       <iframe  style="height: 50vh; width: 100%;" src="<?=base_url('arsipberkaspns/').$result['gambarsk'];?>"></iframe>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+      </div>
+    </div>
+    <?php } else if($param['jenisdokumen']['value'] == 'pendidikan') { ?>
+      <div class="row">
+      <div class="col-lg-6">
+        <table style="width: 100%;" class="table table_dok_detail">
+          <tr>
+            <td class="td-lab-dd">Tingkat Pendidikan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['nm_tktpendidikanb']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Jurusan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['jurusan']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Fakultas</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['fakultas']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Nama Sekolah / Universitas</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['namasekolah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Nama Pimpinan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['pimpinansekolah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Tahun Lulus</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['tahunlulus']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">No. STTB/Ijazah</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['noijasah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Tgl. STTB/Ijazah</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['tglijasah']?> </td>
+          </tr>
+   
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <span style="font-weight: bold;">File </span>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
       <?php } ?>
+   <!-- END HERE  -->
     <div class="row">
-   
       <!-- <div class="col-lg-12"><hr></div> -->
   <?php if ($result['status_dokumen'] == 1) { ?>
+    
  <form method="post" id="form_verifikasi_dokumen" enctype="multipart/form-data" >
-  <input type="hidden" name="jenis_dokumen" id="jenis_dokumen" value="  <?= $param['jenisdokumen']['value'];?>">
-  <input type="hidden" name="db_dokumen" id="db_dokumen" value="  <?= $param['jenisdokumen']['db'];?>">
+  <input type="hidden" name="jenis_dokumen" id="jenis_dokumen" value="<?= $param['jenisdokumen']['value'];?>">
+  <input type="hidden" name="db_dokumen" id="db_dokumen" value="<?= $param['jenisdokumen']['db'];?>">
+  <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai" value="id_pegawai">
 
   <input type="hidden" value="<?=$result['id']?>" name="id" value="id">
   <div class="form-group">
@@ -582,9 +655,7 @@
     <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
   </div>
 <br>
-<button class="btn btn-block btn-primary float-right"  id=""><i class="fa fa-save"></i> SIMPAN</button>
-
-  <!-- <button  class="btn btn-primary float-right">Simpan</button> -->
+<button class="btn btn-block btn-primary float-right"><i class="fa fa-save"></i> SIMPAN</button>
 </form>
 <?php } ?>
 
@@ -602,7 +673,7 @@
  <input type="hidden" name="jenis_dokumen_batal" id="jenis_dokumen_batal" value="  <?= $param['jenisdokumen']['value'];?>">
   <input type="hidden" value="<?=$result['id']?>" name="id_batal" value="id_batal">
   <input type="hidden" name="db_dokumen_batal" id="db_dokumen_batal" value="  <?= $param['jenisdokumen']['db'];?>">
-
+  <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai_batal" value="id_pegawai_batal">
 <button class="btn btn-block btn-danger float-right"  id=""> Batal Verifikasi</button>
 </form>
 </div>
@@ -615,22 +686,60 @@
   </div>
   <script>
     $(function(){
+      getDokumenWs()
     })
 
-    $('#form_verifikasi_dokumen').on('submit', function(e){  
+     function getDokumenWs(){
+    $('.view_file_ws').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+   
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': '<?= $path?>'
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+
+       console.log(data)
+        if(res == null){
+          $('iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK')
+        }
+
+        $('.view_file_ws').attr('src', res.data)
+        $('.view_file_ws').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
+  }
+
+    $('#form_verifikasi_dokumen').on('submit', function(e){ 
+      
       e.preventDefault();
       var formvalue = $('#form_verifikasi_dokumen');
       var form_data = new FormData(formvalue[0]);
+      
       var val = $('#verif').val()
       var ket = $('#keterangan').val()
       if (val == ""){
-        errortoast("Silahkan Pulih Verifikasi")
+        errortoast("Silahkan Pilih Verifikasi")
+        return false;
       } else if (val == 3){
         if(ket == ""){
         errortoast("Keterangan Belum di isi");
         return false;
         }
       }
+      
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiDokumen")?>",
         method:"POST",  
@@ -654,6 +763,7 @@
 
       $('#form_batal_verifikasi_dokumen').on('submit', function(e){  
       e.preventDefault();
+      
       var formvalue = $('#form_batal_verifikasi_dokumen');
       var form_data = new FormData(formvalue[0]);
     

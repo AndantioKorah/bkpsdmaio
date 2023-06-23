@@ -42,7 +42,21 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="modal_view_file_diklat" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_diklat"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="modalDiklat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

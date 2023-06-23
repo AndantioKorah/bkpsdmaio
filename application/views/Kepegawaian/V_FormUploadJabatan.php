@@ -44,6 +44,24 @@
 </div>
 
 
+
+<div class="modal fade" id="modal_view_file_jabatan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalJabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -60,7 +78,7 @@
     <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
     <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="jabatan_unitkerjaxx">Unit Kerja </label>
+    <label for="jabatan_unitkerja">Unit Kerja </label>
     <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="jabatan_unitkerja" id="jabatan_unitkerja" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
                     <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>

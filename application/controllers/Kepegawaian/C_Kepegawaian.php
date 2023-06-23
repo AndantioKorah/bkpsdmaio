@@ -318,7 +318,33 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
-		// dd($data);
+    //    dd($data['result']);
+		    if($jd == "jabatan"){
+			$data['path'] = 'arsipjabatan/'.$data['result']['gambarsk'];
+            } else if($jd == "pangkat"){
+				$data['path'] = 'arsipelektronik/'.$data['result']['gambarsk'];
+            } else if($jd == "gajiberkala"){
+				$data['path'] = 'arsipgjberkala/'.$data['result']['gambarsk'];
+            } else if($jd == "pendidikan"){
+				$data['path'] = 'arsippendidikan/'.$data['result']['gambarsk'];
+            } else if($jd == "diklat"){
+				$data['path'] = 'arsipdiklat/'.$data['result']['gambarsk'];
+            } else if($jd == "cuti"){
+				$data['path'] = 'arsipcuti/'.$data['result']['gambarsk'];
+            } else if($jd == "skp"){
+				$data['path'] = 'arsipskp/'.$data['result']['gambarsk'];
+            } else if($jd == "assesment"){
+				$data['path'] = 'arsipassesment/'.$data['result']['gambarsk'];
+            } else if($jd == "berkaspns"){
+				$data['path'] = 'arsipberkaspns/'.$data['result']['gambarsk'];
+            } else if($jd == "arsip"){
+				$data['path'] = 'arsiplain/'.$data['result']['gambarsk'];
+            }     else {
+				$data['path'] = null;
+			}
+			
+			
+		
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);
 	}
 

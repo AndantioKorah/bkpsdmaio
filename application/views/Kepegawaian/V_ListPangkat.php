@@ -41,8 +41,10 @@
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
 
               <td class="text-left">
+              <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button> 
+                <?php } ?>
               </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>

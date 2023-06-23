@@ -25,8 +25,10 @@
               <td class="text-left"><?= formatDateNamaBulan($rs['tglmulai'])?> / <?= formatDateNamaBulan($rs['tglselesai'])?></td>
               <td class="text-left"><?=$rs['nosttpp']?> / <?= formatDateNamaBulan($rs['tglsttpp'])?></td>
               <td class="text-left">
-                <button href="#modal_view_file_cuti" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                Lihat <i class="fa fa-search"></i></button>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_cuti" onclick="openFileCuti('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <i class="fa fa-file-pdf"></i></button>
+                <?php } ?>
               </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
@@ -51,7 +53,7 @@
     </div>
   </div>
 
-                 
+
 
  
 <script>
@@ -59,9 +61,42 @@
     $('.datatable').dataTable()
   })
 
-  function openFilePangkat(filename){
-    var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_cuti').attr('src', '<?=base_url();?>arsipcuti/'+filename)
+  // function openFileCuti(filename){
+  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   $('#iframe_view_file_cuti').attr('src', '<?=base_url();?>arsipcuti/'+filename)
+  // }
+
+  async function openFileCuti(filename){
+    $('#iframe_view_file_cuti').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    console.log(filename)
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+      method: 'POST',
+      data: {
+        'username': '<?=$this->general_library->getUserName()?>',
+        'password': '<?=$this->general_library->getPassword()?>',
+        'filename': 'arsipcuti/'+filename
+      },
+      success: function(data){
+        let res = JSON.parse(data)
+        
+
+        if(res == null){
+          $('.iframe_loader').show()  
+          $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
+        }
+
+        $('#iframe_view_file_cuti').attr('src', res.data)
+        $('#iframe_view_file_cuti').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+      }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+      }
+    })
   }
 
   function deleteData(id,file,kode){

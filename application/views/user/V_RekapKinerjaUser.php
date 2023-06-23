@@ -18,7 +18,8 @@
                     <?php $bobot_rekap = countNilaiSkp($list_rekap_kinerja);
                         $total_progress_kinerja = 0;
                         $no = 1; foreach($list_rekap_kinerja as $lp){
-                        $progress = (floatval($lp['realisasi_target_kuantitas'])/floatval($lp['target_kuantitas'])) * 100;
+                            // $progress = (floatval($lp['realisasi_target_kuantitas'])/floatval($lp['target_kuantitas'])) * 100;
+                            $progress = (floatval($lp['total_realisasi'])/floatval($lp['target_kuantitas'])) * 100;
                         if($progress > 100){
                             $progress = 100;
                         }

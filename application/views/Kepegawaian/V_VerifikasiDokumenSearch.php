@@ -37,6 +37,7 @@
 
   <div class="modal fade" id="edit_data" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div id="modal-dialog" ss class="modal-dialog modal-xl">
+
         <div class="modal-content" id="edit_data_content">
         </div>
     </div>
@@ -48,11 +49,15 @@
     })
 
     function openDetail(id, jenisdok){
-      $('#edit_data_content').html('')
-      $('#edit_data_content').append(divLoaderNavy)
-      $('#edit_data_content').load('<?=base_url('Kepegawaian/C_Kepegawaian/openDetailDokumen/')?>'+id+'/'+jenisdok, function(){
+
+
+    $('#edit_data_content').html('')
+        $('#edit_data_content').append(divLoaderNavy)
+        $('#edit_data_content').load('<?=base_url('Kepegawaian/C_Kepegawaian/openDetailDokumen/')?>'+id+'/'+jenisdok, function(){
         $('#loader').hide()
-      })
+        })
+
+  
     }
   </script>
 <?php } else { ?>

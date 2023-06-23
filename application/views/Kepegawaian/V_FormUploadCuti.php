@@ -41,6 +41,8 @@
       </div>
     </div>
 </div>
+
+
 <div class="modal fade" id="modal_view_file_cuti" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -49,12 +51,14 @@
           </div>
         <div class="modal-body">
         <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
         <iframe id="iframe_view_file_cuti" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
         </div>
       </div>
     </div>
 </div>
+        
 
 
 <!-- Modal -->
@@ -75,7 +79,7 @@
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Jenis Cuti </label>
-    <select class="form-control select2"
+    <select class="form-control select2" data-dropdown-parent="#modalCuti"  
 			data-dropdown-css-class="select2-navy" name="cuti_jenis" id="cuti_jenis" required>
 			<option value="" disabled selected>Pilih Item</option>
 			<?php if($jenis_cuti){ foreach($jenis_cuti as $r){ ?>

@@ -1,4 +1,6 @@
-<h1 class="h3 mb-3">Penetapan Sasaran Kerja</h1>
+<!-- <h1 class="h3 mb-3">Penetapan Sasaran Kerja</h1> -->
+<h1 class="h3 mb-3">Sasaran Kerja Bulanan Pegawai</h1>
+
 <div class="card card-default">
 
     <div class="card-body" style="display: block;">
@@ -65,6 +67,10 @@
     <div class="col">
     <label >Target Kuantitas</label>
       <input required type="text" class="form-control customInput" name="target_kuantitas" id="target_kuantitas" autocomplete="off">
+    </div>
+    <div class="col">
+    <label >Capaian Kuantitas</label>
+      <input required type="text" class="form-control customInput" name="total_realisasi" id="total_realisasi" autocomplete="off">
     </div>
     <div class="col">
     <label >Satuan</label>

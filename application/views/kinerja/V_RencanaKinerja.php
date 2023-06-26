@@ -128,8 +128,18 @@
 
     $(function(){
       var tahun = '<?=date("Y")?>'
-         var bulan = '<?=date("m")?>'
-        loadRencanaKinerja(bulan,tahun)
+      var bulan = '<?=date("m")?>'
+         
+      var $src = $('#target_kuantitas'),
+      $dst = $('#total_realisasi');
+      $src.on('input', function () {
+      $dst.val($src.val());
+      
+      loadRencanaKinerja(bulan,tahun)
+
+      
+    });
+
     })
 
     function loadRencanaKinerja(bulan,tahun){

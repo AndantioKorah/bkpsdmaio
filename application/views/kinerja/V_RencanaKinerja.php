@@ -135,10 +135,9 @@
       $src.on('input', function () {
       $dst.val($src.val());
       
-      loadRencanaKinerja(bulan,tahun)
-
-      
     });
+
+    loadRencanaKinerja(bulan,tahun)
 
     })
 

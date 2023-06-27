@@ -111,9 +111,11 @@
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
+          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <button data-toggle="modal" onclick="loadEditProfilModal()" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
                   <i class="fa fa-edit"></i> Edit Profil
                 </button>
+                <?php }?>
               </div>
             </div>
           </div>

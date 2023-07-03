@@ -28,7 +28,7 @@
                     <td class="text-center"><?=$no++;?></td>
                     <td><?=getNamaPegawaiFull($p)?></td>
                      <td class="text-center">
-                        <button data-toggle="modal" href="#modal_edit_data_nilai" onclick="editNilaiKomponen('<?=$p['id_m_user']?>')" 
+                        <button data-toggle="modal" href="#modal_edit_data_nilai" onclick="lihatSKP('<?=$p['id_m_user']?>')" 
                         class="btn btn-sm btn-navy"><i class="fa fa-search"></i> Lihat SKP</button>
                         <?php // if($p['komponen_kinerja'] && $p['created_by'] == $this->general_library->getId()){ ?>
                        
@@ -60,7 +60,7 @@ $('#table_list_pegawai').DataTable({
     "aLengthMenu": [[20, 50, 75, -1], [20, 50, 75, "All"]],
      });
     
-        function editNilaiKomponen(id){
+        function lihatSKP(id){
             let bulan = "<?=$periode['bulan']?>"
             let tahun = "<?=$periode['tahun']?>"
             $('#modal_edit_data_nilai_content').html('')

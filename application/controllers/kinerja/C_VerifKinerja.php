@@ -25,6 +25,17 @@ class C_VerifKinerja extends CI_Controller
         render('kinerja/V_VerifKinerja', '', '', $data);
     }
 
+    public function verifKinerjaNew(){
+        $data = null;
+        if($this->general_library->isKaban()){
+            $data['list_bidang'] = $this->master->loadMasterBidangByUnitKerja($this->general_library->getUnitKerjaPegawai());
+        } 
+        if($this->general_library->isWalikota() || $this->general_library->isSetda()){
+            $data['list_skpd'] = $this->user->getAllSkpd();
+        }
+        render('kinerja/V_VerifKinerjaNew', '', '', $data);
+    }
+
     public function searchVerifKinerja(){
         $data['result'] = $this->verifkinerja->searchVerifKinerja($this->input->post());
         $this->load->view('kinerja/V_VerifKinerjaSearchItem', $data);

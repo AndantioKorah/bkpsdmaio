@@ -311,6 +311,20 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_SkpBulananCreate', $data);
     }
 
+    public function createSkpBulananVerif()
+    {
+        $data['periode'] = $this->input->post();
+        // dd($data['periode']);
+
+        list($data['pegawai'], $data['atasan_pegawai'], $data['rencana_kinerja'], $data['kepala_pd'], $data['nilai_komponen']) = $this->kinerja->createSkpBulananVerif($this->input->post());
+        $this->session->set_userdata(['data_skp' => $data]);
+        $id = $this->input->post('id_user');
+        $dataa = $this->input->post();
+        // dd($id);
+        $data['list_perilaku_kerja'] = $this->verifkinerja->loadPerilakuKerja($id, $dataa);
+        $this->load->view('kinerja/V_SkpBulananCreateNew', $data);
+    }
+
     public function komponenKinerja()
     {
         render('kinerja/V_KomponenKinerja', '', '', null);
@@ -326,6 +340,13 @@ class C_Kinerja extends CI_Controller
         $data['periode'] = $this->input->post();
         $data['list_pegawai'] = $this->verifkinerja->loadPegawaiKomponenKinerja($this->input->post());
         $this->load->view('kinerja/V_ListPegawaiKomponenKinerja', $data);
+    }
+
+    public function loadPegawaiKinerja()
+    {
+        $data['periode'] = $this->input->post();
+        $data['list_pegawai'] = $this->verifkinerja->loadPegawaiKomponenKinerja($this->input->post());
+        $this->load->view('kinerja/V_ListPegawaiKomponenKinerjaNew', $data);
     }
 
     public function editNilaiKomponen($id, $bulan, $tahun)

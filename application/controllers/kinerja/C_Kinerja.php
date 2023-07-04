@@ -311,6 +311,49 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_SkpBulananCreate', $data);
     }
 
+    public function openKomponenKinerjaPegawai($id, $bulan, $tahun){
+        list($temp, $data['komponen_kinerja']) = $this->kinerja->loadSkbpPegawai($id, $bulan, $tahun);
+        $data['id'] = $id;
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+        $this->load->view('kinerja/V_VerifSkbpKomponenKinerja', $data);
+    }
+
+    public function openListKegiatanKinerjaPegawai($id){
+        $data['id_rencana_kegiatan'] = $id;
+        $data['result'] = $this->verifkinerja->loadListKegiatanRencanaKinerja($id);
+        $this->load->view('kinerja/V_VerifSkbpListKegiatan', $data);
+    }
+
+    public function openRekapKinerjaPegawai($id, $bulan, $tahun){
+        $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerjaByIdPegawai($tahun, $bulan, $id);
+        $this->load->view('kinerja/V_VerifSkbpRekapKinerja', $data);
+    }
+
+    public function openVerifPegawai()
+    {
+        $data['periode'] = $this->input->post();
+        $data['pegawai'] = $this->user->getPegawaiById($this->input->post('id_user'));
+        $this->load->view('kinerja/V_VerifSkbp', $data);
+    }
+
+    public function createSkpBulananVerifNew($id, $bulan, $tahun)
+    {
+        // $data['periode'] = $this->input->post();
+        // dd($data['periode']);
+        $data['id_user'] = $id;
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+        $data['periode'] = $data;
+
+        list($data['pegawai'], $data['atasan_pegawai'], $data['rencana_kinerja'], $data['kepala_pd'], $data['nilai_komponen']) = $this->kinerja->createSkpBulananVerif($data);
+        $this->load->view('kinerja/V_SkpBulananCreateNew', $data);
+    }
+
+    public function saveKeteranganVerif($id){
+        $this->kinerja->saveKeteranganVerif($id, $this->input->post());
+    }
+
     public function createSkpBulananVerif()
     {
         $data['periode'] = $this->input->post();

@@ -296,6 +296,30 @@
         return $query;  
     }
 
+    public function loadRekapKinerjaByIdPegawai($tahun, $bulan, $id){
+
+        if($tahun) {
+            $bulan = $bulan;
+            $tahun = $tahun;
+        } else {
+            $bulan = date('n');
+            $tahun = date('Y');
+        }
+       
+       
+        $query = $this->db->select('a.*,
+        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        ')
+                        ->from('t_rencana_kinerja a')
+                        ->where('a.id_m_user', $id)
+                        ->where('a.tahun', $tahun)
+                        ->where('a.bulan', $bulan)
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+        // dd($query);
+        return $query;  
+    }
+
 
     function getRencanaKerja(){
         $tahun = $this->input->post('tahun');
@@ -2679,5 +2703,15 @@
         }
 
         return $res;
+    }
+
+    public function saveKeteranganVerif($id, $data){
+        $this->db->where('id', $id)
+                ->update('t_kegiatan', [
+                    'keterangan_verif' => $data['keterangan_verif'],
+                    'id_m_user_verif' => $this->general_library->getId(),
+                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                    'updated_by' => $this->general_library->getId()
+                ]);
     }
 }

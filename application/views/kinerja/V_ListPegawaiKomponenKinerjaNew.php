@@ -70,7 +70,8 @@ $('#table_list_pegawai').DataTable({
             // })
 
             $.ajax({
-            url: '<?=base_url("kinerja/C_Kinerja/createSkpBulananVerif")?>',
+            // url: '<?=base_url("kinerja/C_Kinerja/createSkpBulananVerif")?>',
+            url: '<?=base_url("kinerja/C_Kinerja/openVerifPegawai")?>',
             method: 'post',
             data: {bulan:bulan, tahun:tahun, id_user:id},
             success: function(data){

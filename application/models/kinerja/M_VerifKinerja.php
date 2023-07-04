@@ -98,7 +98,9 @@
                 }
             // } else if($role == 'kepalabadan'){
             } else if($this->general_library->isKaban()){
+                
                 if($data['filter'] == '0'){
+                   
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -113,6 +115,7 @@
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 } else if($data['filter'] == 'eselon_tiga' || $data['filter'] == 'eselon_empat'){
+                   
                     $list_bidang = null;
                     $bidang = $this->db->select('*')
                                     ->from('m_bidang')
@@ -143,6 +146,7 @@
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 } else {
+                 
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -158,6 +162,7 @@
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 }
+              
             } else if($this->general_library->isWalikota() || $this->general_library->isSetda()){
                 if($data['filter_walikota'] == 'skpd'){
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
@@ -235,7 +240,7 @@
             }
             $list_id_pegawai = array();
             $list_data_pegawai = array();
-            // dd($list_pegawai);
+            
             if($list_pegawai){
                 foreach($list_pegawai as $lp){
                     $list_id_pegawai[] = $lp['id_m_user'];
@@ -267,6 +272,7 @@
             if($return_data_pegawai){
                 return $list_data_pegawai;
             }
+            // dd($list_id_pegawai);
             return $list_id_pegawai;
         }
 
@@ -284,6 +290,7 @@
                 return null;
             }
             $list_kerja = null;
+           
             $temp = $this->db->select('*, a.id as id_t_kegiatan, a.tanggal_kegiatan as tanggal_kegiatan, a.realisasi_target_kuantitas')
                                 ->from('t_kegiatan a')
                                 ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
@@ -528,7 +535,7 @@
 
         public function loadPegawaiKomponenKinerja($data){
             $result = null;
-            $list_id_pegawai = $this->getListIdPegawaiForVerif();
+            $list_id_pegawai = $this->getListIdPegawaiForVerif($data);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user')
                                 ->from('m_user a')

@@ -14,7 +14,8 @@ $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 
 
-$route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
+// $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
+$route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerjaNew';
 $route['kinerja/rekapitulasi-realisasi'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['kinerja/skp-bulanan'] = 'kinerja/C_Kinerja/skpBulanan';
 $route['kinerja/skbp'] = 'kinerja/C_Kinerja/skbp';

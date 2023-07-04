@@ -18,6 +18,50 @@
             return $this->db->affected_rows();
         }
 
+        public function insertKomponenKinerja($dataPost){
+            $res['code'] = 0;
+            $res['message'] = 'ok';
+            $res['data'] = null;
+            $this->db->trans_begin();
+
+            $cek = $this->db->select('a.*')
+                            ->from('t_komponen_kinerja a')
+                            ->where('a.id_m_user', $dataPost['id_m_user'])
+                            ->where('a.tahun', $dataPost['tahun'])
+                            ->where('a.bulan', $dataPost['bulan'])
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+            
+            if(!$cek){
+                $data = array('berorientasi_pelayanan' => 97, 
+                'akuntabel' => 97,
+                'kompeten' => 97,
+                'harmonis' => 97,
+                'loyal' => 97,
+                'adaptif' => 97,
+                'kolaboratif' => 97,
+                'id_m_user' => $dataPost['id_m_user'],
+                'bulan' => $dataPost['bulan'],
+                'tahun' => $dataPost['tahun']
+                );
+                $result = $this->db->insert('t_komponen_kinerja', $data);
+            }
+           
+        
+             if ($this->db->trans_status() === FALSE)
+                {
+                        $this->db->trans_rollback();
+                        $res['code'] = 1;
+                        $res['message'] = 'Terjadi Kesalahan';
+                        $res['data'] = null;
+                }
+                else
+                {
+                        $this->db->trans_commit();
+                }
+                return $res;
+            }
+
         public function insertLaporanKegiatan(){
            
         $countfiles = count($_FILES['files']['name']);
@@ -60,7 +104,8 @@
            
               // Set preference
               $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-              $config['upload_path'] = '../siladen/assets/bukti_kegiatan'; 
+            //   $config['upload_path'] = '../siladen/assets/bukti_kegiatan';
+            $config['upload_path'] = './assets/bukti_kegiatan'; 
             //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
               $config['allowed_types'] = '*';
             //   $config['max_size'] = '5000'; // max_size in kb
@@ -150,7 +195,8 @@
                       'target_kualitas' => 100,
                       'id_t_rencana_kinerja' => $dataPost['tugas_jabatan'],
                       'bukti_kegiatan' => $image,
-                      'id_m_user' => $this->general_library->getId()
+                      'id_m_user' => $this->general_library->getId(),
+                      'status_verif' => 1
         );
         $result = $this->db->insert('t_kegiatan', $data);
        
@@ -284,7 +330,7 @@
        
        
         $query = $this->db->select('a.*,
-        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi
         ')
                         ->from('t_rencana_kinerja a')
                         ->where('a.id_m_user', $id)

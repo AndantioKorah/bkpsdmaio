@@ -540,7 +540,58 @@ class C_Kinerja extends CI_Controller
     }
 
     public function skbp(){
-        list($data['atasan'], $data['kepala_pd']) = $this->kinerja->getAtasanPegawai($this->general_library->getId());
-        render('kinerja/V_InputSkbp', '', '', $data);
+        // list($data['pegawai'], $data['atasan'], $data['kepala_pd']) = $this->kinerja->getAtasanPegawai($this->general_library->getId());
+        render('kinerja/V_InputSkbp', '', '', null);
+    }
+
+    public function loadListSkbpPegawai($id_pegawai){
+        $data['result'] = $this->kinerja->loadListSkbpPegawai($id_pegawai);
+        $this->load->view('kinerja/V_ListSkbp', $data);
+    }
+
+    public function inputSkbp($id, $bulan, $tahun){
+        $data['id'] = $id;
+        $data['bulan'] = $bulan;
+        $data['nama_bulan'] = strtoupper(getNamaBulan($bulan));
+        $data['tahun'] = $tahun;
+        $data['id_komponen'] = null;
+        list($data['kinerja'], $data['komponen_kinerja']) = $this->kinerja->loadSkbpPegawai($id, $bulan, $tahun);
+        $this->load->view('kinerja/V_InputSkbpDetail', $data);
+    }
+
+    public function loadSkbpDetailPegawai($id, $bulan, $tahun){
+        list($data['kinerja'], $data['komponen_kinerja']) = $this->kinerja->loadSkbpPegawai($id, $bulan, $tahun);
+        $data['id'] = $id;
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+        $this->load->view('kinerja/V_InputSkbpRow', $data);
+    }
+
+    public function updateRowSkbp($id){
+        echo json_encode($this->kinerja->updateRowSkbp($this->input->post(), $id));
+    }
+
+    public function inputRowSkbp(){
+        echo json_encode($this->kinerja->inputRowSkbp($this->input->post()));
+    }
+
+    public function inputKomponenKinerja($id, $bulan, $tahun){
+        echo json_encode($this->kinerja->inputKomponenKinerja($this->input->post(), $id, $bulan, $tahun));
+    }
+
+    public function updateKomponenKinerja($id, $bulan, $tahun, $id_komponen){
+        echo json_encode($this->kinerja->updateKomponenKinerja($this->input->post(), $id, $bulan, $tahun, $id_komponen));
+    }
+
+    public function deleteKomponenKinerja($id){
+        echo json_encode($this->kinerja->deleteKomponenKinerja($id));
+    }
+
+    public function deleteRowSkbp($id){
+        echo json_encode($this->kinerja->deleteRowSkbp($id));
+    }
+
+    public function deleteSkbp($bulan, $tahun){
+        echo json_encode($this->kinerja->deleteSkbp($bulan, $tahun));
     }
 }

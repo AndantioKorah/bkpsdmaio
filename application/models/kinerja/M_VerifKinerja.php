@@ -333,7 +333,7 @@
             if($kegiatan){
                 if($status == '1' || $status == '2'){
                     //verif bisa ditolak atau diterima hanya jika kegiatan belum diverif atau sudah batal verif
-                    if($kegiatan['status_verif'] == '0' || $kegiatan['status_verif'] == '3'){
+                    // if($kegiatan['status_verif'] == '0' || $kegiatan['status_verif'] == '3'){
                         $this->db->where('id', $id_t_kegiatan)
                                 ->update('t_kegiatan',
                                 [
@@ -359,10 +359,10 @@
                         $this->db->where('id', $rencana_kegiatan['id'])
                                     ->update('t_rencana_kinerja', ['total_realisasi' => floatval($rencana_kegiatan['sum_realisasi'])]);
                         
-                    } else {
-                        $rs['code'] = 1;
-                        $rs['message'] = 'Kegiatan sudah terverifikasi';
-                    }
+                    // } else {
+                    //     $rs['code'] = 1;
+                    //     $rs['message'] = 'Kegiatan sudah terverifikasi';
+                    // }
                 } else {
                     if($kegiatan['status_verif'] == '1' || $kegiatan['status_verif'] == '2'){
                         //hanya bisa batal verif jika kegiatan sudah diverif (tolak maupun setuju)

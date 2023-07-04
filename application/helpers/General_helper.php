@@ -374,6 +374,14 @@ function formatDateNamaBulanWT($data)
     return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
 }
 
+function formatDateNamaBulanWithTime($data)
+{
+    $date_only = formatDate($data);
+    $explode = explode('/', $date_only);
+    $explode_time = explode(' ', $date_only);
+    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
+}
+
 function getNamaPegawaiFull($pegawai)
 {
     return trim($pegawai['gelar1']) . ' ' . trim($pegawai['nama']) . ' ' . trim($pegawai['gelar2']);

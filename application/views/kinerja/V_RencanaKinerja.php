@@ -68,10 +68,10 @@
     <label >Target Kuantitas</label>
       <input required type="text" class="form-control customInput" name="target_kuantitas" id="target_kuantitas" autocomplete="off">
     </div>
-    <div class="col">
+    <!-- <div class="col">
     <label >Capaian Kuantitas</label>
       <input required type="text" class="form-control customInput" name="total_realisasi" id="total_realisasi" autocomplete="off">
-    </div>
+    </div> -->
     <div class="col">
     <label >Satuan</label>
       <input required type="text" class="form-control customInput" name="satuan" id="satuan" autocomplete="off" list="sat" >

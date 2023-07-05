@@ -22,7 +22,11 @@
         }
 
         public function getKinerjaPegawai($id_m_user, $bulan, $tahun){
-            return $this->db->select('*')
+            return $this->db->select('*,
+                            (SELECT SUM(b.realisasi_target_kuantitas)
+                            FROM t_kegiatan b
+                            WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+                            AND b.flag_active = 1) as realisasi')
                             ->from('t_rencana_kinerja')
                             ->where('id_m_user', $id_m_user)
                             ->where('bulan', $bulan)

@@ -40,7 +40,6 @@
                 <th class="text-left table-success">Tahun</th>
                 <th class="text-left table-success">Bulan</th>
                 <th class="text-left table-success">Target Kuantitas</th>
-                <th class="text-left table-success">Capaian Kuantitas</th>
                 <th class="text-left table-success">Satuan</th>
                 <th class="text-left table-success">Target Kualitas (%)</th>
                 <th class="table-success"></th>
@@ -55,7 +54,6 @@
                         <td class="text-left"><?=$lp['tahun']?></td>                       
                         <td class="text-left"><?= getNamaBulan($lp['bulan'])?></td>
                         <td class="text-left"><?=$lp['target_kuantitas']?></td>
-                        <td class="text-left"><?=$lp['total_realisasi']?></td>    
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left"><?=$lp['target_kualitas']?></td>
                                          

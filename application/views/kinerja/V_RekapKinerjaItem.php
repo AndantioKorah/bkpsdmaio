@@ -127,9 +127,9 @@
                 <?php
                 
                 
-                // $realisasi_kualitas = $lp['realisasi_target_kuantitas']/$lp['target_kuantitas'] * 100;
-                // $progress = (floatval($lp['realisasi_target_kuantitas'])/floatval($lp['target_kuantitas'])) * 100;
-                $progress = (floatval($lp['total_realisasi'])/floatval($lp['target_kuantitas'])) * 100;
+                // $realisasi_kualitas = $lp['realisasi']/$lp['target_kuantitas'] * 100;
+                $progress = (floatval($lp['realisasi'])/floatval($lp['target_kuantitas'])) * 100;
+                // $progress = (floatval($lp['total_realisasi'])/floatval($lp['target_kuantitas'])) * 100;
                 if($progress > 100){
                     $progress = 100;
                 }
@@ -145,8 +145,8 @@
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left"><?=$lp['target_kualitas']?>%</td>
                         <td class="text-left">
-                            <!-- <?=$lp['realisasi_target_kuantitas'] == '' ? '0' : $lp['realisasi_target_kuantitas']?></td> -->
-                            <?=$lp['total_realisasi'] == '' ? '0' : $lp['total_realisasi']?></td>
+                            <?=$lp['realisasi'] == '' ? '0' : $lp['realisasi']?></td>
+                            <!-- <?=$lp['total_realisasi'] == '' ? '0' : $lp['total_realisasi']?></td> -->
 
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left">

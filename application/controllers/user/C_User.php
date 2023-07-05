@@ -118,7 +118,21 @@ class C_User extends CI_Controller
         $data['bidang'] = $this->master->loadMasterBidangByUnitKerja($data['user']['skpd']);
         $data['subbidang'] = $this->master->getSubBidangByBidang($data['user']['id_m_bidang']);
         $data['pegawai'] = $this->user->getListPegawaiSkpd($data['user']['skpd'], $id_m_user);
+        $data['hak_akses'] = $this->general->getAllWithOrder('m_hak_akses', 'nama_hak_akses', 'asc');
         $this->load->view('user/V_AddRoleModal', $data);
+    }
+
+    public function refreshHakAkses($id){
+        $data['result'] = $this->user->getHakAksesUser($id);
+        $this->load->view('user/V_ListHakAkses', $data);
+    }
+
+    public function tambahHakAkses(){
+        $this->user->tambahHakAkses($this->input->post());
+    }
+
+    public function deleteHakAkses($id){
+        $this->user->deleteHakAkses($id);
     }
 
     public function loadRoleForUser($id_m_user){
@@ -340,14 +354,28 @@ class C_User extends CI_Controller
         render('user/V_AbsensiPegawai', null, null, null);
     }
 
-    public function searchDetailAbsenPegawai(){
+    public function searchDetailAbsenPegawai($flag_edit = 0){
         $dt = $this->input->post();
+        $data['flag_edit'] = $flag_edit;
         $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        $data['nip'] = $data['result']['pagu_tpp']['nipbaru_ws'];
         $data['result']['param'] = $dt;
         if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y')){
             $this->session->set_userdata('live_tpp', $data['result']);
         }
         return $this->load->view('user/V_DetailAbsensiPegawai', $data);
+    }
+
+    public function editDataPresensi($nip, $date){
+        $data['result'] = $this->user->getPresensiPegawaiByNipAndDate($nip, $date);
+        $data['nip'] = $nip;
+        $data['date'] = $date;
+        return $this->load->view('user/V_EditPresensiPegawai', $data);
+    }
+
+    public function saveEditPresensi($nip, $date){
+        $data = $this->input->post();
+        $this->user->saveEditPresensi($data, $nip, $date);
     }
 
     public function loadHeaderCetakan(){

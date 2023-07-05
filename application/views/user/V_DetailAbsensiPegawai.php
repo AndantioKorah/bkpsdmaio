@@ -27,6 +27,7 @@
 
     .td_sabtu_minggu{
         background-color: #f9050517;
+        border: 1px solid grey !important;
     }
     
     .td_sabtu_minggu span{
@@ -40,6 +41,15 @@
     .table_calendar td{
         max-width: 70px !important;
         min-width: 70px !important;
+    }
+
+    .td_edit{
+        cursor: pointer;
+    }
+
+    .td_edit:hover{
+        background-color: #e6e6e6 !important;
+        transition: .2s;
     }
 
 </style>
@@ -105,7 +115,7 @@
 </div>
 <div class="card card-default p-3 table-responsive">
     <div class="text-center">
-        <h4>REKAP ABSENSI BULAN <?=strtoupper(getNamaBulan($result['param']['bulan']))?> TAHUN <?=$result['param']['tahun']?></h4>
+        <h4>PRESENSI BULAN <?=strtoupper(getNamaBulan($result['param']['bulan']))?> TAHUN <?=$result['param']['tahun']?></h4>
     </div>
     <table class="table_calendar">
         <thead>
@@ -157,7 +167,18 @@
                         if($pointer > $j){
                             $class_td = '';
                         }
-                        echo "<td class='".$class_td."'>";
+
+                        if($flag_tidak_print == 0 && $j == $pointer && !isset($result['hari_libur'][$dates])){
+                            if($this->general_library->isProgrammer()){
+                                $class_td = "td_edit";
+                            }
+                        }
+                        if($this->general_library->isProgrammer() && $class_td == "td_edit"){
+                                echo '<td data-toggle="modal" data-target="#edit_data_presensi" data-dates="'.$dates.'"
+                                onclick=openEditModal("'.$dates.'") class="'.$class_td.'" >';
+                        } else {
+                            echo '<td class="'.$class_td.'" >';
+                        }
                             if($j == $pointer){
                                 if(isset($result['list_hari'][$pointer_hari])){
                                     $text_masuk = '';
@@ -197,3 +218,17 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    function openEditModal(dates){
+        // alert(dates)
+        // $('.td_edit').on('click', function(){
+            // dates = $(this).data('dates');
+            $('#edit_data_presensi_content').html('')
+            $('#edit_data_presensi_content').append(divLoaderNavy)
+            $('#edit_data_presensi_content').load('<?=base_url('user/C_User/editDataPresensi/'.$nip.'/')?>'+dates, function(){
+                $('#loader').hide()
+            })
+        // })
+    }
+</script>

@@ -1,4 +1,6 @@
-<?php if(isset($skpd)){ ?>
+<?php if(isset($skpd)){
+$list_disker = ['S', 'I', 'TK'];
+?>
     <html>
         <head>
             <style>
@@ -148,7 +150,7 @@
     <div class="div_maintb">
     <table class="rekap-table table" style="border-collapse: collapse;" border="1" id="table_rekap_absenx">
         <thead>
-            <tr> 
+            <tr style="vertical-align: middle;"> 
                     <?php $i=0; 
                         $list_dk = null;
                         if($disiplin_kerja){
@@ -186,7 +188,6 @@
                         <th style="text-align: center; ">JHK</th>
                         <th style="text-align: center; ">Hadir</th>
                         <th style="text-align: center; ">Invalid</th>
-                        <!-- <th style="text-align: center; ">Alpa</th> -->
                         <th style="text-align: center; ">TMK 1</th>
                         <th style="text-align: center; ">TMK 2</th>
                         <th style="text-align: center; ">TMK 3</th>
@@ -195,10 +196,10 @@
                         <th style="text-align: center; ">PKSW 3</th>
                         <?php
                             if($list_dk){
-                                foreach($list_dk as $ldk){
+                                foreach($list_dk as $ldk){ if(($flag_print) && $flag_print == 1){if(in_array($ldk, $list_disker)){
                         ?>
                             <th style="text-align: center; "><?=$ldk?></th>
-                        <?php } } ?>
+                        <?php } } } } ?>
 		</tr> 
             </thead>
             <tbody>
@@ -214,7 +215,7 @@
                           ?>
                               <tr class="<?=$bgtr?>">
                                   <td style="text-align: center; "><?=$no++;?></td>
-                                  <td scope="row" style=" text-align: left;"><a><?=$rs['nama_pegawai']?></a></td>
+                                  <td scope="row" style=" text-align: left;"><a style="font-weight: bold;"><?=$rs['nama_pegawai']?></a></td>
                                   <td style=""><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td>
                                   <?php
                                   foreach($rs['absen'] as $a){
@@ -283,17 +284,16 @@
                                   <?php } ?>
                                   <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['jhk']?></td>
                                   <td style=" text-align: center; font-weight: bold;"><?=$rs['rekap']['hadir']?></td>
-                                  <td style=" text-align: center; font-weight: bold; color: <?=$rs['jumlah_anulir'] > 0 ? '#bb01c7;' : '#aaaeb3;'?>"><?=$rs['jumlah_anulir']?></td>
-                                  <!-- <td style=" text-align: center; color: <?= $rs['rekap']['alpa'] > 0 ? 'red;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['alpa']?></td> -->
+                                  <td style=" text-align: center; font-weight: bold; color: <?=$rs['jumlah_anulir'] > 0 ? '#bb01c7;' : '#aaaeb3;'?>"><?=$rs['jumlah_anulir'] > 0 ? $rs['jumlah_anulir'] : "0"?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['tmk1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk1']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['tmk2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk2']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['tmk3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['tmk3']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['pksw1'] > 0 ? '#d3b700;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw1']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['pksw2'] > 0 ? '#d37c00;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw2']?></td>
                                   <td style=" text-align: center; color: <?= $rs['rekap']['pksw3'] > 0 ? '#ff0000;' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap']['pksw3']?></td>
-                                  <?php foreach($list_dk as $l){ ?>
+                                  <?php foreach($list_dk as $l){ if(isset($flag_print) && $flag_print == 1){ if(in_array($l, $list_disker)){ ?>
                                       <td style=" text-align: center; color: <?= $rs['rekap'][$l] > 0 ? $txtcolordisker.';' : '#aaaeb3;' ?> font-weight: bold;"><?=$rs['rekap'][$l]?></td>
-                                  <?php } ?>
+                                  <?php } } } ?>
                               </tr>
                           <?php } } ?>
             

@@ -1585,6 +1585,77 @@
                             ->get()->row_array();
             return $pegawai;
         }
+
+        public function tambahHakAkses($data){
+            $exist = $this->db->select('*')
+                                ->from('t_hak_akses')
+                                ->where('id_m_user', $data['id_m_user'])
+                                ->where('id_m_hak_akses', $data['id_m_hak_akses'])
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+            if(!$exist){
+                $data['created_by'] = $this->general_library->getId();
+                $this->db->insert('t_hak_akses', $data);
+            }
+        }
+
+        public function deleteHakAkses($id){
+            $this->db->where('id', $id)
+                    ->update('t_hak_akses', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function getHakAksesUser($id){
+            return $this->db->select('b.*, a.id as id_t_hak_akses')
+                            ->from('t_hak_akses a')
+                            ->join('m_hak_akses b', 'a.id_m_hak_akses = b.id')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_m_user', $id)
+                            ->order_by('b.nama_hak_akses', 1)
+                            ->get()->result_array();
+        }
+
+        public function getPresensiPegawaiByNipAndDate($nip, $date){
+            return $this->db->select('a.*')
+                            ->from('db_sip.absen a')
+                            ->join('m_user b', 'a.user_id = b.id')
+                            ->where('a.tgl', $date)
+                            ->where('username', $nip)
+                            ->get()->row_array();
+        }
+
+        public function saveEditPresensi($data_input, $nip, $date){
+            $data = $this->db->select('a.*')
+                            ->from('db_sip.absen a')
+                            ->join('m_user b', 'a.user_id = b.id')
+                            ->where('a.tgl', $date)
+                            ->where('username', $nip)
+                            ->get()->row_array();
+            $new_absensi_masuk = $data_input['jam_masuk'].':'.$data_input['menit_masuk'].':'.$data_input['detik_masuk'];
+            $new_absensi_pulang = $data_input['jam_pulang'].':'.$data_input['menit_pulang'].':'.$data_input['detik_pulang'];
+            if($data){
+                $this->db->where('id', $data['id'])
+                        ->update('db_sip.absen', [
+                            'masuk' => $new_absensi_masuk,
+                            'pulang' => $new_absensi_pulang,
+                        ]);
+            } else {
+                $user = $this->db->select('*')
+                                ->from('m_user')
+                                ->where('username', $nip)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+
+                $this->db->insert('db_sip.absen', [
+                    'masuk' => $new_absensi_masuk,
+                    'pulang' => $new_absensi_pulang,
+                    'user_id' => $user['id'],
+                    'tgl' => $date 
+                ]);
+            }
+        }
 	}
 
    

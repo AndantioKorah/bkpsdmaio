@@ -489,7 +489,10 @@
                 <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & PNS</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button  onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+                <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
             </ul>
           </div>
@@ -540,6 +543,41 @@
               
               <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
                 <div id="form_arsip"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab">
+                <div class="row">
+                  <form id="form_presensi_pegawai">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Bulan</label>
+                            <select class="form-control select2-navy" style="width: 100%"
+                                id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
+                                <option <?=date('m') == '01' ? 'selected' : ''?> value="01">Januari</option>
+                                <option <?=date('m') == '02' ? 'selected' : ''?> value="02">Feburari</option>
+                                <option <?=date('m') == '03' ? 'selected' : ''?> value="03">Maret</option>
+                                <option <?=date('m') == '04' ? 'selected' : ''?> value="04">April</option>
+                                <option <?=date('m') == '05' ? 'selected' : ''?> value="05">Mei</option>
+                                <option <?=date('m') == '06' ? 'selected' : ''?> value="06">Juni</option>
+                                <option <?=date('m') == '07' ? 'selected' : ''?> value="07">Juli</option>
+                                <option <?=date('m') == '08' ? 'selected' : ''?> value="08">Agustus</option>
+                                <option <?=date('m') == '09' ? 'selected' : ''?> value="09">September</option>
+                                <option <?=date('m') == '10' ? 'selected' : ''?> value="10">Oktober</option>
+                                <option <?=date('m') == '11' ? 'selected' : ''?> value="11">November</option>
+                                <option <?=date('m') == '12' ? 'selected' : ''?> value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Tahun</label>
+                            <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                        </div>
+                        <div class="col-lg-4">
+                            <label style="color: white;">.</label><br>
+                            <button class="btn btn-navy" type="submit">Submit</button>
+                        </div>
+                    </div>
+                  </form>
+                  <div class="mt-3" id="div_presensi_result"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -835,6 +873,21 @@
   </div>
 </div>
 <!-- end Modal edit profil -->
+
+<div class="modal fade" id="edit_data_presensi" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">EDIT DATA JAM PRESENSI</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="edit_data_presensi_content">
+          </div>
+      </div>
+  </div>
+</div>
   <script>
   var nip = "<?= $nip;?>"; 
   $(function(){
@@ -852,6 +905,36 @@
   })
  function loadEditProfilModal (){
 
+ }
+
+ $('#bulan').on('change', function(){
+  $('#form_presensi_pegawai').submit();
+ })
+
+ $('#tahun').on('change', function(){
+  $('#form_presensi_pegawai').submit();
+})
+
+ $('#form_presensi_pegawai').on('submit', function(e){
+    e.preventDefault()
+    $('#div_presensi_result').html('')
+    $('#div_presensi_result').append(divLoaderNavy)
+    $.ajax({
+        url: '<?=base_url("user/C_User/searchDetailAbsenPegawai/1")?>',
+        method: 'post',
+        // data: $(this).serialize(),
+        data: $(this).serialize(),
+        success: function(data){
+            $('#div_presensi_result').html('')
+            $('#div_presensi_result').append(data)
+        }, error: function(e){
+            errortoast('Terjadi Kesalahan')
+        }
+    })
+})
+
+ function loadPresensiPegawai(){
+  $('#form_presensi_pegawai').submit();
  }
 
   $('#form_edit_profil').on('submit', function(e){  

@@ -16,6 +16,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#password_tab" data-toggle="tab">Password</a>
                 </li>
+                <?php if($this->general_library->isProgrammer()){ ?>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="refreshHakAkses()" href="#hak_akses_tab" data-toggle="tab">Hak Akses</a>
+                    </li>
+                <?php } ?>
                 <!-- <li class="nav-item">
                     <a class="nav-link" onclick="refreshListVerifBidang()" href="#verif_tab" data-toggle="tab">Verifikasi</a>
                 </li> -->
@@ -112,6 +117,29 @@
                             </div>
                             <div class="col-3"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="hak_akses_tab">
+                <div class="row">
+                    <div class="col-12">
+                        <form id="form_tambah_hak_akses">
+                            <label>Hak Akses:</label>
+                            <select id="id_m_hak_akses" style="width: 100%;" class="form-control form-control-sm select2_this select2-navy" data-dropdown-css-class="select2-navy" name="id_m_hak_akses">
+                                <option value="0" disabled selected>Pilih Hak Akses</option>
+                                <?php if($hak_akses){ foreach($hak_akses as $b){ ?>
+                                    <option value="<?=$b['id']?>"><?=$b['nama_hak_akses']?></option>
+                                <?php } } ?>
+                            </select>
+
+                            <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id_m_user']?>"/>
+                            <button id="btn_save_hak_akses" type="submit" class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
+                            <button id="btn_save_hak_akses_loading" style="display: none;" type="submit" class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
+                        </form>
+                    </div>
+                    <div class="col-12"><hr></div>
+                    <div class="col-12">
+                        <div id="div_hak_akses" class="table-responsive"></div>
                     </div>
                 </div>
             </div>
@@ -212,6 +240,14 @@
         })
     }
 
+    function refreshHakAkses(){
+        $('#div_hak_akses').html('')
+        $('#div_hak_akses').append(divLoaderNavy)
+        $('#div_hak_akses').load('<?=base_url("user/C_User/refreshHakAkses")?>'+'/'+'<?=$user['id_m_user']?>', function(){
+
+        })
+    }
+
     function refreshBidang(){
         $('#div_bidang').html('')
         $('#div_bidang').append(divLoaderNavy)
@@ -235,7 +271,28 @@
 
         })
     }
-    
+
+    $('#form_tambah_hak_akses').on('submit', function(e){
+        e.preventDefault()
+        $('btn_save_hak_akses_loading').show()
+        $('btn_save_hak_akses').hide()
+        $.ajax({
+            url: '<?=base_url("user/C_User/tambahHakAkses")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                successtoast('Berhasil menambahkan Hak Akses')
+                $('btn_save_hak_akses_loading').hide()
+                $('btn_save_hak_akses').show()
+                refreshHakAkses()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+                $('btn_save_hak_akses_loading').hide()
+                $('btn_save_hak_akses').show()
+            }
+        })
+    })
+
     $('#form_tambah_verif_pegawai').on('submit', function(e){
         e.preventDefault()
         $.ajax({

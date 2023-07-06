@@ -138,7 +138,7 @@
                 <th class="text-left table-success">Detail Kegiatan</th>
                 <th class="text-left table-success">Realisasi Target (Kuantitas)</th>
                 <th class="text-left table-success">Satuan</th>
-                <th class="text-center table-success">Status</th>
+                <!-- <th class="text-center table-success">Status</th> -->
                 <th class="text-center table-success">Dokumen Bukti Kegiatan</th>
                
                 <th class="table-success"></th>
@@ -152,13 +152,13 @@
                         <td class="text-left"><?=$lp['deskripsi_kegiatan']?></td>
                         <td class="text-left" style="width:10%;"><?=$lp['realisasi_target_kuantitas']?></td>
                         <td class="text-left"><?=$lp['satuan']?></td>
-                        <td class="text-left">
+                        <!-- <td class="text-left">
                         <button class="btn btn-<?php if($lp['id_status_verif'] == 0) echo  "warning";
                                                     else if($lp['id_status_verif'] == 1) echo "success";
                                                     else if($lp['id_status_verif'] == 2) echo "danger";
                                                     else if($lp['id_status_verif'] == 3) echo "warning";   ?> btn-sm" type="button" >
                         <?= $lp['status_verif'];?>
-                            </button></td>
+                            </button></td> -->
                         <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-file"></i> Lihat File

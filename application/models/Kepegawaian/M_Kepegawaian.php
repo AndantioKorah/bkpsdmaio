@@ -285,6 +285,7 @@ class M_Kepegawaian extends CI_Model
                 ->limit(1);
             return $this->db->get()->row_array();
         }
+
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -293,7 +294,9 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+            $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -305,7 +308,9 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg')
                 ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab')
                 ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan')
+                ->join('m_user l', 'a.nipbaru_ws = l.username')
                 ->where('a.nipbaru_ws', $username)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }

@@ -29,9 +29,11 @@ class General_library
     }
 
     public function isHakAkses($meta_name){
-        foreach($this->hakAkses as $hk){
-            if($hk['meta_name'] == $meta_name){
-                return true;
+        if(count($this->hakAkses) > 0){
+            foreach($this->hakAkses as $hk){
+                if($hk['meta_name'] == $meta_name){
+                    return true;
+                }
             }
         }
         return false;

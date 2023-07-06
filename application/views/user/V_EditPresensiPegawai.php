@@ -33,8 +33,12 @@
 </style>
 
 <?php
-  $ex_masuk = explode(":", $result['masuk']);
-  $ex_pulang = explode(":", $result['pulang']);
+  $ex_masuk = null;
+  $ex_pulang = null;
+  if($result){
+    $ex_masuk = explode(":", $result['masuk']);
+    $ex_pulang = explode(":", $result['pulang']);
+  }
 ?>
   <div class="col-lg-12 p-3">
     <div class="col-lg-12 text-center">

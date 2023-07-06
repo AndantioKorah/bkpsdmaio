@@ -354,13 +354,17 @@ class C_User extends CI_Controller
         render('user/V_AbsensiPegawai', null, null, null);
     }
 
-    public function searchDetailAbsenPegawai($flag_edit = 0){
+    public function searchDetailAbsenPegawai($flag_edit = 0, $id_user = 0){
         $dt = $this->input->post();
         $data['flag_edit'] = $flag_edit;
-        $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        if($flag_edit == 1){
+            $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun']);
+        } else {
+            $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        }
         $data['nip'] = $data['result']['pagu_tpp']['nipbaru_ws'];
         $data['result']['param'] = $dt;
-        if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y')){
+        if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y') && ($id_user == $this->general_library->getId())){
             $this->session->set_userdata('live_tpp', $data['result']);
         }
         return $this->load->view('user/V_DetailAbsensiPegawai', $data);

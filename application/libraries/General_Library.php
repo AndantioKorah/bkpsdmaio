@@ -7,6 +7,7 @@ class General_library
 {
     protected $nikita;
     public $userLoggedIn;
+    public $hakAkses;
     public $params;
     public $bios_serial_num;
 
@@ -16,6 +17,7 @@ class General_library
         $this->nikita = &get_instance();
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
+            $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
         }
         $this->params = $this->nikita->session->userdata('params');
         $this->bios_serial_num = shell_exec('wmic bios get serialnumber 2>&1');
@@ -24,6 +26,15 @@ class General_library
         $this->nikita->load->model('user/M_User', 'm_user');
         $this->nikita->load->model('kinerja/M_Kinerja', 'm_kinerja');
         $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
+    }
+
+    public function isHakAkses($meta_name){
+        foreach($this->hakAkses as $hk){
+            if($hk['meta_name'] == $meta_name){
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getServerDateTime(){

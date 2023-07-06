@@ -68,6 +68,7 @@ class C_Login extends CI_Controller
             $all_menu = $this->m_general->getAll('m_menu');
             $list_menu = null;
             $list_role = $this->user->getListRoleForUser($result[0]['id']);
+            $list_hak_akses = $this->user->getHakAksesUser($result[0]['id']);
             $active_role = null;
             $list_exist_url = null;
             $pegawai = $this->m_general->getDataPegawai($result[0]['username']);
@@ -113,6 +114,7 @@ class C_Login extends CI_Controller
                 'list_menu' =>  $list_menu,
                 'list_exist_url' =>  $list_exist_url,
                 'list_role' =>  $list_role,
+                'list_hak_akses' =>  $list_hak_akses,
                 'list_url' =>  $list_url,
                 'active_role' =>  $active_role,
                 'active_role_id' =>  $active_role['id'],

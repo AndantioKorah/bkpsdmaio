@@ -152,7 +152,7 @@
       </div>
     </div>
   </div>
-  <?php if($this->general_library->isProgrammer()){ ?>
+  <?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('edit_presensi')){ ?>
     <div class="modal-footer">
       <div class="col-lg-12">
         <div class="row">

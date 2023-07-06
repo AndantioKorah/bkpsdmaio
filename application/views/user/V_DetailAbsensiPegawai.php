@@ -169,11 +169,11 @@
                         }
 
                         if($flag_tidak_print == 0 && $j == $pointer && !isset($result['hari_libur'][$dates])){
-                            if($this->general_library->isProgrammer()){
+                            if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('edit_presensi')){
                                 $class_td = "td_edit";
                             }
                         }
-                        if($this->general_library->isProgrammer() && $class_td == "td_edit"){
+                        if(($this->general_library->isProgrammer() || $this->general_library->isHakAkses('edit_presensi')) && $class_td == "td_edit"){
                                 echo '<td data-toggle="modal" data-target="#edit_data_presensi" data-dates="'.$dates.'"
                                 onclick=openEditModal("'.$dates.'") class="'.$class_td.'" >';
                         } else {

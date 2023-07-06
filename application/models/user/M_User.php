@@ -1613,7 +1613,7 @@
                             ->join('m_hak_akses b', 'a.id_m_hak_akses = b.id')
                             ->where('a.flag_active', 1)
                             ->where('a.id_m_user', $id)
-                            ->order_by('b.nama_hak_akses', 1)
+                            ->order_by('b.nama_hak_akses', 'asc')
                             ->get()->result_array();
         }
 

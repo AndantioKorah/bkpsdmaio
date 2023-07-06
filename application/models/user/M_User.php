@@ -1306,7 +1306,7 @@
             //data absen
             $list_data_absen = $this->db->select('*')
                                     ->from('db_sip.absen a')
-                                    ->where('a.user_id', $this->general_library->getId())
+                                    ->where('a.user_id', $id_pegawai)
                                     ->where('MONTH(tgl)', $bulan)
                                     ->where('YEAR(tgl)', $tahun)
                                     ->order_by('tgl')

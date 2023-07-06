@@ -285,6 +285,7 @@ class M_Kepegawaian extends CI_Model
                 ->limit(1);
             return $this->db->get()->row_array();
         }
+
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -309,6 +310,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan')
                 ->join('m_user l', 'a.nipbaru_ws = l.username')
                 ->where('a.nipbaru_ws', $username)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }

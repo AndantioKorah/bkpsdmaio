@@ -1279,7 +1279,6 @@
 
         public function getTppPegawai($id_pegawai, $tpp, $pk, $bulan, $tahun, $unitkerja){
             $result = null;
-            dd($tpp[0]['pagu_tpp']);
             $result['pagu_tpp'] = $tpp;
             $result['pagu_pk'] = (floatval(TARGET_BOBOT_PRODUKTIVITAS_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
             $result['pagu_dk'] = (floatval(TARGET_BOBOT_DISIPLIN_KERJA) / 100) * floatval($tpp['pagu_tpp']); 

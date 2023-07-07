@@ -2355,6 +2355,26 @@ public function submitEditProfil(){
     }
 
     return $res;
+} 
+
+public function copyfoto(){
+    
+
+                // $this->db->select('a.fotopeg')
+                // ->from('db_pegawai.pegawai as a')
+                // ->where('a.fotopeg is not null');
+                // $query = $this->db->get();
+                // foreach ($query->result() as $row)
+                //     {
+                        
+                //             $des = './assets/bukti_kegiatan/tes/'.$row->fotopeg; 
+                //             $from = 'http://simpegserver/adm/fotopeg/'.$row->fotopeg; 
+                //             $files = copy($from, $des);
+
+                //     }
+       
+
+		dd('selesai');
 }
     
 

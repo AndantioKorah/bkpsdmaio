@@ -94,11 +94,11 @@
                   src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
                   data-src="<?=$this->general_library->getFotoPegawai($profil_pegawai['fotopeg'])?>" /> -->
                   <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                  src="http://simpegserver/adm/fotopeg/<?=$profil_pegawai['fotopeg']?>" /> 
+                  src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" /> 
                   
               </div>
 
-           
+             
 
               <div class="col-lg-12 text-center">
                 <span class="sp_profil">

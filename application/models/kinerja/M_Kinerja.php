@@ -103,7 +103,7 @@
             //   }
            
               // Set preference
-              $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
             //   $config['upload_path'] = '../siladen/assets/bukti_kegiatan';
             $config['upload_path'] = './assets/bukti_kegiatan'; 
             //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
@@ -204,16 +204,24 @@
         $id =  $this->general_library->getId();
         $bulan = date('n');
         $tahun = date('Y');
-        // $cek = $this->db->select('a.*,
-        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
-        // ')
-        //                 ->from('t_rencana_kinerja a')
-        //                 ->where('a.id_m_user', $id)
-        //                 ->where('a.tahun', $tahun)
-        //                 ->where('a.bulan', $bulan)
-        //                 ->where('a.id', $dataPost['tugas_jabatan'])
-        //                 ->where('a.flag_active', 1)
-        //                 ->get()->result_array();
+
+        $cek = $this->db->select('a.id,
+        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
+        ')
+                        ->from('t_rencana_kinerja a')
+                        ->where('a.id_m_user', $id)
+                        ->where('a.tahun', $tahun)
+                        ->where('a.bulan', $bulan)
+                        ->where('a.id', $dataPost['tugas_jabatan'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+       
+
+           $this->db->where('id',  $cek[0]['id'])
+                     ->update('t_rencana_kinerja', [
+                    //  'updated_by' => $this->general_library->getId(),
+                     'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
+            ]);
 
         // if($cek){          
         //  if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){
@@ -1876,7 +1884,7 @@
 
         $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                             
-        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user,
+        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat,
                             b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg,
                             (SELECT CONCAT(
                                 IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
@@ -1895,7 +1903,6 @@
                             ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                             ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
-                            ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('a.skpd', $data['id_unitkerja'])
                             ->order_by('c.eselon, a.nama')
                             ->get()->result_array();

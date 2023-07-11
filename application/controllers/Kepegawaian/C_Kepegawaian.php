@@ -434,6 +434,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 	
 	public function profilPegawai($nip){
+	
 		if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
@@ -456,6 +457,9 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function uploadDokumen(){
+	
+        // $this->kepegawaian->copyfoto();
+		
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();

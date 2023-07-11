@@ -153,8 +153,8 @@
                                         if($file_name == null){
                                             echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                         } else {
-                                            // echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nomor."</a>";
-                                            echo "<a class='dropdown-item'  href='javascript:;' data-id='".$rs['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nomor."</a>";
+                                            echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nomor."</a>";
+                                            // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$rs['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nomor."</a>";
                                         }
                                     $nomor++;
                                     } 

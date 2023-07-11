@@ -103,7 +103,7 @@
             //   }
            
               // Set preference
-              $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
             //   $config['upload_path'] = '../siladen/assets/bukti_kegiatan';
             $config['upload_path'] = './assets/bukti_kegiatan'; 
             //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
@@ -204,16 +204,24 @@
         $id =  $this->general_library->getId();
         $bulan = date('n');
         $tahun = date('Y');
-        // $cek = $this->db->select('a.*,
-        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
-        // ')
-        //                 ->from('t_rencana_kinerja a')
-        //                 ->where('a.id_m_user', $id)
-        //                 ->where('a.tahun', $tahun)
-        //                 ->where('a.bulan', $bulan)
-        //                 ->where('a.id', $dataPost['tugas_jabatan'])
-        //                 ->where('a.flag_active', 1)
-        //                 ->get()->result_array();
+
+        $cek = $this->db->select('a.id,
+        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
+        ')
+                        ->from('t_rencana_kinerja a')
+                        ->where('a.id_m_user', $id)
+                        ->where('a.tahun', $tahun)
+                        ->where('a.bulan', $bulan)
+                        ->where('a.id', $dataPost['tugas_jabatan'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+       
+
+           $this->db->where('id',  $cek[0]['id'])
+                     ->update('t_rencana_kinerja', [
+                    //  'updated_by' => $this->general_library->getId(),
+                     'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
+            ]);
 
         // if($cek){          
         //  if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){

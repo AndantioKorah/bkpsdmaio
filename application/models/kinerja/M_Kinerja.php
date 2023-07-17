@@ -206,7 +206,7 @@
         $tahun = date('Y');
 
         $cek = $this->db->select('a.id,
-        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1) as realisasi_target_kuantitas
+        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
         ')
                         ->from('t_rencana_kinerja a')
                         ->where('a.id_m_user', $id)
@@ -222,6 +222,8 @@
                     //  'updated_by' => $this->general_library->getId(),
                      'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
             ]);
+
+
 
         // if($cek){          
         //  if($cek['0']['realisasi_target_kuantitas'] > $cek['0']['target_kuantitas']){
@@ -844,7 +846,7 @@
                                 (SELECT SUM(b.realisasi_target_kuantitas)
                                 FROM t_kegiatan b
                                 WHERE b.id_t_rencana_kinerja = a.id
-                                AND b.flag_active = 1) as realisasi')
+                                AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
                                 ->from('t_rencana_kinerja a')
                                 ->where('a.id_m_user', $pegawai['id'])
                                 ->where('a.bulan', floatval($data['bulan']))

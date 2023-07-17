@@ -158,8 +158,8 @@
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left"><?=$lp['target_kualitas']?>%</td>
                         <td class="text-left">
-                            <!-- <?=$lp['realisasi_target_kuantitas'] == '' ? '0' : $lp['realisasi_target_kuantitas']?></td> -->
-                            <?=$lp['total_realisasi'] == '' ? '0' : $lp['total_realisasi']?></td>
+                            <?=$lp['realisasi_target_kuantitas'] == '' ? '0' : $lp['realisasi_target_kuantitas']?></td>
+                            <!-- <?=$lp['total_realisasi'] == '' ? '0' : $lp['total_realisasi']?></td> -->
 
                         <td class="text-left"><?=$lp['satuan']?></td>
                         <td class="text-left">

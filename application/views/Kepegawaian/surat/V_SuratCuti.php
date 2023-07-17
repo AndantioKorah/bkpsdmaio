@@ -1,30 +1,46 @@
 
 <style>
-  /* @media print {
+   td{
+        text-align: left;
+    }
 
-    
-@page {
-  size: F4;
+    th, td {
+  padding: 1px;
 }
 
-	p {
-		font-size: 16pt;
+   .left    { text-align: left;}
+   .right   { text-align: right;}
+   .center  { text-align: center;}
+   .justify { text-align: justify;}
+
+   p {
+		font-size: 14pt;
         font-family: "Bookman Old Style";
         color:#000;
+        margin-right:40px;
 	}
 
     table {
-        font-size: 16pt;
+        font-size: 14pt;
+        font-family: "Bookman Old Style";
+        color:#000;
+        margin-right:40px;
+    }
+
+    span {
+        font-size: 14pt;
         font-family: "Bookman Old Style";
         color:#000;
     }
-} */
-.header{
-    /* margin-top:-10px; */
+
+
+   p.besar {
+    line-height: 30px;
 }
+
 </style>
  <title>Surat Cuti</title>
-<div class="header" >
+<div class="header" style="margin-right:40px;">
 <?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?>
 </div>
 <center>
@@ -54,7 +70,7 @@
    .justify { text-align: justify;}
 
    p.besar {
-    line-height: 20px;
+    line-height: 30px;
 }
 
 </style>
@@ -152,7 +168,7 @@ kembali sebagaimana biasanya.
  ini dibuat untuk digunakan sebagaimana mestinya.</p>
 
 
-<table border="0" style="width:100%;margin-top:10px;margin-bottom:68px;">
+<table border="0" style="width:100%;margin-top:10px;margin-bottom:150px;">
     <tr>
         <td  style="width:50%;"></td>
         <td class="center"  style="width:50%;">Manado, <?= formatDateNamaBulan($result['0']['tanggal_surat']);?>

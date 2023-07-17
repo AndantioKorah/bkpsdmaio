@@ -34,6 +34,7 @@ class C_User extends CI_Controller
     }
 
     public function loadPegawaiBySkpd($id_unitkerja){
+       
         $data['list_pegawai'] = $this->user->getListPegawaiByUnitKerja($id_unitkerja);
         $this->load->view('user/V_ListPegawaiBySkpd', $data);
     }

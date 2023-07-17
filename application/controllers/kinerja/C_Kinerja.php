@@ -71,7 +71,7 @@ class C_Kinerja extends CI_Controller
         $data = $this->input->post();
         $data['id_m_user'] = $this->general_library->getId();
         $this->kinerja->insert('t_rencana_kinerja', $data);
-        $this->kinerja->insertKomponenKinerja($data);
+        // $this->kinerja->insertKomponenKinerja($data);
 
 
     }

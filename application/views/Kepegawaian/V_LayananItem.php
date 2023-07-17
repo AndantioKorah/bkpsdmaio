@@ -1,6 +1,6 @@
 
   <?php if($result){ ?>
-   
+   <div class="table-responsive">
   <table class="table table-striped datatable" id="" border="0">
         <thead>
           <th class="text-left">No </th>
@@ -54,16 +54,34 @@
               
               <?php if($rs['jenis_layanan'] == 3) { ?>
               <?php if($rs['status'] == 1) { ?> 
-                <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
-                data-toggle="modal"   title="Input Nomor dan Tanggal Surat" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </a>
+                <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
+                data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
                 &nbsp;
                
               <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
-              <button id="button_pdf" href=""  class="btn btn-sm btn-warning">
+              <button title="Cetak Surat" id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button></a>
                
              <?php } ?>
              <?php } ?>
+
+             <?php if($rs['jenis_layanan'] == 8) { ?>
+              <?php if($rs['status'] == 1) { ?> 
+                <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
+                data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
+                &nbsp;
+               
+              <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+              <button title="Cetak Surat Hukdis" id="button_pdf" href=""  class="btn btn-sm btn-warning">
+               <i class="fa fa-file-pdf"></i></button>&nbsp;</a>
+
+               <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSuratPidana/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+              <button title="Cetak Surat Pidana" id="button_pdf" href=""  class="btn btn-sm btn-warning">
+               <i class="fa fa-file-pdf"></i></button></a>
+               
+             <?php } ?>
+             <?php } ?>
+            
              </div>
 
               </td>
@@ -72,7 +90,7 @@
           <?php } ?>
         </tbody>
       </table>
-
+      </div>
       <script>
     $(document).on("click", ".open-DetailCuti", function () {
      var jenis = $(this).data('jenis');
@@ -311,9 +329,11 @@ $('#form_nomor_surat').on('submit', function(e){
   }
 
   function openFile(filename){
-    var url = "<?=base_url();?>dokumen_layanan/"
+    var path = "<?=base_url();?>dokumen_layanan/"
     var nip = "<?=$this->general_library->getUserName()?>";
-    $('#iframe_view_file_pengantar').attr('src', url+nip+'/'+filename)
+    var url =  "<?=base_url();?>dokumen_layanan/"+nip+'/'+filename
+    console.log(url)
+    $('#iframe_view_file_pengantar').attr('src', url)
   }
 
 </script>

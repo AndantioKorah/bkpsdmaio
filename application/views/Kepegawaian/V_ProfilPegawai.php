@@ -349,6 +349,19 @@
                   <?=($profil_pegawai['nama_jabatan'])?>
                 </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Status Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_statusjabatan'])?>
+                </span>
+              </div>
+
+
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   TMT Jabatan

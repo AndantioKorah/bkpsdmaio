@@ -491,6 +491,28 @@ class General_library
         return ['code' => '0', 'data' => $image];
     }
 
+    // <?php if($result['0']['id_unitkerjamaster'] =="8010000" || $result['0']['id_unitkerjamaster'] == "8020000" || $result['0']['id_unitkerjamaster'] == "8000000") 
+    // echo "Kepala Dinas Pendidikan dan Kebudayaan Kota Manadoa"; 
+    // else echo "B";
+
+    public function getTembusanHukdis($id_unitkerjamaster,$nm_unitkerjamaster,$nm_unitkerja){
+
+        $tembusan = null;
+
+        if($id_unitkerjamaster =="8010000" || $id_unitkerjamaster == "8020000" || $id_unitkerjamaster == "8000000"){
+            $tembusan = "Kepala Dinas Pendidikan dan Kebudayaan Kota Manado";
+        } else if($id_unitkerjamaster == "4000000"){
+            $tembusan = "Kepala ".$nm_unitkerja." Kota Manado";
+        } else if($id_unitkerjamaster =="6000000"){
+            $tembusan = "Kepala Dinas Kesehatan Kota Manado";
+        } else if($id_unitkerjamaster =="5009000" || $id_unitkerjamaster == "5003000"|| $id_unitkerjamaster == "5004000" || $id_unitkerjamaster == "5005000" || $id_unitkerjamaster == "5006000" || $id_unitkerjamaster == "5007000" || $id_unitkerjamaster == "5008000" || $id_unitkerjamaster == "5009000" || $id_unitkerjamaster == "5001000" || $id_unitkerjamaster == "5010001" || $id_unitkerjamaster == "5011001"){
+            $namaskpd = substr($nm_unitkerjamaster,10);
+            $tembusan = "Camat ".$namaskpd;
+        } 
+
+        return $tembusan;
+    }
+
 
 
 }

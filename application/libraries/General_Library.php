@@ -409,6 +409,11 @@ class General_library
         $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($id_m_user);
         $data['id_unitkerja'] = $unitkerja['id_unitkerja'];
         $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $id_m_user);
+        if(!isset($pagu_tpp['pagu_tpp'])){
+            $temp = $pagu_tpp;
+            $pagu_tpp = null;
+            $pagu_tpp = $temp[$id_m_user];
+        }
         // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
         $produktivitas_kerja = $this->getProduktivitasKerjaPegawai($id_m_user, $bulan, $tahun);
         return $this->nikita->m_user->getTppPegawai($id_m_user, $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);

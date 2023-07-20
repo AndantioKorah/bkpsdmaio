@@ -1886,7 +1886,7 @@
 
         $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                             
-        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat,
+        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user,
                             b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg,
                             (SELECT CONCAT(
                                 IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
@@ -1905,6 +1905,7 @@
                             ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                             ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                            ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('a.skpd', $data['id_unitkerja'])
                             ->order_by('c.eselon, a.nama')
                             ->get()->result_array();

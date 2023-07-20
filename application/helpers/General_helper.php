@@ -384,7 +384,7 @@ function formatDateNamaBulanWithTime($data)
 
 function getNamaPegawaiFull($pegawai)
 {
-    return trim($pegawai['gelar1']) . ' ' . trim($pegawai['nama']) . ' ' . trim($pegawai['gelar2']);
+    return trim(trim($pegawai['gelar1']).' '.trim($pegawai['nama']).' '.trim($pegawai['gelar2']));
 }
 
 function sortArrayObjectValue($object1, $object2, $value)

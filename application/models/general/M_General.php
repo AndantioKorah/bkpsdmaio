@@ -509,6 +509,12 @@
             return $result;
         }
 
+        public function saveLogWebhook($request, $response){
+            $this->db->insert('t_log_webhook', [
+                'request' => $request,
+                'response' => $response
+            ]);
+        }
 
 	}
 ?>

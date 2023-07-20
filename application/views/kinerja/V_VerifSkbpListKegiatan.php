@@ -336,6 +336,7 @@ var span = document.getElementsByClassName("close")[0];
                   let rs = JSON.parse(data)
                   if(rs.code == 0){
                     openListKegiatan('<?=$id_rencana_kegiatan?>')
+                    // loadKinerjaUser()
                   } else {
                       errortoast(rs.message)
                   }

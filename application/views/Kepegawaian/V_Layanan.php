@@ -89,7 +89,7 @@
   <div id="" style="margin-left:10px;">
   <div class="mb-3">
   <label for="exampleInputEmail1" class="form-label">Jenis Layanan </label>
-    <select onchange="loadListUsulLayanan(this.value)"   class="form-control select2" data-dropdown-css-class="select2-navy" name="monitor_jenis_layanan" id="monitor_jenis_layanan" required>
+    <select onchange="loadListUsulLayanan(this.value)"   class="form-control select22" data-dropdown-css-class="select2-navy" name="monitor_jenis_layanan" id="monitor_jenis_layanan" required>
     <option value="0" selected>- Pilih Layanan - </option>
     <?php if($jenis_layanan){ foreach($jenis_layanan as $r){ ?>
                         <option value="<?=$r['kode']?>"><?=$r['nama']?></option>
@@ -124,6 +124,12 @@
     $(function(){
       // loadListUsulLayanan()
   $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
+
+  $(".select22").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,

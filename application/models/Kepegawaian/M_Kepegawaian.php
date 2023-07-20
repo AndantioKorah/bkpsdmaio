@@ -274,13 +274,14 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('a.*, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -296,7 +297,7 @@ class M_Kepegawaian extends CI_Model
             }
             $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
-            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user')
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -1599,7 +1600,7 @@ class M_Kepegawaian extends CI_Model
             ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
             // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
             ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-            ->join('m_status_verif f', 'c.status = f.id')
+            ->join('db_efort.m_status_verif f', 'c.status = f.id')
             ->where('c.jenis_layanan', $id)
             ->where('b.id_peg', $id_peg)
             ->where('c.flag_active', 1)
@@ -1668,7 +1669,7 @@ class M_Kepegawaian extends CI_Model
             h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
             c.id_usul,e.nama as nama_layanan,c.tanggal_usul,
             c.file_pengantar,a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
-            a.id as id_m_user, b.jk, b.alamat')
+            a.id as id_m_user, b.jk, b.alamat, j.id_unitkerjamaster,j.nm_unitkerjamaster,c.tanggal_surat,c.nomor_surat')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
@@ -1678,6 +1679,7 @@ class M_Kepegawaian extends CI_Model
             ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
             ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
             ->join('db_pegawai.agama i', 'b.agama = id_agama')
+            ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
             ->where('c.id_usul', $id_usul)
             ->get()->result_array();
         }
@@ -1948,13 +1950,19 @@ class M_Kepegawaian extends CI_Model
         $res['data'] = null;
 
         $datapost = $this->input->post();
-        
         $this->db->trans_begin();
         $id_usul = $datapost['id_usul'];
         $data["nomor_surat"] = $datapost["nomor_surat"];
         $data["tanggal_surat"] = $datapost["tanggal_surat"];
-        $this->db->where('id_usul', $id_usul)
-                ->update('db_siladen.t_cuti', $data);
+
+        if( $datapost['jenis_layanan'] == 3){
+            $this->db->where('id_usul', $id_usul)
+            ->update('db_siladen.t_cuti', $data);
+        } else {
+            $this->db->where('id_usul', $id_usul)
+            ->update('db_siladen.usul_layanan', $data);
+        }
+        
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -2275,10 +2283,16 @@ public function getDetailLayanan()
 {      
     $id = $this->input->post('id_usul');
     if($this->input->post('layanan') == "Cuti"){
-        $this->db->select('*')
+        $this->db->select('a.id_usul,c.jenis_layanan,a.nomor_surat,a.tanggal_surat')
         ->from('db_siladen.t_cuti as a')
         ->join('db_siladen.m_cuti b', 'b.id_cuti = a.jenis_cuti')
         ->join('db_siladen.usul_layanan c', 'c.id_usul = a.id_usul')
+        ->where('a.id_usul', $id)
+        ->limit(1);
+        return $this->db->get()->result_array();
+    } else if($this->input->post('layanan') == "Surat Keterangan Tidak Hukdis dan Pidana") {
+        $this->db->select('*')
+        ->from('db_siladen.usul_layanan as a')
         ->where('a.id_usul', $id)
         ->limit(1);
         return $this->db->get()->result_array();
@@ -2376,6 +2390,18 @@ public function copyfoto(){
 
 		dd('selesai');
 }
+
+public function getDataKabanBkd()
+{
+    $this->db->select('*')
+    ->from('db_pegawai.pegawai a')
+    ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
+    ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
+    ->where('a.jabatan', '4018000JS01');
+    
+    return $this->db->get()->result_array(); 
+}
+
     
 
 

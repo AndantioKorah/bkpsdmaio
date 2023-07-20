@@ -73,13 +73,13 @@ $route['users/mutasi'] = 'user/C_User/mutasiPegawai';
 // Kepegawaian
 // $route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
 $route['kepegawaian/pasPhoto'] = 'kepegawaian/C_pasphoto/pasPhoto';
-$route['kepegawaian/upload'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
-$route['kepegawaian/profil'] = 'Kepegawaian/C_Kepegawaian/uploadDokumen';
-$route['kepegawaian/layanan'] = 'Kepegawaian/C_Kepegawaian/layanan';
-$route['kepegawaian/teknis'] = 'Kepegawaian/C_Kepegawaian/Adminlayanan';
-$route['kepegawaian/cetak/'] = 'Kepegawaian/C_Kepegawaian/CetakSurat';
-$route['kepegawaian/verifikasi/(:any)/(:any)'] = 'Kepegawaian/C_Kepegawaian/verifikasiLayanan/$1/$2';
-$route['kepegawaian/dokumen/verifikasi'] = 'Kepegawaian/C_Kepegawaian/verifikasiDokumen';
+$route['kepegawaian/upload'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/profil'] = 'kepegawaian/C_Kepegawaian/uploadDokumen';
+$route['kepegawaian/layanan'] = 'kepegawaian/C_Kepegawaian/layanan';
+$route['kepegawaian/teknis'] = 'kepegawaian/C_Kepegawaian/Adminlayanan';
+$route['kepegawaian/cetak/'] = 'kepegawaian/C_Kepegawaian/CetakSurat';
+$route['kepegawaian/verifikasi/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiLayanan/$1/$2';
+$route['kepegawaian/dokumen/verifikasi'] = 'kepegawaian/C_Kepegawaian/verifikasiDokumen';
 
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
 

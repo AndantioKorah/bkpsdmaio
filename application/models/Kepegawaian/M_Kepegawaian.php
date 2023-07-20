@@ -1437,7 +1437,7 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
         } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
+            $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
         } 
 
         $config['upload_path']          = $target_dir;

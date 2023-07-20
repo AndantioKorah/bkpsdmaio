@@ -40,3 +40,7 @@ $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 $route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
 $route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';
 $route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';
+
+//maxchat
+$route['api/maxchat/webhook'] = 'maxchat/C_Maxchat/webhook';
+$route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';

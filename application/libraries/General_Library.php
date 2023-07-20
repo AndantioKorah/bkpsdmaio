@@ -1,7 +1,7 @@
 <?php
         
-// date_default_timezone_set("Asia/Singapore");
-date_default_timezone_set("America/Chicago");
+date_default_timezone_set("Asia/Singapore");
+// date_default_timezone_set("America/Chicago");
 
 class General_library
 {

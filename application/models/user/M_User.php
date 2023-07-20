@@ -1656,6 +1656,15 @@
                 ]);
             }
         }
+
+        public function getProfilUserByNoHp($nohp){
+            $nohp = "0".substr($nohp, 2);
+            return $this->db->select('a.*, b.nm_unitkerja')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                        ->where('a.handphone', $nohp)
+                        ->get()->row_array();
+        }
 	}
 
    

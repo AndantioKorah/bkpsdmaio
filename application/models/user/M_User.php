@@ -1351,13 +1351,16 @@
             $result['list_jam_kerja_event'] = null;;
             if($jam_kerja_event){
                 // $result['jam_kerja_event'][0] = $jam_kerja_event[0];
-                $result['list_jam_kerja_event'] = $jam_kerja_event;
+                // $result['list_jam_kerja_event'] = $jam_kerja_event;
                 foreach($jam_kerja_event as $jke){
                     foreach($result['list_hari'] as $rlh){
                         if((($rlh) >= ($jke['berlaku_dari'])) &&
                             ($rlh) <= ($jke['berlaku_sampai'])){  //cek jika tanggal masuk dalam jam kerja event
                                 // $jam_kerja_event[] = $jke;
                                 $result['jam_kerja_event'][$rlh] = $jke;
+                                if(!isset($result['list_jam_kerja_event'][$jke['id']])){
+                                    $result['list_jam_kerja_event'][$jke['id']] = $jke;
+                                }
                         }
                     }
                     // $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
@@ -1665,6 +1668,35 @@
                         ->where('a.handphone', $nohp)
                         ->get()->row_array();
         }
+
+        public function checkIfKasubagKepeg($nip){
+            $hak_akses = $this->db->select('*')
+                                ->from('t_hak_akses a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('m_hak_akses c', 'a.id_m_hak_akses = c.id')
+                                ->where('b.username', $nip)
+                                ->where('c.meta_name', 'rekap_absen_pd')
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+
+
+            $this->db->select('a.*, b.*, c.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('m_user c', 'a.nipbaru_ws = c.username')
+                            // ->like('b.nama_jabatan', 'kepegawaian')
+                            // ->where_in('b.eselon', ['IV A', 'IV B'])
+                            ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1);
+
+            if(!$hak_akses){
+                $this->db->where_in('b.eselon', ['IV A', 'IV B'])
+                ->where('a.nipbaru_ws', $nip);
+            }
+
+            return $this->db->get()->row_array();
+        }
+
 	}
 
    

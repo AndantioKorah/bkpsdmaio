@@ -23,6 +23,16 @@ function validateKey($arr_needed, $arr_request){
     return ['code' => 0, 'message' => ''];
 }
 
+function fileToBase64($filename){
+    if(file_exists($filename)){
+        $type = pathinfo($filename, PATHINFO_EXTENSION);
+        $data = file_get_contents($filename);
+        $base64 = 'data:application/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    } 
+    return null;
+}
+
 function fileToBytes($file){
     $fh = fopen($file, 'rb');
     $fbytes = fread($fh, filesize($file));

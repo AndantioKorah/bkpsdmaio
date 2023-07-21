@@ -44,3 +44,6 @@ $route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';
 //maxchat
 $route['api/maxchat/webhook'] = 'maxchat/C_Maxchat/webhook';
 $route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';
+
+//cron
+$route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';

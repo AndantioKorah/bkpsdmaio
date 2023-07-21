@@ -67,17 +67,19 @@ class Maxchatlibrary{
         $this->postCurl($url, $data);
     }
 
-    function sendFile($to, $url, $filename) {
+    function sendFile($to, $fileurl, $filename, $caption) {
         // jika kontak belum dikenali pakai "/api/messages/push/file"
         $url = $this->API_URL . "/messages/file";
         
         $data = array(
-        "to" => $to, 
-        "url" => $url,
-        "filename" => $filename
+        "to" => $to,
+        "file" => fileToBase64($fileurl),
+        "url" => $fileurl,
+        "filename" => $filename,
+        "caption" => $caption
         );
 
-        $this->postCurl($url, $data);
+        return $this->postCurl($url, $data);
     }
 
     function sendLink($to, $text, $url) {
@@ -121,8 +123,10 @@ class Maxchatlibrary{
 
         if ($err) {
         echo "cURL Error #:" . $err;
+        return $err;
         } else {
         echo $response;
+        return $response;
         }
     }
 }

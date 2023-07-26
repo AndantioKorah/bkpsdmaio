@@ -48,6 +48,49 @@ function base64ToFile($base64_string, $output_file) {
     return $output_file; 
 }
 
+function checkIfValidDate($bulan, $tahun){
+    $result = true;
+    $thisMonth = date('m');
+    $thisYear = date('Y');
+    if($tahun <= $thisYear){
+        if($bulan <= $thisMonth){
+            $result = true;
+        } else {
+            $result = false;
+        }
+    } else {
+        $result = false;
+    }
+
+    return $result;
+}
+
+function getFileTypeBu($string){
+    $filedata = base64_decode($string);
+    $f = finfo_open();
+    return finfo_buffer($f, $filedata, FILEINFO_MIME_TYPE);
+}
+
+function getBase64FileType($string){
+    $ex1 = explode("/", $string);
+    if(isset($ex1[1])){
+        $ex2 = explode(";", $ex1[1]);
+        if(isset($ex2[0])){
+            return $ex2[0];
+        }
+    }
+
+    return null;
+}
+
+function getFileTypeFromWaBot($string){
+    $ex = explode("/", $string);
+    if(isset($ex[1])){
+        return $ex[1];
+    }
+    return null;
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');

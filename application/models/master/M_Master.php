@@ -639,5 +639,12 @@
             // dd($result);
             return $this->db->get()->result_array();
         }
+
+        public function editMasterJenisLayanan($id, $state){
+            $this->db->where('id', $id)
+                    ->update('db_siladen.jenis_layanan', [
+                        'aktif' => $state
+                    ]);
+        }
 	}
 ?>

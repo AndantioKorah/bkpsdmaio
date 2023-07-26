@@ -268,4 +268,28 @@ class C_Master extends CI_Controller
     public function hapusMasterPresentaseTpp($id){
         $this->general->delete('id', $id, 'm_presentase_tpp');
     }
+
+    public function inputMasterJenisLayanan(){
+        $data = $this->input->post();
+        $input['nama'] = $data['nama'];
+        if(isset($data['aktif'])){
+            $input['aktif'] = "YA";
+        } else {
+            $input['aktif'] = "TIDAK";
+        }
+        $this->general->insert('db_siladen.jenis_layanan', $input);
+    }
+
+    public function jenisLayanan(){
+        render('master/V_MasterJenisLayanan', '', '', null);
+    }
+
+    public function loadJenisLayanan(){
+        $data['result'] = $this->general->getAllWithOrderGeneral('db_siladen.jenis_layanan', 'nama', 'asc');
+        $this->load->view('master/V_MasterJenisLayananList', $data);
+    }
+
+    public function editMasterJenisLayanan($id, $state){
+        $this->master->editMasterJenisLayanan($id, $state);
+    }
 }

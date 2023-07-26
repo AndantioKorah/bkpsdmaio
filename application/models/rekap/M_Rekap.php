@@ -1732,12 +1732,8 @@
                         }
                     }
                 }
-                $sendWa = $this->maxchatlibrary->sendFile(
-                    $c['no_hp'],
-                    $fileurl,
-                    $filename,
-                    $filename
-                );
+
+                $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
 
                 if($sendWa == true){
                     $this->db->where('id', $c['id'])

@@ -292,4 +292,41 @@ class C_Master extends CI_Controller
     public function editMasterJenisLayanan($id, $state){
         $this->master->editMasterJenisLayanan($id, $state);
     }
+
+    public function masterHakAkses(){
+        render('master/V_MasterHakAkses', '', '', null);
+    }
+
+    public function loadMasterHakAkses(){
+        $data['result'] = $this->general->getAllWithOrder('m_hak_akses', 'nama_hak_akses', 'asc');
+        $this->load->view('master/V_MasterHakAksesList', $data);
+    }
+
+    public function inputMasterHakAkses(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->general->insert('m_hak_akses', $data);
+    }
+
+    public function loadUserHakAkses($id){
+        $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        if(!$data['list_pegawai']){
+            $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
+            $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        }
+        $data['result'] = $this->master->loadUserHakAkses($id);
+        $this->load->view('master/V_MasterHakAksesListUser', $data);
+    }
+
+    public function deleteUserAkses($id){
+        $this->master->deleteUserAkses($id);
+    }
+
+    public function tambahHakAksesUser($id_m_user, $id_hak_akses){
+        echo json_encode($this->master->tambahHakAksesUser($id_m_user, $id_hak_akses));
+    }
+
+    public function deleteMasterHakAkses($id){
+        $this->general->delete('id', $id, 'm_hak_akses');
+    }
 }

@@ -646,5 +646,60 @@
                         'aktif' => $state
                     ]);
         }
+
+        public function loadUserHakAkses($id){
+            return $this->db->select('a.*, c.*, d.nm_unitkerja, f.nama_hak_akses, e.nama_jabatan')
+                            ->from('t_hak_akses a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                            ->join('db_pegawai.jabatan e', 'c.jabatan = e.id_jabatanpeg')
+                            ->join('m_hak_akses f', 'a.id_m_hak_akses = f.id')
+                            ->where('a.id_m_hak_akses', $id)
+                            ->where('a.flag_active', 1)
+                            ->order_by('c.nama')
+                            ->get()->result_array();
+        }
+
+        public function deleteUserAkses($id){
+            $this->db->where('id', $id)
+                    ->update('t_hak_akses', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function getAllPegawai(){
+            return $this->db->select('a.*, b.id as id_m_user')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('m_user b', 'a.nipbaru_ws = b.username')
+                    ->where('b.flag_active', 1)
+                    ->order_by('a.nama')
+                    ->get()->result_array();
+        }
+
+        public function tambahHakAksesUser($id_m_user, $id_hak_akses){
+            $rs['code'] = 0;
+            $rs['message'] = "";
+
+            $exists = $this->db->select('*')
+                                ->from('t_hak_akses')
+                                ->where('id_m_hak_akses', $id_hak_akses)
+                                ->where('id_m_user', $id_m_user)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+            if(!$exists){
+                $this->db->insert('t_hak_akses', [
+                    'id_m_user' => $id_m_user,
+                    'id_m_hak_akses' => $id_hak_akses,
+                    'created_by' => $this->general_library->getId()
+                ]);
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = "User Sudah Terdaftar";   
+            }
+
+            return $rs;
+        }
 	}
 ?>

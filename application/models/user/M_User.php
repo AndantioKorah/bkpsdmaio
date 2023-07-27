@@ -1669,6 +1669,14 @@
                         ->get()->row_array();
         }
 
+        public function getProfilUserByNip($nip){
+            return $this->db->select('a.*, b.nm_unitkerja')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                        ->where('a.nipbaru_ws', $nip)
+                        ->get()->row_array();
+        }
+
         public function checkIfKasubagKepeg($nip){
             $hak_akses = $this->db->select('*')
                                 ->from('t_hak_akses a')
@@ -1686,12 +1694,47 @@
                             ->join('m_user c', 'a.nipbaru_ws = c.username')
                             // ->like('b.nama_jabatan', 'kepegawaian')
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
-                            ->where('a.nipbaru_ws', $nip)
+                            // ->where('a.nipbaru_ws', $nip)
                             ->where('c.flag_active', 1);
 
             if(!$hak_akses){
                 $this->db->where_in('b.eselon', ['IV A', 'IV B'])
+                ->where('(b.nama_jabatan LIKE ("Kepala Sub Bagian Umum%") OR b.nama_jabatan LIKE ("Kasubag. Umum%"))')
                 ->where('a.nipbaru_ws', $nip);
+            }
+
+            return $this->db->get()->row_array();
+        }
+
+        public function cekAksesPegawaiRekapAbsen($nip){
+            $hak_akses = $this->db->select('*')
+                                ->from('t_hak_akses a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('m_hak_akses c', 'a.id_m_hak_akses = c.id')
+                                ->where('b.username', $nip)
+                                ->where('c.meta_name', 'rekap_absen_pd')
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+
+
+            $this->db->select('a.*, b.*, c.id as id_m_user, d.*')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('m_user c', 'a.nipbaru_ws = c.username')
+                            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                            // ->like('b.nama_jabatan', 'kepegawaian')
+                            // ->where_in('b.eselon', ['IV A', 'IV B'])
+                            // ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1)
+                            ->where('a.nipbaru_ws', $nip);
+
+            if(!$hak_akses){
+                $this->db->where(
+                    '(b.nama_jabatan LIKE ("Kepala Sub Bagian UMUM%") OR
+                    b.nama_jabatan LIKE ("Kasubag. Umum%") OR
+                    b.nama_jabatan LIKE ("Kepala Sekolah%") OR
+                    b.nama_jabatan LIKE ("Kepala Taman%"))'
+                );
             }
 
             return $this->db->get()->row_array();

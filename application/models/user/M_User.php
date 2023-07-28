@@ -1638,7 +1638,11 @@
                             ->get()->row_array();
             $new_absensi_masuk = $data_input['jam_masuk'].':'.$data_input['menit_masuk'].':'.$data_input['detik_masuk'];
             $new_absensi_pulang = $data_input['jam_pulang'].':'.$data_input['menit_pulang'].':'.$data_input['detik_pulang'];
+            $old_pulang = null;
+            $old_masuk = null;
             if($data){
+                $old_pulang = $data['pulang'];
+                $old_masuk = $data['masuk'];
                 $this->db->where('id', $data['id'])
                         ->update('db_sip.absen', [
                             'masuk' => $new_absensi_masuk,
@@ -1658,6 +1662,15 @@
                     'tgl' => $date 
                 ]);
             }
+            $this->db->insert('t_log_edit_presensi', [
+                'nip' => $nip,
+                'date' => $date,
+                'new_absen_masuk' => $new_absensi_masuk,
+                'new_absen_pulang' => $new_absensi_pulang,
+                'old_absen_masuk' => $old_masuk,
+                'old_absen_pulang' => $old_pulang,
+                'created_by' => $this->general_library->getId()
+            ]);
         }
 
         public function getProfilUserByNoHp($nohp){
@@ -1734,10 +1747,10 @@
                     b.nama_jabatan LIKE ("Kasubag. Umum%") OR
                     b.nama_jabatan LIKE ("Kepala Sekolah%") OR
                     b.nama_jabatan LIKE ("Kepala Taman%") OR
+                    b.nama_jabatan LIKE ("Kepala Sub Bagian Tata Usaha%") OR
                     b.nama_jabatan LIKE ("Lurah%"))'
                 );
             }
-
             return $this->db->get()->row_array();
         }
 

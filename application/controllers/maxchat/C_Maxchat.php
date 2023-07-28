@@ -198,8 +198,16 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        $kasubagkepeg = $this->m_user->cekAksesPegawaiRekapAbsen($id);
-        dd($kasubagkepeg);
+        $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        if($ws){
+            $resp = json_decode($ws['response'], true);
+            if($resp['code'] == 200){
+                $pegawai = $resp['data'];
+            }
+        }
+        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        dd($aksespegawai);
     }
 
 }

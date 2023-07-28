@@ -1351,13 +1351,16 @@
             $result['list_jam_kerja_event'] = null;;
             if($jam_kerja_event){
                 // $result['jam_kerja_event'][0] = $jam_kerja_event[0];
-                $result['list_jam_kerja_event'] = $jam_kerja_event;
+                // $result['list_jam_kerja_event'] = $jam_kerja_event;
                 foreach($jam_kerja_event as $jke){
                     foreach($result['list_hari'] as $rlh){
                         if((($rlh) >= ($jke['berlaku_dari'])) &&
                             ($rlh) <= ($jke['berlaku_sampai'])){  //cek jika tanggal masuk dalam jam kerja event
                                 // $jam_kerja_event[] = $jke;
                                 $result['jam_kerja_event'][$rlh] = $jke;
+                                if(!isset($result['list_jam_kerja_event'][$jke['id']])){
+                                    $result['list_jam_kerja_event'][$jke['id']] = $jke;
+                                }
                         }
                     }
                     // $list_hari_kerja_event = getDateBetweenDates($jke['berlaku_dari'], $jke['berlaku_sampai']);
@@ -1635,7 +1638,11 @@
                             ->get()->row_array();
             $new_absensi_masuk = $data_input['jam_masuk'].':'.$data_input['menit_masuk'].':'.$data_input['detik_masuk'];
             $new_absensi_pulang = $data_input['jam_pulang'].':'.$data_input['menit_pulang'].':'.$data_input['detik_pulang'];
+            $old_pulang = null;
+            $old_masuk = null;
             if($data){
+                $old_pulang = $data['pulang'];
+                $old_masuk = $data['masuk'];
                 $this->db->where('id', $data['id'])
                         ->update('db_sip.absen', [
                             'masuk' => $new_absensi_masuk,
@@ -1655,6 +1662,15 @@
                     'tgl' => $date 
                 ]);
             }
+            $this->db->insert('t_log_edit_presensi', [
+                'nip' => $nip,
+                'date' => $date,
+                'new_absen_masuk' => $new_absensi_masuk,
+                'new_absen_pulang' => $new_absensi_pulang,
+                'old_absen_masuk' => $old_masuk,
+                'old_absen_pulang' => $old_pulang,
+                'created_by' => $this->general_library->getId()
+            ]);
         }
 
         public function getProfilUserByNoHp($nohp){
@@ -1665,6 +1681,79 @@
                         ->where('a.handphone', $nohp)
                         ->get()->row_array();
         }
+
+        public function getProfilUserByNip($nip){
+            return $this->db->select('a.*, b.nm_unitkerja')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                        ->where('a.nipbaru_ws', $nip)
+                        ->get()->row_array();
+        }
+
+        public function checkIfKasubagKepeg($nip){
+            $hak_akses = $this->db->select('*')
+                                ->from('t_hak_akses a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('m_hak_akses c', 'a.id_m_hak_akses = c.id')
+                                ->where('b.username', $nip)
+                                ->where('c.meta_name', 'rekap_absen_pd')
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+
+
+            $this->db->select('a.*, b.*, c.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('m_user c', 'a.nipbaru_ws = c.username')
+                            // ->like('b.nama_jabatan', 'kepegawaian')
+                            // ->where_in('b.eselon', ['IV A', 'IV B'])
+                            // ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1);
+
+            if(!$hak_akses){
+                $this->db->where_in('b.eselon', ['IV A', 'IV B'])
+                ->where('(b.nama_jabatan LIKE ("Kepala Sub Bagian Umum%") OR b.nama_jabatan LIKE ("Kasubag. Umum%"))')
+                ->where('a.nipbaru_ws', $nip);
+            }
+
+            return $this->db->get()->row_array();
+        }
+
+        public function cekAksesPegawaiRekapAbsen($nip){
+            $hak_akses = $this->db->select('*')
+                                ->from('t_hak_akses a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('m_hak_akses c', 'a.id_m_hak_akses = c.id')
+                                ->where('b.username', $nip)
+                                ->where('c.meta_name', 'rekap_absen_pd')
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+
+
+            $this->db->select('a.*, b.*, c.id as id_m_user, d.*')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('m_user c', 'a.nipbaru_ws = c.username')
+                            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                            // ->like('b.nama_jabatan', 'kepegawaian')
+                            // ->where_in('b.eselon', ['IV A', 'IV B'])
+                            // ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1)
+                            ->where('a.nipbaru_ws', $nip);
+
+            if(!$hak_akses){
+                $this->db->where(
+                    '(b.nama_jabatan LIKE ("Kepala Sub Bagian UMUM%") OR
+                    b.nama_jabatan LIKE ("Kasubag. Umum%") OR
+                    b.nama_jabatan LIKE ("Kepala Sekolah%") OR
+                    b.nama_jabatan LIKE ("Kepala Taman%") OR
+                    b.nama_jabatan LIKE ("Kepala Sub Bagian Tata Usaha%") OR
+                    b.nama_jabatan LIKE ("Lurah%"))'
+                );
+            }
+            return $this->db->get()->row_array();
+        }
+
 	}
 
    

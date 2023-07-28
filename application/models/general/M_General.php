@@ -59,6 +59,14 @@
             return $this->db->get()->result_array(); 
         }
 
+        public function getAllWithOrderGeneral($tableName, $orderBy = 'created_date', $whatType = 'desc')
+        {
+            $this->db->select('*')
+            ->order_by($orderBy, $whatType)
+            ->from($tableName);
+            return $this->db->get()->result_array(); 
+        }
+
         public function authenticate($username, $password)
         {
             $this->db->select('*, a.nama as nama_user')
@@ -510,9 +518,16 @@
         }
 
         public function saveLogWebhook($request, $response){
+            $dc_request = json_decode($request, true);
+            $dc_response = json_decode($response, true);
+
             $this->db->insert('t_log_webhook', [
+                'chat_id' => $dc_request['data']['id'],
+                'sender' => $dc_request['data']['sender'],
+                'pesan' => $dc_request['data']['text'],
+                'reply' => $dc_response['text'],
                 'request' => $request,
-                'response' => $response
+                'response' => $response,
             ]);
         }
 

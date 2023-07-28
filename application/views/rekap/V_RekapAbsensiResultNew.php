@@ -306,7 +306,7 @@ $list_disker = ['S', 'I', 'TK'];
                 
                 <br>
                 <center>
-                <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>
+                <!-- <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span> -->
                 <br>
                 <span style="font-size: 12px;">date: </span><span style="font-size: 12px; font-weight: bold;"><?=date('d/m/Y H:i:s')?></span>
                                   </center>

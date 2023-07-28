@@ -130,6 +130,11 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
+					<a title="Hak Akses" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hak-akses')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hak Akses
+					</a>
+				</li>
+				<li class="sidebar-item ">
 					<a title="Jam Kerja" class="sidebar-link sidebar-link-child" href="<?=base_url('master/jam-kerja')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Jam Kerja
 					</a>

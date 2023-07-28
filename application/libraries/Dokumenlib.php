@@ -86,6 +86,36 @@ class Dokumenlib extends CI_Model{
         return ['request' => $data_body, 'response' => $result, 'message' => $message];
     }
 
+    public function getPegawaiSiladen($nohp){ 
+        $nohp = "0".substr($nohp, 2);
+        $data_body  =  "nohp=".$nohp;
+
+        // dd($data_body);
+
+        $session = curl_init();
+
+        $header =  array(
+            'Content-Type: application/x-www-form-urlencoded'
+        );
+
+        curl_setopt($session, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($session, CURLOPT_URL, "http://siladen.manadokota.go.id/bidik/api/siladen/user");
+        curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($session, CURLOPT_POSTFIELDS, $data_body);
+        curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
+        
+        $result = curl_exec($session);
+
+        $message = "OK";
+        if(!$result){
+            $message = curl_error($session);
+        }
+        curl_close($session);
+        
+        return ['request' => $data_body, 'response' => $result, 'message' => $message];
+    }
+
     public function setDokumenWs($method = 'POST', $data = []){   
         $data_body  =   "username=".$data['username'].
                         "&password=".$data['password'].

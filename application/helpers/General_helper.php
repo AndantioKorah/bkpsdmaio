@@ -23,6 +23,16 @@ function validateKey($arr_needed, $arr_request){
     return ['code' => 0, 'message' => ''];
 }
 
+function fileToBase64($filename){
+    if(file_exists($filename)){
+        $type = pathinfo($filename, PATHINFO_EXTENSION);
+        $data = file_get_contents($filename);
+        $base64 = 'data:application/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    } 
+    return null;
+}
+
 function fileToBytes($file){
     $fh = fopen($file, 'rb');
     $fbytes = fread($fh, filesize($file));
@@ -36,6 +46,49 @@ function base64ToFile($base64_string, $output_file) {
     fclose( $ifp );
 
     return $output_file; 
+}
+
+function checkIfValidDate($bulan, $tahun){
+    $result = true;
+    $thisMonth = date('m');
+    $thisYear = date('Y');
+    if($tahun <= $thisYear){
+        if($bulan <= $thisMonth){
+            $result = true;
+        } else {
+            $result = false;
+        }
+    } else {
+        $result = false;
+    }
+
+    return $result;
+}
+
+function getFileTypeBu($string){
+    $filedata = base64_decode($string);
+    $f = finfo_open();
+    return finfo_buffer($f, $filedata, FILEINFO_MIME_TYPE);
+}
+
+function getBase64FileType($string){
+    $ex1 = explode("/", $string);
+    if(isset($ex1[1])){
+        $ex2 = explode(";", $ex1[1]);
+        if(isset($ex2[0])){
+            return $ex2[0];
+        }
+    }
+
+    return null;
+}
+
+function getFileTypeFromWaBot($string){
+    $ex = explode("/", $string);
+    if(isset($ex[1])){
+        return $ex[1];
+    }
+    return null;
 }
 
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){

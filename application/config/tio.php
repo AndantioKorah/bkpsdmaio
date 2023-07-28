@@ -6,11 +6,13 @@ $route['menu'] = 'user/C_User/menu';
 $route['master/pesan/jenis'] = 'master/C_Master/jenisPesan';
 $route['master/hari-libur'] = 'master/C_Master/hariLibur';
 $route['master/jam-kerja'] = 'master/C_Master/jamKerja';
+$route['master/jenis-layanan'] = 'master/C_Master/jenisLayanan';
 $route['pesan/send/individu'] = 'message/C_Message/individuMessage';
 $route['pesan/send/bulk'] = 'message/C_Message/bulkMessage';
 $route['master/bidang'] = 'master/C_Master/masterBidang';
 $route['master/bidang/sub'] = 'master/C_Master/masterSubBidang';
 $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
+$route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 
 
@@ -44,3 +46,6 @@ $route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';
 //maxchat
 $route['api/maxchat/webhook'] = 'maxchat/C_Maxchat/webhook';
 $route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';
+
+//cron
+$route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';

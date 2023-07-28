@@ -361,7 +361,7 @@ class General_library
 
     public function getId(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
-        return $this->userLoggedIn['id'];
+        return $this->userLoggedIn ? $this->userLoggedIn['id'] : '';
     }
 
     // public function getSubBidangUser(){

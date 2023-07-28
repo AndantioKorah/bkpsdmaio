@@ -165,3 +165,5 @@ define('EXCLUDE_ID_ROLE_ATASAN', [5, 16, 17, 25]);
 // define('URL_FILE', 'http://localhost/bkpsdmaio/uploads/');
 define('CHART_COLORS', ["#deb887", "#00ffff", "#ff0000", "#5f9ea0", "#bdb76b", "#5f9ea0", "#9400d3", "#ff00ff", "#ff4d4d", "#0059b3", "#ffff1a", "#ff1493", "#daa520", "#cd5c5c", "#20b2aa", "#f4a460", "#8b4513", "#4682b4", "#9acd32"]);
 define('URL_FILE', 'http://localhost/bkpsdmaio/arsipelektronik/');
+define('GROUP_CHAT_HELPDESK', '120363161928273333');
+define('WA_BOT', '62895355011333');

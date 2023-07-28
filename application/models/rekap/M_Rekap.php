@@ -1,4 +1,15 @@
 <?php
+    // require 'vendor/autoload.php';
+    require FCPATH . 'vendor/autoload.php';
+    // use PhpOffice\PhpSpreadSheet\Spreadsheet;
+    // use PhpOffice\PhpSpreadSheet\IOFactory;
+    require FCPATH . '/vendor/autoload.php';
+
+    // use mpdf\mpdf;
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
 	class M_Rekap extends CI_Model
 	{
 		public function __construct()
@@ -1655,6 +1666,94 @@
         //     }
         // }
         // dd($result['data_absen']);
+    }
+
+    public function cronRekapAbsen(){
+        $cron = $this->db->select('*')
+                        ->from('t_cron_rekap_absen')
+                        ->where('flag_sent', 0)
+                        ->where('flag_active', 1)
+                        ->get()->result_array();
+        if($cron){
+            foreach($cron as $c){
+                if($c['url_file'] && file_exists($c['url_file'])){
+                    $explode = explode("/", $c['url_file']);
+                    $filename = $explode[2];
+                    $fileurl = $c['url_file'];
+                } else {
+                    $unitkerja = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $c['id_unitkerja'])
+                                    ->get()->row_array();
+                    if($unitkerja){
+                        $params = [
+                            'skpd' => $unitkerja['id_unitkerja'].';'.$unitkerja['nm_unitkerja'],
+                            'bulan' => $c['bulan'],
+                            'tahun' => $c['tahun']
+                        ];
+                        $data['result'] = $this->rekap->readAbsensiAars($params);
+                        $data['flag_print'] = 1;
+                        if($data['result']){
+                            $data['skpd'] = $data['result']['skpd'];
+                            $data['jam_kerja'] = $data['result']['jam_kerja'];
+                            $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];
+                            $data['hari_libur'] = $data['result']['hari_libur'];
+                            $data['info_libur'] = $data['result']['info_libur'];
+                            $data['periode'] = $data['result']['periode'];
+                            $data['disiplin_kerja'] = $data['result']['disiplin_kerja'];
+                            $data['list_hari'] = $data['result']['list_hari'];
+                            $data['flag_rekap_aars'] = true;
+                            $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
+                            $this->session->set_userdata('rekap_absen_aars', $data);
+                            $data = null;
+                            $data = $this->session->userdata('rekap_absen_aars');
+                            $data['flag_print'] = 1;
+                            $data['flag_pdf'] = 1;
+                            $mpdf = new \Mpdf\Mpdf([
+                                'format' => 'Legal-L',
+                                'debug' => true
+                            ]);
+                            $html = $this->load->view('rekap/V_RekapAbsensiResultNew', $data, true);
+                            $mpdf->WriteHTML($html);
+                            $mpdf->showImageErrors = true;
+                            // $mpdf->Output('assets/arsipabsensibulanan' . 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf', \Mpdf\Output\Destination::FILE);
+                            
+                            $filename = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf';
+                            $fileurl = 'assets/arsipabsensibulanan/'.$filename;
+                            $mpdf->Output($fileurl, 'F');
+
+                            if(file_exists($fileurl)){
+                                $this->db->where('id', $c['id'])
+                                        ->update('t_cron_rekap_absen', [
+                                            'url_file' => $fileurl
+                                        ]);
+                                
+                            }
+                        }
+                    }
+                }
+
+                $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
+
+                if($sendWa == true){
+                    $this->db->where('id', $c['id'])
+                        ->update('t_cron_rekap_absen', [
+                            'flag_sent' => 1,
+                            'done_date' => date('Y-m-d H:i:s'),
+                            'response' => 'success'
+                        ]);
+                } else {
+                    $this->db->where('id', $c['id'])
+                        ->update('t_cron_rekap_absen', [
+                            'response' => $sendWa
+                        ]);
+                }
+            }
+        }
+    }
+
+    public function saveToCronRekapAbsen($data){
+        $this->db->insert('t_cron_rekap_absen', $data);
     }
 }
 ?>

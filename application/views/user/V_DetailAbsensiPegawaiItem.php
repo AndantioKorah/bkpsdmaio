@@ -4,6 +4,8 @@
         border-radius: 3px;
         font-size: .7rem;
         font-weight: bold;
+        /* position: relative;
+        top: 20%; */
     }
 
     .span_green{
@@ -56,6 +58,8 @@
     .span_libur{
         color: red;
         font-weight: bold;
+        display: inline-block;
+        line-height: 1rem;
     }
 
     .today_text{
@@ -70,13 +74,18 @@
     .today_div{
         margin-top: 5px;
     }
+
+    .col-date-calendar{
+        padding: 0px;
+        margin-bottom: -10px;
+    }
 </style>
 <?php
     
 ?>
 
 <div style="width: 100%; height: 70px; padding: 3px;">
-    <div class="col-12 <?=date('Y-m-d') == $dates ? 'today_div' : '' ?>"><span class="calendar_date <?=date('Y-m-d') == $dates ? 'today_text' : '' ?>"><?=$tanggal?></span></div>
+    <div class="col-12 col-date-calendar <?=date('Y-m-d') == $dates ? 'today_div' : '' ?>"><span class="calendar_date <?=date('Y-m-d') == $dates ? 'today_text' : '' ?>"><?=$tanggal?></span></div>
     <?php
         $span_masuk = 'span_green';
         $span_pulang = 'span_green';
@@ -101,7 +110,11 @@
             }
         }
     ?>
-    <div class="col-12 text-right">
+    <div style="position: relative;
+    height: 55px;
+    display: table-cell;
+    vertical-align: middle;
+    width: 100vw;" class="col-12 text-right">
         <?php
             if($dokpen){ //cek jika ada dokumen pendukung
                 if($dokpen['keterangan'] == 'Tugas Luar Pagi'){

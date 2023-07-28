@@ -52,7 +52,7 @@
                 <?php } ?>
                
               
-              <?php if($rs['jenis_layanan'] == 3) { ?>
+              <!-- <?php if($rs['jenis_layanan'] == 3) { ?>
               <?php if($rs['status'] == 1) { ?> 
                 <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
                 data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
@@ -80,7 +80,7 @@
                <i class="fa fa-file-pdf"></i></button></a>
                
              <?php } ?>
-             <?php } ?>
+             <?php } ?> -->
             
              </div>
 

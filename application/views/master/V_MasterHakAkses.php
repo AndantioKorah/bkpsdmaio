@@ -43,7 +43,7 @@
 </div>
 
 <div class="modal fade" id="modal_tambah_user" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-lg">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
           <div class="modal-header">
               <h6 class="modal-title">TAMBAH HAK AKSES USER</h6>

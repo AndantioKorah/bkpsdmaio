@@ -1733,7 +1733,8 @@
                     '(b.nama_jabatan LIKE ("Kepala Sub Bagian UMUM%") OR
                     b.nama_jabatan LIKE ("Kasubag. Umum%") OR
                     b.nama_jabatan LIKE ("Kepala Sekolah%") OR
-                    b.nama_jabatan LIKE ("Kepala Taman%"))'
+                    b.nama_jabatan LIKE ("Kepala Taman%") OR
+                    b.nama_jabatan LIKE ("Lurah%"))'
                 );
             }
 

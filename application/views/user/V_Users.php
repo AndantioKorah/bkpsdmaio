@@ -2,14 +2,19 @@
     <div class="card card-default">
         <div class="card-header">
             <div class="row">
-                <div class="col-6">
+                <div class="col-3">
                     <h3 class="card-title">TAMBAH USER</h3>
                 </div>
-                <div class="col-6 text-right">
+                <div class="col-9 text-right">
+                    <button class="btn btn-sm btn-navy" onclick="loadUnregisteredPegawai()" data-toggle="modal" data-target="#modal_import_pegawai">
+                        <i class="fa fa-file-import"></i> Pegawai Belum Ada User
+                    </button>
                     <button class="btn btn-sm btn-navy" onclick="loadDataPegawaiFromNewDb()" data-toggle="modal" data-target="#modal_import_pegawai">
                         <i class="fa fa-file-import"></i> Import Pegawai dari Database Baru
                     </button>
-                    <button class="btn btn-sm btn-navy" data-toggle="modal" data-target="#modal_import_user"><i class="fa fa-file-import"></i> Import dari Data Pegawai</button>
+                    <button class="btn btn-sm btn-navy" data-toggle="modal" data-target="#modal_import_user">
+                        <i class="fa fa-file-import"></i> Import dari Data Pegawai
+                    </button>
                 </div>
             </div>
         </div>
@@ -190,6 +195,14 @@
         $('#list_users').html('')
         $('#list_users').append(divLoaderNavy)
         $('#list_users').load('<?=base_url("user/C_User/loadUsers")?>'+'/'+parameter, function(){
+            $('#loader').hide()
+        })
+    }
+
+    function loadUnregisteredPegawai(){
+        $('#content_modal_import_pegawai').html('')
+        $('#content_modal_import_pegawai').append(divLoaderNavy)
+        $('#content_modal_import_pegawai').load('<?=base_url("user/C_User/loadUnregisteredPegawai")?>', function(){
             $('#loader').hide()
         })
     }

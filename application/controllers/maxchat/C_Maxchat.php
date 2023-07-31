@@ -76,7 +76,7 @@ class C_Maxchat extends CI_Controller
                 $chatId = $explode[1];
             } else if ($data->type == "text"){
                 $explode = explode("\n", $data->originalMsg->text);
-                $chatId = $explode[1];
+                $chatId = $explode[2];
             }
             $sender = $this->general->getOne('t_log_webhook', 'chat_id', $chatId, 0);
             if($sender){
@@ -136,8 +136,8 @@ class C_Maxchat extends CI_Controller
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
             $explode = explode("_", $data->text);
             if(strcasecmp($data->text, "#info") == 0 || strcasecmp($data->text, "tabea") == 0){
-                $reply = "Selamat Datang ".$data->senderName.
-                " Silahkan memilih jenis layanan melalui perintah di bawah ini: \n\n".
+                $reply = "Selamat Datang ".getNamaPegawaiFull($pegawai_simpeg).
+                ", Silahkan memilih jenis layanan melalui perintah di bawah ini: \n\n".
                 "1. *#cek_profil*: untuk melihat data pegawai yang terdaftar dengan nomor HP ini. \n\n".
                 "2. *#rekap_absensi_(bulan)_(tahun)*: untuk melihat rekapan absensi SKPD pada bulan dan tahun yang Anda pilih. \nContoh: #rekap_absensi_07_2023 adalah untuk melihat rekap absensi pada bulan Juli tahun 2023 \n\n";
             } else if(strcasecmp("#", substr($data->text, 0, 1)) == 0 && count($explode) > 1){
@@ -167,7 +167,7 @@ class C_Maxchat extends CI_Controller
                             }
                         }
                     } else {
-                        $reply = "Mohon maaf, layanan ini hanya tersedia bagi Kepala Sub Bagian Umum dan Kepegawaian Perangkat Daerah masing-masing.";
+                        $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini.";
                     }
                 } else if ($explode[0] == '#cek' && $explode[1] == 'profil'){
                     $pegawai = $this->user->getProfilUserByNoHp($data->sender);
@@ -182,7 +182,11 @@ class C_Maxchat extends CI_Controller
 
         if($reply == null || $reply == ""){
             $sendTo = GROUP_CHAT_HELPDESK;
-            $reply = $data->senderName."\n".$data->id."\n\n".$data->text;
+            if($pegawai_simpeg){
+                $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$data->id."\n\n".$data->text;
+            } else {
+                $reply = $data->senderName."\n".$data->id."\n\n".$data->text;
+            }
         }
 
         if($reply != null && $reply != ""){

@@ -70,6 +70,7 @@
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->like('a.nama', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();
 
@@ -79,6 +80,7 @@
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->like('a.username', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();
 
@@ -987,6 +989,17 @@
                             ->get()->result_array();
         }
 
+        public function loadUnregisteredPegawai(){
+            return $this->db->query("SELECT
+            `a`.*,
+            `c`.`nm_unitkerja` 
+            FROM
+            `db_pegawai`.`pegawai` `a`
+            JOIN `db_pegawai`.`unitkerja` `c` ON `a`.`skpd` = `c`.`id_unitkerja` 
+            WHERE a.nipbaru_ws NOT IN (SELECT aa.username FROM m_user aa WHERE aa.flag_active = 1)
+            GROUP BY a.id_peg")->result_array();
+        }
+
         public function exportOne($id){
             $res['code'] = 0;
             $res['message'] = '';
@@ -998,6 +1011,22 @@
             if($pegawai){
                 $pegawai[0]['nipbaru_ws'] = str_replace(' ', '', $pegawai[0]['nipbaru']);
                 $this->db->insert('db_pegawai.pegawai', $pegawai[0]);
+                $res = $this->importPegawaiByUnitKerja(0, $pegawai, 1);
+            }
+            return $res;
+        }
+
+        public function exportOneUnregisteredPegawai($id){
+            $res['code'] = 0;
+            $res['message'] = '';
+
+            $pegawai = $this->db->select('*')
+                                ->from('db_pegawai.pegawai')
+                                ->where('id_peg', $id)
+                                ->get()->result_array();
+            if($pegawai){
+                $pegawai[0]['nipbaru_ws'] = str_replace(' ', '', $pegawai[0]['nipbaru']);
+                // $this->db->insert('db_pegawai.pegawai', $pegawai[0]);
                 $res = $this->importPegawaiByUnitKerja(0, $pegawai, 1);
             }
             return $res;
@@ -1020,6 +1049,75 @@
                 }
                 $this->db->insert_batch('db_pegawai.pegawai', $list_pegawai);
                 $res = $this->importPegawaiByUnitKerja(0, $list_pegawai, 1);
+            }
+
+            return $res;
+        }
+
+        public function exportAllUnregisteredPegawai(){
+            $res['code'] = 0;
+            $res['message'] = '';
+
+            $this->db->trans_begin();
+
+            $list_pegawai = $this->loadUnregisteredPegawai();
+            if($list_pegawai){
+                $bulkuser = null;
+                $list_id_pegawai = null;
+                foreach($list_pegawai as $lp){
+                    $user = null;
+                    $exist = $this->db->select('*')
+                            ->from('m_user')
+                            ->where('username', $lp['nipbaru_ws'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+                    if($exist){
+                        $list_id_pegawai[] = $lp['id_peg'];
+                        // echo 'username '.$lp['nipbaru_ws'].' sudah terdaftar'.'<br>';
+                    } else {
+                        $user['username'] = $lp['nipbaru_ws'];
+                        $user['nama'] = trim(getNamaPegawaiFull($lp));
+                        $nip_baru = explode(" ", $lp['nipbaru']);
+                        $password = $nip_baru[0];
+                        $pass_split = str_split($password);
+                        $new_password = $pass_split[6].$pass_split[7].$pass_split[4].$pass_split[5].$pass_split[0].$pass_split[1].$pass_split[2].$pass_split[3];
+                        $user['password'] = $this->general_library->encrypt($user['username'], $new_password);
+                        // $bulkuser[] = $user;
+                        $list_id_pegawai[] = $lp['id_peg'];
+                        if($user){
+                            $this->db->insert('m_user', $user);
+                            $last_id = $this->db->insert_id();
+
+                            $this->db->insert('m_user_role',[
+                                'id_m_user' => $last_id,
+                                'id_m_role' => 10,
+                                'is_default' => 1
+                            ]);
+                        }
+                        // echo 'masukkan '.$lp['nipbaru_ws'].' ke dalam list<br>';
+                    }
+                }
+                // if($list_id_pegawai){
+                //     $this->db->where_in('id_peg', $list_id_pegawai)
+                //             ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
+                // }
+                // if($bulkuser){
+                //     $this->db->insert_batch('m_user', $bulkuser);
+                // } else {
+                //     $rs['code'] = 2;
+                //     $rs['message'] = 'Import Selesai';
+                // }
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
             }
 
             return $res;

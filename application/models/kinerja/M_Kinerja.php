@@ -1874,7 +1874,7 @@
     }
 
     public function countPaguTpp($data, $id_pegawai = null){
-        
+
         $result = null;
 
         $unitkerja = $this->db->select('*')

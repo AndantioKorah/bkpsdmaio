@@ -504,6 +504,10 @@
             $result['golongan'][5]['jumlah'] = 0;
             $result['golongan'][5]['id_golongan'] = 5;
 
+            $result['golongan'][6]['nama'] = 'Golongan X';
+            $result['golongan'][6]['jumlah'] = 0;
+            $result['golongan'][6]['id_golongan'] = 5;
+
             // $temp_pangkat = $this->db->select('*')
             //                     ->from('db_pegawai.pangkat')
             //                     ->get()->result_array();

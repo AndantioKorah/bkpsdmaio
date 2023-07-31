@@ -313,8 +313,18 @@ class C_User extends CI_Controller
         $this->load->view('user/V_ImportPegawaiFromNewDb', $data);
     }
 
+    public function loadUnregisteredPegawai(){
+        $data['list_pegawai_export'] = $this->user->loadUnregisteredPegawai();
+        // $this->session->set_userdata(['list_pegawai_export' => $data['list_pegawai_export']]);
+        $this->load->view('user/V_ImportUnregisteredPegawai', $data);
+    }
+
     public function exportOne($id){
         echo json_encode($this->user->exportOne($id));
+    }
+
+    public function exportAllUnregisteredPegawai(){
+        echo json_encode($this->user->exportAllUnregisteredPegawai());
     }
 
     public function exportAll(){

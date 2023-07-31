@@ -1995,6 +1995,8 @@
                 $result[$p['id_m_user']]['pagu_tpp'] = $pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']][$result[$p['id_m_user']]['jenis_jabatan']]; // pasang pagu tpp
                 if($result[$p['id_m_user']]['statuspeg'] == 1){ //pegawai CPNS
                     $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * 0.8;
+                } else if($result[$p['id_m_user']]['statuspeg'] == 3){ //PPPK
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
                 // if($id_pegawai != null && $p['nipbaru_ws'] == $this->general_library->getUserName()){
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){

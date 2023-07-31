@@ -424,7 +424,10 @@
             $result['golongan'][5]['nama'] = 'Golongan V';
             $result['golongan'][5]['jumlah'] = 0;
 
-       
+            $result['golongan'][6]['nama'] = 'Golongan X';
+            $result['golongan'][6]['jumlah'] = 0;
+
+          
            
             // $temp_pangkat = $this->db->select('*')
             //                     ->from('db_pegawai.pangkat')
@@ -484,6 +487,20 @@
 
             foreach($pegawai as $peg){
                 // $result['pangkat'][$peg['id_pangkat']]['jumlah']++;
+
+                if(substr($peg['nipbaru'], 9, 6) == '202321'){
+                    // dd(substr($peg['id_pangkat'], 0, 1));\
+                    // if($peg['id_pangkat'] == '59') {
+                    //     $result['golongan'][6]['nama'] = 'Golongan IX';
+                    //     $result['golongan'][6]['jumlah'] = 0;
+                    // }
+                    // if($peg['id_pangkat'] == '60') {
+                    //     $result['golongan'][6]['nama'] = 'Golongan X';
+                    //     $result['golongan'][6]['jumlah'] = 0;
+                    // }
+                   
+                }
+                
                 $result['golongan'][substr($peg['id_pangkat'], 0, 1)]['jumlah']++;
                 // $gol1 = [11, 12, 13, 14];
                 // $gol2 = [21, 22, 23, 24];

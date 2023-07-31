@@ -1434,7 +1434,7 @@ class M_Kepegawaian extends CI_Model
         if($_FILES){
         if($this->input->post('jenis_layanan') == 3){
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            $target_dir						= '../siladen/dokumen_layanan/cuti/' . $this->general_library->getUserName();
         } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
             $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();

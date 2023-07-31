@@ -55,9 +55,9 @@
    <a href="<?= base_url('kepegawaian/teknis');?>">
     <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
-  <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div>
+  <!-- <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div> -->
   
-  <?php if($jenis_layanan == 3) { ?>
+  <!-- <?php if($jenis_layanan == 3) { ?>
    <table style="width: 100%;" class="table table_dok_detail">
           <tr>
             <td class="td-lab-dd">Jenis Cuti</td>
@@ -75,7 +75,7 @@
             <td class="td-val-dd"><?=$result[0]['tanggal_selesai'];?></td>
           </tr>
         </table>
-        <?php } ?>
+        <?php } ?> -->
    </div>
 
 
@@ -87,12 +87,12 @@
     <button class="nav-link nav-link-layanan active"  data-bs-toggle="pill" data-bs-target="#pills-supen" type="button" role="tab" aria-controls="pills-supen" aria-selected="false">Surat Pengantar</button>
   </li>
   <?php if($result[0]['jenis_layanan'] == 3) { ?>
-    <?php if($result['0']['surat_keterangan']) { ?>
+    <!-- <?php if($result['0']['surat_keterangan']) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button class="nav-link nav-link-layanan " id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-suket" type="button" role="tab" aria-controls="pills-suket" aria-selected="false">Surat Keterangan</button>
   </li>
-  <?php } ?>
+  <?php } ?> -->
   <?php } ?>
   </ul>
       <hr style="margin-top: 10px;">
@@ -494,7 +494,7 @@
   
 </div>
 <!-- <iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe> -->
-<h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+<h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
 
 				</div>

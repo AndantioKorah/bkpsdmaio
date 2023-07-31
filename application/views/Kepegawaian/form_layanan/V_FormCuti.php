@@ -11,7 +11,7 @@
 			value="<?= date('Y-m-d');?>">
 	</div>
 
-
+<!-- 
 	<div class="mb-3">
 		<label for="exampleInputEmail1" class="form-label">Jenis Cuti </label>
 		<select onchange="openform()" class="form-control select22"
@@ -118,20 +118,20 @@
 		<label for="" class="form-label ">Tanggal Selesai</label>
 		<input type="text" class="form-control datepicker" id="tanggal_selesai" name="tanggal_selesai"
 			autocomplete="off">
-	</div>
+	</div> -->
 
 
 	<div class="mb-3">
 		<label>File Pengantar</label>
 		<input class="form-control my-image-field" type="file" id="file_pengantar" name="berkas[]" />
 	</div>
-
+<!-- 
   <div class="form-group">
 		<label>Surat Keterangan Sakit/Dokter (bagi ASN yang mengajukan cuti sakit) <br>
           Surat Keterangan dari Pihak yang berwenang (bagi ASN yang mengajukan cuti karena alasan penting) <br>
     </label>
 		<input class="form-control my-image-field" type="file" id="surat_keterangan" name="berkas[]" />
-	</div>
+	</div> -->
 
 <br>
 	<button type="submit" class="btn btn-primary">Submit</button>
@@ -164,60 +164,57 @@
         return false;
         }
 
-        var lama_cuti = $('#lama_cuti').val();
-        var radioValue = $("input[name='jenis_lama_cuti']:checked").val();
-        var jenis_cuti = $('#jenis_cuti').find(":selected").val();
+        // var lama_cuti = $('#lama_cuti').val();
+        // var radioValue = $("input[name='jenis_lama_cuti']:checked").val();
+        // var jenis_cuti = $('#jenis_cuti').find(":selected").val();
         
 
-        var tanggal_mulai = $('#tanggal_mulai').val();
-        var tanggal_selesai = $('#tanggal_selesai').val();
+        // var tanggal_mulai = $('#tanggal_mulai').val();
+        // var tanggal_selesai = $('#tanggal_selesai').val();
 
-        var tahun1 = $('#tahun1').val()
-        var tahun2 = $('#tahun2').val()
-        var tahun3 = $('#tahun3').val()
+        // var tahun1 = $('#tahun1').val()
+        // var tahun2 = $('#tahun2').val()
+        // var tahun3 = $('#tahun3').val()
 
-        if(tahun1 == ""){
-        tahun1 = 0;
-        }
+        // if(tahun1 == ""){
+        // tahun1 = 0;
+        // }
 
-        if(tahun2 == ""){
-          tahun2 = 0;
-        }
-        if(tahun3 == ""){
-          tahun3 = 0;
-        }
+        // if(tahun2 == ""){
+        //   tahun2 = 0;
+        // }
+        // if(tahun3 == ""){
+        //   tahun3 = 0;
+        // }
      
-        var jenis_layanan = $('#jenis_layanan').find(":selected").val();
-        if(jenis_layanan == 3){
-          if(lama_cuti == ""){
-            errortoast("Lama hari cuti belum di isi")
-            return false
-          }
-          if(tanggal_mulai == ""){
-            errortoast("Tanggal mulai belum di isi")
-            return false
-          }
-          if(tanggal_selesai == ""){
-            errortoast("Tanggal Selesai belum di isi")
-            return false
-          }
+        // var jenis_layanan = $('#jenis_layanan').find(":selected").val();
+        // if(jenis_layanan == 3){
+        //   if(lama_cuti == ""){
+        //     errortoast("Lama hari cuti belum di isi")
+        //     return false
+        //   }
+        //   if(tanggal_mulai == ""){
+        //     errortoast("Tanggal mulai belum di isi")
+        //     return false
+        //   }
+        //   if(tanggal_selesai == ""){
+        //     errortoast("Tanggal Selesai belum di isi")
+        //     return false
+        //   }
 
 
-          if( $('input[name="jenis_lama_cuti"]').is(':checked') ){
-            if(jenis_cuti == 0){
-              var total_semua_tahun = parseInt(tahun1)+parseInt(tahun2)+parseInt(tahun3);
-              if(parseInt(total_semua_tahun) < parseInt(lama_cuti)){
-              errortoast('Totah hari belum sesuai')
-              }  
-            }
+        //   if( $('input[name="jenis_lama_cuti"]').is(':checked') ){
+        //     if(jenis_cuti == 0){
+        //       var total_semua_tahun = parseInt(tahun1)+parseInt(tahun2)+parseInt(tahun3);
+        //       if(parseInt(total_semua_tahun) < parseInt(lama_cuti)){
+        //       errortoast('Totah hari belum sesuai')
+        //       }  
+        //     }
             
-           } else{
-           errortoast("Hari atau Bulan belum di pilih");
-          }
-          
-          
-        
-        } 
+        //    } else{
+        //    errortoast("Hari atau Bulan belum di pilih");
+        //   }
+        // } 
        
         
       

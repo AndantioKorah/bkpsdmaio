@@ -52,13 +52,13 @@
                 <?php } ?>
                
               
-              <?php if($rs['jenis_layanan'] == 3) { ?>
+              <!-- <?php if($rs['jenis_layanan'] == 3) { ?>
               <?php if($rs['status'] == 1) { ?> 
                 <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
                 data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
                 &nbsp;
                
-              <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+              <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
               <button title="Cetak Surat" id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button></a>
                
@@ -71,16 +71,16 @@
                 data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
                 &nbsp;
                
-              <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+              <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/CetakSurat/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
               <button title="Cetak Surat Hukdis" id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button>&nbsp;</a>
 
-               <a target="_blank" href="<?= base_url();?>Kepegawaian/C_Kepegawaian/CetakSuratPidana/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+               <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/CetakSuratPidana/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
               <button title="Cetak Surat Pidana" id="button_pdf" href=""  class="btn btn-sm btn-warning">
                <i class="fa fa-file-pdf"></i></button></a>
                
              <?php } ?>
-             <?php } ?>
+             <?php } ?> -->
             
              </div>
 
@@ -239,7 +239,7 @@ var base_url = "<?=base_url();?>"
       var id_usul =   $('#id_usul').val(); 
       var jenis_layanan =   $('#jenis_layanan').val(); 
     event.preventDefault();
-    window.open(base_url+'Kepegawaian/C_Kepegawaian/CetakSurat/'+id_usul+'/'+jenis_layanan, '_blank');
+    window.open(base_url+'kepegawaian/C_Kepegawaian/CetakSurat/'+id_usul+'/'+jenis_layanan, '_blank');
   });
 
 $('#form_nomor_surat').on('submit', function(e){

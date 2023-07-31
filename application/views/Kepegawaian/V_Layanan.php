@@ -146,7 +146,7 @@
     $('#form_layanan').html('')
     $('#form_layanan').append(divLoaderNavy)
 
-    $('#form_layanan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadFormLayanan/")?>'+val, function(){
+    $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadFormLayanan/")?>'+val, function(){
       $('#loader').hide()
     })
   }
@@ -163,7 +163,7 @@
   
     $('#list_usul_layanan').html('')
     $('#list_usul_layanan').append(divLoaderNavy)
-    $('#list_usul_layanan').load('<?=base_url("Kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>'+val, function(){
+    $('#list_usul_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>'+val, function(){
       $('#loader').hide()
     })
   }

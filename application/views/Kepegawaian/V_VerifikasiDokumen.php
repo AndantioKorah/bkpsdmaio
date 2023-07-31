@@ -68,7 +68,7 @@
       $('#result').append(divLoaderNavy)
       e.preventDefault()
       $.ajax({
-        url: '<?=base_url('Kepegawaian/C_Kepegawaian/searchDokumenUsul')?>',
+        url: '<?=base_url('kepegawaian/C_Kepegawaian/searchDokumenUsul')?>',
         method: 'post',
         data: $(this).serialize(),
         success: function(data){

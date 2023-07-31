@@ -53,7 +53,7 @@
 
     $('#edit_data_content').html('')
         $('#edit_data_content').append(divLoaderNavy)
-        $('#edit_data_content').load('<?=base_url('Kepegawaian/C_Kepegawaian/openDetailDokumen/')?>'+id+'/'+jenisdok, function(){
+        $('#edit_data_content').load('<?=base_url('kepegawaian/C_Kepegawaian/openDetailDokumen/')?>'+id+'/'+jenisdok, function(){
         $('#loader').hide()
         })
 

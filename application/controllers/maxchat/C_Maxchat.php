@@ -15,7 +15,7 @@ class C_Maxchat extends CI_Controller
         $result = $this->maxchatlibrary->webhookCapture();
         $data = $result->data;
         $this->general->insert('t_chat_group', [
-            'text' => json_encode($resp)
+            'text' => json_encode($result)
         ]);
 
         if ($result->event == "new" && $result->type == "message" && $data->type == "text" && $data->fromMe == false && $data->from != GROUP_CHAT_HELPDESK) {
@@ -128,6 +128,8 @@ class C_Maxchat extends CI_Controller
             if($resp['code'] == 200){
                 $pegawai = $resp['data'];
             }
+        } else {
+            $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         }
         if(!$pegawai){
             $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
@@ -140,9 +142,8 @@ class C_Maxchat extends CI_Controller
                 ", Silahkan memilih jenis layanan melalui perintah di bawah ini: \n\n".
                 "1. *#cek_profil*: untuk melihat data pegawai yang terdaftar dengan nomor HP ini. \n\n".
                 "2. *#rekap_absensi_(bulan)_(tahun)*: untuk melihat rekapan absensi SKPD pada bulan dan tahun yang Anda pilih. \nContoh: #rekap_absensi_07_2023 adalah untuk melihat rekap absensi pada bulan Juli tahun 2023 \n\n";
-            } else if(strcasecmp("#", substr($data->text, 0, 1)) == 0 && count($explode) > 1){
-                // count($explode) > 1
-                if($explode[0] == '#rekap'){
+            } else if(substr($data->text, 0, 1) == "#" && count($explode) > 1){
+                if(strcasecmp($explode[0], "#rekap") == 0 && strcasecmp($explode[1], "absensi") == 0){
                     $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
                     if($aksespegawai){
                         if(count($explode) != 4){
@@ -153,8 +154,8 @@ class C_Maxchat extends CI_Controller
                                     $data_cron = [
                                         'id_unitkerja' => $pegawai_simpeg['skpd'],
                                         'no_hp' => $data->sender,
-                                        'bulan' => $explode[2],
-                                        'tahun' => $explode[3],
+                                        'bulan' => clearString($explode[2]),
+                                        'tahun' => clearString($explode[3]),
                                         'created_by' => $aksespegawai['id_m_user']
                                     ];
                                     $this->rekap->saveToCronRekapAbsen($data_cron);
@@ -167,7 +168,7 @@ class C_Maxchat extends CI_Controller
                             }
                         }
                     } else {
-                        $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini.";
+                        $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
                     }
                 } else if ($explode[0] == '#cek' && $explode[1] == 'profil'){
                     $pegawai = $this->user->getProfilUserByNoHp($data->sender);
@@ -202,6 +203,12 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
+        // $result = null;
+        // $data = new \stdClass();
+        // $data->sender = $id;
+        // $data->text = '#rekap_absen_07_2023';
+        // $this->chatBotLayanan($result, $data);
+        $pegawai = null;
         $ws = $this->dokumenlib->getPegawaiSiladen($id);
         if($ws){
             $resp = json_decode($ws['response'], true);
@@ -211,7 +218,7 @@ class C_Maxchat extends CI_Controller
         }
         $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
         $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        dd($aksespegawai);
+        dd(urldecode($aksespegawai['nm_unitkerja']));
     }
 
 }

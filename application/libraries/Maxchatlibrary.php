@@ -146,7 +146,7 @@ class Maxchatlibrary{
     }
 
     public function saveLog($data){
-        $this->maxchat->general->insert('t_log_maxchat', $data);
+        // $this->maxchat->general->insert('t_log_maxchat', $data);
     }
 
     function postCurl($url, $data, $method = "POST") {

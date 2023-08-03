@@ -18,7 +18,13 @@ class C_Maxchat extends CI_Controller
             'text' => json_encode($result)
         ]);
 
-        if ($result->event == "new" && $result->type == "message" && $data->type == "text" && $data->fromMe == false && $data->from != GROUP_CHAT_HELPDESK) {
+        if ($result->event == "new" && 
+            $result->type == "message" && 
+            $data->type == "text" && 
+            $data->fromMe == false && 
+            // !property_exists($data, 'asd') &&
+            $data->chat != "story" &&
+            $data->from != GROUP_CHAT_HELPDESK) {
             $this->chatBotLayanan($result, $data);
         } else if($data->from == GROUP_CHAT_HELPDESK){
             if(!isset($data->originalMsg)){
@@ -203,22 +209,24 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        // $result = null;
-        // $data = new \stdClass();
-        // $data->sender = $id;
-        // $data->text = '#rekap_absen_07_2023';
+        $result = null;
+        $data = new \stdClass();
+        $data->sender = $id;
+        $data->text = '#rekap_absen_07_2023';
+        // dd(!isset($data->asd));
+        dd(property_exists($data, 'asd'));
         // $this->chatBotLayanan($result, $data);
-        $pegawai = null;
-        $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        if($ws){
-            $resp = json_decode($ws['response'], true);
-            if($resp['code'] == 200){
-                $pegawai = $resp['data'];
-            }
-        }
-        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        dd(urldecode($aksespegawai['nm_unitkerja']));
+        // $pegawai = null;
+        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        // if($ws){
+        //     $resp = json_decode($ws['response'], true);
+        //     if($resp['code'] == 200){
+        //         $pegawai = $resp['data'];
+        //     }
+        // }
+        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        // dd($ws);
     }
 
 }

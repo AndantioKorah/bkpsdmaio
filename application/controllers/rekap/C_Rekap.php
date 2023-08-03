@@ -39,8 +39,19 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars(){
-        $data['result'] = $this->rekap->readAbsensiAars($this->input->post());
+    public function readAbsensiAars($flag_alpha = 0){
+        $param = $this->input->post();
+        if($flag_alpha == 1){
+            $param = [
+                'skpd' => '4018000;Badan Kepegawaian dan Pengembangan Sumber Daya Manusia',
+                'bulan' => '07',
+                'tahun' => '2023'
+            ];
+        }
+        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha);
+        if($flag_alpha == 1){
+            dd($data['result']);
+        }
         $data['flag_print'] = 0;
         if($data['result']){
             $data['skpd'] = $data['result']['skpd'];
@@ -252,19 +263,25 @@ class C_Rekap extends CI_Controller
         $data_absen['bulan'] = $param['bulan'];
         $data_absen['tahun'] = $param['tahun'];
         // dd($data_absen['raw_data_excel']);
-        $data_rekap = $this->session->userdata('rekap_' . $param['bulan'] . '_' . $param['tahun']);
+        // $data_rekap = $this->session->userdata('rekap_' . $param['bulan'] . '_' . $param['tahun']);
 
         switch ($jenis_file) {
             case "absen":
                 $data = null;
-                if (isset($data_absen['raw_data_excel'])) {
-                    // if($data_rekap && isset($data_rekap['absen'])){
-                    //     $data = $data_rekap['absen'];
-                    // } else {
-                    $data = $this->rekap->buildDataAbsensi(json_decode($data_absen['raw_data_excel'], true));
-                    $temp['absen'] = $data;
-                    // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
-                    // }
+                $data['result'] = $this->rekap->readAbsensiAars($param);
+                $data['flag_print'] = 0;
+                if($data['result']){
+                    $data['skpd'] = $data['result']['skpd'];
+                    $data['jam_kerja'] = $data['result']['jam_kerja'];
+                    $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];
+                    $data['hari_libur'] = $data['result']['hari_libur'];
+                    $data['info_libur'] = $data['result']['info_libur'];
+                    $data['periode'] = $data['result']['periode'];
+                    $data['disiplin_kerja'] = $data['result']['disiplin_kerja'];
+                    $data['list_hari'] = $data['result']['list_hari'];
+                    $data['flag_rekap_aars'] = true;
+                    $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
+                    // $this->session->set_userdata('rekap_absen_aars', $data);
                 }
                 $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
                 break;

@@ -766,19 +766,26 @@
         return $data;
     }
 
-    public function buildDataAbsensi($data, $flag_absen_aars = 0){
+    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0){
+        // dd($flag_alpha);
         $rs = null;
         $periode = null;
         $list_hari = null;
         $raw_data_excel = json_encode($data);
         
         if($flag_absen_aars == 1){
-            $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
+            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
-                            ->where('a.skpd', $data['id_unitkerja'])
-                            ->order_by('b.eselon, a.nama')
-                            ->get()->result_array();
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->order_by('b.eselon, a.nama');
+            if($flag_alpha == 0){
+                $this->db->where('a.skpd', $data['id_unitkerja']);
+            } else if($flag_alpha == 1){
+                $this->db->where('c.id_unitkerjamaster', 8010000);
+            }
+
+            $list_pegawai = $this->db->get()->result_array();
         }
 
         if($flag_absen_aars == 1){
@@ -1042,8 +1049,12 @@
             // $i++;
         }
 
+        $list_alpha = [];
         foreach($tempresult as $tr){
-            if(isset($lp[$tr['nip']])){
+            // if(!isset($tr['nip'])){
+            //     dd($tr);
+            // }
+            if(isset($tr['nip']) && isset($lp[$tr['nip']])){
                 $lp[$tr['nip']] = $tr;
                 $lp[$tr['nip']]['rekap']['tmk1'] = 0;
                 $lp[$tr['nip']]['rekap']['tmk2'] = 0;
@@ -1090,6 +1101,9 @@
                                 $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                             } else {
                                 $lp[$tr['nip']]['rekap']['TK']++;
+                                if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
+                                    $list_alpha[$tr['nip']] = $tr['nip'];
+                                }
                             }
                             $flag_check = 0;
                         } else if($flag_absen_aars == 1){
@@ -1108,6 +1122,9 @@
                                     $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "")){
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = 'TK';
                                     $lp[$tr['nip']]['rekap']['TK']++;
+                                    if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
+                                        $list_alpha[$tr['nip']] = $tr['nip'];
+                                    }
                                     $flag_check = 0;
                                 }
                             }
@@ -1182,7 +1199,9 @@
         if($flag_absen_aars == 0){
             $data['raw_data_excel'] = $raw_data_excel;
         }
-        
+        if($flag_alpha == 1){
+            return $list_alpha;
+        }        
         return $data;
     }
 
@@ -1642,13 +1661,13 @@
         return $result;
     }
 
-    public function readAbsensiAars($param){
+    public function readAbsensiAars($param, $flag_alpha){
         $result = null;
         $skpd = explode(";", $param['skpd']);
 
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
-        return $this->buildDataAbsensi($param, 1);
+        return $this->buildDataAbsensi($param, 1, $flag_alpha);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')
         //                 ->from('db_sip.absen a')

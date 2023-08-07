@@ -426,7 +426,7 @@
 				<a class="sidebar-brand" href="<?=base_url('welcome')?>">
           <span class="align-middle">
 		<center>
-    <img style="height:auto;width:150px;" src="<?=base_url('')?>assets/adminkit/img/logoSiladen.png" alt="BIDIK - ASN Juara" class="brand-image img-circle elevation-3"
+    <img style="height:auto;width:150px;" src="<?=base_url('')?>assets/adminkit/img/logo-siladen-new-with-text.png" alt="BIDIK - ASN Juara" class="brand-image img-circle elevation-3"
           style="opacity: .8">
     </center>
    

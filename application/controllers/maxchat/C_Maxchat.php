@@ -123,7 +123,7 @@ class C_Maxchat extends CI_Controller
     }
 
     public function chatBotLayanan($result, $data){
-        $reply = null;
+        $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         $sendTo = $data->sender;
 
         $pegawai = null;
@@ -133,13 +133,18 @@ class C_Maxchat extends CI_Controller
             $resp = json_decode($ws['response'], true);
             if($resp['code'] == 200){
                 $pegawai = $resp['data'];
+                $reply = null;
             }
-        } else {
-            $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+            // else {
+            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+            // }
         }
-        if(!$pegawai){
-            $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-        }
+        // else {
+        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        // }
+        // if(!$pegawai){
+        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        // }
         if($reply == null){
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
             $explode = explode("_", $data->text);
@@ -167,7 +172,7 @@ class C_Maxchat extends CI_Controller
                                     $this->rekap->saveToCronRekapAbsen($data_cron);
                                     $this->rekap->cronRekapAbsen();
                                 } else {
-                                    $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati tanggal berjalan.";
+                                    $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati Bulan dan Tahun berjalan.";
                                 }
                             } else {
                                 $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan format bulan dan tahun yang ditentukan. \nKetik '#info' untuk melihat pilihan yang tersedia.";
@@ -209,24 +214,24 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        $result = null;
-        $data = new \stdClass();
-        $data->sender = $id;
-        $data->text = '#rekap_absen_07_2023';
-        // dd(!isset($data->asd));
-        dd(property_exists($data, 'asd'));
+        // $result = null;
+        // $data = new \stdClass();
+        // $data->sender = $id;
+        // $data->text = '#rekap_absen_07_2023';
+        // // dd(!isset($data->asd));
+        // dd(property_exists($data, 'asd'));
         // $this->chatBotLayanan($result, $data);
-        // $pegawai = null;
-        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        // if($ws){
-        //     $resp = json_decode($ws['response'], true);
-        //     if($resp['code'] == 200){
-        //         $pegawai = $resp['data'];
-        //     }
-        // }
-        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        // dd($ws);
+        $pegawai = null;
+        $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        if($ws){
+            $resp = json_decode($ws['response'], true);
+            if($resp['code'] == 200){
+                $pegawai = $resp['data'];
+            }
+        }
+        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        dd($aksespegawai);
     }
 
 }

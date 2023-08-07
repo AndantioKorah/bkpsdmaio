@@ -415,23 +415,25 @@
               }
           </script>
         <?php } else { ?>
-         
-          <center>
-          <h3>Welcome to</h3>
-            <div style="z-index:0;">
-              <img style="height : auto;
-                        width: 300px; 
-                          margin-bottom:20px;"  class="" src="assets/adminkit/img/logoSiladen.png" />
-            </div>
-         
-          <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
-          <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
-          </center>
-          <?php } ?>
+          <h4><?="Selamat ".greeting().","?></h4>
+          <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
+          <?php $this->load->view('user/V_Pdm', null); ?>
+          <!-- <center>
+            <h3>Welcome to</h3>
+              <div style="z-index:0;">
+                <img style="height : auto;
+                          width: 300px; 
+                            margin-bottom:20px;"  class="" src="assets/adminkit/img/logo-siladen-new-with-text.png" />
+              </div>
+          
+            <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
+            <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
+          </center> -->
+        <?php } ?>
       </div>
-      <div class="col-12 text-center">
-          <!-- <h4 style="font-weight: bold;" id="live_date_time_welcome" class="nav-link"></h4> -->
-      </div>
+      <!-- <div class="col-12 text-center">
+          <h4 style="font-weight: bold;" id="live_date_time_welcome" class="nav-link"></h4>
+      </div> -->
       
   </div>
 </div>

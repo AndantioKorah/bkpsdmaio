@@ -311,6 +311,22 @@ function getPphByIdPangkat($id_pangkat)
     return 0;
 }
 
+function greeting(){
+    date_default_timezone_set("Asia/Singapore");
+
+    $time = date('h');
+    $greeting = "Pagi";
+    if(intval($time) >= 11 && intval($time) < 15){
+        $greeting = "Siang";
+    } else if(intval($time) >= 15 && intval($time) < 18){
+        $greeting = "Siang";
+    } else if(intval($time) >= 18 && intval($time) < 24 && intval($time) >= 0 && intval($time) < 2){
+        $greeting = "Malam";
+    }
+
+    return $greeting;
+}
+
 function clearString($str)
 {
     return str_replace('.', '', preg_replace('/[^0-9.\.]+/', '', (trim($str))));

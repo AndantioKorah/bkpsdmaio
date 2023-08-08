@@ -14,6 +14,93 @@
   Riwayat Usul Pangkat
 </button>
 
+
+
+<!-- status pdm -->
+<?php if($pdm_pangkat) {?>
+<?php
+if($pdm_pangkat[0]['flag_active'] == 1) {?>
+<button onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+  Batal Berkas Sudah Lengkap
+</button>
+<?php } else if($pdm_pangkat[0]['flag_active'] == 0) { ?>
+  <button  onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  Berkas Sudah Lengkap
+</button>
+<?php }  ?>
+<?php } else { ?> 
+
+<button  onclick="openModalStatusPmd('pangkat')"   
+data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
+
+  
+  <script>
+    function openModalStatusPmd(jenisberkas){
+        $(".modal-body #jenis_berkas").val( jenisberkas );
+  }
+</script>
+  
+  
+<!-- Modal -->
+<!-- <div class="modal fade" id="pdmPangkatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Simpan Perubahan Status Berkas ?
+      </div>
+      <form method="post" id="form_status_berkas" enctype="multipart/form-data" >
+      <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="pangkat">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modal_dismis" data-dismiss="modal">Batal</button>
+        <button class="btn btn-block btn-primary" >Ya</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#form_status_berkas').on('submit', function(e){  
+      
+        e.preventDefault();
+        var formvalue = $('#form_status_berkas');
+        var form_data = new FormData(formvalue[0]);
+
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+                successtoast(result.msg)
+                setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1000);
+                setTimeout(loadFormPangkat, 1500);
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+        }  
+        });  
+          
+        });
+
+  
+</script> -->
+
+
 <style>
   .modal:nth-of-type(even) {
     z-index: 1052 !important;

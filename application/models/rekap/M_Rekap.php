@@ -1661,7 +1661,7 @@
         return $result;
     }
 
-    public function readAbsensiAars($param, $flag_alpha){
+    public function readAbsensiAars($param, $flag_alpha = 0){
         $result = null;
         $skpd = explode(";", $param['skpd']);
 
@@ -1687,7 +1687,7 @@
         // dd($result['data_absen']);
     }
 
-    public function cronRekapAbsen(){
+    public function cronRekapAbsen($flag_send_wa = 1){
         $cron = $this->db->select('*')
                         ->from('t_cron_rekap_absen')
                         ->where('flag_sent', 0)
@@ -1752,20 +1752,29 @@
                     }
                 }
 
-                $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
+                if($flag_send_wa == 1){
+                    $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
 
-                if($sendWa == true){
-                    $this->db->where('id', $c['id'])
-                        ->update('t_cron_rekap_absen', [
-                            'flag_sent' => 1,
-                            'done_date' => date('Y-m-d H:i:s'),
-                            'response' => 'success'
-                        ]);
+                    if($sendWa == true){
+                        $this->db->where('id', $c['id'])
+                            ->update('t_cron_rekap_absen', [
+                                'flag_sent' => 1,
+                                'done_date' => date('Y-m-d H:i:s'),
+                                'response' => 'success'
+                            ]);
+                    } else {
+                        $this->db->where('id', $c['id'])
+                            ->update('t_cron_rekap_absen', [
+                                'response' => $sendWa
+                            ]);
+                    }
                 } else {
                     $this->db->where('id', $c['id'])
-                        ->update('t_cron_rekap_absen', [
-                            'response' => $sendWa
-                        ]);
+                            ->update('t_cron_rekap_absen', [
+                                'flag_sent' => 1,
+                                'done_date' => date('Y-m-d H:i:s'),
+                                'response' => 'success'
+                            ]);
                 }
             }
         }
@@ -1773,6 +1782,33 @@
 
     public function saveToCronRekapAbsen($data){
         $this->db->insert('t_cron_rekap_absen', $data);
+    }
+
+    public function cronRekapAbsenPD($bulan, $tahun){
+        $unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja a')
+                            ->where('a.id_unitkerja NOT IN (SELECT id_unitkerja FROM t_cron_rekap_absen WHERE flag_active = 1 AND bulan = '.$bulan.' AND tahun = '.$tahun.')')
+                            ->get()->result_array();
+        $cron = null;
+        $i = 0;
+        if($unitkerja){
+            foreach($unitkerja as $u){
+                $cron[$i]['id_unitkerja'] = $u['id_unitkerja'];
+                $cron[$i]['bulan'] = $bulan;
+                $cron[$i]['tahun'] = $tahun;
+                $cron[$i]['created_by'] = 1;
+                // if($i == 5){
+                //     break;
+                // }
+                $i++;
+            }
+        }
+
+        if($cron){
+            $this->db->insert_batch('t_cron_rekap_absen', $cron);
+        }
+        $this->cronRekapAbsen(0);
+
     }
 }
 ?>

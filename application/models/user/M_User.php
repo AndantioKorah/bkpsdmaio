@@ -1744,7 +1744,7 @@
                 $this->db->where('id', $data['id'])
                         ->update('db_sip.absen', [
                             'masuk' => $new_absensi_masuk,
-                            'pulang' => $new_absensi_pulang,
+                            'pulang' => $new_absensi_pulang == "00:00:00" ? null : $new_absensi_pulang,
                         ]);
             } else {
                 $user = $this->db->select('*')

@@ -901,6 +901,94 @@
       </div>
   </div>
 </div>
+
+<!-- Modal Status PDM -->
+<div class="modal fade" id="pdmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPdm" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelPdm"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Simpan Perubahan Status Berkas ?
+      <form method="post" id="form_status_berkas" enctype="multipart/form-data" >
+      <input type="hidden" name="jenis_berkas" id="jenis_berkas">
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modal_dismis" data-dismiss="modal">Batal</button>
+        <button class="btn btn-block btn-primary" >Ya</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#form_status_berkas').on('submit', function(e){  
+      
+        e.preventDefault();
+        var formvalue = $('#form_status_berkas');
+        var form_data = new FormData(formvalue[0]);
+        var jb = $('#jenis_berkas').val();
+  
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+                successtoast(result.msg)
+                setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1000);
+                if(jb == "pangkat"){
+                setTimeout(loadFormPangkat, 1500);
+                } else if(jb == "gajiberkala"){
+                setTimeout(loadFormGajiBerkala, 1500);
+                } else if(jb == "pendidikan"){
+                setTimeout(loadFormPendidikan, 1500);
+                } else if(jb == "jabatan"){
+                setTimeout(loadFormJabatan, 1500);
+                } else if(jb == "diklat"){
+                setTimeout(loadFormDiklat, 1500);
+                } else if(jb == "organisasi"){
+                setTimeout(loadFormOrganisasi, 1500);
+                } else if(jb == "penghargaan"){
+                setTimeout(loadFormPenghargaan, 1500);
+                } else if(jb == "sumpahjanji"){
+                setTimeout(LoadFormSumpahJanji, 1500);
+                } else if(jb == "keluarga"){
+                setTimeout(loadFormKeluarga, 1500);
+                } else if(jb == "penugasan"){
+                setTimeout(loadFormPenugasan, 1500);
+                } else if(jb == "cuti"){
+                setTimeout(loadFormCuti, 1500);
+                } else if(jb == "skp"){
+                setTimeout(loadFormSkp, 1500);
+                } else if(jb == "assesment"){
+                setTimeout(loadFormAssesment, 1500);
+                } else if(jb == "berkaspns"){
+                setTimeout(loadFormBerkasPns, 1500);
+                } else if(jb == "arsip"){
+                setTimeout(LoadFormArsip, 1500);
+                }
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+        }  
+        });  
+          
+        });
+</script>
+
   <script>
   var nip = "<?= $nip;?>"; 
   $(function(){

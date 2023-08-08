@@ -1352,14 +1352,17 @@
         $param['bulan'] = $data['bulan'];
         $param['tahun'] = $data['tahun'];
         $param['skpd'] = $skpd[0];
-        $temp = $this->readAbsensiFromDb($param);
-        $data_absen = $this->db->select('*')
-                    ->from('t_rekap_absen')
-                    ->where('bulan', $param['bulan'])
-                    ->where('tahun', $param['tahun'])
-                    ->where('id_unitkerja', $param['skpd'])
-                    ->where('flag_active', 1)
-                    ->get()->row_array();
+        // dd($data);
+        // $temp = $this->readAbsensiFromDb($param);
+        $temp = $this->readAbsensiAars($data, $flag_alpha = 0);
+        
+        // $data_absen = $this->db->select('*')
+        //             ->from('t_rekap_absen')
+        //             ->where('bulan', $param['bulan'])
+        //             ->where('tahun', $param['tahun'])
+        //             ->where('id_unitkerja', $param['skpd'])
+        //             ->where('flag_active', 1)
+        //             ->get()->row_array();
         if($temp){
             $result['skpd'] = $temp['skpd'];
             $result['periode'] = $temp['periode'];
@@ -1393,10 +1396,10 @@
             }
         }
 
-        $this->db->where('id', $data_absen['id'])
-                ->update('t_rekap_absen', [
-                    'json_rekap_penilaian_disiplin_kerja' => json_encode($result)
-                ]);
+        // $this->db->where('id', $data_absen['id'])
+        //         ->update('t_rekap_absen', [
+        //             'json_rekap_penilaian_disiplin_kerja' => json_encode($result)
+        //         ]);
         
         return $result;
     }

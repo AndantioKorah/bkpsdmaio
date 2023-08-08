@@ -18,6 +18,32 @@
   Riwayat Usul SK CPNS & PNS
 </button>
 
+
+<!-- status pdm -->
+<?php if($pdm) {?>
+<?php
+if($pdm[0]['flag_active'] == 1) {?>
+<button onclick="openModalStatusPmd('berkaspns')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+  Batal Berkas Sudah Lengkap
+</button>
+<?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <button  onclick="openModalStatusPmd('berkaspns')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  Berkas Sudah Lengkap
+</button>
+<?php }  ?>
+<?php } else { ?> 
+
+<button  onclick="openModalStatusPmd('berkaspns')"   
+data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
+
+<script>
+    function openModalStatusPmd(jenisberkas){
+        $(".modal-body #jenis_berkas").val( jenisberkas );
+  }
+</script>
+
+
 <style>
   .modal:nth-of-type(even) {
     z-index: 1052 !important;

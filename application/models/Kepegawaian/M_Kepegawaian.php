@@ -939,6 +939,19 @@ class M_Kepegawaian extends CI_Model
         return $this->db->get()->result_array(); 
     }
 
+    public function getDataPdmBerkas($tableName, $orderBy = 'created_date', $whatType = 'desc', $jberkas)
+    {
+        $this->db->select('*')
+        // ->where('id !=', 0)
+        // ->where('flag_active', 1)
+        ->where('id_m_user', $this->general_library->getId())
+        ->where('jenis_berkas', $jberkas)
+        ->order_by($orderBy, $whatType)
+        ->limit(1)
+        ->from($tableName);
+        return $this->db->get()->result_array(); 
+    }
+
     public function getOne($tableName, $fieldName, $fieldValue)
     {
         $this->db->select('*')
@@ -2422,6 +2435,61 @@ public function getDataKabanBkd()
     ->where('a.jabatan', '4018000JS01');
     
     return $this->db->get()->result_array(); 
+}
+
+public function updateStatusBerkas(){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+
+    $this->db->trans_begin();
+
+    $datapost = $this->input->post();
+    $id_m_user = $this->general_library->getId();
+    $data["jenis_berkas"] = $datapost["jenis_berkas"];
+
+
+     $query = $this->db->select('*')
+        ->from('t_pdm a')
+        ->where('a.id_m_user', $id_m_user)
+        ->where('a.flag_active', 1)
+        ->where('a.jenis_berkas', $datapost["jenis_berkas"])
+        ->get()->row_array();
+
+    
+        if($query) {
+            $this->db->where('id_m_user', $id_m_user)
+            ->where('jenis_berkas', $datapost["jenis_berkas"])
+            ->update('t_pdm', ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
+            $res = array('msg' => 'Berhasil Update Status', 'success' => true);
+        } else {  
+    
+            $dataInsert['id_m_user']      = $this->general_library->getId();
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['jenis_berkas']      = $datapost["jenis_berkas"];
+            $this->db->insert('t_pdm', $dataInsert);
+
+            $res = array('msg' => 'Berhasil Update Status', 'success' => true);
+            
+ 
+        }
+        
+
+   
+   
+   
+  
+    
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res['code'] = 1;
+        $res['message'] = 'Terjadi Kesalahan';
+        $res['data'] = null;
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
 }
 
     

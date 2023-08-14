@@ -13,42 +13,36 @@ class C_Maxchat extends CI_Controller
 
     public function webhook(){
         $result = $this->maxchatlibrary->webhookCapture();
-        $data = $result->data;
         $this->general->insert('t_chat_group', [
             'text' => json_encode($result)
         ]);
-
-        if ($result->event == "new" && 
-            $result->type == "message" && 
-            $data->type == "text" && 
-            $data->fromMe == false && 
-            // !property_exists($data, 'asd') &&
-            $data->chat != "story" &&
-            $data->from != GROUP_CHAT_HELPDESK) {
-            $this->chatBotLayanan($result, $data);
-        } else if($data->from == GROUP_CHAT_HELPDESK){
-            if(!isset($data->originalMsg)){
-                $this->forwardToPegawai($result, $data);
+        if ($result->type == "text" && 
+            $result->chatType != "story" &&
+            $result->from != GROUP_CHAT_HELPDESK) {
+                $this->chatBotLayanan($result);
+        } else if($result->from == GROUP_CHAT_HELPDESK){
+            if(!isset($result->originalMsg)){
+                $this->forwardToPegawai($result);
             } else {
-                $this->chatHelpdeskSiladen($result, $data);
+                $this->chatHelpdeskSiladen($result);
             }
         }
     }
 
-    public function forwardToPegawai($result, $data){
+    public function forwardToPegawai($result){
         $reply = null;
-        $sendTo = $data->sender;
+        $sendTo = $result->from;
         $log = null;
 
-        if(isset($data->originalId)){
-            if($data->type == "image"){
-                $ori = json_decode($this->maxchatlibrary->getMessageById($data->originalId), true);
+        if(isset($result->originalId)){
+            if($result->type == "image"){
+                $ori = json_decode($this->maxchatlibrary->getMessageById($result->originalId), true);
                 $explode = explode("\n", $ori['text']);
                 $chatId = $explode[1];
             }
             $sender = $this->general->getOne('t_log_webhook', 'chat_id', $chatId, 0);
             if($sender){
-                $media = json_decode($this->maxchatlibrary->getMessageMediaById($data->id), true);
+                $media = json_decode($this->maxchatlibrary->getMessageMediaById($result->id), true);
                 $sendTo = $sender['sender'];
                 if($media){
                     $reply = "data:".$media['mimetype'].";base64,".$media['data'];
@@ -56,7 +50,7 @@ class C_Maxchat extends CI_Controller
                     $log = $this->maxchatlibrary->replyImage([
                         'image' => $reply, 
                         'url' => "http://someweb.com/image.png",
-                        'caption' => isset($data->caption) ? $data->caption : "mengirimkan Anda gambar", 
+                        'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda gambar", 
                         'filename' => date('Ymdhis').'.'.getFileTypeFromWaBot($media['mimetype']),
                         'to' => $sender['sender']
                     ]);
@@ -71,42 +65,42 @@ class C_Maxchat extends CI_Controller
         }
     }
 
-    public function chatHelpdeskSiladen($result, $data){
+    public function chatHelpdeskSiladen($result){
         $reply = null;
-        $sendTo = $data->sender;
+        $sendTo = $result->from;
         
-        if(isset($data->originalId)){
-            if($data->type == "image"){
-                $ori = json_decode($this->maxchatlibrary->getMessageById($data->originalId), true);
+        if(isset($result->originalId)){
+            if($result->type == "image"){
+                $ori = json_decode($this->maxchatlibrary->getMessageById($result->originalId), true);
                 $explode = explode("\n", $ori['text']);
                 $chatId = $explode[1];
-            } else if ($data->type == "text"){
-                $explode = explode("\n", $data->originalMsg->text);
+            } else if ($result->type == "text"){
+                $explode = explode("\n", $result->originalMsg->text);
                 $chatId = $explode[2];
             }
             $sender = $this->general->getOne('t_log_webhook', 'chat_id', $chatId, 0);
             if($sender){
                 $sendTo = $sender['sender'];
-                if($data->type == "image"){
-                    $reply = $data->thumbnail;
+                if($result->type == "image"){
+                    $reply = $result->thumbnail;
                     $log = $this->maxchatlibrary->replyImage([
                         'image' => $reply, 
                         'url' => "http://someweb.com/image.png",
-                        'caption' => isset($data->caption) ? $data->caption : "mengirimkan Anda gambar", 
+                        'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda gambar", 
                         'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
                         'to' => WA_BOT
                     ]);
-                } else if($data->type == "document"){
-                    $reply = $data->thumbnail;
+                } else if($result->type == "document"){
+                    $reply = $result->thumbnail;
                     $log = $this->maxchatlibrary->replyFile([
                         'file' => $reply, 
                         'url' => "http://someweb.com/image.png",
-                        'caption' => isset($data->caption) ? $data->caption : "mengirimkan Anda dokumen", 
+                        'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda dokumen", 
                         'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
                         'to' => WA_BOT
                     ]);
-                } else if ($data->type == "text"){
-                    $reply = $data->text;
+                } else if ($result->type == "text"){
+                    $reply = $result->text;
                     if($reply != null && $reply != ""){
                         $reply .= "\n";
                         $log = $this->maxchatlibrary->replyText($sender['sender'], $reply, $chatId);
@@ -122,13 +116,13 @@ class C_Maxchat extends CI_Controller
         }
     }
 
-    public function chatBotLayanan($result, $data){
-        $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-        $sendTo = $data->sender;
+    public function chatBotLayanan($result){
+        $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        $sendTo = $result->from;
 
         $pegawai = null;
-        // $nohp = "0".substr($data->sender, 2);
-        $ws = $this->dokumenlib->getPegawaiSiladen($data->sender);
+        // $nohp = "0".substr($result->from, 2);
+        $ws = $this->dokumenlib->getPegawaiSiladen($result->from);
         if($ws){
             $resp = json_decode($ws['response'], true);
             if($resp['code'] == 200){
@@ -136,24 +130,24 @@ class C_Maxchat extends CI_Controller
                 $reply = null;
             }
             // else {
-            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
             // }
         }
         // else {
-        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         // }
         // if(!$pegawai){
-        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$data->sender." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         // }
         if($reply == null){
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-            $explode = explode("_", $data->text);
-            if(strcasecmp($data->text, "#info") == 0 || strcasecmp($data->text, "tabea") == 0){
+            $explode = explode("_", $result->text);
+            if(strcasecmp($result->text, "#info") == 0 || strcasecmp($result->text, "tabea") == 0){
                 $reply = "Selamat Datang ".getNamaPegawaiFull($pegawai_simpeg).
                 ", Silahkan memilih jenis layanan melalui perintah di bawah ini: \n\n".
                 "1. *#cek_profil*: untuk melihat data pegawai yang terdaftar dengan nomor HP ini. \n\n".
                 "2. *#rekap_absensi_(bulan)_(tahun)*: untuk melihat rekapan absensi SKPD pada bulan dan tahun yang Anda pilih. \nContoh: #rekap_absensi_07_2023 adalah untuk melihat rekap absensi pada bulan Juli tahun 2023 \n\n";
-            } else if(substr($data->text, 0, 1) == "#" && count($explode) > 1){
+            } else if(substr($result->text, 0, 1) == "#" && count($explode) > 1){
                 if(strcasecmp($explode[0], "#rekap") == 0 && strcasecmp($explode[1], "absensi") == 0){
                     $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
                     if($aksespegawai){
@@ -164,7 +158,7 @@ class C_Maxchat extends CI_Controller
                                 if(checkIfValidDate($explode[2], $explode[3])){
                                     $data_cron = [
                                         'id_unitkerja' => $pegawai_simpeg['skpd'],
-                                        'no_hp' => $data->sender,
+                                        'no_hp' => $result->from,
                                         'bulan' => clearString($explode[2]),
                                         'tahun' => clearString($explode[3]),
                                         'created_by' => $aksespegawai['id_m_user']
@@ -182,27 +176,25 @@ class C_Maxchat extends CI_Controller
                         $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
                     }
                 } else if ($explode[0] == '#cek' && $explode[1] == 'profil'){
-                    $pegawai = $this->user->getProfilUserByNoHp($data->sender);
+                    $pegawai = $this->user->getProfilUserByNoHp($result->from);
                     if($pegawai){
-                        $reply = "Pegawai dengan Nomor HP ".$data->sender." sudah terdaftar dengan data sebagai berikut. \nUnit Kerja: ".$pegawai['nm_unitkerja'].". \nNama: ".getNamaPegawaiFull($pegawai)." \nNIP: ".formatNip($pegawai['nipbaru_ws']);
+                        $reply = "Pegawai dengan Nomor HP ".$result->from." sudah terdaftar dengan data sebagai berikut. \nUnit Kerja: ".$pegawai['nm_unitkerja'].". \nNama: ".getNamaPegawaiFull($pegawai)." \nNIP: ".formatNip($pegawai['nipbaru_ws']);
                     } else {
-                        $reply = "Pegawai dengan Nomor HP ".$data->sender." belum terdaftar.";
+                        $reply = "Pegawai dengan Nomor HP ".$result->from." belum terdaftar.";
                     }
                 }
             }
-        }
-
+        } 
         if($reply == null || $reply == ""){
             $sendTo = GROUP_CHAT_HELPDESK;
             if($pegawai_simpeg){
-                $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$data->id."\n\n".$data->text;
+                $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$result->id."\n\n".$result->text;
             } else {
-                $reply = $data->senderName."\n".$data->id."\n\n".$data->text;
+                $reply = $result->fromName."\n".$result->id."\n\n".$result->text;
             }
         }
 
         if($reply != null && $reply != ""){
-            $reply .= "\n";
             $log = $this->maxchatlibrary->sendText($sendTo, $reply);
         }
 
@@ -214,24 +206,24 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        // $result = null;
-        // $data = new \stdClass();
-        // $data->sender = $id;
-        // $data->text = '#rekap_absen_07_2023';
-        // // dd(!isset($data->asd));
+        $result = null;
+        $data = new \stdClass();
+        $data->from = $id;
+        $data->text = '#rekap_absen_07_2023';
+        $this->chatBotLayanan($result, $data);
+        // dd(!isset($data->asd));
         // dd(property_exists($data, 'asd'));
-        // $this->chatBotLayanan($result, $data);
-        $pegawai = null;
-        $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        if($ws){
-            $resp = json_decode($ws['response'], true);
-            if($resp['code'] == 200){
-                $pegawai = $resp['data'];
-            }
-        }
-        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        dd($aksespegawai);
+        // $pegawai = null;
+        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        // if($ws){
+        //     $resp = json_decode($ws['response'], true);
+        //     if($resp['code'] == 200){
+        //         $pegawai = $resp['data'];
+        //     }
+        // }
+        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        // dd($aksespegawai);
     }
 
 }

@@ -49,3 +49,4 @@ $route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';
 
 //cron
 $route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';
+$route['cron/rekap-absensi-pd'] = 'cron/C_Cron/cronRekapAbsenPD';

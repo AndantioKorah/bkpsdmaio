@@ -24,4 +24,8 @@ class C_Cron extends CI_Controller
     {
         $this->rekap->cronRekapAbsen();
     }
+
+    public function cronRekapAbsenPD(){
+        $this->rekap->cronRekapAbsenPD(date('m'), date('Y'));
+    }
 }

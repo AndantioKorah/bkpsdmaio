@@ -488,4 +488,9 @@ class C_User extends CI_Controller
         $result = $this->general->getDataChartDashboardAdmin();
         echo json_encode($result);
     }
+
+    public function detailPdmUser(){
+        $data['result'] = $this->user->loadDetailPdmUser();
+        $this->load->view('user/V_PdmDetail', $data);
+    }
 }

@@ -1914,7 +1914,7 @@ class M_Kepegawaian extends CI_Model
     // }
 
     function getAllUsulLayananAdmin($id){
-        return $this->db->select('c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+        $this->db->select('c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
@@ -1923,8 +1923,13 @@ class M_Kepegawaian extends CI_Model
                         // ->where('c.jenis_layanan', 3)
                         ->where('c.status', $id)
                         ->where('c.flag_active', 1)
-                        ->order_by('c.id_usul', 'desc')
-                        ->get()->result_array();
+                        ->order_by('c.id_usul', 'desc');
+
+        if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
+            $this->db->where_in('e.kode', $this->general_library->listHakAkses());
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function submitVerifikasiLayanan(){

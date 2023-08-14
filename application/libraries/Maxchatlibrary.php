@@ -9,8 +9,9 @@ class Maxchatlibrary{
 
     public function __construct()
     {
-        $this->API_URL = "https://user.maxchat.id/bkdmdo/api";
-        $this->TOKEN = "LUWtKp21RbXyK3j7DEpGX1";
+        // $this->API_URL = "https://user.maxchat.id/bkdmdo/api";
+        $this->API_URL = "https://core.maxchat.id/bkdmdo/api";
+        $this->TOKEN = "JKDBaV2T4DvWsony";
         $this->maxchat = &get_instance();
         $this->maxchat->load->model('general/M_General', 'general');
     }
@@ -48,7 +49,8 @@ class Maxchatlibrary{
         $url = $this->API_URL . "/messages";
 
         $data = array(
-        "to" => $to, 
+        "to" => $to,
+        "type" => 'text',
         "text" => $text
         );
 
@@ -119,17 +121,28 @@ class Maxchatlibrary{
 
     function sendFile($to, $fileurl, $filename, $caption) {
         // jika kontak belum dikenali pakai "/api/messages/push/file"
-        $url = $this->API_URL . "/messages/file";
+        $url = $this->API_URL . "/messages";
         
         $data = array(
-        "to" => $to,
-        "file" => fileToBase64($fileurl),
-        "url" => $fileurl,
-        "filename" => $filename,
-        "caption" => $caption
+            "to" => $to,
+            'type' => 'document',
+            "caption" => $caption,
+            // "file" => fileToBase64($fileurl),
+            "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".str_replace(' ', '%20', $filename)),
+            // "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".rawurlencode($filename)),
+            // "filename" => $filename,
+            "useTyping" => true
         );
 
-        return $this->postCurl($url, $data);
+        $response = $this->postCurl($url, $data);
+
+        $this->maxchat->general->insert('t_log_maxchat', [
+            'url' => $url,
+            'request' => json_encode($data),
+            'response' => ($response),
+        ]);
+
+        return $response;
     }
 
     function sendLink($to, $text, $url) {

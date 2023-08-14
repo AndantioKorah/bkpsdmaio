@@ -28,6 +28,30 @@ class General_library
         $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
     }
 
+    public function listHakAkses(){
+        $result = null;
+        if(count($this->hakAkses) > 0){
+            foreach($this->hakAkses as $hk){
+                $result[] = $hk['meta_name'];
+            }
+        }
+        return $result;
+    }
+
+    public function isHakAksesLayanan(){
+        $exclude_layanan = ['rekap_absen_pd'];
+        if(count($this->hakAkses) > 0){
+            foreach($this->hakAkses as $hk){
+                if(floatval($hk['meta_name']) > 0){
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
+        return false;
+    }
+
     public function isHakAkses($meta_name){
         if(count($this->hakAkses) > 0){
             foreach($this->hakAkses as $hk){

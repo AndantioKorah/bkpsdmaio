@@ -185,7 +185,7 @@
 	</li>
  
 	<?php
-	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesLayanan()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 

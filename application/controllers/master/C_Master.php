@@ -314,6 +314,7 @@ class C_Master extends CI_Controller
             $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
             $data['list_pegawai'] = $this->session->userdata('list_pegawai');
         }
+        $data['hak_akses'] = $this->general->getOne('m_hak_akses', 'id', $id, 1);
         $data['result'] = $this->master->loadUserHakAkses($id);
         $this->load->view('master/V_MasterHakAksesListUser', $data);
     }

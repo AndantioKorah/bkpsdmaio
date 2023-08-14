@@ -1852,6 +1852,21 @@
             return $this->db->get()->row_array();
         }
 
+        public function loadDetailPdmUser(){
+            $result = null;
+            $data = $this->db->select('*')
+                            ->from('t_pdm')
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $result[$d['jenis_berkas']] = $d;
+                }
+            }
+            return $result;
+        }
+
 	}
 
    

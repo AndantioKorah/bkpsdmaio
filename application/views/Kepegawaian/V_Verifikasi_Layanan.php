@@ -102,16 +102,16 @@
   <div class="tab-pane fade show active" id="pills-supen" role="tabpanel" aria-labelledby="pills-supen-tab">
  
   <?php if($result[0]['jenis_layanan'] == 3) { ?>
-  <iframe id="" style="width: 100%; height: 80vh;"
+  <iframe id="" style="width: 100%; height: 100vh;"
 						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
   <?php } else { ?>
-              <iframe id="" style="width: 100%; height: 80vh;"
+              <iframe id="" style="width: 100%; height: 100vh;"
 						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
  <?php } ?>
  </div>
 
   <div class="tab-pane fade show " id="pills-suket" role="tabpanel" aria-labelledby="pills-suket-tab">
-  <iframe id="" style="width: 100%; height: 80vh;"
+  <iframe id="" style="width: 100%; height: 100vh;"
 						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['surat_keterangan'];?>"></iframe>
   </div>
 
@@ -493,9 +493,9 @@
 <div id="divloader" class="col-lg-12 text-center">
   
 </div>
-<!-- <iframe id="view_file_verif" style="width: 100%; height: 80vh;"></iframe> -->
+<!-- <iframe id="view_file_verif" style="width: 100%; height: 100vh;"></iframe> -->
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+            <iframe style="display: none; width: 100%; height: 100vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
 
 				</div>
 			</div>

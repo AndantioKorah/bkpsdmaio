@@ -1741,7 +1741,21 @@
                             // $mpdf->Output('assets/arsipabsensibulanan' . 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf', \Mpdf\Output\Destination::FILE);
                             
                             $filename = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf';
-                            $fileurl = 'assets/arsipabsensibulanan/'.$filename;
+                            if($flag_send_wa == 1){
+                                $fileurl = 'assets/arsipabsensibulanan/'.$filename;
+                            } else {
+                                $foldernametahun = 'assets/arsipabsensibulanan/cron/'.$params['tahun'];
+                                if(!file_exists($foldernametahun) && !is_dir($foldernametahun)) {
+                                    mkdir($foldernametahun, 0777);       
+                                }
+
+                                $foldernamebulan = $foldernametahun.'/'.$params['bulan'].' - '.getNamaBulan($params['bulan']);
+                                if(!file_exists($foldernamebulan) && !is_dir($foldernamebulan)) {
+                                    mkdir($foldernamebulan, 0777);       
+                                }
+                                
+                                $fileurl = $foldernamebulan.'/'.$filename;
+                            }
                             $mpdf->Output($fileurl, 'F');
 
                             if(file_exists($fileurl)){

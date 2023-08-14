@@ -34,11 +34,7 @@
               </td>
               <td><?=$rs['status_verif']?></td>
               <td>
-              <?php if($rs['jenis_layanan'] == 3) { ?>
-              <a data-toggle="modal" data-jenis="<?=$rs['nm_cuti']?>" data-tgl_mulai="<?=$rs['tanggal_mulai']?>" data-tgl_selesai="<?=$rs['tanggal_selesai']?>" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> </a>
-              <?php } else if($rs['jenis_layanan'] == 12) { ?>
-              <!-- <a data-toggle="modal" data-ket="<?=$rs['keterangan_perbaikan']?>" class="open-DetailPerbaikanDataKepeg btn btn-sm btn-info" href="#modal_detail_perbaikan_data"><i class="fa fa-search"></i> </a> -->
-              <?php } ?>
+             
               <?php if($rs['status'] == 0) { ?>
               
               <div class="btn-group" role="group" aria-label="Basic example">

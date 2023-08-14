@@ -1447,10 +1447,11 @@ class M_Kepegawaian extends CI_Model
         if($_FILES){
         if($this->input->post('jenis_layanan') == 3){
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= '../siladen/dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
         } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
+            $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
+            // $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
         } 
 
         $config['upload_path']          = $target_dir;
@@ -1591,23 +1592,23 @@ class M_Kepegawaian extends CI_Model
     }
 
 
-    function getListUsulLayanan($id,$id_peg){
+    function getListUsulLayanan($id_peg){
 
-        if($id == 3){
-            return $this->db->select('g.nm_cuti,c.status,c.jenis_layanan,c.id_usul,f.status_verif,c.usul_status,e.nama,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar')
-            ->from('m_user a')
-            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-            ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-            ->join('db_siladen.t_cuti d', 'c.id_usul = d.id_usul')
-            ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-            ->join('m_status_verif f', 'c.status = f.id')
-            ->join('db_siladen.m_cuti g', 'g.id_cuti = d.jenis_cuti')
-            ->where('c.jenis_layanan', $id)
-            ->where('b.id_peg', $id_peg)
-            ->where('c.flag_active', 1)
-            ->order_by('c.id_usul','desc')
-            ->get()->result_array();
-        } else {
+        // if($id == 3){
+        //     return $this->db->select('g.nm_cuti,c.status,c.jenis_layanan,c.id_usul,f.status_verif,c.usul_status,e.nama,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar')
+        //     ->from('m_user a')
+        //     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        //     ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+        //     ->join('db_siladen.t_cuti d', 'c.id_usul = d.id_usul')
+        //     ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+        //     ->join('m_status_verif f', 'c.status = f.id')
+        //     ->join('db_siladen.m_cuti g', 'g.id_cuti = d.jenis_cuti')
+        //     // ->where('c.jenis_layanan', $id)
+        //     ->where('b.id_peg', $id_peg)
+        //     ->where('c.flag_active', 1)
+        //     ->order_by('c.id_usul','desc')
+        //     ->get()->result_array();
+        // } else {
             return $this->db->select('c.status,c.jenis_layanan,c.id_usul,f.status_verif,c.usul_status,e.nama,c.tanggal_usul,c.file_pengantar')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -1615,12 +1616,12 @@ class M_Kepegawaian extends CI_Model
             // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
             ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
             ->join('db_efort.m_status_verif f', 'c.status = f.id')
-            ->where('c.jenis_layanan', $id)
+            // ->where('c.jenis_layanan', $id)
             ->where('b.id_peg', $id_peg)
             ->where('c.flag_active', 1)
             ->order_by('c.id_usul','desc')
             ->get()->result_array();
-        }
+        // }
 
     }
 

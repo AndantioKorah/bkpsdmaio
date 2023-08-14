@@ -710,10 +710,10 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayanan());
 	}
 
-	public function loadListUsulLayanan($id){
+	public function loadListUsulLayanan(){
 		// dd($jenis_layanan);
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
-		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
+		$data['result'] = $this->kepegawaian->getListUsulLayanan($id_peg);
 		// dd($data['result']);
 		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
 	}

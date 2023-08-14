@@ -59,7 +59,7 @@
   </li>
   </li>
   <li class="nav-item nav-item-layanan " role="presentation">
-  <button class="nav-link nav-link-layanan" id="pills-monitor-tab" data-bs-toggle="pill" data-bs-target="#pills-monitor" type="button" role="tab" aria-controls="pills-monitor" aria-selected="false">Monitor Usul Layanan</button>
+  <button onclick="loadListUsulLayanan()" class="nav-link nav-link-layanan" id="pills-monitor-tab" data-bs-toggle="pill" data-bs-target="#pills-monitor" type="button" role="tab" aria-controls="pills-monitor" aria-selected="false">Monitor Usul Layanan</button>
 
   </li>
   </ul>
@@ -88,13 +88,13 @@
   <div class="tab-pane fade show " id="pills-monitor" role="tabpanel" aria-labelledby="pills-monitor-tab">
   <div id="" style="margin-left:10px;">
   <div class="mb-3">
-  <label for="exampleInputEmail1" class="form-label">Jenis Layanan </label>
+  <!-- <label for="exampleInputEmail1" class="form-label">Jenis Layanan </label>
     <select onchange="loadListUsulLayanan(this.value)"   class="form-control select22" data-dropdown-css-class="select2-navy" name="monitor_jenis_layanan" id="monitor_jenis_layanan" required>
     <option value="0" selected>- Pilih Layanan - </option>
     <?php if($jenis_layanan){ foreach($jenis_layanan as $r){ ?>
                         <option value="<?=$r['kode']?>"><?=$r['nama']?></option>
                     <?php } } ?>
-  </select>
+  </select> -->
   </div>
             <div id="list_usul_layanan"></div>
  </div>
@@ -151,21 +151,33 @@
     })
   }
 
-  function loadListUsulLayanan(val){
-    var mystr = val;
+  // function loadListUsulLayanan(val){
+   
+  //   var mystr = val;
 
-//Splitting it with : as the separator
-  var myarr = mystr.split(",");
+  // var myarr = mystr.split(",");
 
-  var myvar = myarr[0] + ":" + myarr[1];
+  // var myvar = myarr[0] + ":" + myarr[1];
 
 
   
-    $('#list_usul_layanan').html('')
-    $('#list_usul_layanan').append(divLoaderNavy)
-    $('#list_usul_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>'+val, function(){
-      $('#loader').hide()
-    })
-  }
+  //   $('#list_usul_layanan').html('')
+  //   $('#list_usul_layanan').append(divLoaderNavy)
+  //   $('#list_usul_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>'+val, function(){
+  //     $('#loader').hide()
+  //   })
+  // }
+
+  function loadListUsulLayanan(){
+   
+   
+
+   
+   $('#list_usul_layanan').html('')
+   $('#list_usul_layanan').append(divLoaderNavy)
+   $('#list_usul_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListUsulLayanan/")?>', function(){
+     $('#loader').hide()
+   })
+ }
 
 </script>

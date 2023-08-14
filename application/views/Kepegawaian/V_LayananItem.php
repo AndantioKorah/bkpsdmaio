@@ -21,10 +21,13 @@
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="">
               <?php if ($rs['jenis_layanan'] == 3) { ?> 
-              <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')" 
+              <!-- <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')" 
               data-toggle="modal" 
               data-nama_pegawai="<?=getNamaPegawaiFull($rs)?>" 
-              data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a>
+              data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a> -->
+              <button href="#modal_view_file" 
+                onclick="openFile('<?=$rs['file_pengantar']?>')" 
+                data-toggle="modal" class="btn btn-sm btn-info"><i class="fa fa-search"></i> Lihat </button>
               <?php } else { ?>
                 <button href="#modal_view_file" 
                 onclick="openFile('<?=$rs['file_pengantar']?>')" 

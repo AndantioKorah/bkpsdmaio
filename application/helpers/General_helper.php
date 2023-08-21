@@ -337,9 +337,9 @@ function formatCurrency($data)
     return "Rp " . number_format($data, 2, ",", ".");
 }
 
-function formatCurrencyWithoutRp($data)
+function formatCurrencyWithoutRp($data, $decimal = 2)
 {
-    return number_format($data, 2, ",", ".");
+    return number_format($data, $decimal, ",", ".");
 }
 
 function formatDateOnly($data)
@@ -504,6 +504,16 @@ function getNamaBulan($bulan)
         default:
             return '';
     }
+}
+
+function roundDown($number, $length){
+    $explode = explode(".", $number);
+    $comma = 0;
+    if(isset($explode[1])){
+        $comma = $explode[1];
+    }
+    $digits = substr($explode[0], -3);
+    return floatval($number) - floatval($digits.'.'.$comma);
 }
 
 function getJumlahHariDalamBulan($m, $y)

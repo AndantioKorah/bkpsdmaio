@@ -297,7 +297,8 @@ class M_Kepegawaian extends CI_Model
             }
             $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
-            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan')
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
+            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -1447,11 +1448,12 @@ class M_Kepegawaian extends CI_Model
         if($_FILES){
         if($this->input->post('jenis_layanan') == 3){
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            // $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            $target_dir						= './siladen/dokumen_layanan/cuti/' . $this->general_library->getUserName();
         } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
-            // $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
+            // $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
+            $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
         } 
 
         $config['upload_path']          = $target_dir;
@@ -2097,11 +2099,11 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
    
     $path = substr($path,2);
 
-    $res = $this->dokumenlib->delDokumenWs('POST',[
-        'username' => $this->general_library->getUsername(),
-        'password' => $this->general_library->getPassword(),
-        'filename' => $path
-    ]);
+    // $res = $this->dokumenlib->delDokumenWs('POST',[
+    //     'username' => $this->general_library->getUsername(),
+    //     'password' => $this->general_library->getPassword(),
+    //     'filename' => $path
+    // ]);
     
 
     $this->db->where($fieldName, $fieldValue)
@@ -2115,14 +2117,21 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
-        if(strtotime($tmt_jabatan) > strtotime($getJabatan['id_pegawai'])){
-            $dataUpdate["skpd"] =  $id_skpd;
-            $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
-            $dataUpdate["jabatan"] =   $id_jabatan;
-            $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
-            $this->db->where('id_peg', $id_peg)
-                    ->update('db_pegawai.pegawai', $dataUpdate);
-        } 
+        $getJabatanOld = $this->db->select('*')
+        ->from('db_pegawai.pegjabatan a')
+        ->where('a.id_pegawai', $getJabatan['id_pegawai'])
+        ->where('a.flag_active', 1)
+        ->order_by('tmtjabatan', 'desc')
+        ->limit(1)
+        ->get()->row_array();
+
+       
+            // $dataUpdate["skpd"] =  $id_skpd;
+            $dataUpdate["tmtjabatan"] =  $getJabatanOld['tmtjabatan'];
+            $dataUpdate["jabatan"] =   $getJabatanOld['id_jabatan'];
+            $dataUpdate["jenisjabpeg"] =  $getJabatanOld['jenisjabatan'];
+            $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
+                    ->update('db_pegawai.pegawai as a', $dataUpdate);
     }
 
     if($this->db->trans_status() == FALSE){
@@ -2364,6 +2373,16 @@ public function submitEditProfil(){
     $datapost = $this->input->post();
     
     $this->db->trans_begin();
+
+    if(isset($datapost["edit_goldar"])){
+        $goldar = $datapost["edit_goldar"];
+    } else {
+        $goldar = null;
+    } 
+
+  
+
+
     $id_pegawai = $datapost['edit_id_pegawai'];
     $data["gelar1"] = $datapost["edit_gelar1"];
     $data["nama"] = $datapost["edit_nama"];
@@ -2373,7 +2392,7 @@ public function submitEditProfil(){
     $data["tgllahir"] = $datapost["edit_tgllahir"];
     $data["alamat"] = $datapost["edit_alamat"];
     $data["jk"] = $datapost["edit_jkelamin"];
-    $data["goldarah"] = $datapost["edit_goldar"];
+    $data["goldarah"] = $goldar;
     $data["agama"] = $datapost["edit_agama"];
     $data["skpd"] = $datapost["edit_unit_kerja"];
     // $data["jabatan"] = $datapost["edit_gelar1"];
@@ -2480,12 +2499,6 @@ public function updateStatusBerkas(){
  
         }
         
-
-   
-   
-   
-  
-    
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $res['code'] = 1;
@@ -2497,6 +2510,61 @@ public function updateStatusBerkas(){
 
     return $res;
 }
+
+public function updateProfilePicture($data){ 
+   
+
+                $getFP = $this->db->select('fotopeg')
+                ->from('db_pegawai.pegawai a')
+                ->where('a.id_peg', $this->general_library->getIdPegSimpeg())
+                ->limit(1)
+                ->get()->result_array();
+                
+                $path = './assets/fotopeg/';
+                unlink($path.$getFP[0]['fotopeg']);
+
+
+
+                $this->db->where('id_peg', $this->general_library->getIdPegSimpeg())
+                ->update('db_pegawai.pegawai', ['fotopeg' => $data['data']['file_name']]);
+
+
+ 
+
+                return ['message' => '0'];
+}
+
+
+public function updateJabatanPeg(){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+
+    $this->db->trans_begin();
+
+    $datapost = $this->input->post();
+    // dd([$datapost['edit_jabatan_nama']]);
+    $this->db->where('id', $datapost['edit_jabatan_id'])
+            ->update('db_pegawai.pegjabatan', ['nm_jabatan' => $datapost['edit_jabatan_nama'], 
+                                                'tmtjabatan' => $datapost['edit_jabatan_tmt'], 
+                                                 'updated_by' => $this->general_library->getId()]);
+            $res = array('msg' => 'Berhasil Update Status', 'success' => true);
+      
+        
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res['code'] = 1;
+        $res['message'] = 'Terjadi Kesalahan';
+        $res['data'] = null;
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+}
+
+
+
 
     
 

@@ -76,7 +76,46 @@
       border: 2px solid #ed1818;
       color: white;
     }
+
+    .foto_container {
+  position: relative;
+  /* width: 50%; */
+}
+
+.image-settings {
+  opacity: 1;
+  display: block;
+  /* width: 100%; */
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.foto_container:hover .image {
+  opacity: 0.3;
+  cursor:pointer;
+}
+
+.foto_container:hover .middle {
+  opacity: 1;
+  cursor:pointer;
+}
+
+
   </style>
+
+
 
   <div class="row">
     <div class="col-lg-12">
@@ -89,12 +128,28 @@
                   <h3><span class="badge">CPNS</span></h3>
                 </div>
               <?php } ?>
+            
+
               <div class="col-lg-12 text-center">
                 <!-- <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
                   src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
                   data-src="<?=$this->general_library->getFotoPegawai($profil_pegawai['fotopeg'])?>" /> -->
-                  <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                  src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" /> 
+              
+                  <!-- <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
+                  src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" />  -->
+
+                  <div class="foto_container">
+                            <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
+                            class="img-circle elevation-2 image-settings" alt="User Image"> -->
+                            <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
+                            src="<?=base_url('assets/fotopeg/')?><?=$profil_pegawai['fotopeg']?>" /> 
+                                <div class="middle">
+                                    <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
+                                        <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
+                                    </form>
+                                    <!-- <button class="btn btn-sm btn-navy"><i class="fa fa-image"></i> Ganti Foto</button> -->
+                                </div>
+                        </div>
                   
               </div>
 
@@ -116,6 +171,9 @@
                   <i class="fa fa-edit"></i> Edit Profil
                 </button>
                 <?php }?>
+                
+            
+
               </div>
             </div>
           </div>
@@ -124,11 +182,12 @@
               <!-- profil  -->
               <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
               <li class="nav-item nav-item-profile" role="presentation">
-                <button class="nav-link nav-link-profile active" id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
+                <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button class="nav-link nav-link-profile " id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
+                <button class="nav-link nav-link-profile " id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
               </li>
+              
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile" id="pills-data_lain-tab" data-bs-toggle="pill" data-bs-target="#pills-data_lain" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Data Lainnya</button>
               </li>
@@ -136,7 +195,7 @@
 
             <div class="col-lg-12">
             <div class="tab-content" id="pills-tabContent">
-              <div class="tab-pane show active" id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
+              <div class="tab-pane fade" id="pills-data_pribadi" role="tabpanel" aria-labelledby="pills-data_pribadi-tab">
                 <div id="">
                  <!-- data pribadi  -->
               <!-- <div class="col-lg-12 div_label text-left">
@@ -258,7 +317,7 @@
                <!-- end data pribadi  -->
                 </div>
               </div>
-              <div class="tab-pane fade" id="pills-data_kepeg" role="tabpanel" aria-labelledby="pills-data_kepeg-tab">
+              <div class="tab-pane show active" id="pills-data_kepeg" role="tabpanel" aria-labelledby="pills-data_kepeg-tab">
                 <div id="">
                  <!-- data kepegawaian  -->
                 <div class="col-lg-12 div_label text-left">
@@ -346,7 +405,10 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nama_jabatan'])?>
+                  <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  echo $data[0];
+                  ?>
                 </span>
               </div>
 
@@ -369,7 +431,9 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($profil_pegawai['tmtjabatan'])?>
+                  <?php
+                   $data = explode("/", $profil_pegawai['data_jabatan']);
+                   echo formatDateNamaBulan($data[1]);?>
                 </span>
               </div>
 
@@ -481,16 +545,16 @@
                 <button onclick="loadFormPenghargaan()" class="nav-link nav-link-profile" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="LoadFormSumpahJanji()" class="nav-link nav-link-profile" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
+                <button onclick="LoadFormSumpahJanji()" class="nav-link nav-link-profile" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormKeluarga()"  class="nav-link nav-link-profile" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
+                <button onclick="loadFormKeluarga()"  class="nav-link nav-link-profile" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormPenugasan()" class="nav-link nav-link-profile" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
+                <button onclick="loadFormPenugasan()" class="nav-link nav-link-profile" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-penugasan" type="button" role="tab" aria-controls="pills-penugasan" aria-selected="false">Penugasan</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormCuti()" class="nav-link nav-link-profile" id="pills-penugasan-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
+                <button onclick="loadFormCuti()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormSkp()" class="nav-link nav-link-profile" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
@@ -502,7 +566,7 @@
                 <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & PNS</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
+                <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
@@ -606,7 +670,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Data Pegawai</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -641,6 +705,20 @@
       <div class="col-lg-10">
         <input type="text" id="edit_nip_baru" name="edit_nip_baru" class="form-control" value="<?=$profil_pegawai['nipbaru']?>">
       </div>
+
+      <div class="col-lg-2">
+      <label> Unit Kerja / SKPD  </label>
+       
+      </div>
+      <div class="col-lg-10">
+      <select class="form-control select2" data-dropdown-parent="#editProfileModal" data-dropdown-css-class="select2-navy" name="edit_unit_kerja" id="edit_unit_kerja" required>
+                    <option value="" disabled selected>Pilih Unit Kerja</option>
+                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?>   value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                    <?php } } ?>
+    </select>
+      </div>
+
 
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Tempat / Tanggal Lahir </label>
@@ -694,18 +772,8 @@
         <input type="text" id="edit_alamat" name="edit_alamat" class="form-control" value="<?= $profil_pegawai['alamat']?>">
       </div>
 
-      <div class="col-lg-2">
-        <label for=""  class="col-form-label"> Unit Kerja / SKPD  </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_unit_kerja" id="edit_unit_kerja" required>
-                    <option value="" disabled selected>Pilih Unit Kerja</option>
-                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
-                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?>   value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
+    
+      
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Agama </label>
       </div>
@@ -778,7 +846,7 @@
     </select>
       </div>
 
-      <div class="col-lg-2">
+      <!-- <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Pangkat </label>
       </div>
       <div class="col-lg-10">
@@ -788,25 +856,23 @@
                         <option <?php if($profil_pegawai['id_pangkat'] == $r['id_pangkat']) echo "selected"; else echo ""; ?>   value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
                     <?php } } ?>
     </select>
-      </div>
+      </div> -->
 
-      <div class="col-lg-2">
+      <!-- <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> TMT Pangkat </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="edit_tmt_pangkat" name="edit_tmt_pangkat" class="form-control datepickeronly"  value="<?= $profil_pegawai['tmtpangkat'];?>">
       </div>
 
-      <script>
-      
-      </script>
+       -->
 
-      <div class="col-lg-2">
+      <!-- <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> TMT Gaji Berkala </label>
       </div>
       <div class="col-lg-10">
         <input type="text" id="edit_tmt_gjberkala" name="edit_tmt_gjberkala" class="form-control datepickeronly" value="<?= $profil_pegawai['tmtgjberkala'];?>">
-      </div>
+      </div> -->
 
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> TMT CPNS </label>
@@ -887,6 +953,29 @@
 </div>
 <!-- end Modal edit profil -->
 
+
+<!-- Modal edit profil -->
+<div class="modal fade" id="fotoProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal edit profil -->
+
 <div class="modal fade" id="edit_data_presensi" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -950,9 +1039,9 @@
                 setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1000);
                 if(jb == "pangkat"){
                 setTimeout(loadFormPangkat, 1500);
-                } else if(jb == "gajiberkala"){
+                } else if(jb == "kgb"){
                 setTimeout(loadFormGajiBerkala, 1500);
-                } else if(jb == "pendidikan"){
+                } else if(jb == "ijazah"){
                 setTimeout(loadFormPendidikan, 1500);
                 } else if(jb == "jabatan"){
                 setTimeout(loadFormJabatan, 1500);
@@ -962,7 +1051,7 @@
                 setTimeout(loadFormOrganisasi, 1500);
                 } else if(jb == "penghargaan"){
                 setTimeout(loadFormPenghargaan, 1500);
-                } else if(jb == "sumpahjanji"){
+                } else if(jb == "sumpah_janji"){
                 setTimeout(LoadFormSumpahJanji, 1500);
                 } else if(jb == "keluarga"){
                 setTimeout(loadFormKeluarga, 1500);
@@ -970,13 +1059,13 @@
                 setTimeout(loadFormPenugasan, 1500);
                 } else if(jb == "cuti"){
                 setTimeout(loadFormCuti, 1500);
-                } else if(jb == "skp"){
+                } else if(jb == "skp_tahunan"){
                 setTimeout(loadFormSkp, 1500);
                 } else if(jb == "assesment"){
                 setTimeout(loadFormAssesment, 1500);
-                } else if(jb == "berkaspns"){
+                } else if(jb == "cpns_pns"){
                 setTimeout(loadFormBerkasPns, 1500);
-                } else if(jb == "arsip"){
+                } else if(jb == "data_lainnya"){
                 setTimeout(LoadFormArsip, 1500);
                 }
               } else {
@@ -991,15 +1080,43 @@
 
   <script>
   var nip = "<?= $nip;?>"; 
+  var page = "<?= $page;?>"
   $(function(){
-    $('#pills-pangkat-tab').click()
 
-    $('.select2unitkerja').select2()
-  //   $(".select2unitkerja").select2({   
-	// 	width: '100%',
-	// 	dropdownAutoWidth: true,
-	// 	allowClear: true,
-	// });
+    if(page == "cpns_pns"){
+      $('#pills-berkaspns-tab').click()
+    } else if(page == "pangkat"){
+      $('#pills-pangkat-tab').click()
+    } else if(page == "jabatan"){
+      $('#pills-jabatan-tab').click()
+    } else if(page == "kgb"){
+      $('#pills-berkala-tab').click()
+    } else if(page == "ijazah"){
+      $('#pills-pendidikan-tab').click()
+    } else if(page == "diklat"){
+      $('#pills-diklat-tab').click()
+    } else if(page == "sumpah_janji"){
+      $('#pills-sj-tab').click()
+    } else if(page == "penghargaan"){
+      $('#pills-penghargaan-tab').click()
+    } else if(page == "keluarga"){
+      $('#pills-keluarga-tab').click()
+    } else if(page == "skp_tahunan"){
+      $('#pills-skp-tab').click()
+    } else if(page == "data_lainnya"){
+      $('#pills-arsip-tab').click()
+    } else if(page == "penugasan"){
+      $('#pills-penugasan-tab').click()
+    } else if(page == "cuti"){
+      $('#pills-cuti-tab').click()
+    } else if(page == "organisasi"){
+      $('#pills-organisasi-tab').click()
+    }  else {
+      $('#pills-pangkat-tab').click()
+    }
+    
+
+
   $('.datepickeronly').datepicker({
           format: 'yyyy-mm-dd'
         });
@@ -1043,6 +1160,14 @@
         e.preventDefault();
         var formvalue = $('#form_edit_profil');
         var form_data = new FormData(formvalue[0]);
+
+        // if (!$("input[name='edit_goldar']:checked").val()) {
+        //     alert('Silahkan Pilih Golongan Darah!');
+        //       return false;
+        // }
+
+      
+
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditProfil")?>",
         method:"POST",  
@@ -1190,6 +1315,12 @@
     $('#loader').hide()    
     })
  }
+
+ $('#profilePict').on('change', function(){
+ 
+        $('#form_profile_pict').submit()
+
+    })
  
 
  

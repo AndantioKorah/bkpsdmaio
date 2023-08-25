@@ -1,4 +1,7 @@
 <style>
+    /* .card{
+        background-color: #f5f7fb; 
+    } */
     .card-title-pdm{
         font-size: 15px;
         font-weight: bold;

@@ -21,17 +21,17 @@
 <?php if($pdm_gajiberkala) {?>
 <?php
 if($pdm_gajiberkala[0]['flag_active'] == 1) {?>
-<button onclick="openModalStatusPmd('gajiberkala')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+<button onclick="openModalStatusPmd('kgb')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm_gajiberkala[0]['flag_active'] == 0) { ?>
-  <button  onclick="openModalStatusPmd('gajiberkala')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  <button  onclick="openModalStatusPmd('kgb')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
 
-<button  onclick="openModalStatusPmd('gajiberkala')"   
+<button  onclick="openModalStatusPmd('kgb')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 

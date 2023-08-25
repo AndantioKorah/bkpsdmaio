@@ -450,6 +450,65 @@ class C_User extends CI_Controller
         render('user/V_PegawaiGajiBerkala', '', '', $data);
     }
 
+    public function pegawaiList(){
+        $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        $data['statuspeg'] = $this->m_general->getAll('db_pegawai.statuspeg', 0);
+        $data['tktpendidikan'] = $this->m_general->getAll('db_pegawai.tktpendidikan', 0);
+        $data['agama'] = $this->m_general->getAll('db_pegawai.agama', 0);
+        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        $data['golongan'] = [
+            1 => [
+                'id_golongan' => 'golongan_1',
+                'nm_golongan' => 'Golongan I'
+            ],
+            2 => [
+                'id_golongan' => 'golongan_2',
+                'nm_golongan' => 'Golongan II'
+            ],
+            3 => [
+                'id_golongan' => 'golongan_3',
+                'nm_golongan' => 'Golongan III'
+            ],
+            4 => [
+                'id_golongan' => 'golongan_4',
+                'nm_golongan' => 'Golongan IV'
+            ],
+            5 => [
+                'id_golongan' => 'golongan_5',
+                'nm_golongan' => 'Golongan V'
+            ],
+            6 => [
+                'id_golongan' => 'golongan_7',
+                'nm_golongan' => 'Golongan VII'
+            ],
+            7 => [
+                'id_golongan' => 'golongan_9',
+                'nm_golongan' => 'Golongan IX'
+            ],
+            8 => [
+                'id_golongan' => 'golongan_10',
+                'nm_golongan' => 'Golongan X'
+            ],
+        ];
+        $data['jenis_kelamin'] = [
+            1 => [
+                'id_jenis_kelamin' => 'Laki-laki',
+                'nm_jenis_kelamin' => 'Laki-Laki'
+            ],
+            2 => [
+                'id_jenis_kelamin' => 'Perempuan',
+                'nm_jenis_kelamin' => 'Perempuan'
+            ]
+        ];
+        render('user/V_PegawaiAll', '', '', $data);
+    }
+
+    public function searchAllPegawai(){
+        $data['result'] = $this->user->searchAllPegawai($this->input->post());
+        $this->load->view('user/V_PegawaiAllResult', $data);
+    }
+
     public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){
         $data['result'] = $this->m_general->getListPegawaiGajiBerkalaByYear($this->input->post());
         if($flag_welcome_view == 0){

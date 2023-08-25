@@ -37,16 +37,16 @@
                         <span class="font-weight-bold text-data-pegawai"><?=$r['nama_jabatan']?></span> -->
                     </td>
                     <td class="align-middle text-center"><?=$r['kelas_jabatan']?></td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['pagu_tpp'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['pagu_tpp'], 0)?></td>
                     <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['bobot_produktivitas_kerja'])?> %</td>
                     <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['bobot_disiplin_kerja'])?> %</td>
                     <td class="align-middle text-center"><?=formatTwoMaxDecimal($r['presentase_tpp'])?> %</td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'], 0)?></td>
                     <td class="align-middle text-center">
                         <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                     </td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'])?></td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
                 </tr>
             <?php } ?>
         </tbody>

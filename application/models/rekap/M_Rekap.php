@@ -1654,6 +1654,7 @@
                 $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'] = $data_disiplin_kerja[$p['nipbaru_ws']]['rekap']['capaian_bobot_disiplin_kerja'];
                 $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
                 $result[$p['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$p['nipbaru_ws']]['presentase_tpp']) * floatval($p['pagu_tpp'])) / 100;
+                $result[$p['nipbaru_ws']]['besaran_tpp'] = roundDown($result[$p['nipbaru_ws']]['besaran_tpp'], 3);
                 $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
                 $result[$p['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$p['nipbaru_ws']]['pph']) / 100) * $result[$p['nipbaru_ws']]['besaran_tpp']);
                 $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
@@ -1741,7 +1742,21 @@
                             // $mpdf->Output('assets/arsipabsensibulanan' . 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf', \Mpdf\Output\Destination::FILE);
                             
                             $filename = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.pdf';
-                            $fileurl = 'assets/arsipabsensibulanan/'.$filename;
+                            if($flag_send_wa == 1){
+                                $fileurl = 'assets/arsipabsensibulanan/'.$filename;
+                            } else {
+                                $foldernametahun = 'assets/arsipabsensibulanan/cron/'.$params['tahun'];
+                                if(!file_exists($foldernametahun) && !is_dir($foldernametahun)) {
+                                    mkdir($foldernametahun, 0777);       
+                                }
+
+                                $foldernamebulan = $foldernametahun.'/'.$params['bulan'].' - '.getNamaBulan($params['bulan']);
+                                if(!file_exists($foldernamebulan) && !is_dir($foldernamebulan)) {
+                                    mkdir($foldernamebulan, 0777);       
+                                }
+                                
+                                $fileurl = $foldernamebulan.'/'.$filename;
+                            }
                             $mpdf->Output($fileurl, 'F');
 
                             if(file_exists($fileurl)){

@@ -1664,9 +1664,15 @@
             }
             $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
             $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
-            $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
-            $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
-            $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
+            if($result['pagu_tpp']['pagu_tpp'] == '0' || $result['pagu_tpp']['pagu_tpp'] == 0){
+                $result['presentase_capaian_tpp'] = 0;    
+                $result['presentase_pk'] = 0;
+                $result['presentase_dk'] = 0;
+            } else {
+                $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
+                $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+                $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
+            }
 
             return $result;
         }

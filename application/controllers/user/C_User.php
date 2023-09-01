@@ -550,6 +550,7 @@ class C_User extends CI_Controller
 
     public function detailPdmUser(){
         $data['result'] = $this->user->loadDetailPdmUser();
+        $data['foto'] =  $this->user->getFotoPegawai();
     $this->load->view('user/V_PdmDetail', $data);
     }
 }

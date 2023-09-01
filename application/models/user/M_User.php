@@ -1854,14 +1854,19 @@
 
         public function loadDetailPdmUser(){
             $result = null;
-            $data = $this->db->select('*')
-                            ->from('t_pdm')
-                            ->where('id_m_user', $this->general_library->getId())
-                            ->where('flag_active', 1)
+            $data = $this->db->select('a.*,c.fotopeg')
+                            ->from('t_pdm as a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->where('a.id_m_user', $this->general_library->getId())
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
                             ->get()->result_array();
+                            
             if($data){
                 foreach($data as $d){
                     $result[$d['jenis_berkas']] = $d;
+                     $result[$d['jenis_berkas']] = $d;
                 }
             }
             return $result;
@@ -1933,7 +1938,18 @@
             return $this->db->get()->result_array();
         }
 
+        public function getFotoPegawai(){
+            $username = $this->general_library->getUserName();
+            $this->db->select('a.fotopeg')
+                ->from('db_pegawai.pegawai a')
+                ->where('a.nipbaru_ws', $username)
+                ->limit(1);
+            return $this->db->get()->row_array();
+        }
+
 	}
+
+
 
    
 ?>

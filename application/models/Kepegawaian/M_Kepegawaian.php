@@ -281,7 +281,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
-                ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan')
+                ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -298,7 +298,7 @@ class M_Kepegawaian extends CI_Model
             $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
-            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
+            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 and aa.status = 2 ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -309,7 +309,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg')
                 ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg')
                 ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab')
-                ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan')
+                ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
                 ->join('m_user l', 'a.nipbaru_ws = l.username')
                 ->where('a.nipbaru_ws', $username)
                 ->where('l.flag_active', 1)
@@ -360,7 +360,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+              $this->db->select('c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -744,11 +744,14 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['id_jabatan']      = $id_jabatan;
             $dataInsert['tmtjabatan']     =$tmt_jabatan;
             $dataInsert['jenisjabatan']      = $this->input->post('jabatan_jenis');
+            $dataInsert['statusjabatan']      = $this->input->post('jabatan_status');
             $dataInsert['pejabat']      = $this->input->post('jabatan_pejabat');
             $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
             $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
+            $dataInsert['angkakredit']      = $this->input->post('jabatan_angka_kredit');
             $dataInsert['tglsk']      = $tgl_sk;
             $dataInsert['skpd']      = $nama_skpd;
+            $dataInsert['id_unitkerja']      = $id_skpd;
             $dataInsert['alamatskpd']      = "";
             $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
@@ -766,7 +769,7 @@ class M_Kepegawaian extends CI_Model
             ->limit(1)
             ->get()->row_array();
 
-           
+           if($getJabatan){
             if(strtotime($tmt_jabatan) > strtotime($getJabatan['tmtjabatan'])){
                 $dataUpdate["skpd"] =  $id_skpd;
                 $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
@@ -775,6 +778,14 @@ class M_Kepegawaian extends CI_Model
                 $this->db->where('id_peg', $id_peg)
                         ->update('db_pegawai.pegawai', $dataUpdate);
             } 
+          } else {
+            $dataUpdate["skpd"] =  $id_skpd;
+            $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
+            $dataUpdate["jabatan"] =   $id_jabatan;
+            $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
+            $this->db->where('id_peg', $id_peg)
+                    ->update('db_pegawai.pegawai', $dataUpdate);
+          }
 
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
         } else if($id_dok == 20){            
@@ -2125,13 +2136,24 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
-       
-            // $dataUpdate["skpd"] =  $id_skpd;
-            $dataUpdate["tmtjabatan"] =  $getJabatanOld['tmtjabatan'];
-            $dataUpdate["jabatan"] =   $getJabatanOld['id_jabatan'];
-            $dataUpdate["jenisjabpeg"] =  $getJabatanOld['jenisjabatan'];
-            $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
-                    ->update('db_pegawai.pegawai as a', $dataUpdate);
+       if($getJabatanOld){
+        // $dataUpdate["skpd"] =  $getJabatanOld['skpd'];
+        if($getJabatanOld['id_unitkerja'] != null){
+            $dataUpdate["skpd"] =  $getJabatanOld['id_unitkerja'];
+        }
+        $dataUpdate["tmtjabatan"] =  $getJabatanOld['tmtjabatan'];
+        $dataUpdate["jabatan"] =   $getJabatanOld['id_jabatan'];
+        $dataUpdate["jenisjabpeg"] =  $getJabatanOld['jenisjabatan'];
+        $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
+                ->update('db_pegawai.pegawai as a', $dataUpdate);
+       } else {
+        $dataUpdate2["tmtjabatan"] =  "";
+        $dataUpdate2["jabatan"] =   0;
+        $dataUpdate2["jenisjabpeg"] =  0;
+        $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
+                ->update('db_pegawai.pegawai as a', $dataUpdate2);
+       }
+           
     }
 
     if($this->db->trans_status() == FALSE){
@@ -2399,10 +2421,10 @@ public function submitEditProfil(){
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
-    $data["pangkat"] = $datapost["edit_pangkat"];
-    $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
+    // $data["pangkat"] = $datapost["edit_pangkat"];
+    // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
-    $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
+    // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
     // $data["pendidikan"] = $datapost["edit_gelar1"];
     $data["statuspeg"] = $datapost["edit_status_pegawai"];
     $data["jenispeg"] = $datapost["edit_jenis_pegawai"];
@@ -2550,6 +2572,66 @@ public function updateJabatanPeg(){
                                                  'updated_by' => $this->general_library->getId()]);
             $res = array('msg' => 'Berhasil Update Status', 'success' => true);
       
+        
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res['code'] = 1;
+        $res['message'] = 'Terjadi Kesalahan';
+        $res['data'] = null;
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+}
+
+
+
+public function tambahPegawai(){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+
+    $this->db->trans_begin();
+    
+    $datapost = $this->input->post();
+    $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+
+    $datapost['id_peg'] = "PEG000".$random_number;
+    $datapost['nipbaru_ws'] = $datapost['nipbaru'];
+    $this->db->insert('db_pegawai.pegawai', $datapost);
+    $res = array('msg' => 'Berhasil Tambah Data Pegawai', 'success' => true, 'nip' =>  $datapost['nipbaru_ws']);
+
+    $nip = $datapost['nipbaru_ws'];
+
+    $exist = $this->db->select('*')
+                            ->from('m_user')
+                            ->where('username', $nip)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            $pegawai = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->where('nipbaru_ws', $nip)
+                            ->get()->row_array();
+
+            if($exist){
+                $rs['code'] = 1;
+                $rs['message'] = 'User sudah terdaftar';
+                // $this->db->where('nipbaru_ws', $nip)
+                //         ->update('db_pegawai.pegawai', ['flag_user_created' => 1]);
+            } else if(!$pegawai){
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $user['username'] = $pegawai['nipbaru_ws'];
+                $user['nama'] = getNamaPegawaiFull($pegawai);
+                $nip_baru = explode(" ", $pegawai['nipbaru']);
+                $password = $nip_baru[0];
+                $pass_split = str_split($password);
+                $new_password = $pass_split[6].$pass_split[7].$pass_split[4].$pass_split[5].$pass_split[0].$pass_split[1].$pass_split[2].$pass_split[3];
+                $user['password'] = $this->general_library->encrypt($user['username'], $new_password);
+                $this->db->insert('m_user', $user);
+            }
         
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();

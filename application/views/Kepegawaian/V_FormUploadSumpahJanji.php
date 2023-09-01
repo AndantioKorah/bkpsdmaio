@@ -114,7 +114,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_sj"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -182,6 +182,8 @@ $(function(){
         var formvalue = $('#upload_form_sumpah_janji');
         var form_data = new FormData(formvalue[0]);
    
+        document.getElementById('btn_upload_sj').disabled = true;
+        $('#btn_upload_sj').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
       
         $.ajax({  
@@ -199,6 +201,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_sumpah_janji").reset();
+                document.getElementById('btn_upload_sj').disabled = false;
+               $('#btn_upload_sj').html('Simpan')
                 loadListSumpahJanji()
               } else {
                 errortoast(result.msg)

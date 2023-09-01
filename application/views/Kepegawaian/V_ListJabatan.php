@@ -10,6 +10,7 @@
           <th class="text-left">Angkat Kredit</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-left">No / Tanggal SK</th>
+          <th class="text-left">Status Jabatan</th>
           <th class="text-left">Ket</th>
           <th class="text-left">File SK</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
@@ -27,11 +28,23 @@
 
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nama_jabatan']?></td>
+              
               <td class="text-left"><?= formatDateNamaBulan($rs['tmtjabatan'])?></td>
               <td class="text-left"><?=$rs['nm_eselon']?></td>
               <td class="text-left"><?=$rs['angkakredit']?></td>
               <td class="text-left"><?=$rs['skpd']?></td>
               <td class="text-left"><?=$rs['nosk']?> / <?= formatDateNamaBulan($rs['tglsk'])?></td>
+              <td class="text-left">
+                <?php
+                   if($rs['statusjabatan'] == 1) {
+                    echo "Definitif"; 
+                  } else if($rs['statusjabatan'] == 2) {
+                    echo "Plt"; 
+                  } else if($rs['statusjabatan'] == 3) {
+                    echo "Plh"; 
+                  }
+                ?>
+              </td>
               <td class="text-left"><?=$rs['ket']?></td>
               <td class="text-left"> 
               <?php if($rs['gambarsk'] != "") { ?>
@@ -220,6 +233,7 @@
                                successtoast('Data sudah terhapus')
                               if(kode == 1){
                                 loadListJabatan()
+                                location.reload()
                               } else {
                                 loadRiwayatUsulJabatan()
                               }

@@ -46,7 +46,7 @@ class Maxchatlibrary{
 
     function sendText($to, $text) {
         // kirim pesan ke kontak yang sudah disimpan
-        $url = $this->API_URL . "/messages";
+        $url = $this->API_URL . "/messages?skipBusy=true";
 
         $data = array(
         "to" => $to,
@@ -121,7 +121,7 @@ class Maxchatlibrary{
 
     function sendFile($to, $fileurl, $filename, $caption) {
         // jika kontak belum dikenali pakai "/api/messages/push/file"
-        $url = $this->API_URL . "/messages";
+        $url = $this->API_URL . "/messages?skipBusy=true";
         
         $data = array(
             "to" => $to,
@@ -130,7 +130,7 @@ class Maxchatlibrary{
             // "file" => fileToBase64($fileurl),
             "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".str_replace(' ', '%20', $filename)),
             // "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".rawurlencode($filename)),
-            // "filename" => $filename,
+            "fileName" => $filename,
             "useTyping" => true
         );
 

@@ -1696,9 +1696,11 @@
                         ->from('t_cron_rekap_absen')
                         ->where('flag_sent', 0)
                         ->where('flag_active', 1)
+                        // ->limit(1)
                         ->get()->result_array();
         if($cron){
             foreach($cron as $c){
+                $fileurl = "";
                 if($c['url_file'] && file_exists($c['url_file'])){
                     $explode = explode("/", $c['url_file']);
                     $filename = $explode[2];

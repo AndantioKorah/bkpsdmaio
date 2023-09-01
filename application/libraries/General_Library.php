@@ -102,8 +102,9 @@ class General_library
 
     public function getProfilePicture(){
         $photo = 'assets/img/user-icon.png';
-        if($this->userLoggedIn['profile_picture']){
-            $photo = 'assets/profile_picture/'.$this->userLoggedIn['profile_picture'];
+        if($this->userLoggedIn['fotopeg']){
+            // $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+            $photo = 'assets/img/user-icon.png';
         }
         return base_url().$photo;
     }

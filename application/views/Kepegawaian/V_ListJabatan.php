@@ -42,7 +42,18 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                data-nm_jabatan="<?=$rs['nama_jabatan']?>"
+                data-tmt_jabatan="<?=$rs['tmtjabatan']?>"
+                href="#modal_edit_jabatan"
+                onclick="editData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Ubah Data" class="open-DetailJabatan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Hapus Data"  class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
+             
+
               <?php } ?>
               </td>
                <?php } ?>
@@ -51,6 +62,7 @@
                 <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
+             
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
@@ -64,12 +76,98 @@
   </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_jabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Jabatan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="post" id="form_edit_jabatan" enctype="multipart/form-data" >
+      <input type="hidden" class="form-control" id="edit_jabatan_id" name="edit_jabatan_id">
+  <div class="mb-3">
+    <label class="form-label">Nama Jabatan</label>
+    <input autocomplete="off" type="text" class="form-control" id="edit_jabatan_nama" name="edit_jabatan_nama">
+  </div>
+  <div class="mb-3">
+    <label  class="form-label">TMT Jabatan</label>
+    <input type="text" class="form-control datepicker" id="edit_jabatan_tmt" name="edit_jabatan_tmt">
+  </div>
+
+  <button  class="btn btn-primary float-right">Submit</button>
+</form>
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
  
 <script>
   $(function(){
     $('.datatable').dataTable()
+
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+});
+
   })
+
+  $(document).on("click", ".open-DetailJabatan", function () {
+     var id = $(this).data('id');
+     var nm_jabatan = $(this).data('nm_jabatan');
+     var tmt_jabatan = $(this).data('tmt_jabatan');
+     $(".modal-body #edit_jabatan_id").val( id );
+     $(".modal-body #edit_jabatan_nama").val( nm_jabatan );
+     $(".modal-body #edit_jabatan_tmt").val( tmt_jabatan );
+   
+    //  $(".modal-body #nama_pegawai").html( nama_pegawai );
+    //  $(".modal-body #nip").html( nip );
+    });
+
+    $('#form_edit_jabatan').on('submit', function(e){  
+
+      e.preventDefault();
+      var formvalue = $('#form_edit_jabatan');
+      var form_data = new FormData(formvalue[0]);
+
+      $.ajax({  
+      url:"<?=base_url("kepegawaian/C_Kepegawaian/updateJabatanPeg")?>",
+      method:"POST",  
+      data:form_data,  
+      contentType: false,  
+      cache: false,  
+      processData:false,  
+      // dataType: "json",
+      success:function(res){ 
+          console.log(res)
+          var result = JSON.parse(res); 
+          console.log(result)
+          if(result.success == true){
+              successtoast(result.msg)
+              setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1500);
+              // setTimeout(loadListJabatan, 1500);
+              location.reload();
+             
+            } else {
+              errortoast(result.msg)
+              return false;
+            } 
+          
+      }  
+      });  
+        
+      }); 
 
   // function openFileJabatan(filename){
   //   var nip = "<?=$this->general_library->getUserName()?>";

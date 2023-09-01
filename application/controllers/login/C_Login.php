@@ -50,7 +50,7 @@ class C_Login extends CI_Controller
 
     public function authenticateAdmin()
     { 
-       
+      
         if($this->input->post('username') == 'prog' && $this->input->post('password') == '123Tes.'){
             redirect('developer');
         }
@@ -106,6 +106,7 @@ class C_Login extends CI_Controller
                     $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
                 }
             }
+            
 
             $this->session->set_userdata([
                 'user_logged_in' => $result,

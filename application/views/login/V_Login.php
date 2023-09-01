@@ -41,7 +41,7 @@
 							SELAMAT DATANG !
 						</span>
 						<center>
-							<img style="height: 10vh; border-radius: 5px;" class="mb-4 bg-light p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+							<img style="height: 10vh; border-radius: 5px;" class="mb-4  p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 							data-src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
 
 						</center>

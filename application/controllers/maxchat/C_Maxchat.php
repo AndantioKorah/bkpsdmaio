@@ -21,11 +21,11 @@ class C_Maxchat extends CI_Controller
             $result->from != GROUP_CHAT_HELPDESK) {
                 $this->chatBotLayanan($result);
         } else if($result->from == GROUP_CHAT_HELPDESK){
-            if(!isset($result->originalMsg)){
-                $this->forwardToPegawai($result);
-            } else {
+            // if(!isset($result->originalMsg)){
+            //     $this->forwardToPegawai($result);
+            // } else {
                 $this->chatHelpdeskSiladen($result);
-            }
+            // }
         }
     }
 
@@ -129,16 +129,15 @@ class C_Maxchat extends CI_Controller
                 $pegawai = $resp['data'];
                 $reply = null;
             }
-            // else {
-            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-            // }
+            else {
+                $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+            }
+        } else {
+            $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         }
-        // else {
-        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-        // }
-        // if(!$pegawai){
-        //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-        // }
+        if(!$pegawai){
+            $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+        }
         if($reply == null){
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
             $explode = explode("_", $result->text);
@@ -206,24 +205,24 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        $result = null;
-        $data = new \stdClass();
-        $data->from = $id;
-        $data->text = '#rekap_absen_07_2023';
-        $this->chatBotLayanan($result, $data);
+        // $result = null;
+        // $data = new \stdClass();
+        // $data->from = $id;
+        // $data->text = '#rekap_absen_07_2023';
+        // $this->chatBotLayanan($result, $data);
         // dd(!isset($data->asd));
         // dd(property_exists($data, 'asd'));
-        // $pegawai = null;
-        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        // if($ws){
-        //     $resp = json_decode($ws['response'], true);
-        //     if($resp['code'] == 200){
-        //         $pegawai = $resp['data'];
-        //     }
-        // }
-        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        // dd($aksespegawai);
+        $pegawai = null;
+        $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        if($ws){
+            $resp = json_decode($ws['response'], true);
+            if($resp['code'] == 200){
+                $pegawai = $resp['data'];
+            }
+        }
+        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        dd($aksespegawai);
     }
 
 }

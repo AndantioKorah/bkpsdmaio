@@ -22,17 +22,17 @@
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
-<button onclick="openModalStatusPmd('sumpahjanji')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+<button onclick="openModalStatusPmd('sumpah_janji')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
-  <button  onclick="openModalStatusPmd('sumpahjanji')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  <button  onclick="openModalStatusPmd('sumpah_janji')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
 
-<button  onclick="openModalStatusPmd('sumpahjanji')"   
+<button  onclick="openModalStatusPmd('sumpah_janji')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 

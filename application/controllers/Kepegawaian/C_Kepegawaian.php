@@ -439,6 +439,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
+			$data['page'] = null;
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 			$data['nip'] = $nip;
@@ -456,11 +457,12 @@ class C_Kepegawaian extends CI_Controller
 		}
 	}
 
-	public function uploadDokumen(){
+	public function uploadDokumen($page = null){
 		
         // $this->kepegawaian->copyfoto();
 		
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+		$data['page'] = $page;
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
@@ -472,12 +474,11 @@ class C_Kepegawaian extends CI_Controller
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
 		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
-			
-
-		
 		$data['nip'] = $this->general_library->getUserName();
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
+
+	
 
 	// public function LoadFormDokPangkat($jenis_user,$nip=null){
 	// 	$data['result'] = $this->kepegawaian->getPendidikan();
@@ -515,7 +516,7 @@ class C_Kepegawaian extends CI_Controller
 	public function LoadFormGajiBerkala($nip){
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 7);
-		$data['pdm_gajiberkala'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'gajiberkala');
+		$data['pdm_gajiberkala'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'kgb');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -531,7 +532,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
 		
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
-		$data['pdm_pendidikan'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'pendidikan');
+		$data['pdm_pendidikan'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'ijazah');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -603,7 +604,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadFormSkp($nip){
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
-		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'skp');
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'skp_tahunan');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -616,7 +617,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadFormBerkasPns($nip){
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 2);
-		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'berkaspns');
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'cpns_pns');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -672,7 +673,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormSumpahJanji($nip){
 		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
-		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'sumpahjanji');
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'sumpah_janji');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -684,7 +685,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormArsip($nip){
 		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
-		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'arsip');
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'data_lainnya');
 
 		
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -710,10 +711,10 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayanan());
 	}
 
-	public function loadListUsulLayanan($id){
+	public function loadListUsulLayanan(){
 		// dd($jenis_layanan);
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
-		$data['result'] = $this->kepegawaian->getListUsulLayanan($id,$id_peg);
+		$data['result'] = $this->kepegawaian->getListUsulLayanan($id_peg);
 		// dd($data['result']);
 		$this->load->view('kepegawaian/V_ListUsulLayanan', $data);
 	}
@@ -930,6 +931,24 @@ class C_Kepegawaian extends CI_Controller
 	public function updateStatusBerkas()
 	{ 
 		echo json_encode( $this->kepegawaian->updateStatusBerkas());
+	}
+
+	public function updateProfilePict(){
+        $photo = $_FILES['profilePict']['name'];
+        $upload = $this->general_library->uploadImage('fotopeg','profilePict');
+		// dd($upload);
+        if($upload['code'] != 0){
+            $this->session->set_flashdata('message', $upload['message']);
+        } else {
+            $message = $this->kepegawaian->updateProfilePicture($upload);
+            $this->session->set_flashdata('message', $message['message']);
+        }
+        redirect('kepegawaian/profil');
+    }
+
+	public function updateJabatanPeg()
+	{ 
+		echo json_encode( $this->kepegawaian->updateJabatanPeg());
 	}
 
 

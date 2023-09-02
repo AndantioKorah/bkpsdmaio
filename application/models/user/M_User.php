@@ -1867,6 +1867,72 @@
             return $result;
         }
 
+        public function searchAllPegawai($data){
+            $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
+                    ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
+                    ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
+                    ->order_by('c.eselon, a.nama');
+            if($data['unitkerja'] != 0){
+                $this->db->where('a.skpd', $data['unitkerja']);
+            }
+            if(isset($data['eselon'])){
+                $this->db->where_in('g.id_eselon', $data['eselon']);
+            }
+            if(isset($data['statuspeg'])){
+                $this->db->where_in('f.id_statuspeg', $data['statuspeg']);
+            }
+            if(isset($data['tktpendidikan'])){
+                $this->db->where_in('a.pendidikan', $data['tktpendidikan']);
+            }
+            if(isset($data['jeniskelamin'])){
+                $this->db->where_in('a.jk', $data['jeniskelamin']);
+            }
+            if(isset($data['pangkat'])){
+                $this->db->where_in('a.pangkat', $data['pangkat']);
+            }
+            if(isset($data['agama'])){
+                $this->db->where_in('a.agama', $data['agama']);
+            }
+            if(isset($data['golongan'])){
+                $golongan = [];
+                foreach($data['golongan'] as $g){
+                    if($g == 1){
+                        array_push($golongan, 11, 12, 13, 14);
+                    }
+                    if($g == 2){
+                        array_push($golongan, 21, 22, 23, 24);
+                    }
+                    if($g == 3){
+                        array_push($golongan, 31, 32, 33, 34);
+                    }
+                    if($g == 4){
+                        array_push($golongan, 41, 42, 43, 44);
+                    }
+                    if($g == 5){
+                        array_push($golongan, 55);
+                    }
+                    if($g == 7){
+                        array_push($golongan, 57);
+                    }
+                    if($g == 9){
+                        array_push($golongan, 59);
+                    }
+                    if($g == 10){
+                        array_push($golongan, 60);
+                    }
+                }
+                $this->db->where_in('e.id_pangkat', $golongan);
+            }
+
+            return $this->db->get()->result_array();
+        }
+
 	}
 
    

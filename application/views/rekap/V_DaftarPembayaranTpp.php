@@ -34,12 +34,12 @@
                     </td>
                     <td class="align-middle text-center"><?=$r['kelas_jabatan']?></td>
                     <td class="align-middle text-center"><?=$r['eselon']?></td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_tpp'], 0)?></td>
                     <td class="align-middle text-center">
                         <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                     </td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'])?></td>
-                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'])?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
                 </tr>
             <?php } ?>
         </tbody>

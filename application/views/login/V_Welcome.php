@@ -62,7 +62,7 @@
         <?php if($this->general_library->getRole() == 'programmer'){ ?>
           <div class="row">
             <div class="col-lg-4">
-              <div class="card">
+              <div onclick="openSearchPegawai()" class="card info_card">
                 <div class="card-body">
                   <div class="row">
                     <div class="col mt-0 ml-0">
@@ -337,6 +337,10 @@
                     }
                   });
                 // });
+              }
+
+              function openSearchPegawai(){
+                window.location="<?=base_url('list-pegawai')?>"
               }
 
               function openPensiunCardDetail(){

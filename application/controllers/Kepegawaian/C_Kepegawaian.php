@@ -73,6 +73,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListJabatan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getJabatan($nip,$kode);
 		$data['kode'] = $kode;
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$this->load->view('kepegawaian/V_ListJabatan', $data);
 	}
 

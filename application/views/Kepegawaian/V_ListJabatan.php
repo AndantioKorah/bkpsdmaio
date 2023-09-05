@@ -61,6 +61,7 @@
                 data-id="<?=$rs['id']?>"
                 data-nm_jabatan="<?=$rs['nama_jabatan']?>"
                 data-tmt_jabatan="<?=$rs['tmtjabatan']?>"
+                data-skpd="<?=$rs['skpd']?>"
                 href="#modal_edit_jabatan"
                 onclick="editData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Ubah Data" class="open-DetailJabatan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Hapus Data"  class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -111,7 +112,13 @@
     <input type="text" class="form-control datepicker" id="edit_jabatan_tmt" name="edit_jabatan_tmt">
   </div>
 
-  <button  class="btn btn-primary float-right">Submit</button>
+  <div class="mb-3">
+    <label class="form-label">Unit Kerja</label>
+    <input type="text" class="form-control" id="edit_jabatan_skpd" name="edit_jabatan_skpd">
+
+  </div>
+
+  <button  class="btn btn-primary float-right">Simpan</button>
 </form>
       </div>
       <div class="modal-footer">
@@ -140,10 +147,12 @@
      var id = $(this).data('id');
      var nm_jabatan = $(this).data('nm_jabatan');
      var tmt_jabatan = $(this).data('tmt_jabatan');
+     var skpd = $(this).data('skpd');
+     
      $(".modal-body #edit_jabatan_id").val( id );
      $(".modal-body #edit_jabatan_nama").val( nm_jabatan );
      $(".modal-body #edit_jabatan_tmt").val( tmt_jabatan );
-   
+     $(".modal-body #edit_jabatan_skpd").val( skpd );
     //  $(".modal-body #nama_pegawai").html( nama_pegawai );
     //  $(".modal-body #nip").html( nip );
     });

@@ -278,13 +278,13 @@ $(function(){
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('jabatan_pdf_file').files.length;
         
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
 
-        document.getElementById('btn_upload_jabatan').disabled = true;
-        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_upload_jabatan').disabled = true;
+        // $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
        
      
       

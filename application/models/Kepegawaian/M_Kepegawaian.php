@@ -279,7 +279,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
-                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
                 ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
                 ->where('a.nipbaru_ws', $username)
@@ -303,7 +303,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
-                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
                 ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk')
                 ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg')
@@ -765,6 +765,7 @@ class M_Kepegawaian extends CI_Model
             $getJabatan = $this->db->select('*')
             ->from('db_pegawai.pegjabatan a')
             ->where('a.id_pegawai', $id_peg)
+            ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
             ->limit(1)
             ->get()->row_array();
@@ -1032,8 +1033,9 @@ class M_Kepegawaian extends CI_Model
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
 
-			$data['error']    = strip_tags($this->upload->display_errors());
-			$data['token']    = $this->security->get_csrf_hash();
+			// $data['error']    = strip_tags($this->upload->display_errors());
+			// $data['token']    = $this->security->get_csrf_hash();
+            
             $res = array('msg' => 'Data gagal disimpan', 'success' => false);
             return $res;
 
@@ -2569,6 +2571,7 @@ public function updateJabatanPeg(){
     $this->db->where('id', $datapost['edit_jabatan_id'])
             ->update('db_pegawai.pegjabatan', ['nm_jabatan' => $datapost['edit_jabatan_nama'], 
                                                 'tmtjabatan' => $datapost['edit_jabatan_tmt'], 
+                                                'skpd' => $datapost['edit_jabatan_skpd'], 
                                                  'updated_by' => $this->general_library->getId()]);
             $res = array('msg' => 'Berhasil Update Status', 'success' => true);
       

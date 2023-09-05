@@ -564,6 +564,6 @@ class C_User extends CI_Controller
         $data['foto'] =  $this->user->getFotoPegawai();
         // dd($data['foto']);
         
-    $this->load->view('user/V_PdmDetail', $data);
+        $this->load->view('user/V_PdmDetail', $data);
     }
 }

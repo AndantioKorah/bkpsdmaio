@@ -119,7 +119,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_skp"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -179,7 +179,8 @@ $(function(){
         return false;
         }
        
-      
+        document.getElementById('btn_upload_skp').disabled = true;
+        $('#btn_upload_skp').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -196,6 +197,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_skp").reset();
+                document.getElementById('btn_upload_skp').disabled = false;
+               $('#btn_upload_skp').html('Simpan')
                 loadListSkp()
               } else {
                 errortoast(result.msg)

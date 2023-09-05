@@ -86,3 +86,4 @@ $route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$
 
 //api
 $route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';
+$route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';

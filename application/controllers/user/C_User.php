@@ -7,6 +7,7 @@ class C_User extends CI_Controller
         parent::__construct();
         $this->load->model('general/M_General', 'general');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('master/M_Master', 'master');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
@@ -550,9 +551,19 @@ class C_User extends CI_Controller
 
     public function detailPdmUser(){
         $data['result'] = $this->user->loadDetailPdmUser();
+        $this->load->view('user/V_PdmDetail', $data);
+    }
+
+    public function rekapKehadiranPersonal($bulan, $tahun, $id_m_user){
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+        $data['id_m_user'] = $id_m_user;
+        $result = $this->rekap->buildDataAbsensi($data, 1, 0, 1);
+        echo json_encode($result);
+        // dd($result);
         $data['foto'] =  $this->user->getFotoPegawai();
         // dd($data['foto']);
         
-    $this->load->view('user/V_PdmDetail', $data);
+        $this->load->view('user/V_PdmDetail', $data);
     }
 }

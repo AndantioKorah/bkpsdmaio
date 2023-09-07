@@ -314,7 +314,7 @@ function getPphByIdPangkat($id_pangkat)
 function greeting(){
     date_default_timezone_set("Asia/Singapore");
 
-    $time = date('h');
+    $time = date('H');
     $greeting = "Pagi";
     if(intval($time) >= 11 && intval($time) < 15){
         $greeting = "Siang";

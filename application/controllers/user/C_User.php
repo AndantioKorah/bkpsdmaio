@@ -551,6 +551,7 @@ class C_User extends CI_Controller
 
     public function detailPdmUser(){
         $data['result'] = $this->user->loadDetailPdmUser();
+        $data['foto'] =  $this->user->getFotoPegawai();
         $this->load->view('user/V_PdmDetail', $data);
     }
 
@@ -560,10 +561,5 @@ class C_User extends CI_Controller
         $data['id_m_user'] = $id_m_user;
         $result = $this->rekap->buildDataAbsensi($data, 1, 0, 1);
         echo json_encode($result);
-        // dd($result);
-        $data['foto'] =  $this->user->getFotoPegawai();
-        // dd($data['foto']);
-        
-        $this->load->view('user/V_PdmDetail', $data);
     }
 }

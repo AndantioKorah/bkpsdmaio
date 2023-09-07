@@ -158,10 +158,9 @@
                                 }
                                 echo base_url().$src;?>" /> 
                                 <div class="middle">
-                                    <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
+                                    <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
-                                    </form>
-                                    <!-- <button class="btn btn-sm btn-navy"><i class="fa fa-image"></i> Ganti Foto</button> -->
+                                    </form> -->
                                 </div>
                         </div>
                   
@@ -176,7 +175,8 @@
               </div>
               <div class="col-lg-12 text-center" >
                 <span class="sp_profil">
-                  <?=formatNip($profil_pegawai['nipbaru_ws'])?>
+                  <!-- <?=formatNip($profil_pegawai['nipbaru_ws'])?> -->
+                  <?=$profil_pegawai['nipbaru_ws']?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
@@ -185,7 +185,9 @@
                   <i class="fa fa-edit"></i> Edit Profil
                 </button>
                 <?php }?>
-                
+                <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
+                  <i class="fa fa-user"></i> Ubah Foto Profil
+                </button>
             
 
               </div>
@@ -702,6 +704,47 @@
   </div>
 
 
+<!-- modal ubah foto profil -->
+<div class="modal fade" id="modalFotoProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ubah Foto Profil</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
+                                        <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict" required>
+      
+      <hr>        
+      <span>
+      <b>Keterangan Penting</b><br>
+      Foto Memakai Seragam Khaki dengan atribut lengkap
+      Foto Jelas (tidak kabur/blur)
+      Tipe File JPG/PNG
+      Maximal Ukuran File Foto 1 MB
+      Ukuran Foto 3x4 atau 4x6<br><br>
+      <b>Warna Background Foto</b><br>
+      JPT : Merah<br>
+      Administrator : Biru<br>
+      Pengawas : Hijau<br>
+      Fungisonal Tertentu : Abu-Abu<br>
+      Fungional Umum : Orange<br>
+      PPPK : Kuning
+      </span>
+      <hr>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- tutup modal ubah foto profil  -->
   
 <!-- Modal edit profil -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1354,11 +1397,9 @@
     })
  }
 
- $('#profilePict').on('change', function(){
- 
-        $('#form_profile_pict').submit()
-
-    })
+//  $('#profilePict').on('change', function(){
+//         $('#form_profile_pict').submit()
+//     })
  
 
  

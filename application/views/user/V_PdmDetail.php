@@ -1,7 +1,6 @@
 <?php
-    // $path = './assets/fotopeg/'.$foto['fotopeg'];
-    $path = '../siladen/assets/fotopeg/'.$foto['fotopeg'];
-    // dd($foto['fotopeg']);
+    $path = './assets/fotopeg/'.$foto['fotopeg'];
+    // $path = '../siladen/assets/fotopeg/'.$foto['fotopeg'];
     if($foto['fotopeg']){
     if (file_exists($path)) {
        $result['pas_foto'] = 1;

@@ -44,15 +44,24 @@ class Maxchatlibrary{
         return $this->postCurl($url, $data);
     }
 
-    function sendText($to, $text) {
+    function sendText($to, $text, $replyId = "0") {
         // kirim pesan ke kontak yang sudah disimpan
-        $url = $this->API_URL . "/messages?skipBusy=true";
+        $url = $this->API_URL . "/messages";
 
         $data = array(
-        "to" => $to,
-        "type" => 'text',
-        "text" => $text
+            "to" => $to,
+            "type" => 'text',
+            "text" => $text
         );
+
+        if($replyId != "0"){
+            $data = array(
+                "to" => $to,
+                "type" => 'text',
+                "text" => $text,
+                "replyId" => $replyId
+            );
+        }
 
         return $this->postCurl($url, $data);
     }
@@ -96,17 +105,19 @@ class Maxchatlibrary{
         return $this->postCurl($url, $send);
     }
 
-    function sendImg($to, $url, $caption, $filename) {
+    function sendImg($to, $caption, $filename, $fileurl) {
         // jika kontak belum dikenali pakai "/api/messages/push/image"
         $url = $this->API_URL . "/messages/image";
         
         $data = array(
-        "to" => $to, 
-        "url" => $url,
-        "filename" => $filename
+            "to" => $to,
+            "type" => "image",
+            "caption" => $caption,
+            "url" => $fileurl,
+            "filename" => $filename
         );
 
-        $this->postCurl($url, $data);
+        return $this->postCurl($url, $data);
     }
 
     function getMessageById($id){
@@ -121,7 +132,7 @@ class Maxchatlibrary{
 
     function sendFile($to, $fileurl, $filename, $caption) {
         // jika kontak belum dikenali pakai "/api/messages/push/file"
-        $url = $this->API_URL . "/messages?skipBusy=true";
+        $url = $this->API_URL . "/messages";
         
         $data = array(
             "to" => $to,
@@ -159,14 +170,14 @@ class Maxchatlibrary{
     }
 
     public function saveLog($data){
-        // $this->maxchat->general->insert('t_log_maxchat', $data);
+        $this->maxchat->general->insert('t_log_maxchat', $data);
     }
 
     function postCurl($url, $data, $method = "POST") {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
+        CURLOPT_URL => $url."?skipBusy=true",
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_RETURNTRANSFER => true,

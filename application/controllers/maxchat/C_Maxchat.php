@@ -13,9 +13,9 @@ class C_Maxchat extends CI_Controller
 
     public function webhook(){
         $result = $this->maxchatlibrary->webhookCapture();
-        // $this->general->insert('t_chat_group', [
-        //     'text' => json_encode($result)
-        // ]);
+        $this->general->insert('t_chat_group', [
+            'text' => json_encode($result)
+        ]);
         if (($result->type == "text" || $result->type == "image") && 
             $result->chatType != "story" &&
             $result->from != GROUP_CHAT_HELPDESK && !isset($result->replyId)) {
@@ -208,9 +208,9 @@ class C_Maxchat extends CI_Controller
             } else if($result->type == "image"){
                 $filename = explode("/", $str);
                 $log = $this->maxchatlibrary->sendImg($sendTo, $reply, $filename[5], $result->url);
-                $this->general->insert('t_chat_group', [
-                    'text' => json_encode($filename)
-                ]);
+                // $this->general->insert('t_chat_group', [
+                //     'text' => json_encode($filename)
+                // ]);
             }
         }
 

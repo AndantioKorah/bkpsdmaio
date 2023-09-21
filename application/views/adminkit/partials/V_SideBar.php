@@ -185,7 +185,7 @@
 	</li>
  
 	<?php
-	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesLayanan()) { ?>
+	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
@@ -199,16 +199,20 @@
 				</span>
 			</a>
 			<ul id="verifikasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
 				<li class="sidebar-item ">
 					<a title="Layanan" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/teknis')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan
 					</a>
 				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
 				<li class="sidebar-item ">
 					<a title="Dokumen Upload" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Dokumen Upload
 					</a>
 				</li>
+				<?php } ?>
 			</ul>
 		</li>
 	<?php } ?>

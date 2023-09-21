@@ -38,11 +38,10 @@ class General_library
         return $result;
     }
 
-    public function isHakAksesLayanan(){
-        $exclude_layanan = ['rekap_absen_pd'];
+    public function isHakAksesVerifLayanan(){
         if(count($this->hakAkses) > 0){
             foreach($this->hakAkses as $hk){
-                if(floatval($hk['meta_name']) > 0){
+                if(stringStartWith('layanan', $hk['meta_name'])){
                     return true;
                 }
             }
@@ -50,6 +49,23 @@ class General_library
             return false;
         }
         return false;
+    }
+
+    public function isHavingHakAkses(){
+        $flag_ada = 0;
+        $exclude_layanan = ['rekap_absen_pd'];
+        if(count($this->hakAkses) > 0){
+            $flag_ada = 1;
+            foreach($this->hakAkses as $hk){
+                if(in_array($hk, $exclude_layanan)){
+                    $flag_ada = 0;
+                    break;
+                }
+            }
+        } else {
+            return false;
+        }
+        return $flag_ada == 1 ? true : false;
     }
 
     public function isHakAkses($meta_name){
@@ -102,9 +118,10 @@ class General_library
 
     public function getProfilePicture(){
         $photo = 'assets/img/user-icon.png';
-        if($this->userLoggedIn['fotopeg']){
-            // $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-            $photo = 'assets/img/user-icon.png';
+        $photo_saved = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+        if(file_exists($photo_saved)){
+            $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+            // $photo = 'assets/img/user-icon.png';
         }
         return base_url().$photo;
     }

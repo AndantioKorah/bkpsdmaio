@@ -23,8 +23,8 @@
         color: white !important;
     }
 
-    .card-pdm{
-        /* min-height: 120px; */
+    .card-pdm:hover{
+        cursor:pointer;
     }
 
     .text-progress{
@@ -35,6 +35,16 @@
     }
 
     .progress-bar{
+        transition: .2s;
+    }
+
+    .card-belum-lengkap:hover{
+        background-color: #e5e5e5;
+        transition: .2s;
+    }
+
+    .card-lengkap:hover{
+        background-color: #35475c;
         transition: .2s;
     }
 </style>

@@ -475,6 +475,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
 		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+		$data['kabkota'] = $this->kepegawaian->getAllWithOrder('db_efort.m_kabupaten_kota', 'id', 'asc');
 		$data['nip'] = $this->general_library->getUserName();
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
@@ -976,6 +977,40 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->tambahPegawai());
 	}
+
+	public function loadEditProfilPegawai($id)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
+		$data['status_kawin'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statuskawin', 'id_sk', 'asc');
+		$data['status_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statuspeg', 'id_statuspeg', 'asc');
+		$data['jenis_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispeg', 'id_jenispeg', 'asc');
+		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
+		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
+		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+		$data['kabkota'] = $this->kepegawaian->getKabKota('db_efort.m_kabupaten_kota', 'id', 'asc');
+		$data['nip'] = $this->general_library->getUserName();
+
+        $this->load->view('kepegawaian/V_EditProfilPegawai', $data);
+    }
+
+	public function getdatakec()
+    {
+        $id_kab = $this->input->post('id');
+        $response   = $this->kepegawaian->getkec($id_kab);
+        echo json_encode($response);
+    }
+
+	
+	public function getdatakel()
+    {
+        $id_kec = $this->input->post('id');
+        $response   = $this->kepegawaian->getkel($id_kec);
+        echo json_encode($response);
+    }
+
 
 
 

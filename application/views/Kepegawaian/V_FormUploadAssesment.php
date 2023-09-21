@@ -21,6 +21,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -37,7 +39,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 <button  onclick="openModalStatusPmd('assesment')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );

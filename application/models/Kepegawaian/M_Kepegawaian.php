@@ -295,7 +295,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 and aa.status = 2 ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
@@ -311,6 +311,8 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab')
                 ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
                 ->join('m_user l', 'a.nipbaru_ws = l.username')
+                ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
+                ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
                 ->where('a.nipbaru_ws', $username)
                 ->where('l.flag_active', 1)
                 ->limit(1);
@@ -857,6 +859,22 @@ class M_Kepegawaian extends CI_Model
             }
             // dd($dataInsert);
             $result = $this->db->insert('db_pegawai.pegberkaspns', $dataInsert);
+        } else if($id_dok == 41){   
+                 
+            $dataInsert['id_pegawai']      = $id_peg;
+            $dataInsert['sumpahpeg']         = $this->input->post('sumpahpeg');
+            $dataInsert['pejabat']         = $this->input->post('pejabat');
+            $dataInsert['noba']         = $this->input->post('noba');
+            $dataInsert['tglba']         = $this->input->post('tglba');
+            $dataInsert['gambarsk']            = $data['nama_file'];
+            $dataInsert['created_by']      = $this->general_library->getId();
+            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+            }
+            // dd($dataInsert);
+            $result = $this->db->insert('db_pegawai.pegsumpah', $dataInsert);
         }
       
 
@@ -1007,7 +1025,9 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsippendidikan/';
         } else if($this->input->post('id_dokumen') == 2){
             $target_dir						= './arsipberkaspns/';
-        }  
+        } else if($this->input->post('id_dokumen') == 41){
+            $target_dir						= './arsipsumpah/';
+        }   
 
        
 
@@ -1432,6 +1452,8 @@ class M_Kepegawaian extends CI_Model
             } else if($jenissk){
                 $name = "SK_PNS_".$nip;
             }
+        }  else if($id_dok == 41){
+                $name = "SUMJAN_".$nip;
         } 
 
         
@@ -2404,9 +2426,6 @@ public function submitEditProfil(){
         $goldar = null;
     } 
 
-  
-
-
     $id_pegawai = $datapost['edit_id_pegawai'];
     $data["gelar1"] = $datapost["edit_gelar1"];
     $data["nama"] = $datapost["edit_nama"];
@@ -2434,6 +2453,11 @@ public function submitEditProfil(){
     $data["taspen"] = $datapost["edit_taspen"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
+
+    $data["id_m_provinsi"] = 71;
+    $data["id_m_kabupaten_kota"] = $datapost["edit_kab_kota"];
+    $data["id_m_kecamatan"] = $datapost["edit_kecamatan"];
+    $data["id_m_kelurahan"] = $datapost["edit_kelurahan"];
 
     // dd($data);
     $this->db->where('id_peg', $id_pegawai)
@@ -2648,6 +2672,49 @@ public function tambahPegawai(){
     return $res;
 }
 
+public function getKabKota($tableName, $orderBy = 'created_date', $whatType = 'desc')
+{
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    ->where('id_m_provinsi', 71)
+    ->order_by($orderBy, $whatType)
+    ->from($tableName);
+    return $this->db->get()->result_array(); 
+}
+
+
+function getkec($id_kab)
+{        
+    $this->db->select('id, nama_kecamatan');
+    $this->db->where('id_m_kabupaten_kota', $id_kab);
+    $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('m_kecamatan');
+    $datakec = $fetched_records->result_array();
+
+    $data = array();
+    foreach ($datakec as $kec) {
+        $data[] = array("id" => $kec['id'], "nama_kecamatan" => $kec['nama_kecamatan']);
+    }
+    return $data;
+}
+
+
+
+
+function getkel($id_kec)
+{        
+    $this->db->select('id, nama_kelurahan');
+    $this->db->where('id_m_kecamatan', $id_kec);
+    $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('m_kelurahan');
+    $datakec = $fetched_records->result_array();
+
+    $data = array();
+    foreach ($datakec as $kec) {
+        $data[] = array("id" => $kec['id'], "nama_kelurahan" => $kec['nama_kelurahan']);
+    }
+    return $data;
+}
 
 
 

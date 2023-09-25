@@ -173,10 +173,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         <option value="" selected>Pilih Jabatan</option>
                     </select> -->
                     <select class="form-control select2" data-dropdown-css-class="" name="jabatan_status" id="jabatan_status" required>
-                    <option value="" disabled selected>Pilih Status Jabatan</option>
-                    <?php if($status_jabatan){ foreach($status_jabatan as $r){ ?>
-                        <option   value="<?=$r['id_statusjabatan']?>"><?=$r['nm_statusjabatan']?></option>
-                    <?php } } ?>
+                   <?php if($statusjabatan == 'def') { ?>
+                    <option value=1 >Definitif</option>
+                   <?php } else { ?>
+                    <option value=2 >Plt</option>
+                    <option value=3 >Plh</option>
+                    <?php } ?>
     </select>
     </div>
    
@@ -286,7 +288,7 @@ $(function(){
         // return false;
         // }
 
-        document.getElementById('btn_upload_jabatan').disabled = true;
+        // document.getElementById('btn_upload_jabatan').disabled = true;
         $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
        
      
@@ -323,9 +325,10 @@ $(function(){
 
     function loadListJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+      var statusjabatan = "<?= $statusjabatan?>";
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
-    $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1', function(){
+    $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1'+'/'+statusjabatan, function(){
       $('#loader').hide()
     })
   }

@@ -574,7 +574,10 @@
                 <button onclick="loadFormPendidikan()" class="nav-link nav-link-profile" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormJabatan()" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+                <button onclick="loadFormJabatan('def')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan Plt/Plh</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormDiklat()" class="nav-link nav-link-profile" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
@@ -627,6 +630,9 @@
               </div>
               <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
                 <div id="form_jabatan"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-jabatanplt" role="tabpanel" aria-labelledby="pills-jabatanplt-tab">
+                <div id="form_jabatan_plt"></div>
               </div>
               <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
                 <div id="form_diklat"></div>
@@ -1018,10 +1024,19 @@
     })
  }
 
- function loadFormJabatan(){
+ function loadFormJabatan(val){
+ var status = val;
   $('#form_jabatan').html(' ')
     $('#form_jabatan').append(divLoaderNavy)
-    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+nip, function(){
+    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+nip+'/'+status, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormJabatanPlt(){
+  $('#form_jabatan_plt').html(' ')
+    $('#form_jabatan_plt').append(divLoaderNavy)
+    $('#form_jabatan_plt').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatanPlt/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

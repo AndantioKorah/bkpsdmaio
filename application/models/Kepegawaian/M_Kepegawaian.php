@@ -133,6 +133,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.jabatan c','a.id_jabatan = c.id_jabatanpeg')
                                 ->join('db_pegawai.eselon d','a.eselon = d.id_eselon')
                                 ->join('db_pegawai.jenisjab e','a.jenisjabatan = e.id_jenisjab')
+                                ->join('db_pegawai.statusjabatan f','a.statusjabatan = f.id_statusjabatan')
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'diklat'){
@@ -298,7 +299,7 @@ class M_Kepegawaian extends CI_Model
             $this->db->select('n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
-            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 and aa.status = 2 ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
+            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
@@ -379,6 +380,31 @@ class M_Kepegawaian extends CI_Model
                             $query = $this->db->get()->result_array();
                             return $query;
         }
+
+        function getJabatanPlt($nip,$kode){
+          
+            $this->db->select('c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+                          ->from('m_user a')
+                          ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                          ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
+                          // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                          ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
+                          ->where('a.username', $nip)
+                          ->where('a.flag_active', 1)
+                          ->where('c.flag_active', 1)
+                          ->group_start() //this will start grouping
+                          ->where("FIND_IN_SET(c.ket,'Plt,Plh')!=",0)
+                          ->or_where('c.statusjabatan in (2,3)')
+                          ->group_end() //this will end grouping
+                         
+                          ->order_by('c.tmtjabatan','desc');
+                          if($kode == 1){
+                              $this->db->where('c.status', 2);
+                          }
+
+                          $query = $this->db->get()->result_array();
+                          return $query;
+      }
 
 
         function getDiklat($nip,$kode){
@@ -762,6 +788,12 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
             }
+
+            if($dataInsert['statusjabatan'] == 1) { 
+            dd(1);
+            } else {
+            dd(2);
+            }
            
 
             $getJabatan = $this->db->select('*')
@@ -772,23 +804,33 @@ class M_Kepegawaian extends CI_Model
             ->limit(1)
             ->get()->row_array();
 
+           
+        if($dataInsert['statusjabatan'] == 1) { 
            if($getJabatan){
             if(strtotime($tmt_jabatan) > strtotime($getJabatan['tmtjabatan'])){
-                $dataUpdate["skpd"] =  $id_skpd;
-                $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
-                $dataUpdate["jabatan"] =   $id_jabatan;
-                $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
-                $this->db->where('id_peg', $id_peg)
-                        ->update('db_pegawai.pegawai', $dataUpdate);
+               
+                if($dataInsert['statusjabatan'] == '1'){
+                    $dataUpdate["skpd"] =  $id_skpd;
+                    $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
+                    $dataUpdate["jabatan"] =   $id_jabatan;
+                    $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
+                    $this->db->where('id_peg', $id_peg)
+                            ->update('db_pegawai.pegawai', $dataUpdate);
+                }
+               
             } 
           } else {
+           
+            if($dataInsert['statusjabatan'] == '1'){
             $dataUpdate["skpd"] =  $id_skpd;
             $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
             $dataUpdate["jabatan"] =   $id_jabatan;
             $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
             $this->db->where('id_peg', $id_peg)
                     ->update('db_pegawai.pegawai', $dataUpdate);
+            }
           }
+        }
 
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
         } else if($id_dok == 20){            
@@ -2152,6 +2194,7 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
+        if($getJabatan['statusjabatan'] == 1){
         $getJabatanOld = $this->db->select('*')
         ->from('db_pegawai.pegjabatan a')
         ->where('a.id_pegawai', $getJabatan['id_pegawai'])
@@ -2160,6 +2203,7 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
+      
        if($getJabatanOld){
         // $dataUpdate["skpd"] =  $getJabatanOld['skpd'];
         if($getJabatanOld['id_unitkerja'] != null){
@@ -2177,6 +2221,7 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
                 ->update('db_pegawai.pegawai as a', $dataUpdate2);
        }
+    }
            
     }
 
@@ -2226,6 +2271,7 @@ public function submitVerifikasiDokumen(){
         ->limit(1)
         ->get()->row_array();
       
+        if($getJabatanPost['statusjabatan'] == 1){
         if(strtotime($getJabatanPost['tmtjabatan']) > strtotime($getJabatan['tmtjabatan'])){
             $dataUpdate["skpd"] =  $getJabatanPost['id_unitkerja'];
             $dataUpdate["tmtjabatan"] =  $getJabatanPost['tmtjabatan'];
@@ -2234,6 +2280,8 @@ public function submitVerifikasiDokumen(){
             $this->db->where('id_peg', $datapost["id_pegawai"])
                     ->update('db_pegawai.pegawai', $dataUpdate);
         } 
+        }
+
         }
 
     $this->db->where('id', $id)

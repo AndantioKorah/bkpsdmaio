@@ -1,0 +1,13 @@
+<form method="post" id="form_edit_jabatan" enctype="multipart/form-data" >
+      <input type="hidden" class="form-control" id="edit_jabatan_id" name="edit_jabatan_id">
+  <div class="mb-3">
+    <label class="form-label">Nama Indikator</label>
+    <input autocomplete="off" type="text" class="form-control" id="edit_nm_indikator" name="edit_nm_indikator" value="<?= $indikator['nm_indikator'];?>">
+  </div>
+  <div class="mb-3">
+    <label  class="form-label">Bobot</label>
+    <input type="number" class="form-control datepicker" id="edit_bobot" name="edit_bobot" value="<?= $indikator['bobot'];?>">
+  </div>
+
+  <button  class="btn btn-primary float-right">Simpan</button>
+</form>

@@ -276,6 +276,33 @@
 		<?php } ?>
 
 	</li>
+	<li class="sidebar-header">
+		Manajemen Talenta
+	</li>
+	<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
+				<span class="align-middle">
+					Data Master
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="datamaster" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-indikator')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Indikator
+					</a>
+				</li>
+				<?php } ?>
+				
+			</ul>
+		</li>
+
 </ul>
 <div class="mt-5">
 	<p></p>

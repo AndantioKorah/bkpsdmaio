@@ -89,3 +89,6 @@ $route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai'
 //api
 $route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';
 $route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
+
+// simata 
+$route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';

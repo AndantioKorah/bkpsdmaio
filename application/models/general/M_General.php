@@ -69,6 +69,8 @@
 
         public function authenticate($username, $password)
         {
+            $exclude_username = ['prog', 'walikota'];
+
             $this->db->select('*, a.nama as nama_user')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')

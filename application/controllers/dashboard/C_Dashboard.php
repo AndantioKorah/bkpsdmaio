@@ -7,6 +7,7 @@ class C_Dashboard extends CI_Controller
         parent::__construct();
         $this->load->model('dashboard/M_Dashboard', 'dashboard');
         $this->load->model('master/M_Master', 'master');
+        $this->load->model('general/M_General', 'general');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
@@ -46,6 +47,53 @@ class C_Dashboard extends CI_Controller
 
     public function loadBidangByUnitKerja($id){
         echo json_encode($this->dashboard->loadBidangByUnitKerja($id));
+    }
+
+    public function dashboardWalikota(){
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        $data['agenda'] = $this->general->getOne('db_sip.agenda', 'id', 11, 0);
+        $data['golongan'] = [
+            1 => [
+                'id_golongan' => 'golongan_1',
+                'nm_golongan' => 'Golongan I'
+            ],
+            2 => [
+                'id_golongan' => 'golongan_2',
+                'nm_golongan' => 'Golongan II'
+            ],
+            3 => [
+                'id_golongan' => 'golongan_3',
+                'nm_golongan' => 'Golongan III'
+            ],
+            4 => [
+                'id_golongan' => 'golongan_4',
+                'nm_golongan' => 'Golongan IV'
+            ],
+            5 => [
+                'id_golongan' => 'golongan_5',
+                'nm_golongan' => 'Golongan V'
+            ],
+            6 => [
+                'id_golongan' => 'golongan_7',
+                'nm_golongan' => 'Golongan VII'
+            ],
+            7 => [
+                'id_golongan' => 'golongan_9',
+                'nm_golongan' => 'Golongan IX'
+            ],
+            8 => [
+                'id_golongan' => 'golongan_10',
+                'nm_golongan' => 'Golongan X'
+            ],
+        ];
+        $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
+        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('dashboard/V_DashboardWalikota', '', '', $data);
+    }
+
+    public function getDataLiveAbsen($id_agenda){
+        $data['result'] = $this->dashboard->getDataLiveAbsen($id_agenda);
+        $this->load->view('dashboard/V_DashboardLiveAbsen', $data);
     }
 
 }

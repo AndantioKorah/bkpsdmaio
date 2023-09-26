@@ -138,5 +138,75 @@
         //                     ->where('a.flag_active', 1)
         //                     ->get()->result_array();
         // }
+
+        public function getDataLiveAbsen($id){
+            $data = $this->input->post();
+            $agenda = $this->db->select('*')
+                                ->from('db_sip.agenda')
+                                ->where('id', $id)
+                                ->get()->row_array();
+            $absen = null;
+            if($agenda){
+                $this->db->select('a.masuk, a.pulang, a.tgl, c.gelar1, c.nama, c.gelar2, d.nama_jabatan, d.eselon, e.nm_pangkat, f.nm_unitkerja,
+                    c.nipbaru_ws as nip')
+                    ->from('db_sip.absen a')
+                    ->join('m_user b', 'a.user_id = b.id')
+                    ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
+                    ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
+                    ->join('db_pegawai.pangkat e', 'c.pangkat = e.id_pangkat')
+                    ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+                    ->join('db_pegawai.eselon g', 'd.eselon = g.nm_eselon')
+                    // ->where('a.tgl', $agenda['tgl'])
+                    ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
+                    // ->where('a.pulang >=', $agenda['buka_pulang']) //buka ini
+                    ->group_by('a.id')
+                    // ->where_in('a.aktivitas', [1,2,3]) //buka ini
+                    // ->order_by('a.masuk', 'desc'); //komen ini
+                    ->order_by('a.pulang', 'desc'); //buka ini
+
+                if(isset($data['unitkerja']) && $data['unitkerja'] != 0){
+                    $this->db->where('c.skpd', $data['unitkerja']);
+                }
+                if(isset($data['eselon'])){
+                    $this->db->where_in('g.id_eselon', $data['eselon']);
+                }
+                if(isset($data['pangkat'])){
+                    $this->db->where_in('c.pangkat', $data['pangkat']);
+                }
+                if(isset($data['golongan'])){
+                    $golongan = [];
+                    foreach($data['golongan'] as $g){
+                        if($g == 1){
+                            array_push($golongan, 11, 12, 13, 14);
+                        }
+                        if($g == 2){
+                            array_push($golongan, 21, 22, 23, 24);
+                        }
+                        if($g == 3){
+                            array_push($golongan, 31, 32, 33, 34);
+                        }
+                        if($g == 4){
+                            array_push($golongan, 41, 42, 43, 44);
+                        }
+                        if($g == 5){
+                            array_push($golongan, 55);
+                        }
+                        if($g == 7){
+                            array_push($golongan, 57);
+                        }
+                        if($g == 9){
+                            array_push($golongan, 59);
+                        }
+                        if($g == 10){
+                            array_push($golongan, 60);
+                        }
+                    }
+                    $this->db->where_in('e.id_pangkat', $golongan);
+                }
+                $absen = $this->db->get()->result_array();
+            }
+            $result = $absen;
+            return $result;
+        }
 	}
 ?>

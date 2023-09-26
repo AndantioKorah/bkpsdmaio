@@ -47,6 +47,12 @@
 		background-color: #37495e;
 		transition: .2s;
 	}
+
+	.icon-live{
+		font-size: .5rem;
+		border: 1px solid;
+		padding: 3px;
+	}
 </style>
 
 <?php
@@ -177,7 +183,13 @@
 	<li class="sidebar-header">
 		Kepegawaian
 	</li>
-
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getId() == 193){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>walikota/dashboard">
+				<i class="fa fa-desktop"></i> <span class="align-middle">Live Absen Event</span>
+			</a>
+		</li>
+	<?php } ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
 			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>

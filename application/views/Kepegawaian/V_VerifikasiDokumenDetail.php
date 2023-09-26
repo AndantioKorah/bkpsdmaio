@@ -155,6 +155,11 @@
             <td class="td-val-dd"><?=$result['pejabat']?></td>
           </tr>
           <tr>
+            <td class="td-lab-dd">Status Jabatan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"><?=$result['nm_statusjabatan']?></td>
+          </tr>
+          <tr>
             <td class="td-lab-dd">TMT Jabatan</td>
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd"><?=formatDateNamaBulan($result['tmtjabatan'])?></td>

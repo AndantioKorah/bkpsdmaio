@@ -8,6 +8,7 @@
           <th class="text-left">Yang Mengambil Sumpah</th>
           <th class="text-left">No Berita Acara </th>
           <th class="text-left">Tanggal Berita Acara</th>
+          <th></th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -28,6 +29,12 @@
               <td class="text-left"><?= $rs['pejabat']?></td>
               <td class="text-left"><?=$rs['noba']?></td>
               <td class="text-left"><?=$rs['tglba']?></td>
+              <td class="text-left">
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_sumjan" onclick="openFileSumjan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
@@ -58,6 +65,33 @@
     $('.datatable').dataTable()
   })
 
+  async function openFileSumjan(filename){
+   
+   $('#iframe_view_file_sumjan').hide()
+   $('.iframe_loader').show()  
+   console.log(filename)
+   $.ajax({
+     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+     method: 'POST',
+     data: {
+       'username': '<?=$this->general_library->getUserName()?>',
+       'password': '<?=$this->general_library->getPassword()?>',
+       'filename': 'arsipsumpah/'+filename
+     },
+     success: function(data){
+       let res = JSON.parse(data)
+       console.log(res.data)
+       $(this).show()
+       $('#iframe_view_file_sumjan').attr('src', res.data)
+       $('#iframe_view_file_sumjan').on('load', function(){
+         $('.iframe_loader').hide()
+         $(this).show()
+       })
+     }, error: function(e){
+         errortoast('Terjadi Kesalahan')
+     }
+   })
+ }
 
 
   function deleteData(id,kode){

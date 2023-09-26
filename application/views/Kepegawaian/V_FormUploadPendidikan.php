@@ -18,6 +18,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm_pendidikan) {?>
 <?php
 if($pdm_pendidikan[0]['flag_active'] == 1) {?>
@@ -33,6 +35,7 @@ if($pdm_pendidikan[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('ijazah')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
 <?php }  ?>
 
 <script>

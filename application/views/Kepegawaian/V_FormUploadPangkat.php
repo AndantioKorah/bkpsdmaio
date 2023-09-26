@@ -17,6 +17,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+  
 <?php if($pdm_pangkat) {?>
 <?php
 if($pdm_pangkat[0]['flag_active'] == 1) {?>
@@ -33,7 +35,7 @@ if($pdm_pangkat[0]['flag_active'] == 1) {?>
 <button  onclick="openModalStatusPmd('pangkat')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }?>
   
   <script>
     function openModalStatusPmd(jenisberkas){
@@ -277,7 +279,6 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 $(function(){
-        // $('.select2').select2()
 
    $(".select2").select2({   
 		width: '100%',
@@ -285,7 +286,7 @@ $(function(){
 		allowClear: true,
 	});
   
-        $('#datatable').dataTable()
+    $('#datatable').dataTable()
         loadListPangkat()
     })
 

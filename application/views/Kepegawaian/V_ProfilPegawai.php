@@ -142,12 +142,25 @@
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
                             <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                            src="<?=base_url('assets/fotopeg/')?><?=$profil_pegawai['fotopeg']?>" /> 
+                            src="<?php
+                                $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                if($profil_pegawai['fotopeg']){
+                                if (file_exists($path)) {
+                                   $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                } else {
+                                  $src = './assets/img/user.png';
+                                  // $src = '../siladen/assets/img/user.png';
+                                }
+                                } else {
+                                  $src = './assets/img/user.png';
+                                }
+                                echo base_url().$src;?>" /> 
                                 <div class="middle">
-                                    <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
+                                    <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
-                                    </form>
-                                    <!-- <button class="btn btn-sm btn-navy"><i class="fa fa-image"></i> Ganti Foto</button> -->
+                                    </form> -->
                                 </div>
                         </div>
                   
@@ -162,16 +175,20 @@
               </div>
               <div class="col-lg-12 text-center" >
                 <span class="sp_profil">
-                  <?=formatNip($profil_pegawai['nipbaru_ws'])?>
+                  <!-- <?=formatNip($profil_pegawai['nipbaru_ws'])?> -->
+                  <?=$profil_pegawai['nipbaru_ws']?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
-                <button data-toggle="modal" onclick="loadEditProfilModal()" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
+                
+                <?php }?>
+                <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['id_peg']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
                   <i class="fa fa-edit"></i> Edit Profil
                 </button>
-                <?php }?>
-                
+                <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
+                  <i class="fa fa-user"></i> Ubah Foto Profil
+                </button>
             
 
               </div>
@@ -256,6 +273,16 @@
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm">
                   <?=$profil_pegawai['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $profil_pegawai['tgllahir'], ['tahun', 'bulan'])?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Golongan Darah
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                  <?= $profil_pegawai['goldarah']?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
@@ -419,7 +446,21 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_statusjabatan'])?>
+                <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  if(isset($data[2])) { 
+                    if($data[2] == 1) {
+                    echo "Definitif"; 
+                  } else if($data[2] == 2) {
+                    echo "Plt"; 
+                  } else if($data[2] == 3) {
+                    echo "Plh"; 
+                  } else {
+                    echo $profil_pegawai['nm_statusjabatan'];
+                  }
+                  }  
+                  ?>
+                 
                 </span>
               </div>
 
@@ -433,7 +474,7 @@
                 <span class="sp_profil_sm">
                   <?php
                    $data = explode("/", $profil_pegawai['data_jabatan']);
-                   echo formatDateNamaBulan($data[1]);?>
+                   if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
                 </span>
               </div>
 
@@ -533,7 +574,10 @@
                 <button onclick="loadFormPendidikan()" class="nav-link nav-link-profile" id="pills-pendidikan-tab" data-bs-toggle="pill" data-bs-target="#pills-pendidikan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Pendidikan</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormJabatan()" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+                <button onclick="loadFormJabatan('def')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan Plt/Plh</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormDiklat()" class="nav-link nav-link-profile" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
@@ -586,6 +630,9 @@
               </div>
               <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
                 <div id="form_jabatan"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-jabatanplt" role="tabpanel" aria-labelledby="pills-jabatanplt-tab">
+                <div id="form_jabatan_plt"></div>
               </div>
               <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
                 <div id="form_diklat"></div>
@@ -664,6 +711,47 @@
   </div>
 
 
+<!-- modal ubah foto profil -->
+<div class="modal fade" id="modalFotoProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ubah Foto Profil</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
+                                        <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict" required>
+      
+      <hr>        
+      <span>
+      <b>Keterangan Penting</b><br>
+      Foto Memakai Seragam Khaki dengan atribut lengkap
+      Foto Jelas (tidak kabur/blur)
+      Tipe File JPG/PNG
+      Maximal Ukuran File Foto 1 MB
+      Ukuran Foto 3x4 atau 4x6<br><br>
+      <b>Warna Background Foto</b><br>
+      JPT : Merah<br>
+      Administrator : Biru<br>
+      Pengawas : Hijau<br>
+      Fungisonal Tertentu : Abu-Abu<br>
+      Fungional Umum : Orange<br>
+      PPPK : Kuning
+      </span>
+      <hr>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- tutup modal ubah foto profil  -->
   
 <!-- Modal edit profil -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -675,274 +763,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-      <form method="post" id="form_edit_profil" enctype="multipart/form-data" >
-        <input type="hidden" name="edit_id_pegawai" id="edit_id_pegawai" value="<?=$profil_pegawai['id_peg']?>">
-      <div class="row g-3 align-items-center">
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
-      </div>
-      <div class="col-lg-2">
-        <input type="text" id="edit_gelar1" name="edit_gelar1" class="form-control" value="<?=$profil_pegawai['gelar1']?>">
-      </div>
-      <div class="col-lg-6">
-        <input type="text" id="edit_nama" name="edit_nama" class="form-control" value="<?=$profil_pegawai['nama']?>">
-      </div>
-      <div class="col-lg-2">
-        <input type="text" id="edit_gelar2" name="edit_gelar2" class="form-control" value="<?=$profil_pegawai['gelar2']?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Nip Lama </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="" value="<?=$profil_pegawai['niplama']?>" class="form-control">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Nip Baru </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_nip_baru" name="edit_nip_baru" class="form-control" value="<?=$profil_pegawai['nipbaru']?>">
-      </div>
-
-      <div class="col-lg-2">
-      <label> Unit Kerja / SKPD  </label>
-       
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control select2" data-dropdown-parent="#editProfileModal" data-dropdown-css-class="select2-navy" name="edit_unit_kerja" id="edit_unit_kerja" required>
-                    <option value="" disabled selected>Pilih Unit Kerja</option>
-                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
-                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?>   value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Tempat / Tanggal Lahir </label>
-      </div>
-      <div class="col-lg-5">
-        <input type="text" id="edit_tptlahir" name="edit_tptlahir" class="form-control" value="<?=$profil_pegawai['tptlahir']?>">
-      </div>
-      <div class="col-lg-5">
-        <input type="text" id="edit_tgllahir" name="edit_tgllahir" class="form-control datepickeronly" value="<?=$profil_pegawai['tgllahir']?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Jenis Kelamin </label>
-      </div>
-      <div class="col-lg-10">
-      <div class="form-check form-check-inline">
-      <input <?= $profil_pegawai['jk'] == 'Laki-Laki' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioL" value="Laki-Laki">
-      <label class="form-check-label" for="inlineRadioL">Laki-laki</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input <?= $profil_pegawai['jk'] == 'Perempuan' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioP" value="Perempuan">
-        <label class="form-check-label" for="inlineRadioP">Perempuan</label>
-      </div>
-      </div>
-      
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Golongan Darah </label>
-      </div>
-      <div class="col-lg-10">
-      <div class="form-check form-check-inline">
-      <input <?= $profil_pegawai['goldarah'] == 'A' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_goldar" id="inlineRadioA" value="A">
-      <label class="form-check-label" for="inlineRadioA">A</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input <?= $profil_pegawai['goldarah'] == 'B' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_goldar" id="inlineRadioB" value="B">
-        <label class="form-check-label" for="inlineRadioB">B</label>
-      </div>
-      <div class="form-check form-check-inline">
-      <input <?= $profil_pegawai['goldarah'] == 'O' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_goldar" id="inlineRadioO" value="O">
-      <label class="form-check-label" for="inlineRadioO">O</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input <?= $profil_pegawai['goldarah'] == 'AB' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_goldar" id="inlineRadioAB" value="AB">
-        <label class="form-check-label" for="inlineRadioAB">AB</label>
-      </div>
-      </div>
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Alamat </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_alamat" name="edit_alamat" class="form-control" value="<?= $profil_pegawai['alamat']?>">
-      </div>
-
-    
-      
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Agama </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_agama" id="edit_agama" required>
-                    <option value="" disabled selected>Pilih Agama</option>
-                    <?php if($agama){ foreach($agama as $r){ ?>
-                        <option <?php if($profil_pegawai['id_agama'] == $r['id_agama']) echo "selected"; else echo ""; ?>   value="<?=$r['id_agama']?>"><?=$r['nm_agama']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Status Perkawinan </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_status_kawin" id="edit_status_kawin" required>
-                    <option value="" disabled selected>Pilih Status</option>
-                    <?php if($status_kawin){ foreach($status_kawin as $r){ ?>
-                        <option <?php if($profil_pegawai['id_sk'] == $r['id_sk']) echo "selected"; else echo ""; ?>   value="<?=$r['id_sk']?>"><?=$r['nm_sk']?></option>
-                    <?php } } ?>
-    </select>
-      </div> 
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Status Kepegawaian </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_status_pegawai" id="edit_status_pegawai" required>
-                    <option value="" disabled selected>Pilih Status</option>
-                    <?php if($status_pegawai){ foreach($status_pegawai as $r){ ?>
-                        <option <?php if($profil_pegawai['id_statuspeg'] == $r['id_statuspeg']) echo "selected"; else echo ""; ?>   value="<?=$r['id_statuspeg']?>"><?=$r['nm_statuspeg']?></option>
-                    <?php } } ?>
-    </select>
-      </div> 
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Jenis Kepegawaian </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_jenis_pegawai" id="edit_jenis_pegawai" required>
-                    <option value="" disabled selected>Pilih Jenis Pegawai</option>
-                    <?php if($jenis_pegawai){ foreach($jenis_pegawai as $r){ ?>
-                        <option <?php if($profil_pegawai['id_jenispeg'] == $r['id_jenispeg']) echo "selected"; else echo ""; ?>   value="<?=$r['id_jenispeg']?>"><?=$r['nm_jenispeg']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Jenis Jabatan </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_jenis_jabatan" id="edit_jenis_jabatan" required>
-                    <option value="" disabled selected>Pilih Jenis Jabatan</option>
-                    <?php if($jenis_jabatan){ foreach($jenis_jabatan as $r){ ?>
-                        <option <?php if($profil_pegawai['id_jenisjab'] == $r['id_jenisjab']) echo "selected"; else echo ""; ?>   value="<?=$r['id_jenisjab']?>"><?=$r['nm_jenisjab']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Status Jabatan </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_status_jabatan" id="edit_status_jabatan" required>
-                    <option value="" disabled selected>Pilih Jenis Jabatan</option>
-                    <?php if($status_jabatan){ foreach($status_jabatan as $r){ ?>
-                        <option <?php if($profil_pegawai['id_statusjabatan'] == $r['id_statusjabatan']) echo "selected"; else echo ""; ?>   value="<?=$r['id_statusjabatan']?>"><?=$r['nm_statusjabatan']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-      <!-- <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Pangkat </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="edit_pangkat" id="edit_pangkat" required>
-                    <option value="" disabled selected>Pilih Jenis Jabatan</option>
-                    <?php if($pangkat){ foreach($pangkat as $r){ ?>
-                        <option <?php if($profil_pegawai['id_pangkat'] == $r['id_pangkat']) echo "selected"; else echo ""; ?>   value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
-                    <?php } } ?>
-    </select>
-      </div> -->
-
-      <!-- <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> TMT Pangkat </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_tmt_pangkat" name="edit_tmt_pangkat" class="form-control datepickeronly"  value="<?= $profil_pegawai['tmtpangkat'];?>">
-      </div>
-
-       -->
-
-      <!-- <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> TMT Gaji Berkala </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_tmt_gjberkala" name="edit_tmt_gjberkala" class="form-control datepickeronly" value="<?= $profil_pegawai['tmtgjberkala'];?>">
-      </div> -->
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> TMT CPNS </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_tmt_cpns" name="edit_tmt_cpns" class="form-control datepickeronly" value="<?= $profil_pegawai['tmtcpns'];?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Pendidikan Terakhir </label>
-      </div>
-      <div class="col-lg-10">
-      <select class="form-control" data-dropdown-css-class="" name="" id="" required>
-                    <option value="" disabled selected>Pilih Pendidikan</option>
-                    <?php if($pendidikan){ foreach($pendidikan as $r){ ?>
-                        <option <?php if($profil_pegawai['id_tktpendidikan'] == $r['id_tktpendidikan']) echo "selected"; else echo ""; ?>   value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
-                    <?php } } ?>
-    </select>
-      </div>
-
-      
-      <!-- <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Diklat Struktural </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="" class="form-control" >
-      </div> -->
-
-      
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> NIK </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_nik" name="edit_nik" class="form-control" value="<?= $profil_pegawai['nik'];?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> No Seri Karpeg </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="" class="form-control" value="">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> No Seri Taspen </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_taspen" name="edit_taspen" class="form-control" value="<?= $profil_pegawai['taspen'];?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> No Handphone </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_no_hp" name="edit_no_hp" class="form-control" value="<?= $profil_pegawai['handphone'];?>">
-      </div>
-
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Email </label>
-      </div>
-      <div class="col-lg-10">
-        <input type="text" id="edit_email" name="edit_email" class="form-control" value="<?= $profil_pegawai['email'];?>">
-      </div>
-
-         
-    </div>
-   
-      <!-- <button type="submit" class="btn btn-primary float-right">Submit</button> -->
-      <button class="btn btn-block btn-primary float-right"><i class="fa fa-save"></i> SIMPAN</button>
-    </form>
+      <div class="modal-body" id="edit_profil_pegawai">
+     
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -952,6 +774,11 @@
   </div>
 </div>
 <!-- end Modal edit profil -->
+
+<script>
+
+
+</script>
 
 
 <!-- Modal edit profil -->
@@ -1007,7 +834,7 @@
       <input type="hidden" name="jenis_berkas" id="jenis_berkas">
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="modal_dismis" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-secondary" id="modal_dismis_pdm" data-dismiss="modal">Batal</button>
         <button class="btn btn-block btn-primary" >Ya</button>
       </div>
       </form>
@@ -1036,7 +863,7 @@
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modal_dismis_pdm").trigger( "click" );}, 1000);
                 if(jb == "pangkat"){
                 setTimeout(loadFormPangkat, 1500);
                 } else if(jb == "kgb"){
@@ -1115,13 +942,23 @@
       $('#pills-pangkat-tab').click()
     }
     
+    $(".select2x").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	})
 
   $('.datepickeronly').datepicker({
           format: 'yyyy-mm-dd'
         });
   })
- function loadEditProfilModal (){
-
+ function loadEditProfilModal(id){
+ 
+    $('#edit_profil_pegawai').html('')
+    $('#edit_profil_pegawai').append(divLoaderNavy)
+    $('#edit_profil_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditProfilPegawai")?>'+'/'+id, function(){
+      $('#loader').hide()
+    })
  }
 
  $('#bulan').on('change', function(){
@@ -1153,46 +990,7 @@
   $('#form_presensi_pegawai').submit();
  }
 
-  $('#form_edit_profil').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
-        e.preventDefault();
-        var formvalue = $('#form_edit_profil');
-        var form_data = new FormData(formvalue[0]);
-
-        // if (!$("input[name='edit_goldar']:checked").val()) {
-        //     alert('Silahkan Pilih Golongan Darah!');
-        //       return false;
-        // }
-
-      
-
-        $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditProfil")?>",
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        // dataType: "json",
-        success:function(res){ 
-            console.log(res)
-            var result = JSON.parse(res); 
-            console.log(result)
-            if(result.success == true){
-                successtoast(result.msg)
-                document.getElementById("form_edit_profil").reset();
-                // loadListPangkat()
-                location.reload()
-              } else {
-                errortoast(result.msg)
-                return false;
-              } 
-            
-        }  
-        });  
-          
-        }); 
+   
   function loadFormPangkat(){
     $('#form_pangkat').html(' ')
       $('#form_pangkat').append(divLoaderNavy)
@@ -1225,10 +1023,19 @@
     })
  }
 
- function loadFormJabatan(){
+ function loadFormJabatan(val){
+ var status = val;
   $('#form_jabatan').html(' ')
     $('#form_jabatan').append(divLoaderNavy)
-    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+nip, function(){
+    $('#form_jabatan').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+nip+'/'+status, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormJabatanPlt(){
+  $('#form_jabatan_plt').html(' ')
+    $('#form_jabatan_plt').append(divLoaderNavy)
+    $('#form_jabatan_plt').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatanPlt/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }
@@ -1315,11 +1122,9 @@
     })
  }
 
- $('#profilePict').on('change', function(){
- 
-        $('#form_profile_pict').submit()
-
-    })
+//  $('#profilePict').on('change', function(){
+//         $('#form_profile_pict').submit()
+//     })
  
 
  

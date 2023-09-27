@@ -24,14 +24,10 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <?php if($rs['statusjabatan'] == 1 || $rs['statusjabatan'] == '') { ?>
-              <?php if($rs['ket'] != 'Plt') { ?>
-                <?php if($rs['ket'] != 'Plh') { ?>
+           
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
-
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nama_jabatan']?></td>
-              
               <td class="text-left"><?= formatDateNamaBulan($rs['tmtjabatan'])?></td>
               <td class="text-left"><?=$rs['nm_eselon']?></td>
               <td class="text-left"><?=$rs['angkakredit']?></td>
@@ -86,9 +82,7 @@
               </td>
               <?php } ?>
             </tr>
-            <?php } ?>
-            <?php } ?>
-            <?php } ?>
+          
           <?php } ?>
         </tbody>
       </table>

@@ -1,4 +1,12 @@
 <?php
+    $path = './assets/fotopeg/'.$foto['fotopeg'];
+    // $path = '../siladen/assets/fotopeg/'.$foto['fotopeg'];
+    if($foto['fotopeg']){
+    if (file_exists($path)) {
+       $result['pas_foto'] = 1;
+    } 
+    }
+   
     $progress_target = 0;
     $jumlah_berkas = 15;
     if($result){
@@ -14,7 +22,13 @@
             </div>
         </div>
         <hr>
+  
     </div>
+
+   
+
+    <!-- <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
+                            src="<?=base_url('assets/fotopeg/')?><?=$foto['fotopeg']?>" />  -->
 
 <div class="card-group">
   <div class="card">

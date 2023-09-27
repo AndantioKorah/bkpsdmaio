@@ -82,7 +82,15 @@ $route['kepegawaian/verifikasi/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/veri
 $route['kepegawaian/dokumen/verifikasi'] = 'kepegawaian/C_Kepegawaian/verifikasiDokumen';
 
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
-$route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1';
+$route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1'; 
+$route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai';
+
 
 //api
 $route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';
+$route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
+
+// simata 
+$route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';
+$route['mt/data-master-interval'] = 'simata/C_Simata/masterInterval';
+

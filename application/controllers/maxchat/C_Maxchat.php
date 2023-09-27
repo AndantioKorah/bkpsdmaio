@@ -16,12 +16,12 @@ class C_Maxchat extends CI_Controller
         $this->general->insert('t_chat_group', [
             'text' => json_encode($result)
         ]);
-        if ($result->type == "text" && 
+        if (($result->type == "text" || $result->type == "image") && 
             $result->chatType != "story" &&
-            $result->from != GROUP_CHAT_HELPDESK) {
+            $result->from != GROUP_CHAT_HELPDESK && !isset($result->replyId)) {
                 $this->chatBotLayanan($result);
-        } else if($result->from == GROUP_CHAT_HELPDESK){
-            // if(!isset($result->originalMsg)){
+        } else if($result->to == GROUP_CHAT_HELPDESK){
+            // if(!isset($result->replyId)){
             //     $this->forwardToPegawai($result);
             // } else {
                 $this->chatHelpdeskSiladen($result);
@@ -34,12 +34,12 @@ class C_Maxchat extends CI_Controller
         $sendTo = $result->from;
         $log = null;
 
-        if(isset($result->originalId)){
-            if($result->type == "image"){
-                $ori = json_decode($this->maxchatlibrary->getMessageById($result->originalId), true);
-                $explode = explode("\n", $ori['text']);
-                $chatId = $explode[1];
-            }
+        if(isset($result->replyId)){
+            // if($result->type == "image"){
+            //     $ori = json_decode($this->maxchatlibrary->getMessageById($result->originalId), true);
+            //     $explode = explode("\n", $ori['text']);
+            //     $chatId = $explode[1];
+            // }
             $sender = $this->general->getOne('t_log_webhook', 'chat_id', $chatId, 0);
             if($sender){
                 $media = json_decode($this->maxchatlibrary->getMessageMediaById($result->id), true);
@@ -68,42 +68,47 @@ class C_Maxchat extends CI_Controller
     public function chatHelpdeskSiladen($result){
         $reply = null;
         $sendTo = $result->from;
-        
-        if(isset($result->originalId)){
+        $chatId = 0;
+        if(isset($result->replyId)){
             if($result->type == "image"){
                 $ori = json_decode($this->maxchatlibrary->getMessageById($result->originalId), true);
                 $explode = explode("\n", $ori['text']);
                 $chatId = $explode[1];
             } else if ($result->type == "text"){
-                $explode = explode("\n", $result->originalMsg->text);
-                $chatId = $explode[2];
+                $reply = $result->text;
+                $ori = json_decode($this->maxchatlibrary->getMessageById($result->replyId), true);
+                if($ori){
+                    $explode = explode("\n", $ori['data']['text']);
+                    $chatId = $explode[2];
+                }
             }
-            $sender = $this->general->getOne('t_log_webhook', 'chat_id', $chatId, 0);
+            $sender = json_decode($this->maxchatlibrary->getMessageById($chatId), true);
             if($sender){
-                $sendTo = $sender['sender'];
-                if($result->type == "image"){
-                    $reply = $result->thumbnail;
-                    $log = $this->maxchatlibrary->replyImage([
-                        'image' => $reply, 
-                        'url' => "http://someweb.com/image.png",
-                        'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda gambar", 
-                        'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
-                        'to' => WA_BOT
-                    ]);
-                } else if($result->type == "document"){
-                    $reply = $result->thumbnail;
-                    $log = $this->maxchatlibrary->replyFile([
-                        'file' => $reply, 
-                        'url' => "http://someweb.com/image.png",
-                        'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda dokumen", 
-                        'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
-                        'to' => WA_BOT
-                    ]);
-                } else if ($result->type == "text"){
+                $sendTo = $sender['data']['from'];
+                // if($result->type == "image"){
+                //     $reply = $result->thumbnail;
+                //     $log = $this->maxchatlibrary->replyImage([
+                //         'image' => $reply, 
+                //         'url' => "http://someweb.com/image.png",
+                //         'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda gambar", 
+                //         'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
+                //         'to' => WA_BOT
+                //     ]);
+                // } else if($result->type == "document"){
+                //     $reply = $result->thumbnail;
+                //     $log = $this->maxchatlibrary->replyFile([
+                //         'file' => $reply, 
+                //         'url' => "http://someweb.com/image.png",
+                //         'caption' => isset($result->caption) ? $result->caption : "mengirimkan Anda dokumen", 
+                //         'filename' => date('Ymdhis').'.'.getBase64FileType($reply),
+                //         'to' => WA_BOT
+                //     ]);
+                // } else 
+                if ($result->type == "text"){
                     $reply = $result->text;
                     if($reply != null && $reply != ""){
                         $reply .= "\n";
-                        $log = $this->maxchatlibrary->replyText($sender['sender'], $reply, $chatId);
+                        $log = $this->maxchatlibrary->sendText($sender['data']['from'], trim($reply), $sender['data']['id']);
                     }
                 }
         
@@ -111,7 +116,7 @@ class C_Maxchat extends CI_Controller
                 $response['to'] = $sendTo;
                 $response['log'] = $log;
         
-                $this->general->saveLogWebhook(json_encode($result), json_encode($response));
+                // $this->general->saveLogWebhook(json_encode($result), json_encode($response));
             }
         }
     }
@@ -187,14 +192,26 @@ class C_Maxchat extends CI_Controller
         if($reply == null || $reply == ""){
             $sendTo = GROUP_CHAT_HELPDESK;
             if($pegawai_simpeg){
-                $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$result->id."\n\n".$result->text;
+                if($result->type == "text"){
+                    $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$result->id."\n\n".$result->text;
+                } else {
+                    $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$result->id."\n\n".$result->caption;
+                }
             } else {
                 $reply = $result->fromName."\n".$result->id."\n\n".$result->text;
             }
         }
 
         if($reply != null && $reply != ""){
-            $log = $this->maxchatlibrary->sendText($sendTo, $reply);
+            if($result->type == "text"){
+                $log = $this->maxchatlibrary->sendText($sendTo, $reply);
+            } else if($result->type == "image"){
+                $filename = explode("/", $str);
+                $log = $this->maxchatlibrary->sendImg($sendTo, $reply, $filename[5], $result->url);
+                // $this->general->insert('t_chat_group', [
+                //     'text' => json_encode($filename)
+                // ]);
+            }
         }
 
         $response['text'] = $reply;
@@ -205,6 +222,8 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
+        $str = "https://core.maxchat.id/bkdmdo/download/3EB00C36EF71C52A66B404.jpeg";
+        dd(explode("/", $str)[5]);
         // $result = null;
         // $data = new \stdClass();
         // $data->from = $id;
@@ -212,17 +231,17 @@ class C_Maxchat extends CI_Controller
         // $this->chatBotLayanan($result, $data);
         // dd(!isset($data->asd));
         // dd(property_exists($data, 'asd'));
-        $pegawai = null;
-        $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        if($ws){
-            $resp = json_decode($ws['response'], true);
-            if($resp['code'] == 200){
-                $pegawai = $resp['data'];
-            }
-        }
-        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        dd($aksespegawai);
+        // $pegawai = null;
+        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        // if($ws){
+        //     $resp = json_decode($ws['response'], true);
+        //     if($resp['code'] == 200){
+        //         $pegawai = $resp['data'];
+        //     }
+        // }
+        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        // dd($aksespegawai);
     }
 
 }

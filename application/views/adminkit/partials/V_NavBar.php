@@ -164,7 +164,7 @@
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">
 		<ul class="navbar-nav navbar-align">
-			<li class="nav-item dropdown">
+			<!-- <li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 					<div class="position-relative">
 						<i class="align-middle" data-feather="bell"></i>
@@ -193,7 +193,8 @@
 						<a href="#" class="text-muted">Show all notifications</a>
 					</div>
 				</div>
-			</li>
+			</li> -->
+			
 			<!-- <li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
 					<div class="position-relative">
@@ -289,7 +290,7 @@
 			</a>
 
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-				<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="" /> 
+				<img src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important;" class="avatar img-fluid rounded me-1" alt="" /> 
 				<!-- <span class="text-dark"><?=$this->general_library->getNamaUser();?></span> -->
 			</a>
 				<div class="dropdown-menu dropdown-menu-end">

@@ -17,6 +17,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+  
 <?php if($pdm_pangkat) {?>
 <?php
 if($pdm_pangkat[0]['flag_active'] == 1) {?>
@@ -33,7 +35,7 @@ if($pdm_pangkat[0]['flag_active'] == 1) {?>
 <button  onclick="openModalStatusPmd('pangkat')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }?>
   
   <script>
     function openModalStatusPmd(jenisberkas){
@@ -228,7 +230,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary"  id="btn_upload_pangkat"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -277,7 +279,6 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 $(function(){
-        // $('.select2').select2()
 
    $(".select2").select2({   
 		width: '100%',
@@ -285,7 +286,7 @@ $(function(){
 		allowClear: true,
 	});
   
-        $('#datatable').dataTable()
+    $('#datatable').dataTable()
         loadListPangkat()
     })
 
@@ -311,7 +312,8 @@ $(function(){
         return false;
         }
        
-      
+        document.getElementById('btn_upload_pangkat').disabled = true;
+        $('#btn_upload_pangkat').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -328,6 +330,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form").reset();
+                document.getElementById('btn_upload_pangkat').disabled = false;
+               $('#btn_upload_pangkat').html('Simpan')
                 loadListPangkat()
               } else {
                 errortoast(result.msg)

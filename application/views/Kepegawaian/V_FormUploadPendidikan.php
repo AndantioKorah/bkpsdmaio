@@ -18,6 +18,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm_pendidikan) {?>
 <?php
 if($pdm_pendidikan[0]['flag_active'] == 1) {?>
@@ -33,6 +35,7 @@ if($pdm_pendidikan[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('ijazah')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
 <?php }  ?>
 
 <script>
@@ -156,7 +159,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_pendidikan"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -222,7 +225,9 @@ $(function(){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-       
+
+        document.getElementById('btn_upload_pendidikan').disabled = true;
+        $('#btn_upload_pendidikan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
       
         $.ajax({  
@@ -240,6 +245,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_pendidikan").reset();
+                document.getElementById('btn_upload_pendidikan').disabled = false;
+               $('#btn_upload_pendidikan').html('Simpan')
                 loadListPendidikan()
               } else {
                 errortoast(result.msg)

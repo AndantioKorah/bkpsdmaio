@@ -19,6 +19,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -34,6 +36,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('keluarga')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
 <?php }  ?>
 
 <script>
@@ -121,7 +124,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_keluarga"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -190,7 +193,8 @@ $(function(){
         var form_data = new FormData(formvalue[0]);
   
        
-      
+        document.getElementById('btn_upload_keluarga').disabled = true;
+        $('#btn_upload_keluarga').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -207,6 +211,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_keluarga").reset();
+                document.getElementById('btn_upload_keluarga').disabled = false;
+               $('#btn_upload_keluarga').html('Simpan')
                 loadListKeluarga()
               } else {
                 errortoast(result.msg)

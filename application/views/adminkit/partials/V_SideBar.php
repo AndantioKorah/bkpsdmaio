@@ -47,6 +47,12 @@
 		background-color: #37495e;
 		transition: .2s;
 	}
+
+	.icon-live{
+		font-size: .5rem;
+		border: 1px solid;
+		padding: 3px;
+	}
 </style>
 
 <?php
@@ -177,7 +183,13 @@
 	<li class="sidebar-header">
 		Kepegawaian
 	</li>
-
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getId() == 193){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>walikota/dashboard">
+				<i class="fa fa-desktop"></i> <span class="align-middle">Live Absen Event</span>
+			</a>
+		</li>
+	<?php } ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
 			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
@@ -185,7 +197,7 @@
 	</li>
  
 	<?php
-	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesLayanan()) { ?>
+	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
@@ -199,16 +211,20 @@
 				</span>
 			</a>
 			<ul id="verifikasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
 				<li class="sidebar-item ">
 					<a title="Layanan" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/teknis')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan
 					</a>
 				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
 				<li class="sidebar-item ">
 					<a title="Dokumen Upload" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Dokumen Upload
 					</a>
 				</li>
+				<?php } ?>
 			</ul>
 		</li>
 	<?php } ?>
@@ -260,6 +276,40 @@
 		<?php } ?>
 
 	</li>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
+	<li class="sidebar-header">
+		Manajemen Talenta
+	</li>
+	<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
+				<span class="align-middle">
+					Data Master
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="datamaster" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-indikator')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Indikator
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-interval')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Interval
+					</a>
+				</li>
+				
+				
+			</ul>
+		</li>
+		<?php } ?>
+
 </ul>
 <div class="mt-5">
 	<p></p>

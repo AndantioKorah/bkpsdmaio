@@ -2,17 +2,17 @@
     <div class="card card-default">
         <div class="card-header">
                 <div class="col-3">
-                <button style="color:#fff;"  id="btn_tambah_indikator" class="btn btn-sm  btn-navy" type="submit">TAMBAH INDIKATOR</button>
+                <button style="color:#fff;"  id="btn_tambah_indikator" class="btn btn-sm  btn-navy" type="submit">TAMBAH INTERVAL</button>
                 <!-- <h3 class="card-title">TAMBAH INDIKATOR</h3> -->
                 </div>
         </div>
-        <div class="card-body div_form_tambah_indikator" id="div_form_tambah_indikator" style="display:none;">
-        <form method="post" id="form_tambah_indikator" enctype="multipart/form-data" >
+        <div class="card-body div_form_tambah_interval" id="div_form_tambah_interval" style="display:none;">
+        <form method="post" id="form_tambah_interval" enctype="multipart/form-data" >
                 <div class="row">
                     <div class="col-lg-3 col-md-4">
                         <div class="form-group">
                             <label class="bmd-label-floating">Unsur Penilaian </label>
-                            <select   class="form-control select2 " data-dropdown-css-class="select2-navy" name="unsur_penilaian" id="unsur_penilaian" required>     
+                            <select   class="form-control select2 " data-dropdown-css-class="select2-navy" name="id_m_unsur_penilaian" id="id_m_unsur_penilaian" required>     
                             <option value="" disabled selected>Pilih Unsur Penilaian</option>
                                             <?php if($unsur){ foreach($unsur as $r){ ?>
                                                 <option value="<?=$r['id']?>"><?=$r['nm_unsur']?></option>
@@ -21,24 +21,25 @@
                         </div>
                     </div>
 
+                    
                     <div class="col-lg-3 col-md-4">
                         <div class="form-group">
-                            <label class="bmd-label-floating">Sub Unsur Penilaian</label>
-                            <select class="form-control select2 sub_unsur_penilaian" data-dropdown-css-class="select2-navy" name="sub_unsur_penilaian" id="sub_unsur_penilaian" required>     
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4">
-                        <div class="form-group">
-                            <label class="bmd-label-floating">Indikator</label>
-                            <input required class="form-control" autocomplete="off" type="text" name="indikator" id="indikator" required/>
+                            <label class="bmd-label-floating">Kriteria</label>
+                            <input required class="form-control" autocomplete="off" type="text" name="kriteria" id="kriteria" required/>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-md-4">
                         <div class="form-group">
-                            <label class="bmd-label-floating">Bobot</label>
-                            <input required class="form-control" autocomplete="off" type="number" name="bobot" id="bobot" required/>
+                            <label class="bmd-label-floating">dari</label>
+                            <input min=0 step=0.01  required class="form-control" autocomplete="off" type="number" name="dari" id="dari" required/>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">sampai</label>
+                            <input min=0 step=0.01 required class="form-control" autocomplete="off" type="number" name="sampai" id="sampai" required/>
                         </div>
                     </div>
                    
@@ -55,11 +56,11 @@
     <div class="card card-default">
         <div class="card-header">
                 <div class="col-3">
-                    <h3 class="card-title">LIST INDIKATOR</h3>
+                    <h3 class="card-title">LIST INTERVAL</h3>
                 </div>
         </div>
         <div class="card-body" style="margin-top:-20px;">
-        <div id="list_indikator">
+        <div id="list_interval">
 
         </div>
         </div>
@@ -79,39 +80,19 @@ $(".select2").select2({
      allowClear: true,
  });
 
- loadListindikator()
- 
+ loadListInterval()
  })
 
 
-     $("#unsur_penilaian").change(function() {
-      var id = $("#unsur_penilaian").val();
-      $.ajax({
-              url : "<?php echo base_url();?>simata/C_Simata/getDataSubUnsurPenilaian",
-              method : "POST",
-              data : {id: id},
-              async : false,
-              dataType : 'json',
-              success: function(data){
-              var html = '';
-                      var i;
-                      for(i=0; i<data.length; i++){
-                          html += '<option value='+data[i].id+'>'+data[i].nm_sub_unsur_penilaian+'</option>';
-                      }
-                      $('.sub_unsur_penilaian').html(html);
-                          }
-                  });
-  });
 
-
-  $('#form_tambah_indikator').on('submit', function(e){  
+  $('#form_tambah_interval').on('submit', function(e){  
        
         e.preventDefault();
-        var formvalue = $('#form_tambah_indikator');
+        var formvalue = $('#form_tambah_interval');
         var form_data = new FormData(formvalue[0]);
 
         $.ajax({  
-        url:"<?=base_url("simata/C_Simata/submitTambahIndikator")?>",
+        url:"<?=base_url("simata/C_Simata/submitTambahInterval")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -124,7 +105,7 @@ $(".select2").select2({
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("form_tambah_indikator").reset();
+                document.getElementById("form_tambah_interval").reset();
                 // loadListPangkat()
                 location.reload()
               } else {
@@ -138,25 +119,25 @@ $(".select2").select2({
         });
 
      
- function loadListindikator(){
-   
-    $('#list_indikator').html('')
-    $('#list_indikator').append(divLoaderNavy)
-    $('#list_indikator').load('<?=base_url("simata/C_Simata/loadListIndikator/")?>', function(){
-      $('#loader').hide()
-    })
-  }
-
-  $("#btn_tambah_indikator").click(function() { 
+$("#btn_tambah_indikator").click(function() { 
     // assumes element with id='button'
-    $("#div_form_tambah_indikator").toggle('fast');
+    $("#div_form_tambah_interval").toggle('fast');
 });
 
 $(window).scroll(function() {
   if ($(this).scrollTop() > 0) {
-    $('.div_form_tambah_indikator').fadeOut();
+    $('.div_form_tambah_interval').fadeOut();
   } else {
-    // $('.div_form_tambah_indikator').fadeIn();
+    // $('.div_form_tambah_interval').fadeIn();
   }
 });
+
+function loadListInterval(){
+   
+   $('#list_interval').html('')
+   $('#list_interval').append(divLoaderNavy)
+   $('#list_interval').load('<?=base_url("simata/C_Simata/loadListInterval/")?>', function(){
+     $('#loader').hide()
+   })
+ }
 </script>

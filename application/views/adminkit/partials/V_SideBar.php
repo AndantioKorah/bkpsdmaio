@@ -276,6 +276,7 @@
 		<?php } ?>
 
 	</li>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
 	<li class="sidebar-header">
 		Manajemen Talenta
 	</li>
@@ -292,16 +293,22 @@
 				</span>
 			</a>
 			<ul id="datamaster" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
+				
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-indikator')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Indikator
 					</a>
 				</li>
-				<?php } ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-interval')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Interval
+					</a>
+				</li>
+				
 				
 			</ul>
 		</li>
+		<?php } ?>
 
 </ul>
 <div class="mt-5">

@@ -92,3 +92,5 @@ $route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
 
 // simata 
 $route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';
+$route['mt/data-master-interval'] = 'simata/C_Simata/masterInterval';
+

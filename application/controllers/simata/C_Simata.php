@@ -43,7 +43,8 @@ class C_Simata extends CI_Controller
 
     public function loadKriteriaPenilaian($id)
     {
-		$data['kriteria'] = $this->simata->getKriteriaPenilaian($id);
+		// $data['kriteria'] = $this->simata->getKriteriaPenilaian($id);
+        $data['id_indikator'] = $id;
         $this->load->view('simata/V_KriteriaPenilaian', $data);
     }
 
@@ -51,6 +52,81 @@ class C_Simata extends CI_Controller
     {
         $this->simata->delete('id', $id, "db_simata.m_indikator_penilaian");
     }
+
+    public function updateIndikator()
+	{ 
+		echo json_encode($this->simata->updateIndikator());
+	}
+
+    public function loadListKriteria($id){
+        $data['result'] = $this->simata->getKriteriaPenilaian($id);
+        $this->load->view('simata/V_KriteriaPenilaianItem', $data);
+    }
+
+    public function submitTambahKriteria()
+	{ 
+		echo json_encode( $this->simata->submitTambahKriteria());
+	}
+
+
+    public function updateKriteria()
+    {
+        // dd($_POST['id']);
+        for ($count = 0; $count < count($_POST['id']); $count++) {
+            $id = $_POST['id'][$count];
+            $data = null;
+            // dd($id);
+            // dd($_POST['nm_kriteria'][$count]);
+            if(isset($_POST['nm_kriteria'][$count])){
+                $data['nm_kriteria'] = $_POST['nm_kriteria'][$count];
+            }
+            if(isset($_POST['skor'][$count])){
+                $data['skor'] = $_POST['skor'][$count];
+            }
+           
+            if($data){
+                $result = $this->simata->updateKriteria($id, $data);
+            }
+
+        }
+
+        echo json_encode($result);
+    }
+
+    public function deleteDataKriteria($id)
+    {
+        $this->simata->delete('id', $id, "db_simata.m_kriteria_penilaian");
+    }
+
+
+    public function masterInterval(){
+        $data['unsur'] = $this->simata->getMasterUnsurPenilaian();
+        render('simata/V_MasterInterval', '', '', $data);
+    }
+
+
+    public function submitTambahInterval()
+	{ 
+		echo json_encode( $this->simata->submitTambahInterval());
+	}
+
+
+    public function loadListInterval(){
+        $data['sub_unsur'] = $this->simata->getMasterSubUnsurPenilaian();
+        $data['result'] = $this->simata->getMasterInterval();
+        // dd($data['result']);
+        $this->load->view('simata/V_MasterIntervalItem', $data);
+    }
+
+    public function deleteDataInterval($id)
+    {
+        $this->simata->delete('id', $id, "db_simata.m_interval_penilaian");
+    }
+
+    public function updateInterval()
+	{ 
+		echo json_encode($this->simata->updateInterval());
+	}
 
 
    

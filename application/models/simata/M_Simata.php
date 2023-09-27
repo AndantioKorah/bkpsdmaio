@@ -86,12 +86,169 @@
                 return $this->db->get()->row_array();
             }
 
-            function getKriteriaPenilaian($id){
-                $this->db->select('a.*')
-                    ->from('db_simata.m_kriteria_penilaian a')
-                    ->where('a.id', $id);
-                return $this->db->get()->row_array();
+            
+
+            public function updateIndikator(){
+                $res['code'] = 0;
+                $res['message'] = 'ok';
+                $res['data'] = null;
+            
+                $this->db->trans_begin();
+            
+                $datapost = $this->input->post();
+                $this->db->where('id', $datapost['edit_id'])
+                        ->update('db_simata.m_indikator_penilaian', ['nm_indikator' => $datapost['edit_nm_indikator'], 
+                                                            'bobot' => $datapost['edit_bobot'],  
+                                                             'updated_by' => $this->general_library->getId()]);
+                        $res = array('msg' => 'Berhasil Update Data', 'success' => true);
+                  
+                    
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    $res['code'] = 1;
+                    $res['message'] = 'Terjadi Kesalahan';
+                    $res['data'] = null;
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+                return $res;
             }
+
+
+            public function getKriteriaPenilaian($id){
+                return $this->db->select('a.*')
+                                ->from('db_simata.m_kriteria_penilaian a')  
+                                ->where('a.id_m_indikator_penilaian', $id)
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+            }
+
+
+            public function submitTambahKriteria(){
+    
+                $datapost = $this->input->post();
+                
+                $this->db->trans_begin();
+            
+               
+                $data["id_m_indikator_penilaian"] = $datapost["id_m_indikator_penilaian"];
+                $data["nm_kriteria"] = $datapost["kriteria"];
+                $data["skor"] = $datapost["skor"];
+                $this->db->insert('db_simata.m_kriteria_penilaian', $data);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            
+            
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    // $res['code'] = 1;
+                    // $res['message'] = 'Terjadi Kesalahan';
+                    // $res['data'] = null;
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+                return $res;
+            }
+
+            public function updateKriteria($id, $data) {
+
+
+            
+            $this->db->trans_begin();
+        
+            $this->db->where('id', $id);
+            $this->db->update('db_simata.m_kriteria_penilaian', $data);  
+            $res = array('msg' => 'Data berhasil diubah', 'success' => true);
+
+        
+        
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                // $res['code'] = 1;
+                // $res['message'] = 'Terjadi Kesalahan';
+                // $res['data'] = null;
+                $res = array('msg' => 'Data gagal diubah', 'success' => false);
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+
+        public function submitTambahInterval(){
+    
+            $datapost = $this->input->post();
+            
+            $this->db->trans_begin();
+        
+           
+            $data["id_m_unsur_penilaian"] = $datapost["id_m_unsur_penilaian"];
+            $data["kriteria"] = $datapost["kriteria"];
+            $data["dari"] = $datapost["dari"];
+            $data["sampai"] = $datapost["sampai"];
+            $this->db->insert('db_simata.m_interval_penilaian', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                // $res['code'] = 1;
+                // $res['message'] = 'Terjadi Kesalahan';
+                // $res['data'] = null;
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+        public function getMasterInterval(){
+            return $this->db->select('a.*')
+                            ->from('db_simata.m_interval_penilaian a')  
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+        }
+
+
+
+        public function updateInterval(){
+            $res['code'] = 0;
+            $res['message'] = 'ok';
+            $res['data'] = null;
+        
+            $this->db->trans_begin();
+        
+            $datapost = $this->input->post();
+            $this->db->where('id', $datapost['edit_interval_id'])
+                    ->update('db_simata.m_interval_penilaian', ['kriteria' => $datapost['edit_interval_kriteria'], 
+                                                        'dari' => $datapost['edit_interval_dari'],
+                                                        'sampai' => $datapost['edit_interval_sampai'],  
+                                                         'updated_by' => $this->general_library->getId()]);
+                    $res = array('msg' => 'Berhasil Update Data', 'success' => true);
+              
+                
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $res['code'] = 1;
+                $res['message'] = 'Terjadi Kesalahan';
+                $res['data'] = null;
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+        
+
+            
+                     
+            
        
 	}
 ?>

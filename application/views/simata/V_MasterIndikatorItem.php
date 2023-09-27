@@ -16,8 +16,9 @@
     <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>A.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></a>
     <a class="list-group-item list-group-item-action">
     <?php $no++;?>
+    <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered" style="width:100%;">
-  <thead >
+    <thead >
                 <th class="text-center">No</th>
                 <th style="width:50%;">Indikator</th>
                 <th style="width:25%;">Bobot</th>
@@ -54,6 +55,7 @@
                 <?php } ?>
             </tbody>
         </table>
+        </div>
     </a>
     <?php } ?>
     <?php } ?>
@@ -68,7 +70,8 @@
     <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>B.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></b></a>
     <a class="list-group-item list-group-item-action">
     <?php $no++;?>
-    <table class="table table-hover table-striped table-bordered" style="width:100%;">
+    <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered " style="width:100%;">
             <thead>
             <th class="text-center">No</th>
                 <th style="width:50%;">Indikator</th>
@@ -107,6 +110,7 @@
                 <?php } ?>
             </tbody>
         </table>
+        </div>
     </a>
     <?php } ?>
     <?php } ?>
@@ -117,7 +121,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabelIndikator"><span id="nm_indikator"></span></h5>
+        <h3 class="modal-title" id="exampleModalLabelIndikator"><span id="nm_indikator"></span></h3>
         <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

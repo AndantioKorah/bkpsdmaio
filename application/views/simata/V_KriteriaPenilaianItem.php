@@ -18,7 +18,7 @@
                 <!-- <input type="text" class="form-control" value="<?=$rs['nm_kriteria']?>"> -->
                 </td>
                 <td >
-                <input  name="skor[]" type="text" class="form-control" value="<?=$rs['skor']?>" autocomplete="off">
+                <input  name="skor[]" type="number" class="form-control" value="<?=$rs['skor']?>" autocomplete="off">
                 </td>
                 <td>
                 <a onclick="deleteDataKriteria('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </a>

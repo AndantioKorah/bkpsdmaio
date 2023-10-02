@@ -2,7 +2,7 @@
     <div class="card card-default">
         <div class="card-header">
                 <div class="col-3">
-                <button style="color:#fff;"  id="btn_tambah_indikator" class="btn btn-sm  btn-navy" type="submit">TAMBAH INTERVAL</button>
+                <button style="color:#fff;"  id="btn_tambah_indikator" class="btn btn-sm  btn-navy" type="submit"><i class="fa fa-plus"></i> TAMBAH INTERVAL</button>
                 <!-- <h3 class="card-title">TAMBAH INDIKATOR</h3> -->
                 </div>
         </div>

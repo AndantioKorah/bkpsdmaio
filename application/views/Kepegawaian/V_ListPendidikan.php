@@ -26,7 +26,7 @@
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
 
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nm_tktpendidikanb']?></td>
+              <td class="text-left"><?=$rs['nm_tktpendidikan']?></td>
            
               <td class="text-left"><?=$rs['namasekolah']?></td>
               <td class="text-left"><?=$rs['fakultas']?></td>

@@ -308,6 +308,15 @@
 				
 			</ul>
 		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-target" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
+				<span class="align-middle">
+				Jabatan Target
+				</span>
+			</a>	
+		</li>
 		<?php } ?>
 
 </ul>

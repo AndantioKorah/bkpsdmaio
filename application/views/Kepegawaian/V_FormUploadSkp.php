@@ -109,8 +109,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   </div>
 
   <div class="form-group">
+    <label>Nilai</label>
+    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai"  required/>
+  </div>
+
+  <div class="form-group">
     <label>Predikat</label>
-    <input class="form-control customInput" type="text" id="gb_pejabat" name="skp_predikat"  required/>
+    <input class="form-control customInput" type="text" id="skp_predikat" name="skp_predikat"  required/>
   </div>
 
  

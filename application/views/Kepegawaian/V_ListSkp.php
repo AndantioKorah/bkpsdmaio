@@ -5,6 +5,7 @@
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Tahun</th>
+          <th class="text-left">Nilai</th>
           <th class="text-left">Predikat</th>
           <th class="text-left">File</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
@@ -22,7 +23,8 @@
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['tahun']?></td>
-              <td class="text-left"><?= $rs['predikat']?></td>          
+              <td class="text-left"><?= $rs['nilai']?></td>          
+              <td class="text-left"><?= $rs['predikat']?></td>   
               <td class="text-left">
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_skp" onclick="openFileSKP('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

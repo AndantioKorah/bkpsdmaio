@@ -6,6 +6,8 @@ class C_Simata extends CI_Controller
     {
         parent::__construct();
         $this->load->model('simata/M_Simata', 'simata');
+        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+		$this->load->model('general/M_General', 'general');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
@@ -128,6 +130,47 @@ class C_Simata extends CI_Controller
 		echo json_encode($this->simata->updateInterval());
 	}
 
+    public function jabatanTarget(){
+     
+        $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+    
+        render('simata/V_JabatanTarget', '', '', $data);
+
+    }
+
+    public function loadListJabatanTarget(){
+        $data['sub_unsur'] = $this->simata->getMasterSubUnsurPenilaian();
+        $data['result'] = $this->simata->getMasterIndikator();
+      
+        $this->load->view('simata/V_MasterIndikatorItem', $data);
+    }
+
+    public function loadListPegawaiDinilai($id){
+        $data['jabatan'] = $this->simata->getNamaJabatanAdministrator();
+        // $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator();
+        $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
+        if($id == 0){
+            $data['result'] = null;
+           
+        } else {
+            $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator($id);
+        }
+        $this->load->view('simata/V_JabatanTargetItem', $data);
+    }
+
+    public function submitJabatanTarget(){
+    $this->simata->submitJabatanTarget();
+   
+    redirect('mt/jabatan-target');
+    }
+
+    public function deleteDataJabatanTarget($id)
+    {
+        $this->simata->delete('id', $id, "db_simata.t_penilaian");
+    }
+
+
+    
 
    
 }

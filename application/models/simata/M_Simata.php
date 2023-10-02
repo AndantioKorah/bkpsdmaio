@@ -244,6 +244,74 @@
             return $res;
         }
 
+        function getPegawaiDinilaiToAdministrator($id){
+            $id_pangkat = array(33,34);
+            $this->db->select('TIMESTAMPDIFF(year,a.tmtjabatan, now()) as masakerjajabatan , a.id_peg, a.nipbaru, a.nama,a.gelar1,a.gelar2, b.nama_jabatan, a.tmtjabatan, c.nm_pangkat')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                // ->where('b.eselon like', '%IV%')
+                // ->where("FIND_IN_SET(b.eselon,'IV A,IV B,III B')!=",0)
+                ->group_start()
+                ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
+                ->where("FIND_IN_SET(b.eselon,'IV A,IV B,Non Eselon')!=",0)
+                ->or_where_in('a.pangkat',$id_pangkat)
+                ->group_end()
+                ->where_in('a.pangkat', $id_pangkat)
+                ->where('b.nama_jabatan !=', 'Pelaksana')
+                ->where('b.eselon !=', 'III B')
+                ->where('a.skpd', $id);
+            return $this->db->get()->result_array();
+        }
+        
+        function getJabatanTargetPegawai(){
+            $this->db->select('a.*,b.nama_jabatan,c.nm_unitkerja')
+                ->from('db_simata.t_penilaian a')
+                ->join('db_pegawai.jabatan b', 'a.id_jabatan_target = b.id_jabatanpeg')
+                ->join('db_pegawai.unitkerja c', 'b.id_unitkerja = c.id_unitkerja')
+                // ->where('a.id_peg ', 'PEG0000000ei390')
+                
+                ->where('a.flag_active', 1);
+            return $this->db->get()->result_array();
+        }
+        
+             
+function getNamaJabatanAdministrator(){
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+    ->where("FIND_IN_SET(a.eselon,'III B')!=",0)
+    ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+
+}
+
+ function submitJabatanTarget(){
+ 
+ $jtarget = [];
+ $jtarget = $this->input->post('jabatan_target');
+ $id_peg = $this->input->post('id_pegawai');
+
+ for ($count = 0; $count < count($jtarget); $count++) {
+    $jt = $jtarget[$count];
+  
+    
+    $data["id_peg"] = $id_peg;
+    $data["id_jabatan_target"] = $jt;
+    $data["created_by"] = $this->general_library->getId();
+  
+    
+    $this->db->insert('db_simata.t_penilaian', $data);
+
+}
+
+ 
+    
+}
+
+
         
 
             

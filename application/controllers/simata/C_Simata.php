@@ -150,7 +150,7 @@ class C_Simata extends CI_Controller
         // $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator();
         $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
         if($id == 0){
-            $data['result'] = null;
+            $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
            
         } else {
             $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator($id);
@@ -160,8 +160,8 @@ class C_Simata extends CI_Controller
 
     public function submitJabatanTarget(){
     $this->simata->submitJabatanTarget();
-   
     redirect('mt/jabatan-target');
+    // echo json_encode( $this->simata->submitJabatanTarget());
     }
 
     public function deleteDataJabatanTarget($id)

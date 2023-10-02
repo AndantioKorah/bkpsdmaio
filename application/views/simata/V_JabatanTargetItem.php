@@ -31,8 +31,8 @@
                        
                         </td>
                         <td class="align-top">
-                <!-- <form method="post" action="submit-jabatan-target" enctype="multipart/form-data" > -->
-                <form method="post" id="submit_jabatan_target" enctype="multipart/form-data" >
+                <form method="post" action="submit-jabatan-target" enctype="multipart/form-data" >
+                <!-- <form method="post" id="submit_jabatan_target" enctype="multipart/form-data" > -->
 
                     <div class="mb-3">
                     <div class="row">
@@ -109,8 +109,33 @@
 
                $('#submit_jabatan_target').on('submit', function(e){  
                 e.preventDefault();
-                var formvalue = $('#form_cari');
+                var formvalue = $('#submit_jabatan_target');
                 var form_data = new FormData(formvalue[0]);
+
+                $.ajax({  
+                url:"<?=base_url("simata/C_Simata/submitJabatanTarget")?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    console.log(res)
+                    var result = JSON.parse(res); 
+                    console.log(result)
+                    if(result.success == true){
+                        successtoast(result.msg)
+                        loadListPegawaiDinilai()
+                       
+                       
+                    } else {
+                        errortoast(result.msg)
+                        return false;
+                    } 
+                    
+                }  
+        }); 
              
                 }); 
 

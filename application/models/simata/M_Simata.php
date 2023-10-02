@@ -304,6 +304,9 @@ function getNamaJabatanAdministrator(){
   
     
     $this->db->insert('db_simata.t_penilaian', $data);
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+    return $res;
 
 }
 

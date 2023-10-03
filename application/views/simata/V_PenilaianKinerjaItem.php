@@ -1,0 +1,141 @@
+<?php if($result){ ?>
+    <style>
+      .list-group-item.active {
+    background-color: #222e3c;
+    border-color: var(--bs-list-group-active-border-color);
+    color: var(--bs-list-group-active-color);
+    z-index: 2;
+}
+    </style>
+
+    <div class="table-responsive">
+    
+ 
+    <table id="example" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
+    <thead >
+    <th class="text-center" style="width:5%;">No</th>
+                <th style="width:50%;">Jabatan Target</th>
+                <th style="width:15%;">Nilai Kinerja</th>
+                <th style="width:20%;">Pemeringkatan Kinerja</th>
+
+                <th style="width:6%;"></th>
+                <th style="width:5%;"></th>
+
+            </thead>
+            <tbody>
+           
+                <?php $nomor = 1; foreach($result as $rs){ ?>
+                    <tr style="background-color:#f8f9fa;">
+                            <td  colspan="6"><b><?=$nomor++;?>.  <?=$rs['nama'];?></b><br>
+                            <table class="table table-hover"  style="width:102%;margin-left:-8px;margin-bottom:-8px;" border="0" > 
+                            <!-- <thead>
+                                <th style="width:5%"></th>
+                                <th style="width:48%"></th>
+                                <th style="width:14%"></th>
+                                <th style="width:17%"></th>
+                                <th style="width:5%"></th>
+                                <th></th>
+
+                            </thead> -->
+                            <tbody>
+                            <?php foreach($result2 as $rs2){ ?>
+                            <?php if($rs2['id_peg'] == $rs['id_peg']) { ?>
+                         <tr style="border-bottom:0.5pt solid #e9eaee;border-top:0.5pt solid #e9eaee;">
+                            <td style="width:5%;">-</td>
+                            <td style="width:54%"><?=$rs2['nama_jabatan'];?></td>                            
+                            <td style="width:15%;">80</td>
+                            <td style="width:20%;"><span class="badge bg-secondary">Secondary</span></td>
+                            <td style="width:5%;"><button title="Ubah Data" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> </td>
+                            <td style="width:5%;"> <button title="Ubah Data" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> </td>
+                            </tr>
+                            </tbody>
+                        <?php } ?>
+                <?php } ?>   
+                            </table>
+                        
+                        </td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>   
+                        </tr> 
+                                 
+                       
+                       
+                <?php } ?>
+            </tbody>
+        </table>
+      
+        </div>
+    
+
+</div>
+
+<script>
+  
+
+      $(function(){
+        $('.js-example-basic-multiple').select2();
+        $('#example').dataTable( {
+        "ordering": false
+        } );
+        
+        })
+
+  function deleteDataJt(id){
+                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                       $.ajax({
+                           url: '<?=base_url("simata/C_Simata/deleteDataJabatanTarget/")?>'+id,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data sudah terhapus')
+                               location.reload()
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
+
+
+               $('#submit_jabatan_target').on('submit', function(e){  
+                e.preventDefault();
+                var formvalue = $('#submit_jabatan_target');
+                var form_data = new FormData(formvalue[0]);
+
+                $.ajax({  
+                url:"<?=base_url("simata/C_Simata/submitJabatanTarget")?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    console.log(res)
+                    var result = JSON.parse(res); 
+                    console.log(result)
+                    if(result.success == true){
+                        successtoast(result.msg)
+                        loadListPegawaiDinilai()
+                       
+                       
+                    } else {
+                        errortoast(result.msg)
+                        return false;
+                    } 
+                    
+                }  
+        }); 
+             
+                }); 
+
+
+</script>
+<?php } else { ?>
+    <div class="col-12 text-center">
+        <h5>DATA TIDAK DITEMUKAN !</h5>
+    </div>
+<?php } ?>

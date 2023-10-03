@@ -6,7 +6,7 @@
                 <!-- <h3 class="card-title">TAMBAH INDIKATOR</h3> -->
                 </div>
         </div>
-        <div class="card-body div_form_tambah_indikator" id="div_form_tambah_indikator" style="display:none;">
+        <div class="card-body div_form_tambah_indikator" id="div_form_tambah_indikator" style="display:nonex;">
         <form method="post" id="form_tambah_indikator" enctype="multipart/form-data" >
                 <div class="row">
                     <div class="col-lg-3 col-md-4">
@@ -124,9 +124,9 @@ $(".select2").select2({
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("form_tambah_indikator").reset();
-                // loadListPangkat()
-                location.reload()
+                // document.getElementById("form_tambah_indikator").reset();
+                loadListindikator()
+                // location.reload()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -152,11 +152,11 @@ $(".select2").select2({
     $("#div_form_tambah_indikator").toggle('fast');
 });
 
-$(window).scroll(function() {
-  if ($(this).scrollTop() > 0) {
-    $('.div_form_tambah_indikator').fadeOut();
-  } else {
-    // $('.div_form_tambah_indikator').fadeIn();
-  }
-});
+// $(window).scroll(function() {
+//   if ($(this).scrollTop() > 0) {
+//     $('.div_form_tambah_indikator').fadeOut();
+//   } else {
+//     // $('.div_form_tambah_indikator').fadeIn();
+//   }
+// });
 </script>

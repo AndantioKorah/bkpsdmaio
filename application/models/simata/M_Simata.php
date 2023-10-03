@@ -307,15 +307,32 @@ function getNamaJabatanAdministrator(){
     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
     return $res;
-
-}
-
- 
-    
+    }    
 }
 
 
-        
+public function getPegawaiPenilaianKinerjaAdministratorGroupBy(){
+    return $this->db->select('*')
+                    ->from('db_simata.t_penilaian a')
+                    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                    ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.id', 'asc')
+                    ->group_by('a.id_peg') 
+                    ->get()->result_array();
+}
+
+public function getPegawaiPenilaianKinerjaAdministrator(){
+    return $this->db->select('*')
+                    ->from('db_simata.t_penilaian a')
+                    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                    ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.id', 'asc') 
+                    ->get()->result_array();
+}
 
             
                      

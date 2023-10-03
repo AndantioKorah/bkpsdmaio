@@ -171,6 +171,21 @@ class C_Simata extends CI_Controller
 
 
     
+    public function penilaianKinerja(){
+        $data['result'] = null;
+        render('simata/V_PenilaianKinerja', '', '', $data);
+    }
+
+    public function loadListPegawaiPenilainKinerja(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
+        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();     
+        $this->load->view('simata/V_PenilaianKinerjaItem', $data);
+    }
+
+
+
+    
 
    
 }

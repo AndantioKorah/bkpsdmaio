@@ -317,6 +317,14 @@
 				</span>
 			</a>	
 		</li>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kinerja" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
+				<span class="align-middle">
+				Penilaian Kinerja
+				</span>
+			</a>	
+		</li>
 		<?php } ?>
 
 </ul>

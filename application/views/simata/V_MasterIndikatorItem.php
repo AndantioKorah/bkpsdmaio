@@ -11,7 +11,7 @@
   <a class="list-group-item list-group-item-action active" aria-current="true">
     A. Unsur Penilaian Kinerja
   </a>
-  <?php $no = 1; foreach($sub_unsur as $su){ ?>
+  <?php $bobot = null; $no = 1; foreach($sub_unsur as $su){ ?>
     <?php if($su['id_m_unsur_penilaian'] == 1) { ?>
     <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>A.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></a>
     <a class="list-group-item list-group-item-action">
@@ -25,8 +25,10 @@
                 <th style="width:25%;"></th>
             </thead>
             <tbody>
-                <?php $nomor = 1; foreach($result as $rs){ ?>
+                <?php $nomor = 1;  foreach($result as $rs){ ?>
+                 
                      <?php if($su['id'] == $rs['id_sub_unsur_penilaian']) { ?>
+                      <?php $bobot += $rs['bobot'];?>
                     <tr>
                     <td align="center"><?=$nomor++;?></td>
                         <td><?=$rs['nm_indikator'];?></td>
@@ -53,17 +55,20 @@
                     </tr>
                     <?php } ?>
                 <?php } ?>
+               
             </tbody>
         </table>
         </div>
     </a>
     <?php } ?>
     <?php } ?>
-
+  
+  <span style="margin-left:0px;">Total Bobot = <?= $bobot;?></span>
+  
   <a class="list-group-item list-group-item-action active" aria-current="true">
   B. Unsur Penilaian Potensial
   </a>
-  <?php $no = 1; foreach($sub_unsur as $su){ ?>
+  <?php $bobot = null; $no = 1; foreach($sub_unsur as $su){ ?>
     
     <?php if($su['id_m_unsur_penilaian'] == 2) { ?>
        
@@ -81,6 +86,7 @@
             <tbody>
                 <?php $nomor = 1; foreach($result as $rs){ ?>
                      <?php if($su['id'] == $rs['id_sub_unsur_penilaian']) { ?>
+                      <?php $bobot += $rs['bobot'];?>
                     <tr>
                     <td align="center"><?=$nomor++;?></td>
                         <td><?=$rs['nm_indikator'];?></td>
@@ -114,6 +120,8 @@
     </a>
     <?php } ?>
     <?php } ?>
+    <span style="margin-left:0px;">Total Bobot = <?= $bobot;?></span>
+
 </div>
 
 <!-- modal detail indikator -->

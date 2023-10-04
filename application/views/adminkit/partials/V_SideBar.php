@@ -282,7 +282,7 @@
 	</li>
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
+			<i class="align-middle me-2 fa fa-fw fa-bars"></i> 
 				<span class="align-middle">
 					Data Master
 					<i class="fa fa-chevron-down" 
@@ -319,7 +319,7 @@
 		</li>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kinerja" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-check-square"></i> 
 				<span class="align-middle">
 				Penilaian Kinerja
 				</span>

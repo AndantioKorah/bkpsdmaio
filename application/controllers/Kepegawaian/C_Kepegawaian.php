@@ -51,6 +51,12 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListAssesment', $data);
 	}
 
+	public function loadListTimKerja($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getTimKerja($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListTimKerja', $data);
+	}
+
 	public function loadListKeluarga($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getKeluarga($nip,$kode);
 		$data['kode'] = $kode;
@@ -195,6 +201,12 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->doUploadAssesment());
 	}
+
+	public function doUploadTk()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadTk());
+	}
+
 
 	public function doUploadArsipLainnya()
 	{ 
@@ -622,7 +634,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormPenghargaan($nip){
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'penghargaan');
-
+		$data['pemberi'] = $this->kepegawaian->getPemberiPenghargaan();
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
@@ -1037,6 +1049,19 @@ class C_Kepegawaian extends CI_Controller
         $id_kec = $this->input->post('id');
         $response   = $this->kepegawaian->getkel($id_kec);
         echo json_encode($response);
+    }
+
+	public function loadFormTimKerja($nip){
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'tim_kerja');
+		$data['lingkup_tim'] = $this->kepegawaian->getLingkupTimKerja();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadTimKerja', $data);
     }
 
 

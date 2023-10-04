@@ -334,7 +334,42 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
                     ->get()->result_array();
 }
 
-            
+
+        function getKriteriaKinerja1(){
+            $this->db->select('*')
+            ->where('a.id_m_indikator_penilaian', 19)
+            ->from('db_simata.m_kriteria_penilaian a');
+            return $this->db->get()->result_array(); 
+        }
+
+        function getKriteriaKinerja2(){
+            $this->db->select('*')
+            ->where('a.id_m_indikator_penilaian', 20)
+            ->from('db_simata.m_kriteria_penilaian a');
+            return $this->db->get()->result_array(); 
+        }
+
+        function getKriteriaKinerja3(){
+            $this->db->select('*')
+            ->where('a.id_m_indikator_penilaian', 21)
+            ->from('db_simata.m_kriteria_penilaian a');
+            return $this->db->get()->result_array(); 
+        }
+
+        function getKriteriaKinerja4(){
+            $this->db->select('*')
+            ->where('a.id_m_indikator_penilaian', 22)
+            ->from('db_simata.m_kriteria_penilaian a');
+            return $this->db->get()->result_array(); 
+        }
+
+        function getKriteriaKinerja5(){
+            $this->db->select('*')
+            ->where('a.id_m_indikator_penilaian', 23)
+            ->from('db_simata.m_kriteria_penilaian a');
+            return $this->db->get()->result_array(); 
+        }
+                    
                      
             
        

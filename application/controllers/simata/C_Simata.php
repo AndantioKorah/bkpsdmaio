@@ -158,16 +158,16 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_JabatanTargetItem', $data);
     }
 
-    public function submitJabatanTarget(){
-    $this->simata->submitJabatanTarget();
-    redirect('mt/jabatan-target');
-    // echo json_encode( $this->simata->submitJabatanTarget());
-    }
+        public function submitJabatanTarget(){
+        $this->simata->submitJabatanTarget();
+        redirect('mt/jabatan-target');
+        // echo json_encode( $this->simata->submitJabatanTarget());
+        }
 
-    public function deleteDataJabatanTarget($id)
-    {
-        $this->simata->delete('id', $id, "db_simata.t_penilaian");
-    }
+        public function deleteDataJabatanTarget($id)
+        {
+            $this->simata->delete('id', $id, "db_simata.t_penilaian");
+        }
 
 
     
@@ -182,6 +182,18 @@ class C_Simata extends CI_Controller
         $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();     
         $this->load->view('simata/V_PenilaianKinerjaItem', $data);
     }
+
+    public function loadModalPenilaianKinerja($id,$nip)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+        $data['kriteria_kinerja_1'] = $this->simata->getKriteriaKinerja1();
+        $data['kriteria_kinerja_2'] = $this->simata->getKriteriaKinerja2();
+        $data['kriteria_kinerja_3'] = $this->simata->getKriteriaKinerja3();
+        $data['kriteria_kinerja_4'] = $this->simata->getKriteriaKinerja4();
+        $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
+        $this->load->view('simata/V_ModalPenilaianKinerja', $data);
+    }
+
 
 
 

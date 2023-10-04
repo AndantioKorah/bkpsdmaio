@@ -44,9 +44,16 @@
                             <td style="width:5%;">-</td>
                             <td style="width:54%"><?=$rs2['nama_jabatan'];?></td>                            
                             <td style="width:15%;">80</td>
-                            <td style="width:20%;"><span class="badge bg-secondary">Secondary</span></td>
-                            <td style="width:5%;"><button title="Ubah Data" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> </td>
-                            <td style="width:5%;"> <button title="Ubah Data" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> </td>
+                            <td style="width:20%;"><span class="badge bg-success">Sesuai Ekspektasi</span></td>
+                            <td style="width:5%;"><span class="badge bg-success">0/4</span></td>
+                            <td style="width:5%;"> 
+                            <button 
+                            data-toggle="modal" 
+                            data-id="<?=$rs2['id']?>"
+                            data-nip="<?=$rs2['nipbaru']?>"
+                            href="#modal_penilaian_kinerja"
+                            title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info"> <i class="fa fa-edit"></i></button> 
+                            </td>
                             </tr>
                             </tbody>
                         <?php } ?>
@@ -66,11 +73,32 @@
                 <?php } ?>
             </tbody>
         </table>
+        </div>
+</div>
+
+<!-- modal detail indikator -->
+<div class="modal fade" id="modal_penilaian_kinerja" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelIndikator" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabelIndikator"><span id="nm_indikator"></span></h3>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div id="div_modal_penilaian_kinerja">
       
         </div>
-    
-
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
 </div>
+<!-- tutup modal detail indikator -->
+
 
 <script>
   
@@ -130,8 +158,21 @@
                 }  
         }); 
              
-                }); 
+    }); 
 
+    $(document).on("click", ".open-DetailPenilaian", function () {
+
+    var id = $(this).data('id');
+    var nip = $(this).data('nip');
+    
+    $('#div_modal_penilaian_kinerja').html('')
+    $('#div_modal_penilaian_kinerja').append(divLoaderNavy)
+    $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKinerja/")?>'+id+'/'+nip, function(){
+      $('#loader').hide()
+    })
+    
+
+    });
 
 </script>
 <?php } else { ?>

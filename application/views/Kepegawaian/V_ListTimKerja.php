@@ -4,7 +4,9 @@
       <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
-          <th class="text-left">Nama Assesment</th>
+          <th class="text-left">Nama Tim Kerja</th>
+          <th class="text-left">Jabatan</th>
+          <th class="text-left">Ruang Lingkup Tim Kerja</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -17,8 +19,9 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nilai_assesment']?></td>
-           
+              <td class="text-left"><?=$rs['nm_timkerja']?></td>
+              <td class="text-left"><?=($rs['jabatan'] == '1' ? 'Ketua/Penanggung Jawab' : 'Anggota');;?></td>
+              <td class="text-left"><?=$rs['nm_lingkup_timkerja']?></td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>

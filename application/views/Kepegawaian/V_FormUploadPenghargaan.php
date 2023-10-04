@@ -126,7 +126,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Asal Perolehan</label>
-    <input class="form-control customInput" type="text" id="asal" name="asal"  required/>
+    <select class="form-control select2" data-dropdown-parent="#modalPenghargaan" data-dropdown-css-class="select2-navy" name="pemberi" id="pemberi" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($pemberi){ foreach($pemberi as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['nm_pemberipenghargaan']?></option>
+                    <?php } } ?>
+    </select>
   </div>
 
 
@@ -201,8 +206,8 @@ $(function(){
         var form_data = new FormData(formvalue[0]);
        
        
-        document.getElementById('btn_upload_penghargaan').disabled = true;
-        $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_upload_penghargaan').disabled = true;
+        // $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",

@@ -610,6 +610,9 @@
                 <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & PNS</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="LoadFormTimKerja()" class="nav-link nav-link-profile" id="pills-tk-tab" data-bs-toggle="pill" data-bs-target="#pills-tk" type="button" role="tab" aria-controls="pills-tk" aria-selected="false">Tim Kerja</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
@@ -663,6 +666,9 @@
               </div>
               <div class="tab-pane fade" id="pills-berkaspns" role="tabpanel" aria-labelledby="pills-berkaspns-tab">
               <div id="form_berkaspns"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-tk" role="tabpanel" aria-labelledby="pills-tk-tab">
+                <div id="form_tk"></div>
               </div>
               
               <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
@@ -1110,6 +1116,14 @@
   $('#form_arsip').html(' ')
     $('#form_arsip').append(divLoaderNavy)
     $('#form_arsip').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormArsip/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function LoadFormTimKerja(){
+  $('#form_tk').html(' ')
+    $('#form_tk').append(divLoaderNavy)
+    $('#form_tk').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormTimKerja/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

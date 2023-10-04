@@ -8,15 +8,12 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalAssesment">
-  Tambah Data Assesment
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalTimKerja">
+  Tambah Data Tim Kerja
 </button>
 
-
-
-
-<button onclick="loadRiwayatUsulAssesment()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalAssesment">
-  Riwayat Usul Assesment
+<button onclick="loadRiwayatUsulTimKerja()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
+  Riwayat Usul Tim Kerja
 </button>
 
 
@@ -26,17 +23,17 @@
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
-<button onclick="openModalStatusPmd('assesment')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+<button onclick="openModalStatusPmd('tim_kerja')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
-  <button  onclick="openModalStatusPmd('assesment')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  <button  onclick="openModalStatusPmd('tim_kerja')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
 
-<button  onclick="openModalStatusPmd('assesment')"   
+<button  onclick="openModalStatusPmd('tim_kerja')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
@@ -56,7 +53,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 }
    
 </style>
-<div class="modal fade" id="myModalAssesment">
+<div class="modal fade" id="myModalTimKerja">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -89,33 +86,54 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalAssesment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalTimKerja" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Assesment</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Tim Kerja</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_assesment" enctype="multipart/form-data" >
+      <form method="post" id="upload_form_tk" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
  
   <div class="form-group">
-    <label>Nilai Assesment Manajerial dan Sosial Kultural</label>
-    <input min=0 step=0.01 class="form-control" type="number" id="nilai_assesment" name="nilai_assesment" autocomplete="off"  required/>
+    <label>Nama Tim Kerja</label>
+    <input  class="form-control" type="text" id="nm_timkerja" name="nm_timkerja" autocomplete="off"  required/>
+  </div>
+
+  <div class="form-group">
+    <label>Peran dalam Tim Kerja</label>
+    <select class="form-control select2" data-dropdown-parent="#modalTimKerja" data-dropdown-css-class="select2-navy" name="jabatan" id="jabatan" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                   <option value="1">Ketua/Penanggung Jawab</option>
+                   <option value="2">Anggota</option>
+
+    </select>
+  </div>
+
+  
+  <div class="form-group">
+    <label>Ruang Lingkup Tim Kerja</label>
+    <select class="form-control select2" data-dropdown-parent="#modalTimKerja" data-dropdown-css-class="select2-navy" name="lingkup_timkerja" id="lingkup_timkerja" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($lingkup_tim){ foreach($lingkup_tim as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['nm_lingkup_timkerja']?></option>
+                    <?php } } ?>
+    </select>
   </div>
 
 
-  <!-- <div class="form-group">
-    <label>File Assesment</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_assesment" name="file"   />
-  </div> -->
+  <div class="form-group">
+    <label>File SK</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_tk" name="file"   />
+  </div>
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload_assesment"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_tk"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -128,7 +146,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>
 
    
-<div id="list_assesment">
+<div id="list_tim_kerja">
 
 </div>
 
@@ -142,7 +160,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-    loadListAssesment()
+    loadListTimKerja()
     })
 
     $('.datepicker').datepicker({
@@ -162,24 +180,23 @@ $(function(){
 });
 
     
-        $('#upload_form_assesment').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
-        e.preventDefault();
-        var formvalue = $('#upload_form_assesment');
-        var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('pdf_file_assesment').files.length;
+        $('#upload_form_tk').on('submit', function(e){  
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
+        e.preventDefault();
+        var formvalue = $('#upload_form_tk');
+        var form_data = new FormData(formvalue[0]);
+        var ins = document.getElementById('pdf_file_tk').files.length;
+        
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
        
-        document.getElementById('btn_upload_assesment').disabled = true;
-        $('#btn_upload_assesment').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_tk').disabled = true;
+        $('#btn_upload_tk').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadAssesment")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadTk")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -192,10 +209,10 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_assesment").reset();
-                document.getElementById('btn_upload_assesment').disabled = false;
-               $('#btn_upload_assesment').html('Simpan')
-                loadListAssesment()
+                document.getElementById("upload_form_tk").reset();
+                document.getElementById('btn_upload_tk').disabled = false;
+               $('#btn_upload_tk').html('Simpan')
+                loadListTimKerja()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -206,28 +223,28 @@ $(function(){
           
         }); 
 
-    function loadListAssesment(){
+    function loadListTimKerja(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#list_assesment').html('')
-    $('#list_assesment').append(divLoaderNavy)
-    $('#list_assesment').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/1', function(){
+    $('#list_tim_kerja').html('')
+    $('#list_tim_kerja').append(divLoaderNavy)
+    $('#list_tim_kerja').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListTimKerja/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
     }
 
-    function loadRiwayatUsulAssesment(){
+    function loadRiwayatUsulTimKerja(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
     $('#riwayat_usul_assesment').html('')
     $('#riwayat_usul_assesment').append(divLoaderNavy)
-    $('#riwayat_usul_assesment').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListAssesment/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_assesment').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListTimKerja/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
     }
 
     
-  $("#pdf_file_assesment").change(function (e) {
+  $("#pdf_file_tk").change(function (e) {
 
-        var extension = pdf_file_assesment.value.split('.')[1];
+        var extension = pdf_file_tk.value.split('.')[1];
       
         var fileSize = this.files[0].size/1024;
      

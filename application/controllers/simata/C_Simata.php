@@ -145,30 +145,29 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_MasterIndikatorItem', $data);
     }
 
-    public function loadListPegawaiDinilai($id){
+    public function loadListPegawaiDinilai($id,$tab=null){
         $data['jabatan_adm'] = $this->simata->getNamaJabatanAdministrator();
         $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
         
-
+       
         $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
-        if($id == 0){
-            $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id=4018000);
-            $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
-        } else {
+        // if($id == 0){
+        //     $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id=4018000);
+        //     $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
+        // } else {
             $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id);
             $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id);
-        }
-        $data['unit_kerja'] = $id;
+        
+        $data['tab'] = $tab;
         $this->load->view('simata/V_JabatanTargetItem', $data);
     }
 
         public function submitJabatanTarget(){
            
-        $id_unitkerja =  $this->session->set_flashdata('id_unitkerja', $this->input->post('id_unitkerja'));
-        
-        $this->simata->submitJabatanTarget();
-        redirect('mt/jabatan-target');
-        // echo json_encode( $this->simata->submitJabatanTarget());
+    //    dd($this->input->post());
+        // $this->simata->submitJabatanTarget();
+        // redirect('mt/jabatan-target');
+        echo json_encode( $this->simata->submitJabatanTarget());
         }
 
         public function deleteDataJabatanTarget($id)

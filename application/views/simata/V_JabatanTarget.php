@@ -55,17 +55,19 @@ $(function(){
         allowClear: true,
     });
    
-    loadListPegawaiDinilai()
+    loadListPegawaiDinilai(tab=null)
     })
 
-    function loadListPegawaiDinilai(){
+    function loadListPegawaiDinilai(tab=null){
+    
    var id = $('#unit_kerja').val()
    $('#list_pegawai').html('')
    $('#list_pegawai').append(divLoaderNavy)
-   $('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListPegawaiDinilai/")?>'+id, function(){
+   $('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListPegawaiDinilai/")?>'+id+'/'+tab, function(){
      $('#loader').hide()
    })
-  }
+   
+    }
 
   $('#form_cari').on('submit', function(e){  
 

@@ -44,17 +44,17 @@
                        
                         </td>
                         <td class="align-top">
-                <form method="post"  action="submit-jabatan-target" enctype="multipart/form-data" >
-                <!-- <form method="post" id="submit_jabatan_target" enctype="multipart/form-data" > -->
+                <!-- <form method="post"  action="submit-jabatan-target" enctype="multipart/form-data" > -->
+                <form method="post" id="submit_jabatan_target" class="submit_jabatan_target" enctype="multipart/form-data" >
 
                     <div class="mb-3">
                     <div class="row">
     
                     <div class="col-lg-9 col-md-4">
                         <div class="form-group">
-                              <input type="text" name="id_unitkerja" value="<?=$unit_kerja;?>">
+                              <input type="hidden" name="tab" value="adm">
                         <input type="hidden" name="id_pegawai" value="<?=$rs['id_peg'];?>">
-                        <select class="form-control js-example-basic-multiple" name="jabatan_target[]" multiple="multiple" required>
+                        <select class="form-control js-example-basic-multiple hsl" name="jabatan_target[]" multiple="multiple" required>
                         <!-- <option disabled selected>Pilih Jabatan Target</option> -->
                         <?php if($jabatan_adm){ foreach($jabatan_adm as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?> Pada <?=$r['nm_unitkerja']?> </option>
@@ -76,11 +76,11 @@
                             <?php if($rs['id_peg'] == $jt['id_peg']) { ?>
                                <table class="table table-hover table-striped table-bordered">
                                 <tr >
-                                    <td  valign="top">-</td>
-                                    <td> <b><?=$jt['nama_jabatan'];?> Pada <?=$jt['nm_unitkerja'];?></b> 
+                                    <td style="width:5%;"  valign="top">-</td>
+                                    <td style="width:90%;"> <b><?=$jt['nama_jabatan'];?> Pada <?=$jt['nm_unitkerja'];?></b> 
                                 </td>
                                 <td>
-                                <a onclick="deleteDataJt('<?=$jt['id']?>')" class="btn btn-sm"> <i style="color:red;" class="fa fa-trash"></i> </a>
+                                <a onclick="deleteDataJt('<?=$jt['id']?>','adm')" class="btn btn-sm"> <i style="color:red;" class="fa fa-trash"></i> </a>
                                 </td>
                                 </tr>
                                </table>
@@ -127,15 +127,15 @@
                        
                         </td>
                         <td class="align-top">
-                        <form method="post" id="submit_jabatan_target" action="submit-jabatan-target" enctype="multipart/form-data" >
-                <!-- <form method="post" id="submit_jabatan_target" enctype="multipart/form-data" > -->
+                        <!-- <form method="post"  action="submit-jabatan-target" enctype="multipart/form-data" > -->
+                <form method="post" id="submit_jabatan_target" class="submit_jabatan_target" enctype="multipart/form-data" >
 
                     <div class="mb-3">
                     <div class="row">
     
                     <div class="col-lg-9 col-md-4">
                         <div class="form-group">
-                        <input type="text" name="id_unitkerja" value="<?=$unit_kerja;?>">
+                        <input type="hidden" name="tab" value="jpt">
 
                         <input type="hidden" name="id_pegawai" value="<?=$rs['id_peg'];?>">
                         <select class="form-control js-example-basic-multiple" name="jabatan_target[]" multiple="multiple" required>
@@ -163,7 +163,7 @@
                                     <td> <b><?=$jt['nama_jabatan'];?> Pada <?=$jt['nm_unitkerja'];?></b> 
                                 </td>
                                 <td>
-                                <a onclick="deleteDataJt('<?=$jt['id']?>')" class="btn btn-sm"> <i style="color:red;" class="fa fa-trash"></i> </a>
+                                <a onclick="deleteDataJt('<?=$jt['id']?>','jpt')" class="btn btn-sm"> <i style="color:red;" class="fa fa-trash"></i> </a>
                                 </td>
                                 </tr>
                                </table>
@@ -189,11 +189,19 @@
 
 <script>
       $(function(){
-        $('.js-example-basic-multiple').select2();
+       
+    $('.js-example-basic-multiple').select2();
     $('.datatable').dataTable()
+    var tab = "<?= $tab;?>"
+    if(tab == "adm"){
+      $('#home-tab').click()
+    } else if(tab == "jpt"){
+      $('#profile-tab').click()
+    }
+    // $('#profile-tab').click()
   })
 
-  function deleteDataJt(id){
+  function deleteDataJt(id,tab){
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
                            url: '<?=base_url("simata/C_Simata/deleteDataJabatanTarget/")?>'+id,
@@ -201,7 +209,7 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               location.reload()
+                               loadListPegawaiDinilai(tab)
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -210,8 +218,46 @@
                }
 
           
-
-               
+                $('.submit_jabatan_target').on('submit', function(event){
+                    var base_url = "<?=base_url();?>";
+                    var count_data = 0;
+                    event.preventDefault();
+                    
+                $('.hsl').each(function(){
+                count_data = count_data + 1;
+                });
+                console.log(count_data)
+                if(count_data > 0)
+                {
+                var form_data = $(this).serialize();
+                $.ajax({
+                    url:  base_url + "simata/C_Simata/submitJabatanTarget",
+                    // url:"insert.php",
+                    method:"post",
+                    data:form_data,
+                    
+                    success:function(res){ 
+                        console.log(res)
+                        var result = JSON.parse(res); 
+                        console.log(result)
+                        if(result.success == true){
+                            successtoast(result.msg)
+                            loadListPegawaiDinilai(result.tab)
+                            } else {
+                            errortoast(result.msg)
+                            return false;
+                            } 
+                        
+                    } 
+                })
+                }
+                else
+                {
+                $('#action_alert').html('<p>Please Add atleast one data</p>');
+                $('#action_alert').dialog('open');
+                }
+                });
+                            
 
 // var table = $('.datatable').DataTable();
   

@@ -327,7 +327,7 @@ function getNamaJabatanJpt(){
  $jtarget = [];
  $jtarget = $this->input->post('jabatan_target');
  $id_peg = $this->input->post('id_pegawai');
-
+ $tab = $this->input->post('tab');
  for ($count = 0; $count < count($jtarget); $count++) {
     $jt = $jtarget[$count];
   
@@ -338,10 +338,11 @@ function getNamaJabatanJpt(){
   
     
     $this->db->insert('db_simata.t_penilaian', $data);
-    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true,'tab' => $tab);
 
-    return $res;
     }    
+    
+    return $res;
 }
 
 

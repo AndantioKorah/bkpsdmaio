@@ -263,6 +263,27 @@
                 ->where('a.skpd', $id);
             return $this->db->get()->result_array();
         }
+
+        function getPegawaiDinilaiToJpt($id){
+            $id_pangkat = array(41,42);
+            $this->db->select('TIMESTAMPDIFF(year,a.tmtjabatan, now()) as masakerjajabatan , a.id_peg, a.nipbaru, a.nama,a.gelar1,a.gelar2, b.nama_jabatan, a.tmtjabatan, c.nm_pangkat')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                // ->where('b.eselon like', '%IV%')
+                // ->where("FIND_IN_SET(b.eselon,'IV A,IV B,III B')!=",0)
+                ->group_start()
+                ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
+                ->where("FIND_IN_SET(b.eselon,'III A,IIIB,Non Eselon')!=",0)
+                ->or_where_in('a.pangkat',$id_pangkat)
+                ->group_end()
+                ->where_in('a.pangkat', $id_pangkat)
+                ->where('b.nama_jabatan !=', 'Pelaksana')
+                // ->where('b.eselon !=', 'III B')
+                ->where('a.skpd', $id)
+                ->order_by('a.pangkat', 'desc');
+            return $this->db->get()->result_array();
+        }
         
         function getJabatanTargetPegawai(){
             $this->db->select('a.*,b.nama_jabatan,c.nm_unitkerja')
@@ -287,6 +308,19 @@ function getNamaJabatanAdministrator(){
     return $this->db->get()->result_array(); 
 
 }
+
+function getNamaJabatanJpt(){
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+    ->where("FIND_IN_SET(a.eselon,'II B')!=",0)
+    ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+
+}
+
 
  function submitJabatanTarget(){
  
@@ -321,6 +355,8 @@ public function getPegawaiPenilaianKinerjaAdministratorGroupBy(){
                     ->order_by('a.id', 'asc')
                     ->group_by('a.id_peg') 
                     ->get()->result_array();
+
+      
 }
 
 public function getPegawaiPenilaianKinerjaAdministrator(){
@@ -336,8 +372,9 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
 
 
         function getKriteriaKinerja1(){
-            $this->db->select('*')
+            $this->db->select('a.*,b.bobot')
             ->where('a.id_m_indikator_penilaian', 19)
+            ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
             ->from('db_simata.m_kriteria_penilaian a');
             return $this->db->get()->result_array(); 
         }
@@ -345,6 +382,7 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
         function getKriteriaKinerja2(){
             $this->db->select('*')
             ->where('a.id_m_indikator_penilaian', 20)
+            ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
             ->from('db_simata.m_kriteria_penilaian a');
             return $this->db->get()->result_array(); 
         }
@@ -352,6 +390,7 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
         function getKriteriaKinerja3(){
             $this->db->select('*')
             ->where('a.id_m_indikator_penilaian', 21)
+            ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
             ->from('db_simata.m_kriteria_penilaian a');
             return $this->db->get()->result_array(); 
         }
@@ -359,6 +398,7 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
         function getKriteriaKinerja4(){
             $this->db->select('*')
             ->where('a.id_m_indikator_penilaian', 22)
+            ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
             ->from('db_simata.m_kriteria_penilaian a');
             return $this->db->get()->result_array(); 
         }
@@ -366,8 +406,95 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
         function getKriteriaKinerja5(){
             $this->db->select('*')
             ->where('a.id_m_indikator_penilaian', 23)
+            ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
             ->from('db_simata.m_kriteria_penilaian a');
             return $this->db->get()->result_array(); 
+        }
+
+        public function submitPenilaianKinerja(){
+    
+            $datapost = $this->input->post();
+            
+            $this->db->trans_begin();
+        
+            if($this->input->post('kriteria1') != 0){
+            // $krit = $this->input->post('kriteria1');
+            // $kriteria = explode(",", $krit);
+            // $id_kriteria = $kriteria[0];
+            // $skor = $kriteria[1];
+            // $bobot = $kriteria[2];
+           
+            $total_kinerja = null;
+            for($x=1;$x<=5;$x++){
+                $krit = $this->input->post('kriteria'.$x.'');
+                  $kriteria = explode(",", $krit);
+                  $id_kriteria = $kriteria[0];
+                  $skor = $kriteria[1];
+                  $bobot = $kriteria[2];
+                  $total_kinerja += $skor * $bobot / 100;   
+            }
+           
+
+          }
+
+           $krit1 = $this->input->post('kriteria1');
+           $kriteria1 = explode(",", $krit);
+           $id_kriteria1 = $kriteria1[0];
+
+           $krit2 = $this->input->post('kriteria2');
+           $kriteria2 = explode(",", $krit2);
+           $id_kriteria2 = $kriteria2[0];
+
+           $krit3 = $this->input->post('kriteria3');
+           $kriteria3 = explode(",", $krit3);
+           $id_kriteria3 = $kriteria3[0];
+
+           $krit4 = $this->input->post('kriteria4');
+           $kriteria4 = explode(",", $krit4);
+           $id_kriteria4 = $kriteria4[0];
+
+           $krit5 = $this->input->post('kriteria5');
+           $kriteria5 = explode(",", $krit5);
+           $id_kriteria5 = $kriteria5[0];
+           
+
+
+           
+            $data["id_peg"] = $datapost["id_peg"];
+            $data["kriteria1"] = $datapost["kriteria1"];
+            $data["kriteria2"] = $datapost["kriteria2"];
+            $data["kriteria3"] = $datapost["kriteria3"];
+            $data["kriteria4"] = $datapost["kriteria4"];
+            $data["kriteria5"] = $datapost["kriteria5"];
+            $this->db->insert('db_simata.t_penilaian_kinerja', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            $this->db->where('id', $datapost['id_t_penilaian'])
+                        ->update('db_simata.t_penilaian', 
+                        ['res_kinerja' => $total_kinerja]);
+
+        
+        
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                // $res['code'] = 1;
+                // $res['message'] = 'Terjadi Kesalahan';
+                // $res['data'] = null;
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+        function getPegawaiNilaiKinerjaPegawai($nip){
+            $this->db->select('a.*,b.nipbaru')
+                ->from('db_simata.t_penilaian_kinerja a')
+                ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                ->where('b.nipbaru', $nip);
+                // ->limit(1);
+            return $this->db->get()->row_array();
         }
                     
                      

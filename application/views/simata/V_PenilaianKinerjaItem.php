@@ -18,7 +18,7 @@
                 <th style="width:15%;">Nilai Kinerja</th>
                 <th style="width:20%;">Pemeringkatan Kinerja</th>
 
-                <th style="width:6%;"></th>
+                <!-- <th style="width:6%;"></th> -->
                 <th style="width:5%;"></th>
 
             </thead>
@@ -26,7 +26,7 @@
            
                 <?php $nomor = 1; foreach($result as $rs){ ?>
                     <tr style="background-color:#f8f9fa;">
-                            <td  colspan="6"><b><?=$nomor++;?>.  <?=$rs['nama'];?></b><br>
+                            <td  colspan="5"><b><?=$nomor++;?>.  <?=$rs['nama'];?></b><br>
                             <table class="table table-hover"  style="width:102%;margin-left:-8px;margin-bottom:-8px;" border="0" > 
                             <!-- <thead>
                                 <th style="width:5%"></th>
@@ -43,9 +43,9 @@
                          <tr style="border-bottom:0.5pt solid #e9eaee;border-top:0.5pt solid #e9eaee;">
                             <td style="width:5%;">-</td>
                             <td style="width:54%"><?=$rs2['nama_jabatan'];?></td>                            
-                            <td style="width:15%;">80</td>
+                            <td style="width:15%;"><?=$rs2['res_kinerja'];?></td>
                             <td style="width:20%;"><span class="badge bg-success">Sesuai Ekspektasi</span></td>
-                            <td style="width:5%;"><span class="badge bg-success">0/4</span></td>
+                            <!-- <td style="width:5%;"><span class="badge bg-success">0/5</span></td> -->
                             <td style="width:5%;"> 
                             <button 
                             data-toggle="modal" 
@@ -56,8 +56,8 @@
                             </td>
                             </tr>
                             </tbody>
-                        <?php } ?>
-                <?php } ?>   
+                            <?php } ?>
+                            <?php } ?>   
                             </table>
                         
                         </td>
@@ -65,7 +65,6 @@
                             <td style="display:none"></td>
                             <td style="display:none"></td>
                             <td style="display:none"></td>
-                            <td style="display:none"></td>   
                         </tr> 
                                  
                        
@@ -128,37 +127,37 @@
                }
 
 
-               $('#submit_jabatan_target').on('submit', function(e){  
-                e.preventDefault();
-                var formvalue = $('#submit_jabatan_target');
-                var form_data = new FormData(formvalue[0]);
+    //            $('#submit_jabatan_target').on('submit', function(e){  
+    //             e.preventDefault();
+    //             var formvalue = $('#submit_jabatan_target');
+    //             var form_data = new FormData(formvalue[0]);
 
-                $.ajax({  
-                url:"<?=base_url("simata/C_Simata/submitJabatanTarget")?>",
-                method:"POST",  
-                data:form_data,  
-                contentType: false,  
-                cache: false,  
-                processData:false,  
-                // dataType: "json",
-                success:function(res){ 
-                    console.log(res)
-                    var result = JSON.parse(res); 
-                    console.log(result)
-                    if(result.success == true){
-                        successtoast(result.msg)
-                        loadListPegawaiDinilai()
+    //             $.ajax({  
+    //             url:"<?=base_url("simata/C_Simata/submitJabatanTarget")?>",
+    //             method:"POST",  
+    //             data:form_data,  
+    //             contentType: false,  
+    //             cache: false,  
+    //             processData:false,  
+    //             // dataType: "json",
+    //             success:function(res){ 
+    //                 console.log(res)
+    //                 var result = JSON.parse(res); 
+    //                 console.log(result)
+    //                 if(result.success == true){
+    //                     successtoast(result.msg)
+    //                     loadListPegawaiDinilai()
                        
                        
-                    } else {
-                        errortoast(result.msg)
-                        return false;
-                    } 
+    //                 } else {
+    //                     errortoast(result.msg)
+    //                     return false;
+    //                 } 
                     
-                }  
-        }); 
+    //             }  
+    //     }); 
              
-    }); 
+    // }); 
 
     $(document).on("click", ".open-DetailPenilaian", function () {
 

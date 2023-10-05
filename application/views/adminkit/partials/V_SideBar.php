@@ -60,6 +60,7 @@
 ?>
 
 <ul class="sidebar-nav">
+<?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
 	<div><hr class="sidebar-divider"></div>
 	<div onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
@@ -89,8 +90,10 @@
 				</span>
 			</center>			
 		</li>
+		
 	</div>
 	<div><hr class="sidebar-divider"></div>
+	<?php } ?>
 	<li class="sidebar-header">
 		Main
 	</li>

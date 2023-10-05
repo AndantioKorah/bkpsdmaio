@@ -551,7 +551,10 @@
     <div class="col-lg-12">
         <span><b>Penilaian Kinerja</b></span>
         <hr>
-    <form action="" >
+    <form id="form_penilaian_kinerja" method="post" enctype="multipart/form-data" >
+      <input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
+      <input type="text" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
+
         <div class="table-responsive">
         <table class="table table-striped table-bordered" >
             <tr>
@@ -561,19 +564,19 @@
             <tr>
                 <td style="width:25%">Penilaian Kinerja N-1</td>
                 <td style="width:25%">
-                <select class="form-select select2" >
-                <option value="0" disabled selected>Pilih Item</option>
+                <select class="form-select select2" name="kriteria1" required>
+                <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_1){ foreach($kriteria_kinerja_1 as $r){ ?>
-                     <option value="<?=$r['id']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                     <option <?php if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo ""; ?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
                 <td style="width:25%">Inovatif</td>
                 <td style="width:25%">
-                <select class="form-select select2" >
-                <option value="0" disabled selected>Pilih Item</option>
+                <select class="form-select select2" name="kriteria3" required>
+                <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_3){ foreach($kriteria_kinerja_3 as $r){ ?>
-                        <option value="<?=$r['id']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -582,19 +585,19 @@
             <tr>
                 <td style="width:25%">Penilaian Kinerja N-2</td>
                 <td style="width:25%">
-                <select class="form-select select2" >
-                <option value="0" disabled selected>Pilih Item</option>
+                <select class="form-select select2" name="kriteria2" required>
+                <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                        <option value="<?=$r['id']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
                 <td style="width:25%">Empati dalam Organisasi</td>
                 <td style="width:25%">
-                <select class="form-select select2" >
-                <option value="0" disabled selected>Pilih Item</option>
+                <select class="form-select select2" name="kriteria4" required>
+                <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_4){ foreach($kriteria_kinerja_4 as $r){ ?>
-                        <option value="<?=$r['id']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -607,10 +610,10 @@
                </td>
                 <td style="width:25%">Amanah</td>
                 <td style="width:25%">
-                <select class="form-select select2" >
-                <option value="0" disabled selected>Pilih Item</option>
+                <select class="form-select select2" name="kriteria5" required>
+                <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_5){ foreach($kriteria_kinerja_5 as $r){ ?>
-                        <option value="<?=$r['id']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -620,54 +623,10 @@
         </div>
         <div class="modal-footer" style="margin-bottom:5px;">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <button type="submit" class="btn btn-primary float-right">Simpan</button>
+      <button class="btn btn-primary float-right">Simpan</button>
       </div>
       
     </form>
-
-<!-- 
-    <form >
-    <div class="row col-lg-12">
-    <div class="col-lg-6"> 
-        <span>Spesifik</span>
-        <hr>
-    <div class="row g-3 align-items-center">
-    <div class="col-auto">
-        <label for="inputPassword6" class="col-form-label">Penilaian Kinerja N-1</label>
-    </div>
-    <div class="col-auto">
-        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-    </div>
-
-    <div class="col-auto">
-        <label for="inputPassword6" class="col-form-label">Penilaian Kinerja N-2</label>
-    </div>
-    <div class="col-auto">
-        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-    </div>
-
-    </div>
-    </div>
-
-    <div class="col-lg-6">  
-           <span>Generik</span>
-        <hr>
-    <div class="row g-3 align-items-center">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Password</label>
-  </div>
-  <div class="col-auto">
-    <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-  </div>
-    </div>
-    </div>
-
-    </div>
-
-      <button type="submit" class="btn btn-primary float-right">Submit</button>
-</form> -->
-
-
     </div>
     </div>
   
@@ -680,6 +639,38 @@
         dropdownAutoWidth: true,
         allowClear: true,
     });
+
+
+    $('#form_penilaian_kinerja').on('submit', function(e){  
+                e.preventDefault();
+                var formvalue = $('#form_penilaian_kinerja');
+                var form_data = new FormData(formvalue[0]);
+               
+
+                $.ajax({  
+                url:"<?=base_url("simata/C_Simata/submitPenilaianKinerja")?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    console.log(res)
+                    var result = JSON.parse(res); 
+                    console.log(result)
+                    if(result.success == true){
+                        successtoast(result.msg)
+                        location.reload();
+                    } else {
+                        errortoast(result.msg)
+                        return false;
+                    } 
+                    
+                }  
+        }); 
+             
+    }); 
    
     })
 </script>

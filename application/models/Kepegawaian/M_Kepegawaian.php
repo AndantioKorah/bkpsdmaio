@@ -807,11 +807,11 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
             }
 
-            if($dataInsert['statusjabatan'] == 1) { 
-            dd(1);
-            } else {
-            dd(2);
-            }
+            // if($dataInsert['statusjabatan'] == 1) { 
+            // dd(1);
+            // } else {
+            // dd(2);
+            // }
            
 
             $getJabatan = $this->db->select('*')
@@ -828,7 +828,8 @@ class M_Kepegawaian extends CI_Model
             if(strtotime($tmt_jabatan) > strtotime($getJabatan['tmtjabatan'])){
                
                 if($dataInsert['statusjabatan'] == '1'){
-                    $dataUpdate["skpd"] =  $id_skpd;
+                    $dataUpdate["skpd"] =  $nama_skpd;
+                    $dataUpdate['id_unitkerja']      = $id_skpd;
                     $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
                     $dataUpdate["jabatan"] =   $id_jabatan;
                     $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');
@@ -840,7 +841,8 @@ class M_Kepegawaian extends CI_Model
           } else {
            
             if($dataInsert['statusjabatan'] == '1'){
-            $dataUpdate["skpd"] =  $id_skpd;
+            $dataUpdate["skpd"] =  $nama_skpd;
+            $dataUpdate['id_unitkerja']      = $id_skpd;
             $dataUpdate["tmtjabatan"] =  $tmt_jabatan;
             $dataUpdate["jabatan"] =   $id_jabatan;
             $dataUpdate["jenisjabpeg"] =  $this->input->post('jabatan_jenis');

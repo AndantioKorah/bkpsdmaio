@@ -146,19 +146,26 @@ class C_Simata extends CI_Controller
     }
 
     public function loadListPegawaiDinilai($id){
-        $data['jabatan'] = $this->simata->getNamaJabatanAdministrator();
-        // $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator();
+        $data['jabatan_adm'] = $this->simata->getNamaJabatanAdministrator();
+        $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
+        
+
         $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
         if($id == 0){
-            $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
-           
+            $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id=4018000);
+            $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
         } else {
-            $data['result'] = $this->simata->getPegawaiDinilaiToAdministrator($id);
+            $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id);
+            $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id);
         }
+        $data['unit_kerja'] = $id;
         $this->load->view('simata/V_JabatanTargetItem', $data);
     }
 
         public function submitJabatanTarget(){
+           
+        $id_unitkerja =  $this->session->set_flashdata('id_unitkerja', $this->input->post('id_unitkerja'));
+        
         $this->simata->submitJabatanTarget();
         redirect('mt/jabatan-target');
         // echo json_encode( $this->simata->submitJabatanTarget());
@@ -179,7 +186,7 @@ class C_Simata extends CI_Controller
     public function loadListPegawaiPenilainKinerja(){
         
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();     
+        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
         $this->load->view('simata/V_PenilaianKinerjaItem', $data);
     }
 
@@ -191,8 +198,17 @@ class C_Simata extends CI_Controller
         $data['kriteria_kinerja_3'] = $this->simata->getKriteriaKinerja3();
         $data['kriteria_kinerja_4'] = $this->simata->getKriteriaKinerja4();
         $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
+        $data['id_t_penilaian'] = $id;
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
+        // dd($data['nilai_kinerja']);  
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
+
+
+    public function submitPenilaianKinerja()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianKinerja());
+	}
 
 
 

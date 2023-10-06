@@ -182,14 +182,21 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianKinerja', '', '', $data);
     }
 
-    public function loadListPegawaiPenilainKinerja(){
+    public function loadListPegawaiPenilainKinerjaAdm(){
         
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
         $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
         $this->load->view('simata/V_PenilaianKinerjaItem', $data);
     }
 
-    public function loadModalPenilaianKinerja($id,$nip)
+    public function loadListPegawaiPenilainKinerjaJpt(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
+        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+        $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
+    }
+
+    public function loadModalPenilaianKinerja($id,$nip,$kode)
     {
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
         $data['kriteria_kinerja_1'] = $this->simata->getKriteriaKinerja1();
@@ -199,7 +206,7 @@ class C_Simata extends CI_Controller
         $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
         $data['id_t_penilaian'] = $id;
         $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
-        // dd($data['nilai_kinerja']);  
+        $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
 

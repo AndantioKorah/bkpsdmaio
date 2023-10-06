@@ -553,7 +553,8 @@
         <hr>
     <form id="form_penilaian_kinerja" method="post" enctype="multipart/form-data" >
       <input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
-      <input type="text" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
+      <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
+      <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 
         <div class="table-responsive">
         <table class="table table-striped table-bordered" >
@@ -567,7 +568,7 @@
                 <select class="form-select select2" name="kriteria1" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_1){ foreach($kriteria_kinerja_1 as $r){ ?>
-                     <option <?php if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo ""; ?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
@@ -576,7 +577,7 @@
                 <select class="form-select select2" name="kriteria3" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_3){ foreach($kriteria_kinerja_3 as $r){ ?>
-                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -588,7 +589,7 @@
                 <select class="form-select select2" name="kriteria2" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
@@ -597,7 +598,7 @@
                 <select class="form-select select2" name="kriteria4" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_4){ foreach($kriteria_kinerja_4 as $r){ ?>
-                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria4'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -613,7 +614,7 @@
                 <select class="form-select select2" name="kriteria5" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_5){ foreach($kriteria_kinerja_5 as $r){ ?>
-                        <option value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -641,12 +642,13 @@
     });
 
 
-    $('#form_penilaian_kinerja').on('submit', function(e){  
+    $('#form_penilaian_kinerja').on('submit', function(e){
+      var kode = $('#jenis_jab').val()
+      
                 e.preventDefault();
                 var formvalue = $('#form_penilaian_kinerja');
                 var form_data = new FormData(formvalue[0]);
                
-
                 $.ajax({  
                 url:"<?=base_url("simata/C_Simata/submitPenilaianKinerja")?>",
                 method:"POST",  
@@ -661,7 +663,15 @@
                     console.log(result)
                     if(result.success == true){
                         successtoast(result.msg)
-                        location.reload();
+                        setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
+                        if(kode == 1){
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaAdm, 1000);
+                        } else {
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt, 1000);
+
+                        }
+                        // loadListPegawaiPenilaianKinerjaAdm()
+                    
                     } else {
                         errortoast(result.msg)
                         return false;

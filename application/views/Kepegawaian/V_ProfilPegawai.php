@@ -183,8 +183,8 @@
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 
                 <?php }?>
-                <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['id_peg']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
-                  <i class="fa fa-edit"></i> Edit Profil
+                <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
+                  <i class="fa fa-edit"></i> Edit Profil 
                 </button>
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
@@ -730,6 +730,7 @@
       <div class="modal-body">
       <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict" required>
+                                        <input type="hidden" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>">
       
       <hr>        
       <span>

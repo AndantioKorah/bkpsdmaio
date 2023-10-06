@@ -977,15 +977,22 @@ class C_Kepegawaian extends CI_Controller
 
 	public function updateProfilePict(){
         $photo = $_FILES['profilePict']['name'];
-        $upload = $this->general_library->uploadImage('fotopeg','profilePict');
-		// dd($upload);
+		$nip = $this->input->post('nip');
+        $upload = $this->general_library->uploadImageAdmin('fotopeg','profilePict',$nip);
+	
         if($upload['code'] != 0){
             $this->session->set_flashdata('message', $upload['message']);
         } else {
             $message = $this->kepegawaian->updateProfilePicture($upload);
             $this->session->set_flashdata('message', $message['message']);
         }
-        redirect('kepegawaian/profil');
+
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+        redirect('kepegawaian/profil-pegawai/'.$nip);
+		} else {
+		redirect('kepegawaian/profil');
+		}
+
     }
 
 	public function updateJabatanPeg()
@@ -1020,7 +1027,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadEditProfilPegawai($id)
     {
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($id);
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 		$data['status_kawin'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statuskawin', 'id_sk', 'asc');

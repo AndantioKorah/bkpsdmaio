@@ -2721,7 +2721,7 @@ public function updateProfilePicture($data){
 
                 $getFP = $this->db->select('fotopeg')
                 ->from('db_pegawai.pegawai a')
-                ->where('a.id_peg', $this->general_library->getIdPegSimpeg())
+                ->where('a.nipbaru_ws', $data['nip'])
                 ->limit(1)
                 ->get()->result_array();
                 
@@ -2730,7 +2730,7 @@ public function updateProfilePicture($data){
 
 
 
-                $this->db->where('id_peg', $this->general_library->getIdPegSimpeg())
+                $this->db->where('nipbaru_ws', $data['nip'])
                 ->update('db_pegawai.pegawai', ['fotopeg' => $data['data']['file_name']]);
 
 

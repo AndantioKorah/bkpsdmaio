@@ -11,8 +11,7 @@
 
 <div class="table-responsive">
 
-
-	<table id="table-adm" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
+	<table id="table-jpt" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
 		<thead>
 			<th class="text-center" style="width:5%;">No</th>
 			<th style="width:50%;">Jabatan Target</th>
@@ -49,9 +48,10 @@
 								<td style="width:20%;"><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
 								<!-- <td style="width:5%;"><span class="badge bg-success">0/5</span></td> -->
 								<td style="width:5%;">
-									<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-kode="1"
-										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
-										<i class="fa fa-edit"></i></button>
+									<button data-toggle="modal" data-id="<?=$rs2['id']?>"
+										data-nip="<?=$rs2['nipbaru']?>" data-kode="2" href="#modal_penilaian_kinerja"
+										title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info"> <i
+											class="fa fa-edit"></i></button>
 								</td>
 							</tr>
 						</tbody>
@@ -74,11 +74,10 @@
 </div>
 </div>
 
-
-
 <script>
 	$(function () {
-		$('#table-adm').dataTable({
+		$('.js-example-basic-multiple').select2();
+		$('#table-jpt').dataTable({
 			"ordering": false
 		});
 
@@ -101,19 +100,6 @@
 		}
 	}
 
-
-	// $(document).on("click", ".open-DetailPenilaian", function () {
-
-	// var id = $(this).data('id');
-	// var nip = $(this).data('nip');
-
-	// $('#div_modal_penilaian_kinerja').html('')
-	// $('#div_modal_penilaian_kinerja').append(divLoaderNavy)
-	// $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKinerja/")?>'+id+'/'+nip+'/1', function(){
-	//   $('#loader').hide()
-	// })
-
-	// });
 
 </script>
 <?php } else { ?>

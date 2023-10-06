@@ -767,3 +767,26 @@ function decrypt_custom($encrypted_string)
 //   }       
 //   return $hasil;
 //  }
+
+function pemeringkatanKriteriaKinerja($nilai){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalKinerja();
+
+    $pemeringkatan = null;
+
+    foreach ($list_interval as $li) {
+        if($nilai >= $li['dari'] AND $nilai <= $li['sampai']){
+            if($li['id'] == 1) {
+            $badge = "success";
+            } else if($li['id'] == 3) {
+            $badge = "secondary";
+            } else if($li['id'] == 4) {
+            $badge = "danger";
+            }
+            $pemeringkatan = "<span class='badge bg-".$badge."'>".$li['kriteria']."</span>";
+        }
+    }
+
+    return $pemeringkatan;
+}

@@ -8,12 +8,12 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalTimKerja">
-  Tambah Data Tim Kerja
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalInovasi">
+  Tambah Data Inovasi
 </button>
 
-<button onclick="loadRiwayatUsulTimKerja()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
-  Riwayat Usul Tim Kerja
+<button onclick="loadRiwayatUsulInovasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
+  Riwayat Usul Invasi
 </button>
 
 
@@ -61,7 +61,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div><div class="container"></div>
         <div class="modal-body">
-        <div id="riwayat_usul_tim_kerja"></div>
+        <div id="riwayat_usul_inovasi"></div>
         </div>
        
       </div>
@@ -70,41 +70,33 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalTimKerja" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalInovasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Tim Kerja</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Inovasi</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_tk" enctype="multipart/form-data" >
+      <form method="post" id="upload_form_inovasi" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
  
   <div class="form-group">
-    <label>Nama Tim Kerja</label>
-    <input  class="form-control" type="text" id="nm_timkerja" name="nm_timkerja" autocomplete="off"  required/>
-  </div>
-
-  <div class="form-group">
-    <label>Peran dalam Tim Kerja</label>
-    <select class="form-control select2" data-dropdown-parent="#modalTimKerja" data-dropdown-css-class="select2-navy" name="jabatan" id="jabatan" required>
-                    <option value="" disabled selected>Pilih Item</option>
-                   <option value="1">Ketua/Penanggung Jawab</option>
-                   <option value="2">Anggota</option>
-
-    </select>
+    <label>Nama Inovasi</label>
+    <input  class="form-control" type="text" id="nm_inovasi" name="nm_inovasi" autocomplete="off"  required/>
   </div>
 
   
+
+  
   <div class="form-group">
-    <label>Ruang Lingkup Tim Kerja</label>
-    <select class="form-control select2" data-dropdown-parent="#modalTimKerja" data-dropdown-css-class="select2-navy" name="lingkup_timkerja" id="lingkup_timkerja" required>
+    <label>Kriteria Inovasi</label>
+    <select class="form-control select2" data-dropdown-parent="#modalInovasi" data-dropdown-css-class="select2-navy" name="kriteria_inovasi" id="kriteria_inovasi" required>
                     <option value="" disabled selected>Pilih Item</option>
-                    <?php if($lingkup_tim){ foreach($lingkup_tim as $r){ ?>
-                        <option value="<?=$r['id']?>"><?=$r['nm_lingkup_timkerja']?></option>
+                    <?php if($kriteria_inovasi){ foreach($kriteria_inovasi as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['kriteria_inovasi']?></option>
                     <?php } } ?>
     </select>
   </div>
@@ -112,12 +104,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_tk" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="pdf_file_inovasi" name="file"   />
   </div>
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload_tk"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_inovasi"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -130,13 +122,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>
 
    
-<div id="list_tim_kerja">
+<div id="list_inovasi">
 
 </div>
 
 
 
-<div class="modal fade" id="modal_view_file_tk" data-backdrop="static">
+<div class="modal fade" id="modal_view_file_inovasi" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -152,7 +144,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 </div>
 
+<style>
+  .smalldrop {
+    min-width: 1513px !important;
+    max-width: 1936px !important;
+}
 
+</style>
 
 <script type="text/javascript">
 
@@ -160,10 +158,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 $(function(){
   $(".select2").select2({   
 		width: '100%',
-		dropdownAutoWidth: true,
-		allowClear: true,
+		// dropdownAutoWidth: true,
+		allowClear: true
 	});
-    loadListTimKerja()
+    loadListInovasi()
     })
 
     $('.datepicker').datepicker({
@@ -183,23 +181,23 @@ $(function(){
 });
 
     
-        $('#upload_form_tk').on('submit', function(e){  
+        $('#upload_form_inovasi').on('submit', function(e){  
         
         e.preventDefault();
-        var formvalue = $('#upload_form_tk');
+        var formvalue = $('#upload_form_inovasi');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_tk').files.length;
+        var ins = document.getElementById('pdf_file_inovasi').files.length;
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
        
-        document.getElementById('btn_upload_tk').disabled = true;
-        $('#btn_upload_tk').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_inovasi').disabled = true;
+        $('#btn_upload_inovasi').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadTk")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadInovasi")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -212,10 +210,10 @@ $(function(){
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("upload_form_tk").reset();
-                document.getElementById('btn_upload_tk').disabled = false;
-               $('#btn_upload_tk').html('Simpan')
-                loadListTimKerja()
+                document.getElementById("upload_form_inovasi").reset();
+                document.getElementById('btn_upload_inovasi').disabled = false;
+               $('#btn_upload_inovasi').html('Simpan')
+                loadListInovasi()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -226,28 +224,28 @@ $(function(){
           
         }); 
 
-    function loadListTimKerja(){
+    function loadListInovasi(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#list_tim_kerja').html('')
-    $('#list_tim_kerja').append(divLoaderNavy)
-    $('#list_tim_kerja').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListTimKerja/")?>'+nip+'/1', function(){
+    $('#list_inovasi').html('')
+    $('#list_inovasi').append(divLoaderNavy)
+    $('#list_inovasi').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListInovasi/")?>'+nip+'/1', function(){
       $('#loader').hide()
     })
     }
 
-    function loadRiwayatUsulTimKerja(){
+    function loadRiwayatUsulInovasi(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-    $('#riwayat_usul_tim_kerja').html('')
-    $('#riwayat_usul_tim_kerja').append(divLoaderNavy)
-    $('#riwayat_usul_tim_kerja').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListTimKerja/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_inovasi').html('')
+    $('#riwayat_usul_inovasi').append(divLoaderNavy)
+    $('#riwayat_usul_inovasi').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListInovasi/")?>'+nip+'/2', function(){
       $('#loader').hide()
     })
     }
 
     
-  $("#pdf_file_tk").change(function (e) {
+  $("#pdf_file_inovasi").change(function (e) {
 
-        var extension = pdf_file_tk.value.split('.')[1];
+        var extension = pdf_file_inovasi.value.split('.')[1];
       
         var fileSize = this.files[0].size/1024;
      
@@ -255,8 +253,5 @@ $(function(){
           errortoast("Harus File PDF")
           $(this).val('');
         }
-
-     
-
         });
 </script>

@@ -227,6 +227,7 @@ $(function(){
                 document.getElementById('btn_upload_penghargaan').disabled = false;
                $('#btn_upload_penghargaan').html('Simpan')
                 loadListPenghargaan()
+                setTimeout(function() {$("#modalPenghargaan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

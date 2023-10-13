@@ -218,6 +218,8 @@ $(function(){
                 document.getElementById('btn_upload_sj').disabled = false;
                $('#btn_upload_sj').html('Simpan')
                 loadListSumpahJanji()
+                setTimeout(function() {$("#modalSumpahJanji").trigger( "click" );}, 1000);
+
               } else {
                 errortoast(result.msg)
                 return false;

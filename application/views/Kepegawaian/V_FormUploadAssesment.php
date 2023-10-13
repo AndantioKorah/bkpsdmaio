@@ -102,6 +102,11 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <form method="post" id="upload_form_assesment" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
  
+      <div class="form-group">
+    <label>Tahun</label>
+    <input min=0 step=0.01 class="form-control" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
+  </div>
+
   <div class="form-group">
     <label>Nilai Assesment Manajerial dan Sosial Kultural</label>
     <input min=0 step=0.01 class="form-control" type="number" id="nilai_assesment" name="nilai_assesment" autocomplete="off"  required/>

@@ -240,6 +240,7 @@ $(function(){
                 document.getElementById('btn_upload_diklat').disabled = false;
                $('#btn_upload_diklat').html('Simpan')
                 loadListDiklat()
+                setTimeout(function() {$("#modalDiklat").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

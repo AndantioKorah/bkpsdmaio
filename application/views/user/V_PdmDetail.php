@@ -135,7 +135,7 @@
                     <i class="text-dark fa fa-file-alt fa-2x"></i>
                 </div>
                 <div class="col-12 text-center">
-                    <span class="card-title-pdm">Sert. Diklat</span>
+                    <span class="card-title-pdm">Bangkom</span>
                 </div>
                 </div>
       </div>

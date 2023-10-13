@@ -279,7 +279,7 @@
 		<?php } ?>
 
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isManajemenTalenta()){ ?>
 	<li class="sidebar-header">
 		Manajemen Talenta
 	</li>

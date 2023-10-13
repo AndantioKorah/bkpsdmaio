@@ -50,7 +50,6 @@
 
     function openDetail(id, jenisdok){
 
-
     $('#edit_data_content').html('')
         $('#edit_data_content').append(divLoaderNavy)
         $('#edit_data_content').load('<?=base_url('kepegawaian/C_Kepegawaian/openDetailDokumen/')?>'+id+'/'+jenisdok, function(){

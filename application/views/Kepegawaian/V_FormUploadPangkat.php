@@ -333,6 +333,7 @@ $(function(){
                 document.getElementById('btn_upload_pangkat').disabled = false;
                $('#btn_upload_pangkat').html('Simpan')
                 loadListPangkat()
+                setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

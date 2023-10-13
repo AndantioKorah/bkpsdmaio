@@ -235,6 +235,7 @@ $(function(){
                 document.getElementById('btn_upload_berkala').disabled = false;
                $('#btn_upload_berkala').html('Simpan')
                 loadListGajiBerkala()
+                setTimeout(function() {$("#modalBerkala").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

@@ -214,6 +214,7 @@ $(function(){
                 document.getElementById('btn_upload_keluarga').disabled = false;
                $('#btn_upload_keluarga').html('Simpan')
                 loadListKeluarga()
+                setTimeout(function() {$("#modalKeluarga").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

@@ -110,7 +110,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <select class="form-control select2" data-dropdown-parent="#modalPendidikan" data-dropdown-css-class="select2-navy" name="pendidikan_tingkat" id="pendidikan_tingkat" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_tingkat_pendidikan){ foreach($list_tingkat_pendidikan as $r){ ?>
-                        <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
+                        <option value="<?=$r['id_tktpendidikanb']?>"><?=$r['nm_tktpendidikanb']?></option>
                     <?php } } ?>
     </select>
     </div>
@@ -248,6 +248,7 @@ $(function(){
                 document.getElementById('btn_upload_pendidikan').disabled = false;
                $('#btn_upload_pendidikan').html('Simpan')
                 loadListPendidikan()
+                setTimeout(function() {$("#modalPendidikan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

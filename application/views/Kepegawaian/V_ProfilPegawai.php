@@ -387,7 +387,13 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_pangkat'])?>
+                  <?php if($profil_pegawai['data_pangkat']) {
+                    $data = explode("|", $profil_pegawai['data_pangkat']);
+                    echo $data[0];
+                  } else {
+                    echo $profil_pegawai['nm_pangkat'];
+                  }
+                    ?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
@@ -397,7 +403,14 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($profil_pegawai['tmtpangkat'])?>
+                <?php if($profil_pegawai['data_pangkat']) {
+                    $data = explode("|", $profil_pegawai['data_pangkat']);
+                    echo formatDateNamaBulan($data[1]);
+                  } else {
+                    echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
+                  }
+                    ?>
+                
                 </span>
               </div>
 
@@ -580,10 +593,10 @@
                 <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan Plt/Plh</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormDiklat()" class="nav-link nav-link-profile" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Diklat</button>
+                <button onclick="loadFormDiklat()" class="nav-link nav-link-profile" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Bangkom</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormOrganisasi()" class="nav-link nav-link-profile" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Organisasi</button>
+                <button onclick="loadFormOrganisasi()" class="nav-link nav-link-profile" id="pills-organisasi-tab" data-bs-toggle="pill" data-bs-target="#pills-organisasi" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Sosial Kultural</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormPenghargaan()" class="nav-link nav-link-profile" id="pills-penghargaan-tab" data-bs-toggle="pill" data-bs-target="#pills-penghargaan" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Penghargaan</button>
@@ -612,6 +625,15 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormTimKerja()" class="nav-link nav-link-profile" id="pills-tk-tab" data-bs-toggle="pill" data-bs-target="#pills-tk" type="button" role="tab" aria-controls="pills-tk" aria-selected="false">Tim Kerja</button>
               </li>
+
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="LoadFormInovasi()" class="nav-link nav-link-profile" id="pills-inovasi-tab" data-bs-toggle="pill" data-bs-target="#pills-inovasi" type="button" role="tab" aria-controls="pills-inovasi" aria-selected="false">Inovasi</button>
+              </li>
+<!-- 
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="LoadFormMutasi()" class="nav-link nav-link-profile" id="pills-mutasi-tab" data-bs-toggle="pill" data-bs-target="#pills-mutasi" type="button" role="tab" aria-controls="pills-mutasi" aria-selected="false">Mutasi</button>
+              </li> -->
+            
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
@@ -669,6 +691,14 @@
               </div>
               <div class="tab-pane fade" id="pills-tk" role="tabpanel" aria-labelledby="pills-tk-tab">
                 <div id="form_tk"></div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-inovasi" role="tabpanel" aria-labelledby="pills-inovasi-tab">
+                <div id="form_inovasi"></div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-mutasi" role="tabpanel" aria-labelledby="pills-mutasi-tab">
+                <div id="form_mutasi"></div>
               </div>
               
               <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
@@ -1125,6 +1155,22 @@
   $('#form_tk').html(' ')
     $('#form_tk').append(divLoaderNavy)
     $('#form_tk').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormTimKerja/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function LoadFormInovasi(){
+  $('#form_inovasi').html(' ')
+    $('#form_inovasi').append(divLoaderNavy)
+    $('#form_inovasi').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormInovasi/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function LoadFormMutasi(){
+  $('#form_mutasi').html(' ')
+    $('#form_mutasi').append(divLoaderNavy)
+    $('#form_mutasi').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormTimKerja/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

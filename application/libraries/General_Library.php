@@ -191,6 +191,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isManajemenTalenta(){
+        return $this->getActiveRoleName() == 'manajemen_talenta';
+    }
+
     public function isAdminAplikasi(){
         return $this->getActiveRoleName() == 'admin_aplikasi';
     }
@@ -290,6 +294,7 @@ class General_library
             if($this->isProgrammer()){
                 return true;
             }
+            
             $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');

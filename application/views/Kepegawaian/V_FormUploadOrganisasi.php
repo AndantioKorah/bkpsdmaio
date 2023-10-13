@@ -5,6 +5,127 @@
 		height:35px !important;
 		margin-bottom:10px !important;
     }
+
+    
+.select2.select2-container {
+  /* width: 100% !important; */
+  margin-bottom: 15px;
+}
+
+/*
+.select2.select2-container .select2-selection {
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  height: 34px; 
+  margin-bottom: 15px;
+  outline: none !important;
+  transition: all .15s ease-in-out;
+}
+
+ .select2.select2-container .select2-selection .select2-selection__rendered {
+  color: #333;
+  line-height: 32px;
+  padding-right: 33px;
+}
+
+.select2.select2-container .select2-selection .select2-selection__arrow {
+  background: #f8f8f8;
+  border-left: 1px solid #ccc;
+  -webkit-border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+  height: 32px;
+  width: 33px;
+}
+
+.select2.select2-container.select2-container--open .select2-selection.select2-selection--single {
+  background: #f8f8f8;
+}
+
+.select2.select2-container.select2-container--open .select2-selection.select2-selection--single .select2-selection__arrow {
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+}
+
+.select2.select2-container.select2-container--open .select2-selection.select2-selection--multiple {
+  border: 1px solid #34495e;
+}
+
+.select2.select2-container .select2-selection--multiple {
+  height: auto;
+  min-height: 34px;
+}
+
+.select2.select2-container .select2-selection--multiple .select2-search--inline .select2-search__field {
+  margin-top: 0;
+  height: 32px;
+}
+
+.select2.select2-container .select2-selection--multiple .select2-selection__rendered {
+  display: block;
+  padding: 0 4px;
+  line-height: 29px;
+}
+
+.select2.select2-container .select2-selection--multiple .select2-selection__choice {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  margin: 4px 4px 0 0;
+  padding: 0 6px 0 22px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  position: relative;
+}
+
+.select2.select2-container .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  margin: 0;
+  text-align: center;
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.select2-container .select2-dropdown {
+  background: transparent;
+  border: none;
+  margin-top: -5px;
+}
+
+.select2-container .select2-dropdown .select2-search {
+  padding: 0;
+}
+
+.select2-container .select2-dropdown .select2-search input {
+  outline: none !important;
+  border: 1px solid #34495e !important;
+  border-bottom: none !important;
+  padding: 4px 6px !important;
+}
+
+.select2-container .select2-dropdown .select2-results {
+  padding: 0;
+}
+
+.select2-container .select2-dropdown .select2-results ul {
+  background: #fff;
+  border: 1px solid #34495e;
+}
+
+.select2-container .select2-dropdown .select2-results ul .select2-results__option--highlighted[aria-selected] {
+  background-color: #3498db;
+} */
 </style>
 
 <!-- Button trigger modal -->
@@ -102,7 +223,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
    <input type="hidden" id="id_pegorganisasi" name="id_pegorganisasi" value="">
    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
 
-    <div class="form-group" style="margin-bottom:10px !important;">
+    <div class="form-group" >
     <label >Jenis Organisasi </label>
     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_organisasi" id="jenis_organisasi" required>
                     <option value="" disabled selected>Pilih Item</option>
@@ -117,9 +238,15 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <input class="form-control customInput" type="text" id="nama_organisasi" name="nama_organisasi"  required/>
   </div>
 
+
   <div class="form-group">
     <label>Kedudukan / Jabatan</label>
-    <input class="form-control customInput" type="text" id="jabatan_organisasi" name="jabatan_organisasi"  required/>
+    <select class="form-control select2" data-dropdown-parent="#modalOrganisasi" data-dropdown-css-class="select2-navy" name="id_jabatan_organisasi" id="id_jabatan_organisasi" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($jabatan_organisasi){ foreach($jabatan_organisasi as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['nm_jabatan_organisasi']?></option>
+                    <?php } } ?>
+    </select>
   </div>
 
   
@@ -141,6 +268,11 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="form-group">
     <label>Tempat</label>
     <input class="form-control customInput" type="text" id="tempat" name="tempat"  required/>
+  </div>
+
+  <div class="form-group">
+    <label>File SK</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_organisasi" name="file"   />
   </div>
 
 
@@ -175,6 +307,7 @@ $(function(){
 		width: '100%',
 		dropdownAutoWidth: true,
 		allowClear: true,
+    marginBottom:'500px;'
 	});
         loadListOrganisasi()
     })
@@ -193,7 +326,7 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_organisasi');
         var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('organisasi_pdf_file').files.length;
+        // var ins = document.getElementById('pdf_file_organisasi').files.length;
         
         // if(ins == 0){
         // errortoast("Silahkan upload file terlebih dahulu");
@@ -221,6 +354,7 @@ $(function(){
                 document.getElementById('btn_upload_organisasi').disabled = false;
                $('#btn_upload_organisasi').html('Simpan')
                 loadListOrganisasi()
+                setTimeout(function() {$("#modalOrganisasi").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;
@@ -255,8 +389,6 @@ $(function(){
     $('#iframe_view_file').attr('src', '<?= URL_FILE ?>'+filename)
   }
 
-  
-
         $('.yearpicker').datepicker({
             format: 'yyyy',
             viewMode: "years", 
@@ -264,4 +396,17 @@ $(function(){
             orientation: 'bottom',
             autoclose: true
         });
+
+        $("#pdf_file_organisasi").change(function (e) {
+
+        var extension = pdf_file_organisasi.value.split('.')[1];
+
+        var fileSize = this.files[0].size/1024;
+
+        if (extension != "pdf"){
+          errortoast("Harus File PDF")
+          $(this).val('');
+        }
+        });
+
 </script>

@@ -635,6 +635,105 @@
         <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
+     <?php } else if($param['jenisdokumen']['value'] == 'pendidikan') { ?>
+      <div class="row">
+      <div class="col-lg-6">
+        <table style="width: 100%;" class="table table_dok_detail">
+          <tr>
+            <td class="td-lab-dd">Tingkat Pendidikan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['nm_tktpendidikanb']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Jurusan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['jurusan']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Fakultas</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['fakultas']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Nama Sekolah / Universitas</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['namasekolah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Nama Pimpinan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['pimpinansekolah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Tahun Lulus</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['tahunlulus']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">No. STTB/Ijazah</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['noijasah']?> </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Tgl. STTB/Ijazah</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= $result['tglijasah']?> </td>
+          </tr>
+   
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <span style="font-weight: bold;">File </span>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+      </div>
+    </div>
+    <?php } else if($param['jenisdokumen']['value'] == 'timkerja') { ?>
+      <div class="row">
+      <div class="col-lg-6">
+        <table style="width: 100%;" class="table table_dok_detail">
+          <tr>
+            <td class="td-lab-dd">Nama Tim Kerja</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"><?=$result['nm_timkerja']?></td>
+          </tr>
+          <tr>
+            <td class="td-lab-dd">Jabatan</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd">
+            <?= ($result['jabatan_tim'] == '1') ? 'Ketua/Penanggung Jawab' : 'Anggota'; ?>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="td-lab-dd">Ruang Lingkup</td>
+            <td class="td-smc-dd">:</td>
+            <td class="td-val-dd"><?=$result['nm_lingkup_timkerja']?></td>
+          </tr>
+  
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <span style="font-weight: bold;">GAMBAR SK</span>
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+      </div>
+    </div>
       <?php } ?>
    <!-- END HERE  -->
     <div class="row">

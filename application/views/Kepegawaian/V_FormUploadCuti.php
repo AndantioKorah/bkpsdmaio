@@ -226,6 +226,8 @@ $(function(){
                 document.getElementById('btn_upload_cuti').disabled = false;
                $('#btn_upload_cuti').html('Simpan')
                 loadListCuti()
+                setTimeout(function() {$("#modalCuti").trigger( "click" );}, 1000);
+                
               } else {
                 errortoast(result.msg)
                 return false;

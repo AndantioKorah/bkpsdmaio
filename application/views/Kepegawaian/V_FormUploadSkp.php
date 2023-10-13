@@ -208,6 +208,8 @@ $(function(){
                 document.getElementById('btn_upload_skp').disabled = false;
                $('#btn_upload_skp').html('Simpan')
                 loadListSkp()
+                setTimeout(function() {$("#modalSkp").trigger( "click" );}, 1000);
+
               } else {
                 errortoast(result.msg)
                 return false;

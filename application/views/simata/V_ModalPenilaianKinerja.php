@@ -637,7 +637,7 @@
 
    $(".select2").select2({   
         width: '100%',
-        dropdownAutoWidth: true,
+        // dropdownAutoWidth: true,
         allowClear: true,
     });
 

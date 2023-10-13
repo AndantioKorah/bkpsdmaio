@@ -57,6 +57,12 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListTimKerja', $data);
 	}
 
+	public function loadListInovasi($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getInovasi($nip,$kode);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListInovasi', $data);
+	}
+
 	public function loadListKeluarga($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getKeluarga($nip,$kode);
 		$data['kode'] = $kode;
@@ -205,6 +211,17 @@ class C_Kepegawaian extends CI_Controller
 	public function doUploadTk()
 	{ 
 		echo json_encode( $this->kepegawaian->doUploadTk());
+	}
+
+	public function doUploadInovasi()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadInovasi());
+	}
+
+
+	public function doUploadSk()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadSk());
 	}
 
 
@@ -361,7 +378,9 @@ class C_Kepegawaian extends CI_Controller
 				$data['path'] = 'arsipberkaspns/'.$data['result']['gambarsk'];
             } else if($jd == "arsip"){
 				$data['path'] = 'arsiplain/'.$data['result']['gambarsk'];
-            }     else {
+            } else if($jd == "timkerja"){
+				$data['path'] = 'arsiptimkerja/'.$data['result']['gambarsk'];
+            }       else {
 				$data['path'] = null;
 			}
 			
@@ -443,6 +462,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_dokumen']['pegberkaspns']['db'] = 'pegberkaspns';
 		$data['list_dokumen']['pegberkaspns']['nama'] = 'SK CPNS & PNS';
 		$data['list_dokumen']['pegberkaspns']['value'] = 'berkaspns';
+
+		$data['list_dokumen']['pegtimkerja']['db'] = 'pegtimkerja';
+		$data['list_dokumen']['pegtimkerja']['nama'] = 'Tim Kerja';
+		$data['list_dokumen']['pegtimkerja']['value'] = 'timkerja';
 
 		
 		$this->session->set_userdata('list_dokumen', $data['list_dokumen']);
@@ -552,7 +575,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormPendidikan($nip){
 		// $data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
-		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
 		
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
 		$data['pdm_pendidikan'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'ijazah');
@@ -619,9 +642,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormOrganisasi($nip){
-		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'id_organisasi', 'asc');
+		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'no_urut', 'asc');
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', null);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'organisasi');
+		$data['lingkup_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.lingkup_organisasi', 'id', 'asc');
+		$data['jabatan_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan_organisasi', 'id', 'asc');
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -1058,7 +1083,7 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($response);
     }
 
-	public function loadFormTimKerja($nip){
+	public function LoadFormTimKerja($nip){
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'tim_kerja');
 		$data['lingkup_tim'] = $this->kepegawaian->getLingkupTimKerja();
@@ -1069,6 +1094,19 @@ class C_Kepegawaian extends CI_Controller
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
         $this->load->view('kepegawaian/V_FormUploadTimKerja', $data);
+    }
+
+	public function LoadFormInovasi($nip){
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'tim_kerja');
+		$data['kriteria_inovasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.inovasi', 'id', 'asc');
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadInovasi', $data);
     }
 
 

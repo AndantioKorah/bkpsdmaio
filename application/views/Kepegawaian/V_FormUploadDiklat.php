@@ -134,7 +134,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   </div>
 
   <div class="form-group">
-    <label>Jam</label>
+    <label>Total Jam Pelatihan</label>
     <input class="form-control customInput" type="text" id="diklat_jam" name="diklat_jam"  required/>
   </div>
 
@@ -276,6 +276,8 @@ $(function(){
 
   $("#diklat_pdf_file").change(function (e) {
 
+    
+
         var extension = diklat_pdf_file.value.split('.')[1];
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
@@ -287,7 +289,7 @@ $(function(){
         }
 
         if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
+          errortoast("Maksimal Ukuran File 1 MB")
           $(this).val('');
         }
 

@@ -234,7 +234,7 @@
       <select class="form-control select2" data-dropdown-css-class="" name="pendidikan" id="pendidikan" required>
                     <option value="" disabled selected>Pilih Pendidikan</option>
                     <?php if($pendidikan){ foreach($pendidikan as $r){ ?>
-                        <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
+                        <option value="<?=$r['id_tktpendidikanb']?>"><?=$r['nm_tktpendidikanb']?></option>
                     <?php } } ?>
     </select>
       </div>

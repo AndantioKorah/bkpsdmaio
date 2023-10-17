@@ -81,7 +81,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         <div class="modal-body" id="modal_view_file_content">
         <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_pendidikan"  frameborder="0" ></iframe>	
-      </div>
+           
+          </div>
         </div>
       </div>
     </div>

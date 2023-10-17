@@ -126,6 +126,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       </div>
     </div>
 </div>
+
 <div class="modal fade" id="modal_view_file" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -134,9 +135,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
           </div>
         <div class="modal-body">
            <div id="modal_view_file_content">
-            <h5 id="iframe_loader" class="text-center"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-         </div>
+
+          </div>
         </div>
       </div>
     </div>

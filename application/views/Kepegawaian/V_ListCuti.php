@@ -71,32 +71,42 @@
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-        'username': '<?=$this->general_library->getUserName()?>',
-        'password': '<?=$this->general_library->getPassword()?>',
-        'filename': 'arsipcuti/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
+    // $.ajax({
+    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+    //   method: 'POST',
+    //   data: {
+    //     'username': '<?=$this->general_library->getUserName()?>',
+    //     'password': '<?=$this->general_library->getPassword()?>',
+    //     'filename': 'arsipcuti/'+filename
+    //   },
+    //   success: function(data){
+    //     let res = JSON.parse(data)
         
 
-        if(res == null){
-          $('.iframe_loader').show()  
-          $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
-        }
+    //     if(res == null){
+    //       $('.iframe_loader').show()  
+    //       $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
+    //     }
 
-        $('#iframe_view_file_cuti').attr('src', res.data)
+    //     $('#iframe_view_file_cuti').attr('src', res.data)
+    //     $('#iframe_view_file_cuti').on('load', function(){
+    //       $('.iframe_loader').hide()
+    //       $(this).show()
+    //     })
+    //   }, error: function(e){
+    //     errortoast('Terjadi Kesalahan')
+    //   }
+    // })
+
+    var number = Math.floor(Math.random() * 1000);
+   $link = "http://siladen.manadokota.go.id/bidik/arsipcuti/"+filename+"?v="+number;
+
+    $('#iframe_view_file_cuti').attr('src', $link)
         $('#iframe_view_file_cuti').on('load', function(){
           $('.iframe_loader').hide()
           $(this).show()
-        })
-      }, error: function(e){
-        errortoast('Terjadi Kesalahan')
-      }
     })
+
   }
 
   function deleteData(id,file,kode){

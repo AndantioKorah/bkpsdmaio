@@ -222,6 +222,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
    
    <input type="hidden" id="id_pegorganisasi" name="id_pegorganisasi" value="">
    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
+   <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
 
     <div class="form-group" >
     <label >Jenis Organisasi </label>
@@ -273,6 +274,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_organisasi" name="file"   />
+    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
 
@@ -290,6 +292,23 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   </div>
 </div>
 
+
+
+<div class="modal fade" id="modal_view_file_organisasi" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_organisasi"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
 
    
 
@@ -400,13 +419,19 @@ $(function(){
         $("#pdf_file_organisasi").change(function (e) {
 
         var extension = pdf_file_organisasi.value.split('.')[1];
-
+        var MaxSize = <?=$format_dok['file_size']?>;
         var fileSize = this.files[0].size/1024;
 
         if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');
         }
+
+        if (fileSize > MaxSize ){
+          errortoast("Maksimal Ukuran File 1 MB")
+          $(this).val('');
+        }
+
         });
 
 </script>

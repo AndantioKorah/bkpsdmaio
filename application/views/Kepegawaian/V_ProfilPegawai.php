@@ -112,6 +112,11 @@
   cursor:pointer;
 }
 
+.select2.select2-container {
+  /* width: 100% !important; */
+  margin-bottom: 15px;
+}
+
 
   </style>
 

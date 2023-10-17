@@ -110,13 +110,28 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Nilai</label>
-    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai"  required/>
+    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai" />
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Predikat</label>
     <input class="form-control customInput" type="text" id="skp_predikat" name="skp_predikat"  required/>
-  </div>
+  </div> -->
+
+  <div class="form-group " style="margin-bottom:10px !important;">
+<label >Predikat</label>
+<select  class="form-control  "  name="skp_predikat" id="skp_predikat" required>
+                <option value="" disabled selected>Pilih Predikat</option>
+                <option value="Sangat Baik">Sangat Baik</option>
+                <option value="Baik">Baik</option>
+                <option value="Butuh Perbaikan">Butuh Perbaikan</option>
+                <option value="Kurang">Kurang</option>
+                <option value="Sangat Kurang">Sangat Kurang</option>
+                <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
+                  <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
+                <?php } } ?>
+</select>
+</div>
 
  
   <div class="form-group">

@@ -76,9 +76,9 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'gajiberkala') { ?>
@@ -123,9 +123,9 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
 
       </div>
     </div>
@@ -192,10 +192,10 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <!-- <iframe style="height: 50vh; width: 100%;" src="<?=base_url('arsipjabatan/').$result['gambarsk']?>"></iframe> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'diklat') { ?>
@@ -252,14 +252,14 @@
           <tr>
             <td class="td-lab-dd">Tanggal STTPP</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['tglsttpp']?></td>
+            <td class="td-val-dd"><?=formatDateNamaBulan($result['tglsttpp'])?></td>
           </tr>
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'organisasi') { ?>
@@ -484,9 +484,9 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'skp') { ?>
@@ -507,9 +507,9 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <span style="font-weight: bold;">GAMBAR SK</span>
+        <!-- <span style="font-weight: bold;">GAMBAR SK</span> -->
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'assesment') { ?>
@@ -527,7 +527,7 @@
       <div class="col-lg-6">
         <span style="font-weight: bold;">File Assesment</span>
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'arsip') { ?>
@@ -545,7 +545,7 @@
       <div class="col-lg-6">
         <span style="font-weight: bold;">File</span>
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'berkaspns') { ?>
@@ -564,7 +564,7 @@
       <div class="col-lg-6">
         <span style="font-weight: bold;">File </span>
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'pendidikan') { ?>
@@ -632,7 +632,7 @@
       <div class="col-lg-6">
         <span style="font-weight: bold;">File </span>
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
      <?php } else if($param['jenisdokumen']['value'] == 'pendidikan') { ?>

@@ -39,13 +39,25 @@ class C_Login extends CI_Controller
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
-        $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+        // $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
         $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
         // dd($data);
-        $this->session->set_userdata('live_tpp', $data['tpp']);
+        // $this->session->set_userdata('live_tpp', null);
         // $data = null;
 
         render('login/V_Welcome', '', '', $data);
+    }
+
+    public function loadLiveTpp(){
+        if(!$this->session->userdata('live_tpp')){
+            $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+            $this->session->set_userdata('live_tpp', $data['tpp']);
+        } else {
+            $data['tpp'] = $this->session->userdata('live_tpp');
+        }
+        $data['tpp']['capaian_tpp'] = formatCurrencyWithoutRp($data['tpp']['capaian_tpp']);
+        $data['tpp']['pagu_tpp']['pagu_tpp'] = formatCurrencyWithoutRp($data['tpp']['pagu_tpp']['pagu_tpp']);
+        echo json_encode($data['tpp']);
     }
 
     public function authenticateAdmin()
@@ -125,6 +137,7 @@ class C_Login extends CI_Controller
                 // 'getBidangBySub' => $list_sub_bidang,
                 'ID_PENDAFTARAN_PASIEN' =>  null,
                 'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
+                'live_tpp' => null
             ]);
             if($params){
                 foreach($params as $p){

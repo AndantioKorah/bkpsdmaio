@@ -130,7 +130,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListSumpahJanji', $data);
 	}
 
-
+	public function loadListPelanggaran($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getAllPelanggaranByNip($nip);
+		$data['kode'] = $kode;
+		$this->load->view('kepegawaian/V_ListPelanggaran', $data);
+	}
 
 	public function loadListPenugasan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPenugasan($nip,$kode);
@@ -751,6 +755,16 @@ class C_Kepegawaian extends CI_Controller
 		}
         $this->load->view('kepegawaian/V_FormUploadSumpahJanji', $data);
     }
+
+	public function loadFormPelanggaran($nip){
+		$data['list_pelanggaran'] = $this->kepegawaian->getAllPelanggaranByNip($nip);
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadPelanggaran', $data);
+	}
 
 	public function LoadFormArsip($nip){
 		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();

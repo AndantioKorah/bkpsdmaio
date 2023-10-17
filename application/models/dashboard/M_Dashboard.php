@@ -156,11 +156,11 @@
                     ->join('db_pegawai.pangkat e', 'c.pangkat = e.id_pangkat')
                     ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
                     ->join('db_pegawai.eselon g', 'd.eselon = g.nm_eselon')
-                    // ->where('a.tgl', $agenda['tgl'])
+                    ->where('a.tgl', $agenda['tgl'])
                     ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
                     // ->where('a.pulang >=', $agenda['buka_pulang']) //buka ini
                     ->group_by('a.id')
-                    // ->where_in('a.aktivitas', [1,2,3]) //buka ini
+                    ->where_in('a.aktivitas', [1,2,3]) //buka ini
                     // ->order_by('a.masuk', 'desc'); //komen ini
                     ->order_by('a.pulang', 'desc'); //buka ini
 
@@ -206,7 +206,76 @@
                 $absen = $this->db->get()->result_array();
             }
             $result = $absen;
-            return $result;
+            return array($result, $agenda);
+        }
+
+        public function getDataDetailDashboardPdm($data){
+            $rs = null;
+            $rs['progress_keseluruhan'] = 0;
+            $master = $this->db->select('*')
+                                    ->from('m_pdm')
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+
+            foreach($master as $m){
+                $rs['master'][$m['singkatan']] = $m;
+                $rs['master'][$m['singkatan']]['progress']['total'] = 0;
+            }
+
+
+            $list_pegawai = $this->db->select('a.*, c.nm_pangkat, b.nama_jabatan')
+                                        ->from('db_pegawai.pegawai a')
+                                        ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                                        ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                                        ->where('a.skpd', $data['unitkerja'])
+                                        ->order_by('b.eselon', 'asc')
+                                        ->group_by('a.nipbaru')
+                                        ->get()->result_array();
+
+            foreach($list_pegawai as $lp){
+                $rs['list_pegawai'][$lp['nipbaru_ws']] = $lp;
+                $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['total'] = 0;
+                $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['detail'] = null;
+                foreach($master as $ms){
+                    $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['detail'][$ms['singkatan']] = 0;
+                }
+                if($lp['fotopeg'] != null && $lp['fotopeg'] != ''){
+                    $path = './assets/fotopeg/'.$lp['fotopeg'];
+                    if (file_exists($path)) {
+                        $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['total']++;
+                        $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['detail']['pas_foto'] = 1;
+                        $rs['master']['pas_foto']['progress']['total']++;
+                        $rs['progress_keseluruhan']++;
+                    }
+                }
+                // if($lp['nipbaru_ws'] == '199011042022032007'){
+                //     dd(json_encode($rs['list_pegawai'][$lp['nipbaru_ws']]));
+                // }
+            }
+
+            $rs['data_pdm'] = $this->db->select('a.*, b.username, c.nama')
+                                    ->from('t_pdm a')
+                                    ->join('m_user b', 'a.id_m_user = b.id')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
+                                    ->where('c.skpd', $data['unitkerja'])
+                                    ->get()->result_array();
+            foreach($rs['data_pdm'] as $pd){
+                $rs['list_pegawai'][$pd['username']]['progress']['total']++;
+                // if(!isset($rs['list_pegawai'][$pd['username']]['progress']['detail'][$pd['jenis_berkas']])){
+                //     dd($pd);
+                // }
+                $rs['list_pegawai'][$pd['username']]['progress']['detail'][$pd['jenis_berkas']] = 1;
+                $rs['master'][$pd['jenis_berkas']]['progress']['total']++;
+                $rs['progress_keseluruhan']++;
+            }
+
+            $rs['total_keseluruhan'] = count($rs['master']) * count($rs['list_pegawai']);
+            // $rs['progress_keseluruhan'] = count($rs['data_pdm']);
+            $rs['total_progress'] = ($rs['progress_keseluruhan'] / $rs['total_keseluruhan']) * 100;
+
+            return $rs;
         }
 	}
 ?>

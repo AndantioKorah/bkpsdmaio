@@ -610,6 +610,9 @@
                 <button onclick="LoadFormSumpahJanji()" class="nav-link nav-link-profile" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormPelanggaran()" class="nav-link nav-link-profile" id="pills-pelanggaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pelanggaran" type="button" role="tab" aria-controls="pills-pelanggaran" aria-selected="false">Pelanggaran</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormKeluarga()"  class="nav-link nav-link-profile" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
@@ -675,6 +678,9 @@
               </div>
               <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">
                   <div id="form_sumpah_janji"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-pelanggaran" role="tabpanel" aria-labelledby="pills-pelanggaran-tab">
+                  <div id="form_pelanggaran"></div>
               </div>
               <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">
                   <div id="form_keluarga"></div>
@@ -1144,6 +1150,14 @@
   $('#form_sumpah_janji').html(' ')
     $('#form_sumpah_janji').append(divLoaderNavy)
     $('#form_sumpah_janji').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormSumpahJanji/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormPelanggaran(){
+  $('#form_pelanggaran').html(' ')
+    $('#form_pelanggaran').append(divLoaderNavy)
+    $('#form_pelanggaran').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormPelanggaran/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

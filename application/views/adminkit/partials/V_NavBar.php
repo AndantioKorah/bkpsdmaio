@@ -290,7 +290,8 @@
 			</a>
 
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-				<img src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important;" class="avatar img-fluid rounded me-1" alt="" /> 
+				<img src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important; object-fit: cover;" 
+				class="avatar img-fluid rounded me-1" alt="" /> 
 				<!-- <span class="text-dark"><?=$this->general_library->getNamaUser();?></span> -->
 			</a>
 				<div class="dropdown-menu dropdown-menu-end">

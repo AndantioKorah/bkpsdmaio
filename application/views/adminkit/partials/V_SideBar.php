@@ -72,21 +72,29 @@
 		</li>
 		<li class="live_tpp">
 			<center>
-				<span class="align-middle" style="
+				<span id="span_capaian_tpp" class="align-middle" style="
 					font-size: 1.1rem;
 					color: white;
 					font-weight: bold;
 					margin-top: -5px;
 					margin-bottom: 10px;
 				">
-					<?=formatCurrency($tpp['capaian_tpp'])?>
+					<?php if($tpp){ ?>
+						<?=formatCurrencyWithoutRp($tpp['capaian_tpp'])?>
+					<?php } else { ?>
+						<i class="fa fa-spin fa-spinner"></i>
+					<?php } ?>
 				</span>
-				<span style="
+				<span id="pagu_tpp" style="
 					font-size: .9rem;
 					color: #ababab;
 					vertical-align: bottom;
 				">
-					/ <?=formatCurrencyWithoutRp($tpp['pagu_tpp']['pagu_tpp'])?>
+					<?php if($tpp){ ?>
+						/ <?=formatCurrencyWithoutRp($tpp['pagu_tpp']['pagu_tpp'])?>
+					<?php } else { ?>
+						<!-- <i class="fa fa-spin fa-spinner"></i> -->
+					<?php } ?>
 				</span>
 			</center>			
 		</li>
@@ -359,6 +367,44 @@
 </div>
 
 <script>
+	$(function(){
+		<?php if(!$tpp){ ?>
+			loadLiveTpp()
+		<?php } ?>
+	})
+
+	function loadLiveTpp(){
+		$.ajax({
+			url: '<?=base_url("login/C_Login/loadLiveTpp")?>',
+			method: 'post',
+			data: $(this).serialize(),
+			success: function(rs){
+				let data = JSON.parse(rs)
+				$('#span_capaian_tpp').html((data.capaian_tpp))
+				$('#pagu_tpp').html(' / '+data.pagu_tpp.pagu_tpp)
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}
+		})
+	}
+
+	function formatRupiah(angka, prefix = "Rp ") {
+        var number_string = angka.replace(/[^,\d]/g, "").toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix == undefined ? rupiah : rupiah ? rupiah : "";
+    }
+	
 	function openDetailTppPegawai(){
 		window.location = "<?=base_url('pegawai/tpp/detail')?>"
 	}

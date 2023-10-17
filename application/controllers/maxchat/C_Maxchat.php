@@ -222,8 +222,8 @@ class C_Maxchat extends CI_Controller
     }
 
     public function sendMessage($id){
-        $str = "https://core.maxchat.id/bkdmdo/download/3EB00C36EF71C52A66B404.jpeg";
-        dd(explode("/", $str)[5]);
+        // $str = "https://core.maxchat.id/bkdmdo/download/3EB00C36EF71C52A66B404.jpeg";
+        // dd(explode("/", $str)[5]);
         // $result = null;
         // $data = new \stdClass();
         // $data->from = $id;
@@ -232,16 +232,17 @@ class C_Maxchat extends CI_Controller
         // dd(!isset($data->asd));
         // dd(property_exists($data, 'asd'));
         // $pegawai = null;
-        // $ws = $this->dokumenlib->getPegawaiSiladen($id);
-        // if($ws){
-        //     $resp = json_decode($ws['response'], true);
-        //     if($resp['code'] == 200){
-        //         $pegawai = $resp['data'];
-        //     }
-        // }
-        // $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
-        // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-        // dd($aksespegawai);
+        $ws = $this->dokumenlib->getPegawaiSiladen($id);
+        dd($ws);
+        if($ws){
+            $resp = json_decode($ws['response'], true);
+            if($resp['code'] == 200){
+                $pegawai = $resp['data'];
+            }
+        }
+        $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
+        $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+        dd($aksespegawai);
     }
 
 }

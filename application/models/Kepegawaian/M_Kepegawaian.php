@@ -2764,6 +2764,16 @@ function getkel($id_kec)
     return $data;
 }
 
+public function getAllPelanggaranByNip($nip){
+    return $this->db->select('b.id as id_m_user, a.*, c.nama_pelanggaran_detail')
+                    ->from('t_pelanggaran a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('m_pelanggaran_detail c', 'a.id_m_pelanggaran_detail = c.id')
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.created_date', 'desc')
+                    ->get()->result_array();
+}
+
 
 
     

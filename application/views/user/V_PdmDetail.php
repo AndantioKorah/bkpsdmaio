@@ -8,7 +8,7 @@
     }
    
     $progress_target = 0;
-    $jumlah_berkas = 15;
+    $jumlah_berkas = 18;
     if($result){
         $progress_target = formatTwoMaxDecimal((count($result) / $jumlah_berkas) * 100);
     }    

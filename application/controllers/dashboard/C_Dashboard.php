@@ -92,8 +92,18 @@ class C_Dashboard extends CI_Controller
     }
 
     public function getDataLiveAbsen($id_agenda){
-        $data['result'] = $this->dashboard->getDataLiveAbsen($id_agenda);
+        list($data['result'], $data['agenda']) = $this->dashboard->getDataLiveAbsen($id_agenda);
         $this->load->view('dashboard/V_DashboardLiveAbsen', $data);
+    }
+
+    public function dashboardPdm(){
+        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('dashboard/V_DashboardPdm', '', '', $data);
+    }
+
+    public function searchDataPdm(){
+        $data['result'] = $this->dashboard->getDataDetailDashboardPdm($this->input->post());
+        $this->load->view('dashboard/V_DashboardPdmDetail', $data);
     }
 
 }

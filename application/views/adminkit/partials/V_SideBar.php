@@ -150,6 +150,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hari Libur
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hukuman-dinas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
+					</a>
+				</li>
 			</ul>
 		</li>
 		<li class="sidebar-item ">
@@ -190,19 +195,37 @@
 			</a>
 		</li>
 	<?php } ?>
+	<?php if($this->general_library->isProgrammer() 
+	|| $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isWalikota() 
+	// || $this->general_library->isWakilWalikota()
+	){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>pdm/dashboard">
+				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
+			</a>
+		</li>
+	<?php } ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
 			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>
- 
+	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>pelanggaran">
+				<i class="fa fa-user-shield"></i><span class="align-middle">Pelanggaran</span>
+			</a>
+		</li>
+	<?php } ?> -->
 	<?php
 	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
-				<span class="align-middle">
-					Verifikasi
+				<span class="align-middle">Verifikasi
 					<i class="fa fa-chevron-down" 
 					style="
 						position: absolute;

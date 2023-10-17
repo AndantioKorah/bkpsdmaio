@@ -132,6 +132,7 @@
                 $pointer = date('w', strtotime($result['list_hari'][0]));
                 $col = 7;
                 $row = 5;
+                $pointer = $pointer == 0 ? 7 : $pointer;
                 if(count($result['list_hari']) >= 30){
                     if($pointer == 7){
                         $row = 6;

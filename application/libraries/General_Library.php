@@ -191,6 +191,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isManajemenTalenta(){
+        return $this->getActiveRoleName() == 'manajemen_talenta';
+    }
+
     public function isAdminAplikasi(){
         return $this->getActiveRoleName() == 'admin_aplikasi';
     }
@@ -290,6 +294,7 @@ class General_library
             if($this->isProgrammer()){
                 return true;
             }
+            
             $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
@@ -558,6 +563,38 @@ class General_library
         } 
 
         return $tembusan;
+    }
+
+
+    public function uploadImageAdmin($path, $input_file_name,$nip){
+        if (!file_exists(URI_UPLOAD.$path)) {
+            mkdir(URI_UPLOAD.$path, 0777, true);
+        }
+        $file = $_FILES["$input_file_name"];
+        $fileName = $nip.'_profile_pict_'.date('ymdhis').'_'.$file['name'];
+        
+        $_FILES[$input_file_name]['name'] = $file['name'];
+        $_FILES[$input_file_name]['type'] = $file['type'];
+        $_FILES[$input_file_name]['tmp_name'] = $file['tmp_name'];
+        $_FILES[$input_file_name]['error'] = $file['error'];
+        $_FILES[$input_file_name]['size'] = $file['size'];
+        
+        $config['upload_path'] = URI_UPLOAD.$path; //buat folder dengan nama assets di root folder
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = '*';
+        $config['max_size'] = '2000';
+
+        $this->nikita->load->library('upload', $config);
+
+        if(!$this->nikita->upload->do_upload($input_file_name)){
+            $this->nikita->upload->display_errors();
+        }
+        if($this->nikita->upload->error_msg){
+            return ['code' => '500', 'message' => $this->nikita->upload->error_msg[0]];
+        }
+        $image = $this->nikita->upload->data();
+      
+        return ['code' => '0', 'data' => $image, 'nip' => $nip];
     }
 
 

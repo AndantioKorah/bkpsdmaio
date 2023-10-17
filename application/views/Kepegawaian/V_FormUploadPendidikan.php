@@ -248,6 +248,7 @@ $(function(){
                 document.getElementById('btn_upload_pendidikan').disabled = false;
                $('#btn_upload_pendidikan').html('Simpan')
                 loadListPendidikan()
+                setTimeout(function() {$("#modalPendidikan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

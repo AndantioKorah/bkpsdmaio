@@ -28,7 +28,7 @@
               <td class="text-left"><?=$rs['nosk']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['tahun_penghargaan']?></td>
-              <td class="text-left"><?=$rs['asal']?></td>
+              <td class="text-left"><?=$rs['nm_pemberipenghargaan']?></td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>

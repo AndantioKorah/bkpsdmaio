@@ -197,6 +197,7 @@ $(function(){
                 document.getElementById('btn_upload_penugasan').disabled = false;
                $('#btn_upload_penugasan').html('Simpan')
                 loadListPenugasan()
+                setTimeout(function() {$("#modal_penugasan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

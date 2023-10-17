@@ -101,16 +101,22 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <div class="modal-body">
       <form method="post" id="upload_form_assesment" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
-  <div class="form-group">
-    <label>Nama Assesment</label>
-    <input class="form-control" type="text" id="nm_assesment" name="nm_assesment" autocomplete="off"  required/>
+ 
+      <div class="form-group">
+    <label>Tahun</label>
+    <input min=0 step=0.01 class="form-control" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
   </div>
 
- 
   <div class="form-group">
+    <label>Nilai Assesment Manajerial dan Sosial Kultural</label>
+    <input min=0 step=0.01 class="form-control" type="number" id="nilai_assesment" name="nilai_assesment" autocomplete="off"  required/>
+  </div>
+
+
+  <!-- <div class="form-group">
     <label>File Assesment</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_assesment" name="file"   />
-  </div>
+  </div> -->
 
   <div class="form-group col-lg-12">
     <br>
@@ -167,12 +173,12 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_assesment');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_assesment').files.length;
+        // var ins = document.getElementById('pdf_file_assesment').files.length;
         
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
        
         document.getElementById('btn_upload_assesment').disabled = true;
         $('#btn_upload_assesment').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

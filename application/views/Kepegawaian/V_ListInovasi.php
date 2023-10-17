@@ -4,13 +4,15 @@
       <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
-          <th class="text-left">Tahun</th>
-          <th class="text-left">Nilai Assesment</th>
+          <th class="text-left">Nama Inovasi</th>
+          <th class="text-left">Kriteria Inovasi</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+          <th></th>
           <th></th>
             <?php } ?>
           <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
+          <th></th>
           <th class="text-left">  </th>
           <?php } ?>
         </thead>
@@ -18,9 +20,14 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['tahun']?></td>
-              <td class="text-left"><?=$rs['nilai_assesment']?></td>
-           
+              <td class="text-left"><?=$rs['nm_inovasi']?></td>
+              <td class="text-left"><?=$rs['kriteria_inovasi']?></td>
+              <td>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_inovasi" onclick="openFileInovasi('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
@@ -50,10 +57,9 @@
     $('.datatable').dataTable()
   })
 
-
-  async function openFileAssesment(filename){
+  async function openFileInovasi(filename){
    
-   $('#iframe_view_file_assesment').hide()
+   $('#iframe_view_file_inovasi').hide()
    $('.iframe_loader').show()  
    console.log(filename)
    $.ajax({
@@ -62,14 +68,14 @@
      data: {
        'username': '<?=$this->general_library->getUserName()?>',
        'password': '<?=$this->general_library->getPassword()?>',
-       'filename': 'arsipassesment/'+filename
+       'filename': 'arsipinovasi/'+filename
      },
      success: function(data){
        let res = JSON.parse(data)
        console.log(res.data)
        $(this).show()
-       $('#iframe_view_file_assesment').attr('src', res.data)
-       $('#iframe_view_file_assesment').on('load', function(){
+       $('#iframe_view_file_inovasi').attr('src', res.data)
+       $('#iframe_view_file_inovasi').on('load', function(){
          $('.iframe_loader').hide()
          $(this).show()
        })
@@ -78,20 +84,19 @@
      }
    })
  }
-  
   function deleteData(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
-                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegassesment/'+file,
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/peginovasi/'+file,
                            method: 'post',
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
                                if(kode == 1){
-                                loadListAssesment()
+                                loadListInovasi()
                                } else {
-                                loadRiwayatUsulAssesment()
+                                loadRiwayatUsulInovasi()
                                }
                                
                            }, error: function(e){

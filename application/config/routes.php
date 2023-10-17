@@ -89,3 +89,13 @@ $route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai'
 //api
 $route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';
 $route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
+
+// simata 
+$route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';
+$route['mt/data-master-interval'] = 'simata/C_Simata/masterInterval';
+// $route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanTarget/$1';
+$route['mt/jabatan-target'] = 'simata/C_Simata/jabatanTarget';
+$route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
+$route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
+$route['mt/penilaian-kinerja'] = 'simata/C_Simata/penilaianKinerja';
+

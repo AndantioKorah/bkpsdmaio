@@ -3,6 +3,11 @@
         .knob{
             font-size: 3.5rem !important;
         }
+
+        .knob-bidang{
+            font-size: 1.6rem !important;
+            text-align: center !important;
+        }
     </style>
     <div class="row">
         <div class="col-lg-6">
@@ -63,13 +68,34 @@
         </div>
     </div>
     <div class="row">
+        <?php if($result['bidang']){ foreach($result['bidang'] as $b){ ?>
+            <div class="col">
+                <div class="card card-default text-center">
+                    <div class="card-header" style="height: 8vh;">
+                        <h5 class="nama_bidang" style="color: grey; font-weight: bold; font-size: .8rem;"><?=$b['nama_bidang']?></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12 mt-2">
+                                <input data-readonly="true" disabled type="number" class="knob knob-bidang" 
+                                value="<?=formatTwoMaxDecimal($b['total_progress'])?>"
+                                data-width="150" data-height="150" data-fgColor="<?=getProgressBarColor(formatTwoMaxDecimal($b['total_progress']), false)?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } } ?>
+    </div>
+    <div class="row">
         <div class="col-lg-12">
             <div class="card card-default">
-                <div class="col-lg-12 table-responsive p-3" style="width: 80vw; overflow-x: scroll;">
-                <table class="data_table_dashboard table table-hover table-striped">
+                <div class="col-lg-12 table-responsive p-3" style="overflow-x: scroll;">
+                <table class="data_table_dashboard table table-hover table-striped" style="width: 100%;">
                     <thead>
                         <th style="width: 5%;" class="text-center">No</th>
                         <th style="width: 35%;" class="text-left">Pegawai</th>
+                        <th style="width: 25%;" class="text-center">Bidang</th>
                         <th style="width: 35%;" class="text-center">Progress</th>
                         <!-- <?php foreach($result['master'] as $rm){ ?>
                             <th style="width: 5%;" class="text-center"><?=$rm['nama_berkas']?></th>
@@ -87,6 +113,7 @@
                                     <span style="color: grey; font-size: .8rem;"><?=($l['nm_pangkat'])?></span><br>
                                     <span style="color: grey; font-size: .8rem;"><?=($l['nama_jabatan'])?></span>
                                 </td>
+                                <td class="text-left"><?=$l['nama_bidang']?></td>
                                 <td class="text-center">
                                     <span style="color: black; font-weight: bold !important;"><?=formatTwoMaxDecimal($total_progress_pegawai).' %'?></span>
                                     <div class="progress progress-sm" style="height: 1rem !important; border-radius: 10px;">

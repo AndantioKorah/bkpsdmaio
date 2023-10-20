@@ -395,7 +395,7 @@ function getProgressBarColor($progress, $use_important = true)
         $bgcolor = '#ffcf00 !important';
     } else if ($progress > 65 && $progress <= 85) {
         $bgcolor = '#5bff00 !important';
-    } else if ($progress > 85 && $progress <= 99) {
+    } else if ($progress > 85 && $progress < 100) {
         $bgcolor = '#41b302 !important';
     } else if ($progress >= 100) {
         $bgcolor = '#006600 !important';

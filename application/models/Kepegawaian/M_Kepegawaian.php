@@ -440,7 +440,7 @@ class M_Kepegawaian extends CI_Model
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
+                            ->join('db_pegawai.pangkat d', 'c.pangkat = d.id_pangkat')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
@@ -575,6 +575,8 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegorganisasi c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.organisasi d', 'c.jenis_organisasi = d.id_organisasi')
+                            ->join('db_pegawai.jabatan_organisasi e', 'c.id_jabatan_organisasi = e.id')
+
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
@@ -587,7 +589,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPenghargaan($nip,$kode){
-             $this->db->select('*')
+             $this->db->select('a.*, b.*,c.*,d.nm_pemberipenghargaan,d.id as id_pemberi')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
@@ -967,12 +969,36 @@ class M_Kepegawaian extends CI_Model
             // dd($dataInsert);
             $result = $this->db->insert('db_pegawai.pegsumpah', $dataInsert);
         } else  if($this->input->post('jenis_organisasi')){ 
+            $dataInsert['id_pegawai']      = $id_peg;
+            $dataInsert['id_pegorganisasi']      = $this->input->post('id_pegorganisasi');
+            $dataInsert['jenis_organisasi']      = $this->input->post('jenis_organisasi');
+            $dataInsert['nama_organisasi']      = $this->input->post('nama_organisasi');
+            $dataInsert['id_jabatan_organisasi']      = $this->input->post('id_jabatan_organisasi');
+            $dataInsert['tglmulai']      = $this->input->post('tglmulai');
+            $dataInsert['tglselesai']      = $this->input->post('tglselesai');
+            $dataInsert['pemimpin']      = $this->input->post('pemimpin');
+            $dataInsert['tempat']      = $this->input->post('tempat');
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-                $dataPost['status']      = 2;
-                $dataPost['tanggal_verif']      = date('Y-m-d H:i:s');
-                $dataPost['id_m_user_verif']      = $this->general_library->getId();
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+                $dataInsert['gambarsk']            = $data['nama_file'];
                 }
-                $result = $this->insert('db_pegawai.pegorganisasi',$dataPost);
+                $result = $this->insert('db_pegawai.pegorganisasi',$dataInsert);
+        } else if($this->input->post('nm_pegpenghargaan')){
+            $dataInsert['id_pegawai']      = $id_peg;
+            $dataInsert['nm_pegpenghargaan']      = $this->input->post('nm_pegpenghargaan');
+            $dataInsert['nosk']      = $this->input->post('nosk');
+            $dataInsert['tglsk']      = $this->input->post('tglsk');
+            $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');
+            $dataInsert['pemberi']      = $this->input->post('pemberi');
+            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+                $dataInsert['gambarsk']            = $data['nama_file'];
+                }
+                $result = $this->insert('db_pegawai.pegpenghargaan',$dataInsert);
         }
 
       
@@ -1100,12 +1126,12 @@ class M_Kepegawaian extends CI_Model
         
        
 		// cek file size apa diperbolehkan		
-		$cekFile	= $this->isAllowSize($_FILES['file'], $id_dok);
-		$response   = $cekFile['response'];
-		if (!$response) {
-                $res = array('msg' => $cekFile['pesan'], 'success' => false);
-                return $res;
-		}
+		// $cekFile	= $this->isAllowSize($_FILES['file'], $id_dok);
+		// $response   = $cekFile['response'];
+		// if (!$response) {
+        //         $res = array('msg' => $cekFile['pesan'], 'success' => false);
+        //         return $res;
+		// }
 
         $target_dir = null;
         if($this->input->post('id_dokumen') == 4){
@@ -1128,6 +1154,8 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsipsumpah/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
+        } else if($this->input->post('nm_pegpenghargaan')){
+            $target_dir						= './arsippenghargaan/';
         }   
 
        
@@ -1157,10 +1185,10 @@ class M_Kepegawaian extends CI_Model
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
 
-			// $data['error']    = strip_tags($this->upload->display_errors());
+			$data['error']    = strip_tags($this->upload->display_errors());
 			// $data['token']    = $this->security->get_csrf_hash();
             
-            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'eror' => $data['error']);
             return $res;
 
 		} else {
@@ -1531,6 +1559,7 @@ class M_Kepegawaian extends CI_Model
     public function doUploadSk()
 	{
 
+      
         $this->db->trans_begin();
             
         $target_dir						= './arsipsosialkultural/';
@@ -2796,7 +2825,7 @@ public function submitEditProfil(){
     // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
     // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
-    // $data["pendidikan"] = $datapost["edit_gelar1"];
+    $data["status"] = $datapost["edit_status_kawin"];
     $data["statuspeg"] = $datapost["edit_status_pegawai"];
     $data["jenispeg"] = $datapost["edit_jenis_pegawai"];
     $data["nik"] = $datapost["edit_nik"];
@@ -3093,6 +3122,318 @@ public function getAllPelanggaranByNip($nip){
             return $this->db->get()->result_array(); 
 
         }
+
+        function getPangkatPegawaiEdit($id){
+            $this->db->select('c.id,e.id_jenispengangkatan,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+                           c.nosk, c.tglsk, c.gambarsk,c.pangkat')
+                           ->from('m_user a')
+                           ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                           ->join('db_pegawai.pegpangkat c', 'b.id_peg = c.id_pegawai')
+                           ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
+                           ->join('db_pegawai.jenispengangkatan e','c.jenispengangkatan = e.id_jenispengangkatan')
+                           ->where('c.id', $id)
+                           ->where('a.flag_active', 1)
+                           ->where('c.flag_active', 1);
+
+                           $query = $this->db->get()->result_array();
+                           return $query;
+       }
+
+       function getGajiBerkalaEdit($id){
+        $this->db->select('*')
+                       ->from('m_user a')
+                       ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                       ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
+                       ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
+                       ->where('c.id', $id)
+                       ->where('a.flag_active', 1)
+                       ->where('c.flag_active', 1);
+                    
+                       $query = $this->db->get()->result_array();
+                       return $query;
+   }
+
+   function getPendidikanEdit($id){
+    $this->db->select('*')
+                   ->from('m_user a')
+                   ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                   ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
+                   // ->join('db_pegawai.tktpendidikan d','c.tktpendidikan = d.id_tktpendidikan')
+                   ->join('db_pegawai.tktpendidikanb e','c.tktpendidikan = e.id_tktpendidikanb')
+                   ->where('c.id', $id)
+                   ->where('a.flag_active', 1)
+                   ->where('c.flag_active', 1);
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
+
+
+
+       public function submitEditPangkat(){
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+        $target_dir = './arsipelektronik/';
+        $filename = $this->input->post('gambarsk');
+       
+        if($_FILES['file']['name'] != ""){
+          
+            $path = './arsipelektronik/'.$filename;
+            $path = substr($path,2);
+
+            // $res = $this->dokumenlib->delDokumenWs('POST',[
+            //     'username' => $this->general_library->getUsername(),
+            //     'password' => $this->general_library->getPassword(),
+            //     'filename' => $path
+            // ]);
+
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+
+		$this->load->library('upload', $config);
+
+	
+
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());
+			// $data['token']    = $this->security->get_csrf_hash();
+            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            // $dataFile 			= $this->upload->data();
+            // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            // $filename = $random_number.$dataFile['file_name'];
+
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
+                'filename' => $path.$filename,
+                'docfile'  => $base64
+            ]);
+           
+            // if($target_dir != null){
+            //     unlink($target_dir."$nama_file");
+            // }
+
+            $id = $datapost['id'];
+            $data["jenispengangkatan"] = $datapost["edit_jenis_pengangkatan"];
+            $data["pangkat"] = $datapost["edit_pangkat"];
+            $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
+            $data["masakerjapangkat"] = $datapost["edit_masa_kerja"];
+            $data["pejabat"] = $datapost["edit_pejabat"];
+            $data["nosk"] = $datapost["edit_no_sk"];
+            $data["tglsk"] = $datapost["edit_tanggal_sk"];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegpangkat', $data);
+        
+
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+   
+		}
+        } else {
+
+            $id = $datapost['id'];
+            $data["jenispengangkatan"] = $datapost["edit_jenis_pengangkatan"];
+            $data["pangkat"] = $datapost["edit_pangkat"];
+            $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
+            $data["masakerjapangkat"] = $datapost["edit_masa_kerja"];
+            $data["pejabat"] = $datapost["edit_pejabat"];
+            $data["nosk"] = $datapost["edit_no_sk"];
+            $data["tglsk"] = $datapost["edit_tanggal_sk"];
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegpangkat', $data);
+        
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            // $res['code'] = 1;
+            // $res['message'] = 'Terjadi Kesalahan';
+            // $res['data'] = null;
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+
+       public function submitEditBerkala(){
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+        $target_dir = './arsipgjberkala/';
+        $filename = $this->input->post('gambarsk');
+       
+        if($_FILES['file']['name'] != ""){
+          
+            $path = './arsipgjberkala/'.$filename;
+            $path = substr($path,2);
+
+    
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
+                'filename' => $path.$filename,
+                'docfile'  => $base64
+            ]);
+           
+            $id = $datapost['id'];
+            $data["pangkat"] = $datapost["edit_gb_pangkat"];
+            $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
+            $data["pejabat"] = $datapost["edit_gb_pejabat"];
+            $data["nosk"] = $datapost["edit_gb_no_sk"];
+            $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
+            $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.peggajiberkala', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        } else {
+            $id = $datapost['id'];
+            $data["pangkat"] = $datapost["edit_gb_pangkat"];
+            $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
+            $data["pejabat"] = $datapost["edit_gb_pejabat"];
+            $data["nosk"] = $datapost["edit_gb_no_sk"];
+            $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
+            $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.peggajiberkala', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+
+
+       public function submitEditPendidikan(){
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+        $target_dir = './arsippendidikan/';
+        $filename = $this->input->post('gambarsk');
+       
+        if($_FILES['file']['name'] != ""){
+          
+            $path = './arsippendidikan/'.$filename;
+            $path = substr($path,2);
+
+    
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => $this->general_library->getUsername(),
+                'password' => $this->general_library->getPassword(),
+                'filename' => $path.$filename,
+                'docfile'  => $base64
+            ]);
+           
+            $id = $datapost['id'];
+            $data["tktpendidikan"] = $datapost["edit_pendidikan_tingkat"];
+            $data["jurusan"] = $datapost["edit_pendidikan_jurusan"];
+            $data["fakultas"] = $datapost["edit_pendidikan_fakultas"];
+            $data["namasekolah"] = $datapost["edit_pendidikan_nama_sekolah_universitas"];
+            $data["pimpinansekolah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["tahunlulus"] = $datapost["edit_pendidikan_tahun_lulus"];
+            $data["noijasah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["tglijasah"] = $datapost["edit_pendidikan_tanggal_ijazah"];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegpendidikan', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        } else {
+            $id = $datapost['id'];
+            $data["tktpendidikan"] = $datapost["edit_pendidikan_tingkat"];
+            $data["jurusan"] = $datapost["edit_pendidikan_jurusan"];
+            $data["fakultas"] = $datapost["edit_pendidikan_fakultas"];
+            $data["namasekolah"] = $datapost["edit_pendidikan_nama_sekolah_universitas"];
+            $data["pimpinansekolah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["tahunlulus"] = $datapost["edit_pendidikan_tahun_lulus"];
+            $data["noijasah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["tglijasah"] = $datapost["edit_pendidikan_tanggal_ijazah"];
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegpendidikan', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
 
 
     

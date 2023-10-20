@@ -21,6 +21,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPangkat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip,$kode);
 		$data['kode'] = $kode;
+		
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
@@ -647,7 +648,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormOrganisasi($nip){
 		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'no_urut', 'asc');
-		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', null);
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 48);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'organisasi');
 		$data['lingkup_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.lingkup_organisasi', 'id', 'asc');
 		$data['jabatan_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan_organisasi', 'id', 'asc');
@@ -664,6 +665,7 @@ class C_Kepegawaian extends CI_Controller
 	public function LoadFormPenghargaan($nip){
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'penghargaan');
 		$data['pemberi'] = $this->kepegawaian->getPemberiPenghargaan();
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 49);
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
@@ -1052,7 +1054,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispeg', 'id_jenispeg', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
-		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
 		$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 		
 		render('kepegawaian/V_FormTambahPegawai', '', '', $data);
@@ -1112,7 +1114,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormInovasi($nip){
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
-		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'tim_kerja');
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'inovasi');
 		$data['kriteria_inovasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.inovasi', 'id', 'asc');
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -1122,6 +1124,53 @@ class C_Kepegawaian extends CI_Controller
 		}
         $this->load->view('kepegawaian/V_FormUploadInovasi', $data);
     }
+
+
+	public function loadEditPangkaPegawai($id)
+    {
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
+		$data['pdm_pangkat'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'pangkat');
+		$data['pangkat'] = $this->kepegawaian->getPangkatPegawaiEdit($id);
+        // dd($data['pangkat']);
+        $this->load->view('kepegawaian/V_EditPangkat', $data);
+    }
+
+	public function loadEditGajiBerkala($id)
+    {
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
+		$data['berkala'] = $this->kepegawaian->getGajiBerkalaEdit($id);
+        // dd($data['pangkat']);
+        $this->load->view('kepegawaian/V_EditGajiBerkala', $data);
+    }
+
+	public function loadEditPendidikan($id)
+    {
+		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
+		$data['pendidikan'] = $this->kepegawaian->getPendidikanEdit($id);
+        // dd($data['pangkat']);
+        $this->load->view('kepegawaian/V_EditPendidikan', $data);
+    }
+
+
+	public function submitEditPangkat()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditPangkat());
+	}
+
+	public function submitEditBerkala()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditBerkala());
+	}
+
+	public function submitEditPendidikan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditPendidikan());
+	}
+
 
 
 

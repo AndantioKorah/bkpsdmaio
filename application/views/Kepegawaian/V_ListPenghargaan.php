@@ -9,6 +9,7 @@
           <th class="text-left">Tgl SK</th>
           <th class="text-left">Tahun</th>
           <th class="text-left">Asal Perolehan</th>
+          <th></th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -29,6 +30,12 @@
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['tahun_penghargaan']?></td>
               <td class="text-left"><?=$rs['nm_pemberipenghargaan']?></td>
+              <td>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_penghargaan" onclick="openFilePenghargaan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
@@ -60,10 +67,6 @@
   })
 
 
-  function openFilePendidikan(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
-  }
-
   function deleteData(id,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
@@ -86,7 +89,22 @@
                    }
                }
 
+               async function openFilePenghargaan(filename){
 
+              $('#iframe_view_file_penghargaan').hide()
+              $('.iframe_loader').show()  
+              $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+
+              var number = Math.floor(Math.random() * 1000);
+              $link = "http://siladen.manadokota.go.id/bidik/arsippenghargaan/"+filename+"?v="+number;
+
+              $('#iframe_view_file_penghargaan').attr('src', $link)
+                  $('#iframe_view_file_penghargaan').on('load', function(){
+                    $('.iframe_loader').hide()
+                    $(this).show()
+              })
+
+              }
 </script>
 <?php } else { ?>
   <div class="row">

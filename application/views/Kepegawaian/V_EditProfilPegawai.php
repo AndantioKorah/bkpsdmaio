@@ -355,7 +355,7 @@ $(".select2").select2({
             console.log(result)
             if(result.success == true){
                 successtoast(result.msg)
-                document.getElementById("form_edit_profil").reset();
+                // document.getElementById("form_edit_profil").reset();
                 // loadListPangkat()
                 location.reload()
               } else {

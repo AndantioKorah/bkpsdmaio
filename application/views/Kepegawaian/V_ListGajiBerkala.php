@@ -42,7 +42,15 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+              
+                href="#modal_edit_berkala"
+                onclick="loadEditBerkala('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailBerkala btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
               </td>
               <?php } ?>
                <?php } ?>
@@ -53,7 +61,7 @@
 
            <td>
            <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteKegiatan('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
            </td>
            <?php } ?>
@@ -65,6 +73,28 @@
   </div>
  
  
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_berkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Gaji Berkala</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_berkala_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   $(function(){
     $('.datatable').dataTable()
@@ -81,33 +111,44 @@
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-        'username': '<?=$this->general_library->getUserName()?>',
-        'password': '<?=$this->general_library->getPassword()?>',
-        'filename': 'arsipgjberkala/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
+    // $.ajax({
+    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+    //   method: 'POST',
+    //   data: {
+    //     'username': '<?=$this->general_library->getUserName()?>',
+    //     'password': '<?=$this->general_library->getPassword()?>',
+    //     'filename': 'arsipgjberkala/'+filename
+    //   },
+    //   success: function(data){
+    //     let res = JSON.parse(data)
         
 
-        if(res == null){
-          $('.iframe_loader').show()  
-          $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
-        }
+    //     if(res == null){
+    //       $('.iframe_loader').show()  
+    //       $('.iframe_loader').html('Tidak ada file SK Gaji Berkala')
+    //     }
 
-        $('#iframe_view_file_gaji_berkala').attr('src', res.data)
-        $('#iframe_view_file_gaji_berkala').on('load', function(){
+    //     $('#iframe_view_file_gaji_berkala').attr('src', res.data)
+    //     $('#iframe_view_file_gaji_berkala').on('load', function(){
+    //       $('.iframe_loader').hide()
+    //       $(this).show()
+    //     })
+    //   }, error: function(e){
+    //     errortoast('Terjadi Kesalahan')
+    //   }
+    // })
+
+    var number = Math.floor(Math.random() * 1000);
+    $link = "http://siladen.manadokota.go.id/bidik/arsipgjberkala/"+filename+"?v="+number;
+
+  $('#iframe_view_file_gaji_berkala').attr('src', $link)
+    $('#embed_view_file_gaji_berkala').attr('src', $link)
+        $('#embed_view_file_gaji_berkala').on('load', function(){
           $('.iframe_loader').hide()
           $(this).show()
-        })
-      }, error: function(e){
-        errortoast('Terjadi Kesalahan')
-      }
     })
-  }
+
+    }
 
 
   function deleteData(id,file,kode){
@@ -131,6 +172,16 @@
                        })
                    }
                }
+
+
+        function loadEditBerkala(id){
+ 
+          $('#edit_berkala_pegawai').html('')
+          $('#edit_berkala_pegawai').append(divLoaderNavy)
+          $('#edit_berkala_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditGajiBerkala")?>'+'/'+id, function(){
+            $('#loader').hide()
+          })
+          }
 
 
 </script>

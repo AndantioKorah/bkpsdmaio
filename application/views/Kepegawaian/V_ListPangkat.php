@@ -49,7 +49,17 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                data-nm_jabatan="<?=$rs['nm_pangkat']?>"
+                data-tmt_jabatan="<?=$rs['tmtpangkat']?>"
+                href="#modal_edit_pangkat"
+                onclick="loadEditPangkat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
               </td>
               <?php } ?>
                <?php } ?>
@@ -70,6 +80,34 @@
       </table>
     </div>
   </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_pangkat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Pangkat</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_pangkat_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
  
 <script>
   $(function(){
@@ -78,30 +116,37 @@
 
   
   async function openFilePangkat(filename){
-   
+
     $('#iframe_view_file').hide()
-    $('#iframe_loader').show()  
-    console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-        'username': '<?=$this->general_library->getUserName()?>',
-        'password': '<?=$this->general_library->getPassword()?>',
-        'filename': 'arsipelektronik/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
-        console.log(res.data)
-        $(this).show()
-        $('#iframe_view_file').attr('src', res.data)
-        $('#iframe_view_file').on('load', function(){
-          $('#iframe_loader').hide()
-          $(this).show()
-        })
-      }, error: function(e){
-          errortoast('Terjadi Kesalahan')
-      }
+    $('.iframe_loader').show()  
+    // $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    // $.ajax({
+    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+    //   method: 'POST',
+    //   data: {
+    //     'username': '<?=$this->general_library->getUserName()?>',
+    //     'password': '<?=$this->general_library->getPassword()?>',
+    //     'filename': 'arsipelektronik/'+filename
+    //   },
+    //   success: function(data){
+    //     let res = JSON.parse(data)
+    //     console.log(res.data)
+    //     $(this).show()
+    //     $('#iframe_view_file').attr('src', res.data)
+    //     $('#iframe_view_file').on('load', function(){
+    //       $('#iframe_loader').hide()
+    //       $(this).show()
+    //     })
+    //   }, error: function(e){
+    //       errortoast('Terjadi Kesalahan')
+    //   }
+    // })
+    var number = Math.floor(Math.random() * 1000);
+    $link = "http://siladen.manadokota.go.id/bidik/arsipelektronik/"+filename+"?v="+number; 
+    $('#iframe_view_file').attr('src', $link)
+    $('#iframe_view_file').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
     })
   }
 
@@ -151,6 +196,16 @@
                     }
                 })
             }
+        }
+
+
+        function loadEditPangkat(id){
+ 
+        $('#edit_pangkat_pegawai').html('')
+        $('#edit_pangkat_pegawai').append(divLoaderNavy)
+        $('#edit_pangkat_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditPangkaPegawai")?>'+'/'+id, function(){
+          $('#loader').hide()
+        })
         }
 
 </script>

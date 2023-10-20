@@ -66,31 +66,39 @@
   })
 
   async function openFileSumjan(filename){
-   
    $('#iframe_view_file_sumjan').hide()
    $('.iframe_loader').show()  
    console.log(filename)
-   $.ajax({
-     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-     method: 'POST',
-     data: {
-       'username': '<?=$this->general_library->getUserName()?>',
-       'password': '<?=$this->general_library->getPassword()?>',
-       'filename': 'arsipsumpah/'+filename
-     },
-     success: function(data){
-       let res = JSON.parse(data)
-       console.log(res.data)
-       $(this).show()
-       $('#iframe_view_file_sumjan').attr('src', res.data)
-       $('#iframe_view_file_sumjan').on('load', function(){
-         $('.iframe_loader').hide()
-         $(this).show()
-       })
-     }, error: function(e){
-         errortoast('Terjadi Kesalahan')
-     }
-   })
+  //  $.ajax({
+  //    url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+  //    method: 'POST',
+  //    data: {
+  //      'username': '<?=$this->general_library->getUserName()?>',
+  //      'password': '<?=$this->general_library->getPassword()?>',
+  //      'filename': 'arsipsumpah/'+filename
+  //    },
+  //    success: function(data){
+  //      let res = JSON.parse(data)
+  //      console.log(res.data)
+  //      $(this).show()
+  //      $('#iframe_view_file_sumjan').attr('src', res.data)
+  //      $('#iframe_view_file_sumjan').on('load', function(){
+  //        $('.iframe_loader').hide()
+  //        $(this).show()
+  //      })
+  //    }, error: function(e){
+  //        errortoast('Terjadi Kesalahan')
+  //    }
+  //  })
+  var number = Math.floor(Math.random() * 1000);
+  $link = "http://siladen.manadokota.go.id/bidik/arsipsumpah/"+filename+"?v="+number;
+
+$('#iframe_view_file_sumjan').attr('src', $link)
+    $('#iframe_view_file_sumjan').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
+})
+
  }
 
 

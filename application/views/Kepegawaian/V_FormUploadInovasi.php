@@ -23,17 +23,17 @@
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
-<button onclick="openModalStatusPmd('tim_kerja')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+<button onclick="openModalStatusPmd('inovasi')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
-  <button  onclick="openModalStatusPmd('tim_kerja')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
+  <button  onclick="openModalStatusPmd('inovasi')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
 
-<button  onclick="openModalStatusPmd('tim_kerja')"   
+<button  onclick="openModalStatusPmd('inovasi')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
@@ -137,7 +137,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         <div class="modal-body">
         <div class="modal-body" id="modal_view_file_content">
         <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe id="iframe_view_file_tk" style="width: 100%; height: 80vh;" src=""></iframe>
+        <iframe id="iframe_view_file_inovasi" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
         </div>
       </div>

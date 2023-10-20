@@ -5,6 +5,11 @@
 		height:35px !important;
 		margin-bottom:10px !important;
     }
+    .select2.select2-container {
+  /* width: 100% !important; */
+  margin-bottom: 15px;
+}
+
 </style>
 
 <!-- Button trigger modal -->

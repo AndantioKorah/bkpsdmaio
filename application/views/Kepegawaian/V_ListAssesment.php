@@ -77,6 +77,8 @@
          errortoast('Terjadi Kesalahan')
      }
    })
+
+   
  }
   
   function deleteData(id,file,kode){

@@ -45,7 +45,7 @@
               <td>
               <div class="btn-group" role="group" aria-label="Basic example">
               <?php if($kode == 1) { ?>
-                <?php if($this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
 
                 <button 
                 data-toggle="modal" 

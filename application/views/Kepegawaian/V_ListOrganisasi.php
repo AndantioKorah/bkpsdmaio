@@ -48,7 +48,7 @@
                 <?php } ?>
 
               <?php if($kode == 1) { ?>
-                <?php if($this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
 
                 <button 
                 data-toggle="modal" 

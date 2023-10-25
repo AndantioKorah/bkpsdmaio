@@ -127,6 +127,7 @@
   background-color: #3498db;
 } */
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalOrganisasi">
@@ -157,6 +158,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('organisasi')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
 <?php }  ?>
 <?php }  ?>
 

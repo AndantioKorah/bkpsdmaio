@@ -40,6 +40,8 @@
               </td>
               <td>
               <?php if($kode == 1) { ?>
+                <?php if($this->general_library->getUserName() == $nip) { ?>
+
                 <div class="btn-group" role="group" aria-label="Basic example">
                 <button 
                 data-toggle="modal" 
@@ -47,6 +49,8 @@
                 href="#modal_edit_berkala"
                 onclick="loadEditBerkala('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailBerkala btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
+                <?php } ?>
+
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

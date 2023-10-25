@@ -45,12 +45,15 @@
                 <?php } ?>
 
               <?php if($kode == 1) { ?>
+                <?php if($this->general_library->getUserName() == $nip) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
                 href="#modal_edit_penghargaan"
                 onclick="loadEditPenghargaan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPenghargaan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
+                <?php } ?>
+
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                   <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>

@@ -62,6 +62,7 @@
                 <?php } ?>
 
                 <?php if($kode == 1) { ?>
+                  <?php if($this->general_library->getUserName() == $nip) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -69,6 +70,7 @@
                 data-tmt_jabatan="<?=$rs['tmtpangkat']?>"
                 href="#modal_edit_pangkat"
                 onclick="loadEditPangkat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
                 <?php } ?>
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>

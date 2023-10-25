@@ -52,11 +52,14 @@
                 <?php } ?>
 
                 <?php if($kode == 1) { ?>
+                <?php if($this->general_library->getUserName() == $nip) { ?>
+
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
                 href="#modal_edit_pendidikan"
                 onclick="loadEditPendidikan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPendidikan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
                 <?php } ?>
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <?php if($kode == 1) { ?>

@@ -21,13 +21,14 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPangkat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPangkatPegawai($nip,$kode);
 		$data['kode'] = $kode;
-		
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListPangkat', $data);
 	}
 
 	public function loadListSkp($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getSkp($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListSkp', $data);
 	}
 
@@ -35,6 +36,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->kepegawaian->getBerkasPns($nip,$kode);
 		// dd($data);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListBerkasPns', $data);
 	}
 
@@ -42,6 +44,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListOrganisasi($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getOrganisasi($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListOrganisasi', $data);
 	}
 
@@ -49,24 +52,28 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListAssesment($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getAssesment($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListAssesment', $data);
 	}
 
 	public function loadListTimKerja($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getTimKerja($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListTimKerja', $data);
 	}
 
 	public function loadListInovasi($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getInovasi($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListInovasi', $data);
 	}
 
 	public function loadListKeluarga($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getKeluarga($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListKeluarga', $data);
 	}
 	
@@ -74,18 +81,20 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPendidikan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPendidikan($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListPendidikan', $data);
 	}
 
 	public function loadListDiklat($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getDiklat($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListDiklat', $data);
 	}
 
 	public function loadListJabatan($nip,$kode = null,$statusjabatan){
 		
-		
+		$data['nip'] = $nip;
 		$data['kode'] = $kode;
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		if($statusjabatan == 'def'){
@@ -102,6 +111,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListGajiBerkala($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getGajiBerkala($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
 	}
 
@@ -109,24 +119,28 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPenghargaan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPenghargaan($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListPenghargaan', $data);
 	}
 
 	public function loadListCuti($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getCuti($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListCuti', $data);
 	}
 
 	public function loadListArsip($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getArsip($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListArsip', $data);
 	}
 
 	public function loadListSumpahJanji($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getSumpahJanji($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListSumpahJanji', $data);
 	}
 
@@ -139,6 +153,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListPenugasan($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getPenugasan($nip,$kode);
 		$data['kode'] = $kode;
+		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListPenugasan', $data);
 	}
 
@@ -165,10 +180,10 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListProfil', $data);
 	}
 
-	public function loadListBerkala(){
-		$data['result'] = $this->kepegawaian->getGajiBerkala();
-		$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
-	}
+	// public function loadListBerkala(){
+	// 	$data['result'] = $this->kepegawaian->getGajiBerkala();
+	// 	$this->load->view('kepegawaian/V_ListGajiBerkala', $data);
+	// }
 
 
 
@@ -543,7 +558,8 @@ class C_Kepegawaian extends CI_Controller
     //     render('kepegawaian/V_UploadDokumenNew', '', '', $data);
     // }
 
-	public function LoadFormDokPenugasan(){
+	public function LoadFormDokPenugasan($nip){
+		$data['nip'] = $nip;
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'penugasan');
 
@@ -559,7 +575,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['pdm_pangkat'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'pangkat');
 		$data['nip'] = $nip;
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -575,8 +591,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 7);
 		$data['pdm_gajiberkala'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'kgb');
-
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		$data['nip'] = $nip;
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -588,11 +604,11 @@ class C_Kepegawaian extends CI_Controller
 	public function LoadFormPendidikan($nip){
 		// $data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
-		
+		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
 		$data['pdm_pendidikan'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'ijazah');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -602,7 +618,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormJabatan($nip,$statusjab){
-		
+		$data['nip'] = $nip;
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
@@ -611,7 +627,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'jabatan');
 		$data['statusjabatan'] = $statusjab;
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -621,7 +637,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormJabatanPlt($nip){
-		// dd($nip);
+		$data['nip'] = $nip;
 		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
@@ -630,7 +646,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'jabatan');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -643,8 +659,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_diklat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.diklat', 'id_diklat', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 20);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'diklat');
-
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		$data['nip'] = $nip;
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -654,6 +670,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormOrganisasi($nip){
+		$data['nip'] = $nip;
 		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'no_urut', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 48);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'organisasi');
@@ -661,7 +678,7 @@ class C_Kepegawaian extends CI_Controller
 		// $data['jabatan_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan_organisasi', 'id', 'asc');
 		$data['jabatan_organisasi'] = $this->kepegawaian->getJabatanOrganisasi();
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -671,10 +688,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormPenghargaan($nip){
+		$data['nip'] = $nip;
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'penghargaan');
 		$data['pemberi'] = $this->kepegawaian->getPemberiPenghargaan();
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 49);
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -684,10 +702,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadFormSkp($nip){
+		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'skp_tahunan');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -697,10 +716,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadFormBerkasPns($nip){
+		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 2);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'cpns_pns');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -710,10 +730,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadFormAssesment($nip){
+		$data['nip'] = $nip;
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'assesment');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -723,11 +744,12 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadFormKeluarga($nip){
+		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['hubungan_keluarga'] = $this->kepegawaian->getAllWithOrder('db_pegawai.keluarga', 'id_keluarga', 'asc');
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'keluarga');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -737,13 +759,14 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormCuti($nip){
+		$data['nip'] = $nip;
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 17);
 		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_pegawai.cuti', 'id_cuti', 'asc');
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'cuti');
 
 		
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -753,10 +776,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormSumpahJanji($nip){
+		$data['nip'] = $nip;
 		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'sumpah_janji');
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
@@ -775,11 +799,12 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function LoadFormArsip($nip){
+		$data['nip'] = $nip;
 		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'data_lainnya');
 
 		
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -1108,10 +1133,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormTimKerja($nip){
+		$data['nip'] = $nip;
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'tim_kerja');
 		$data['lingkup_tim'] = $this->kepegawaian->getLingkupTimKerja();
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {
@@ -1121,10 +1147,11 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormInovasi($nip){
+		$data['nip'] = $nip;
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'inovasi');
 		$data['kriteria_inovasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.inovasi', 'id', 'asc');
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
 		} else {

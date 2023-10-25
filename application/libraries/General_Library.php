@@ -251,6 +251,10 @@ class General_library
         return $this->nikita->session->userdata('pegawai')['skpd'];
     }
 
+    public function isPegawaiBkpsdm(){
+        return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
+    }
+
     public function setActiveRole($id_role){
         $this->nikita->session->set_userdata([
             'active_role_id' => null,

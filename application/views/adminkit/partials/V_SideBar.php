@@ -208,6 +208,17 @@
 	<?php } ?>
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
+	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+	|| $this->general_library->isPegawaiBkpsdm()
+	){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>list-pegawai">
+				<i class="fa fa-database"></i> <span class="align-middle">Database Pegawai</span>
+			</a>
+		</li>
+	<?php } ?>
+	<?php if($this->general_library->isProgrammer() 
+	|| $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isWalikota() 
 	// || $this->general_library->isWakilWalikota()
 	){ ?>

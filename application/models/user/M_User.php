@@ -1879,6 +1879,9 @@
         }
 
         public function searchAllPegawai($data){
+            $result = null;
+            $flag_use_masa_kerja = 0;
+
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -1941,7 +1944,38 @@
                 $this->db->where_in('e.id_pangkat', $golongan);
             }
 
-            return $this->db->get()->result_array();
+            $result = $this->db->get()->result_array();
+
+            if(isset($data['satyalencana'])){
+                $flag_use_masa_kerja = 1;
+                $masa_kerja_satyalencana = $data['satyalencana'][0];
+                $batas_atas = floatval($masa_kerja_satyalencana) + 10;
+                if($batas_atas > 30){
+                    $batas_atas = 100;
+                }
+                $temp = $result;
+                if($temp){
+                    $result = null;
+                    foreach($temp as $t){
+                        $tahun = substr($t['nipbaru_ws'], 8, 4);
+                        $bulan = substr($t['nipbaru_ws'], 12, 2);
+                        $tmt = $tahun.'-'.$bulan.'-01';
+                        $masa_kerja = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun']);
+                        $explode_masa_kerja = explode(" ", trim($masa_kerja));
+                        
+                        if($explode_masa_kerja[0] != '' && $explode_masa_kerja[0]){
+                            if(floatval($explode_masa_kerja[0] >= $masa_kerja_satyalencana && floatval($explode_masa_kerja[0]) < $batas_atas)){
+                                if(!isset($result[$t['nipbaru_ws']])){
+                                    $result[$t['nipbaru_ws']] = $t;
+                                    $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return [$result, $flag_use_masa_kerja];
         }
 
         public function getFotoPegawai(){

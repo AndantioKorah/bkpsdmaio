@@ -41,6 +41,7 @@ $route['master/tpp'] = 'master/C_Master/tpp';
 
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
 $route['pdm/dashboard'] = 'dashboard/C_Dashboard/dashboardPdm';
+$route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 

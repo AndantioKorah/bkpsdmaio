@@ -4,9 +4,8 @@
 		margin-bottom:10px !important;
     }
 </style>
-
 <!-- Button trigger modal -->
-<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $profil_pegawai['nipbaru_ws']){ ?>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>

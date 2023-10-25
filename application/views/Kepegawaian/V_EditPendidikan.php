@@ -2,6 +2,19 @@
 <input type="hidden" id="id" name="id" value="<?= $pendidikan[0]['id'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $pendidikan[0]['gambarsk'];?>">
     
+    
+    <!-- <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } ?> -->
+
+   <?php if($pendidikan[0]['status']==2){ ?>       
+   <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+  <div style="display:none">
+  <?php } else { ?> 
+   <div>
+  <?php } ?>
+  <?php }?>
+
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Tingkat Pendidikan </label>
@@ -48,6 +61,10 @@
     <label>Tgl. STTB/Ijazah</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_pendidikan_tanggal_ijazah" name="edit_pendidikan_tanggal_ijazah" value="<?= $pendidikan[0]['tglijasah'];?>" required/>
   </div>
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+  </div>
+   <?php } ?>
+
 
   <div class="form-group">
     <label>File Ijazah</label>
@@ -79,8 +96,8 @@
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pendidikan_pdf_edit_file').files.length;
     
-     // document.getElementById('btn_edit_pendidikan').disabled = true;
-     // $('#btn_edit_pendidikan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+     document.getElementById('btn_edit_pendidikan').disabled = true;
+     $('#btn_edit_pendidikan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
    
      $.ajax({  
      url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditPendidikan")?>",
@@ -101,6 +118,7 @@
             $('#btn_edit_pendidikan').html('Simpan')
              setTimeout(function() {$("#modal_edit_pendidikan").trigger( "click" );}, 1000);
              const myTimeout = setTimeout(loadListPendidikan, 2000);
+             loadRiwayatUsulPendidikan()
            } else {
              errortoast(result.msg)
              return false;

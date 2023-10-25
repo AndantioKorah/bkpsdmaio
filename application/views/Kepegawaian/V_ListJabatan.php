@@ -27,7 +27,8 @@
             <?php if($rs['statusjabatan'] == 1 || $rs['statusjabatan'] == '') { ?>
               <?php if($rs['ket'] != 'Plt') { ?>
                 <?php if($rs['ket'] != 'Plh') { ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+                  <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
 
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nama_jabatan']?></td>
@@ -76,7 +77,7 @@
                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
              

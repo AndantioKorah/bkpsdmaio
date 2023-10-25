@@ -549,6 +549,23 @@ public function getPegawaiPenilaianKinerjaJpt(){
                 // ->limit(1);
             return $this->db->get()->result_array();
         }
+
+        public function getPenilaianPegawai(){
+            return $this->db->select('a.res_kinerja,a.res_potensial')
+                            ->from('db_simata.t_penilaian a')
+                            ->where('a.flag_active', 1)
+                            ->get()->result();
+        }
+
+
+        function getNilaiAssesment($id){
+            $this->db->select('*')
+                ->from('db_pegawai.pegassesment a')
+                ->where('a.id_pegawai', $id)
+                ->order_by('a.tahun', 'desc')
+                ->limit(1);
+            return $this->db->get()->row_array();
+        }
           
           
         

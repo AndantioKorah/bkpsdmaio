@@ -14,9 +14,8 @@
           <th class="text-left">Tanggal Mulai / Tanggal Selesai</th>
           <th class="text-left">No / Tanggal STTPP</th>
           <th class="text-left">Sertifikat STTPP</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
-            <?php } ?>
+        
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -43,16 +42,25 @@
                  <i class="fa fa-file-pdf"></i></button>
               <?php } ?>
               </td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
+              <div class="btn-group" role="group" aria-label="Basic example">
               <?php if($kode == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_diklat"
+                onclick="loadEditDiklat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailDiklat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
               </td>
                <?php } ?>
                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
               <?php if($rs['status'] == 1) { ?>
@@ -122,7 +130,6 @@
     // })
     var number = Math.floor(Math.random() * 1000);
     $link = "http://siladen.manadokota.go.id/bidik/arsipdiklat/"+filename+"?v="+number;
-    $link = "http://siladen.manadokota.go.id/bidik/arsipdiklat/"+filename; 
 
     $('#iframe_view_file_diklat').attr('src', $link)
         $('#iframe_view_file_diklat').on('load', function(){
@@ -153,6 +160,14 @@
                        })
                    }
                }
+
+     function loadEditDiklat(id){
+              $('#edit_diklat_pegawai').html('')
+              $('#edit_diklat_pegawai').append(divLoaderNavy)
+              $('#edit_diklat_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditDiklat")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
 
 </script>
 <?php } else { ?>

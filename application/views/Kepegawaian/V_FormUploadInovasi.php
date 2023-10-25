@@ -245,10 +245,12 @@ $(function(){
     
   $("#pdf_file_inovasi").change(function (e) {
 
-        var extension = pdf_file_inovasi.value.split('.')[1];
-      
+        // var extension = pdf_file_inovasi.value.split('.')[1];
+        var doc = pdf_file_inovasi.value.split('.')
+        var extension = doc[doc.length - 1]
         var fileSize = this.files[0].size/1024;
-     
+        
+    
         if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');

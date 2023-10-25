@@ -15,8 +15,8 @@
     }
 
     .card-lengkap{
-        border: 2px solid #222e3c;
-        background-color: #222e3c;
+        border: 2px solid #15654d;
+        background-color: #0a7958;
     }
 
     .card-lengkap span, .card-lengkap i{

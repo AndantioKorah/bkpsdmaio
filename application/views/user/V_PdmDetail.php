@@ -97,6 +97,20 @@
       </div>
   </div>
 
+  <div class="card">
+    <div class="card-body">
+    <div onclick="loadPage('assesment')" class="card card-default card-pdm <?=isset($result['assesment']) ? 'card-lengkap' : 'card-belum-lengkap' ?> p-3">
+    <div class="col-12 text-center">
+                    <i class="text-dark fa fa-file-alt fa-2x"></i>
+                </div>
+                <div class="col-12 text-center">
+                    <span class="card-title-pdm">Assesment</span>
+                </div>
+                </div>
+      </div>
+  </div>
+
+
 </div>
 
 
@@ -166,6 +180,22 @@
         </div>
       </div>
   </div>
+
+  
+<div class="card">
+    <div class="card-body">
+    <div onclick="loadPage('inovasi')" class="card card-default card-pdm <?=isset($result['inovasi']) ? 'card-lengkap' : 'card-belum-lengkap' ?> p-3">
+    <div class="col-12 text-center">
+                    <i class="text-dark fa fa-file-alt fa-2x"></i>
+                </div>
+                <div class="col-12 text-center">
+                    <span class="card-title-pdm">Inovasi</span>
+                </div>
+                </div>
+      </div>
+  </div>
+
+
 </div>
 
 
@@ -235,7 +265,22 @@
                 </div>
       </div>
   </div>
+
+  <div class="card">
+    <div class="card-body">
+    <div onclick="loadPage('tim_kerja')" class="card card-default card-pdm <?=isset($result['tim_kerja']) ? 'card-lengkap' : 'card-belum-lengkap' ?> p-3">
+    <div class="col-12 text-center">
+                    <i class="text-dark fa fa-file-alt fa-2x"></i>
+                </div>
+                <div class="col-12 text-center">
+                    <span class="card-title-pdm">Tim Kerja</span>
+                </div>
+                </div>
+      </div>
+  </div>
+
 </div>
+
 
 
 <!-- 

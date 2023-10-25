@@ -157,7 +157,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 $(function(){
   $(".select2").select2({   
 		width: '100%',
-		dropdownAutoWidth: true,
+		// dropdownAutoWidth: true,
 		allowClear: true,
 	});
     loadListArsip()

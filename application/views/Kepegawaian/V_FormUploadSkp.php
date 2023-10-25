@@ -257,10 +257,11 @@ $(function(){
 
   $("#pdf_file_skp").change(function (e) {
 
-        var extension = pdf_file_skp.value.split('.')[1];
-      
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>
+
+        var doc = pdf_file_skp.value.split('.')
+        var extension = doc[doc.length - 1]
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")

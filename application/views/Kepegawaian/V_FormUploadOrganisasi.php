@@ -318,6 +318,31 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_organisasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Organisasi</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_organisasi_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script type="text/javascript">
 
 
@@ -345,12 +370,12 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_organisasi');
         var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('pdf_file_organisasi').files.length;
+        var ins = document.getElementById('pdf_file_organisasi').files.length;
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
        
         document.getElementById('btn_upload_organisasi').disabled = true;
         $('#btn_upload_organisasi').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

@@ -11,9 +11,8 @@
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">TMT Gaji Berkala</th>
           <th class="text-left">SK</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
-          <th></th>
-            <?php } ?>
+         <th></th>
+          
           <?php if($kode == 2) { ?>
           <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -39,16 +38,17 @@
                  <i class="fa fa-file-pdf"></i></button>
                  <?php } ?>
               </td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
                 <div class="btn-group" role="group" aria-label="Basic example">
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
-              
                 href="#modal_edit_berkala"
                 onclick="loadEditBerkala('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailBerkala btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>
               </td>
@@ -57,7 +57,7 @@
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
 
-                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'diolak : '.$rs['keterangan']; else echo '';?></td>
 
            <td>
            <?php if($rs['status'] == 1) { ?>
@@ -73,28 +73,6 @@
   </div>
  
  
-<!-- Modal -->
-<div class="modal fade" id="modal_edit_berkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Detail Gaji Berkala</h5>
-        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="edit_berkala_pegawai">
-          
-        </div>
-    
-      </div>
-      <div class="modal-footer">
-       
-      </div>
-    </div>
-  </div>
-</div>
 <script>
   $(function(){
     $('.datatable').dataTable()
@@ -142,8 +120,7 @@
     $link = "http://siladen.manadokota.go.id/bidik/arsipgjberkala/"+filename+"?v="+number;
 
   $('#iframe_view_file_gaji_berkala').attr('src', $link)
-    $('#embed_view_file_gaji_berkala').attr('src', $link)
-        $('#embed_view_file_gaji_berkala').on('load', function(){
+        $('#iframe_view_file_gaji_berkala').on('load', function(){
           $('.iframe_loader').hide()
           $(this).show()
     })

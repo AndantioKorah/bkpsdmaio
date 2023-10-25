@@ -609,9 +609,9 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormSumpahJanji()" class="nav-link nav-link-profile" id="pills-sj-tab" data-bs-toggle="pill" data-bs-target="#pills-sj" type="button" role="tab" aria-controls="pills-sj" aria-selected="false">Sumpah/Janji</button>
               </li>
-              <li class="nav-item nav-item-profile" role="presentation">
+              <!-- <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormPelanggaran()" class="nav-link nav-link-profile" id="pills-pelanggaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pelanggaran" type="button" role="tab" aria-controls="pills-pelanggaran" aria-selected="false">Pelanggaran</button>
-              </li>
+              </li> -->
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormKeluarga()"  class="nav-link nav-link-profile" id="pills-keluarga-tab" data-bs-toggle="pill" data-bs-target="#pills-keluarga" type="button" role="tab" aria-controls="pills-keluarga" aria-selected="false">Keluarga</button>
               </li>
@@ -942,6 +942,10 @@
                 setTimeout(loadFormBerkasPns, 1500);
                 } else if(jb == "data_lainnya"){
                 setTimeout(LoadFormArsip, 1500);
+                } else if(jb == "inovasi"){
+                setTimeout(LoadFormInovasi, 1500);
+                } else if(jb == "tim_kerja"){
+                setTimeout(LoadFormTimKerja, 1500);
                 }
               } else {
                 errortoast(result.msg)
@@ -986,7 +990,13 @@
       $('#pills-cuti-tab').click()
     } else if(page == "organisasi"){
       $('#pills-organisasi-tab').click()
-    }  else {
+    } else if(page == "tim_kerja"){
+      $('#pills-tk-tab').click()
+    } else if(page == "inovasi"){
+      $('#pills-inovasi-tab').click()
+    } else if(page == "assesment"){
+      $('#pills-assesment-tab').click()
+    } else {
       $('#pills-pangkat-tab').click()
     }
     

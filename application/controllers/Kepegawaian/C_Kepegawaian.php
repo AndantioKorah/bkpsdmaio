@@ -362,7 +362,7 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
-    //    dd($data['result']);
+		// dd($data['param']['jenisdokumen']);
 		    if($jd == "jabatan"){
 			$data['path'] = 'arsipjabatan/'.$data['result']['gambarsk'];
             } else if($jd == "pangkat"){
@@ -385,10 +385,15 @@ class C_Kepegawaian extends CI_Controller
 				$data['path'] = 'arsiplain/'.$data['result']['gambarsk'];
             } else if($jd == "timkerja"){
 				$data['path'] = 'arsiptimkerja/'.$data['result']['gambarsk'];
+            }  else if($jd == "sumpahjanji"){
+				$data['path'] = 'arsipsumpah/'.$data['result']['gambarsk'];
+            } else if($jd == "organisasi"){
+				$data['path'] = 'arsiporganisasi/'.$data['result']['gambarsk'];
+            } else if($jd == "penghargaan"){
+				$data['path'] = 'arsippenghargaan/'.$data['result']['gambarsk'];
             }       else {
 				$data['path'] = null;
 			}
-			
 			
 		
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);
@@ -651,7 +656,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 48);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'organisasi');
 		$data['lingkup_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.lingkup_organisasi', 'id', 'asc');
-		$data['jabatan_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan_organisasi', 'id', 'asc');
+		// $data['jabatan_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jabatan_organisasi', 'id', 'asc');
+		$data['jabatan_organisasi'] = $this->kepegawaian->getJabatanOrganisasi();
 
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
@@ -1054,7 +1060,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispeg', 'id_jenispeg', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
-		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
+		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 		$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 		
 		render('kepegawaian/V_FormTambahPegawai', '', '', $data);
@@ -1155,6 +1161,56 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_EditPendidikan', $data);
     }
 
+	public function loadEditCuti($id)
+    {
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 17);
+		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_pegawai.cuti', 'id_cuti', 'asc');
+		$data['cuti'] = $this->kepegawaian->getCutiEdit($id);
+        // dd($data['pangkat']);
+        $this->load->view('kepegawaian/V_EditCuti', $data);
+    }
+
+	public function loadEditDiklat($id)
+    {
+		$data['jenis_diklat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.diklat', 'id_diklat', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 20);
+		$data['diklat'] = $this->kepegawaian->getDiklatEdit($id);
+        $this->load->view('kepegawaian/V_EditDiklat', $data);
+    }
+
+	public function loadEditOrganisasi($id)
+    {
+		$data['jenis_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.organisasi', 'no_urut', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 48);
+		$data['lingkup_organisasi'] = $this->kepegawaian->getAllWithOrder('db_pegawai.lingkup_organisasi', 'id', 'asc');
+		$data['jabatan_organisasi'] = $this->kepegawaian->getJabatanOrganisasi();
+		$data['organisasi'] = $this->kepegawaian->getOrganisasiEdit($id);
+       
+		$this->load->view('kepegawaian/V_EditOrganisasi', $data);
+    }
+
+	public function loadEditPenghargaan($id)
+    {
+		$data['pemberi'] = $this->kepegawaian->getPemberiPenghargaan();
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 49);
+		$data['penghargaan'] = $this->kepegawaian->getPenghargaanEdit($id);
+		$this->load->view('kepegawaian/V_EditPenghargaan', $data);
+    }
+
+	public function loadEditSumjan($id)
+    {
+		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
+		$data['sumjan'] = $this->kepegawaian->getSumpahJanjiEdit($id);
+		$this->load->view('kepegawaian/V_EditSumjan', $data);
+    }
+
+
+
+
+
+
+	
+
 
 	public function submitEditPangkat()
 	{ 
@@ -1171,6 +1227,34 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->submitEditPendidikan());
 	}
 
+	public function submitEditCuti()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditCuti());
+	}
+
+	public function submitEditDiklat()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditDiklat());
+	}
+
+	public function submitEditOrganisasi()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditOrganisasi());
+	}
+
+	public function submitEditPenghargaan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditPenghargaan());
+	}
+
+	public function submitEditSumjan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditSumjan());
+	}
+
+
+
+	
 
 
 

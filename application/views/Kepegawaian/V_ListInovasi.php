@@ -18,7 +18,8 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+            <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_inovasi']?></td>
               <td class="text-left"><?=$rs['kriteria_inovasi']?></td>
@@ -36,7 +37,8 @@
               <?php } ?>
                <?php } ?>
              <?php if($kode == 2) { ?>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
+
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

@@ -104,7 +104,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
  
       <div class="form-group">
     <label>Tahun</label>
-    <input min=0 step=0.01 class="form-control" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
+    <input min=0 step=0.01 class="form-control yearpicker" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">

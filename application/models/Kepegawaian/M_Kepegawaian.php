@@ -298,7 +298,10 @@ class M_Kepegawaian extends CI_Model
 
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
-            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()|| $this->general_library->isManajemenTalenta()){
+            if($this->general_library->isProgrammer() 
+            || $this->general_library->isAdminAplikasi()
+            || $this->general_library->isManajemenTalenta()
+            || $this->general_library->isHakAkses('akses_profil_pegawai')){
                 $username = $nip;
                 if(!$username){
                     $username = $this->general_library->getUserName();

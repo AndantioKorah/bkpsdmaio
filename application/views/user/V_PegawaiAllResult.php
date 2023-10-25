@@ -26,6 +26,9 @@
             <th class="text-center">Pegawai</th>
             <th class="text-center">Eselon</th>
             <th class="text-center">Pangkat</th>
+            <?php if($use_masa_kerja == 1){ ?>
+                <th class="text-center">Masa Kerja</th>
+            <?php } ?>
             <th class="text-center">Unit Kerja</th>
         </thead>
         <tbody>
@@ -46,6 +49,9 @@
                     </td>
                     <td class="text-center"><?=$rs['eselon']?></td>
                     <td class="text-left"><?=$rs['nm_pangkat']?></td>
+                    <?php if($use_masa_kerja == 1){ ?>
+                        <td class="text-center"><?=$rs['masa_kerja']?></td>
+                    <?php } ?>
                     <td class="text-left"><?=$rs['nm_unitkerja']?></td>
                 </tr>
             <?php } } ?>

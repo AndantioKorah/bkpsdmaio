@@ -458,6 +458,7 @@ class C_User extends CI_Controller
         $data['tktpendidikan'] = $this->m_general->getAll('db_pegawai.tktpendidikan', 0);
         $data['agama'] = $this->m_general->getAll('db_pegawai.agama', 0);
         $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        $data['satyalencana'] = $this->m_general->getAllWithOrderGeneral('m_satyalencana', 'nama_satya_lencana', 'asc');
         $data['golongan'] = [
             1 => [
                 'id_golongan' => 'golongan_1',
@@ -506,7 +507,7 @@ class C_User extends CI_Controller
     }
 
     public function searchAllPegawai(){
-        $data['result'] = $this->user->searchAllPegawai($this->input->post());
+        list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
         $this->load->view('user/V_PegawaiAllResult', $data);
     }
 

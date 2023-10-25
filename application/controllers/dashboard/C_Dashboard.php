@@ -106,4 +106,9 @@ class C_Dashboard extends CI_Controller
         $this->load->view('dashboard/V_DashboardPdmDetail', $data);
     }
 
+    public function dashboardKepegawaian(){
+        $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
+        render('dashboard/V_DashboardKepegawaian', '', '', $data);
+	}
+
 }

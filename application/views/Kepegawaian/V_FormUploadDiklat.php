@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDiklat">
@@ -39,7 +40,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
-
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -185,6 +186,29 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_diklat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Bangkom</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_diklat_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script type="text/javascript">
 
@@ -278,10 +302,14 @@ $(function(){
 
     
 
-        var extension = diklat_pdf_file.value.split('.')[1];
+        // var extension = diklat_pdf_file.value.split('.')[1];
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
-        
+
+        var doc = diklat_pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
+       
+
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")

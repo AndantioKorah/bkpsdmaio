@@ -5,8 +5,15 @@
 }
 </style>
 <form method="post" id="form_edit_profil" enctype="multipart/form-data" >
-        <input type="hidden" name="edit_id_pegawai" id="edit_id_pegawai" value="<?=$profil_pegawai['id_peg']?>">
+      <input type="hidden" name="edit_id_pegawai" id="edit_id_pegawai" value="<?=$profil_pegawai['id_peg']?>">
+      
+     
       <div class="row g-3 align-items-center" >
+      <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } ?>
+
+
       <div class="col-lg-2" >
         <label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
       </div>
@@ -71,6 +78,11 @@
         <label class="form-check-label" for="inlineRadioP">Perempuan</label>
       </div>
       </div>
+
+      <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+      </div>
+      <?php } ?>
+
       
       <div class="col-lg-2" >
         <label for="inputPassword6" class="col-form-label"> Golongan Darah </label>
@@ -241,12 +253,21 @@
         <input type="text" id="edit_tmt_gjberkala" name="edit_tmt_gjberkala" class="form-control datepickeronly" value="<?= $profil_pegawai['tmtgjberkala'];?>">
       </div> -->
 
+      <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } ?>
+
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> TMT CPNS </label>
       </div>
       <div class="col-lg-10">
-        <input <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "readonly" ?> type="text" id="edit_tmt_cpns" name="edit_tmt_cpns" class="form-control datepickeronly" value="<?= $profil_pegawai['tmtcpns'];?>">
+        <input <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "readonly" ?> type="text" id="edit_tmt_cpns" name="edit_tmt_cpns" class="form-control datepicker" value="<?= $profil_pegawai['tmtcpns'];?>">
       </div>
+
+      <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+      </div>
+   <?php } ?>
+
 
       <div class="col-lg-2" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
         <label for="inputPassword6" class="col-form-label"> Pendidikan Terakhir </label>
@@ -408,5 +429,14 @@ $(".select2").select2({
                           }
                   });
       });
+
+      $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+          // viewMode: "years", 
+          // minViewMode: "years",
+          // orientation: 'bottom',
+          autoclose: true
+      });
+
     
 </script>

@@ -1,6 +1,21 @@
 <form method="post" id="form_edit_pangkat" enctype="multipart/form-data" >
     <input type="hidden" id="id" name="id" value="<?= $pangkat[0]['id'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $pangkat[0]['gambarsk'];?>">
+  
+    <!-- <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } ?> -->
+
+     <?php if($pangkat[0]['status']==2){ ?>       
+   
+    <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } else { ?> 
+    <div>
+   <?php } ?>
+   <?php }?>
+
+   
     <div class="form-group " style="margin-bottom:10px !important;">
     <label >Jenis Pengangkatan</label>
     <select  class="form-control select2" data-dropdown-parent="#modal_edit_pangkat" data-dropdown-css-class="select2-navy" name="edit_jenis_pengangkatan" id="edit_jenis_pengangkatan" required>
@@ -26,7 +41,7 @@
 
    <div class="form-group">
     <label>TMT Pangkat</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="edit_tmt_pangkat" name="edit_tmt_pangkat" value="<?=$pangkat[0]['tmtpangkat'];?>" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="edit_tmt_pangkat" name="edit_tmt_pangkat" value="<?=$pangkat[0]['tmtpangkat'];?>" readonly required/>
   </div>
   
   <div class="form-group">
@@ -46,9 +61,13 @@
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker" id="edit_tanggal_sk" name="edit_tanggal_sk" value="<?=$pangkat[0]['tglsk'];?>" required/>
+    <input autocomplete="off"  class="form-control datepicker" id="edit_tanggal_sk" name="edit_tanggal_sk" value="<?=$pangkat[0]['tglsk'];?>" readonly required/>
   </div>
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
+    </div>
+   <?php } ?>
 
+ 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_pangkat" name="file"/>
@@ -109,6 +128,7 @@ $('#form_edit_pangkat').on('submit', function(e){
                $('#btn_edit_pangkat').html('Simpan')
                 setTimeout(function() {$("#modal_edit_pangkat").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListPangkat, 2000);
+                loadRiwayatUsulListPangkat()
               } else {
                 errortoast(result.msg)
                 return false;

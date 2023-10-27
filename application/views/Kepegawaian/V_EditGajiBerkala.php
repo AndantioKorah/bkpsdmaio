@@ -2,6 +2,11 @@
     <input type="hidden" id="id" name="id" value="<?= $berkala[0]['id'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $berkala[0]['gambarsk'];?>">
 
+    <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+   <div style="display:none">
+   <?php } ?>
+
+
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Pangkat - Gol/Ruang </label>
     <select class="form-control select2" data-dropdown-parent="#modal_edit_berkala" data-dropdown-css-class="select2-navy" name="edit_gb_pangkat" id="edit_gb_pangkat" required>
@@ -37,6 +42,10 @@
     <label>TMT Gaji Berkala</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?= $berkala[0]['tmtgajiberkala'];?>" required/>
   </div>
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+  </div>
+   <?php } ?>
+
 
   <div class="form-group">
     <label>File SK</label>
@@ -76,8 +85,8 @@ $('#form_edit_berkala').on('submit', function(e){
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pdf_file_edit_berkala').files.length;
     
-     // document.getElementById('btn_edit_berkala').disabled = true;
-     // $('#btn_edit_berkala').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+     document.getElementById('btn_edit_berkala').disabled = true;
+     $('#btn_edit_berkala').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
    
      $.ajax({  
      url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditBerkala")?>",

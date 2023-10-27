@@ -216,6 +216,55 @@ class C_Simata extends CI_Controller
 		echo json_encode( $this->simata->submitPenilaianKinerja());
 	}
 
+    public function nineBox(){
+        $data['result'] = $this->simata->getPenilaianPegawai();
+        // dd($data); 
+        render('simata/V_NineBoxNew', '', '', $data);
+    }
+
+    public function getPenilaianPegawai()
+	{ 
+		echo json_encode($this->simata->getPenilaianPegawai());
+	}
+
+
+    public function penilaianPotensial(){
+        $data['result'] = null;
+        render('simata/V_PenilaianPotensial', '', '', $data);
+    }
+
+
+    public function loadListPegawaiPenilainPotensialAdm(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
+        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
+        $this->load->view('simata/V_PenilaianPotensialItem', $data);
+    }
+
+    public function loadListPegawaiPenilainPotensialJpt(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
+        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+        $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
+    }
+
+    public function loadModalPenilaianPotensial($id,$nip,$kode)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+        // $data['kriteria_kinerja_1'] = $this->simata->getKriteriaKinerja1();
+
+        $id_peg = $data['profil_pegawai']['id_peg'];
+             
+        $data['id_t_penilaian'] = $id;
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
+        $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        $data['kode'] = $kode;  
+        $this->load->view('simata/V_ModalPenilaianPotensial', $data);
+    }
+
+
+
+
 
 
 

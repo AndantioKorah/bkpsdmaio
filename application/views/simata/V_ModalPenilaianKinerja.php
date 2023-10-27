@@ -191,13 +191,13 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>
-              <li class="nav-item nav-item-profile" role="presentation">
+              <!-- <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile " id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
               </li>
               
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile" id="pills-data_lain-tab" data-bs-toggle="pill" data-bs-target="#pills-data_lain" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Data Lainnya</button>
-              </li>
+              </li> -->
             </ul>
 
             <div class="col-lg-12">
@@ -593,7 +593,7 @@
                     <?php } } ?>
                 </select>
                </td>
-                <td style="width:25%">Empati dalam Organisasi</td>
+                <td style="width:25%">Pengalaman dalam Tim</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria4" required>
                 <option value=""  selected>Pilih Item</option>

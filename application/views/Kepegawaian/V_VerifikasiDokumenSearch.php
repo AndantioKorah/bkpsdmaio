@@ -16,6 +16,7 @@
           <td class="text-center"><?=getNamaPegawaiFull($rs)?></td>
           <td class="text-center"><?=formatDateNamaBulan($rs['created_date'])?></td>
           <td class="text-center">
+            
             <button href="#edit_data" data-toggle="modal" onclick="openDetail('<?=$rs['id_dokumen']?>', '<?=$param['jenisdokumen']['value']?>')"
             class="btn btn-navy btn-sm">Detail <i class="fa fa-search"></i></button>
           </td>

@@ -370,6 +370,22 @@
 				</span>
 			</a>	
 		</li>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-check-square"></i> 
+				<span class="align-middle">
+				Penilaian Potensial
+				</span>
+			</a>	
+		</li>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-eye"></i> 
+				<span class="align-middle">
+				Nine Box
+				</span>
+			</a>	
+		</li>
 		<?php } ?>
 
 </ul>

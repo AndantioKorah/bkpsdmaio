@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSkp">
@@ -39,6 +40,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
 
 <script>
     function openModalStatusPmd(jenisberkas){
@@ -257,10 +260,11 @@ $(function(){
 
   $("#pdf_file_skp").change(function (e) {
 
-        var extension = pdf_file_skp.value.split('.')[1];
-      
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>
+
+        var doc = pdf_file_skp.value.split('.')
+        var extension = doc[doc.length - 1]
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")

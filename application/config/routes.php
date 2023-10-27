@@ -98,4 +98,9 @@ $route['mt/jabatan-target'] = 'simata/C_Simata/jabatanTarget';
 $route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
 $route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
 $route['mt/penilaian-kinerja'] = 'simata/C_Simata/penilaianKinerja';
+$route['mt/ninebox'] = 'simata/C_Simata/nineBox';
+$route['mt/penilaian-potensial'] = 'simata/C_Simata/penilaianPotensial';
+
+
+
 

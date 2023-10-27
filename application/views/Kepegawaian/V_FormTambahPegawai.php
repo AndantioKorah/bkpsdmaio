@@ -234,7 +234,7 @@
       <select class="form-control select2" data-dropdown-css-class="" name="pendidikan" id="pendidikan" required>
                     <option value="" disabled selected>Pilih Pendidikan</option>
                     <?php if($pendidikan){ foreach($pendidikan as $r){ ?>
-                        <option value="<?=$r['id_tktpendidikanb']?>"><?=$r['nm_tktpendidikanb']?></option>
+                        <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
                     <?php } } ?>
     </select>
       </div>
@@ -298,6 +298,8 @@
 
 
 $('#form_profil').on('submit', function(e){
+
+  var base_url = "<?= base_url();?>"
      
         e.preventDefault();
         $.ajax({
@@ -310,7 +312,7 @@ $('#form_profil').on('submit', function(e){
             console.log(result.nip)
             if(result.success == true){
                 successtoast(result.msg)
-                location.href = " http://localhost/bkpsdmaio/kepegawaian/profil-pegawai/"+result.nip;
+                location.href = base_url+"kepegawaian/profil-pegawai/"+result.nip;
               } else {
                 errortoast(result.msg)
                 return false;

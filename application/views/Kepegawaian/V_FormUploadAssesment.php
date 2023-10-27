@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalAssesment">
@@ -40,6 +41,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -104,7 +107,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
  
       <div class="form-group">
     <label>Tahun</label>
-    <input min=0 step=0.01 class="form-control" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
+    <input min=0 step=0.01 class="form-control yearpicker" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">

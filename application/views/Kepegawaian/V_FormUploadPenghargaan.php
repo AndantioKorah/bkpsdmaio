@@ -7,6 +7,9 @@
     }
 </style>
 
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
+
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
   Tambah Data Penghargaan
@@ -38,6 +41,9 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
+
 
 <script>
     function openModalStatusPmd(jenisberkas){
@@ -105,7 +111,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Nama Penghargaan</label>
-    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  required/>
+    <input class="form-control customInput" list="listpenghargaan" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan" autocomplete="off"  required/>
+    <datalist id="listpenghargaan">
+    <option value="Satyalencana Karya Satya 10 tahun">Satyalencana Karya Satya 10 tahun</option>
+    <option value="Satyalencana Karya Satya 20 tahun">Satyalencana Karya Satya 20 tahun</option>           
+    <option value="Satyalencana Karya Satya 30 tahun">Satyalencana Karya Satya 30 tahun</option>           
+
+    </datalist>
   </div>
 
   <div class="form-group">
@@ -165,22 +177,6 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 
-
-
-<div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
-      <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
-      </div>
-    </div>
-  </div>
-</div>    
-
-
 <div class="modal fade" id="modal_view_file_penghargaan" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -197,6 +193,30 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_penghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Penghargaaan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_penghargaan_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 
@@ -229,10 +249,16 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_penghargaan');
         var form_data = new FormData(formvalue[0]);
+
+        var ins = document.getElementById('pdf_file_penghargaan').files.length;
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
        
        
-        // document.getElementById('btn_upload_penghargaan').disabled = true;
-        // $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_penghargaan').disabled = true;
+        $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -297,9 +323,11 @@ $(function(){
 
         $("#pdf_file_penghargaan").change(function (e) {
 
-      var extension = pdf_file_penghargaan.value.split('.')[1];
+      var doc = pdf_file_penghargaan.value.split('.');
       var MaxSize = <?=$format_dok['file_size']?>;
       var fileSize = this.files[0].size/1024;
+      var extension = doc[doc.length - 1]
+
 
       if (extension != "pdf"){
         errortoast("Harus File PDF")

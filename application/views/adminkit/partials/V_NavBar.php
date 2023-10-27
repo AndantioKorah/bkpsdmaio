@@ -142,7 +142,7 @@
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
 	
-	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
+	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
 		<form class="form-inline mr-3">
 			<div class="row">
 				<div class="div_search_bar">

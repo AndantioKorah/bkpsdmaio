@@ -178,7 +178,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group " style="margin-bottom:10px !important;">
     <label >Jenis Pengangkatan</label>
-    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
+    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" autocomplete="off" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_pengangkatan){ foreach($jenis_pengangkatan as $r){ ?>
                         <option value="<?=$r['id_jenispengangkatan']?>"><?=$r['nm_jenispengangkatan']?></option>
@@ -188,7 +188,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Pangkat - Gol/Ruang </label>
-    <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" required>
+    <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" autocomplete="off" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
@@ -201,22 +201,22 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
    <div class="form-group">
     <label>TMT Pangkat</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" readonly required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" readonly  required/>
   </div>
   
   <div class="form-group">
     <label>Masa Kerja</label>
-    <input class="form-control" type="text" id="masa_kerja" name="masa_kerja"  required/>
+    <input class="form-control" type="text" id="masa_kerja" name="masa_kerja" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
     <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control" type="text" id="pejabat" name="pejabat"  required/>
+    <input class="form-control" type="text" id="pejabat" name="pejabat" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
     <label>Nomor SK</label>
-    <input class="form-control" type="text" id="no_sk" name="no_sk"  required/>
+    <input class="form-control" type="text" id="no_sk" name="no_sk" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
@@ -402,7 +402,9 @@ $(function(){
 
   $("#pdf_file").change(function (e) {
 
-        var extension = pdf_file.value.split('.')[1];
+        // var extension = pdf_file.value.split('.')[1];
+        var doc = pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>

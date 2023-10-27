@@ -251,6 +251,7 @@
 
     function renderChart(rs){
       let dt = JSON.parse(rs)
+      console.log("yor")
       // document.addEventListener("DOMContentLoaded", function() {
         let labels = [];
         let values = [];
@@ -261,7 +262,9 @@
             values.push(dt.result[i].jumlah)
           }
         })
-        console.log(labels)
+
+        console.log(values)
+       
 
         let colors = JSON.parse('<?=json_encode(CHART_COLORS)?>')                
         // let data_labels = 

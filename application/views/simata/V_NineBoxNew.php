@@ -128,21 +128,42 @@ table tr td.green
    
   
 </div>
+
+<?php
+
+           $nilai['result'] = $result;
+           $data_pendidikan['id_chart'] = 'chart_pendidikan';
+          ?>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script>
+
+$(function(){          
+    // renderChart()
+    })
+
+    
+    var dx = JSON.parse('<?=json_encode($nilai)?>');
+    var c = [];
+    let point = [];
+    let temp = Object.keys(dx.result)
+    temp.forEach((i) => {
+          var nilaiy =  parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
+          point.push({ x: dx.result[i].res_kinerja, y: nilaiy, nama:"Youri" })
+    });
+    console.log(point)
+    var data1 = point;
     
 const data = {
 datasets: [{
-  label : 'tes',
-  data: [ 
-      {x : 68, y:68},
-      ],
+  // label : 'tes',
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }],
@@ -174,6 +195,27 @@ options: {
   plugins: {
       legend: {
           display: false
+      }, 
+      tooltip:{
+        callbacks:{
+          label: (context) => {
+            console.log(context)
+            // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
+            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
+          },
+          labelColor: function(context) {
+                        return {
+                            borderColor: 'rgb(0, 0, 255)',
+                            backgroundColor: 'rgb(255, 0, 0)',
+                            borderWidth: 1,
+                            // borderDash: [1, 1],
+                            borderRadius: 1,
+                        };
+                    },
+          // labelTextColor: function(context) {
+          // return '#543453';
+          // }
+        }
       }
   },
   
@@ -198,7 +240,6 @@ options: {
      min: 0,
      max: 69,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -213,10 +254,13 @@ options: {
 plugins: [nineGridLabels]
 };
 
+// function renderChart(){  
 const myChart = new Chart(
 document.getElementById('myChart'),
 config
 );
+// }
+
 
 </script>
 
@@ -243,15 +287,13 @@ const nineGridLabels2 = {
 const config2 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 60, y:80},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -283,7 +325,6 @@ options: {
      min: 70,
      max: 84.99,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -328,15 +369,13 @@ const nineGridLabels3 = {
 const config3 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 73, y:60},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -353,7 +392,7 @@ options: {
      min: 70,
      max: 85,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -413,15 +452,13 @@ const nineGridLabels4 = {
 const config4 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 10, y:88},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -453,7 +490,7 @@ options: {
      min: 85    ,
      max: 100,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -499,15 +536,13 @@ const nineGridLabels5 = {
 const config5 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 77, y:77},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -539,7 +574,7 @@ options: {
      min: 70,
      max: 84.99,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -585,15 +620,13 @@ const nineGridLabels6 = {
 const config6 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 86, y:10},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -610,7 +643,7 @@ options: {
      min: 85,
      max: 100,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -671,15 +704,13 @@ const nineGridLabels7 = {
 const config7 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 82, y:90},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -696,7 +727,7 @@ options: {
      min: 70,
      max: 84.99,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -757,15 +788,13 @@ const nineGridLabels8 = {
 const config8 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 86, y:72},
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -782,7 +811,7 @@ options: {
      min: 85,
      max: 100,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -797,7 +826,7 @@ options: {
      min: 70,
      max: 84.99,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -843,21 +872,13 @@ const nineGridLabels9 = {
 const config9 = {
 type: 'scatter',
 data: {datasets: [{
-  data: [ 
-      {x : 86, y:92},
-      {x : 87, y:91},
-      {x : 86, y:88},
-      {x : 95, y:98},
-      {x : 100, y:100},
-
-
-      ],
+  data: data1,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
       pointBackgroundColor: "#000",
       pointBorderColor: "#000",
-      pointRadius: 1.5,
+      pointRadius: 2,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -865,6 +886,22 @@ options: {
   plugins: {
       legend: {
           display: false
+      },
+      tooltip:{
+        callbacks:{
+          label: (context) => {
+            console.log(context)
+            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
+          },
+          labelColor: function(context) {
+                        return {
+                            borderColor: 'rgb(0, 0, 255)',
+                            backgroundColor: 'rgb(255, 0, 0)',
+                            borderWidth: 1,
+                            borderRadius: 1,
+                        };
+            }
+        }
       }
   },
   
@@ -874,7 +911,7 @@ options: {
      min: 85,
      max: 100,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {
@@ -889,7 +926,7 @@ options: {
      min: 85,
      max: 100,
      afterTickToLabelConversion: (ctx) => {
-      console.log(ctx)
+      // console.log(ctx)
       ctx.ticks = [];
      },
      grid: {

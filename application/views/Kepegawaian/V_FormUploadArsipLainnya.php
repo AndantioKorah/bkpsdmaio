@@ -242,11 +242,12 @@ $(function(){
 
   $("#pdf_file_arsip_lainnya").change(function (e) {
 
-        var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        // var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        var doc = pdf_file_arsip_lainnya.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
        
-     
         if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');

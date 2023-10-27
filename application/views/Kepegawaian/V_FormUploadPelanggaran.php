@@ -233,6 +233,7 @@ $(function(){
 
 var extension = pdf_file_pelanggaran.value.split('.')[1];
 
+
 var fileSize = this.files[0].size/1024;
 var MaxSize = 1024;
 

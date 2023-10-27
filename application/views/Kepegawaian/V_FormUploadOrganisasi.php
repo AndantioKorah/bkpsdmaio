@@ -445,7 +445,11 @@ $(function(){
 
         $("#pdf_file_organisasi").change(function (e) {
 
-        var extension = pdf_file_organisasi.value.split('.')[1];
+        // var extension = pdf_file_organisasi.value.split('.')[1];
+        var doc = pdf_file_organisasi.value.split('.')
+        var extension = doc[doc.length - 1]
+
+
         var MaxSize = <?=$format_dok['file_size']?>;
         var fileSize = this.files[0].size/1024;
 

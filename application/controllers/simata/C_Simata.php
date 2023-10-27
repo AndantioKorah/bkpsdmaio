@@ -218,7 +218,7 @@ class C_Simata extends CI_Controller
 
     public function nineBox(){
         $data['result'] = $this->simata->getPenilaianPegawai();
-        // dd($data); 
+        $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
         render('simata/V_NineBoxNew', '', '', $data);
     }
 
@@ -237,7 +237,7 @@ class C_Simata extends CI_Controller
     public function loadListPegawaiPenilainPotensialAdm(){
         
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
+        $data['result2'] = $this->simata->getPegawaiPenilaianPotensialAdministrator();  
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
@@ -248,20 +248,38 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
     }
 
-    public function loadModalPenilaianPotensial($id,$nip,$kode)
+    public function loadModalPenilaianPotensial($id,$nip,$kode,$jt)
     {
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
-        // $data['kriteria_kinerja_1'] = $this->simata->getKriteriaKinerja1();
-
+        $data['list_pendidikan_formal'] = $this->simata->getKriteriaPotensial(26);
+        $data['pangkat_gol'] = $this->simata->getKriteriaPotensial(27);
+        $data['masa_kerja_jabatan'] = $this->simata->getKriteriaPotensial(28);
+        $data['diklat'] = $this->simata->getKriteriaPotensial(29);
+        $data['kompetensi20_jp'] = $this->simata->getKriteriaPotensial(30);
+        $data['penghargaan'] = $this->simata->getKriteriaPotensial(31);
+        $data['riwayat_hukdis'] = $this->simata->getKriteriaPotensial(32);
         $id_peg = $data['profil_pegawai']['id_peg'];
              
         $data['id_t_penilaian'] = $id;
-        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
+        $data['jabatan_target'] = $jt;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jt);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
 
+    public function submitPenilaianPotensialCerdas()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianPotensialCerdas());
+	}
+
+    public function submitPenilaianPotensialRj()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianPotensialRj());
+	}
+
+
+    
 
 
 

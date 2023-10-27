@@ -351,7 +351,10 @@ $(function(){
 
   $("#jabatan_pdf_file").change(function (e) {
 
-        var extension = jabatan_pdf_file.value.split('.')[1];
+        // var extension = jabatan_pdf_file.value.split('.')[1];
+        var doc = jabatan_pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
+
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
         

@@ -62,7 +62,7 @@
 <ul class="sidebar-nav">
 <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
 	<div><hr class="sidebar-divider"></div>
-	<div onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
+	<div style="display:none" onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
 			<span class="" style="
 				font-size: .7rem !important;

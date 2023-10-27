@@ -142,6 +142,7 @@
 							<div class="foto_container">
 								<!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
+							<a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
 								<img id="profile_pegawai" class="img-fluid mb-2 b-lazy" src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
@@ -157,6 +158,7 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" />
+								</a>
 								<div class="middle">
 									<!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
@@ -170,7 +172,10 @@
 
 						<div class="col-lg-12 text-center">
 							<span class="sp_profil">
+							<a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
 								<?=getNamaPegawaiFull($profil_pegawai)?>
+							</a>
+								
 							</span>
 						</div>
 						<div class="col-lg-12 text-center">
@@ -396,16 +401,21 @@
 						aria-labelledby="pills-cerdas-tab">
 			<span><b>Nilai Assesment</b></span>
 			<hr>
-			<form id="form_penilaian_kinerja" method="post" enctype="multipart/form-data">
+			<form id="form_penilaian_potensial_cerdas" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
 				<input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
 				<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
+				<input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>">
 
                 <?php
                 if($nilai_assesment){
                     $nilai = $nilai_assesment['nilai_assesment'];
                 } else {
-                    $nilai = "";
+					if($nilai_potensial){
+						$nilai = $nilai_potensial['nilai_assesment'];
+					} else {
+						$nilai = "";
+					}
                 }
                 ?>
 
@@ -415,60 +425,79 @@
 					</div>
 
 					<div class="tab-pane show" id="pills-rj" role="tabpanel" aria-labelledby="pills-rj-tab">
-                    <form>
-                    <div class="mb-3">
+					<form id="form_penilaian_potensial_rj" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="rj_id_peg" value="<?=($profil_pegawai['id_peg'])?>">
+					<input type="hidden" name="rj_id_t_penilaian" value="<?=$id_t_penilaian?>">
+					<input type="hidden" name="rj_jenis_jab" id="rj_jenis_jab" value="<?=$kode?>">
+					<input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>">
+
+					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan Formal</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk1" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($list_pendidikan_formal){ foreach($list_pendidikan_formal as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pendidikan_formal'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pangkat/Golongan Ruang</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk2" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+						<?php if($pangkat_gol){ foreach($pangkat_gol as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pangkat_gol'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Masa Kerja Jabatan</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk3" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($masa_kerja_jabatan){ foreach($masa_kerja_jabatan as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan dan Pelatihan Kepemimpinan</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk4" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+						<?php if($diklat){ foreach($diklat as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengembangan Kompetensi 20 JP</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk5" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($kompetensi20_jp){ foreach($kompetensi20_jp as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['kompetensi20_jp'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Penghargaan</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk6" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+						<?php if($penghargaan){ foreach($penghargaan as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['penghargaan'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Riwayat Hukuman Disiplin</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="rekamjjk7" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($riwayat_hukdis){ foreach($riwayat_hukdis as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
                     
@@ -516,9 +545,9 @@
 		</div>
 	</div>
 
-    <div class="modal-footer" style="margin-bottom:5px;">
+    <!-- <div class="modal-footer" style="margin-bottom:5px;">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
+				</div> -->
 
 	<script>
 		$(function () {
@@ -530,17 +559,17 @@
 				allowClear: true,
 			});
 
+		})
 
-			$('#form_penilaian_kinerja').on('submit', function (e) {
+			$('#form_penilaian_potensial_cerdas').on('submit', function (e) {
 				var kode = $('#jenis_jab').val()
 
 				e.preventDefault();
-				var formvalue = $('#form_penilaian_kinerja');
+				var formvalue = $('#form_penilaian_potensial_cerdas');
 				var form_data = new FormData(formvalue[0]);
 
 				$.ajax({
-					url: "<?=base_url("
-					simata / C_Simata / submitPenilaianKinerja ")?>",
+					url: "<?=base_url("simata/C_Simata/submitPenilaianPotensialCerdas")?>",
 					method: "POST",
 					data: form_data,
 					contentType: false,
@@ -553,18 +582,17 @@
 						console.log(result)
 						if (result.success == true) {
 							successtoast(result.msg)
-							setTimeout(function () {
-								$("#modal_penilaian_kinerja").trigger("click");
-							}, 500);
+							// setTimeout(function () {
+							// 	$("#modal_penilaian_kinerja").trigger("click");
+							// }, 500);
 							if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaAdm,
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt,
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
 									1000);
-
 							}
-							// loadListPegawaiPenilaianKinerjaAdm()
+						
 
 						} else {
 							errortoast(result.msg)
@@ -576,7 +604,47 @@
 
 			});
 
-		})
+
+			$('#form_penilaian_potensial_rj').on('submit', function (e) {
+			
+				var kode = $('#rj_jenis_jab').val()
+				e.preventDefault();
+				var formvalue = $('#form_penilaian_potensial_rj');
+				var form_data = new FormData(formvalue[0]);
+				// const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,1000);
+				
+				$.ajax({
+					url: "<?=base_url("simata/C_Simata/submitPenilaianPotensialRj")?>",
+					method: "POST",
+					data: form_data,
+					contentType: false,
+					cache: false,
+					processData: false,
+					// dataType: "json",
+					success: function (res) {
+						console.log(res)
+						var result = JSON.parse(res);
+						console.log(result)
+						if (result.success == true) {
+							successtoast(result.msg)
+							if(kode == 1) {
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
+									1000);
+							} else {
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
+									1000);
+							}
+						} else {
+							errortoast(result.msg)
+							return false;
+						}
+
+					}
+				});
+
+			});
+
+		
 
 	</script>
 	<?php } else { ?>

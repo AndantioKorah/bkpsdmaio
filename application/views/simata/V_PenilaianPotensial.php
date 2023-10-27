@@ -224,10 +224,11 @@ $(document).on("click", ".open-DetailPenilaian", function () {
 var id = $(this).data('id');
 var nip = $(this).data('nip');
 var kode = $(this).data('kode');
+var jt = $(this).data('jt');
 
 $('#div_modal_penilaian_potensial').html('')
 $('#div_modal_penilaian_potensial').append(divLoaderNavy)
-$('#div_modal_penilaian_potensial').load('<?=base_url("simata/C_Simata/loadModalPenilaianPotensial/")?>'+id+'/'+nip+'/'+kode, function(){
+$('#div_modal_penilaian_potensial').load('<?=base_url("simata/C_Simata/loadModalPenilaianPotensial/")?>'+id+'/'+nip+'/'+kode+'/'+jt, function(){
   $('#loader').hide()
 })
 

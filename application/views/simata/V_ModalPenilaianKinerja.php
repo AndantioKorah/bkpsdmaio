@@ -141,6 +141,8 @@
                   <div class="foto_container">
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
+                <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+                            
                             <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
                             src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
@@ -157,6 +159,7 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" /> 
+                                </a>
                                 <div class="middle">
                                     <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
@@ -170,7 +173,9 @@
 
               <div class="col-lg-12 text-center">
                 <span class="sp_profil">
-                  <?=getNamaPegawaiFull($profil_pegawai)?>
+                <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+                <?=getNamaPegawaiFull($profil_pegawai)?>
+                  </a>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >

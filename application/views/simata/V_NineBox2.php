@@ -1,60 +1,63 @@
    <canvas id="chartId" aria-label="chart" height="300" width="580"></canvas>
+
+
+<?php
+           $data_pendidikan['result'] = $chart['pendidikan'];
+           $data_pendidikan['id_chart'] = 'chart_pendidikan';
+           $nilai['result'] = $result;
+           $data_pendidikan['id_chart'] = 'chart_pendidikan';
+          ?>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
    <script>
-
-    $(function(){          
-    // renderChart()
+     
+    $(function(){
+    //   render3('<?=json_encode($data_pendidikan)?>')
     })
 
-    var nilai = <?=json_encode($result)?>
-
-    const staffsDetails = [
-                            { name: "Jam Josh", age: 44, salary: 4000, currency: "USD" },
-                            { name: "Justina Kap", age: 34, salary: 3000, currency: "USD" },
-                            { name: "Chris Colt", age: 37, salary: 3700, currency: "USD" },
-                            { name: "Jane Doe", age: 24, salary: 4200, currency: "USD" }
-                            ];
-  console.log(nilai)
-  console.log(staffsDetails)
+ 
 
 
-    function getNilaiPegawai(){
-                $.ajax({
-                  url: '<?=base_url("simata/C_Simata/getPenilaianPegawai")?>',
-                  method: 'post',
-                  data: null,
-                  success: function(data){
-                    let rs = JSON.parse(data)
-                   const dataa = data
-                    
-                  }, error: function(e){
-                      errortoast('Terjadi Kesalahan')
-                      console.log(e)
-                  }
-                })
-              }
+  
+       
+    
+
+    var dx = JSON.parse('<?=json_encode($nilai)?>');
+    var c = [];
+    let elementx = [];
+    let tempx = Object.keys(dx.result)
+
+    tempx.forEach((i) => {
+          elementx.push({ x: dx.result[i].res_kinerja, y: dx.result[i].res_potensial_cerdas })
+    });
+
+    console.log("xx")
+      console.log(elementx)
 
 
-var c = [];
-nilai.forEach((nilai) => {
-  let poin = nilai.res_kinerja+' && '+nilai.res_potensial;
-  var obj ='{x:' + nilai.res_kinerja + ',' + 'y:' + nilai.res_potensial + '}';
-  var element = { x: nilai.res_kinerja, y: nilai.res_kinerja };
-                c.push(obj);
-});
+    // function render3(){
+       
+      let dt = JSON.parse('<?=json_encode($data_pendidikan)?>')
+      
+      let labels = [];
+      let values = [];
+      let obj = [];
+      var z = [];
+      let element = [];
+      let temp = Object.keys(dt.result)
 
-// staffsDetails.forEach((staffDetail) => {
-//   let sentence = `I am ${staffDetail.name} a staff of Royal Suites.`;
-//   console.log(sentence);
-// });
+      temp.forEach(function(i) {
+          labels.push(dt.result[i].nama)
+          values.push(dt.result[i].jumlah)
+          obj.push('{x:' + dt.result[i].jumlah + ',' + 'y:' + dt.result[i].jumlah + '}')
+          element.push({ x: dt.result[i].jumlah, y: dt.result[i].jumlah })
+          z.push(values);
+      })
+      console.log("zz")
+      console.log(element)
 
+// }
 
-
-
-var data1 =  [{x:93.00,y:80.00}, {x:94.00,y:82.67}]
-   
-
-            
+var data1 = elementx        
     // var data1 = [
     //   {x: 11, y: 30},
     //   {x: 10.5, y: 50},
@@ -62,16 +65,18 @@ var data1 =  [{x:93.00,y:80.00}, {x:94.00,y:82.67}]
     //   {x: 12, y: 30},
     //   {x: 10.75, y: 30},
     //   {x: 12.4, y: 30},
-    //   {x: 9.6 + 20, y: 30},
-    //   {x: 10 + 20, y: 20},
-    //   {x: 11 + 20, y: 30},
-    //   {x: 10.5 + 20, y: 20},
-    //   {x: 11.5 + 20, y: 30},
-    //   {x: 12 + 20, y: 30},
-    //   {x: 10.75 + 20, y: 10},
-    //   {x: 12.4 + 20, y: 30},
-    //   {x: 9.6 + 20, y: 10},
+    //   {x: 20, y: 30},
     // ];
+
+    const staffsDetails = [
+                        { name: "Jam Josh", age: 44, salary: 4000, currency: "USD" },
+                        { name: "Justina Kap", age: 34, salary: 3000, currency: "USD" },
+                        { name: "Chris Colt", age: 37, salary: 3700, currency: "USD" },
+                        { name: "Jane Doe", age: 24, salary: 4200, currency: "USD" }
+                        ];
+                        
+console.log(data1)
+
 
 
 
@@ -122,4 +127,26 @@ var data1 =  [{x:93.00,y:80.00}, {x:94.00,y:82.67}]
         });
 //  }
       
+ 
+
+
+
+
+
+function getNilaiPegawai(){
+            $.ajax({
+              url: '<?=base_url("simata/C_Simata/getPenilaianPegawai")?>',
+              method: 'post',
+              data: null,
+              success: function(data){
+                let rs = JSON.parse(data)
+               const dataa = data
+                
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+                  console.log(e)
+              }
+            })
+          }
+
    </script>

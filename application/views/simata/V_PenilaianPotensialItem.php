@@ -12,78 +12,111 @@
 <div class="table-responsive">
 
 
-	<table id="table-adm" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
-		<thead>
-			<th class="text-center" style="width:5%;">No</th>
-			<th style="width:50%;">Jabatan Target</th>
-			<th style="width:15%;">Nilai Assesment(50%)</th>
-			<th style="width:15%;">Nilai Rekam Jejak(40%)</th>
-			<th style="width:15%;">Nilai Pertimbangan Lainnya(10%)</th>
-			<th>Total Nilai</th>
-			<th style="width:20%;">Pemeringkatan Kinerja</th>
-
-			<!-- <th style="width:6%;"></th> -->
-			<th style="width:5%;"></th>
-
-		</thead>
-		<tbody>
-
-			<?php $nomor = 1; foreach($result as $rs){ ?>
-			<tr style="background-color:#f8f9fa;">
-				<td colspan="8"><b><?=$nomor++;?>. <?=$rs['gelar1'];?><?=$rs['nama'];?> <?=$rs['gelar2'];?> /
-						<?=$rs['nipbaru'];?></b><br>
-					<table class="table table-hover" style="width:105%;margin-left:-8px;margin-bottom:-8px;" border="0">
-						<tbody>
-							<?php foreach($result2 as $rs2){ ?>
-							<?php if($rs2['id_peg'] == $rs['id_peg'])  { ?>
-                            <?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
-							<tr style="border-bottom:0.5pt solid #e9eaee;border-top:0.5pt solid #e9eaee;">
-								<td style="width:5%;">-</td>
-								<td style="width:48%"><?=$rs2['nama_jabatan'];?></td>
-								<td style="width:15%;"><?=$rs2['res_potensial_cerdas'];?></td>
-                                <td style="width:12%;"><?=$rs2['res_potensial_rj'];?></td>
-                                <td style="width:10%;"><?=$rs2['res_potensial_lainnya'];?></td>
-                                <td style="width:15%;"><?=$total_nilai;?></td>
-								
-								<td style="width:20%;"><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
-								<!-- <td style="width:5%;"><span class="badge bg-success">0/5</span></td> -->
-								<td style="width:5%;">
-									<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
+<style>
+	tr.group,
+	tr.group:hover {
+		background-color: #2e4963 !important;
+		color: #fff;
+	}
+</style>
+<table id="example" class="display table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Jabatan Target</th>
+                <th>Nilai Asessment</th>
+                <th>Nama</th>
+                <th>Nilai Rekam Jejak</th>
+                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Total</th>
+				<th>Pemeringkatan</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody>
+		<?php $no = 1; foreach($result as $rs2){ ?>
+			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
+            <tr>
+                <td><?=$rs2['nama_jabatan'];?></td>
+                <td><?=$rs2['res_potensial_cerdas'];?></td>
+                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><?=$rs2['res_potensial_rj'];?></td>
+                <td><?=$rs2['res_potensial_lainnya'];?></td>
+                <td><?=$total_nilai;?></td>
+				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
+				<td>
+				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_potensial" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
-								</td>
-							</tr>
-						</tbody>
-						<?php } ?>
-						<?php } ?>
-					</table>
-
 				</td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-
-				<td style="display:none"></td>
-
-				<td style="display:none"></td>
-
-			</tr>
-
-
-
+            </tr>
 			<?php } ?>
-		</tbody>
-	</table>
-</div>
+            
+        </tbody>
+        <tfoot>
+            <tr>
+			<th>Jabatan Target</th>
+                <th>Nilai Asessment</th>
+                <th>Nama</th>
+                <th>Nilai Rekam Jejak</th>
+                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Total</th>
+				<th>Pemeringkatan</th>
+				<th></th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
+</div>
 
+<script>
+	var groupColumn = 2;
+var table = $('#example').DataTable({
+    columnDefs: [{ visible: false, targets: groupColumn }],
+    order: [[groupColumn, 'asc']],
+    displayLength: 25,
+    drawCallback: function (settings) {
+        var api = this.api();
+        var rows = api.rows({ page: 'current' }).nodes();
+        var last = null;
+ 
+        api.column(groupColumn, { page: 'current' })
+            .data()
+            .each(function (group, i) {
+                if (last !== group) {
+                    $(rows)
+                        .eq(i)
+                        .before(
+                            '<tr class="group"><td colspan="7">' +
+                                group +
+                                '</td></tr>'
+                        );
+ 
+                    last = group;
+                }
+            });
+    }
+});
+ 
+// Order by the grouping
+$('#example tbody').on('click', 'tr.group', function () {
+    var currentOrder = table.order()[0];
+    if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+        table.order([groupColumn, 'desc']).draw();
+    }
+    else {
+        table.order([groupColumn, 'asc']).draw();
+    }
+});
+</script>
 
 <script>
 	$(function () {
 		$('#table-adm').dataTable({
+			"ordering": false
+		});
+
+		$('#table-adm2').dataTable({
 			"ordering": false
 		});
 

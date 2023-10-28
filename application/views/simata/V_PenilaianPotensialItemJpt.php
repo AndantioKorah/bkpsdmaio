@@ -19,26 +19,33 @@
 		color: #fff;
 	}
 </style>
-<table id="kinerja_adm" class="display table table-bordered" style="width:100%">
+<table id="potensial_jpt" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+                <th>Nilai Asessment</th>
                 <th>Nama</th>
+                <th>Nilai Rekam Jejak</th>
+                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Total</th>
 				<th>Pemeringkatan</th>
 				<th></th>
             </tr>
         </thead>
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
+			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
-                <td><?=$rs2['res_kinerja'];?></td>
+                <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
-				<td><?= pemeringkatanKriteriaPotensial($rs2['res_kinerja'])?></td>
+                <td><?=$rs2['res_potensial_rj'];?></td>
+                <td><?=$rs2['res_potensial_lainnya'];?></td>
+                <td><?=$total_nilai;?></td>
+				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
 				<td>
-				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
-										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
+				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="2"
+										href="#modal_penilaian_potensial" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
 				</td>
             </tr>
@@ -48,8 +55,11 @@
         <tfoot>
             <tr>
 			<th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+                <th>Nilai Asessment</th>
                 <th>Nama</th>
+                <th>Nilai Rekam Jejak</th>
+                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Total</th>
 				<th>Pemeringkatan</th>
 				<th></th>
             </tr>
@@ -61,7 +71,7 @@
 
 <script>
 	var groupColumn = 2;
-var table = $('#kinerja_adm').DataTable({
+var table = $('#potensial_jpt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn }],
     order: [[groupColumn, 'asc']],
     displayLength: 25,
@@ -77,7 +87,7 @@ var table = $('#kinerja_adm').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="5">' +
+                            '<tr class="group"><td colspan="7">' +
                                 group +
                                 '</td></tr>'
                         );
@@ -89,7 +99,7 @@ var table = $('#kinerja_adm').DataTable({
 });
  
 // Order by the grouping
-$('#kinerja_adm tbody').on('click', 'tr.group', function () {
+$('#potensial_jpt tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
         table.order([groupColumn, 'desc']).draw();

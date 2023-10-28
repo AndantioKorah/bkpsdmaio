@@ -562,13 +562,12 @@
       <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 
         <div class="table-responsive">
-        <table class="table table-striped table-bordered" >
+        <table class="table table-bordered" >
             <tr>
-                <td style="width:50%" colspan="2"><b>Spesifik</b></td>
-                <td style="width:50%" colspan="2"><b>Generik</b></td>
+                <td style="background-color:#2e4963;color:#fff" style="width:50%" colspan="4"><b>Spesifik</b></td>
             </tr>
             <tr>
-                <td style="width:25%">Penilaian Kinerja N-1</td>
+            <td style="width:25%">Penilaian Kinerja N-1</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria1" required>
                 <option value=""  selected>Pilih Item</option>
@@ -577,6 +576,25 @@
                     <?php } } ?>
                 </select>
                </td>
+            </tr>
+
+            <tr>
+            <td style="width:25%">Penilaian Kinerja N-2</td>
+                <td style="width:25%">
+                <select class="form-select select2" name="kriteria2" required>
+                <option value=""  selected>Pilih Item</option>
+                    <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                    <?php } } ?>
+                </select>
+               </td>
+            </tr>
+
+            <tr>
+            <td style="background-color:#2e4963;color:#fff" colspan="2"><b>Generik</b></td>
+            </tr>
+            <tr>
+                
                 <td style="width:25%">Inovatif</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria3" required>
@@ -589,15 +607,7 @@
             </tr>
 
             <tr>
-                <td style="width:25%">Penilaian Kinerja N-2</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria2" required>
-                <option value=""  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
-                    <?php } } ?>
-                </select>
-               </td>
+                
                 <td style="width:25%">Pengalaman dalam Tim</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria4" required>
@@ -610,10 +620,7 @@
             </tr>
 
             <tr>
-                <td colspan="2" ></td>
-                
-                
-               </td>
+              
                 <td style="width:25%">Amanah</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria5" required>
@@ -641,7 +648,7 @@
    
 
    $(".select2").select2({   
-        width: '100%',
+        width: '500px',
         // dropdownAutoWidth: true,
         allowClear: true,
     });
@@ -649,6 +656,7 @@
 
     $('#form_penilaian_kinerja').on('submit', function(e){
       var kode = $('#jenis_jab').val()
+
       
                 e.preventDefault();
                 var formvalue = $('#form_penilaian_kinerja');

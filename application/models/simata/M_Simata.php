@@ -569,8 +569,11 @@ public function getPegawaiPenilaianKinerjaJpt(){
         }
 
         public function getPenilaianPegawai(){
-            return $this->db->select('*')
+            return $this->db->select('a.*,b.nama')
                             ->from('db_simata.t_penilaian a')
+                            ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                            ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+                            ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                             ->where('a.flag_active', 1)
                             ->get()->result();
         }

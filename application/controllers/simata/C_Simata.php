@@ -184,8 +184,8 @@ class C_Simata extends CI_Controller
 
     public function loadListPegawaiPenilainKinerjaAdm(){
         
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
+        // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
         $this->load->view('simata/V_PenilaianKinerjaItem', $data);
     }
 
@@ -236,16 +236,14 @@ class C_Simata extends CI_Controller
 
     public function loadListPegawaiPenilainPotensialAdm(){
         
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianPotensialAdministrator();  
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialAdministrator();  
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
     public function loadListPegawaiPenilainPotensialJpt(){
         
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
-        $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+        $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
 
     public function loadModalPenilaianPotensial($id,$nip,$kode,$jt)

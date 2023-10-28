@@ -149,7 +149,7 @@ $(function(){
     let temp = Object.keys(dx.result)
     temp.forEach((i) => {
           var nilaiy =  parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
-          point.push({ x: dx.result[i].res_kinerja, y: nilaiy, nama:"Youri" })
+          point.push({ x: dx.result[i].res_kinerja, y: nilaiy, nama:dx.result[i].nama })
     });
     console.log(point)
     var data1 = point;
@@ -188,15 +188,8 @@ const nineGridLabels = {
   }) 
 }
 
-const config = {
-type: 'scatter',
-data,
-options: {
-  plugins: {
-      legend: {
-          display: false
-      }, 
-      tooltip:{
+
+const tooltipchart = {
         callbacks:{
           label: (context) => {
             console.log(context)
@@ -215,8 +208,18 @@ options: {
           // labelTextColor: function(context) {
           // return '#543453';
           // }
-        }
-      }
+        }   
+}
+
+const config = {
+type: 'scatter',
+data,
+options: {
+  plugins: {
+      legend: {
+          display: false
+      }, 
+      tooltip: tooltipchart
   },
   
   aspectRatio : false   ,
@@ -301,7 +304,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -383,7 +387,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -466,7 +471,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -550,7 +556,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -634,7 +641,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -718,7 +726,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -802,7 +811,8 @@ options: {
   plugins: {
       legend: {
           display: false
-      }
+      },
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,
@@ -887,22 +897,7 @@ options: {
       legend: {
           display: false
       },
-      tooltip:{
-        callbacks:{
-          label: (context) => {
-            console.log(context)
-            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
-          },
-          labelColor: function(context) {
-                        return {
-                            borderColor: 'rgb(0, 0, 255)',
-                            backgroundColor: 'rgb(255, 0, 0)',
-                            borderWidth: 1,
-                            borderRadius: 1,
-                        };
-            }
-        }
-      }
+      tooltip:tooltipchart
   },
   
   aspectRatio : false   ,

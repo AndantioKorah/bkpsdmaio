@@ -54,7 +54,7 @@
 
   <div class="form-group">
     <label>No. STTB/Ijazah</label>
-    <input class="form-control customInput" type="text" id="edit_pendidikan_nama_pimpinan" name="edit_pendidikan_nama_pimpinan" value="<?= $pendidikan[0]['noijasah'];?>"  required/>
+    <input class="form-control customInput" type="text" id="edit_pendidikan_no_ijazah" name="edit_pendidikan_no_ijazah" value="<?= $pendidikan[0]['noijasah'];?>"  required/>
   </div>
 
   <div class="form-group">

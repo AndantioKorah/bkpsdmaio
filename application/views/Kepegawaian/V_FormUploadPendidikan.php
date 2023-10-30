@@ -144,7 +144,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>No. STTB/Ijazah</label>
-    <input class="form-control customInput" type="text" id="pendidikan_nama_pimpinan" name="pendidikan_nama_pimpinan"  required/>
+    <input class="form-control customInput" type="text" id="pendidikan_no_ijazah" name="pendidikan_no_ijazah"  required/>
   </div>
 
   <div class="form-group">

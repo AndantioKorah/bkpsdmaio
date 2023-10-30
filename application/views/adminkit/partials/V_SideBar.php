@@ -59,6 +59,7 @@
 	$tpp = $this->session->userdata('live_tpp');
 ?>
 
+
 <ul class="sidebar-nav">
 <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
 	<div><hr class="sidebar-divider"></div>
@@ -191,6 +192,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Roles
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Roles" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/tambah')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Tambah Pegawai
+					</a>
+				</li>
 			</ul>
 		</li>
 	<?php } ?>
@@ -321,13 +327,13 @@
 		<?php } ?>
 
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isManajemenTalenta()){ ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('akses_profil_pegawai')){ ?>
 	<li class="sidebar-header">
 		Manajemen Talenta
 	</li>
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa-bars"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
 				<span class="align-middle">
 					Data Master
 					<i class="fa fa-chevron-down" 
@@ -372,7 +378,7 @@
 		</li>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-check-square"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-file-text-o"></i> 
 				<span class="align-middle">
 				Penilaian Potensial
 				</span>
@@ -380,7 +386,7 @@
 		</li>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-eye"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-bar-chart"></i> 
 				<span class="align-middle">
 				Nine Box
 				</span>

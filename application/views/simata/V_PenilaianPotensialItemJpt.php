@@ -72,7 +72,8 @@
 <script>
 	var groupColumn = 2;
 var table = $('#potensial_jpt').DataTable({
-    columnDefs: [{ visible: false, targets: groupColumn }],
+    columnDefs: [{ visible: false, targets: groupColumn },
+    {targets: 0,orderable: false}],
     order: [[groupColumn, 'asc']],
     displayLength: 25,
     drawCallback: function (settings) {
@@ -116,9 +117,7 @@ $('#potensial_jpt tbody').on('click', 'tr.group', function () {
 			"ordering": false
 		});
 
-		$('#table-adm2').dataTable({
-			"ordering": false
-		});
+
 
 	})
 

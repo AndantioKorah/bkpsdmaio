@@ -114,6 +114,11 @@
 		cursor: pointer;
 	}
 
+	label{
+		color:#222e3c;
+		font-weight:bold
+	}
+
 </style>
 
 
@@ -399,8 +404,6 @@
 				<div class="tab-content" id="pills-tabContent">
 					<div class="tab-pane show active" id="pills-cerdas" role="tabpanel"
 						aria-labelledby="pills-cerdas-tab">
-			<span><b>Nilai Assesment</b></span>
-			<hr>
 			<form id="form_penilaian_potensial_cerdas" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
 				<input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
@@ -418,6 +421,7 @@
 					}
                 }
                 ?>
+                        <label for="exampleInputEmail1" class="form-label">Nilai Assesment</label>
 
 				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai">
 				<button class="btn btn-primary float-right mt-3 mb-3">Simpan</button>

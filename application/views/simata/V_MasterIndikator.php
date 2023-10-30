@@ -1,4 +1,4 @@
-<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'manajemen_talenta') { ?>
+<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
     <div class="card card-default">
         <div class="card-header">
                 <div class="col-3">

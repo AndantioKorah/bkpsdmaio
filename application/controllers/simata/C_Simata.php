@@ -217,8 +217,26 @@ class C_Simata extends CI_Controller
 	}
 
     public function nineBox(){
-        $data['result'] = $this->simata->getPenilaianPegawai();
-        $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
+        
+       
+        $data['post']=null;
+        $data['result']=null;
+        $data['jt_adm'] = null;
+        $data['jt_jpt'] = null;
+        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
+        if($_POST) {
+        $data['post'] = $_POST;
+        if($_POST['jenis_jabatan'] == 1){
+            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            $data['jt_adm'] = $_POST['jabatan_target_adm'];
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
+        } else {
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
+        }
+        }
         render('simata/V_NineBoxNew', '', '', $data);
     }
 
@@ -275,6 +293,14 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianPotensialRj());
 	}
+
+    public function loadChartNineBox(){
+
+        $data['result'] = $this->simata->getPenilaianPegawai();
+        $this->load->view('simata/V_ChartNineBox', $data);
+    }
+
+    
 
 
     

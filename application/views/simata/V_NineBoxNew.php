@@ -3,8 +3,8 @@
 
 .parent {
 display: grid;
-grid-template-columns: repeat(5, 1fr);
-grid-template-rows: repeat(5, 1fr);
+/* grid-template-columns: repeat(5, 1fr); */
+/* grid-template-rows: repeat(5, 1fr); */
 grid-column-gap: 0px;
 grid-row-gap: 0px;
 }
@@ -19,89 +19,152 @@ grid-row-gap: 0px;
 .div3 { grid-area: 3 / 2 / 4 / 3;border-bottom: 2px solid;border-top: 2px solid; background-color: #be4d4d}
 .div6 { grid-area: 3 / 3 / 4 / 4;border: 2px solid;background-color: #fcb92c }
 
-/* .div4 { grid-area: 1 / 1 / 2 / 2;background-color: #fcb92c }
-.div7 { grid-area: 1 / 2 / 2 / 3;background-color: #1cbb8c }
-.div9 { grid-area: 1 / 3 / 2 / 4;background-color: #1cbb8c }
-.div2 { grid-area: 2 / 1 / 3 / 2;background-color: #be4d4d}
-.div5 { grid-area: 2 / 2 / 3 / 3;background-color: #fcb92c }
-.div8 { grid-area: 2 / 3 / 3 / 4;background-color: #1cbb8c }
-.div1 { grid-area: 3 / 1 / 4 / 2;background-color: #be4d4d}
-.div3 { grid-area: 3 / 2 / 4 / 3;background-color: #be4d4d}
-.div6 { grid-area: 3 / 3 / 4 / 4;background-color: #fcb92c } */
-
-.divred {  }
-
-table.divred td {
-  
+.vertical-lr {
+  writing-mode: vertical-lr;
 }
 
-table tr td.red
-{
-    background-color: #be4d4d;
-    width: 10vw;
-    height: 25vh;
+.vertical-rl {
+  writing-mode: vertical-rl;
 }
 
-table tr td.orange
-{
-    background-color: #fcb92c;
-    width: 10vw;
-    height: 25vh;
+.rotated {
+  transform: rotate(180deg);
 }
 
-table tr td.green
-{
-    background-color: #1cbb8c;
-    width: 10vw;
-    height: 25vh;
+.sideways-lr {
+  writing-mode: sideways-lr;
 }
+
+.only-rotate {
+  inline-size: fit-content;
+  transform: rotate(-90deg);
+}
+
+table, th, td {
+  border: 1px rgba(0, 0, 0, 0);
+  background-color:#2e4963;
+  color:#fff;
+}
+
+label {
+  color:white
+}
+
+
+
+
 </style>
-    <div class="row ml-2">
-    
-    <div class="card card-default col-lg-6">
-        <div class="card-body">
+    <!-- <div class="row ml-1" > -->
 
-        <!-- <table class="table table-bordered" border="1">
-<tbody border="1">
-<tr>
-<td class="orange"  >
-4
-</td>
-<td  class="green">&nbsp;7</td>
-<td class="green">&nbsp;9</td>
-</tr>
-<tr>
-<td class="red"  >
-3
-</td>
-<td class="orange"  >
-5
-</td>
-<td class="green">&nbsp;8</td>
-</tr>
-<tr>
-<td class="red" >
-1
+    <?php 
+    $ix = 0; 
+    $viii = 0;
+    $vii = 0;
+    $vi = 0;
+    $v = 0;
+    $iv = 0;
+    $iii = 0;
+    $ii = 0;
+    $i = 0;
+    $nilaix = 0;
+    $nilaiy = 0;
+    if($result){
+    foreach($result as $rs){ 
+          
+          $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
+          $nilaix = $rs->res_kinerja;
 
-</td>
-<td class="red" >
-3
-</td>
-<td class="orange"   >&nbsp;6 </td>
-</tr>
-</tbody>
-</table> -->
+             if($nilaix >= 85 && $nilaiy >= 85) {
+              $ix++;
+             } 
+             if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+              // print_r($nilaix."-".$nilaiy.",");
+              $viii++;
+             }
+             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+              $vii++;
+             } 
+            if($nilaix >= 85 && $nilaiy < 70) {
+              $vi++;
+             } 
+             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+              $v++;
+            } 
+            if($nilaix < 70 && $nilaiy >= 85) {
+              $iv++;
+            } 
+            if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+              $iii++;
+            }
+            if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+              $ii++;
+            }
+            if($nilaix < 70 && $nilaiy < 70) {
+             $i++;
+            }  
+			 } }?>
+    <div class="card card-default" style="background-color:#2e4963;">
+      <div class="row" >
+      <div class="col-lg-3" >
+      <div class="card-body">
+      <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
+        <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
+        <option value=""  selected>Pilih Jenis Jabatan</option>
+        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+        <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
+      </select>
+      </div>
+      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target Adm</label>
+        <select class="form-select select2" name="jabatan_target_adm" >
+                <option value=""  selected>Semua</option>
+                    <?php if($jabatan_target_adm){ foreach($jabatan_target_adm as $r){ ?>
+                     <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+                </select>
+      </div>
+      
+      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target Jpt</label>
+        <select class="form-select select2" name="jabatan_target_jpt" >
+                <option value=""  selected>Semua</option>
+                    <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
+                     <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+                </select>
+      </div>
 
-       
+      <button type="submit" class="btn btn-primary float-right mb-2">Lihat</button>
+    </form>
+     </div>
+    </div>
+      <div class="col-lg-6" style="background-color:#fff;">
+        <div class="card-body" id="div_chart">
+          <?php if($post) { ?>
+        <table class=" table-bordered" border="1" style="margin-left:-15px;">
+       <tr>
+        <td></td>
+        <td>
+        <span style="color: rgba(0, 0, 0, 0);"><b>Potensial</b></span>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+        <span class="vertical-rl rotated "><b>Kinerja</b></span>
+        </td>
+        <td>
         <div class="parent">
         <div class="div4">
         <canvas id="myChart4" style="height:25vh; width:10vw"></canvas>
         </div>
         <div class="div7">
-        <canvas id="myChart7" style="height:25vh; width:10vw"></canvas>
+        <canvas id="myChart7" style="height:25vh; width:11vw"></canvas>
         </div>
         <div class="div9">
-        <canvas id="myChart9" style="height:25vh; width:10vw"></canvas>
+        <canvas id="myChart9" style="height:25vh; width:11vw"></canvas>
         </div>
         <div class="div2">
         <canvas id="myChart2" style="height:25vh; width:10vw"></canvas>
@@ -110,49 +173,195 @@ table tr td.green
         <canvas id="myChart5" style="height:25vh; width:10vw"></canvas>
         </div>
         <div class="div8">
-        <canvas id="myChart8" style="height:25vh; width:10vw"></canvas>
+        <canvas id="myChart8" style="height:25vh; width:1vw"></canvas>
         </div>
         <div class="div1">
-        <canvas id="myChart" style="height:25vh; width:10vw"></canvas>
+        <canvas id="myChart" style="height:25vh; width:11vw"></canvas>
         </div>
         <div class="div3">
         <canvas id="myChart3" style="height:25vh; width:10vw"></canvas>
         </div>
+        <a href=""></a>
         <div class="div6">
         <canvas id="myChart6" style="height:25vh; width:10vw"></canvas>
         </div>
         </div>
-
+        </td>
+        <td>
+        <span class="vertical-rl rotated" style="color: rgba(0, 0, 0, 0);"><b>Kinerja</b></span>
+        </td>
+      </tr>
+      <tr>
+      <td></td>
+      <td class="text-center">
+        <span><b>Potensial</b></span>
+      </td>
+      <td></td>
+      </tr>
+    </table>
+    <?php } ?>
         </div>
     </div>
-   
-  
+    <div class="col-lg-3" >
+    <div class="card-body" >
+    <table class="table table-bordered" border="1" style="margin-left:-15px;">
+    <thead>
+      <tr>
+        <th valign="top">Kuadran</th>
+        <th>Jumlah Suksesi</th>
+        <th></th>
+      </tr>
+
+      </thead>
+      <tbody>
+      <tr style="background-color: #1cbb8c">
+      <td>IX</td>
+      <td><?=$ix;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #1cbb8c">
+      <td>VIII</td>
+      <td><?=$viii;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #1cbb8c">
+      <td>VII</td>
+      <td><?=$vii;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #fcb92c">
+      <td>VI</td>
+      <td><?=$vi;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+
+      </tr>
+      <tr style="background-color: #fcb92c">
+      <td>V</td>
+      <td><?=$v;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #fcb92c">
+      <td>IV</td>
+      <td><?=$iv;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #be4d4d">
+      <td>III</td>
+      <td><?=$iii;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #be4d4d">
+      <td>II</td>
+      <td><?=$ii;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      <tr style="background-color: #be4d4d">
+      <td>I</td>
+      <td><?=$i;?></td>
+      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      </tr>
+      </tbody>
+      </table>
+    </div>
+    </div>
 </div>
-
-<?php
-
-           $nilai['result'] = $result;
-           $data_pendidikan['id_chart'] = 'chart_pendidikan';
-          ?>
+</div>
+  
+<!-- </div> -->
+<?php $nilai['result'] = $result;?>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script>
 
 $(function(){          
-    // renderChart()
-    })
+    // loadChartNineBox()
+    $(".select2").select2({   
+		width: '100%',
+		// dropdownAutoWidth: true,
+		allowClear: true
+	});
+  })
+
+  function loadChartNineBox(){
+   $('#div_chart').html('')
+   $('#div_chart').append(divLoaderNavy)
+   $('#div_chart').load('<?=base_url("simata/C_Simata/loadChartNineBox/")?>', function(){
+     $('#loader').hide()
+   })
+ }
+
+ $('#jenis_jabatan').on('change', function() {
+  if(this.value == 1) {
+   $('#adm').show('fast')
+   $('#jpt').hide()
+  } else {
+    $('#jpt').show('fast')
+    $('#adm').hide()
+  }
+});
 
     
     var dx = JSON.parse('<?=json_encode($nilai)?>');
     var c = [];
     let point = [];
+    let point2 = [];
+    let point3 = [];
+    let point4 = [];
+    let point5 = [];
+    let point6 = [];
+    let point7 = [];
+    let point8 = [];
+    let point9 = [];
+
+    
     let temp = Object.keys(dx.result)
     temp.forEach((i) => {
-          var nilaiy =  parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
-          point.push({ x: dx.result[i].res_kinerja, y: nilaiy, nama:dx.result[i].nama })
+          let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
+          let nilaix = parseFloat(dx.result[i].res_kinerja)
+          if(nilaix < 70 && nilaiy < 70) {
+            point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix < 70 && nilaiy >= 70 && nilaiy < 85) {
+            point2.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy < 70) {
+            point3.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix < 70 && nilaiy >= 85) {
+            point4.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 70 && nilaiy < 85) {
+            point5.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy < 70) {
+            point6.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 85) {
+            point7.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy >= 70 && nilaiy < 85) {
+            point8.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy >= 85) {
+            point9.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
     });
-    console.log(point)
+    console.log(point5)
+
     var data1 = point;
+    var data2 = point2;
+    var data3 = point3; 
+    var data4 = point4;
+    var data5 = point5;
+    var data6 = point6;
+    var data7 = point7;
+    var data8 = point8;
+    var data9 = point9;
+
+    
+    var pointcolor = ['Cornsilk', 'DarkMagenta', 'DeepPink', 'MediumSlateBlue', 'NavajoWhite', 'lightblue'];
+    var pointsize = 3;
+    // var pointcolor = "#000";
     
 const data = {
 datasets: [{
@@ -161,9 +370,9 @@ datasets: [{
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize ,
       pointHoverRadius: 2,  
       borderWidth: 1
 }],
@@ -194,7 +403,9 @@ const tooltipchart = {
           label: (context) => {
             console.log(context)
             // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
-            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
+            // return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
+            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y];
+            
           },
           labelColor: function(context) {
                         return {
@@ -236,7 +447,7 @@ options: {
      },
      border: {
       width: 0
-     },
+     }
 
     },
     y: {
@@ -290,13 +501,13 @@ const nineGridLabels2 = {
 const config2 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data2,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -373,13 +584,13 @@ const nineGridLabels3 = {
 const config3 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data3,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -457,13 +668,13 @@ const nineGridLabels4 = {
 const config4 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data4,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -542,13 +753,13 @@ const nineGridLabels5 = {
 const config5 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data5,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -627,13 +838,13 @@ const nineGridLabels6 = {
 const config6 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data6,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -712,13 +923,13 @@ const nineGridLabels7 = {
 const config7 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data7,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -797,13 +1008,14 @@ const nineGridLabels8 = {
 const config8 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data8,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      // pointBackgroundColor: ['yellow', 'aqua', 'pink', 'lightgreen', 'gold', 'lightblue'],
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},
@@ -882,13 +1094,13 @@ const nineGridLabels9 = {
 const config9 = {
 type: 'scatter',
 data: {datasets: [{
-  data: data1,
+  data: data9,
       fill: true,
       borderColor: "#dc3545",
       backgroundColor: "#dc3545",
-      pointBackgroundColor: "#000",
+      pointBackgroundColor: pointcolor,
       pointBorderColor: "#000",
-      pointRadius: 2,
+      pointRadius: pointsize,
       pointHoverRadius: 2,  
       borderWidth: 1
 }]},

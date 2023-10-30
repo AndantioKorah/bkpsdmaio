@@ -568,15 +568,34 @@ public function getPegawaiPenilaianKinerjaJpt(){
             return $this->db->get()->result_array();
         }
 
-        public function getPenilaianPegawai(){
-            return $this->db->select('a.*,b.nama')
+        public function getPenilaianPegawaiAdm(){
+             $this->db->select('a.*,b.nama')
                             ->from('db_simata.t_penilaian a')
                             ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                             ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
                             ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
-                            ->where('a.flag_active', 1)
-                            ->get()->result();
+                            ->where('a.flag_active', 1);
+                            if($_POST['jabatan_target_adm'] != ""){
+                                $this->db->where('c.id_jabatanpeg', $_POST['jabatan_target_adm']);
+                            }
+                 return  $this->db->get()->result();
+                         
         }
+
+   
+        public function getPenilaianPegawaiJpt(){
+             $this->db->select('a.*,b.nama')
+                            ->from('db_simata.t_penilaian a')
+                            ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                            ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+                            ->where("FIND_IN_SET(c.eselon,'II B')!=",0)
+                            ->where('a.flag_active', 1);
+                            if($_POST['jabatan_target_jpt'] != ""){
+                                $this->db->where('c.id_jabatanpeg', $_POST['jabatan_target_jpt']);
+                            }
+                return  $this->db->get()->result();
+        }
+
 
 
         function getNilaiAssesment($id){
@@ -752,6 +771,24 @@ public function getPegawaiPenilaianKinerjaJpt(){
             }
         
             return $res;
+        }
+
+        function getJabatanTargetNineBoxAdm(){
+            $this->db->select('*')
+            ->from('db_simata.t_penilaian a')
+            ->join('db_pegawai.jabatan b', 'a.id_jabatan_target = b.id_jabatanpeg')
+            ->where("FIND_IN_SET(b.eselon,'III A,III B')!=",0)
+            ->group_by('a.id_jabatan_target');
+            return $this->db->get()->result_array(); 
+        }
+
+        function getJabatanTargetNineBoxJpt(){
+            $this->db->select('*')
+            ->from('db_simata.t_penilaian a')
+            ->join('db_pegawai.jabatan b', 'a.id_jabatan_target = b.id_jabatanpeg')
+            ->where("FIND_IN_SET(b.eselon,'II B')!=",0)
+            ->group_by('a.id_jabatan_target');
+            return $this->db->get()->result_array(); 
         }
           
         

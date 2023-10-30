@@ -799,7 +799,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['namasekolah']      = $this->input->post('pendidikan_nama_sekolah_universitas');
             $dataInsert['pimpinansekolah']      = $this->input->post('pendidikan_nama_pimpinan');
             $dataInsert['tahunlulus']      = $this->input->post('pendidikan_tahun_lulus');
-            $dataInsert['noijasah']      = $this->input->post('pendidikan_tahun_lulus');
+            $dataInsert['noijasah']      = $this->input->post('pendidikan_no_ijazah');
             $dataInsert['tglijasah']      = $tgl_ijazah;
             $dataInsert['gambarsk']      = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
@@ -3493,7 +3493,7 @@ function getSumpahJanjiEdit($id){
             $data["namasekolah"] = $datapost["edit_pendidikan_nama_sekolah_universitas"];
             $data["pimpinansekolah"] = $datapost["edit_pendidikan_nama_pimpinan"];
             $data["tahunlulus"] = $datapost["edit_pendidikan_tahun_lulus"];
-            $data["noijasah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["noijasah"] = $datapost["edit_pendidikan_no_ijazah"];
             $data["tglijasah"] = $datapost["edit_pendidikan_tanggal_ijazah"];
             $data["gambarsk"] = $filename;
             $this->db->where('id', $id)
@@ -3508,7 +3508,7 @@ function getSumpahJanjiEdit($id){
             $data["namasekolah"] = $datapost["edit_pendidikan_nama_sekolah_universitas"];
             $data["pimpinansekolah"] = $datapost["edit_pendidikan_nama_pimpinan"];
             $data["tahunlulus"] = $datapost["edit_pendidikan_tahun_lulus"];
-            $data["noijasah"] = $datapost["edit_pendidikan_nama_pimpinan"];
+            $data["noijasah"] = $datapost["edit_pendidikan_no_ijazah"];
             $data["tglijasah"] = $datapost["edit_pendidikan_tanggal_ijazah"];
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegpendidikan', $data);

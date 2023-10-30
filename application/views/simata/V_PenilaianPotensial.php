@@ -1,4 +1,4 @@
-<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'manajemen_talenta') { ?>
+<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
    <style>
     
     .sp_profil{
@@ -154,7 +154,7 @@
     
 <!-- modal detail indikator -->
 <div class="modal fade" id="modal_penilaian_potensial" tabindex="-1" role="dialog" aria-labelledby="table-admModalLabelIndikator" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="table-admModalLabelIndikator"><span id="nm_indikator"></span></h3>

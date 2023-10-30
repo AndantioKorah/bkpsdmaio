@@ -23,10 +23,10 @@
         <thead>
             <tr>
                 <th>Jabatan Target</th>
-                <th>Nilai Asessment</th>
+                <th>Nilai Asessment (50%)</th>
                 <th>Nama</th>
-                <th>Nilai Rekam Jejak</th>
-                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Nilai Rekam Jejak (40%)</th>
+                <th>Nilai Pertimbangan Lainnya (10%)</th>
                 <th>Total</th>
 				<th>Pemeringkatan</th>
 				<th></th>
@@ -54,11 +54,11 @@
         </tbody>
         <tfoot>
             <tr>
-			<th>Jabatan Target</th>
-                <th>Nilai Asessment</th>
+            <th>Jabatan Target</th>
+                <th>Nilai Asessment (50%)</th>
                 <th>Nama</th>
-                <th>Nilai Rekam Jejak</th>
-                <th>Nilai Pertimbangan Lainnya</th>
+                <th>Nilai Rekam Jejak (40%)</th>
+                <th>Nilai Pertimbangan Lainnya (10%)</th>
                 <th>Total</th>
 				<th>Pemeringkatan</th>
 				<th></th>
@@ -72,7 +72,8 @@
 <script>
 	var groupColumn = 2;
 var table = $('#example').DataTable({
-    columnDefs: [{ visible: false, targets: groupColumn }],
+    columnDefs: [{ visible: false, targets: groupColumn },
+    {targets: 0,orderable: false}],
     order: [[groupColumn, 'asc']],
     displayLength: 25,
     drawCallback: function (settings) {
@@ -111,16 +112,6 @@ $('#example tbody').on('click', 'tr.group', function () {
 </script>
 
 <script>
-	$(function () {
-		$('#table-adm').dataTable({
-			"ordering": false
-		});
-
-		$('#table-adm2').dataTable({
-			"ordering": false
-		});
-
-	})
 
 	function deleteDataJt(id) {
 		if (confirm('Apakah Anda yakin ingin menghapus data?')) {

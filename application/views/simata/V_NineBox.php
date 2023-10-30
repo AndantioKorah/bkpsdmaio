@@ -24,18 +24,29 @@
     </div>
    
     <div class="card card-default col-lg-4 ml-3">
-        <div class="card-body" >
-        2
+        <div class="card-body" id="div_chart">
+        <?php
+            $data_pendidikan['result'] = null;
+           
+            $this->load->view('simata/V_ChartNineBox', $data_pendidikan);
+          ?>
         </div>
     </div>
 
 </div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script>
-    $(function(){
-myChart.ctx.canvas.removeEventListener('wheel', myChart._wheelHandler);
-      
-    })
+$(function(){          
+    // loadChartNineBox()
+  })
+
+  function loadChartNineBox(){
+   $('#div_chart').html('')
+   $('#div_chart').append(divLoaderNavy)
+   $('#div_chart').load('<?=base_url("simata/C_Simata/loadChartNineBox/")?>', function(){
+     $('#loader').hide()
+   })
+ }
 
 // setup 
 const data = {
@@ -112,9 +123,9 @@ options: {
      max: 100,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
-      ctx.ticks = [];
-      ctx.ticks.push({value:69.99, label: ''})
-      ctx.ticks.push({value:84.99, label: ''})
+      // ctx.ticks = [];
+      // ctx.ticks.push({value:69.99, label: ''})
+      // ctx.ticks.push({value:84.99, label: ''})
      },
      grid: {
       drawTicks: false
@@ -136,9 +147,9 @@ options: {
      max: 100,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
-      ctx.ticks = [];
-      ctx.ticks.push({value:69.99, label: ''})
-      ctx.ticks.push({value:84.99, label: ''})
+      // ctx.ticks = [];
+      // ctx.ticks.push({value:69.99, label: ''})
+      // ctx.ticks.push({value:84.99, label: ''})
      },
      grid: {
       drawTicks: false

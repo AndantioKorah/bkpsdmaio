@@ -1,4 +1,4 @@
-<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'manajemen_talenta') { ?>
+<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
 <style>
 	.sp_profil {
 		font-size: .9rem;

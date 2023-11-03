@@ -310,7 +310,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active = 1 and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -330,6 +330,8 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_user l', 'a.nipbaru_ws = l.username')
                 ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
                 ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
+                ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
+                ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->where('a.nipbaru_ws', $username)
                 ->where('l.flag_active', 1)
                 ->limit(1);
@@ -387,7 +389,7 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
-                            ->where('c.flag_active', 1)
+                            ->where_in('c.flag_active', [1,2])
                             ->order_by('c.tmtjabatan','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -2846,9 +2848,16 @@ public function submitEditProfil(){
     $data["id_m_kecamatan"] = $datapost["edit_kecamatan"];
     $data["id_m_kelurahan"] = $datapost["edit_kelurahan"];
 
+    $idUser = $datapost["edit_id_m_user"];
+    $dataUser["id_m_bidang"] = $datapost["edit_id_m_bidang"];
+    $dataUser["id_m_sub_bidang"] = $datapost["edit_id_m_sub_bidang"];
+
     // dd($data);
     $this->db->where('id_peg', $id_pegawai)
             ->update('db_pegawai.pegawai', $data);
+
+    $this->db->where('id', $idUser)
+            ->update('m_user', $dataUser);
 
     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
@@ -3930,5 +3939,67 @@ function getSumpahJanjiEdit($id){
         return $res;
 
        }
+
+       function getMasterBidang($skpd){
+        $this->db->select('*')
+        ->where('id_unitkerja',$skpd)
+        ->where('flag_active',1)
+        ->from('db_efort.m_bidang');
+        return $this->db->get()->result_array(); 
+       }
+
+            function getMasterSubBidang($id)
+            {        
+                $this->db->select('id, nama_sub_bidang');
+                $this->db->where('id_m_bidang', $id);
+                $this->db->where('flag_active', 1);
+                $this->db->order_by('id', 'asc');
+                $fetched_records = $this->db->get('m_sub_bidang');
+                $datasub = $fetched_records->result_array();
+
+                $data = array();
+                foreach ($datasub as $sub) {
+                    $data[] = array("id" => $sub['id'], "nama_sub_bidang" => $sub['nama_sub_bidang']);
+                }
+                return $data;
+            }
+
+       function getBidang($id){
+            $this->db->select('a.id_m_bidang')
+                ->from('db_efort.m_user a')
+                ->where('a.id', $id);
+            return $this->db->get()->row_array();
+       }
+
+
+       public function submiDataBidang(){
+    
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+    
+        $id = $this->general_library->getId();
+        
+        $data["id_m_bidang"] = $datapost["id_m_bidang"];
+        $data["id_m_sub_bidang"] = $datapost["id_m_sub_bidang"];
+    
+        $this->db->where('id', $id)
+                ->update('m_user', $data);
+    
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            // $res['code'] = 1;
+            // $res['message'] = 'Terjadi Kesalahan';
+            // $res['data'] = null;
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    } 
 
 }

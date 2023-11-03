@@ -511,33 +511,41 @@
 					</div>
 
                     <div class="tab-pane show" id="pills-pertimbangan" role="tabpanel" aria-labelledby="pills-pertimbangan-tab">
-                    <form>
-                    <div class="mb-3">
+					<form id="form_penilaian_potensial_lainnya" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="lainnya_id_peg" value="<?=($profil_pegawai['id_peg'])?>">
+					<input type="hidden" name="lainnya_id_t_penilaian" value="<?=$id_t_penilaian?>">
+					<input type="hidden" name="lainnya_jenis_jab" id="lainnya_jenis_jab" value="<?=$kode?>">
+					<input type="hidden" name="lainnya_jabatan_target" value="<?=$jabatan_target?>">
+					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengalaman dalam Kepemimpinan Organisasi</label>
-                        <select class="form-select select2" name="kriteria4" required>
+						<select class="form-select select2" name="lainnya1" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($pengalaman_org){ foreach($pengalaman_org as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pengalaman_organisasi'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pertimbangan Aspirasi Karier</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="lainnya2" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($aspirasi_karir){ foreach($aspirasi_karir as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['aspirasi_karir'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Survey Pegawai ASN Ceria</label>
-                        <select class="form-select select2" name="kriteria4" required>
+                        <select class="form-select select2" name="lainnya3" required>
                         <option value=""  selected>Pilih Item</option>
-                        
+                        <?php if($asn_ceria){ foreach($asn_ceria as $r){ ?>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['asn_ceria'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <?php } } ?>
                         </select>
                     </div>
 
-                  
-                    
 
                     <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
                     </form>
@@ -647,6 +655,46 @@
 				});
 
 			});
+
+	
+			$('#form_penilaian_potensial_lainnya').on('submit', function (e) {
+			
+			var kode = $('#lainnya_jenis_jab').val()
+			e.preventDefault();
+			var formvalue = $('#form_penilaian_potensial_lainnya');
+			var form_data = new FormData(formvalue[0]);
+			// const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,1000);
+			
+			$.ajax({
+				url: "<?=base_url("simata/C_Simata/submitPenilaianPotensialLainnya")?>",
+				method: "POST",
+				data: form_data,
+				contentType: false,
+				cache: false,
+				processData: false,
+				// dataType: "json",
+				success: function (res) {
+					console.log(res)
+					var result = JSON.parse(res);
+					console.log(result)
+					if (result.success == true) {
+						successtoast(result.msg)
+						if(kode == 1) {
+							const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
+								1000);
+						} else {
+							const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
+								1000);
+						}
+					} else {
+						errortoast(result.msg)
+						return false;
+					}
+
+				}
+			});
+
+		});
 
 		
 

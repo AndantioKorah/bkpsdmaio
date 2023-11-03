@@ -510,7 +510,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
-			
+		    $data['bidang'] = null;
 			$data['page'] = null;
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
@@ -546,7 +546,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
 		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 		$data['kabkota'] = $this->kepegawaian->getAllWithOrder('db_efort.m_kabupaten_kota', 'id', 'asc');
+		$data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
 		$data['nip'] = $this->general_library->getUserName();
+		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
 
@@ -1113,6 +1115,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 		$data['kabkota'] = $this->kepegawaian->getKabKota('db_efort.m_kabupaten_kota', 'id', 'asc');
 		$data['nip'] = $this->general_library->getUserName();
+		$data['bidang'] = $this->kepegawaian->getBidang($data['profil_pegawai']['id_m_user']);
+		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
 
         $this->load->view('kepegawaian/V_EditProfilPegawai', $data);
     }
@@ -1280,6 +1284,22 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode($this->kepegawaian->submitEditSumjan());
 	}
+
+	public function getMasterSubBidang()
+    {
+        $id = $this->input->post('id');
+        $response   = $this->kepegawaian->getMasterSubBidang($id);
+        echo json_encode($response);
+    }
+
+	public function submiDataBidang(){
+
+     $this->kepegawaian->submiDataBidang();
+	 redirect('kepegawaian/profil');
+		
+
+    }
+
 
 
 

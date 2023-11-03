@@ -343,10 +343,24 @@ $(function(){
         var formvalue = $('#upload_form');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('pdf_file').files.length;
-        
+        var tmtpangkat = $('#tmt_pangkat').val()
+        var tglskpangkat = $('#tanggal_sk').val()
+
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
+        }
+
+        if(tmtpangkat == ""){
+          errortoast("tmt pangkat masih kosong")
+          document.getElementById("tmt_pangkat").focus();
+          return false;
+        }
+
+        if(tglskpangkat == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("tanggal_sk").focus();
+          return false;
         }
        
         document.getElementById('btn_upload_pangkat').disabled = true;

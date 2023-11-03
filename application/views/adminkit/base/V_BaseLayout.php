@@ -54,7 +54,6 @@
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datepicker.css')?>">
   <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 	
   <style>
 

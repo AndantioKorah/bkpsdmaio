@@ -35,7 +35,7 @@
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
-				<td><?= pemeringkatanKriteriaPotensial($rs2['res_kinerja'])?></td>
+				<td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">

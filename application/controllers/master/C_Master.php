@@ -20,11 +20,13 @@ class C_Master extends CI_Controller
     public function detailMasterSkpd($id_unitkerja){
         $data['result'] = $this->master->getDetailMasterSkpd($id_unitkerja);
         $this->session->set_userdata('list_pegawai_detail_skpd', $data['result']);
+      
         render('master/V_MasterSkpdDetail', '', '', $data);
     }
 
     public function loadSkpdDetailPegawai(){
         $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+     
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
     }
 

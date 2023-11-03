@@ -229,7 +229,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
@@ -283,13 +283,30 @@ $(function(){
         var formvalue = $('#upload_form_jabatan');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('jabatan_pdf_file').files.length;
+        var tmtjabatan = $('#jabatan_tmt').val()
+        var tglsk = $('#jabatan_tanggal_sk').val()
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
 
         // document.getElementById('btn_upload_jabatan').disabled = true;
+       
+
+        if(tmtjabatan == ""){
+          errortoast("tmt jabatan masih kosong")
+          document.getElementById("jabatan_tmt").focus();
+          return false;
+        }
+
+        if(tglsk == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("jabatan_tanggal_sk").focus();
+          return false;
+        }
+        
+
         $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
        
      

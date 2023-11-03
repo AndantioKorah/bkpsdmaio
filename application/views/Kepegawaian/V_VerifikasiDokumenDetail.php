@@ -118,7 +118,7 @@
           <tr>
             <td class="td-lab-dd">TMT Gaji Berkala</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['tmtgajiberkala']?></td>
+            <td class="td-val-dd"><?= formatDateNamaBulan($result['tmtgajiberkala'])?></td>
           </tr>
         </table>
       </div>

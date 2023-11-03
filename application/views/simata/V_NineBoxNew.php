@@ -42,8 +42,8 @@ grid-row-gap: 0px;
 
 table, th, td {
   border: 1px rgba(0, 0, 0, 0);
-  background-color:#2e4963;
-  color:#fff;
+  /* background-color:#2e4963; */
+  /* color:#fff; */
 }
 
 label {
@@ -1497,8 +1497,11 @@ animation06
     if($result){
     foreach($result as $rs){ 
           
-          $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
-          $nilaix = $rs->res_kinerja;
+        //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
+        //   $nilaix = $rs->res_kinerja;
+
+          $nilaiy = $rs->res_kinerja;
+          $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
 
              if($nilaix >= 85 && $nilaiy >= 85) {
               $ix++;
@@ -1543,7 +1546,7 @@ animation06
       </select>
       </div>
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
-        <label for="exampleInputPassword1" class="form-label">Jabatan Target Adm</label>
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_adm" >
                 <option value=""  selected>Semua</option>
                     <?php if($jabatan_target_adm){ foreach($jabatan_target_adm as $r){ ?>
@@ -1553,7 +1556,7 @@ animation06
       </div>
       
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
-        <label for="exampleInputPassword1" class="form-label">Jabatan Target Jpt</label>
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
                 <option value=""  selected>Semua</option>
                     <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
@@ -1708,7 +1711,7 @@ animation06
         <div class="card-body" >
    
           <?php if($post) { ?>
-        <table class=" table-bordered" border="1" style="margin-left:-15px;">
+        <table class=" table-bordered" border="1" style="margin-left:-15px;background-color:#2e4963;color:#fff">
        <tr>
         <td></td>
         <td>
@@ -1769,61 +1772,99 @@ animation06
     </div>
     <div class="col-lg-3" >
     <div class="card-body" >
-    <table class="table table-bordered" border="1" style="margin-left:-15px;">
+    <table class="table table-bordered" border="1" style="margin-left:-15px;color:#fff;">
     <thead>
       <tr>
-        <th valign="top">Kuadran</th>
-        <th>Jumlah Suksesi</th>
+        <th valign="top" class="text-center">Kuadran</th>
+        <th class="text-center">Jumlah Suksesi</th>
         <th></th>
       </tr>
 
+
+
       </thead>
       <tbody>
-      <tr style="background-color: #1cbb8c">
-      <td>IX</td>
-      <td><?=$ix;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      <tr class="text-center" style="background-color: #1cbb8c">
+      <td >IX</td>
+      <td ><?=$ix;?></td>
+      <td>
+        <?php if($post) { ?>
+        <button data-box="9" data-jumlah="<?=$ix;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
       </tr>
-      <tr style="background-color: #1cbb8c">
+      <tr class="text-center" style="background-color: #1cbb8c">
       <td>VIII</td>
       <td><?=$viii;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      <td>
+      <?php if($post) { ?>
+        <button data-box="8" data-jumlah="<?=$viii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
       </tr>
-      <tr style="background-color: #1cbb8c">
+      <tr class="text-center" style="background-color: #1cbb8c">
       <td>VII</td>
       <td><?=$vii;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      <td>
+      <?php if($post) { ?>
+        <button data-box="7" data-jumlah="<?=$vii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
       </tr>
-      <tr style="background-color: #fcb92c">
+      <tr class="text-center" style="background-color: #fcb92c">
       <td>VI</td>
       <td><?=$vi;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
-
+      <td>
+      <?php if($post) { ?>
+        <button data-box="6" data-jumlah="<?=$vi;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
       </tr>
-      <tr style="background-color: #fcb92c">
+      <tr class="text-center" style="background-color: #fcb92c">
       <td>V</td>
       <td><?=$v;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+      <td>
+      <?php if($post) { ?>
+        <button data-box="5" data-jumlah="<?=$v;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
+
       </tr>
-      <tr style="background-color: #fcb92c">
+      <tr class="text-center" style="background-color: #fcb92c">
       <td>IV</td>
       <td><?=$iv;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+           <td>
+           <?php if($post) { ?>
+        <button data-box="4" data-jumlah="<?=$iv;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
       </tr>
-      <tr style="background-color: #be4d4d">
+      <tr class="text-center" style="background-color: #be4d4d">
       <td>III</td>
       <td><?=$iii;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+           <td>
+           <?php if($post) { ?>
+        <button data-box="3" data-jumlah="<?=$iii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
       </tr>
-      <tr style="background-color: #be4d4d">
+      <tr class="text-center" style="background-color: #be4d4d">
       <td>II</td>
       <td><?=$ii;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+           <td>
+           <?php if($post) { ?>
+        <button data-box="2" data-jumlah="<?=$ii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
       </tr>
-      <tr style="background-color: #be4d4d">
+      <tr class="text-center" style="background-color: #be4d4d">
       <td>I</td>
       <td><?=$i;?></td>
-      <td><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></td>
+           <td>
+           <?php if($post) { ?>
+        <button data-box="1" data-jumlah="<?=$i;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
       </tr>
       </tbody>
       </table>
@@ -1831,7 +1872,42 @@ animation06
     </div>
 </div>
 </div>
-  
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail_nine_box">
+        ...
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+<!-- tutup modal  -->
+
+
+<?php if($post) { ?>
+<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$post['jenis_jabatan'];?>">
+<?php if($jt_adm) { ?>
+<input type="hidden" name="jt" id="jt" value="<?=$jt_adm;?>">
+<?php } else if($jt_jpt) { ?>
+<input type="hidden" name="jt" id="jt" value="<?=$jt_jpt;?>">
+<?php } else { ?> 
+<input type="hidden" name="jt" id="jt" value="0">
+
+<?php } ?>
+<?php } ?>
+
 <!-- </div> -->
 <?php $nilai['result'] = $result;?>
 
@@ -1846,6 +1922,20 @@ $(function(){
 		allowClear: true
 	});
   })
+
+  $(document).on("click", ".open-DetailNinebox", function () {
+    var jenis_jab = $('#jenis_jab').val()
+    var jt = $('#jt').val()
+    var box = $(this).data('box');
+    var jumlah = $(this).data('jumlah');
+
+        $('#detail_nine_box').html('')
+        $('#detail_nine_box').append(divLoaderNavy)
+        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah, function(){
+        $('#loader').hide()
+        })
+
+        });
 
   function loadChartNineBox(){
    $('#div_chart').html('')
@@ -1881,8 +1971,10 @@ $(function(){
     
     let temp = Object.keys(dx.result)
     temp.forEach((i) => {
-          let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
-          let nilaix = parseFloat(dx.result[i].res_kinerja)
+        //   let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
+        //   let nilaix = parseFloat(dx.result[i].res_kinerja)
+          let nilaix = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
+          let nilaiy = parseFloat(dx.result[i].res_kinerja)
           if(nilaix < 70 && nilaiy < 70) {
             point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
@@ -1969,7 +2061,7 @@ const tooltipchart = {
             console.log(context)
             // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
             // return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
-            return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y];
+            return ["Kinerja: "+context.raw.y, "Potensial: "+context.raw.x];
             
           },
           labelColor: function(context) {

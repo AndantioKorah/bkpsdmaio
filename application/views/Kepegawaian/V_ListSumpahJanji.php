@@ -1,4 +1,4 @@
-<?php if($result){ ?>dsfs
+<?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
       <table class="table table-hover datatable">
@@ -35,16 +35,34 @@
                 <i class="fa fa-file-pdf"></i></button>
               <?php } ?>
               </td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
+              <div class="btn-group" role="group" aria-label="Basic example">
+              <?php if($rs['status'] == 1) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_sumjan"
+                onclick="loadEditSumjan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
+                <?php } ?>
+
+                <?php if($kode == 1) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_sumjan"
+                onclick="loadEditSumjan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailSumjan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <?php if($kode == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
               <?php } ?>  
+              <?php } ?>
             </td>
-               <?php } ?>
+             
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>',2)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -66,31 +84,39 @@
   })
 
   async function openFileSumjan(filename){
-   
    $('#iframe_view_file_sumjan').hide()
    $('.iframe_loader').show()  
    console.log(filename)
-   $.ajax({
-     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-     method: 'POST',
-     data: {
-       'username': '<?=$this->general_library->getUserName()?>',
-       'password': '<?=$this->general_library->getPassword()?>',
-       'filename': 'arsipsumpah/'+filename
-     },
-     success: function(data){
-       let res = JSON.parse(data)
-       console.log(res.data)
-       $(this).show()
-       $('#iframe_view_file_sumjan').attr('src', res.data)
-       $('#iframe_view_file_sumjan').on('load', function(){
-         $('.iframe_loader').hide()
-         $(this).show()
-       })
-     }, error: function(e){
-         errortoast('Terjadi Kesalahan')
-     }
-   })
+  //  $.ajax({
+  //    url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+  //    method: 'POST',
+  //    data: {
+  //      'username': '<?=$this->general_library->getUserName()?>',
+  //      'password': '<?=$this->general_library->getPassword()?>',
+  //      'filename': 'arsipsumpah/'+filename
+  //    },
+  //    success: function(data){
+  //      let res = JSON.parse(data)
+  //      console.log(res.data)
+  //      $(this).show()
+  //      $('#iframe_view_file_sumjan').attr('src', res.data)
+  //      $('#iframe_view_file_sumjan').on('load', function(){
+  //        $('.iframe_loader').hide()
+  //        $(this).show()
+  //      })
+  //    }, error: function(e){
+  //        errortoast('Terjadi Kesalahan')
+  //    }
+  //  })
+  var number = Math.floor(Math.random() * 1000);
+  $link = "http://siladen.manadokota.go.id/bidik/arsipsumpah/"+filename+"?v="+number;
+
+$('#iframe_view_file_sumjan').attr('src', $link)
+    $('#iframe_view_file_sumjan').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
+})
+
  }
 
 
@@ -115,6 +141,14 @@
                        })
                    }
                }
+
+        function loadEditSumjan(id){
+              $('#edit_sumjan_pegawai').html('')
+              $('#edit_sumjan_pegawai').append(divLoaderNavy)
+              $('#edit_sumjan_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditSumjan")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
 
 </script>
 <?php } else { ?>

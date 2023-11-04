@@ -38,7 +38,7 @@
                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>',2)" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

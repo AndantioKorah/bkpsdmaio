@@ -8,9 +8,7 @@
           <th class="text-left">Nilai</th>
           <th class="text-left">Predikat</th>
           <th class="text-left">File</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
-          <th></th>
-            <?php } ?>
+          
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -20,7 +18,8 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+            <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['tahun']?></td>
               <td class="text-left"><?= $rs['nilai']?></td>          
@@ -40,7 +39,7 @@
                <?php } ?>
                <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo "ditolak : ".$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -72,27 +71,37 @@
    $('#iframe_view_file_skp').hide()
    $('.iframe_loader').show()  
    console.log(filename)
-   $.ajax({
-     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-     method: 'POST',
-     data: {
-       'username': '<?=$this->general_library->getUserName()?>',
-       'password': '<?=$this->general_library->getPassword()?>',
-       'filename': 'arsipskp/'+filename
-     },
-     success: function(data){
-       let res = JSON.parse(data)
-       console.log(res.data)
-       $(this).show()
-       $('#iframe_view_file_skp').attr('src', res.data)
-       $('#iframe_view_file_skp').on('load', function(){
-         $('.iframe_loader').hide()
-         $(this).show()
-       })
-     }, error: function(e){
-         errortoast('Terjadi Kesalahan')
-     }
-   })
+  //  $.ajax({
+  //    url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+  //    method: 'POST',
+  //    data: {
+  //      'username': '<?=$this->general_library->getUserName()?>',
+  //      'password': '<?=$this->general_library->getPassword()?>',
+  //      'filename': 'arsipskp/'+filename
+  //    },
+  //    success: function(data){
+  //      let res = JSON.parse(data)
+  //      console.log(res.data)
+  //      $(this).show()
+  //      $('#iframe_view_file_skp').attr('src', res.data)
+  //      $('#iframe_view_file_skp').on('load', function(){
+  //        $('.iframe_loader').hide()
+  //        $(this).show()
+  //      })
+  //    }, error: function(e){
+  //        errortoast('Terjadi Kesalahan')
+  //    }
+  //  })
+
+   $link = "http://siladen.manadokota.go.id/bidik/arsipskp/"+filename; 
+
+$('#iframe_view_file_skp').attr('src', $link)
+    $('#iframe_view_file_skp').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
+})
+
+
  }
 
   function deleteData(id,file,kode){

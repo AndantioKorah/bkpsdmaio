@@ -1,4 +1,3 @@
-<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'manajemen_talenta') { ?>
    <style>
     
     .sp_profil{
@@ -175,7 +174,6 @@
 </div>
 <!-- tutup modal detail indikator -->
 
-<?php } ?>
 
 <script>
 

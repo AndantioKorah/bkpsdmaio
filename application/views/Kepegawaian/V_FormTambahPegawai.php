@@ -298,6 +298,8 @@
 
 
 $('#form_profil').on('submit', function(e){
+
+  var base_url = "<?= base_url();?>"
      
         e.preventDefault();
         $.ajax({
@@ -310,7 +312,7 @@ $('#form_profil').on('submit', function(e){
             console.log(result.nip)
             if(result.success == true){
                 successtoast(result.msg)
-                location.href = " http://localhost/bkpsdmaio/kepegawaian/profil-pegawai/"+result.nip;
+                location.href = base_url+"kepegawaian/profil-pegawai/"+result.nip;
               } else {
                 errortoast(result.msg)
                 return false;

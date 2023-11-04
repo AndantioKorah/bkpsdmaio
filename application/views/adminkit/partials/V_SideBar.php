@@ -59,10 +59,11 @@
 	$tpp = $this->session->userdata('live_tpp');
 ?>
 
+
 <ul class="sidebar-nav">
 <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
 	<div><hr class="sidebar-divider"></div>
-	<div onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
+	<div  onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
 			<span class="" style="
 				font-size: .7rem !important;
@@ -72,21 +73,29 @@
 		</li>
 		<li class="live_tpp">
 			<center>
-				<span class="align-middle" style="
+				<span id="span_capaian_tpp" class="align-middle" style="
 					font-size: 1.1rem;
 					color: white;
 					font-weight: bold;
 					margin-top: -5px;
 					margin-bottom: 10px;
 				">
-					<?=formatCurrency($tpp['capaian_tpp'])?>
+					<?php if($tpp){ ?>
+						<?=formatCurrencyWithoutRp($tpp['capaian_tpp'])?>
+					<?php } else { ?>
+						<i class="fa fa-spin fa-spinner"></i>
+					<?php } ?>
 				</span>
-				<span style="
+				<span id="pagu_tpp" style="
 					font-size: .9rem;
 					color: #ababab;
 					vertical-align: bottom;
 				">
-					/ <?=formatCurrencyWithoutRp($tpp['pagu_tpp']['pagu_tpp'])?>
+					<?php if($tpp){ ?>
+						/ <?=formatCurrencyWithoutRp($tpp['pagu_tpp']['pagu_tpp'])?>
+					<?php } else { ?>
+						<!-- <i class="fa fa-spin fa-spinner"></i> -->
+					<?php } ?>
 				</span>
 			</center>			
 		</li>
@@ -153,6 +162,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hari Libur
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hukuman-dinas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
+					</a>
+				</li>
 			</ul>
 		</li>
 		<li class="sidebar-item ">
@@ -178,6 +192,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Roles
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Roles" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/tambah')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Tambah Pegawai
+					</a>
+				</li>
 			</ul>
 		</li>
 	<?php } ?>
@@ -193,19 +212,54 @@
 			</a>
 		</li>
 	<?php } ?>
+	<?php if($this->general_library->isProgrammer() 
+	|| $this->general_library->isAdminAplikasi() 
+	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+	|| $this->general_library->isPegawaiBkpsdm()
+	){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>list-pegawai">
+				<i class="fa fa-database"></i> <span class="align-middle">Database Pegawai</span>
+			</a>
+		</li>
+		<li class="sidebar-item">
+		<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
+			</a>
+		</li>
+	<?php } ?>
+	<?php if($this->general_library->isProgrammer() 
+	|| $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isWalikota() 
+	// || $this->general_library->isWakilWalikota()
+	){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>pdm/dashboard">
+				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
+			</a>
+		</li>
+	<?php } ?>
 	<li class="sidebar-item">
-		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
+		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
+		<a class="sidebar-link" href="#">
 			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>
- 
+	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>pelanggaran">
+				<i class="fa fa-user-shield"></i><span class="align-middle">Pelanggaran</span>
+			</a>
+		</li>
+	<?php } ?> -->
 	<?php
 	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
-				<span class="align-middle">
-					Verifikasi
+				<span class="align-middle">Verifikasi
 					<i class="fa fa-chevron-down" 
 					style="
 						position: absolute;
@@ -279,13 +333,15 @@
 		<?php } ?>
 
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isManajemenTalenta()){ ?>
-	<li class="sidebar-header">
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
+	
+		<li class="sidebar-header">
 		Manajemen Talenta
 	</li>
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa-bars"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
 				<span class="align-middle">
 					Data Master
 					<i class="fa fa-chevron-down" 
@@ -328,6 +384,22 @@
 				</span>
 			</a>	
 		</li>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fas fa-tasks"></i> 
+				<span class="align-middle">
+				Penilaian Potensial
+				</span>
+			</a>	
+		</li>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
+				<span class="align-middle">
+				Nine Box
+				</span>
+			</a>	
+		</li>
 		<?php } ?>
 
 </ul>
@@ -336,6 +408,44 @@
 </div>
 
 <script>
+	$(function(){
+		<?php if(!$tpp){ ?>
+			loadLiveTpp()
+		<?php } ?>
+	})
+
+	function loadLiveTpp(){
+		$.ajax({
+			url: '<?=base_url("login/C_Login/loadLiveTpp")?>',
+			method: 'post',
+			data: $(this).serialize(),
+			success: function(rs){
+				let data = JSON.parse(rs)
+				$('#span_capaian_tpp').html((data.capaian_tpp))
+				$('#pagu_tpp').html(' / '+data.pagu_tpp.pagu_tpp)
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}
+		})
+	}
+
+	function formatRupiah(angka, prefix = "Rp ") {
+        var number_string = angka.replace(/[^,\d]/g, "").toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix == undefined ? rupiah : rupiah ? rupiah : "";
+    }
+	
 	function openDetailTppPegawai(){
 		window.location = "<?=base_url('pegawai/tpp/detail')?>"
 	}

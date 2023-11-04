@@ -661,4 +661,11 @@ class C_Kinerja extends CI_Controller
     public function deleteSkbp($bulan, $tahun){
         echo json_encode($this->kinerja->deleteSkbp($bulan, $tahun));
     }
+
+    public function pelanggaran(){
+        $data['result'] = $this->general->getAllWithOrder('m_pelanggaran', 'nama_pelanggaran', 'asc');
+        $data['list_pegawai'] = $this->general->getAllPegawai();
+        // dd($data['list_pegawai']);
+        render('kinerja/V_Pelanggaran', '', '', $data);
+    }
 }

@@ -11,73 +11,103 @@
 
 <div class="table-responsive">
 
-	<table id="table-jpt" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
-		<thead>
-			<th class="text-center" style="width:5%;">No</th>
-			<th style="width:50%;">Jabatan Target</th>
-			<th style="width:15%;">Nilai Kinerja</th>
-			<th style="width:20%;">Pemeringkatan Kinerja</th>
 
-			<!-- <th style="width:6%;"></th> -->
-			<th style="width:5%;"></th>
-
-		</thead>
-		<tbody>
-
-			<?php $nomor = 1; foreach($result as $rs){ ?>
-			<tr style="background-color:#f8f9fa;">
-				<td colspan="5"><b><?=$nomor++;?>. <?=$rs['gelar1'];?><?=$rs['nama'];?> <?=$rs['gelar2'];?> /
-						<?=$rs['nipbaru'];?></b><br>
-					<table class="table table-hover" style="width:102%;margin-left:-8px;margin-bottom:-8px;" border="0">
-						<!-- <thead>
-                                <th style="width:5%"></th>
-                                <th style="width:48%"></th>
-                                <th style="width:14%"></th>
-                                <th style="width:17%"></th>
-                                <th style="width:5%"></th>
-                                <th></th>
-
-                            </thead> -->
-						<tbody>
-							<?php foreach($result2 as $rs2){ ?>
-							<?php if($rs2['id_peg'] == $rs['id_peg']) { ?>
-							<tr style="border-bottom:0.5pt solid #e9eaee;border-top:0.5pt solid #e9eaee;">
-								<td style="width:5%;">-</td>
-								<td style="width:54%"><?=$rs2['nama_jabatan'];?></td>
-								<td style="width:15%;"><?=$rs2['res_kinerja'];?></td>
-								<td style="width:20%;"><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
-								<!-- <td style="width:5%;"><span class="badge bg-success">0/5</span></td> -->
-								<td style="width:5%;">
-									<button data-toggle="modal" data-id="<?=$rs2['id']?>"
-										data-nip="<?=$rs2['nipbaru']?>" data-kode="2" href="#modal_penilaian_kinerja"
-										title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info"> <i
-											class="fa fa-edit"></i></button>
-								</td>
-							</tr>
-						</tbody>
-						<?php } ?>
-						<?php } ?>
-					</table>
-
+<style>
+	tr.group,
+	tr.group:hover {
+		background-color: #2e4963 !important;
+		color: #fff;
+	}
+</style>
+<table id="kinerja_jpt" class="display table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Jabatan Target</th>
+                <th>Nilai Kinerja</th>
+                <th>Nama</th>
+				<th>Pemeringkatan</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody>
+		<?php $no = 1; foreach($result as $rs2){ ?>
+            <tr>
+                <td><?=$rs2['nama_jabatan'];?></td>
+                <td><?=$rs2['res_kinerja'];?></td>
+                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+				<td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
+				<td>
+				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="2"
+										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
+										<i class="fa fa-edit"></i></button>
 				</td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-				<td style="display:none"></td>
-			</tr>
-
-
-
+            </tr>
 			<?php } ?>
-		</tbody>
-	</table>
+            
+        </tbody>
+        <tfoot>
+            <tr>
+			<th>Jabatan Target</th>
+                <th>Nilai Kinerja</th>
+                <th>Nama</th>
+				<th>Pemeringkatan</th>
+				<th></th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
+
 </div>
 
 <script>
+	var groupColumn = 2;
+var table = $('#kinerja_jpt').DataTable({
+    columnDefs: [{ visible: false, targets: groupColumn },
+    {targets: 0,orderable: false}],
+    order: [[groupColumn, 'asc']],
+    displayLength: 25,
+    drawCallback: function (settings) {
+        var api = this.api();
+        var rows = api.rows({ page: 'current' }).nodes();
+        var last = null;
+ 
+        api.column(groupColumn, { page: 'current' })
+            .data()
+            .each(function (group, i) {
+                if (last !== group) {
+                    $(rows)
+                        .eq(i)
+                        .before(
+                            '<tr class="group"><td colspan="5">' +
+                                group +
+                                '</td></tr>'
+                        );
+ 
+                    last = group;
+                }
+            });
+    }
+});
+ 
+// Order by the grouping
+$('#kinerja_jpt tbody').on('click', 'tr.group', function () {
+    var currentOrder = table.order()[0];
+    if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+        table.order([groupColumn, 'desc']).draw();
+    }
+    else {
+        table.order([groupColumn, 'asc']).draw();
+    }
+});
+</script>
+
+<script>
 	$(function () {
-		$('.js-example-basic-multiple').select2();
-		$('#table-jpt').dataTable({
+		$('#table-adm').dataTable({
+			"ordering": false
+		});
+
+		$('#table-adm2').dataTable({
 			"ordering": false
 		});
 
@@ -99,6 +129,7 @@
 			})
 		}
 	}
+
 
 
 </script>

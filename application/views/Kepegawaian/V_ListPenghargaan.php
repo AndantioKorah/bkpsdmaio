@@ -9,9 +9,8 @@
           <th class="text-left">Tgl SK</th>
           <th class="text-left">Tahun</th>
           <th class="text-left">Asal Perolehan</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
-            <?php } ?>
+          <th></th>
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -29,17 +28,47 @@
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['tahun_penghargaan']?></td>
               <td class="text-left"><?=$rs['nm_pemberipenghargaan']?></td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_penghargaan" onclick="openFilePenghargaan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
+              <td>
+              <div class="btn-group" role="group" aria-label="Basic example">
+              <?php if($rs['status'] == 1) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_penghargaan"
+                onclick="loadEditPenghargaan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPenghargaan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
+                <?php } ?>
+
               <?php if($kode == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-              <?php } ?>  
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_penghargaan"
+                onclick="loadEditPenghargaan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPenghargaan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php } ?>
+
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                  <button onclick="deleteData('<?=$rs['id']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
+
+              </div>
+              
+             
+               
             </td>
+            <?php } ?> 
                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
 
-                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+                <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
               <?php if($rs['status'] == 1) { ?>
@@ -59,10 +88,6 @@
     $('.datatable').dataTable()
   })
 
-
-  function openFilePendidikan(filename){
-    $('#iframe_view_file').attr('src', 'http://bkd.manadokota.go.id/simpegonline/adm/arsipelektronik/'+filename)
-  }
 
   function deleteData(id,kode){
                    
@@ -86,7 +111,33 @@
                    }
                }
 
+               async function openFilePenghargaan(filename){
 
+              $('#iframe_view_file_penghargaan').hide()
+              $('.iframe_loader').show()  
+              $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+
+              var number = Math.floor(Math.random() * 1000);
+              $link = "http://siladen.manadokota.go.id/bidik/arsippenghargaan/"+filename+"?v="+number;
+
+              $('#iframe_view_file_penghargaan').attr('src', $link)
+                  $('#iframe_view_file_penghargaan').on('load', function(){
+                    $('.iframe_loader').hide()
+                    $(this).show()
+              })
+
+              }
+              
+
+              function loadEditPenghargaan(id){
+              $('#edit_penghargaan_pegawai').html('')
+              $('#edit_penghargaan_pegawai').append(divLoaderNavy)
+              $('#edit_penghargaan_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditPenghargaan")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
+
+       
 </script>
 <?php } else { ?>
   <div class="row">

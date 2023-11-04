@@ -550,5 +550,15 @@
             ]);
         }
 
+        public function getAllPegawai(){
+            return $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws as nip, h.id as id_m_user')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user h', 'a.nipbaru_ws = h.username')
+                        ->where('h.flag_active', 1)
+                        ->group_by('h.id')
+                        ->order_by('a.nama')
+                        ->get()->result_array();
+        }
+
 	}
 ?>

@@ -184,8 +184,8 @@ class C_Simata extends CI_Controller
 
     public function loadListPegawaiPenilainKinerjaAdm(){
         
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result2'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
+        // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
         $this->load->view('simata/V_PenilaianKinerjaItem', $data);
     }
 
@@ -215,6 +215,118 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianKinerja());
 	}
+
+    public function nineBox(){
+        
+       
+        $data['post']=null;
+        $data['result']=null;
+        $data['jt_adm'] = null;
+        $data['jt_jpt'] = null;
+        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
+        if($_POST) {
+        $data['post'] = $_POST;
+        if($_POST['jenis_jabatan'] == 1){
+            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            $data['jt_adm'] = $_POST['jabatan_target_adm'];
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
+        } else {
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
+        }
+        }
+        render('simata/V_ChartNineBox', '', '', $data);
+    }
+
+    public function getPenilaianPegawai()
+	{ 
+		echo json_encode($this->simata->getPenilaianPegawai());
+	}
+
+
+    public function penilaianPotensial(){
+        $data['result'] = null;
+        render('simata/V_PenilaianPotensial', '', '', $data);
+    }
+
+
+    public function loadListPegawaiPenilainPotensialAdm(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialAdministrator();  
+        $this->load->view('simata/V_PenilaianPotensialItem', $data);
+    }
+
+    public function loadListPegawaiPenilainPotensialJpt(){
+        
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+        $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
+    }
+
+    public function loadModalPenilaianPotensial($id,$nip,$kode,$jt)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+        $data['list_pendidikan_formal'] = $this->simata->getKriteriaPotensial(26);
+        $data['pangkat_gol'] = $this->simata->getKriteriaPotensial(27);
+        $data['masa_kerja_jabatan'] = $this->simata->getKriteriaPotensial(28);
+        $data['diklat'] = $this->simata->getKriteriaPotensial(29);
+        $data['kompetensi20_jp'] = $this->simata->getKriteriaPotensial(30);
+        $data['penghargaan'] = $this->simata->getKriteriaPotensial(31);
+        $data['riwayat_hukdis'] = $this->simata->getKriteriaPotensial(32);
+        $data['pengalaman_org'] = $this->simata->getKriteriaPotensial(33);
+        $data['aspirasi_karir'] = $this->simata->getKriteriaPotensial(34);
+        $data['asn_ceria'] = $this->simata->getKriteriaPotensial(35);
+       
+        $id_peg = $data['profil_pegawai']['id_peg'];
+             
+        $data['id_t_penilaian'] = $id;
+        $data['jabatan_target'] = $jt;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jt);
+        $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        $data['kode'] = $kode;  
+        $this->load->view('simata/V_ModalPenilaianPotensial', $data);
+    }
+
+    public function submitPenilaianPotensialCerdas()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianPotensialCerdas());
+	}
+
+    public function submitPenilaianPotensialRj()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianPotensialRj());
+	}
+
+    public function submitPenilaianPotensialLainnya()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianPotensialLainnya());
+	}
+
+    public function loadChartNineBox(){
+
+        $data['result'] = $this->simata->getPenilaianPegawai();
+        $this->load->view('simata/V_ChartNineBox', $data);
+    }
+
+
+    public function loadDetailNineBox($jenis_jab,$jt,$box,$jumlah)
+    {
+        $data['result'] = null;
+        $data['kotak']=null;
+        if($jumlah > 0){
+        $data['result'] = $this->simata->getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box,$jumlah);  
+        $data['kotak']=$box;    
+        } 
+        $this->load->view('simata/V_DetailNineBox', $data);
+    }
+
+    
+    
+
+    
+
+
 
 
 

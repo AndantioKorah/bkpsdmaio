@@ -19,7 +19,7 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['name'];?></td>
+              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?></td>
               <td class="text-left">
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
@@ -66,31 +66,39 @@
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-       'username': '<?=$this->general_library->getUserName()?>',
-        'password': '<?=$this->general_library->getPassword()?>',
-        'filename': 'arsiplain/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
+    // $.ajax({
+    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+    //   method: 'POST',
+    //   data: {
+    //    'username': '<?=$this->general_library->getUserName()?>',
+    //     'password': '<?=$this->general_library->getPassword()?>',
+    //     'filename': 'arsiplain/'+filename
+    //   },
+    //   success: function(data){
+    //     let res = JSON.parse(data)
 
 
-        if(res == null){
-          $('iframe_loader').show()  
-          $('.iframe_loader').html('Tidak ada file SK')
-        }
+    //     if(res == null){
+    //       $('iframe_loader').show()  
+    //       $('.iframe_loader').html('Tidak ada file SK')
+    //     }
 
-        $('#iframe_view_file_arsip').attr('src', res.data)
+    //     $('#iframe_view_file_arsip').attr('src', res.data)
+    //     $('#iframe_view_file_arsip').on('load', function(){
+    //       $('.iframe_loader').hide()
+    //       $(this).show()
+    //     })
+    //   }, error: function(e){
+    //     errortoast('Terjadi Kesalahan')
+    //   }
+    // })
+
+    var number = Math.floor(Math.random() * 1000);
+    $link = "http://siladen.manadokota.go.id/bidik/arsiplain/"+filename+"?v="+number;
+    $('#iframe_view_file_arsip').attr('src', $link)
         $('#iframe_view_file_arsip').on('load', function(){
           $('.iframe_loader').hide()
           $(this).show()
-        })
-      }, error: function(e){
-        errortoast('Terjadi Kesalahan')
-      }
     })
   }
 

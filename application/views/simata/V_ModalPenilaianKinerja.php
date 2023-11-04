@@ -141,6 +141,8 @@
                   <div class="foto_container">
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
+                <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+                            
                             <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
                             src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
@@ -157,6 +159,7 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" /> 
+                                </a>
                                 <div class="middle">
                                     <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
@@ -170,7 +173,9 @@
 
               <div class="col-lg-12 text-center">
                 <span class="sp_profil">
-                  <?=getNamaPegawaiFull($profil_pegawai)?>
+                <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+                <?=getNamaPegawaiFull($profil_pegawai)?>
+                  </a>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
@@ -191,13 +196,13 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>
-              <li class="nav-item nav-item-profile" role="presentation">
+              <!-- <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile " id="pills-data_pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data_pribadi" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Data Pribadi</button>
               </li>
               
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile" id="pills-data_lain-tab" data-bs-toggle="pill" data-bs-target="#pills-data_lain" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Data Lainnya</button>
-              </li>
+              </li> -->
             </ul>
 
             <div class="col-lg-12">
@@ -557,13 +562,12 @@
       <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 
         <div class="table-responsive">
-        <table class="table table-striped table-bordered" >
+        <table class="table table-bordered" >
             <tr>
-                <td style="width:50%" colspan="2"><b>Spesifik</b></td>
-                <td style="width:50%" colspan="2"><b>Generik</b></td>
+                <td style="background-color:#2e4963;color:#fff" style="width:50%" colspan="4"><b>Spesifik</b></td>
             </tr>
             <tr>
-                <td style="width:25%">Penilaian Kinerja N-1</td>
+            <td style="width:25%">Penilaian Kinerja N-1</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria1" required>
                 <option value=""  selected>Pilih Item</option>
@@ -572,6 +576,25 @@
                     <?php } } ?>
                 </select>
                </td>
+            </tr>
+
+            <tr>
+            <td style="width:25%">Penilaian Kinerja N-2</td>
+                <td style="width:25%">
+                <select class="form-select select2" name="kriteria2" required>
+                <option value=""  selected>Pilih Item</option>
+                    <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                    <?php } } ?>
+                </select>
+               </td>
+            </tr>
+
+            <tr>
+            <td style="background-color:#2e4963;color:#fff" colspan="2"><b>Generik</b></td>
+            </tr>
+            <tr>
+                
                 <td style="width:25%">Inovatif</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria3" required>
@@ -584,16 +607,8 @@
             </tr>
 
             <tr>
-                <td style="width:25%">Penilaian Kinerja N-2</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria2" required>
-                <option value=""  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
-                    <?php } } ?>
-                </select>
-               </td>
-                <td style="width:25%">Empati dalam Organisasi</td>
+                
+                <td style="width:25%">Pengalaman dalam Tim</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria4" required>
                 <option value=""  selected>Pilih Item</option>
@@ -605,10 +620,7 @@
             </tr>
 
             <tr>
-                <td colspan="2" ></td>
-                
-                
-               </td>
+              
                 <td style="width:25%">Amanah</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria5" required>
@@ -636,7 +648,7 @@
    
 
    $(".select2").select2({   
-        width: '100%',
+        width: '500px',
         // dropdownAutoWidth: true,
         allowClear: true,
     });
@@ -644,6 +656,7 @@
 
     $('#form_penilaian_kinerja').on('submit', function(e){
       var kode = $('#jenis_jab').val()
+
       
                 e.preventDefault();
                 var formvalue = $('#form_penilaian_kinerja');

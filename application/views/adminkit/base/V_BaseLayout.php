@@ -54,7 +54,8 @@
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datepicker.css')?>">
   <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
-	<style>
+	
+  <style>
 
 :root{
   --primary-color: #222e3c;

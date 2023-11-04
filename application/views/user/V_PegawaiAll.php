@@ -97,6 +97,15 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
+                            <label class="label-filter">Satyalencana</label>
+                            <div class="filter-option">
+                                <?php foreach($satyalencana as $sl){ ?>
+                                    <span id="btn_filter_satyalencana_<?=$sl['masa_kerja']?>" onclick="filterClicked('satyalencana_<?=$sl['masa_kerja']?>')"
+                                    class="filter-btn btn-filter-satyalencana filter-unselect"><?=$sl['nama_satya_lencana']?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Pangkat</label>
                             <div class="filter-option">
                                 <?php foreach($pangkat as $p){ ?>
@@ -157,6 +166,7 @@
     let pangkat = [];
     let golongan = [];
     let agama = [];
+    let satyalencana = [];
     $(function(){
         $('.select2-navy').select2()
     })
@@ -167,6 +177,10 @@
 
     function filterClicked(btn){
         jenis = btn.split("_")
+        if(jenis[0] == 'satyalencana'){
+            $('.btn-filter-satyalencana').removeClass('filter-select')
+            $('.btn-filter-satyalencana').addClass('filter-unselect')
+        }
         if($('#btn_filter_'+btn).hasClass('filter-unselect')){
             $('#btn_filter_'+btn).removeClass('filter-unselect')
             $('#btn_filter_'+btn).addClass('filter-select')
@@ -180,6 +194,9 @@
                 agama.push(jenis[1])
             } else if(jenis[0] == 'tktpendidikan'){
                 tktpendidikan.push(jenis[1])
+            } else if(jenis[0] == 'satyalencana'){
+                satyalencana = []
+                satyalencana.push(jenis[1])
             } else if(jenis[0] == 'pangkat'){
                 pangkat.push(jenis[1])
             } else if(jenis[0] == 'golongan'){
@@ -208,6 +225,10 @@
                 tktpendidikan = tktpendidikan.filter(function(e){
                     return e !== jenis[1]
                 })
+            } else if(jenis[0] == 'satyalencana'){
+                satyalencana = pangkat.filter(function(e){
+                    return e !== jenis[1]
+                })
             } else if(jenis[0] == 'pangkat'){
                 pangkat = pangkat.filter(function(e){
                     return e !== jenis[1]
@@ -218,7 +239,7 @@
                 })
             }
         }
-        console.log(golongan)
+        console.log(satyalencana)
     }
 
     $('#form_search').on('submit', function(e){
@@ -236,6 +257,7 @@
                 pangkat: pangkat,
                 agama: agama,
                 statuspeg: statuspeg,
+                satyalencana: satyalencana,
                 unitkerja: $('#unitkerja').val(),
             },
             success: function(data){

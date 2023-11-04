@@ -19,14 +19,15 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+            <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_timkerja']?></td>
               <td class="text-left"><?=($rs['jabatan'] == '1' ? 'Ketua/Penanggung Jawab' : 'Anggota');?></td>
               <td class="text-left"><?=$rs['nm_lingkup_timkerja']?></td>
               <td>
               <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_tk" onclick="openFileTk('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <button href="#modal_view_file_tk" onclick="openFileTim('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button>
               <?php } ?>
               </td>
@@ -38,7 +39,8 @@
               <?php } ?>
                <?php } ?>
              <?php if($kode == 2) { ?>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
+
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -59,32 +61,21 @@
     $('.datatable').dataTable()
   })
 
-  async function openFileTk(filename){
+  async function openFileTim(filename){
    
    $('#iframe_view_file_tk').hide()
    $('.iframe_loader').show()  
    console.log(filename)
-   $.ajax({
-     url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-     method: 'POST',
-     data: {
-       'username': '<?=$this->general_library->getUserName()?>',
-       'password': '<?=$this->general_library->getPassword()?>',
-       'filename': 'arsiptimkerja/'+filename
-     },
-     success: function(data){
-       let res = JSON.parse(data)
-       console.log(res.data)
-       $(this).show()
-       $('#iframe_view_file_tk').attr('src', res.data)
-       $('#iframe_view_file_tk').on('load', function(){
-         $('.iframe_loader').hide()
-         $(this).show()
-       })
-     }, error: function(e){
-         errortoast('Terjadi Kesalahan')
-     }
-   })
+  
+
+    var number = Math.floor(Math.random() * 1000);
+    $link = "http://siladen.manadokota.go.id/bidik/arsiptimkerja/"+filename+"?v="+number;
+    $('#iframe_view_file_tk').attr('src', $link)
+        $('#iframe_view_file_tk').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+    })
+
  }
   function deleteData(id,file,kode){
                    
@@ -95,10 +86,10 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               ifh(kode == 1){
+                               if(kode == 1){
                                 loadListTimKerja()
                                } else {
-                                loadRiwayatUsulTimKerja;()
+                                loadRiwayatUsulTimKerja()
                                }
                                
                            }, error: function(e){

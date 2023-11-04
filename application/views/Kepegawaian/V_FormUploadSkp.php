@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSkp">
@@ -39,6 +40,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
 
 <script>
     function openModalStatusPmd(jenisberkas){
@@ -110,13 +113,28 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Nilai</label>
-    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai"  required/>
+    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai" />
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Predikat</label>
     <input class="form-control customInput" type="text" id="skp_predikat" name="skp_predikat"  required/>
-  </div>
+  </div> -->
+
+  <div class="form-group " style="margin-bottom:10px !important;">
+<label >Predikat</label>
+<select  class="form-control  "  name="skp_predikat" id="skp_predikat" required>
+                <option value="" disabled selected>Pilih Predikat</option>
+                <option value="Sangat Baik">Sangat Baik</option>
+                <option value="Baik">Baik</option>
+                <option value="Butuh Perbaikan">Butuh Perbaikan</option>
+                <option value="Kurang">Kurang</option>
+                <option value="Sangat Kurang">Sangat Kurang</option>
+                <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
+                  <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
+                <?php } } ?>
+</select>
+</div>
 
  
   <div class="form-group">
@@ -242,10 +260,11 @@ $(function(){
 
   $("#pdf_file_skp").change(function (e) {
 
-        var extension = pdf_file_skp.value.split('.')[1];
-      
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>
+
+        var doc = pdf_file_skp.value.split('.')
+        var extension = doc[doc.length - 1]
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")

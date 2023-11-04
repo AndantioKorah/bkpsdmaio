@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalArsipLainnya">
@@ -39,6 +40,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -81,7 +84,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         <div class="modal-body" id="modal_view_file_content">
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_arsip"  frameborder="0" ></iframe>
-      </div>
+     
+          </div>
         </div>
       </div>
     </div>
@@ -156,7 +160,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 $(function(){
   $(".select2").select2({   
 		width: '100%',
-		dropdownAutoWidth: true,
+		// dropdownAutoWidth: true,
 		allowClear: true,
 	});
     loadListArsip()
@@ -238,11 +242,12 @@ $(function(){
 
   $("#pdf_file_arsip_lainnya").change(function (e) {
 
-        var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        // var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        var doc = pdf_file_arsip_lainnya.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
        
-     
         if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');

@@ -13,8 +13,12 @@ $route['master/bidang'] = 'master/C_Master/masterBidang';
 $route['master/bidang/sub'] = 'master/C_Master/masterSubBidang';
 $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
+$route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 
+
+//pelanggaran
+$route['pelanggaran'] = 'kinerja/C_Kinerja/pelanggaran';
 
 // $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerjaNew';
@@ -36,6 +40,8 @@ $route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
 $route['master/tpp'] = 'master/C_Master/tpp';
 
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
+$route['pdm/dashboard'] = 'dashboard/C_Dashboard/dashboardPdm';
+$route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 

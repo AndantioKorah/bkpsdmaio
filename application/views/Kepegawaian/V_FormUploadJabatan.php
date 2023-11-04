@@ -9,6 +9,7 @@
 
 
 <!-- Button trigger modal -->
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
   Tambah Data Jabatan
@@ -40,7 +41,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
-
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -190,7 +191,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>TMT Jabatan</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tmt" name="jabatan_tmt" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tmt" name="jabatan_tmt" readonly required/>
   </div>
 
 
@@ -211,7 +212,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tanggal_sk" name="jabatan_tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tanggal_sk" name="jabatan_tanggal_sk" readonly required/>
   </div>
 
 
@@ -228,7 +229,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
@@ -282,13 +283,30 @@ $(function(){
         var formvalue = $('#upload_form_jabatan');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('jabatan_pdf_file').files.length;
+        var tmtjabatan = $('#jabatan_tmt').val()
+        var tglsk = $('#jabatan_tanggal_sk').val()
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
 
         // document.getElementById('btn_upload_jabatan').disabled = true;
+       
+
+        if(tmtjabatan == ""){
+          errortoast("tmt jabatan masih kosong")
+          document.getElementById("jabatan_tmt").focus();
+          return false;
+        }
+
+        if(tglsk == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("jabatan_tanggal_sk").focus();
+          return false;
+        }
+        
+
         $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
        
      
@@ -350,7 +368,10 @@ $(function(){
 
   $("#jabatan_pdf_file").change(function (e) {
 
-        var extension = jabatan_pdf_file.value.split('.')[1];
+        // var extension = jabatan_pdf_file.value.split('.')[1];
+        var doc = jabatan_pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
+
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
         
@@ -361,7 +382,7 @@ $(function(){
         }
 
         if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
+          errortoast("Maksimal Ukuran File 1 MB")
           $(this).val('');
         }
 

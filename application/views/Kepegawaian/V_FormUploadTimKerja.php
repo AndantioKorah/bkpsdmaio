@@ -5,7 +5,13 @@
 		height:35px !important;
 		margin-bottom:10px !important;
     }
+    .select2.select2-container {
+  /* width: 100% !important; */
+  margin-bottom: 15px;
+}
+
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalTimKerja">
@@ -37,6 +43,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
+<?php }  ?>
+
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -247,7 +255,9 @@ $(function(){
     
   $("#pdf_file_tk").change(function (e) {
 
-        var extension = pdf_file_tk.value.split('.')[1];
+        // var extension = pdf_file_tk.value.split('.')[1];
+        var doc = pdf_file_tk.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
      

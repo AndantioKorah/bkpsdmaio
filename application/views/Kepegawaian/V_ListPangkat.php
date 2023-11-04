@@ -15,10 +15,9 @@
           <th class="text-left">No. SK</th>
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">Dokumen</th>
-         
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
-            <?php } ?>
+         
+       
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -44,18 +43,45 @@
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button> 
+                
                 <?php } ?>
               </td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
-                <?php if($kode == 1) { ?>
+           
                 <td>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+
+                <?php if($rs['status'] == 1) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                data-nm_jabatan="<?=$rs['nm_pangkat']?>"
+                data-tmt_jabatan="<?=$rs['tmtpangkat']?>"
+                href="#modal_edit_pangkat"
+                onclick="loadEditPangkat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+
+                <?php if($kode == 1) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                data-nm_jabatan="<?=$rs['nm_pangkat']?>"
+                data-tmt_jabatan="<?=$rs['tmtpangkat']?>"
+                href="#modal_edit_pangkat"
+                onclick="loadEditPangkat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
               </td>
               <?php } ?>
                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'Di Tolak : '.$rs['keterangan']; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -70,6 +96,12 @@
       </table>
     </div>
   </div>
+
+
+
+
+
+  
  
 <script>
   $(function(){
@@ -78,30 +110,37 @@
 
   
   async function openFilePangkat(filename){
-   
+
     $('#iframe_view_file').hide()
-    $('#iframe_loader').show()  
-    console.log(filename)
-    $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
-      method: 'POST',
-      data: {
-        'username': '<?=$this->general_library->getUserName()?>',
-        'password': '<?=$this->general_library->getPassword()?>',
-        'filename': 'arsipelektronik/'+filename
-      },
-      success: function(data){
-        let res = JSON.parse(data)
-        console.log(res.data)
-        $(this).show()
-        $('#iframe_view_file').attr('src', res.data)
-        $('#iframe_view_file').on('load', function(){
-          $('#iframe_loader').hide()
-          $(this).show()
-        })
-      }, error: function(e){
-          errortoast('Terjadi Kesalahan')
-      }
+    $('.iframe_loader').show()  
+    // $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    // $.ajax({
+    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/fetchDokumenWs/")?>',
+    //   method: 'POST',
+    //   data: {
+    //     'username': '<?=$this->general_library->getUserName()?>',
+    //     'password': '<?=$this->general_library->getPassword()?>',
+    //     'filename': 'arsipelektronik/'+filename
+    //   },
+    //   success: function(data){
+    //     let res = JSON.parse(data)
+    //     console.log(res.data)
+    //     $(this).show()
+    //     $('#iframe_view_file').attr('src', res.data)
+    //     $('#iframe_view_file').on('load', function(){
+    //       $('#iframe_loader').hide()
+    //       $(this).show()
+    //     })
+    //   }, error: function(e){
+    //       errortoast('Terjadi Kesalahan')
+    //   }
+    // })
+    var number = Math.floor(Math.random() * 1000);
+    $link = "http://siladen.manadokota.go.id/bidik/arsipelektronik/"+filename+"?v="+number; 
+    $('#iframe_view_file').attr('src', $link)
+    $('#iframe_view_file').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
     })
   }
 
@@ -151,6 +190,16 @@
                     }
                 })
             }
+        }
+
+
+        function loadEditPangkat(id){
+ 
+        $('#edit_pangkat_pegawai').html('')
+        $('#edit_pangkat_pegawai').append(divLoaderNavy)
+        $('#edit_pangkat_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditPangkaPegawai")?>'+'/'+id, function(){
+          $('#loader').hide()
+        })
         }
 
 </script>

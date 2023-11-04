@@ -6,7 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
-
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?> 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
   Tambah Data Gaji Berkala
@@ -37,7 +37,7 @@ if($pdm_gajiberkala[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
-
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -79,13 +79,38 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
            <div id="modal_view_file_content">
            <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_gaji_berkala"  frameborder="0" ></iframe>	
-         </div>
+           
+          </div>
          </div>
         </div>
       </div>
     </div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_berkala" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Gaji Berkala</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_berkala_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -133,7 +158,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" readonly required/>
   </div>
 
   <div class="form-group">
@@ -207,11 +232,28 @@ $(function(){
         var formvalue = $('#upload_form_gaji_berkala');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('pdf_file_berkala').files.length;
+        var tglskgb = $('#gb_tanggal_sk').val()
+        var tmtgb = $('#tmt_gaji_berkala').val()
+        
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
+
+        if(tglskgb == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("gb_tanggal_sk").focus();
+          return false;
+        }
+
+        if(tmtgb == ""){
+          errortoast("tmt gaji berkala masih kosong")
+          document.getElementById("tmt_gaji_berkala").focus();
+          return false;
+        }
+
+    
        
         document.getElementById('btn_upload_berkala').disabled = true;
         $('#btn_upload_berkala').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
@@ -272,7 +314,9 @@ $(function(){
 
   $("#pdf_file_berkala").change(function (e) {
 
-        var extension = pdf_file_berkala.value.split('.')[1];
+        // var extension = pdf_file_berkala.value.split('.')[1];
+        var doc = pdf_file_berkala.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>

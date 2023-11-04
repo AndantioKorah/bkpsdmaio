@@ -20,11 +20,13 @@ class C_Master extends CI_Controller
     public function detailMasterSkpd($id_unitkerja){
         $data['result'] = $this->master->getDetailMasterSkpd($id_unitkerja);
         $this->session->set_userdata('list_pegawai_detail_skpd', $data['result']);
+      
         render('master/V_MasterSkpdDetail', '', '', $data);
     }
 
     public function loadSkpdDetailPegawai(){
         $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+     
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
     }
 
@@ -329,5 +331,39 @@ class C_Master extends CI_Controller
 
     public function deleteMasterHakAkses($id){
         $this->general->delete('id', $id, 'm_hak_akses');
+    }
+
+    public function masterPelanggaran(){
+        render('master/V_MasterPelanggaran', '', '', null);
+    }
+
+    public function inputMasterPelanggaran(){
+        $data = $this->input->post();
+        $this->master->insert('m_pelanggaran', $data);
+    }
+
+    public function loadMasterPelanggaran(){
+        $data['result'] = $this->general->getAllWithOrder('m_pelanggaran', 'nama_pelanggaran', 'asc');
+        $this->load->view('master/V_MasterPelanggaranList', $data);
+    }
+
+    public function loadDetailPelanggaran($id){
+        $data['id_m_pelanggaran'] = $id;
+        $data['result'] = $this->master->loadDetailPelanggaran($id);
+        $this->load->view('master/V_MasterPelanggaranDetailList', $data);
+    }
+
+    public function deletePelanggaranDetail($id){
+        $this->general->delete('id', $id, 'm_pelanggaran_detail');
+    }
+
+    public function deletePelanggaran($id){
+        $this->general->delete('id', $id, 'm_pelanggaran');
+    }
+
+    public function insertPelanggaranDetail($id){
+        $data_input = $this->input->post();
+        $data_input['id_m_pelanggaran'] = $id;
+        $this->general->insert('m_pelanggaran_detail', $data_input);
     }
 }

@@ -66,12 +66,16 @@
 </style>
 
 <div class="card card-default">
-    <div class="card-header">
-        <h3>LIVE ABSEN KEGIATAN RAPAT KOORDINASI</h3>
-    </div>
+    <!-- <div class="card-header">
+        <h3>LIVE ABSEN KEGIATAN</h3>
+    </div> -->
     <div class="card-body">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-4">
+                <button class="btn btn-block btn-navy" id="btn_filter"><i class="fa fa-filter"></i> <span class="lbl_filter"> Show Filter</span></button>
+            </div>
+            <div class="col-lg-8"></div>
+            <div class="col-lg-12" style="display: none;" id="div_filter">
                 <div class="row">
                     <div class="col-lg-6">
                         <label class="label-filter">Eselon</label>
@@ -127,11 +131,30 @@
     let eselon = [];
     let pangkat = [];
     let golongan = [];
+    let show_filter = 0;
     // setInterval(loadDataLiveAbsen, 5000);
     
     $(function(){
         $('.select2-navy').select2()
         loadDataLiveAbsen()
+        // pageScroll()
+    })
+
+    function pageScroll() {
+        window.scrollBy(100,1000);
+        scrolldelay = setTimeout(pageScroll,10);
+    }
+
+    $('#btn_filter').on('click', function(){
+        if(show_filter == 0){
+            show_filter = 1;
+            $('#div_filter').show()
+            $('.lbl_filter').html('Hide Filter')
+        } else {
+            show_filter = 0;
+            $('#div_filter').hide()
+            $('.lbl_filter').html('Show Filter')
+        }
     })
 
     function filterClicked(btn){
@@ -192,7 +215,7 @@
 
     function loadDataLiveAbsen(){
         $.ajax({
-            url: '<?=base_url("dashboard/C_Dashboard/getDataLiveAbsen/11")?>',
+            url: '<?=base_url("dashboard/C_Dashboard/getDataLiveAbsen/13")?>',
             method: 'post',
             data: {
                 eselon: eselon,

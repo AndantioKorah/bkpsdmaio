@@ -705,5 +705,14 @@
 
             return $rs;
         }
+
+        public function loadDetailPelanggaran($id){
+            return $this->db->select('*')
+                            ->from('m_pelanggaran_detail')
+                            ->where('id_m_pelanggaran', $id)
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        }
+
 	}
 ?>

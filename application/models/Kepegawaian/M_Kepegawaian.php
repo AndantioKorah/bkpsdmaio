@@ -127,7 +127,7 @@ class M_Kepegawaian extends CI_Model
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'jabatan'){
-                return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.status as status_dokumen')
+                return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.tmtjabatan as tmt_jabatan, a.status as status_dokumen')
                                 ->from('db_pegawai.pegjabatan a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.jabatan c','a.id_jabatan = c.id_jabatanpeg')
@@ -226,6 +226,14 @@ class M_Kepegawaian extends CI_Model
                                 ->from('db_pegawai.pegtimkerja a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.lingkup_timkerja c', 'a.lingkup_timkerja = c.id')
+
+                                ->where('a.id', $id)
+                                ->get()->row_array();
+            } else if($jd == 'inovasi'){
+                return $this->db->select('a.*,b.*,c.kriteria_inovasi,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.peginovasi a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.inovasi c', 'a.kriteria_inovasi = c.id')
 
                                 ->where('a.id', $id)
                                 ->get()->row_array();
@@ -551,8 +559,8 @@ class M_Kepegawaian extends CI_Model
                        ->join('db_pegawai.inovasi d', 'c.kriteria_inovasi = d.id')
                        ->where('a.username', $nip)
                        ->where('c.flag_active', 1)
-                       ->where('a.flag_active', 1);
-                       // ->order_by('c.tglsk','desc')
+                       ->where('a.flag_active', 1)
+                       ->order_by('c.id','desc');
                        if($kode == 1){
                            $this->db->where('c.status', 2);
                        }
@@ -1104,6 +1112,17 @@ class M_Kepegawaian extends CI_Model
         ->from($tableName);
         return $this->db->get()->result_array(); 
     }
+
+    public function getDataDok($tableName, $id_peg)
+    {
+        $this->db->select('count(id) as total')
+        ->where('id_pegawai',$id_peg)
+        ->where('flag_active', 1)
+        ->where_in('status', [1,2])
+        ->from($tableName);
+        return $this->db->get()->row_array(); 
+    }
+
 
     public function getDataPdmBerkas($tableName, $orderBy = 'created_date', $whatType = 'desc', $jberkas)
     {

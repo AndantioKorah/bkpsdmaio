@@ -25,12 +25,13 @@ if($pdm_pangkat[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm_pangkat[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokpangkat" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokpangkat" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('pangkat')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
@@ -39,6 +40,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   
   <script>
     function openModalStatusPmd(jenisberkas){
+      var jumlah = $('#jumlahdokpangkat').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
@@ -383,8 +388,10 @@ $(function(){
                 document.getElementById("upload_form").reset();
                 document.getElementById('btn_upload_pangkat').disabled = false;
                $('#btn_upload_pangkat').html('Simpan')
-                loadListPangkat()
+                // loadListPangkat()
+                // setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-pangkat-tab").trigger( "click" );}, 2000);
               } else {
                 errortoast(result.msg)
                 return false;

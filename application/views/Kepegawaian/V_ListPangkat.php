@@ -108,6 +108,11 @@
     $('.datatable').dataTable()
   })
 
+  $("#myModal").on('hide.bs.modal', function(){
+    $("#pills-pangkat-tab").trigger( "click" )
+  });
+
+
   
   async function openFilePangkat(filename){
 

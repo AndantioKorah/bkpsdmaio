@@ -61,6 +61,11 @@
     $('.datatable').dataTable()
   })
 
+  $("#myModalSkp").on('hide.bs.modal', function(){
+    $("#pills-skp-tab").trigger( "click" )
+  });
+
+
   // function openFileSKP(filename){
   //   var nip = "<?=$this->general_library->getUserName()?>";
   //   $('#iframe_view_file_skp').attr('src', '<?=base_url();?>arsipskp/'+filename)

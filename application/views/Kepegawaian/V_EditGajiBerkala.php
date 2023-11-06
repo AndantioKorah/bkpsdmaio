@@ -23,11 +23,7 @@
     <input class="form-control customInput" type="text" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?= $berkala[0]['masakerja'];?>"  required/>
   </div>
 
-  <div class="form-group">
-    <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control customInput" type="text" id="edit_gb_pejabat" name="edit_gb_pejabat" value="<?= $berkala[0]['pejabat'];?>"  required/>
-  </div>
-
+ 
   <div class="form-group">
     <label>Nomor SK</label>
     <input class="form-control customInput" type="text" id="edit_gb_no_sk" name="edit_gb_no_sk" value="<?= $berkala[0]['nosk'];?>"  required/>
@@ -45,6 +41,11 @@
   <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
   </div>
    <?php } ?>
+
+   <div class="form-group">
+    <label>Pejabat Yang Menetapkan</label>
+    <input class="form-control customInput" type="text" id="edit_gb_pejabat" name="edit_gb_pejabat" value="<?= $berkala[0]['pejabat'];?>"  required/>
+  </div>
 
 
   <div class="form-group">

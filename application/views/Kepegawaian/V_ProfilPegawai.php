@@ -790,10 +790,14 @@
 
   <?php 
   if($this->general_library->getUserName() == $nip){
+    $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+   
     if($bidang){
-      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000"){
+      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "III A") {
+        $idBidang = 99;
+      } else if($nm_jab == "Kepala"){
         $idBidang = 99;
       } else {
         $idBidang = $bidang['id_m_bidang'];
@@ -998,7 +1002,12 @@
         var formvalue = $('#form_status_berkas');
         var form_data = new FormData(formvalue[0]);
         var jb = $('#jenis_berkas').val();
-  
+        if(jb == ""){
+          errortoast("belum ada berkas yg diupload")
+          return false;
+        }
+
+
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
         method:"POST",  
@@ -1020,7 +1029,7 @@
                 } else if(jb == "ijazah"){
                 setTimeout(loadFormPendidikan, 1500);
                 } else if(jb == "jabatan"){
-                setTimeout(loadFormJabatan, 1500);
+                setTimeout($('#pills-jabatan-tab').click(), 1500);
                 } else if(jb == "diklat"){
                 setTimeout(loadFormDiklat, 1500);
                 } else if(jb == "organisasi"){

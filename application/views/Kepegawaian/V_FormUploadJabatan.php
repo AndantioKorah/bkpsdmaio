@@ -31,12 +31,13 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('jabatan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('jabatan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
@@ -44,6 +45,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
+      var jumlah = $('#jumlahdokjab').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>

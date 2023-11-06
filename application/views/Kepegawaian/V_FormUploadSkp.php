@@ -30,12 +30,13 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokskp" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('skp_tahunan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+<input type="hidden"  id="jumlahdokskp" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('skp_tahunan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
@@ -45,7 +46,11 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 <script>
     function openModalStatusPmd(jenisberkas){
-        $(".modal-body #jenis_berkas").val( jenisberkas );
+      var jumlahskp = $('#jumlahdokskp').val()
+      if(jumlahskp == 0){
+        jenisberkas = null 
+      }
+      $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
 
@@ -225,8 +230,10 @@ $(function(){
                 document.getElementById("upload_form_skp").reset();
                 document.getElementById('btn_upload_skp').disabled = false;
                $('#btn_upload_skp').html('Simpan')
-                loadListSkp()
+                // loadListSkp()
+                // setTimeout(function() {$("#modalSkp").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#modalSkp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-skp-tab").trigger( "click" );}, 2000);
 
               } else {
                 errortoast(result.msg)

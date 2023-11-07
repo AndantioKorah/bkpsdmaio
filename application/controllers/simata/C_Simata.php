@@ -312,14 +312,48 @@ class C_Simata extends CI_Controller
 
     public function loadDetailNineBox($jenis_jab,$jt,$box,$jumlah)
     {
+      
         $data['result'] = null;
         $data['kotak']=null;
         if($jumlah > 0){
         $data['result'] = $this->simata->getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box,$jumlah);  
         $data['kotak']=$box;    
         } 
+        $data['jt'] = $jt;
+        
         $this->load->view('simata/V_DetailNineBox', $data);
     }
+
+    public function profilTalenta(){
+        $data['result'] = null;
+        render('simata/V_ProfilTalenta', '', '', $data);
+    }
+
+
+    public function loadListProfilTalentaAdm(){
+        $data['result'] = $this->simata->loadListProfilTalentaAdm();  
+        $this->load->view('simata/V_ProfilTalentaAdmList', $data);
+    }
+
+
+    public function loadModalDetailProfilTalenta($id,$nip,$kode,$jt)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+       
+       
+        $id_peg = $data['profil_pegawai']['id_peg'];
+             
+        $data['id_t_penilaian'] = $id;
+        $data['jabatan_target'] = $jt;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPT($nip,$jt);
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPT($nip);
+        // dd($data['nilai_potensial']);
+        $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        $data['kode'] = $kode;  
+        $this->load->view('simata/V_ModalDetailProfilTalenta', $data);
+    }
+
+
 
     
     

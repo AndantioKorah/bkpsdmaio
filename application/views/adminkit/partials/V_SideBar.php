@@ -401,7 +401,16 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
-				Nine Box
+				Nine Box & Rencana Suksesi
+				</span>
+			</a>	
+		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/profil-talenta" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+				<span class="align-middle">
+				Profil Talenta
 				</span>
 			</a>	
 		</li>

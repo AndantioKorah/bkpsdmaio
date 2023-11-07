@@ -29,7 +29,11 @@
                 <th>Nama</th>
                 <th>Nilai Potensial</th>
                 <th>Hasil Pemetaan Talenta</th>
+                <?php if($jt == 0) { ?>
+                <th>Rekomendasi</th>
+                <?php } else { ?>
                 <th>Peringkat</th>
+               <?php } ?>
             </tr>
         </thead>
         <tbody >
@@ -38,10 +42,18 @@
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td class="text-center"><?=$rs2['res_kinerja'];?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><?=$rs2['gelar1'];?> 
+                <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff">   <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></a>
+             </td>
                 <td class="text-center"><?=$rs2['res_potensial_total'];?> </td>
                 <td class="text-center"><?=numberToRoman($kotak);?></td>
+                <?php if($jt == 0) { ?>
+                <td class="text-center">Rekom</td>
+                <?php } else { ?>
                 <td class="text-center"><?=$no++;?></td>
+               <?php } ?>
+
+              
 				
             </tr>
 			<?php } ?>

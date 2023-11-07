@@ -833,6 +833,46 @@ function pemeringkatanKriteriaPotensial($nilai){
     return $pemeringkatan;
 }
 
+function pemetaanTalenta($nilaix,$nilaiy){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalPotensial();
+
+    
+    $hasil = null;
+    $badge = null;
+    if($nilaix >= 85 && $nilaiy >= 85) {
+        $hasil = "IX";
+       } 
+       if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        // print_r($nilaix."-".$nilaiy.",");
+        $hasil = "VIII";
+       }
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+        $hasil = "VII";
+       } 
+      if($nilaix >= 85 && $nilaiy < 70) {
+        $hasil = "VI";
+       } 
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "V";
+      } 
+      if($nilaix < 70 && $nilaiy >= 85) {
+        $hasil = "IV";
+      } 
+      if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+        $hasil = "III";
+      }
+      if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "II";
+      }
+      if($nilaix < 70 && $nilaiy < 70) {
+        $hasil = "I";
+      }  
+
+    return $hasil;
+}
+
 
 
 function numberToRoman($number) {

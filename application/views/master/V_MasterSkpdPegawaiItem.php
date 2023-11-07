@@ -44,7 +44,7 @@
                         <center>
                             <!-- <img style="width: 75px; height: 75px" class="img-fluid rounded-circle mb-2 b-lazy"
                             src="<?=$this->general_library->getFotoPegawai($lp['fotopeg'])?>"/> -->
-                            <img style="width: 75px; height: 75px" class="img-fluid rounded-circle mb-2 b-lazy"
+                            <img style="width: 75px; height: 75px;object-fit: cover" class="img-fluid rounded-circle mb-2 b-lazy"
                             src="<?php
                                 $path = './assets/fotopeg/'.$lp['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];

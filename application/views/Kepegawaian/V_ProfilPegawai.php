@@ -194,6 +194,9 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
+                <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                  <i class="fa fa-id-badge"></i> DRH
+                </button>
             
 
               </div>
@@ -800,7 +803,27 @@
   </div>
 </div>
 <!-- tutup modal ubah foto profil  -->
-  
+
+<div class="modal fade" id="modal_drh" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">DAFTAR RIWAYAT HIDUP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_drh_content">
+     
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal edit profil -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -1010,6 +1033,15 @@
           format: 'yyyy-mm-dd'
         });
   })
+
+ function loadDrh(nip){
+  $('#modal_drh_content').html('')
+    $('#modal_drh_content').append(divLoaderNavy)
+    $('#modal_drh_content').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDataDrh")?>'+'/'+nip, function(){
+      $('#loader').hide()
+    })
+ }
+  
  function loadEditProfilModal(id){
  
     $('#edit_profil_pegawai').html('')

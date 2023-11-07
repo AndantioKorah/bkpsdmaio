@@ -63,7 +63,7 @@
 <ul class="sidebar-nav">
 <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
 	<div><hr class="sidebar-divider"></div>
-	<div style="display:none" onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
+	<div  onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
 			<span class="" style="
 				font-size: .7rem !important;
@@ -227,6 +227,11 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Database Pegawai</span>
 			</a>
 		</li>
+		<li class="sidebar-item">
+		<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
+			</a>
+		</li>
 	<?php } ?>
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
@@ -240,7 +245,8 @@
 		</li>
 	<?php } ?>
 	<li class="sidebar-item">
-		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan">
+		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
+		<a class="sidebar-link" href="#">
 			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
 		</a>
 	</li>
@@ -332,8 +338,10 @@
 		<?php } ?>
 
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('akses_profil_pegawai')){ ?>
-	<li class="sidebar-header">
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
+	
+		<li class="sidebar-header">
 		Manajemen Talenta
 	</li>
 	<li class="sidebar-item ">
@@ -383,7 +391,7 @@
 		</li>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-file-text-o"></i> 
+			<i class="align-middle me-2 fa fa-fw fas fa-tasks"></i> 
 				<span class="align-middle">
 				Penilaian Potensial
 				</span>
@@ -391,7 +399,7 @@
 		</li>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-bar-chart"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
 				Nine Box
 				</span>

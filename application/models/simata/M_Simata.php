@@ -568,6 +568,15 @@ public function getPegawaiPenilaianKinerjaJpt(){
             return $this->db->get()->result_array();
         }
 
+        function getListIntervalPotensial(){
+            $this->db->select('*')
+                ->from('db_simata.m_interval_penilaian a')
+                ->where('a.id_m_unsur_penilaian', 2)
+                ->where('a.flag_active', 1);
+                // ->limit(1);
+            return $this->db->get()->result_array();
+        }
+
         public function getPenilaianPegawaiAdm(){
              $this->db->select('a.*,b.nama')
                             ->from('db_simata.t_penilaian a')
@@ -622,7 +631,6 @@ public function getPegawaiPenilaianKinerjaJpt(){
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
 
-            // dd($cek);
 
             if($cek){
                 $this->db->where('id_peg', $datapost['id_peg'])
@@ -640,13 +648,25 @@ public function getPegawaiPenilaianKinerjaJpt(){
 
             $total_nilai = $datapost["nilai_assesment"] * 50 / 100;
 
-
-
             $this->db->where('id_peg', $datapost['id_peg'])
                      ->where('id_jabatan_target', $datapost['jabatan_target'])
                         ->update('db_simata.t_penilaian', 
                         ['res_potensial_cerdas' => $total_nilai]);
+            
 
+            $getAllNilaiPotensial =  $this->db->select('*')
+                        ->from('db_simata.t_penilaian a')
+                        ->where('a.id_peg', $datapost["id_peg"])
+                        ->where('a.id_jabatan_target', $datapost['jabatan_target'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+            $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+            $this->db->where('id_peg', $datapost['id_peg'])
+            ->where('id_jabatan_target', $datapost['jabatan_target'])
+               ->update('db_simata.t_penilaian', 
+               ['res_potensial_total' => $total_potensial]);
         
         
             if($this->db->trans_status() == FALSE){
@@ -758,6 +778,117 @@ public function getPegawaiPenilaianKinerjaJpt(){
                          ->update('db_simata.t_penilaian', 
                         ['res_potensial_rj' => $total_rj]);
 
+            $getAllNilaiPotensial =  $this->db->select('*')
+                        ->from('db_simata.t_penilaian a')
+                        ->where('a.id_peg', $data["id_peg"])
+                        ->where('a.id_jabatan_target', $datapost['rj_jabatan_target'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+                        
+            $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+            $this->db->where('id_peg', $data['id_peg'])
+            ->where('id_jabatan_target', $datapost['rj_jabatan_target'])
+               ->update('db_simata.t_penilaian', 
+               ['res_potensial_total' => $total_potensial]);
+
+                        
+        
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                // $res['code'] = 1;
+                // $res['message'] = 'Terjadi Kesalahan';
+                // $res['data'] = null;
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+
+        public function submitPenilaianPotensialLainnya(){
+    
+            $datapost = $this->input->post();
+            // dd($datapost);
+            
+            $this->db->trans_begin();
+        
+            if($this->input->post('lainnya1') != 0){
+
+            $total_rj = null;
+            for($x=1;$x<=3;$x++){
+                $rj = $this->input->post('lainnya'.$x.'');
+                  $rekamjjk = explode(",", $rj);
+                  $id_rekamjjk = $rekamjjk[0];
+                  $skor = $rekamjjk[1];
+                  $bobot = $rekamjjk[2];
+                  $total_rj += $skor * $bobot / 100;   
+            }
+          }
+
+           $rekjak1 = $this->input->post('lainnya1');
+           $rekamjjk1 = explode(",", $rekjak1);
+           $id_rekamjjk1 = $rekamjjk1[0];
+
+           $rekjak2 = $this->input->post('lainnya2');
+           $rekamjjk2 = explode(",", $rekjak2);
+           $id_rekamjjk2 = $rekamjjk2[0];
+
+           $rekjak3 = $this->input->post('lainnya3');
+           $rekamjjk3 = explode(",", $rekjak3);
+           $id_rekamjjk3 = $rekamjjk3[0];
+
+           
+
+            $data["id_peg"] = $datapost["lainnya_id_peg"];
+            $data["pengalaman_organisasi"] = $id_rekamjjk1;
+            $data["aspirasi_karir"] = $id_rekamjjk2;
+            $data["asn_ceria"] = $id_rekamjjk3;
+            $data["jabatan_target"] = $this->input->post('lainnya_jabatan_target');
+
+            $cek =  $this->db->select('*')
+                                    ->from('db_simata.t_penilaian_potensial a')
+                                    ->where('a.id_peg', $data["id_peg"])
+                                    ->where('a.jabatan_target', $this->input->post('lainnya_jabatan_target'))
+                                    ->where('a.flag_active', 1)
+                                    ->get()->result_array();
+
+            if($cek){
+                $this->db->where('id_peg', $data['id_peg'])
+                         ->where('jabatan_target', $this->input->post('lainnya_jabatan_target'))
+                ->update('db_simata.t_penilaian_potensial', 
+                ['pengalaman_organisasi' => $id_rekamjjk1,
+                'aspirasi_karir' => $id_rekamjjk2,
+                'asn_ceria' => $id_rekamjjk3
+                 ]);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            } else {
+                $this->db->insert('db_simata.t_penilaian_potensial', $data);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            }
+
+            $this->db->where('id_peg', $data['id_peg'])
+                     ->where('id_jabatan_target', $datapost['lainnya_jabatan_target']) 
+                         ->update('db_simata.t_penilaian', 
+                        ['res_potensial_lainnya' => $total_rj]);
+
+            $getAllNilaiPotensial =  $this->db->select('*')
+                        ->from('db_simata.t_penilaian a')
+                        ->where('a.id_peg', $data["id_peg"])
+                        ->where('a.id_jabatan_target', $datapost['lainnya_jabatan_target'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+                        
+            $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+            $this->db->where('id_peg', $data['id_peg'])
+            ->where('id_jabatan_target', $datapost['lainnya_jabatan_target'])
+               ->update('db_simata.t_penilaian', 
+               ['res_potensial_total' => $total_potensial]);
+
                         
         
             if($this->db->trans_status() == FALSE){
@@ -790,9 +921,70 @@ public function getPegawaiPenilaianKinerjaJpt(){
             ->group_by('a.id_jabatan_target');
             return $this->db->get()->result_array(); 
         }
+
+        public function getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box){
+             $this->db->select('*')
+                            ->from('db_simata.t_penilaian a')
+                            ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                            ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+                            ->where('a.flag_active', 1)
+                            ->order_by('(a.res_kinerja) + (a.res_potensial_total) DESC');
+                            if($box == 9){
+                                $this->db->where('a.res_potensial_total >=', 85);
+                                $this->db->where('a.res_kinerja >=', 85);
+                            }
+                            if($box == 8){
+                                $this->db->where('a.res_potensial_total >=', 85);
+                                $this->db->where('a.res_kinerja >=', 70);
+                                $this->db->where('a.res_kinerja <', 85);
+                            }
+                            if($box == 7){
+                                $this->db->where('a.res_potensial_total >=', 70);
+                                $this->db->where('a.res_potensial_total <', 85);
+                                $this->db->where('a.res_kinerja >=', 85);
+                            }
+                            if($box == 6){
+                                $this->db->where('a.res_potensial_total >=', 85);
+                                $this->db->where('a.res_kinerja <', 70);
+                            }
+                            if($box == 5){
+                                $this->db->where('a.res_potensial_total >=', 70);
+                                $this->db->where('a.res_potensial_total <', 85);
+                                $this->db->where('a.res_kinerja >=', 70);
+                                $this->db->where('a.res_kinerja <', 85);
+                            }
+                            if($box == 4){
+                                $this->db->where('a.res_potensial_total <', 70);
+                                $this->db->where('a.res_kinerja >=', 85);
+                            }
+                            if($box == 3){
+                                $this->db->where('a.res_potensial_total >=', 70);
+                                $this->db->where('a.res_potensial_total <', 85);
+                                $this->db->where('a.res_kinerja <', 70);
+                            }
+                            if($box == 2){
+                                $this->db->where('a.res_potensial_total <', 70);
+                                $this->db->where('a.res_kinerja >=', 70);
+                                $this->db->where('a.res_kinerja <', 85);
+                            }
+                            if($box == 1){
+                                $this->db->where('a.res_potensial_total <', 70);
+                                $this->db->where('a.res_kinerja <', 70);
+                            }
+                            if($jenis_jab == 1){
+                                $this->db->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0);
+                            }
+                            if($jenis_jab == 2){
+                                $this->db->where("FIND_IN_SET(c.eselon,'II B')!=",0);
+                            }
+                            if($jt != 0){
+                                $this->db->where("id_jabatan_target",$jt);
+                            }
+
+            return  $this->db->get()->result_array();
+        }
           
-        
-                     
+      
             
        
 	}

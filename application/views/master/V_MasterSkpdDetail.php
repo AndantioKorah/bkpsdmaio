@@ -58,8 +58,24 @@
                                                 <div class="col-lg-12 mt-2 <?=isset($result['kepala_skpd']) && $result['kepala_skpd'] ? 'class_kepalaskpd' : ''?>">
                                                     <center>
                                                         <?php if($result['kepala_skpd']){ ?>
+                                                            <!-- <img style="width: 128px; height: 128px" class="img-fluid rounded-circle mb-2 b-lazy"
+                                                            src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="<?=$this->general_library->getFotoPegawai($result['kepala_skpd']['fotopeg'])?>" /> -->
                                                             <img style="width: 128px; height: 128px" class="img-fluid rounded-circle mb-2 b-lazy"
-                                                            src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="<?=$this->general_library->getFotoPegawai($result['kepala_skpd']['fotopeg'])?>" />
+                                                            src="<?php
+                                                                $path = './assets/fotopeg/'.$result['kepala_skpd']['fotopeg'];
+                                                                // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                                                if($result['kepala_skpd']['fotopeg']){
+                                                                if (file_exists($path)) {
+                                                                $src = './assets/fotopeg/'.$result['kepala_skpd']['fotopeg'];
+                                                                //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                                                } else {
+                                                                $src = './assets/img/user.png';
+                                                                // $src = '../siladen/assets/img/user.png';
+                                                                }
+                                                                } else {
+                                                                $src = './assets/img/user.png';
+                                                                }
+                                                                echo base_url().$src;?>" /> 
                                                         <?php } else { ?>
                                                             <img style="width: 128px; height: 128px" class="img-fluid rounded-circle mb-2 b-lazy"
                                                             src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="<?=$this->general_library->getFotoPegawai('default')?>" />

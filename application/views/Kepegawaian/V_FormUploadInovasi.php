@@ -14,7 +14,7 @@
 </button>
 
 <button onclick="loadRiwayatUsulInovasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
-  Riwayat Usul Invasi
+  Riwayat Usul Inovasi
 </button>
 
 

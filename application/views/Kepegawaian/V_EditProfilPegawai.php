@@ -13,6 +13,7 @@
    <div style="display:none">
    <?php } ?>
 
+   
 
       <div class="col-lg-2" >
         <label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
@@ -82,6 +83,42 @@
       <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
       </div>
       <?php } ?>
+
+      
+  <input type="hidden" name="edit_id_m_user" id="edit_id_m_user" value="<?=$profil_pegawai['id_m_user'];?>">
+
+  <?php if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000") {
+    $style ="style='display:none'";
+    // $style ="";
+    $required ="";
+  } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "III A") {
+    $style ="style='display:none'";
+    $required ="";
+  } else {
+    $style ="";
+    $required ="required";
+  }
+  ?>
+  <div class="col-lg-2" <?=$style;?>>
+      <label> Bidang/Bagian  </label>
+      </div>
+      <div class="col-lg-10" <?=$style;?>>
+      <select class="form-control select2"  data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_id_m_bidang" id="edit_id_m_bidang" <?=$style;?>>
+                    <option value="" selected>Pilih Item</option>
+                    <?php if($mbidang){ foreach($mbidang as $r){ ?>
+                        <option <?php if($bidang['id_m_bidang'] == $r['id']) echo "selected"; else echo ""; ?>  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
+                    <?php } } ?>
+    </select>
+      </div>
+     
+      <div class="col-lg-2" <?=$style;?>>
+      <label> Sub Bidang/Sub Bagian/Seksi </label>
+      </div>
+      <div class="col-lg-10" <?=$style;?>>
+      <select class="form-control select2"  data-dropdown-css-class="select2-navy" name="edit_id_m_sub_bidang" id="edit_id_m_sub_bidang">
+      <option value="<?=$profil_pegawai['id_m_sub_bidang'];?>"> <?=$profil_pegawai['nama_sub_bidang'];?></option>
+    </select>
+      </div>
 
       
       <div class="col-lg-2" >
@@ -437,6 +474,26 @@ $(".select2").select2({
           // orientation: 'bottom',
           autoclose: true
       });
+
+
+      $("#edit_id_m_bidang").change(function() {
+      var id = $("#edit_id_m_bidang").val();
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getMasterSubBidang",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '<option value=>-</option>';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].nama_sub_bidang+'</option>';
+                      }
+                      $('#edit_id_m_sub_bidang').html(html);
+                          }
+                  });
+  });
 
     
 </script>

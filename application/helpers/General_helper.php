@@ -772,13 +772,15 @@ function pemeringkatanKriteriaKinerja($nilai){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
     $list_interval = $helper->simata->getListIntervalKinerja();
-
     $pemeringkatan = null;
     $badge = null;
+
     foreach ($list_interval as $li) {
         if($nilai == 0) {
-            $badge = "primary";
-            $pemeringkatan = "-";
+            // $badge = "primary";
+            // $pemeringkatan = "-";
+            $badge = "danger";
+            $pemeringkatan = "<span class='badge bg-".$badge."'>Di bawah ekspektasi</span>";
         } else {
             if($nilai >= $li['dari'] AND $nilai <= $li['sampai']){
                 if($li['id'] == 1) {
@@ -801,21 +803,24 @@ function pemeringkatanKriteriaKinerja($nilai){
 function pemeringkatanKriteriaPotensial($nilai){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
-    $list_interval = $helper->simata->getListIntervalKinerja();
+    $list_interval = $helper->simata->getListIntervalPotensial();
 
+    
     $pemeringkatan = null;
     $badge = null;
     foreach ($list_interval as $li) {
         if($nilai == 0) {
-            $badge = "primary";
-            $pemeringkatan = "-";
+            $badge = "danger";
+            // $pemeringkatan = "-";
+            $pemeringkatan = "<span class='badge bg-".$badge."'>Rendah</span>";
+
         } else {
             if($nilai >= $li['dari'] AND $nilai <= $li['sampai']){
-                if($li['id'] == 1) {
+                if($li['id'] == 2) {
                 $badge = "success";
-                } else if($li['id'] == 3) {
+                } else if($li['id'] == 5) {
                 $badge = "secondary";
-                } else if($li['id'] == 4) {
+                } else if($li['id'] == 6) {
                 $badge = "danger";
                 }
                 $pemeringkatan = "<span class='badge bg-".$badge."'>".$li['kriteria']."</span>";
@@ -826,4 +831,21 @@ function pemeringkatanKriteriaPotensial($nilai){
     }
 
     return $pemeringkatan;
+}
+
+
+
+function numberToRoman($number) {
+    $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+    $returnValue = '';
+    while ($number > 0) {
+        foreach ($map as $roman => $int) {
+            if($number >= $int) {
+                $number -= $int;
+                $returnValue .= $roman;
+                break;
+            }
+        }
+    }
+    return $returnValue;
 }

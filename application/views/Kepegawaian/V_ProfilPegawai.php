@@ -121,6 +121,11 @@
   </style>
 
 
+<?php
+	$tpp = $this->session->userdata('live_tpp');
+  // $jenis_jabatan = $tpp[0]['jenis_jabatan'];
+?>
+
 
   <div class="row">
     <div class="col-lg-12">
@@ -185,9 +190,9 @@
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
                 
-                <?php }?>
+             
                 <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
                   <i class="fa fa-edit"></i> Edit Profil 
                 </button>
@@ -198,6 +203,7 @@
                   <i class="fa fa-id-badge"></i> DRH
                 </button>
             
+                <?php }?>
 
               </div>
             </div>
@@ -365,6 +371,32 @@
                   <?=($profil_pegawai['nm_unitkerja'])?>
                 </span>
               </div>
+
+              <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Bidang/Bagian
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nama_bidang'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Sub Bidang/Sub Bagian/Seksi
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nama_sub_bidang'])?>
+                </span>
+              </div>
+              <?php } ?>
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
@@ -760,6 +792,32 @@
     </div>
   </div>
 
+  <?php 
+  if($this->general_library->getUserName() == $nip){
+    $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+   
+    if($bidang){
+      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
+        $idBidang = 99;
+      } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "III A") {
+        $idBidang = 99;
+      } else if($nm_jab == "Kepala"){
+        $idBidang = 99;
+      } else {
+        $idBidang = $bidang['id_m_bidang'];
+      }
+   
+    } else {
+    $idBidang = 99;
+    }
+    } else {
+    $idBidang = 99;
+    }
+    ?>
+
+<input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
+
+
 
 <!-- modal ubah foto profil -->
 <div class="modal fade" id="modalFotoProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -846,11 +904,53 @@
 </div>
 <!-- end Modal edit profil -->
 
-<script>
+<!-- Modal -->
 
+<!-- Button trigger modal -->
+<button style="display:none" id="btnstatic" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
 
-</script>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+      <?php if($tpp['pagu_tpp']['jenis_jabatan'] == "jft") { ?>
+        <button type="button" class="close"  data-dismiss="modal"  aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <?php } ?>
+      </div><br>
+      <center><h3>Harap Mengisi Data Bidang/Bagian </h3></center>
 
+      <div class="modal-body">
+      <form action="<?=base_url('kepegawaian/C_Kepegawaian/submiDataBidang');?>" method="post">
+  <div class="mb-3">
+  <label for="exampleInputPassword1" class="form-label">Bidang/Bagian</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_bidang" id="id_m_bidang" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($mbidang){ foreach($mbidang as $r){ ?>
+                        <option  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
+                    <?php } } ?>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Sub Bidang/Sub Bagian/Seksi</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_sub_bidang" id="id_m_sub_bidang">
+      <option value="0" selected>-</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary float-right">Simpan</button>
+</form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal edit profil -->
 <div class="modal fade" id="fotoProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -913,6 +1013,12 @@
   </div>
 </div>
 
+<!-- Modal -->
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+
 <script>
     $('#form_status_berkas').on('submit', function(e){  
       
@@ -920,7 +1026,12 @@
         var formvalue = $('#form_status_berkas');
         var form_data = new FormData(formvalue[0]);
         var jb = $('#jenis_berkas').val();
-  
+        if(jb == ""){
+          errortoast("belum ada berkas yg diupload")
+          return false;
+        }
+
+
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
         method:"POST",  
@@ -942,7 +1053,7 @@
                 } else if(jb == "ijazah"){
                 setTimeout(loadFormPendidikan, 1500);
                 } else if(jb == "jabatan"){
-                setTimeout(loadFormJabatan, 1500);
+                setTimeout($('#pills-jabatan-tab').click(), 1500);
                 } else if(jb == "diklat"){
                 setTimeout(loadFormDiklat, 1500);
                 } else if(jb == "organisasi"){
@@ -1249,7 +1360,24 @@
 //     })
  
 
- 
+$("#id_m_bidang").change(function() {
+      var id = $("#id_m_bidang").val();
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getMasterSubBidang",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '<option value=>-</option>';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].nama_sub_bidang+'</option>';
+                      }
+                      $('#id_m_sub_bidang').html(html);
+                          }
+                  });
+  });
 
  
 

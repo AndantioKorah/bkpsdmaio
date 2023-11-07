@@ -1,6 +1,58 @@
 <style>
+
+
+.parent {
+display: grid;
+/* grid-template-columns: repeat(5, 1fr); */
+/* grid-template-rows: repeat(5, 1fr); */
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+/* width:100%; */
+}
+
+.div4 { grid-area: 1 / 1 / 2 / 2;border: 2px solid;background-color: #fcb92c }
+.div7 { grid-area: 1 / 2 / 2 / 3;border-top: 2px solid;border-bottom: 2px solid;background-color: #1cbb8c }
+.div9 { grid-area: 1 / 3 / 2 / 4;border: 2px solid;background-color: #1cbb8c }
+.div2 { grid-area: 2 / 1 / 3 / 2;border-left: 2px solid; border-right: 2px solid; background-color: #be4d4d}
+.div5 { grid-area: 2 / 2 / 3 / 3;background-color: #fcb92c }
+.div8 { grid-area: 2 / 3 / 3 / 4;border-right: 2px solid;border-left: 2px solid;background-color: #1cbb8c }
+.div1 { grid-area: 3 / 1 / 4 / 2;border: 2px solid; background-color: #be4d4d}
+.div3 { grid-area: 3 / 2 / 4 / 3;border-bottom: 2px solid;border-top: 2px solid; background-color: #be4d4d}
+.div6 { grid-area: 3 / 3 / 4 / 4;border: 2px solid;background-color: #fcb92c }
+
+.vertical-lr {
+  writing-mode: vertical-lr;
+}
+
+.vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.sideways-lr {
+  writing-mode: sideways-lr;
+}
+
+.only-rotate {
+  inline-size: fit-content;
+  transform: rotate(-90deg);
+}
+
+table, th, td {
+  border: 1px rgba(0, 0, 0, 0);
+  /* background-color:#2e4963; */
+  /* color:#fff; */
+}
+
+label {
+  color:white
+}
+
    
-   .cardz {
+.cardz {
     position: relative;
     width: 100%;
     height: 100%;
@@ -83,7 +135,7 @@ animation02
     position: absolute;
     width: 0;
     height: 0;
-    animation: animation02 0.6s ease-in 0.6s forwards;
+    animation: animation02 0.2s ease-in 0.3s forwards;
     opacity: 0;
 }
 
@@ -142,7 +194,7 @@ animation03
     height: 13vw;
     border: 0.25vw solid #54988b;
     border-radius: 50%;
-    animation: animation03_circle 0.3s ease-in-out 0.5s forwards, animation03_circle_element01 0.3s linear 0.9s forwards;
+    animation: animation03_circle 0.3s ease-in-out 0.3s forwards, animation03_circle_element01 0.3s linear 0.6s forwards;
     opacity: 0;
 }
 
@@ -151,7 +203,7 @@ animation03
     height: 9vw;
     border: 0.5vw solid #4b5e58;
     border-radius: 50%;
-    animation: animation03_circle 0.4s ease-in-out 0.5s forwards, animation03_circle_element02 0.2s linear 1.0s forwards;
+    animation: animation03_circle 0.3s ease-in-out 0.3s forwards, animation03_circle_element02 0.2s linear 0.5s forwards;
     opacity: 0;
 }
 
@@ -160,7 +212,7 @@ animation03
     height: 4vw;
     border: 1vw solid #404a52;
     border-radius: 50%;
-    animation: animation03_circle 0.45s ease-in-out 0.5s forwards, animation03_circle_element03 0.15s linear 1.4s forwards;
+    animation: animation03_circle 0.3s ease-in-out 0.3s forwards, animation03_circle_element03 0.15s linear 0.5s forwards;
     opacity: 0;
 }
 
@@ -937,7 +989,9 @@ animation06
     left: 0;
     width: 100%;
     height: 100%;
-    animation: rhombus 0.7s ease-in 2.0s forwards;
+    animation: rhombus 0.7s ease-in 0.3s forwards;
+    /* animation: rhombus 0.7s ease-in 2.0s forwards; */
+
     opacity: 0;
 }
 
@@ -978,7 +1032,7 @@ animation06
     transform: translate(-50%, -50%);
     width: 12.25vw;
     height: 12.25vw;
-    background-color: #f2f3df;
+    background-color: #fff;
 }
 
 @keyframes rhombus {
@@ -1269,7 +1323,7 @@ animation08
 .animation08 div:nth-of-type(1) {
     width: 100%;
     height: 100%;
-    background: #242324;
+    background: #fff;
 }
 
 .animation08 div:nth-of-type(2) {
@@ -1422,92 +1476,105 @@ animation06
     }
 }
 }
-</style>
 
-<div class="cardz">
-    <div class="animation01">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+
+
+
+</style>
+    <!-- <div class="row ml-1" > -->
+
+    <?php 
+    $ix = 0; 
+    $viii = 0;
+    $vii = 0;
+    $vi = 0;
+    $v = 0;
+    $iv = 0;
+    $iii = 0;
+    $ii = 0;
+    $i = 0;
+    $nilaix = 0;
+    $nilaiy = 0;
+    if($result){
+    foreach($result as $rs){ 
+          
+        //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
+        //   $nilaix = $rs->res_kinerja;
+
+          $nilaiy = $rs->res_kinerja;
+          $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
+
+             if($nilaix >= 85 && $nilaiy >= 85) {
+              $ix++;
+             } 
+             if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+              // print_r($nilaix."-".$nilaiy.",");
+              $viii++;
+             }
+             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+              $vii++;
+             } 
+            if($nilaix >= 85 && $nilaiy < 70) {
+              $vi++;
+             } 
+             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+              $v++;
+            } 
+            if($nilaix < 70 && $nilaiy >= 85) {
+              $iv++;
+            } 
+            if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+              $iii++;
+            }
+            if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+              $ii++;
+            }
+            if($nilaix < 70 && $nilaiy < 70) {
+             $i++;
+            }  
+			 } }?>
+    <div class="card card-default" style="background-color:#2e4963;">
+      <div class="row" >
+      <div class="col-lg-3" >
+      <div class="card-body">
+      <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
+        <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
+        <option value=""  selected>Pilih Jenis Jabatan</option>
+        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+        <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
+      </select>
+      </div>
+      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
+        <select class="form-select select2" name="jabatan_target_adm" >
+                <option value=""  selected>Semua</option>
+                    <?php if($jabatan_target_adm){ foreach($jabatan_target_adm as $r){ ?>
+                     <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+                </select>
+      </div>
+      
+      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
+        <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
+        <select class="form-select select2" name="jabatan_target_jpt" >
+                <option value=""  selected>Semua</option>
+                    <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
+                     <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+                </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary float-right mb-2">Lihat</button>
+    </form>
+     </div>
     </div>
-    <div class="animation02">
-        <div></div>
-        <div></div>
-    </div>
-    <div class="animation03">
-        <div class="circle">
-            <div class="circle_element01"></div>
-        </div>
-        <div class="circle">
-            <div class="circle_element02"></div>
-        </div>
-        <div class="circle">
-            <div class="circle_element03"></div>
-        </div>
-        <div class="animation04">
-            <div class="line_wrapper line_wrapper01">
-                <span class="line line01"></span>
-            </div>
-            <div class="rotate45">
-                <div class="line_wrapper line_wrapper02">
-                    <span class="line line02"></span>
-                </div>
-            </div>
-            <div class="line_wrapper line_wrapper03">
-                <span class="line line03"></span>
-            </div>
-            <div class="rotate135">
-                <div class="line_wrapper line_wrapper04">
-                    <span class="line line04"></span>
-                </div>
-            </div>
-            <div class="line_wrapper line_wrapper05">
-                <span class="line line05"></span>
-            </div>
-            <div class="rotate-135">
-                <div class="line_wrapper line_wrapper06">
-                    <span class="line line06"></span>
-                </div>
-            </div>
-            <div class="line_wrapper line_wrapper07">
-                <span class="line line07"></span>
-            </div>
-            <div class="rotate-45">
-                <div class="line_wrapper line_wrapper08">
-                    <span class="line line08"></span>
-                </div>
-            </div>
-        </div>
-        <div class="animation05">
-            <div class="double_wrapper02 green02">
-                <div class="double_wrapper01 green01">
-                    <div class="double_block green00"></div>
-                </div>
-            </div>
-            <div class="double_wrapper02 navy02">
-                <div class="double_wrapper01 navy01">
-                    <div class="double_block navy00"></div>
-                </div>
-            </div>
-            <div class="double_wrapper02 yellow02">
-                <div class="double_wrapper01 yellow01">
-                    <div class="double_block yellow00"></div>
-                </div>
-            </div>
-            <div class="double_wrapper02 blue02">
-                <div class="double_wrapper01 blue01">
-                    <div class="double_block blue00"></div>
-                </div>
-            </div>
-            <div class="double_wrapper02 red02">
-                <div class="double_wrapper01 red01">
-                    <div class="double_block red00"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+      <div class="col-lg-6" style="background-color:#fff;">
+      <?php if(!$post) { ?>
+      <!-- animasi -->  
+    <div class="cardz">
+    
     <div class="animation06">
         <div class="rhombus05">
             <div class="rhombus04">
@@ -1519,44 +1586,1155 @@ animation06
             </div>
         </div>
     </div>
-    <div class="animation07">
-        <div class="circle">
-            <div class="circle_element01"></div>
-        </div>
-        <div class="line_wrapper line_wrapper01">
-            <span class="line line01"></span>
-        </div>
-        <div class="rotate60">
-            <div class="line_wrapper line_wrapper02">
-                <span class="line line02"></span>
-            </div>
-        </div>
-        <div class="rotate120">
-            <div class="line_wrapper line_wrapper03">
-                <span class="line line03"></span>
-            </div>
-        </div>
-        <div class="line_wrapper line_wrapper04">
-            <span class="line line04"></span>
-        </div>
-        <div class="rotate-120">
-            <div class="line_wrapper line_wrapper05">
-                <span class="line line05"></span>
-            </div>
-        </div>
-        <div class="rotate-60">
-            <div class="line_wrapper line_wrapper06">
-                <span class="line line06"></span>
-            </div>
-        </div>
+   
     </div>
-    <div class="animation08">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    </div>
+<!-- animasi -->
+<?php } ?>
+        <div class="card-body" >
+   
+        <?php if($post) { ?>
+        <table class=" table-bordered" border="1" style="width:100%;margin-left:-30px;background-color:rgba(0, 0, 0, 0);color:#fff">
+       <tr>
+        <td></td>
+        <td></td>
+        <td style="color: rgba(0, 0, 0, 0);" class="text-center" colspan="3"></td>
+        <td></td>
+      
+      </tr>
+      <tr style="color: rgba(0, 0, 0, 0);">
+        <td></td>
+        <td style="background-color:#2e4963;"></td>
+        <td style="background-color:#2e4963;">1</td>
+        <td style="background-color:#2e4963;">2</td>
+        <td style="background-color:#2e4963;">3</td>
+        <td style="background-color:#2e4963;"></td>
+      </tr>
 
 
+      <tr>
+        <td  rowspan="3">
+        <span class="vertical-rl rotated" style="font-size:20px;height:15%;color:#2e4963;">KINERJA</span>
+
+        </td>
+        <td style="background-color:#2e4963;color:#fff">
+        <span class="vertical-rl rotated" style="font-size:9px;height:16%"><b>Di Atas Ekspektasi</b></span>
+        </td>
+        <td rowspan="3" colspan="3">
+        <div class="parent">
+        <div class="div4">
+        <canvas id="myChart4" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div7">
+        <canvas id="myChart7" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div9">
+        <canvas id="myChart9" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div2">
+        <canvas id="myChart2" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div5">
+        <canvas id="myChart5" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div8">
+        <canvas id="myChart8" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div1">
+        <canvas id="myChart"  style="height:100%; width:11vw;"></canvas>
+        </div>
+        <div class="div3">
+        <canvas id="myChart3" style="height:100%; width:11vw;"></canvas>
+        </div>
+        <a href=""></a>
+        <div class="div6">
+        <canvas id="myChart6" style="height:100%; width:11vw;"></canvas>
+        </div>
+        </div>
+        </td>
+        <td style="background-color:#2e4963;color:#fff"></td>
+        <td style="color: rgba(0, 0, 0, 0);" rowspan="3">
+        <span class="vertical-rl rotated" style="font-size:9px;height:15%">ddd</span>
+        </td>
+      </tr>
+      <tr>
+        <td  style="font-size:10px;height:30%;background-color:#2e4963;color:#fff">
+        <span class="vertical-rl rotated" style="font-size:9px;height:16%"><b>Sesuai Ekspektasi</b></span>
+    
+    </td>
+       <td style="color: rgba(0, 0, 0, 0);background-color:#2e4963;">
+       <span class="vertical-rl rotated" style="font-size:10px;height:16%">bbbb</span>
+       </td>
+      </tr>
+      <tr>
+        <td style="font-size:10px;height:30%;background-color:#2e4963;color:#fff">
+        <span class="vertical-rl rotated" style="font-size:9px;height:16%;"><b>Di Bawah Ekspektasi</b></span>
+    
+    </td>
+       <td style="color: rgba(0, 0, 0, 0);background-color:#2e4963;">
+       <span class="vertical-rl rotated" style="font-size:10px;height:16%">cccc</span>
+       </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="background-color:#2e4963;color:#000"></td>
+        <td class="text-center" style="font-size:9px;width:30%;background-color:#2e4963;color:#fff"><b>Rendah</b></td>
+        <td class="text-center" style="font-size:9px;width:30%;background-color:#2e4963;color:#fff"><b>Menengah</b></td>
+        <td class="text-center" style="font-size:9px;width:30%;background-color:#2e4963;color:#fff"><b>Tinggi</b>  </td>
+       <td style="background-color:#2e4963;color:#000"></td>
+       <td></td>
+      </tr>
+
+
+      
+      <tr>
+        <td></td>
+        <td></td>
+        <td class="text-center" colspan="3" style="font-size:20px;color:#2e4963">POTENSIAL</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <?php } ?>
+        </div>
+    </div>
+    <div class="col-lg-3" >
+    <div class="card-body" >
+    <table class="table table-bordered" border="1" style="width:110%;margin-left:-20px;color:#fff;">
+    <thead>
+      <tr>
+        <th valign="top" class="text-center">Kuadran</th>
+        <th class="text-center">Jumlah Suksesi</th>
+      </tr>
+
+
+
+      </thead>
+      <tbody>
+      <tr class="text-center" style="background-color: #1cbb8c">
+      <td >IX</td>
+      <td ><?=$ix;?></td>
+      <td>
+        <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="9" data-jumlah="<?=$ix;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
+      </tr>
+      <tr class="text-center" style="background-color: #1cbb8c">
+      <td>VIII</td>
+      <td><?=$viii;?></td>
+      <td>
+      <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="8" data-jumlah="<?=$viii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
+      </tr>
+      <tr class="text-center" style="background-color: #1cbb8c">
+      <td>VII</td>
+      <td><?=$vii;?></td>
+      <td>
+      <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="7" data-jumlah="<?=$vii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
+      </tr>
+      <tr class="text-center" style="background-color: #fcb92c">
+      <td>VI</td>
+      <td><?=$vi;?></td>
+      <td>
+      <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="6" data-jumlah="<?=$vi;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
+      </tr>
+      <tr class="text-center" style="background-color: #fcb92c">
+      <td>V</td>
+      <td><?=$v;?></td>
+      <td>
+      <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="5" data-jumlah="<?=$v;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+    </td>
+
+      </tr>
+      <tr class="text-center" style="background-color: #fcb92c">
+      <td>IV</td>
+      <td><?=$iv;?></td>
+           <td>
+           <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="4" data-jumlah="<?=$iv;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
+      </tr>
+      <tr class="text-center" style="background-color: #be4d4d">
+      <td>III</td>
+      <td><?=$iii;?></td>
+           <td>
+           <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="3" data-jumlah="<?=$iii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
+      </tr>
+      <tr class="text-center" style="background-color: #be4d4d">
+      <td>II</td>
+      <td><?=$ii;?></td>
+           <td>
+           <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="2" data-jumlah="<?=$ii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
+      </tr>
+      <tr class="text-center" style="background-color: #be4d4d">
+      <td>I</td>
+      <td><?=$i;?></td>
+           <td>
+           <?php if($post) { ?>
+        <button style="border-radius:8px;" data-box="1" data-jumlah="<?=$i;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
+        <?php } ?>
+        </td>
+      </tr>
+      </tbody>
+      </table>
+    </div>
+    </div>
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail_nine_box">
+        ...
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+<!-- tutup modal  -->
+
+
+<?php if($post) { ?>
+<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$post['jenis_jabatan'];?>">
+<?php if($jt_adm) { ?>
+<input type="hidden" name="jt" id="jt" value="<?=$jt_adm;?>">
+<?php } else if($jt_jpt) { ?>
+<input type="hidden" name="jt" id="jt" value="<?=$jt_jpt;?>">
+<?php } else { ?> 
+<input type="hidden" name="jt" id="jt" value="0">
+
+<?php } ?>
+<?php } ?>
+
+<!-- </div> -->
+<?php $nilai['result'] = $result;?>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<script>
+
+$(function(){          
+    // loadChartNineBox()
+    $(".select2").select2({   
+		width: '100%',
+		// dropdownAutoWidth: true,
+		allowClear: true
+	});
+  })
+
+  $(document).on("click", ".open-DetailNinebox", function () {
+    var jenis_jab = $('#jenis_jab').val()
+    var jt = $('#jt').val()
+    var box = $(this).data('box');
+    var jumlah = $(this).data('jumlah');
+
+        $('#detail_nine_box').html('')
+        $('#detail_nine_box').append(divLoaderNavy)
+        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah, function(){
+        $('#loader').hide()
+        })
+
+        });
+
+  function loadChartNineBox(){
+   $('#div_chart').html('')
+   $('#div_chart').append(divLoaderNavy)
+   $('#div_chart').load('<?=base_url("simata/C_Simata/loadChartNineBox/")?>', function(){
+     $('#loader').hide()
+   })
+ }
+
+ $('#jenis_jabatan').on('change', function() {
+  if(this.value == 1) {
+   $('#adm').show('fast')
+   $('#jpt').hide()
+  } else {
+    $('#jpt').show('fast')
+    $('#adm').hide()
+  }
+});
+
+    
+    var dx = JSON.parse('<?=json_encode($nilai)?>');
+    var c = [];
+    let point = [];
+    let point2 = [];
+    let point3 = [];
+    let point4 = [];
+    let point5 = [];
+    let point6 = [];
+    let point7 = [];
+    let point8 = [];
+    let point9 = [];
+
+    
+    let temp = Object.keys(dx.result)
+    temp.forEach((i) => {
+        //   let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
+        //   let nilaix = parseFloat(dx.result[i].res_kinerja)
+          let nilaix = parseFloat(dx.result[i].res_potensial_total);
+          let nilaiy = parseFloat(dx.result[i].res_kinerja)
+          if(nilaix < 70 && nilaiy < 70) {
+            point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix < 70 && nilaiy >= 70 && nilaiy < 85) {
+            point2.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy < 70) {
+            point3.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix < 70 && nilaiy >= 85) {
+            point4.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 70 && nilaiy < 85) {
+            point5.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy < 70) {
+            point6.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 85) {
+            point7.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy >= 70 && nilaiy < 85) {
+            point8.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+          if(nilaix >= 85 && nilaiy >= 85) {
+            point9.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
+          }
+    });
+    console.log(point5)
+
+    var data1 = point;
+    var data2 = point2;
+    var data3 = point3; 
+    var data4 = point4;
+    var data5 = point5;
+    var data6 = point6;
+    var data7 = point7;
+    var data8 = point8;
+    var data9 = point9;
+
+    
+    var pointcolor = ['Cornsilk', 'DarkMagenta', 'DeepPink', 'MediumSlateBlue', 'NavajoWhite', 'lightblue'];
+    var pointsize = 3;
+    // var pointcolor = "#000";
+    
+const data = {
+datasets: [{
+  // label : 'tes',
+  data: data1,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize ,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}],
+
+};
+
+const nineGridLabels = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('I', x.getPixelForValue(35), y.getPixelForValue(30)) 
+  }) 
+}
+
+
+const tooltipchart = {
+        callbacks:{
+          label: (context) => {
+            console.log(context)
+            // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
+            // return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
+            return ["Kinerja: "+context.raw.y, "Potensial: "+context.raw.x];
+            
+          },
+          labelColor: function(context) {
+                        return {
+                            borderColor: 'rgb(0, 0, 255)',
+                            // backgroundColor: 'rgb(255, 0, 0)',
+                            backgroundColor:  ['Cornsilk'],
+                           
+                            borderWidth: 1,
+                            // borderDash: [1, 1],
+                            borderRadius: 1,
+                        };
+                    },
+          // labelTextColor: function(context) {
+          // return '#543453';
+          // }
+        }   
+}
+
+const config = {
+type: 'scatter',
+data,
+options: {
+  plugins: {
+      legend: {
+          display: false
+      }, 
+      tooltip: tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 0,
+     max: 69.99,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     }
+
+    },
+    y: {
+     min: 0,
+     max: 69,
+     afterTickToLabelConversion: (ctx) => {
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels]
+};
+
+// function renderChart(){  
+const myChart = new Chart(
+document.getElementById('myChart'),
+config
+);
+// }
+
+
+</script>
+
+<!-- dua  -->
+<script>
+const nineGridLabels2 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('II', x.getPixelForValue(35), y.getPixelForValue(77)) 
+  }) 
+}
+
+const config2 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data2,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 0,
+     max: 69.99,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 70,
+     max: 84.99,
+     afterTickToLabelConversion: (ctx) => {
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels2]
+};
+
+const myChart2 = new Chart(
+document.getElementById('myChart2'),
+config2
+);
+</script>
+
+
+
+<script>
+const nineGridLabels3 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('III', x.getPixelForValue(77), y.getPixelForValue(30)) 
+  }) 
+}
+
+const config3 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data3,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 70,
+     max: 85,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 0,
+     max: 69,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels3]
+};
+
+const myChart3 = new Chart(
+document.getElementById('myChart3'),
+config3
+);
+</script>
+
+
+<!-- empat -->
+<script>
+const nineGridLabels4 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('IV', x.getPixelForValue(35), y.getPixelForValue(92)) 
+  }) 
+}
+
+const config4 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data4,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 0,
+     max: 69.99,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 85    ,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels4]
+};
+
+const myChart4 = new Chart(
+document.getElementById('myChart4'),
+config4
+);
+</script>
+
+
+
+<!-- lima -->
+<script>
+const nineGridLabels5 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('V', x.getPixelForValue(77), y.getPixelForValue(77)) 
+  }) 
+}
+
+const config5 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data5,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 70,
+     max: 84.99,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 70,
+     max: 84.99,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels5]
+};
+
+const myChart5 = new Chart(
+document.getElementById('myChart5'),
+config5
+);
+</script>
+
+
+
+<!-- enam -->
+<script>
+const nineGridLabels6 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('VI', x.getPixelForValue(92), y.getPixelForValue(31)) 
+  }) 
+}
+
+const config6 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data6,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 85,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 0,
+     max: 69.99,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels6]
+};
+
+const myChart6 = new Chart(
+document.getElementById('myChart6'),
+config6
+);
+</script>
+
+
+
+<!-- tujuh -->
+<script>
+const nineGridLabels7 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('VII', x.getPixelForValue(77), y.getPixelForValue(92)) 
+  }) 
+}
+
+const config7 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data7,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 70,
+     max: 84.99,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 85,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels7]
+};
+
+const myChart7 = new Chart(
+document.getElementById('myChart7'),
+config7
+);
+</script>
+
+
+
+<!-- delapan -->
+<script>
+const nineGridLabels8 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('VIII', x.getPixelForValue(92), y.getPixelForValue(77)) 
+  }) 
+}
+
+const config8 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data8,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      // pointBackgroundColor: ['yellow', 'aqua', 'pink', 'lightgreen', 'gold', 'lightblue'],
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 85,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 70,
+     max: 84.99,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels8   ]
+};
+
+const myChart8 = new Chart(
+document.getElementById('myChart8'),
+config8
+);
+</script>
+
+
+
+<!-- sembilan -->
+<script>
+const nineGridLabels9 = {
+  id: 'nineGridLabels',
+  beforeDatasetsDraw: ((chart, args, plugins) => {
+   const { ctx, 
+      chartArea: { top, bottom, left, right}, 
+      scales:
+   {x, y}} = chart;
+
+   ctx.save();
+   ctx.font = 'bold 18px sans-serif';
+   ctx.fillStyle = "#fff";
+   ctx.backgroundColor = "#dc3545",
+   ctx.borderColor = "#dc3545",
+   ctx.textAlign = 'center';
+      ctx.fillText('IX', x.getPixelForValue(92), y.getPixelForValue(92)) 
+  }) 
+}
+
+const config9 = {
+type: 'scatter',
+data: {datasets: [{
+  data: data9,
+      fill: true,
+      borderColor: "#dc3545",
+      backgroundColor: "#dc3545",
+      pointBackgroundColor: pointcolor,
+      pointBorderColor: "#000",
+      pointRadius: pointsize,
+      pointHoverRadius: 2,  
+      borderWidth: 1
+}]},
+options: {
+  plugins: {
+      legend: {
+          display: false
+      },
+      tooltip:tooltipchart
+  },
+  
+  aspectRatio : false   ,
+  scales: {
+  x: {
+     min: 85,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+
+    },
+    y: {
+     min: 85,
+     max: 100,
+     afterTickToLabelConversion: (ctx) => {
+      // console.log(ctx)
+      ctx.ticks = [];
+     },
+     grid: {
+      drawTicks: false
+     },
+     border: {
+      width: 0
+     },
+    }
+  }
+},
+plugins: [nineGridLabels9]
+};
+
+const myChart9 = new Chart(
+document.getElementById('myChart9'),
+config9
+);
+</script>

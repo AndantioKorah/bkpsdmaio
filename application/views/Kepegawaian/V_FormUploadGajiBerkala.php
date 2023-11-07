@@ -158,7 +158,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="gb_tanggal_sk" name="gb_tanggal_sk" readonly required/>
   </div>
 
   <div class="form-group">
@@ -232,11 +232,28 @@ $(function(){
         var formvalue = $('#upload_form_gaji_berkala');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('pdf_file_berkala').files.length;
+        var tglskgb = $('#gb_tanggal_sk').val()
+        var tmtgb = $('#tmt_gaji_berkala').val()
+        
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
+
+        if(tglskgb == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("gb_tanggal_sk").focus();
+          return false;
+        }
+
+        if(tmtgb == ""){
+          errortoast("tmt gaji berkala masih kosong")
+          document.getElementById("tmt_gaji_berkala").focus();
+          return false;
+        }
+
+    
        
         document.getElementById('btn_upload_berkala').disabled = true;
         $('#btn_upload_berkala').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

@@ -1,4 +1,3 @@
-<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
    <style>
     
     .sp_profil{
@@ -175,7 +174,6 @@
 </div>
 <!-- tutup modal detail indikator -->
 
-<?php } ?>
 
 <script>
 

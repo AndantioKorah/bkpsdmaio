@@ -421,7 +421,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_pensiun', $temp);
             $this->load->view('user/V_PegawaiPensiunItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }
@@ -519,7 +519,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_gaji_berkala', $temp);
             $this->load->view('user/V_PegawaiGajiBerkalaItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }

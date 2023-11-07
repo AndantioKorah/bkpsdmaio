@@ -1300,6 +1300,10 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->submitEditSumjan());
 	}
 
+	public function loadDataDrh($nip){
+		$data['result'] = $this->kepegawaian->loadDataDrh($nip);
+		$this->load->view('Kepegawaian/V_DrhPegawai', $data);
+	}
 	public function getMasterSubBidang()
     {
         $id = $this->input->post('id');

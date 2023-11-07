@@ -636,7 +636,8 @@
             }
 
             if($data['nama_pegawai']){
-                $this->db->like('a.nama', $data['nama_pegawai']);
+                // $this->db->like('a.nama', $data['nama_pegawai']);
+                $this->db->where('(a.nama LIKE "%'.$data['nama_pegawai'].'%" OR a.nipbaru_ws LIKE "%'.$data['nama_pegawai'].'%")');
             }
 
             // $result = $this->db->get()->result_array();

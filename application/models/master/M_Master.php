@@ -587,7 +587,11 @@
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }
-                $result['agama'][$peg['agama']]['jumlah']++;
+                if(isset($result['agama'][$peg['agama']]['jumlah'])){
+                    $result['agama'][$peg['agama']]['jumlah']++;
+                } else {
+                    $result['agama'][$peg['agama']]['jumlah'] = 1;
+                }
                 if($peg['jk'] == 'Laki-Laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {

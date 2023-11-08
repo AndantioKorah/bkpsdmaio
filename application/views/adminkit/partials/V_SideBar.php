@@ -223,8 +223,8 @@
 	|| $this->general_library->isPegawaiBkpsdm()
 	){ ?>
 		<li class="sidebar-item">
-			<a class="sidebar-link" href="<?=base_url();?>list-pegawai">
-				<i class="fa fa-database"></i> <span class="align-middle">Database Pegawai</span>
+			<a class="sidebar-link" href="<?=base_url();?>database">
+				<i class="fa fa-database"></i> <span class="align-middle">Database</span>
 			</a>
 		</li>
 		<li class="sidebar-item">

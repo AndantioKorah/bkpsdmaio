@@ -45,6 +45,8 @@ $route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 
+$route['database'] = 'user/C_User/pegawaiList';
+$route['database/(:any)'] = 'user/C_User/pegawaiList/$1';
 $route['list-pegawai'] = 'user/C_User/pegawaiList';
 $route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
 $route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';

@@ -1892,6 +1892,9 @@
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
                     ->order_by('c.eselon, a.nama');
+            if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
+                $this->db->like('a.nama', $data['nama_pegawai']);
+            }
             if($data['unitkerja'] != 0){
                 $this->db->where('a.skpd', $data['unitkerja']);
             }

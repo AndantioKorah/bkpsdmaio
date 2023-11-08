@@ -57,6 +57,12 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
+                            <label class="label-filter">Nama Pegawai</label>
+                            <div class="filter-option">
+                                <input value="<?=$search != "" || $search != null ? $search : ''?>" style="margin-top: -5px;" class="form-control" name="nama_pegawai" id="nama_pegawai" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Eselon</label>
                             <div class="filter-option">
                                 <?php foreach($eselon as $e){ ?>
@@ -97,6 +103,18 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
+                            <label class="label-filter">Unit Kerja</label>
+                            <div class="">
+                                <select class="form-control select2-navy" 
+                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
+                                    <option value="0" selected>Semua</option>
+                                    <?php foreach($unitkerja as $u){ ?>
+                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Satyalencana</label>
                             <div class="filter-option">
                                 <?php foreach($satyalencana as $sl){ ?>
@@ -132,18 +150,6 @@
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="col-lg-12 mt-2">
-                            <label class="label-filter">Unit Kerja</label>
-                            <div class="">
-                                <select class="form-control select2-navy" 
-                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
-                                    <option value="0" selected>Semua</option>
-                                    <?php foreach($unitkerja as $u){ ?>
-                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-9"></div>
@@ -156,9 +162,10 @@
     </div>
 </div>
 
-<div class="card card-default" id="div_result">
+<div class="card card-default mt-2" id="div_result">
 </div>
 <script>
+    
     let eselon = [];
     let statuspeg = [];
     let tktpendidikan = [];
@@ -168,7 +175,11 @@
     let agama = [];
     let satyalencana = [];
     $(function(){
+        // $('#form_search').submit()
         $('.select2-navy').select2()
+        <?php if($search != "" && $search != null){ ?>
+            $('#form_search').submit()
+        <?php } ?>
     })
 
     $('#tahun').on('change', function(){
@@ -259,6 +270,7 @@
                 statuspeg: statuspeg,
                 satyalencana: satyalencana,
                 unitkerja: $('#unitkerja').val(),
+                nama_pegawai: $('#nama_pegawai').val()
             },
             success: function(data){
                 $('#div_result').html('')

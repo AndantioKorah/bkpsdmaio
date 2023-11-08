@@ -451,7 +451,8 @@ class C_User extends CI_Controller
         render('user/V_PegawaiGajiBerkala', '', '', $data);
     }
 
-    public function pegawaiList(){
+    public function pegawaiList($search = ''){
+        $data['search'] = urldecode($search);
         $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
         $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
         $data['statuspeg'] = $this->m_general->getAll('db_pegawai.statuspeg', 0);
@@ -503,7 +504,7 @@ class C_User extends CI_Controller
                 'nm_jenis_kelamin' => 'Perempuan'
             ]
         ];
-        render('user/V_PegawaiAll', '', '', $data);
+        render('user/V_Database', '', '', $data);
     }
 
     public function searchAllPegawai(){

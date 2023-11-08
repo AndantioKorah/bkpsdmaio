@@ -143,10 +143,10 @@
 	</a>
 	
 	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
-		<form class="form-inline mr-3">
+		<form id="form_search_navbar" class="form-inline mr-3">
 			<div class="row">
 				<div class="div_search_bar">
-				<input id="search_navbar" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai" aria-label="Search">
+				<input id="search_navbar" name="search_navbar;" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai / Perangkat Daerah" aria-label="Search">
 					<!-- <div class="input-group-append"> -->
 						<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
 						<i class="fas fa-search"></i>
@@ -368,4 +368,10 @@
 		}
       ,500);
     })
+
+	$('#form_search_navbar').on('submit', function(e){
+		let base_url = '<?=base_url()?>'
+		e.preventDefault()
+		window.location = base_url + 'database/'+$('#search_navbar').val()
+	})
 </script>

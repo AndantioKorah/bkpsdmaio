@@ -3,12 +3,12 @@
 ?>
   <style>
     .sp_profil{
-      font-size: 1.3rem;
+      font-size: 1rem;
       font-weight: bold;
     }
 
     .sp_profil_nip{
-      font-size: 1rem;
+      font-size: .9rem;
       font-weight: bold;
     }
 
@@ -191,7 +191,7 @@
 
              
               <div class="col-lg-12 text-center" >
-                <?php if($satyalencana){ foreach($satyalencana as $sl){
+                <?php if(isset($satyalencana) && $satyalencana){ foreach($satyalencana as $sl){
                   if($sl['id_m_satyalencana'] == 1){
                 ?>
                   <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana10.png')?>" />
@@ -222,9 +222,9 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
-                <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                <!-- <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
                   <i class="fa fa-id-badge"></i> DRH
-                </button>
+                </button> -->
             
                 <?php }?>
 
@@ -234,7 +234,7 @@
           <div class="col-lg-8">
             <div class="row">
               <!-- profil  -->
-              <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+            <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>

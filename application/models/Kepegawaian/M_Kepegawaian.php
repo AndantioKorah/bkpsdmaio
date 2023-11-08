@@ -611,7 +611,7 @@ class M_Kepegawaian extends CI_Model
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id')
+                            ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id','left')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)

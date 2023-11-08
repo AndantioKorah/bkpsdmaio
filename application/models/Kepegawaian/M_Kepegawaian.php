@@ -761,6 +761,7 @@ class M_Kepegawaian extends CI_Model
             // ->get()->row_array();
         $id_peg =  $this->input->post('id_pegawai');
         $id_dok  = $this->input->post('id_dokumen');
+       
         // dd($id_dok);
         if($id_dok == 4){
              //PANGKAT   
@@ -1003,9 +1004,22 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
                 $result = $this->insert('db_pegawai.pegorganisasi',$dataInsert);
-        } else if($this->input->post('nm_pegpenghargaan')){
+        } else if($this->input->post('pegpenghargaan')){
+            $pegpenghargaan = $this->input->post('pegpenghargaan');
+
+            if($pegpenghargaan == 4) {
+            $dataInsert['nm_pegpenghargaan'] = $this->input->post('nm_pegpenghargaan');
+            } else if($pegpenghargaan == 1) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 10 tahun";
+            }  else if($pegpenghargaan == 2) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 20 tahun";
+            } else if($pegpenghargaan == 3) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 30 tahun";
+            }
+            
             $dataInsert['id_pegawai']      = $id_peg;
-            $dataInsert['nm_pegpenghargaan']      = $this->input->post('nm_pegpenghargaan');
+            $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
+          
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
             $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');
@@ -1162,6 +1176,8 @@ class M_Kepegawaian extends CI_Model
         //         return $res;
 		// }
 
+       
+
         $target_dir = null;
         if($this->input->post('id_dokumen') == 4){
             $target_dir						= './arsipelektronik/';
@@ -1183,11 +1199,11 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsipsumpah/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
-        } else if($this->input->post('nm_pegpenghargaan')){
+        } else if($this->input->post('pegpenghargaan')){
             $target_dir						= './arsippenghargaan/';
         }   
 
-       
+        // dd($target_dir);
 
         // else {
         //     $target_dir						= './uploads/';

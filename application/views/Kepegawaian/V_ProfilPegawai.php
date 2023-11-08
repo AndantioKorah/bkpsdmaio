@@ -199,7 +199,7 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
-                <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                <button style="display:none" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
                   <i class="fa fa-id-badge"></i> DRH
                 </button>
             

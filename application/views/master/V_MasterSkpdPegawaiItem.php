@@ -84,7 +84,7 @@
     </div>
     <script>
         function openDetailPegawai(nip){
-            window.location="<?=base_url('kepegawaian/profil-pegawai/')?>"+nip
+            window.open("<?=base_url('kepegawaian/profil-pegawai/')?>"+nip, "_blank");
         }
     </script>
 <?php } else { ?>

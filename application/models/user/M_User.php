@@ -64,7 +64,7 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('a.*, c.nm_unitkerja')
+                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -74,7 +74,7 @@
                                 ->limit(5)
                                 ->get()->result_array();
 
-                $nip = $this->db->select('a.*, c.nm_unitkerja')
+                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -92,6 +92,21 @@
                     $result[] = $np;
                 }
 
+            }
+
+            return $result;
+        }
+
+        public function searchSkpd($data){
+            $result = null;
+
+            if($data['search_param'] != ''){
+                $result = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->like('nm_unitkerja', $data['search_param'])
+                                ->order_by('nm_unitkerja', 'asc')
+                                ->limit(5)
+                                ->get()->result_array();
             }
 
             return $result;

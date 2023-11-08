@@ -165,7 +165,7 @@
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
                             <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                            src="<?php
+                            data-src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 if($profil_pegawai['fotopeg']){
@@ -194,11 +194,11 @@
                 <?php if(isset($satyalencana) && $satyalencana){ foreach($satyalencana as $sl){
                   if($sl['id_m_satyalencana'] == 1){
                 ?>
-                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana10.png')?>" />
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana10.png')?>" />
                 <?php } if($sl['id_m_satyalencana'] == 2){ ?>
-                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana20.png')?>" />
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana20.png')?>" />
                 <?php } if($sl['id_m_satyalencana'] == 3){ ?>
-                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana30.png')?>" />
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana30.png')?>" />
                 <?php } } } ?>
               </div>
               <div class="col-lg-12 text-center">
@@ -1112,6 +1112,14 @@
   var nip = "<?= $nip;?>"; 
   var page = "<?= $page;?>"
   $(function(){
+    window.bLazy = new Blazy({
+      container: '.container',
+      success: function(element){
+        console.log("Element loaded: ", element.nodeName);
+      }, error: function(e){
+        console.log(e)
+      }
+    });
 
     if(page == "cpns_pns"){
       $('#pills-berkaspns-tab').click()

@@ -26,10 +26,10 @@
 		border-bottom-right-radius: 5px;
 		border-bottom-right-radius: 5px;
 		z-index: 10;
-		top: 8%;
+		top: 7%;
 		margin-left: 0px;
 		box-shadow: 5px 10px 20px #888888;
-		max-height: 300px;
+		max-height: 100vh;
 		overflow-y: scroll;
 		-ms-overflow-style: none;  /* IE and Edge */
 		scrollbar-width: none;  /* Firefox */

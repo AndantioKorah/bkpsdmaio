@@ -399,7 +399,8 @@ class C_User extends CI_Controller
     }
 
     public function searchPegawaiNavbar(){
-        $data['result'] = $this->user->searchPegawai($this->input->post());
+        $data['result_pegawai'] = $this->user->searchPegawai($this->input->post());
+        $data['result_skpd'] = $this->user->searchSkpd($this->input->post());
         $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);
     }
 

@@ -3959,6 +3959,19 @@ function getSumpahJanjiEdit($id){
 
        }
 
+    public function getDataSatyalencanaPegawai($nip){
+        return $this->db->select('a.*, c.nama_satya_lencana')
+                        ->from('db_pegawai.pegpenghargaan a')
+                        ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->join('m_satyalencana c', 'a.id_m_satyalencana = c.id')
+                        ->where('b.nipbaru_ws', $nip)
+                        ->where('a.flag_active', 1)
+                        ->where('a.status = 2')
+                        ->where('a.id_m_satyalencana IS NOT NULL')
+                        ->order_by('a.id_m_satyalencana', 'asc')
+                        ->get()->result_array();
+    }
+
     public function loadDataDrh($nip){
         $rs['riwayat_pendidikan'] = null;
         $rs['riwayat_pangkat'] = null;

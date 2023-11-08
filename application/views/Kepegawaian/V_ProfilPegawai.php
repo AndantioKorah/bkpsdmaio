@@ -3,7 +3,12 @@
 ?>
   <style>
     .sp_profil{
-      font-size: .9rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .sp_profil_nip{
+      font-size: 1rem;
       font-weight: bold;
     }
 
@@ -78,9 +83,9 @@
     }
 
     .foto_container {
-  position: relative;
-  /* width: 50%; */
-}
+      position: relative;
+      /* width: 50%; */
+    }
 
 .image-settings {
   opacity: 1;
@@ -115,6 +120,14 @@
 .select2.select2-container {
   /* width: 100% !important; */
   margin-bottom: 15px;
+}
+
+.badge_satyalencana{
+  width: 3vw;
+  cursor: pointer;
+  padding: 0 !important;
+  margin-left: -10px !important;
+  margin-right: -10px !important;
 }
 
 
@@ -177,16 +190,26 @@
               </div>
 
              
-
+              <div class="col-lg-12 text-center" >
+                <?php if($satyalencana){ foreach($satyalencana as $sl){
+                  if($sl['id_m_satyalencana'] == 1){
+                ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana10.png')?>" />
+                <?php } if($sl['id_m_satyalencana'] == 2){ ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana20.png')?>" />
+                <?php } if($sl['id_m_satyalencana'] == 3){ ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" src="<?=base_url('assets/img/satyalencana30.png')?>" />
+                <?php } } } ?>
+              </div>
               <div class="col-lg-12 text-center">
                 <span class="sp_profil">
                   <?=getNamaPegawaiFull($profil_pegawai)?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-                <span class="sp_profil">
+                <span class="sp_profil_nip">
                   <!-- <?=formatNip($profil_pegawai['nipbaru_ws'])?> -->
-                  <?=$profil_pegawai['nipbaru_ws']?>
+                  NIP. <?=$profil_pegawai['nipbaru_ws']?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
@@ -371,7 +394,6 @@
                   <?=($profil_pegawai['nm_unitkerja'])?>
                 </span>
               </div>
-
               <?php
                   $data = explode("/", $profil_pegawai['data_jabatan']);
                 if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
@@ -397,7 +419,79 @@
                 </span>
               </div>
               <?php } ?>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jenis Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_jenisjab'])?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  echo $data[0];
+                  ?>
+                </span>
+              </div>
 
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Status Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  if(isset($data[2])) { 
+                    if($data[2] == 1) {
+                    echo "Definitif"; 
+                  } else if($data[2] == 2) {
+                    echo "Plt"; 
+                  } else if($data[2] == 3) {
+                    echo "Plh"; 
+                  } else {
+                    echo $profil_pegawai['nm_statusjabatan'];
+                  }
+                  }  
+                  ?>
+                 
+                </span>
+              </div>
+
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?php
+                   $data = explode("/", $profil_pegawai['data_jabatan']);
+                   if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Eselon
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['eselon'])?>
+                </span>
+              </div>
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Status Kepegawaian
@@ -462,83 +556,6 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                   <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
-                </span>
-              </div>
-
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jenis Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_jenisjab'])?>
-                </span>
-              </div>
-
-              
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
-                  echo $data[0];
-                  ?>
-                </span>
-              </div>
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Status Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
-                  if(isset($data[2])) { 
-                    if($data[2] == 1) {
-                    echo "Definitif"; 
-                  } else if($data[2] == 2) {
-                    echo "Plt"; 
-                  } else if($data[2] == 3) {
-                    echo "Plh"; 
-                  } else {
-                    echo $profil_pegawai['nm_statusjabatan'];
-                  }
-                  }  
-                  ?>
-                 
-                </span>
-              </div>
-
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  TMT Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?php
-                   $data = explode("/", $profil_pegawai['data_jabatan']);
-                   if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
-                </span>
-              </div>
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Eselon
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['eselon'])?>
                 </span>
               </div>
                  <!-- end data kepegawaian  -->

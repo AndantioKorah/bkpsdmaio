@@ -1246,12 +1246,12 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
-            // dd($res);
+            
             
 
             $dataFile['nama_file'] =  "$nama_file.pdf";

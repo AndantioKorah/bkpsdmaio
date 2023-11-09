@@ -252,9 +252,10 @@ class M_Kepegawaian extends CI_Model
 
             $tanggal_akhir = explode("-", $tanggal[1]);
             $tak = $tanggal_akhir[0].'-'.$tanggal_akhir[2].'-'.$tanggal_akhir[1];
-            $this->db->select('*, a.id as id_dokumen')
+            $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen')
                         ->from('db_pegawai.'.$data['jenisdokumen'].' a')
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.flag_active', 1)
                         ->where('a.created_date >=', $taw.' 00:00:00')
                         ->where('a.created_date <=', $tak.' 23:59:59')

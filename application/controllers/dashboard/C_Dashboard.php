@@ -102,8 +102,43 @@ class C_Dashboard extends CI_Controller
     }
 
     public function searchDataPdm(){
+        $uk = $this->input->post('unitkerja');
         $data['result'] = $this->dashboard->getDataDetailDashboardPdm($this->input->post());
-        $this->load->view('dashboard/V_DashboardPdmDetail', $data);
+        if($uk == 0){
+            $this->session->set_userdata('data_dashboard_pdm', $data['result']);
+            $this->load->view('dashboard/V_DashboardPdmDetailAll', $data);
+        } else {
+            $this->load->view('dashboard/V_DashboardPdmDetail', $data);
+        }
+    }
+
+    public function getDashboardPdmAll(){
+        $param['unitkerja'] = 0;
+        $data['result'] = $this->dashboard->getDataDetailDashboardPdm($param);
+        $this->session->set_userdata('data_dashboard_pdm', $data['result']);
+        $this->load->view('dashboard/V_DashboardPdmDetailAll', $data);
+    }
+
+    public function downloadDataPdm(){
+        $data['result'] = $this->session->userdata('data_dashboard_pdm');
+        function sortByPresentase($a, $b) {
+            if ($a['presentase'] < $b['presentase']) {
+                return 1;
+            } elseif ($a['presentase'] > $b['presentase']) {
+                return -1;
+            }
+            return 0;
+        }
+        usort($data['result'], 'sortByPresentase');
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'Legal-P',
+            'debug' => true
+        ]);
+        $html = $this->load->view('dashboard/V_DashboardPdmDetailAllPdf', $data, true);
+        $mpdf->WriteHTML($html);
+        $mpdf->showImageErrors = true;
+        $mpdf->Output('Data Progress PDM Siladen ASN Kota Manado '.date('dmyhis').'.pdf', 'D');
+        // $this->load->view('dashboard/V_DashboardPdmDetailAllPdf', $data);
     }
 
     public function dashboardKepegawaian(){

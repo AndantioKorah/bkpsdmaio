@@ -56,16 +56,35 @@
     </div>
     <div class="col-lg-12" id="detail_pdm">
     </div>
+    <div class="col-lg-12 mt-2">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="">
+                    <div class="card-body" id="dashboard_pdm">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     $(function(){
         loadDetailPdm();
+        loadDashboardPdm();
     })
 
     function loadDetailPdm(){
         $('#detail_pdm').html('')
         $('#detail_pdm').append(divLoaderNavy)
         $('#detail_pdm').load('<?=base_url('user/C_User/detailPdmUser')?>', function(){
+            $('#loader').hide()
+        })
+    }
+
+    function loadDashboardPdm(){
+        $('#dashboard_pdm').html('')
+        $('#dashboard_pdm').append(divLoaderNavy)
+        $('#dashboard_pdm').load('<?=base_url('dashboard/C_Dashboard/getDashboardPdmAll')?>', function(){
             $('#loader').hide()
         })
     }

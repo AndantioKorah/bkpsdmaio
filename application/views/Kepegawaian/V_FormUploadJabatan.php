@@ -264,7 +264,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Detail Pangkat</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Jabatan</h5>
         <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

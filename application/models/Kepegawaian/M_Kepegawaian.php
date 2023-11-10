@@ -2508,7 +2508,15 @@ function getNamaJabatan(){
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
+}
 
+function getNamaJabatanEdit(){
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    // ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
 }
 
 
@@ -3186,7 +3194,7 @@ public function getAllPelanggaranByNip($nip){
         }
 
         function getJabatanPegawaiEdit($id){
-            $this->db->select('c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
+            $this->db->select('c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -3361,12 +3369,26 @@ public function submitEditJabatan(){
             'docfile'  => $base64
         ]);
        
-     
+            $str = $this->input->post('edit_jabatan_nama');
+            $newStr = explode(",", $str);
+            $id_jabatan = $newStr[0];
+            $nama_jabatan = $newStr[1]; 
 
-        $id = $datapost['id'];
-     
-        $data["gambarsk"] = $filename;
-        $this->db->where('id', $id)
+            $id = $datapost['id'];
+            $data['nm_jabatan']      = $nama_jabatan;
+            $data['id_jabatan']      = $id_jabatan;
+            $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
+            $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
+            $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
+            $data['pejabat']      = $this->input->post('edit_jabatan_pejabat');
+            $data['eselon']      = $this->input->post('edit_jabatan_eselon');
+            $data['nosk']      = $this->input->post('edit_jabatan_no_sk');
+            $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
+            $data['ket']      = $this->input->post('edit_jataban_keterangan');
+            $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+            $data['updated_by']      = $this->general_library->getId();
+            $data["gambarsk"] = $filename;
+             $this->db->where('id', $id)
                 ->update('db_pegawai.pegjabatan', $data);
     
 
@@ -3375,9 +3397,27 @@ public function submitEditJabatan(){
     }
     } else {
 
-        // $id = $datapost['id'];
-        // $this->db->where('id', $id)
-        //         ->update('db_pegawai.pegjabatan', $data);
+        $str = $this->input->post('edit_jabatan_nama');
+        $newStr = explode(",", $str);
+        $id_jabatan = $newStr[0];
+        $nama_jabatan = $newStr[1]; 
+
+
+        $id = $datapost['id'];
+        $data['nm_jabatan']      = $nama_jabatan;
+        $data['id_jabatan']      = $id_jabatan;
+        $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
+        $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
+        $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
+        $data['pejabat']      = $this->input->post('edit_jabatan_pejabat');
+        $data['eselon']      = $this->input->post('edit_jabatan_eselon');
+        $data['nosk']      = $this->input->post('edit_jabatan_no_sk');
+        $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
+        $data['ket']      = $this->input->post('edit_jataban_keterangan');
+        $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+        $data['updated_by']      = $this->general_library->getId();
+        $this->db->where('id', $id)
+                ->update('db_pegawai.pegjabatan', $data);
     
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 

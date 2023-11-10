@@ -1180,6 +1180,14 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadInovasi', $data);
     }
 
+	
+	public function loadEditJabatanPegawai($id)
+    {
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
+		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
+        $this->load->view('kepegawaian/V_EditJabatan', $data);
+    }
+
 
 	public function loadEditPangkaPegawai($id)
     {
@@ -1257,7 +1265,10 @@ class C_Kepegawaian extends CI_Controller
 
 
 
-
+	public function submitEditJabatan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditJabatan());
+	}
 	
 
 

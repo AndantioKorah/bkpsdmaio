@@ -13,9 +13,8 @@
           <th class="text-left">Status Jabatan</th>
           <th class="text-left">Ket</th>
           <th class="text-left">File SK</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
-            <?php } ?>
+         
           <?php if($kode == 2) { ?>
           <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
@@ -56,25 +55,38 @@
                  <i class="fa fa-file-pdf"></i></button>
               <?php } ?>
               </td>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
-              <?php if($kode == 1) { ?>
-                <div class="btn-group" role="group" aria-label="Basic example">
+
+              <div class="btn-group" role="group" aria-label="Basic example">
+
+                <?php if($rs['status'] == 1) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
                 data-nm_jabatan="<?=$rs['nama_jabatan']?>"
                 data-tmt_jabatan="<?=$rs['tmtjabatan']?>"
-                data-skpd="<?=$rs['skpd']?>"
                 href="#modal_edit_jabatan"
-                onclick="editData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Ubah Data" class="open-DetailJabatan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
-                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" title="Hapus Data"  class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-              </div>
-             
+                onclick="loadEditJabatan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
 
-              <?php } ?>
-              </td>
-               <?php } ?>
+                <?php if($kode == 1) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                data-nm_jabatan="<?=$rs['nama_jabatan']?>"
+                data-tmt_jabatan="<?=$rs['tmtjabatan']?>"
+                href="#modal_edit_jabatan"
+                onclick="loadEditJabatan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
+                <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php if($kode == 1) { ?>
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                </div>
+                </td>
+                <?php } ?>
+                <?php } ?>
               <?php if($kode == 2) { ?>
                 <td><?=formatDateNamaBulan($rs['created_date'])?></td>
                 <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
@@ -98,7 +110,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modal_edit_jabatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_edit_jabatanx" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -274,6 +286,16 @@
                        })
                    }
                }
+
+
+               function loadEditJabatan(id){
+ 
+              $('#edit_jabatan_pegawai').html('')
+              $('#edit_jabatan_pegawai').append(divLoaderNavy)
+              $('#edit_jabatan_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditJabatanPegawai")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+              }
 
 
 </script>

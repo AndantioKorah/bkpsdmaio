@@ -8,6 +8,7 @@
     $data['satyalencana'] = $satyalencana;
     $data['golongan'] = $golongan;
     $data['jenis_kelamin'] = $jenis_kelamin;
+    $data['jenis_jabatan'] = $jenis_jabatan;
     $data['search'] = $search;
     $this->load->view('user/V_PegawaiAll', $data);
 ?>

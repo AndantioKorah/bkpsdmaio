@@ -4,6 +4,7 @@
       <th class="text-center">No</th>
       <th class="text-center">NIP</th>
       <th class="text-center">Nama</th>
+      <th class="text-center">Unit Kerja</th>
       <th class="text-center">Tgl. Usul</th>
       <th class="text-center">Detail</th>
       <!-- <th class="text-center">Verif</th> -->
@@ -14,6 +15,7 @@
           <td class="text-center"><?=$no++;?></td>
           <td class="text-center"><?=formatNip($rs['nipbaru_ws'])?></td>
           <td class="text-center"><?=getNamaPegawaiFull($rs)?></td>
+          <td class="text-center"><?=($rs['nm_unitkerja'])?></td>
           <td class="text-center"><?=formatDateNamaBulan($rs['created_date'])?></td>
           <td class="text-center">
             

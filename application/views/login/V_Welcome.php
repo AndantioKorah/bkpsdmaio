@@ -57,10 +57,16 @@
         }
         </style>
         <?php if($this->general_library->getRole() == 'programmer'){ ?>
-          <?php
-            $data['chart'] = $chart; 
-            $this->load->view('dashboard/V_DashboardKepegawaian', $data);
-          ?>
+          <div class="row">
+            <div class="col-lg-12">
+              <?php
+                $data['chart'] = $chart; 
+                $this->load->view('dashboard/V_DashboardKepegawaian', $data);
+              ?>
+            </div>
+            <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
+            </div>
+          </div>
         <?php } else { ?>
           <h4><?="Selamat ".greeting().","?></h4>
           <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
@@ -93,5 +99,14 @@
 		<?php
 		$this->session->set_userdata('apps_error', null);
 		} ?>
+    loadDashboardPdmWelcome();
   })
+
+  function loadDashboardPdmWelcome(){
+      $('#dashboard_pdm_welcome').html('')
+      $('#dashboard_pdm_welcome').append(divLoaderNavy)
+      $('#dashboard_pdm_welcome').load('<?=base_url('dashboard/C_Dashboard/getDashboardPdmAll')?>', function(){
+          $('#loader').hide()
+      })
+  }
 </script>

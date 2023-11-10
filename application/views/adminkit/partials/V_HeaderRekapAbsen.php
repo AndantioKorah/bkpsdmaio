@@ -32,7 +32,7 @@
 			<h5 class="footer_header">website: bkd.manadokota.go.id | email: bkdkotamanado@gmail.com</h5>
 		</td>
 		<td valign=bottom style="width: 5%;">
-			<img style="width: 80px; height: 100px;" src="<?=urlencode(('assets/adminkit/img/logo-siladen-small.png'))?>">
+			<img style="width: 90px; height: 100px;" src="<?=urlencode(('assets/adminkit/img/logo-siladen-small.png'))?>">
 		</td>
 	</tr>
 	<tr>

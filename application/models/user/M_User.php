@@ -64,7 +64,7 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('a.*, c.nm_unitkerja')
+                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -74,7 +74,7 @@
                                 ->limit(5)
                                 ->get()->result_array();
 
-                $nip = $this->db->select('a.*, c.nm_unitkerja')
+                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -92,6 +92,21 @@
                     $result[] = $np;
                 }
 
+            }
+
+            return $result;
+        }
+
+        public function searchSkpd($data){
+            $result = null;
+
+            if($data['search_param'] != ''){
+                $result = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->like('nm_unitkerja', $data['search_param'])
+                                ->order_by('nm_unitkerja', 'asc')
+                                ->limit(5)
+                                ->get()->result_array();
             }
 
             return $result;
@@ -1881,7 +1896,6 @@
         public function searchAllPegawai($data){
             $result = null;
             $flag_use_masa_kerja = 0;
-
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -1892,11 +1906,20 @@
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
                     ->order_by('c.eselon, a.nama');
+            if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
+                $this->db->like('a.nama', $data['nama_pegawai']);
+            }
             if($data['unitkerja'] != 0){
                 $this->db->where('a.skpd', $data['unitkerja']);
             }
             if(isset($data['eselon'])){
                 $this->db->where_in('g.id_eselon', $data['eselon']);
+            }
+            if(isset($data['jenis_jabatan'])){
+                $this->db->where_in('c.jenis_jabatan', $data['jenis_jabatan']);
+                if(in_array('JFT', $data['jenis_jabatan'])){
+                    $this->db->where('f.id_statuspeg != 1');
+                }
             }
             if(isset($data['statuspeg'])){
                 $this->db->where_in('f.id_statuspeg', $data['statuspeg']);

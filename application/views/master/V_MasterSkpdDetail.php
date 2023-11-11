@@ -55,12 +55,12 @@
                                                     class="col-lg-12">
                                                     <center>KEPALA SKPD</center>
                                                 </div>
-                                                <div class="col-lg-12 mt-2 <?=$result['kepala_skpd'] ? 'class_kepalaskpd' : ''?>">
+                                                <div class="col-lg-12 mt-2 <?=isset($result['kepala_skpd']) && $result['kepala_skpd'] ? 'class_kepalaskpd' : ''?>">
                                                     <center>
                                                         <?php if($result['kepala_skpd']){ ?>
                                                             <!-- <img style="width: 128px; height: 128px" class="img-fluid rounded-circle mb-2 b-lazy"
                                                             src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="<?=$this->general_library->getFotoPegawai($result['kepala_skpd']['fotopeg'])?>" /> -->
-                                                            <img style="width: 128px; height: 128px" class="img-fluid rounded-circle mb-2 b-lazy"
+                                                            <img style="width: 128px; height: 128px;object-fit: cover" class="img-fluid rounded-circle mb-2 b-lazy"
                                                             src="<?php
                                                                 $path = './assets/fotopeg/'.$result['kepala_skpd']['fotopeg'];
                                                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
@@ -370,9 +370,11 @@
             })
         }
 
-        $('.class_kepalaskpd').on('click', function(){
-            window.location="<?=base_url('kepegawaian/profil-pegawai/'.$result['kepala_skpd']['nipbaru_ws'])?>"
-        })
+        <?php if($result['kepala_skpd']){ ?>
+            $('.class_kepalaskpd').on('click', function(){
+                window.location="<?=base_url('kepegawaian/profil-pegawai/'.$result['kepala_skpd']['nipbaru_ws'])?>"
+            })
+        <?php } ?>
 
         function renderChart(rs){
             let dt = JSON.parse(rs)
@@ -418,7 +420,7 @@
                     eselon: 0,
                     pangkat: 0,
                     tahun: '<?=date('Y')?>',
-                    skpd: '<?=$result['kepala_skpd']['id_unitkerja']?>'
+                    skpd: '<?=$id_unitkerja?>'
                 },
                 success: function(data){
                 let rs = JSON.parse(data)
@@ -440,7 +442,7 @@
                     eselon: 0,
                     pangkat: 0,
                     tahun: '<?=date('Y')?>',
-                    skpd: '<?=$result['kepala_skpd']['id_unitkerja']?>'
+                    skpd: '<?=$id_unitkerja?>'
                 },
                 success: function(data){
                 let rs = JSON.parse(data)
@@ -462,7 +464,7 @@
                     eselon: 0,
                     pangkat: 0,
                     tahun: '<?=date('Y')?>',
-                    skpd: '<?=$result['kepala_skpd']['id_unitkerja']?>'
+                    skpd: '<?=$id_unitkerja?>'
                 },
                 success: function(data){
                 let rs = JSON.parse(data)

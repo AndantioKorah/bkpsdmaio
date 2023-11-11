@@ -3,6 +3,11 @@
 ?>
   <style>
     .sp_profil{
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .sp_profil_nip{
       font-size: .9rem;
       font-weight: bold;
     }
@@ -78,9 +83,9 @@
     }
 
     .foto_container {
-  position: relative;
-  /* width: 50%; */
-}
+      position: relative;
+      /* width: 50%; */
+    }
 
 .image-settings {
   opacity: 1;
@@ -115,6 +120,14 @@
 .select2.select2-container {
   /* width: 100% !important; */
   margin-bottom: 15px;
+}
+
+.badge_satyalencana{
+  width: 3vw;
+  cursor: pointer;
+  padding: 0 !important;
+  margin-left: -10px !important;
+  margin-right: -10px !important;
 }
 
 
@@ -152,7 +165,7 @@
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
                             <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                            src="<?php
+                            data-src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 if($profil_pegawai['fotopeg']){
@@ -177,16 +190,26 @@
               </div>
 
              
-
+              <div class="col-lg-12 text-center" >
+                <?php if(isset($satyalencana) && $satyalencana){ foreach($satyalencana as $sl){
+                  if($sl['id_m_satyalencana'] == 1){
+                ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana10.png')?>" />
+                <?php } if($sl['id_m_satyalencana'] == 2){ ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana20.png')?>" />
+                <?php } if($sl['id_m_satyalencana'] == 3){ ?>
+                  <img title="<?=$sl['nama_satya_lencana']?>" class="badge_satyalencana b-lazy" data-src="<?=base_url('assets/img/satyalencana30.png')?>" />
+                <?php } } } ?>
+              </div>
               <div class="col-lg-12 text-center">
                 <span class="sp_profil">
                   <?=getNamaPegawaiFull($profil_pegawai)?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-                <span class="sp_profil">
+                <span class="sp_profil_nip">
                   <!-- <?=formatNip($profil_pegawai['nipbaru_ws'])?> -->
-                  <?=$profil_pegawai['nipbaru_ws']?>
+                  NIP. <?=$profil_pegawai['nipbaru_ws']?>
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
@@ -199,6 +222,10 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
+                <!-- <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                  <i class="fa fa-id-badge"></i> DRH
+                </button> -->
+            
                 <?php }?>
 
               </div>
@@ -207,7 +234,7 @@
           <div class="col-lg-8">
             <div class="row">
               <!-- profil  -->
-              <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+            <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
               <li class="nav-item nav-item-profile" role="presentation">
                 <button class="nav-link nav-link-profile active" id="pills-data_kepeg-tab" data-bs-toggle="pill" data-bs-target="#pills-data_kepeg" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Data Kepegawaian</button>
               </li>
@@ -367,7 +394,6 @@
                   <?=($profil_pegawai['nm_unitkerja'])?>
                 </span>
               </div>
-
               <?php
                   $data = explode("/", $profil_pegawai['data_jabatan']);
                 if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
@@ -393,7 +419,79 @@
                 </span>
               </div>
               <?php } ?>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jenis Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_jenisjab'])?>
+                </span>
+              </div>
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  echo $data[0];
+                  ?>
+                </span>
+              </div>
 
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Status Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?php
+                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  if(isset($data[2])) { 
+                    if($data[2] == 1) {
+                    echo "Definitif"; 
+                  } else if($data[2] == 2) {
+                    echo "Plt"; 
+                  } else if($data[2] == 3) {
+                    echo "Plh"; 
+                  } else {
+                    echo $profil_pegawai['nm_statusjabatan'];
+                  }
+                  }  
+                  ?>
+                 
+                </span>
+              </div>
+
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?php
+                   $data = explode("/", $profil_pegawai['data_jabatan']);
+                   if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Eselon
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($profil_pegawai['eselon'])?>
+                </span>
+              </div>
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Status Kepegawaian
@@ -458,83 +556,6 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                   <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
-                </span>
-              </div>
-
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jenis Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_jenisjab'])?>
-                </span>
-              </div>
-
-              
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
-                  echo $data[0];
-                  ?>
-                </span>
-              </div>
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Status Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
-                  if(isset($data[2])) { 
-                    if($data[2] == 1) {
-                    echo "Definitif"; 
-                  } else if($data[2] == 2) {
-                    echo "Plt"; 
-                  } else if($data[2] == 3) {
-                    echo "Plh"; 
-                  } else {
-                    echo $profil_pegawai['nm_statusjabatan'];
-                  }
-                  }  
-                  ?>
-                 
-                </span>
-              </div>
-
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  TMT Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?php
-                   $data = explode("/", $profil_pegawai['data_jabatan']);
-                   if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
-                </span>
-              </div>
-
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Eselon
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['eselon'])?>
                 </span>
               </div>
                  <!-- end data kepegawaian  -->
@@ -790,10 +811,14 @@
 
   <?php 
   if($this->general_library->getUserName() == $nip){
+    $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+   
     if($bidang){
-      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000"){
+      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "III A") {
+        $idBidang = 99;
+      } else if($nm_jab == "Kepala"){
         $idBidang = 99;
       } else {
         $idBidang = $bidang['id_m_bidang'];
@@ -853,7 +878,27 @@
   </div>
 </div>
 <!-- tutup modal ubah foto profil  -->
-  
+
+<div class="modal fade" id="modal_drh" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">DAFTAR RIWAYAT HIDUP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_drh_content">
+     
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal edit profil -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -998,7 +1043,12 @@
         var formvalue = $('#form_status_berkas');
         var form_data = new FormData(formvalue[0]);
         var jb = $('#jenis_berkas').val();
-  
+        if(jb == ""){
+          errortoast("belum ada berkas yg diupload")
+          return false;
+        }
+
+
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
         method:"POST",  
@@ -1020,7 +1070,7 @@
                 } else if(jb == "ijazah"){
                 setTimeout(loadFormPendidikan, 1500);
                 } else if(jb == "jabatan"){
-                setTimeout(loadFormJabatan, 1500);
+                setTimeout($('#pills-jabatan-tab').click(), 1500);
                 } else if(jb == "diklat"){
                 setTimeout(loadFormDiklat, 1500);
                 } else if(jb == "organisasi"){
@@ -1062,6 +1112,14 @@
   var nip = "<?= $nip;?>"; 
   var page = "<?= $page;?>"
   $(function(){
+    window.bLazy = new Blazy({
+      container: '.container',
+      success: function(element){
+        console.log("Element loaded: ", element.nodeName);
+      }, error: function(e){
+        console.log(e)
+      }
+    });
 
     if(page == "cpns_pns"){
       $('#pills-berkaspns-tab').click()
@@ -1110,12 +1168,16 @@
   $('.datepickeronly').datepicker({
           format: 'yyyy-mm-dd'
         });
-
-  var bidang = $('#bidangPegawai').val()
-  if(bidang == "" || bidang == 0){
-  $('#btnstatic').click()  
-  }
   })
+
+ function loadDrh(nip){
+  $('#modal_drh_content').html('')
+    $('#modal_drh_content').append(divLoaderNavy)
+    $('#modal_drh_content').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDataDrh")?>'+'/'+nip, function(){
+      $('#loader').hide()
+    })
+ }
+  
  function loadEditProfilModal(id){
  
     $('#edit_profil_pegawai').html('')

@@ -30,12 +30,13 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokberkas" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('cpns_pns')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokberkas" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('cpns_pns')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
@@ -44,8 +45,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 <script>
+  
     function openModalStatusPmd(jenisberkas){
-        $(".modal-body #jenis_berkas").val( jenisberkas );
+      var jumlah = $('#jumlahdokberkas').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
+      $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
 
@@ -206,7 +212,13 @@ $(function(){
                 document.getElementById("upload_form_berkas_pns").reset();
                 document.getElementById('btn_upload_berkas').disabled = false;
                $('#btn_upload_berkas').html('Simpan')
-                loadListBerkasPns()
+                // loadListBerkasPns()
+                // $("#myModalBerkasPns").modal("hide");
+                // setTimeout(function() {$("#pills-berkaspns-tab").trigger( "click" );}, 1500);
+                // $('#pills-berkaspns-tab').click()
+                setTimeout(function() {$("#modalBerkasPns").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-berkaspns-tab").trigger( "click" );}, 2000);
+
               } else {
                 errortoast(result.msg)
                 return false;
@@ -216,6 +228,10 @@ $(function(){
         });  
           
         }); 
+
+ $("#myModalBerkasPns").on('hide.bs.modal', function(){
+          $("#pills-berkaspns-tab").trigger( "click" )
+  });
 
     function loadListBerkasPns(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";

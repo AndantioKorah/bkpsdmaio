@@ -115,6 +115,7 @@
                                 loadListBerkasPns()
                                } else {
                                 loadRiwayatUsulBerkasPns()
+
                                }
                                
                            }, error: function(e){

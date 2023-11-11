@@ -14,7 +14,7 @@
     ?>
       <tr>
           <td><span style="background-color: <?=$colors[$i]?>">&nbsp;&nbsp;</span></td>
-          <td><span style="font-size: .7rem;"><?=$rs['nama']?></span></td>
+          <td><span style="font-size: .7rem;"><?=isset($rs['nama']) ? $rs['nama'] : ''?></span></td>
           <td><span style="font-size: .7rem;">:&nbsp;&nbsp;</span></td>
           <td class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?=formatCurrencyWithoutRp($rs['jumlah'])?></span></td>
       </tr>

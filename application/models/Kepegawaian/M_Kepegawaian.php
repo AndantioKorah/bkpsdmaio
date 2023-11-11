@@ -127,7 +127,7 @@ class M_Kepegawaian extends CI_Model
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'jabatan'){
-                return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.status as status_dokumen')
+                return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.tmtjabatan as tmt_jabatan, a.status as status_dokumen')
                                 ->from('db_pegawai.pegjabatan a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.jabatan c','a.id_jabatan = c.id_jabatanpeg')
@@ -229,6 +229,14 @@ class M_Kepegawaian extends CI_Model
 
                                 ->where('a.id', $id)
                                 ->get()->row_array();
+            } else if($jd == 'inovasi'){
+                return $this->db->select('a.*,b.*,c.kriteria_inovasi,a.id as id_dokumen, a.status as status_dokumen')
+                                ->from('db_pegawai.peginovasi a')
+                                ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                ->join('db_pegawai.inovasi c', 'a.kriteria_inovasi = c.id')
+
+                                ->where('a.id', $id)
+                                ->get()->row_array();
             }
             
 
@@ -244,9 +252,10 @@ class M_Kepegawaian extends CI_Model
 
             $tanggal_akhir = explode("-", $tanggal[1]);
             $tak = $tanggal_akhir[0].'-'.$tanggal_akhir[2].'-'.$tanggal_akhir[1];
-            $this->db->select('*, a.id as id_dokumen')
+            $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen')
                         ->from('db_pegawai.'.$data['jenisdokumen'].' a')
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.flag_active', 1)
                         ->where('a.created_date >=', $taw.' 00:00:00')
                         ->where('a.created_date <=', $tak.' 23:59:59')
@@ -551,8 +560,8 @@ class M_Kepegawaian extends CI_Model
                        ->join('db_pegawai.inovasi d', 'c.kriteria_inovasi = d.id')
                        ->where('a.username', $nip)
                        ->where('c.flag_active', 1)
-                       ->where('a.flag_active', 1);
-                       // ->order_by('c.tglsk','desc')
+                       ->where('a.flag_active', 1)
+                       ->order_by('c.id','desc');
                        if($kode == 1){
                            $this->db->where('c.status', 2);
                        }
@@ -603,7 +612,7 @@ class M_Kepegawaian extends CI_Model
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id')
+                            ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id','left')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
@@ -753,6 +762,7 @@ class M_Kepegawaian extends CI_Model
             // ->get()->row_array();
         $id_peg =  $this->input->post('id_pegawai');
         $id_dok  = $this->input->post('id_dokumen');
+       
         // dd($id_dok);
         if($id_dok == 4){
              //PANGKAT   
@@ -995,9 +1005,22 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
                 $result = $this->insert('db_pegawai.pegorganisasi',$dataInsert);
-        } else if($this->input->post('nm_pegpenghargaan')){
+        } else if($this->input->post('pegpenghargaan')){
+            $pegpenghargaan = $this->input->post('pegpenghargaan');
+
+            if($pegpenghargaan == 4) {
+            $dataInsert['nm_pegpenghargaan'] = $this->input->post('nm_pegpenghargaan');
+            } else if($pegpenghargaan == 1) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 10 tahun";
+            }  else if($pegpenghargaan == 2) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 20 tahun";
+            } else if($pegpenghargaan == 3) {
+            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 30 tahun";
+            }
+            
             $dataInsert['id_pegawai']      = $id_peg;
-            $dataInsert['nm_pegpenghargaan']      = $this->input->post('nm_pegpenghargaan');
+            $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
+          
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
             $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');
@@ -1105,6 +1128,17 @@ class M_Kepegawaian extends CI_Model
         return $this->db->get()->result_array(); 
     }
 
+    public function getDataDok($tableName, $id_peg)
+    {
+        $this->db->select('count(id) as total')
+        ->where('id_pegawai',$id_peg)
+        ->where('flag_active', 1)
+        ->where_in('status', [1,2])
+        ->from($tableName);
+        return $this->db->get()->row_array(); 
+    }
+
+
     public function getDataPdmBerkas($tableName, $orderBy = 'created_date', $whatType = 'desc', $jberkas)
     {
         $this->db->select('*')
@@ -1143,6 +1177,8 @@ class M_Kepegawaian extends CI_Model
         //         return $res;
 		// }
 
+       
+
         $target_dir = null;
         if($this->input->post('id_dokumen') == 4){
             $target_dir						= './arsipelektronik/';
@@ -1164,11 +1200,11 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsipsumpah/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
-        } else if($this->input->post('nm_pegpenghargaan')){
+        } else if($this->input->post('pegpenghargaan')){
             $target_dir						= './arsippenghargaan/';
         }   
 
-       
+        // dd($target_dir);
 
         // else {
         //     $target_dir						= './uploads/';
@@ -1211,12 +1247,12 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
-            // dd($res);
+            
             
 
             $dataFile['nama_file'] =  "$nama_file.pdf";
@@ -1448,8 +1484,8 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -1524,8 +1560,8 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -1599,8 +1635,8 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
@@ -1673,8 +1709,8 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$dataFile['file_name'],
                 'docfile'  => $base64
             ]);
@@ -2472,7 +2508,15 @@ function getNamaJabatan(){
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
+}
 
+function getNamaJabatanEdit(){
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('flag_active', 1)
+    // ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
 }
 
 
@@ -3149,6 +3193,19 @@ public function getAllPelanggaranByNip($nip){
 
         }
 
+        function getJabatanPegawaiEdit($id){
+            $this->db->select('c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
+                          ->from('m_user a')
+                          ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
+                          ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
+                          // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                          ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
+                          ->where('a.flag_active', 1)
+                          ->where('c.id', $id);
+                          $query = $this->db->get()->result_array();
+                          return $query;
+      }
+
         function getPangkatPegawaiEdit($id){
             $this->db->select('c.id,e.id_jenispengangkatan,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                            c.nosk, c.tglsk, c.gambarsk,c.pangkat')
@@ -3264,6 +3321,118 @@ function getSumpahJanjiEdit($id){
 }
 
 
+public function submitEditJabatan(){
+
+    $datapost = $this->input->post();
+    $this->db->trans_begin();
+    $target_dir = './arsipjabatan/';
+    $filename = $this->input->post('gambarsk');
+   
+    if($_FILES['file']['name'] != ""){
+      
+        if($filename == ""){
+            $filename = $_FILES['file']['name'];
+        } 
+
+
+    $config['upload_path']          = $target_dir;
+    $config['allowed_types']        = 'pdf';
+    $config['encrypt_name']			= FALSE;
+    $config['overwrite']			= TRUE;
+    $config['detect_mime']			= TRUE; 
+
+    $this->load->library('upload', $config);
+
+
+
+    // coba upload file		
+    if (!$this->upload->do_upload('file')) {
+
+        $data['error']    = strip_tags($this->upload->display_errors());
+        // $data['token']    = $this->security->get_csrf_hash();
+        
+        $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+        return $res;
+
+    } else {
+        $dataFile = $this->upload->data();
+ 
+
+        $file_tmp = $_FILES['file']['tmp_name'];
+        $data_file = file_get_contents($file_tmp);
+        $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+        $path = substr($target_dir,2);
+        $res = $this->dokumenlib->setDokumenWs('POST',[
+            'username' => "199401042020121011",
+            'password' => "039945c6ccf8669b8df44612765a492a",
+            'filename' => $path.$filename,
+            'docfile'  => $base64
+        ]);
+       
+            $str = $this->input->post('edit_jabatan_nama');
+            $newStr = explode(",", $str);
+            $id_jabatan = $newStr[0];
+            $nama_jabatan = $newStr[1]; 
+
+            $id = $datapost['id'];
+            $data['nm_jabatan']      = $nama_jabatan;
+            $data['id_jabatan']      = $id_jabatan;
+            $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
+            $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
+            $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
+            $data['pejabat']      = $this->input->post('edit_jabatan_pejabat');
+            $data['eselon']      = $this->input->post('edit_jabatan_eselon');
+            $data['nosk']      = $this->input->post('edit_jabatan_no_sk');
+            $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
+            $data['ket']      = $this->input->post('edit_jataban_keterangan');
+            $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+            $data['updated_by']      = $this->general_library->getId();
+            $data["gambarsk"] = $filename;
+             $this->db->where('id', $id)
+                ->update('db_pegawai.pegjabatan', $data);
+    
+
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+    }
+    } else {
+
+        $str = $this->input->post('edit_jabatan_nama');
+        $newStr = explode(",", $str);
+        $id_jabatan = $newStr[0];
+        $nama_jabatan = $newStr[1]; 
+
+
+        $id = $datapost['id'];
+        $data['nm_jabatan']      = $nama_jabatan;
+        $data['id_jabatan']      = $id_jabatan;
+        $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
+        $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
+        $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
+        $data['pejabat']      = $this->input->post('edit_jabatan_pejabat');
+        $data['eselon']      = $this->input->post('edit_jabatan_eselon');
+        $data['nosk']      = $this->input->post('edit_jabatan_no_sk');
+        $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
+        $data['ket']      = $this->input->post('edit_jataban_keterangan');
+        $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+        $data['updated_by']      = $this->general_library->getId();
+        $this->db->where('id', $id)
+                ->update('db_pegawai.pegjabatan', $data);
+    
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+    }
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+
+   }
 
 
 
@@ -3316,8 +3485,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3409,8 +3578,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3489,8 +3658,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3573,8 +3742,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3654,8 +3823,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3742,8 +3911,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3824,8 +3993,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3901,8 +4070,8 @@ function getSumpahJanjiEdit($id){
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => $this->general_library->getUsername(),
-                'password' => $this->general_library->getPassword(),
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
                 'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
@@ -3940,6 +4109,85 @@ function getSumpahJanjiEdit($id){
 
        }
 
+    public function getDataSatyalencanaPegawai($nip){
+        return $this->db->select('a.*, c.nama_satya_lencana')
+                        ->from('db_pegawai.pegpenghargaan a')
+                        ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->join('m_satyalencana c', 'a.id_m_satyalencana = c.id')
+                        ->where('b.nipbaru_ws', $nip)
+                        ->where('a.flag_active', 1)
+                        ->where('a.status = 2')
+                        ->where('a.id_m_satyalencana IS NOT NULL')
+                        ->order_by('a.id_m_satyalencana', 'asc')
+                        ->get()->result_array();
+    }
+
+    public function loadDataDrh($nip){
+        $rs['riwayat_pendidikan'] = null;
+        $rs['riwayat_pangkat'] = null;
+        $rs['riwayat_diklat'] = null;
+        $rs['riwayat_jabatan'] = null;
+        $rs['riwayat_keluarga'] = null;
+
+        $rs['data_pegawai'] = $this->db->select('a.*, b.nm_unitkerja, c.nama_jabatan, d.nm_pangkat, e.nm_agama,
+                                f.nama_kelurahan, g.nama_kecamatan, h.nama_kabupaten_kota, i.nm_sk')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                                ->join('db_pegawai.agama e', 'a.agama = e.id_agama')
+                                ->join('m_kelurahan f', 'a.id_m_kelurahan = f.id', 'left')
+                                ->join('m_kecamatan g', 'a.id_m_kecamatan = g.id', 'left')
+                                ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id', 'left')
+                                ->join('db_pegawai.statuskawin i', 'a.status = i.id_sk')
+                                ->where('a.nipbaru_ws', $nip)
+                                ->get()->row_array();
+
+        if($rs['data_pegawai']){
+            $rs['riwayat_pendidikan'] = $this->db->select('a.*, c.nm_tktpendidikanb')
+                                            ->from('db_pegawai.pegpendidikan a')
+                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            ->join('db_pegawai.tktpendidikanb c', 'a.tktpendidikan = c.id_tktpendidikanb')
+                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
+                                            ->order_by('tahunlulus', 'asc')
+                                            ->get()->result_array();
+
+            $rs['riwayat_pangkat'] = $this->db->select('a.*, c.nm_pangkat, d.nm_jenispengangkatan')
+                                            ->from('db_pegawai.pegpangkat a')
+                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                                            ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
+                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
+                                            ->order_by('tmtpangkat', 'asc')
+                                            ->get()->result_array();
+
+            $rs['riwayat_diklat'] = $this->db->select('a.*, c.nm_jdiklat')
+                                            ->from('db_pegawai.pegdiklat a')
+                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            ->join('db_pegawai.diklat c', 'a.jenisdiklat = c.id_diklat')
+                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
+                                            ->order_by('tglsttpp', 'asc')
+                                            ->get()->result_array();
+
+            $rs['riwayat_jabatan'] = $this->db->select('a.*')
+                                            ->from('db_pegawai.pegjabatan a')
+                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            // ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
+                                            // ->join('db_pegawai.unitkerja d', 'c.id_unitkerja = d.id_unitkerja')
+                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
+                                            ->order_by('tmtjabatan', 'asc')
+                                            ->get()->result_array();
+
+            $rs['riwayat_keluarga'] = $this->db->select('a.*, c.nm_keluarga')
+                                            ->from('db_pegawai.pegkeluarga a')
+                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            ->join('db_pegawai.keluarga c', 'a.hubkel = c.id_keluarga')
+                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
+                                            ->order_by('tgllahir', 'asc')
+                                            ->get()->result_array();
+        }
+        return $rs;
+    }
        function getMasterBidang($skpd){
         $this->db->select('*')
         ->where('id_unitkerja',$skpd)

@@ -399,7 +399,8 @@ class C_User extends CI_Controller
     }
 
     public function searchPegawaiNavbar(){
-        $data['result'] = $this->user->searchPegawai($this->input->post());
+        $data['result_pegawai'] = $this->user->searchPegawai($this->input->post());
+        $data['result_skpd'] = $this->user->searchSkpd($this->input->post());
         $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);
     }
 
@@ -421,7 +422,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_pensiun', $temp);
             $this->load->view('user/V_PegawaiPensiunItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }
@@ -451,7 +452,8 @@ class C_User extends CI_Controller
         render('user/V_PegawaiGajiBerkala', '', '', $data);
     }
 
-    public function pegawaiList(){
+    public function pegawaiList($search = ''){
+        $data['search'] = urldecode($search);
         $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
         $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
         $data['statuspeg'] = $this->m_general->getAll('db_pegawai.statuspeg', 0);
@@ -503,12 +505,39 @@ class C_User extends CI_Controller
                 'nm_jenis_kelamin' => 'Perempuan'
             ]
         ];
-        render('user/V_PegawaiAll', '', '', $data);
+        $data['jenis_jabatan'] = [
+            'Struktural' => [
+                'id_jenis_jabatan' => 'Struktural',
+                'nm_jenis_jabatan' => 'Struktural'
+            ],
+            'JFT' => [
+                'id_jenis_jabatan' => 'JFT',
+                'nm_jenis_jabatan' => 'JFT'
+            ],
+            'JFU' => [
+                'id_jenis_jabatan' => 'JFU',
+                'nm_jenis_jabatan' => 'JFU'
+            ],
+        ];
+        render('user/V_Database', '', '', $data);
     }
 
     public function searchAllPegawai(){
         list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
+        $this->session->set_userdata('data_search_database', $data);
         $this->load->view('user/V_PegawaiAllResult', $data);
+    }
+
+    public function downloadDataSearch(){
+        $data = $this->session->userdata('data_search_database');
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'Legal-P',
+            'debug' => true
+        ]);
+        $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);
+        $mpdf->WriteHTML($html);
+        $mpdf->showImageErrors = true;
+        $mpdf->Output('DATA ASN Kota Manado.pdf', 'D');
     }
 
     public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){
@@ -519,7 +548,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_gaji_berkala', $temp);
             $this->load->view('user/V_PegawaiGajiBerkalaItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }

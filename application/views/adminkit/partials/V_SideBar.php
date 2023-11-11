@@ -118,7 +118,7 @@
 		</a>
 	</li>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 		<li class="sidebar-item ">
 			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
@@ -132,11 +132,14 @@
 				</span>
 			</a>
 			<ul id="master" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 				<li class="sidebar-item ">
 					<a title="Perangkat Daerah" class="sidebar-link sidebar-link-child" href="<?=base_url('master/perangkat-daerah')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Perangkat Daerah
 					</a>
 				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 				<li class="sidebar-item ">
 					<a title="Bidang/Bagian" class="sidebar-link sidebar-link-child" href="<?=base_url('master/bidang')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Bidang/Bagian
@@ -167,8 +170,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
 					</a>
 				</li>
+				<?php } ?>
 			</ul>
 		</li>
+		<?php } ?>
+	<?php // if($this->general_library->isProrgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
 		<li class="sidebar-item ">
 			<a title="Manajemen User" data-bs-target="#user-management" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-users"></i> 
@@ -199,8 +205,7 @@
 				</li>
 			</ul>
 		</li>
-	<?php } ?>
-
+	<?php // } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian
@@ -218,8 +223,8 @@
 	|| $this->general_library->isPegawaiBkpsdm()
 	){ ?>
 		<li class="sidebar-item">
-			<a class="sidebar-link" href="<?=base_url();?>list-pegawai">
-				<i class="fa fa-database"></i> <span class="align-middle">Database Pegawai</span>
+			<a class="sidebar-link" href="<?=base_url();?>database">
+				<i class="fa fa-database"></i> <span class="align-middle">Database</span>
 			</a>
 		</li>
 		<li class="sidebar-item">
@@ -396,7 +401,16 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
-				Nine Box
+				Nine Box & Rencana Suksesi
+				</span>
+			</a>	
+		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/profil-talenta" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+				<span class="align-middle">
+				Profil Talenta
 				</span>
 			</a>	
 		</li>

@@ -587,7 +587,11 @@
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }
-                $result['agama'][$peg['agama']]['jumlah']++;
+                if(isset($result['agama'][$peg['agama']]['jumlah'])){
+                    $result['agama'][$peg['agama']]['jumlah']++;
+                } else {
+                    $result['agama'][$peg['agama']]['jumlah'] = 1;
+                }
                 if($peg['jk'] == 'Laki-Laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {
@@ -636,7 +640,8 @@
             }
 
             if($data['nama_pegawai']){
-                $this->db->like('a.nama', $data['nama_pegawai']);
+                // $this->db->like('a.nama', $data['nama_pegawai']);
+                $this->db->where('(a.nama LIKE "%'.$data['nama_pegawai'].'%" OR a.nipbaru_ws LIKE "%'.$data['nama_pegawai'].'%")');
             }
 
             // $result = $this->db->get()->result_array();

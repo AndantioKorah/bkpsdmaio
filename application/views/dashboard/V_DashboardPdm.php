@@ -1,30 +1,43 @@
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card card-default">
-            <div class="card-header">
-                <h5 class="card-title">DASHBOARD PENDATAAN DATA MANDIRI</h5>
+    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+        <div class="col-lg-12">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h5 class="card-title">DASHBOARD PENDATAAN DATA MANDIRI</h5>
+                </div>
+                <div class="card-body">
+                    <form id="form_pdm">
+                        <div class="row" style="margin-top: -30px;">
+                            <div class="col-lg-12">
+                                <label>Pilih Unit Kerja</label>
+                                <select class="form-control select2-navy" 
+                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
+                                    <option value="0" selected>Semua</option>
+                                    <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>
+                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-lg-12 mt-3">
+                                <button class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card-body">
-                <form id="form_pdm">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label>Pilih Unit Kerja</label>
-                            <select class="form-control select2-navy" 
-                                id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
-                                <!-- <option value="0" selected>Semua</option> -->
-                                <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>
-                                    <option <?= $this->general_library->getUnitKerjaPegawai() == $u['id_unitkerja'] ? 'selected' : '';?> value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="col-lg-12 mt-3">
-                            <button class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
-                        </div>
-                    </div>
+        </div>
+    <?php } else { ?>
+        <div class="col-lg-12">
+            <div class="card card-default">
+                <div class="card-header">
+                    <div class=""><h4 class="font-weight-bold">DASHBOARD PDM <?=strtoupper($this->general_library->getNamaSKPDUser())?></h4></div>
+                </div>
+                <form id="form_pdm" style="display: none;">
+                    <input name="unitkerja" value="<?=$this->general_library->getUnitKerjaPegawai()?>" />
                 </form>
             </div>
         </div>
-    </div>
+    <?php } ?>
     <div class="col-lg-12">
         <div class="row" id="div_result"></div>
     </div>

@@ -31,12 +31,13 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('jabatan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('jabatan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
@@ -44,6 +45,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
+      var jumlah = $('#jumlahdokjab').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
@@ -253,6 +258,29 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 </div>
 
+
+
+<div class="modal fade" id="modal_edit_jabatan" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Jabatan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_jabatan_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script type="text/javascript">

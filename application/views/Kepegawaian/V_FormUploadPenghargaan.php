@@ -103,21 +103,37 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_penghargaan" enctype="multipart/form-data" >
-   
+
+  <form method="post" id="upload_form_penghargaan" enctype="multipart/form-data" >
    <input type="hidden" id="id_pegpenghargaan" name="id_pegpenghargaan" value="">
    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
    <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
 
   <div class="form-group">
-    <label>Nama Penghargaan</label>
-    <input class="form-control customInput" list="listpenghargaan" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan" autocomplete="off"  required/>
-    <datalist id="listpenghargaan">
-    <option value="Satyalencana Karya Satya 10 tahun">Satyalencana Karya Satya 10 tahun</option>
-    <option value="Satyalencana Karya Satya 20 tahun">Satyalencana Karya Satya 20 tahun</option>           
-    <option value="Satyalencana Karya Satya 30 tahun">Satyalencana Karya Satya 30 tahun</option>           
+    <label>Penghargaan</label>
+    <select onchange="myFunction()" class="form-control select2"  type="text" id="pegpenghargaan" name="pegpenghargaan" autocomplete="off"  required>
+    <option selected disabled value="">Pilih Item</option>
+    <option value="1">Satyalencana Karya Satya 10 tahun</option>
+    <option value="2">Satyalencana Karya Satya 20 tahun</option>           
+    <option value="3">Satyalencana Karya Satya 30 tahun</option>           
+    <option value="4">Penghargaan Lainnya</option>         
+    </select>
+  </div>
 
-    </datalist>
+  <script>
+    function myFunction(val) {
+    var val = $('#pegpenghargaan').val()
+    if(val == 4){
+    $('#nama_peg').show('fast')
+    } else {
+      $('#nama_peg').hide('fast')
+    }
+    }
+  </script>
+  
+  <div class="form-group" style="display:none" id="nama_peg">
+    <label>Nama Penghargaan</label>
+    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  />
   </div>
 
   <div class="form-group">
@@ -250,12 +266,20 @@ $(function(){
         var formvalue = $('#upload_form_penghargaan');
         var form_data = new FormData(formvalue[0]);
 
+        var pegpenghargaan = $('#pegpenghargaan').val()
+        var nm_penghargaan = $('#nm_pegpenghargaan').val()
+
         var ins = document.getElementById('pdf_file_penghargaan').files.length;
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-       
+
+        if(pegpenghargaan == 4){
+          if(nm_penghargaan == ""){
+            errortoast("Silahkan isi nama penghargaan");
+          }
+        }
        
         document.getElementById('btn_upload_penghargaan').disabled = true;
         $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

@@ -144,6 +144,11 @@
 
   })
 
+  $("#myModalJabatan").on('hide.bs.modal', function(){
+    $("#pills-jabatan-tab").trigger( "click" )
+  });
+
+
   $(document).on("click", ".open-DetailJabatan", function () {
      var id = $(this).data('id');
      var nm_jabatan = $(this).data('nm_jabatan');

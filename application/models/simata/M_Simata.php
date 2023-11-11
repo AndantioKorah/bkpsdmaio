@@ -627,6 +627,7 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $cek =  $this->db->select('*')
                                     ->from('db_simata.t_penilaian_potensial a')
                                     ->where('a.id_peg', $data["id_peg"])
+                                    ->where('a.jabatan_target', $this->input->post('jabatan_target'))
                                     ->where('a.nilai_assesment is not null')
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
@@ -983,6 +984,75 @@ public function getPegawaiPenilaianKinerjaJpt(){
 
             return  $this->db->get()->result_array();
         }
+
+
+        
+public function loadListProfilTalentaAdm(){
+    return $this->db->select('*')
+                    ->from('db_simata.t_penilaian a')
+                    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                    ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+                    ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.id', 'asc') 
+                    ->get()->result_array();
+}
+
+function getPegawaiNilaiKinerjaPT($nip){
+    $this->db->select('`a`.*,
+	`b`.`nipbaru`,
+	 c.nm_kriteria as kinerja1,
+	 c.skor as skor1,
+	  d.nm_kriteria as kinerja2,
+	 d.skor as skor2,
+	 	  e.nm_kriteria as kinerja3,
+	 e.skor as skor3,
+	 	  f.nm_kriteria as kinerja4,
+	 f.skor as skor4,
+	 	  g.nm_kriteria as kinerja5,
+	 g.skor as skor5')
+        ->from('db_simata.t_penilaian_kinerja a')
+        ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+        ->join('db_simata.m_kriteria_penilaian c', 'a.kriteria1 = c.id')
+        ->join('db_simata.m_kriteria_penilaian d', 'a.kriteria2 = d.id')
+        ->join('db_simata.m_kriteria_penilaian e', 'a.kriteria3 = e.id')
+        ->join('db_simata.m_kriteria_penilaian f', 'a.kriteria4 = f.id')
+        ->join('db_simata.m_kriteria_penilaian g', 'a.kriteria5 = g.id')
+        ->where('b.nipbaru', $nip);
+        // ->limit(1);
+    return $this->db->get()->row_array();
+}
+
+function getPegawaiNilaiPotensialPT($nip,$jt){
+    $this->db->select('a.*,b.nipbaru,
+    c.nm_kriteria as potensial1,
+    c.skor as skor1,
+     d.nm_kriteria as potensial2,
+    d.skor as skor2,
+          e.nm_kriteria as potensial3,
+    e.skor as skor3,
+          f.nm_kriteria as potensial4,
+    f.skor as skor4,
+          g.nm_kriteria as potensial5,
+    g.skor as skor5,
+    h.nm_kriteria as potensial6,
+    h.skor as skor6,
+    i.nm_kriteria as potensial7,
+    i.skor as skor7')
+        ->from('db_simata.t_penilaian_potensial a')
+        ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+        ->join('db_simata.m_kriteria_penilaian c', 'a.pendidikan_formal = c.id','left')
+        ->join('db_simata.m_kriteria_penilaian d', 'a.pangkat_gol = d.id','left')
+        ->join('db_simata.m_kriteria_penilaian e', 'a.masa_kerja_jabatan = e.id','left')
+        ->join('db_simata.m_kriteria_penilaian f', 'a.diklat = f.id','left')
+        ->join('db_simata.m_kriteria_penilaian g', 'a.kompetensi20_jp = g.id','left')
+        ->join('db_simata.m_kriteria_penilaian h', 'a.penghargaan = h.id','left')
+        ->join('db_simata.m_kriteria_penilaian i', 'a.riwayat_hukdis = i.id','left')
+        ->where('b.nipbaru', $nip)
+        ->where('a.jabatan_target', $jt);
+        // ->limit(1);
+    return $this->db->get()->row_array();
+}
           
       
             

@@ -20,6 +20,13 @@
     }
 </style>
 <div class="col-lg-12 p-3">
+    <div class="row mb-3">
+        <div class="col-lg-12 text-right">
+            <form action="<?=base_url('user/C_User/downloadDataSearch')?>" target="_blank">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+            </form>
+        </div>
+    </div>
     <table class="table table-hover" id="result_all_pegawai">
         <thead>
             <th class="text-center">No</th>

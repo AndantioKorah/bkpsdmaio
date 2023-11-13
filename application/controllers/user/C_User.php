@@ -505,12 +505,39 @@ class C_User extends CI_Controller
                 'nm_jenis_kelamin' => 'Perempuan'
             ]
         ];
+        $data['jenis_jabatan'] = [
+            'Struktural' => [
+                'id_jenis_jabatan' => 'Struktural',
+                'nm_jenis_jabatan' => 'Struktural'
+            ],
+            'JFT' => [
+                'id_jenis_jabatan' => 'JFT',
+                'nm_jenis_jabatan' => 'JFT'
+            ],
+            'JFU' => [
+                'id_jenis_jabatan' => 'JFU',
+                'nm_jenis_jabatan' => 'JFU'
+            ],
+        ];
         render('user/V_Database', '', '', $data);
     }
 
     public function searchAllPegawai(){
         list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
+        $this->session->set_userdata('data_search_database', $data);
         $this->load->view('user/V_PegawaiAllResult', $data);
+    }
+
+    public function downloadDataSearch(){
+        $data = $this->session->userdata('data_search_database');
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'Legal-P',
+            'debug' => true
+        ]);
+        $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);
+        $mpdf->WriteHTML($html);
+        $mpdf->showImageErrors = true;
+        $mpdf->Output('DATA ASN Kota Manado.pdf', 'D');
     }
 
     public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){

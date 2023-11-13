@@ -26,7 +26,7 @@
 	<link rel="stylesheet" type="text/css" href="assets/new_login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="assets/new_login/css/main.css">
 	<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
-    <link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/iconSiladen.png" />
+    <link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/logo-siladen-small.png" />
 
 <!--===============================================================================================-->
 </head>

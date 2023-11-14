@@ -1566,6 +1566,8 @@ class M_Kepegawaian extends CI_Model
                 'docfile'  => $base64
             ]);
 
+            
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_inovasi']      = $this->input->post('nm_inovasi');
             $dataInsert['kriteria_inovasi']      = $this->input->post('kriteria_inovasi');
@@ -1632,20 +1634,24 @@ class M_Kepegawaian extends CI_Model
 
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $this->general_library->getId().$random_number.$dataFile['file_name'];
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
                 'username' => "199401042020121011",
                 'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$dataFile['file_name'],
+                'filename' => $path.$filename,
                 'docfile'  => $base64
             ]);
+
+           
 
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_timkerja']      = $this->input->post('nm_timkerja');
             $dataInsert['jabatan']      = $this->input->post('jabatan');
             $dataInsert['lingkup_timkerja']      = $this->input->post('lingkup_timkerja');
-            $dataInsert['gambarsk']         = $dataFile['file_name'];
+            $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -1705,19 +1711,23 @@ class M_Kepegawaian extends CI_Model
 		} else {
 			$dataFile 			= $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $this->general_library->getId().$random_number.$dataFile['file_name'];
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
             $res = $this->dokumenlib->setDokumenWs('POST',[
                 'username' => "199401042020121011",
                 'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$dataFile['file_name'],
+                'filename' => $path. $filename,
                 'docfile'  => $base64
             ]);
 
+            
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
-            $dataInsert['gambarsk']         = $dataFile['file_name'];
+            $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
@@ -1873,7 +1883,9 @@ class M_Kepegawaian extends CI_Model
             }
         }  else if($id_dok == 41){
                 $name = "SUMJAN_".$nip;
-        } 
+        } else if($id_dok == 49){
+                $name = "PENGHARGAAN".$nip;
+        }  
 
         
 
@@ -2514,7 +2526,7 @@ function getNamaJabatanEdit(){
     $this->db->select('*')
     // ->where('id !=', 0)
     // ->where('flag_active', 1)
-    // ->group_by('a.nama_jabatan')
+    ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
 }
@@ -3397,15 +3409,18 @@ public function submitEditJabatan(){
     }
     } else {
 
-        $str = $this->input->post('edit_jabatan_nama');
-        $newStr = explode(",", $str);
-        $id_jabatan = $newStr[0];
-        $nama_jabatan = $newStr[1]; 
-
-
+        // $str = $this->input->post('edit_jabatan_nama');
+        // if($str){
+        //     $newStr = explode(",", $str);
+        //     $id_jabatan = $newStr[0];
+        //     $nama_jabatan = $newStr[1];
+           
+        //     $data['id_jabatan']      = $id_jabatan; 
+        // }
+       
+        
         $id = $datapost['id'];
-        $data['nm_jabatan']      = $nama_jabatan;
-        $data['id_jabatan']      = $id_jabatan;
+        $data['nm_jabatan']      =  $this->input->post('edit_jabatan_nama');
         $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
         $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
         $data['statusjabatan']      = $this->input->post('edit_jabatan_status');

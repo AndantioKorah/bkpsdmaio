@@ -39,6 +39,13 @@
     
    
 
+  
+
+  
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
+    </div>
+   <?php } ?>
+
    <div class="form-group">
     <label>TMT Pangkat</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_tmt_pangkat" name="edit_tmt_pangkat" value="<?=$pangkat[0]['tmtpangkat'];?>" readonly required/>
@@ -49,23 +56,22 @@
     <input class="form-control" type="text" id="edit_masa_kerja" name="edit_masa_kerja" value="<?=$pangkat[0]['masakerjapangkat'];?>"  required/>
   </div>
 
-  <div class="form-group">
-    <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control" type="text" id="edit_pejabat" name="edit_pejabat" value="<?=$pangkat[0]['pejabat'];?>"  required/>
-  </div>
-
+   
   <div class="form-group">
     <label>Nomor SK</label>
     <input class="form-control" type="text" id="edit_no_sk" name="edit_no_sk" value="<?=$pangkat[0]['nosk'];?>"  required/>
   </div>
 
-  <div class="form-group">
+
+   <div class="form-group">
     <label>Tanggal SK</label>
     <input autocomplete="off"  class="form-control datepicker" id="edit_tanggal_sk" name="edit_tanggal_sk" value="<?=$pangkat[0]['tglsk'];?>" readonly required/>
   </div>
-  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
-    </div>
-   <?php } ?>
+
+   <div class="form-group">
+    <label>Pejabat Yang Menetapkan</label>
+    <input class="form-control" type="text" id="edit_pejabat" name="edit_pejabat" value="<?=$pangkat[0]['pejabat'];?>"  required/>
+  </div>
 
  
   <div class="form-group">

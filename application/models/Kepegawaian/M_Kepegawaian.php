@@ -3372,6 +3372,9 @@ public function submitEditJabatan(){
 
         $file_tmp = $_FILES['file']['tmp_name'];
         $data_file = file_get_contents($file_tmp);
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = $random_number.$filename;
+
         $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
         $path = substr($target_dir,2);
         $res = $this->dokumenlib->setDokumenWs('POST',[
@@ -3381,14 +3384,14 @@ public function submitEditJabatan(){
             'docfile'  => $base64
         ]);
        
-            $str = $this->input->post('edit_jabatan_nama');
-            $newStr = explode(",", $str);
-            $id_jabatan = $newStr[0];
-            $nama_jabatan = $newStr[1]; 
+            // $str = $this->input->post('edit_jabatan_nama');
+            // $newStr = explode(",", $str);
+            // $id_jabatan = $newStr[0];
+            // $nama_jabatan = $newStr[1]; 
 
             $id = $datapost['id'];
-            $data['nm_jabatan']      = $nama_jabatan;
-            $data['id_jabatan']      = $id_jabatan;
+            $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
+            // $data['id_jabatan']      = $id_jabatan;
             $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
             $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
             $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
@@ -3492,8 +3495,8 @@ public function submitEditJabatan(){
 		} else {
 			$dataFile = $this->upload->data();
             // $dataFile 			= $this->upload->data();
-            // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            // $filename = $random_number.$dataFile['file_name'];
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
 
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
@@ -3589,6 +3592,10 @@ public function submitEditJabatan(){
 		} else {
 			$dataFile = $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+
+            
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);

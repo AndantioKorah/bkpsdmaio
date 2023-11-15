@@ -74,6 +74,13 @@ class C_User extends CI_Controller
         $this->general->update('id', $id, 't_verif_tambahan', ['flag_active' => 0]);
     }
 
+    public function sinkronNoHp(){
+        $params['username'] = $this->general_library->getUserName();
+        $params['password'] = $this->general_library->getPassword();
+        $result = $this->apilib->getAllNoHpFromSiladen('POST', $params);
+        dd($result);
+    }
+
     // public function importPegawaiByUnitKerja(){
     //     $this->user->importPegawaiByUnitKerja(IMPORT_UNIT_KERJA);
     // }

@@ -71,10 +71,11 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('*, a.nama as nama_user')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                        ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('a.flag_active', 1);

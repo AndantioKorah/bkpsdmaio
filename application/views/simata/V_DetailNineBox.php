@@ -48,7 +48,9 @@
                 <td class="text-center"><?=$rs2['res_potensial_total'];?> </td>
                 <td class="text-center"><?=numberToRoman($kotak);?></td>
                 <?php if($jt == 0) { ?>
-                <td class="text-center">Rekom</td>
+                <td class="text-left">
+                    <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
+                </td>
                 <?php } else { ?>
                 <td class="text-center"><?=$no++;?></td>
                <?php } ?>

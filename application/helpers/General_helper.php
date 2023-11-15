@@ -882,6 +882,80 @@ function pemetaanTalenta($nilaix,$nilaiy){
     return $hasil;
 }
 
+function rekomendasi($nilaix,$nilaiy){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalPotensial();
+
+    
+    $hasil = null;
+    $badge = null;
+    if($nilaix >= 85 && $nilaiy >= 85) {
+        $hasil = "IX";
+        $rekom = "1. Dipromosikan dan dipertahankan
+        2. Masuk Kelompok Rencana Suksesi
+        Instansi/Nasional
+        3. Penghargaan";
+       } 
+       if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        // print_r($nilaix."-".$nilaiy.",");
+        $hasil = "VIII";
+        $rekom = "1. Dipertahankan<br>
+        2. Masuk Kelompok Rencana Suksesi
+        Instansi<br>
+        3. Rotasi/Perluasan jabatan<br>
+        4. Bimbingan kinerja";
+       }
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+        $hasil = "VII";
+        $rekom = "1. Dipertahankan <br>
+        2. Masuk Kelompok Rencana Suksesi 
+        Instansi<br>
+        3. Rotasi/Pengayaan jabatan <br>
+        4. Pengembangan kompetensi <br>
+        5. Tugas belajar"; 
+       } 
+      if($nilaix >= 85 && $nilaiy < 70) {
+        $hasil = "VI";
+        $rekom = "1. Penempatan yang sesuai<br>
+        2. Bimbingan kinerja<br>
+        3. Konseling kinerja
+        ";
+       } 
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "V";
+        $rekom = "1. Penempatan yang sesuai<br>
+        2. Bimbingan kinerja<br>
+        3. Pengembangan kompetensi";
+      } 
+      if($nilaix < 70 && $nilaiy >= 85) {
+        $hasil = "IV";
+        $rekom = "1. Rotasi<br>
+        2. Pengembangan kompetensi";
+      } 
+      if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+        $hasil = "III";
+        $rekom = "1. Bimbingan kinerja<br>
+        2. Konseling kinerja<br>
+        3. Pengembangan kompetensi<br>
+        4. Penempatan yang sesuai";
+      }
+      if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "II";
+        $rekom = "1. Bimbingan kinerja<br>
+        2. Pengembangan kompetensi<br>
+        3. Penempatan yang sesuai
+        ";
+      }
+      if($nilaix < 70 && $nilaiy < 70) {
+        $hasil = "I";
+        $rekom = "Diproses sesuai ketentuan peraturan
+        perundangan";
+      }  
+
+    return $rekom;
+}
+
 
 
 function numberToRoman($number) {

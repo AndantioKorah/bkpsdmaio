@@ -1702,7 +1702,7 @@ animation06
     <table class="table table-bordered" border="1" style="width:110%;margin-left:-20px;color:#fff;">
     <thead>
       <tr>
-        <th valign="top" class="text-center">Kuadran</th>
+        <th valign="top" class="text-center">Kotak</th>
         <th class="text-center">Jumlah Suksesi</th>
       </tr>
 

@@ -47,7 +47,7 @@
        
       </div>
       <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
-      <select   class="form-control select2 " data-dropdown-css-class="select2-navy" name="edit_unit_kerja" id="edit_unit_kerja" required>     
+      <select   class="form-control select2 " data-dropdown-parent="#editProfileModal" data-dropdown-css-class="select2-navy" name="edit_unit_kerja" id="edit_unit_kerja" required>     
       <option value="" disabled selected>Pilih Unit Kerja</option>
                     <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
                         <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?>   value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>

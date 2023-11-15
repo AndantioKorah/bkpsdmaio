@@ -24,23 +24,13 @@
     </select>
     </div>
 
-    
-    
- 
 
-    <div class="form-group" style="margin-bottom:10px !important;">
-    <label for="jabatan_jenis">Nama Jabatan </label>
-    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="edit_jabatan_nama" id="edit_jabatan_nama" required>
-                    <option value="" disabled selected>Pilih Item</option>
-                    <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
-                        <option <?php if($jabatan[0]['id_jabatan'] == $r['id_jabatanpeg']) echo "selected"; else echo ""; ?>  value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
-                    <?php } } ?>
-    </select>
-    </div>
+    
+
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_jenis">Status Jabatan </label>
 
-                    <select class="form-control select2" data-dropdown-css-class="" name="edit_jabatan_status" id="edit_jabatan_status" required>
+                    <select class="form-control select2" data-dropdown-css-class="" name="edit_jabatan_status" id="edit_jabatan_status" >
                     <option <?php if($jabatan[0]['statusjabatan'] == 1) echo "selected"; else echo ""; ?> value=1 >Definitif</option>
                     <option <?php if($jabatan[0]['statusjabatan'] == 2) echo "selected"; else echo ""; ?> value=2 >Plt</option>
                     <option <?php if($jabatan[0]['statusjabatan'] == 3) echo "selected"; else echo ""; ?> value=3 >Plh</option>
@@ -48,15 +38,6 @@
     </div>
    
 
-  <div class="form-group">
-    <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control customInput" type="text" id="edit_jabatan_pejabat" name="edit_jabatan_pejabat"  value="<?=$jabatan[0]['pejabat']?>"/>
-  </div>
-
-  <div class="form-group">
-    <label>TMT Jabatan</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="edit_jabatan_tmt" name="edit_jabatan_tmt"  value="<?=$jabatan[0]['tmtjabatan']?>"/>
-  </div>
 
 
   <div class="form-group" style="margin-bottom:10px !important;">
@@ -69,7 +50,34 @@
     </select>
     </div>
 
+ 
+
+
+
+
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
+    </div>
+   <?php } ?>
+
+   <div class="form-group" style="margin-bottom:10px !important;">
+    <label for="jabatan_jenis">Nama Jabatan </label>
+    <input class="form-control customInput" type="text" id="edit_jabatan_nama" name="edit_jabatan_nama"  value="<?=$jabatan[0]['nama_jabatan']?>"/>
+    </div>
+
+ 
+
+   <div class="form-group">
+    <label>Pejabat Yang Menetapkan</label>
+    <input class="form-control customInput" type="text" id="edit_jabatan_pejabat" name="edit_jabatan_pejabat"  value="<?=$jabatan[0]['pejabat']?>"/>
+  </div>
+
   <div class="form-group">
+    <label>TMT Jabatan</label>
+    <input autocomplete="off"  class="form-control datepicker"   id="edit_jabatan_tmt" name="edit_jabatan_tmt"  value="<?=$jabatan[0]['tmtjabatan']?>"/>
+  </div>
+
+
+   <div class="form-group">
     <label>Nomor SK</label>
     <input class="form-control customInput" type="text" id="edit_jabatan_no_sk" name="edit_jabatan_no_sk"  value="<?=$jabatan[0]['nosk']?>"/>
   </div>
@@ -78,7 +86,6 @@
     <label>Tanggal SK</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_jabatan_tanggal_sk" name="edit_jabatan_tanggal_sk" readonly value="<?=$jabatan[0]['tglsk']?>"/>
   </div>
-
 
   <div class="form-group">
     <label>Angka Kredit</label>
@@ -90,11 +97,6 @@
     <input class="form-control customInput" type="text" id="edit_jataban_keterangan" name="edit_jataban_keterangan"  value="<?=$jabatan[0]['ket']?>"/>
   </div>
 
-  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
-    </div>
-   <?php } ?>
-
- 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_jab" name="file"/>

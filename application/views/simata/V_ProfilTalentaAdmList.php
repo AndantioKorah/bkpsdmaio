@@ -32,6 +32,7 @@
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
                 <th>Hasil Pemetanaan</th>
+                <th>Rekomendasi</th>
 				<th></th>
             </tr>
         </thead>
@@ -49,6 +50,9 @@
                 <td><?=$rs2['res_potensial_total'];?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
                 <td><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></td>
+                <td>
+                <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
+                </td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT btn btn-sm btn-info">
@@ -70,6 +74,7 @@
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
                 <th>Hasil Pemetanaan</th>
+                <th>Rekomendasi</th>
 				<th></th>
             </tr>
         </tfoot>
@@ -97,7 +102,7 @@ var table = $('#example').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="10">' +
+                            '<tr class="group"><td colspan="11">' +
                                 group +
                                 '</td></tr>'
                         );

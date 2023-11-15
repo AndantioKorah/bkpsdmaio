@@ -319,23 +319,27 @@ $(function(){
         return false;
         }
 
-        // document.getElementById('btn_upload_jabatan').disabled = true;
        
+        document.getElementById('btn_upload_jabatan').disabled = true;
+        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
 
         if(tmtjabatan == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
           errortoast("tmt jabatan masih kosong")
           document.getElementById("jabatan_tmt").focus();
           return false;
         }
 
         if(tglsk == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
           errortoast("tanggal sk masih kosong")
           document.getElementById("jabatan_tanggal_sk").focus();
           return false;
         }
         
-
-        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        
        
      
       

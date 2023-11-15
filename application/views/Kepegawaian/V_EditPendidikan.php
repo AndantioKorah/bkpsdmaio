@@ -16,6 +16,11 @@
   <?php }?>
 
 
+  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+  </div>
+   <?php } ?>
+
+
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Tingkat Pendidikan </label>
     <select class="form-control select2" data-dropdown-parent="#modal_edit_pendidikan" data-dropdown-css-class="select2-navy" name="edit_pendidikan_tingkat" id="edit_pendidikan_tingkat" required>
@@ -61,9 +66,6 @@
     <label>Tgl. STTB/Ijazah</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_pendidikan_tanggal_ijazah" name="edit_pendidikan_tanggal_ijazah" value="<?= $pendidikan[0]['tglijasah'];?>" required/>
   </div>
-  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
-  </div>
-   <?php } ?>
 
 
   <div class="form-group">

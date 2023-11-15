@@ -10,13 +10,13 @@
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkasPns">
-  Tambah Data SK CPNS & PNS
+  Tambah Data SK CPNS, PNS & PPPK
 </button>
 
 
 
 <button onclick="loadRiwayatUsulBerkasPns()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalBerkasPns">
-  Riwayat Usul SK CPNS & PNS
+  Riwayat Usul SK CPNS, PNS & PPPK
 </button>
 
 
@@ -117,6 +117,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <option  selected>- Pilih Jenis SK -</option>
     <option value="1">SK CPNS</option>
     <option value="2">SK PNS</option>
+    <option value="3">SK PPPK</option>
         </select>
         </div>
         <br>

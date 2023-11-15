@@ -233,17 +233,22 @@
 			</a>
 		</li>
 	<?php } ?>
-	<?php if($this->general_library->isProgrammer() 
-	|| $this->general_library->isAdminAplikasi() 
-	|| $this->general_library->isWalikota() 
-	// || $this->general_library->isWakilWalikota()
-	){ ?>
+	<?php
+		if($this->general_library->isProgrammer() 
+		|| $this->general_library->isAdminAplikasi() 
+		|| $this->general_library->isWalikota() 
+		// || $this->general_library->isWakilWalikota()
+		|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+		){ 
+	?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>pdm/dashboard">
 				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
 			</a>
 		</li>
-	<?php } ?>
+	<?php
+		}
+	?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a class="sidebar-link" href="#">

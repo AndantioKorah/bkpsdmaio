@@ -646,6 +646,15 @@ function logErrorTelegram($data)
     $this->general_library->logErrorTelegram($data);
 }
 
+function isKasubKepegawaian($nama_jabatan){
+    return (stringStartWith('Kepala Sub', $nama_jabatan) || 
+    stringStartWith('Kepala Seksi', $nama_jabatan) ||
+    stringStartWith('Kasubag', $nama_jabatan) ||
+    stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
+    stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
+    stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
+}
+
 function get_client_ip()
 {
     $ipaddress = '';

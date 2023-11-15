@@ -410,6 +410,11 @@ class General_library
         return $this->userLoggedIn['nama_user'];
     }
 
+    public function getNamaJabatan(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['nama_jabatan'];
+    }
+
     public function getId(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn ? $this->userLoggedIn['id'] : '';

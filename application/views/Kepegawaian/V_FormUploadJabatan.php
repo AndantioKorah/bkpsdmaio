@@ -259,6 +259,21 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>
 
 
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        DOKUMEN
+      </div> -->
+      <div class="modal-body" id="">
+       
+      </div>
+    </div>
+  </div>
+</div>  
+
+
+
 
 <div class="modal fade" id="modal_edit_jabatan" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-lg" role="document">
@@ -319,23 +334,27 @@ $(function(){
         return false;
         }
 
-        // document.getElementById('btn_upload_jabatan').disabled = true;
        
+        document.getElementById('btn_upload_jabatan').disabled = true;
+        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
 
         if(tmtjabatan == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
           errortoast("tmt jabatan masih kosong")
           document.getElementById("jabatan_tmt").focus();
           return false;
         }
 
         if(tglsk == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
           errortoast("tanggal sk masih kosong")
           document.getElementById("jabatan_tanggal_sk").focus();
           return false;
         }
         
-
-        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        
        
      
       

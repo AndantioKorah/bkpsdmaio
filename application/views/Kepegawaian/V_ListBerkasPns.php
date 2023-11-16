@@ -18,7 +18,7 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?php if($rs['jenissk'] == 1) echo 'SK CPNS'; else echo 'SK PNS';?></td>
+              <td class="text-left"><?php if($rs['jenissk'] == 1) echo 'SK CPNS'; else if($rs['jenissk'] == 2) echo 'SK PNS'; else echo 'SK PPPK'?></td>
               <td class="text-left">
 
               <button href="#modal_view_file_berkas_pns" onclick="openFileBerkasPns('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

@@ -1,5 +1,5 @@
 <div class="row">
-    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isWalikota()){ ?>
         <div class="col-lg-12">
             <div class="card card-default">
                 <div class="card-header">

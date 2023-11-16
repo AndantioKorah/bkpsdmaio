@@ -3261,6 +3261,16 @@ public function getAllPelanggaranByNip($nip){
                        return $query;
    }
 
+   function getArsipLainEdit($id){
+    $this->db->select('*')
+                   ->from('m_user a')
+                   ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                   ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
+                   ->where('c.id', $id);                
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
+
    function getPendidikanEdit($id){
     $this->db->select('*')
                    ->from('m_user a')
@@ -4131,6 +4141,73 @@ public function submitEditJabatan(){
                     ->update('db_pegawai.pegsumpah', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+       public function submitEditArsipLain(){
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $target_dir = './arsiplain/';
+        $filename = $this->input->post('gambarsk');
+       
+        if($_FILES['file']['name'] != ""){
+       
+            if($filename == ""){
+                $filename = $_FILES['file']['name'];
+            } 
+           
+    
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $this->general_library->getId().$random_number.$filename;
+
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $res = $this->dokumenlib->setDokumenWs('POST',[
+                'username' => "199401042020121011",
+                'password' => "039945c6ccf8669b8df44612765a492a",
+                'filename' => $path.$filename,
+                'docfile'  => $base64
+            ]);
+           
+            $id = $datapost['id'];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegarsip', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        } else {
+            $id = $datapost['id'];
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         }
 
         if($this->db->trans_status() == FALSE){

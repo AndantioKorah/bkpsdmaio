@@ -1215,6 +1215,12 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_EditGajiBerkala', $data);
     }
 
+	public function loadEditArsipLain($id)
+    {
+		$data['arsip'] = $this->kepegawaian->getArsipLainEdit($id);
+        $this->load->view('kepegawaian/V_EditArsipLain', $data);
+    }
+
 	public function loadEditPendidikan($id)
     {
 		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
@@ -1316,6 +1322,11 @@ class C_Kepegawaian extends CI_Controller
 	public function submitEditSumjan()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditSumjan());
+	}
+
+	public function submitEditArsipLain()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditArsipLain());
 	}
 
 	public function loadDataDrh($nip){

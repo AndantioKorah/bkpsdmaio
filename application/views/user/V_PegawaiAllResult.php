@@ -25,6 +25,9 @@
             <form action="<?=base_url('user/C_User/downloadDataSearch')?>" target="_blank">
                 <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
             </form>
+            <form class="mt-2" action="<?=base_url('user/C_User/downloadDataSearch/1')?>" target="_blank">
+                <button type="submit" class="btn btn-success"><i class="fa fa-file-pdf"></i> Download as Excel</button>
+            </form>
         </div>
     </div>
     <table class="table table-hover" id="result_all_pegawai">

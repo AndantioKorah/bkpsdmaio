@@ -6,11 +6,11 @@
     <div class="card-body" style="margin-top: -30px;">
         <form id="form_search">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <label>Pilih Tahun</label>
                     <input autocomplete="off" value="<?=date('Y')?>" class="form-control tahunpicker" name="tahun" id="tahun" />
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <label>Eselon</label>
                     <select class="form-control select2-navy" 
                         id="eselon" data-dropdown-css-class="select2-navy" name="eselon" required>
@@ -20,7 +20,17 @@
                         <?php } ?>
                     </select>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
+                    <label>Jenis Jabatan</label>
+                    <select class="form-control select2-navy" 
+                        id="jenis_jabatan" data-dropdown-css-class="select2-navy" name="jenis_jabatan" required>
+                        <option value="0" selected>Semua</option>
+                        <option value="Struktural">Struktural</option>
+                        <option value="JFT">JFT</option>
+                        <option value="JFU">JFU</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
                     <label>Pangkat</label>
                     <select class="form-control select2-navy" 
                         id="pangkat" data-dropdown-css-class="select2-navy" name="pangkat" required>

@@ -655,6 +655,20 @@ function isKasubKepegawaian($nama_jabatan){
     stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
 }
 
+function countTmtPensiun($nip){
+    $tahun = floatval(substr($nip, 0, 4));
+    $bulan = floatval(substr($nip, 4, 2));
+    $tanggal = substr($nip, 6, 2);
+    
+    if($bulan == '12'){
+        $tahun += 1;
+        return $tahun."-01-01";
+    } else {
+        $bulan += 1;
+        return $tahun.'-'.$bulan.'-01';
+    }
+}
+
 function get_client_ip()
 {
     $ipaddress = '';

@@ -105,6 +105,7 @@
       <div class="col-lg-10" <?=$style;?>>
       <select class="form-control select2"  data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_id_m_bidang" id="edit_id_m_bidang" <?=$style;?>>
                     <option value="" selected>Pilih Item</option>
+                    <option <?php if($bidang['id_m_bidang'] == 0) echo "selected"; else echo ""; ?> value="0" >-</option>
                     <?php if($mbidang){ foreach($mbidang as $r){ ?>
                         <option <?php if($bidang['id_m_bidang'] == $r['id']) echo "selected"; else echo ""; ?>  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
                     <?php } } ?>
@@ -115,7 +116,7 @@
       <label> Sub Bidang/Sub Bagian/Seksi </label>
       </div>
       <div class="col-lg-10" <?=$style;?>>
-      <select class="form-control select2"  data-dropdown-css-class="select2-navy" name="edit_id_m_sub_bidang" id="edit_id_m_sub_bidang">
+      <select class="form-control select2" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_id_m_sub_bidang" id="edit_id_m_sub_bidang">
       <option value="<?=$profil_pegawai['id_m_sub_bidang'];?>"> <?=$profil_pegawai['nama_sub_bidang'];?></option>
     </select>
       </div>

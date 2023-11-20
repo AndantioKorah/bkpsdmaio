@@ -535,16 +535,20 @@ class C_User extends CI_Controller
         $this->load->view('user/V_PegawaiAllResult', $data);
     }
 
-    public function downloadDataSearch(){
+    public function downloadDataSearch($flag_excel = 0){
         $data = $this->session->userdata('data_search_database');
-        $mpdf = new \Mpdf\Mpdf([
-            'format' => 'Legal-P',
-            'debug' => true
-        ]);
-        $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);
-        $mpdf->WriteHTML($html);
-        $mpdf->showImageErrors = true;
-        $mpdf->Output('DATA ASN Kota Manado.pdf', 'D');
+        if($flag_excel == 0){
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                'debug' => true
+            ]);
+            $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output('DATA ASN Kota Manado.pdf', 'D');
+        } else {
+            $this->load->view('user/V_PegawaiAllResultExcel', $data);
+        }
     }
 
     public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){

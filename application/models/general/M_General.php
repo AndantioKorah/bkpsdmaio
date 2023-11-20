@@ -561,5 +561,31 @@
                         ->get()->result_array();
         }
 
+        public function getGroupUnitKerja($id_unitkerja){
+            $id_unitkerjamaster = null;
+            $unitkerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $id_unitkerja)
+                                ->get()->row_array();
+            if(in_array($id_unitkerja, LIST_UNIT_KERJA_KECAMATAN)){
+                $id_unitkerjamaster[] = $unitkerja['id_unitkerjamaster'];
+            } else if($id_unitkerja == 3012000){ //dinas kesehatan
+                $id_unitkerjamaster = [7005000, 6000000];
+            } else if($id_unitkerja == 3010000){ //diknas
+                $id_unitkerjamaster = [8000000, 8010000, 8020000];
+            }
+            $result = null;
+            if($id_unitkerjamaster){
+                $result = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where_in('id_unitkerjamaster', $id_unitkerjamaster)
+                                ->order_by('nm_unitkerja')
+                                ->get()->result_array();
+            }
+            $result[] = $unitkerja;
+
+            return $result;
+        }
+
 	}
 ?>

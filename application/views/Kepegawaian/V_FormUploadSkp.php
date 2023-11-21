@@ -19,7 +19,6 @@
   Riwayat Usul SKP
 </button>
 
-
 <!-- status pdm -->
 <?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
 
@@ -30,13 +29,13 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
-  <input type="hidden"  id="jumlahdokskp" value="<?=$dok['total'];?>">
+  <input type="hidden"  id="jumlahdokskp" value="<?php if($profil_pegawai['statuspeg'] == "3")  echo "1"; else echo $dok['total'];?>">
   <button  onclick="openModalStatusPmd('skp_tahunan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-<input type="hidden"  id="jumlahdokskp" value="<?=$dok['total'];?>">
+<input type="hidden"  id="jumlahdokskp" value="<?php if($profil_pegawai['statuspeg'] == "3")  echo "1"; else echo $dok['total'];?>">
 <button  onclick="openModalStatusPmd('skp_tahunan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>

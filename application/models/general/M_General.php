@@ -625,6 +625,8 @@
             }
             if($result && ($result[0]['id_unitkerja'] != $unitkerja['id_unitkerja'])){
                 $result[] = $unitkerja;
+            } else if($result == null){
+                $result[] = $unitkerja;
             }
 
             return $result;

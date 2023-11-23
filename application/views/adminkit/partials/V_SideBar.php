@@ -61,7 +61,7 @@
 
 
 <ul class="sidebar-nav">
-<?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>
+<?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
 	<div><hr class="sidebar-divider"></div>
 	<div  onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
@@ -112,11 +112,13 @@
 			<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 		</a>
 	</li> -->
+	<?php if(!$this->general_library->isWalikota()) { ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/profil">
 			<i class="fa fa-user"></i> <span class="align-middle">Profile</span>
 		</a>
 	</li>
+	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
 	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 		<li class="sidebar-item ">
@@ -175,6 +177,7 @@
 		</li>
 		<?php } ?>
 	<?php // if($this->general_library->isProrgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
+		<?php if(!$this->general_library->isWalikota()) { ?>
 		<li class="sidebar-item ">
 			<a title="Manajemen User" data-bs-target="#user-management" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-users"></i> 
@@ -205,6 +208,7 @@
 				</li>
 			</ul>
 		</li>
+		<?php } ?>
 	<?php // } ?>
 
 	<li class="sidebar-header">
@@ -220,7 +224,7 @@
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
 	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-	|| $this->general_library->isPegawaiBkpsdm()
+	|| $this->general_library->isPegawaiBkpsdm() || $this->general_library->isWalikota()
 	){ ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>database">
@@ -235,7 +239,7 @@
 	<?php } ?>
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
-	|| $this->general_library->isWalikota() 
+	// || $this->general_library->isWalikota() 
 	// || $this->general_library->isWakilWalikota()
 	){ ?>
 		<li class="sidebar-item">

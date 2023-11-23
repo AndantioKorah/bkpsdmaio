@@ -56,7 +56,7 @@
       
         }
         </style>
-        <?php if($this->general_library->getRole() == 'programmer'){ ?>
+        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isWalikota()){ ?>
           <div class="row">
             <div class="col-lg-12">
               <?php

@@ -1,3 +1,4 @@
+<?php if(!$this->general_library->isWalikota()) { ?>
 <div class="card card-default">
     <div class="card-header">
         <h4>Verifikasi Kinerja dari Pejabat Penilai</h4>
@@ -56,7 +57,7 @@
 
 <div class="col-12 card card-default p-3" id="result">
 </div>
-
+<?php } ?>
 <script>
     $(function(){
         $('#bulan').select2()

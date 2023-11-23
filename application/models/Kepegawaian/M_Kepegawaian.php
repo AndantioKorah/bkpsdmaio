@@ -1134,7 +1134,7 @@ class M_Kepegawaian extends CI_Model
     {
         $this->db->select('count(id) as total')
         ->where('id_pegawai',$id_peg)
-        ->where('flag_active', 1)
+        ->where_in('flag_active', [1,2])
         ->where_in('status', [1,2])
         ->from($tableName);
         return $this->db->get()->row_array(); 

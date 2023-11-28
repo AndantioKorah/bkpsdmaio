@@ -479,6 +479,7 @@
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id',$this->general_library->getId())
                             ->get()->row_array();
         // dd($pegawai);
@@ -574,6 +575,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $kepala_pd)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -590,6 +592,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -610,6 +613,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -649,6 +653,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -666,6 +671,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -685,6 +691,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -702,6 +709,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -720,6 +728,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -737,6 +746,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -756,6 +766,7 @@
                             ->where('h.role_name', $kepala_pd)
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -773,6 +784,7 @@
                                         ->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)->get()->row_array();
             } else {
@@ -788,6 +800,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1);
 
@@ -817,6 +830,7 @@
                             ->where('h.role_name', $atasan)
                             ->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -835,6 +849,7 @@
                             ->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -880,6 +895,7 @@
                             ->join('m_role h', 'g.id_m_role = h.id')
                             ->where('a.flag_active', 1)
                             ->where('h.id !=', 5)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $data['id_user'])
                             ->get()->row_array();
         // dd($pegawai);
@@ -978,6 +994,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $kepala_pd)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -994,6 +1011,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -1014,6 +1032,7 @@
                             ->where('a.id !=', $this->general_library->getId())
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -1053,6 +1072,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1070,6 +1090,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1089,6 +1110,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1106,6 +1128,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1124,6 +1147,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1141,6 +1165,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -1160,6 +1185,7 @@
                             ->where('h.role_name', $kepala_pd)
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -1177,6 +1203,7 @@
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)->get()->row_array();
             } else {
@@ -1192,6 +1219,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1);
 
@@ -1221,6 +1249,7 @@
                             ->where('h.role_name', $atasan)
                             ->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -1239,6 +1268,7 @@
                             ->where('b.skpd', $this->general_library->getUnitKerjaPegawai())
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -1300,6 +1330,7 @@
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
         ->where('a.flag_active', 1)
+        ->where('id_m_status_pegawai', 1)
         ->order_by('a.created_date', 'desc');
         
         if($this->general_library->isAdministrator()){
@@ -1375,6 +1406,7 @@
             ->where('a.bulan', floatval($data['bulan']))
             ->where('a.tahun', floatval($data['tahun']))
             ->where('a.flag_active', 1)
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.created_date', 'desc');
         if(isset($data['id_unitkerja'])){
             $this->db->where('c.skpd', $data['id_unitkerja']);
@@ -1492,6 +1524,7 @@
                 ->where('a.bulan', floatval($bulan))
                 ->where('a.tahun', floatval($tahun))
                 ->where('a.flag_active', 1)
+                ->where('id_m_status_pegawai', 1)
                 ->group_by('a.status, a.dokumen_pendukung, a.id_m_jenis_disiplin_kerja, a.id_m_user');
 
         if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() || ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1)){
@@ -1625,6 +1658,7 @@
                         ->where('a.tahun', $tahun)
                         ->where('a.flag_active', 1)
                         ->order_by('a.created_date', 'desc')
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
     }
 
@@ -1638,6 +1672,7 @@
             ->where('a.tahun', floatval($data['tahun']))
             ->where('c.skpd', $data['id_unitkerja'])
             ->where('a.flag_active', 1)
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.created_date', 'desc');
 
         $disiplin_kerja = $this->db->get()->result_array();
@@ -1673,6 +1708,7 @@
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
         ->where('c.skpd', $id_unitkerja)
+        ->where('id_m_status_pegawai', 1)
         ->where('a.flag_active', 1);
 
         if($status == 1){
@@ -1731,6 +1767,7 @@
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('a.id', $id)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
 
         $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
@@ -1908,6 +1945,7 @@
                             ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('a.skpd', $data['id_unitkerja'])
                             ->order_by('c.eselon, a.nama')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         // dd($pegawai);
         if($pegawai){
@@ -2029,6 +2067,7 @@
                         ->where('b.id', $id_m_user)
                         ->where('b.flag_active', 1)
                         ->where('c.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->where_not_in('c.id_m_role', EXCLUDE_ID_ROLE_ATASAN)
                         ->get()->row_array();
 
@@ -2099,6 +2138,7 @@
             // ->where('g.id', $user['id_m_bidang'])
             ->where('b.flag_active', 1)
             ->where('c.flag_active', 1)
+            ->where('id_m_status_pegawai', 1)
             ->where_not_in('c.id_m_role', EXCLUDE_ID_ROLE_ATASAN);
 
         if(!$flag_sekolah){
@@ -2125,6 +2165,7 @@
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
                             ->where('a.id', $id_pegawai)
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->row_array();
         // dd($pegawai);
         $atasan = "";
@@ -2214,6 +2255,7 @@
                             ->where('a.id !=', $id_pegawai)
                             ->where('h.role_name', $kepala_pd)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -2230,6 +2272,7 @@
                             ->where('a.id !=', $id_pegawai)
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -2250,6 +2293,7 @@
                             ->where('a.id !=', $id_pegawai)
                             ->where('h.role_name', $atasan)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -2289,6 +2333,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2306,6 +2351,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2325,6 +2371,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2342,6 +2389,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2360,6 +2408,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2377,6 +2426,7 @@
                                         ->where('h.role_name', $kepala_pd)
                                         ->where('g.flag_active', 1)
                                         ->where('a.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)
                                         ->get()->row_array();
@@ -2396,6 +2446,7 @@
                             ->where('h.role_name', $kepala_pd)
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -2413,6 +2464,7 @@
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1)->get()->row_array();
             } else {
@@ -2428,6 +2480,7 @@
                                         ->where('h.role_name', $atasan)
                                         ->where('a.flag_active', 1)
                                         ->where('g.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->group_by('a.id')
                                         ->limit(1);
 
@@ -2457,6 +2510,7 @@
                             ->where('h.role_name', $atasan)
                             ->where('b.skpd', $pegawai['id_unitkerja'])
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();
@@ -2475,6 +2529,7 @@
                             ->where('b.skpd', $pegawai['id_unitkerja'])
                             ->where('g.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->group_by('a.id')
                             ->limit(1)
                             ->get()->row_array();

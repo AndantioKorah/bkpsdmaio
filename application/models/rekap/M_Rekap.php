@@ -63,6 +63,7 @@
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -123,6 +124,7 @@
                                     ->join('m_role f', 'f.id = e.id_m_role', 'left')
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('b.id')
                                     ->order_by('c.eselon, b.username')
                                     ->get()->result_array();
@@ -135,6 +137,7 @@
                         ->where('a.bulan', $data['bulan'])
                         ->where('a.tahun', $data['tahun'])
                         ->where('c.skpd', $skpd[0])
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
@@ -504,6 +507,7 @@
                             ->where('a.bulan', floatval($bulan))
                             ->where('a.tahun', floatval($tahun))
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.status', 2);
                     if($uk){
                         $this->db->where('c.skpd', $uk['id_unitkerja']);
@@ -778,6 +782,7 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('b.eselon, a.nama');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
                 $this->db->where('a.skpd', $data['id_unitkerja']);
@@ -837,6 +842,7 @@
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('MONTH(a.tgl)', $data['bulan'])
                         ->where('YEAR(a.tgl)', $data['tahun'])
+                        ->where('id_m_status_pegawai', 1)
                         // ->where('c.skpd', $data['id_unitkerja'])
                         ->group_by('a.id');
 
@@ -905,6 +911,7 @@
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->where('a.skpd', $rs['id_unitkerja'])
                             ->order_by('b.eselon, a.nama')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
         $lp = null;
@@ -1007,6 +1014,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where('c.skpd', $uker['id_unitkerja'])
+                ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
@@ -1288,6 +1296,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1466,6 +1475,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1545,6 +1555,7 @@
                         ->where('a.tahun', $parameter['tahun'])
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
 

@@ -35,6 +35,7 @@
                             ->join('m_sub_bidang c', 'a.id_m_sub_bidang = c.id', 'left')
                             ->where('c.skpd', $id_unitkerja)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
         }
@@ -638,6 +639,7 @@
                             ->from('db_pegawai.pegawai')
                             ->where('skpd', $id_unitkerja)
                             ->order_by('nama', 'asc')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -651,6 +653,7 @@
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                             ->or_like('a.nipbaru_ws', $data['search_value'])
                             ->or_like('a.nama', $data['search_value'])
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -666,6 +669,7 @@
             } else {
                 $list_pegawai = $this->db->select('*')
                                     ->from('db_pegawai.pegawai')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->where('skpd', $unitkerja)
                                     ->get()->result_array();
             }
@@ -790,6 +794,7 @@
                             ->where('b.skpd', $idskpd)
                             ->where('a.id !=', $iduser)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('b.nama', 'asc')
                             ->get()->result_array();
         }
@@ -915,6 +920,7 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja', 'left')
                             ->where('a.skpd', $id_unitkerja)
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.flag_active', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
@@ -974,6 +980,7 @@
         public function getListPegawaiSkpdMutasi($id_peg){
             return $this->db->select('a.nama as nama_pegawai, a.id_peg, a.skpd, a.nipbaru')
                             ->from('db_pegawai.pegawai a')
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.skpd', $idskpd)
                             ->where('a.id_peg ', $id_peg)
                             // ->where('a.flag_active', 1)
@@ -990,6 +997,7 @@
                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                             ->where('a.id_pegawai', $id_peg)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                               ->order_by('a.id', 'desc')
                             ->get()->result_array();
         }
@@ -1001,6 +1009,7 @@
                             ->from('db_pegawai_new.pegawai a')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja', 'left')
                             ->where('a.id_peg NOT IN (SELECT b.id_peg FROM db_pegawai.pegawai b)')
+                            
                             ->get()->result_array();
         }
 
@@ -1233,6 +1242,7 @@
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                     ->join('m_user_role d', 'b.id = d.id_m_user', 'left')
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.nipbaru_ws')
                                     ->get()->result_array();
             $bulkroles = null;
@@ -1333,6 +1343,7 @@
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id_pegawai)
                             ->get()->row_array();
         }
@@ -1703,6 +1714,7 @@
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id)
                             ->get()->row_array();
             return $pegawai;
@@ -1798,6 +1810,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.handphone', $nohp)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1806,6 +1819,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.nipbaru_ws', $nip)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1827,6 +1841,7 @@
                             // ->like('b.nama_jabatan', 'kepegawaian')
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('c.flag_active', 1);
 
             if(!$hak_akses){
@@ -1858,6 +1873,7 @@
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.nipbaru_ws', $nip);
 
             if(!$hak_akses){
@@ -1882,6 +1898,7 @@
                             ->where('a.id_m_user', $this->general_library->getId())
                             ->where('a.flag_active', 1)
                             ->where('b.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
                             
             if($data){

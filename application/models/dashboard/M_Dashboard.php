@@ -25,6 +25,7 @@
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->where('a.skpd', $id_skpd)
                             ->where('b.flag_active', 1)
+                            ->where('a.id_m_status_pegawai', 1)
                             ->get()->row_array();
         }
 
@@ -63,7 +64,8 @@
                     ->where('c.skpd', $id_skpd)
                     ->where('a.bulan', $data['bulan'])
                     ->where('a.tahun', $data['tahun'])
-                    ->where('a.flag_active', 1);
+                    ->where('a.flag_active', 1)
+                    ->where('c.id_m_status_pegawai', 1);
             if(isset($data['bidang']) && $data['bidang'] != 0){
                 $this->db->where('b.id_m_bidang', $data['bidang']);
             }
@@ -79,7 +81,8 @@
                     ->where('a.flag_active', 1)
                     ->where('b.flag_active', 1)
                     ->where('b.bulan', $data['bulan'])
-                    ->where('b.tahun', $data['tahun']);
+                    ->where('b.tahun', $data['tahun'])
+                    ->where('d.id_m_status_pegawai', 1);
             if(isset($data['bidang']) && $data['bidang'] != 0){
                 $this->db->where('c.id_m_bidang', $data['bidang']);
             }
@@ -160,6 +163,7 @@
                     ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
                     // ->where('a.pulang >=', $agenda['buka_pulang']) //buka ini
                     ->group_by('a.id')
+                    ->where('c.id_m_status_pegawai', 1)
                     ->where_in('a.aktivitas', [1,2,3]) //buka ini
                     // ->order_by('a.masuk', 'desc'); //komen ini
                     ->order_by('a.pulang', 'desc'); //buka ini
@@ -245,6 +249,7 @@
                                             ->join('m_bidang e', 'd.id_m_bidang = e.id', 'left')
                                             ->where('a.skpd', $data['unitkerja'])
                                             ->where('d.flag_active', 1)
+                                            ->where('a.id_m_status_pegawai', 1)
                                             ->order_by('b.eselon', 'asc')
                                             ->group_by('a.nipbaru')
                                             ->get()->result_array();
@@ -282,6 +287,7 @@
                                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                         ->where('a.flag_active', 1)
                                         ->where('b.flag_active', 1)
+                                        ->where('c.id_m_status_pegawai', 1)
                                         ->where('c.skpd', $data['unitkerja'])
                                         ->get()->result_array();
                 foreach($rs['data_pdm'] as $pd){
@@ -308,6 +314,7 @@
                                     ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                     ->where('a.id_unitkerja !=', '9050030')
                                     ->group_by('a.id_unitkerja')
+                                    ->where('b.id_m_status_pegawai', 1)
                                     ->get()->result_array();
 
                 foreach($unitkerja as $u){
@@ -324,6 +331,7 @@
                                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                         ->where('a.flag_active', 1)
                                         ->where('b.flag_active', 1)
+                                        ->where('c.id_m_status_pegawai', 1)
                                         ->get()->result_array();
 
                 foreach($data_pdm as $dp){
@@ -337,6 +345,7 @@
                                             ->where('a.id_unitkerja !=', '9050030')
                                             ->where('(b.fotopeg IS NOT NULL AND b.fotopeg != "")')
                                             ->group_by('b.nipbaru_ws')
+                                            ->where('b.id_m_status_pegawai', 1)
                                             ->get()->result_array();
 
                 foreach($list_pegawai as $l){

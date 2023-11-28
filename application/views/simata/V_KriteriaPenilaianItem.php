@@ -30,7 +30,7 @@
       </table>
       </div>
       <div class="modal-footer" style="margin-bottom:5px;">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
       <button type="submit" class="btn btn-navy "> Simpan</button> 
       </div>
       </form>

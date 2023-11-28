@@ -646,6 +646,10 @@ function logErrorTelegram($data)
     $this->general_library->logErrorTelegram($data);
 }
 
+function convertPhoneNumber($nohp){
+    return "62".substr($nohp, 1, strlen($nohp)-1);
+}
+
 function isKasubKepegawaian($nama_jabatan){
     return (stringStartWith('Kepala Sub', $nama_jabatan) || 
     stringStartWith('Kepala Seksi', $nama_jabatan) ||

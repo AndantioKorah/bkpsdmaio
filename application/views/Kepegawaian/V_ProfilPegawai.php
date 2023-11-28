@@ -2,6 +2,10 @@
   if($profil_pegawai){
 ?>
   <style>
+    .whatsapp_link:hover{
+      color: green !important;
+    }
+    
     .sp_profil{
       font-size: 1rem;
       font-weight: bold;
@@ -363,7 +367,16 @@
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm sp_profil_alamat">
-                  <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php if($this->general_library->isProgrammer() || 
+                  $this->general_library->isAdminAplikasi() || 
+                  $this->general_library->isHakAkses('akses_profil_pegawai')){ ?>
+                  <a class="whatsapp_link" style="text-decoration: none; color: #495057;" target="_blank" href="https://wa.me/<?=convertPhoneNumber($profil_pegawai['handphone'])?>">
+                    <i class="fab fa-whatsapp"></i>&nbsp;
+                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  </a>
+                  <?php } else { ?>
+                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php } ?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">

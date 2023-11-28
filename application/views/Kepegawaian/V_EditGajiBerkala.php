@@ -6,6 +6,9 @@
    <div style="display:none">
    <?php } ?>
 
+   <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
+  </div>
+   <?php } ?>
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Pangkat - Gol/Ruang </label>
@@ -38,9 +41,7 @@
     <label>TMT Gaji Berkala</label>
     <input autocomplete="off"  class="form-control datepicker"   id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?= $berkala[0]['tmtgajiberkala'];?>" required/>
   </div>
-  <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
-  </div>
-   <?php } ?>
+
 
    <div class="form-group">
     <label>Pejabat Yang Menetapkan</label>

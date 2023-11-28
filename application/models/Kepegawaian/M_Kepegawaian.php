@@ -322,7 +322,7 @@ class M_Kepegawaian extends CI_Model
             $this->db->select('f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, 
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
-            (SELECT CONCAT(aa.nm_jabatan,"/",aa.tmtjabatan,"/",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
+            (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
             (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat')
                 ->from('db_pegawai.pegawai a')
@@ -822,6 +822,8 @@ class M_Kepegawaian extends CI_Model
             }
             $result = $this->db->insert('db_pegawai.pegpendidikan', $dataInsert);
         } else if($id_dok == 8){
+
+            // dd($this->input->post());
 
             $str = $this->input->post('jabatan_nama');
             $newStr = explode(",", $str);
@@ -2521,6 +2523,14 @@ function getNamaJabatan(){
     // ->where('flag_active', 1)
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+}
+
+function getTingkatPendidikan(){
+    $this->db->select('*')
+    ->where_not_in('id_tktpendidikanb', [2004,2005,2027])
+    // ->where('flag_active', 1)
+    ->from('db_pegawai.tktpendidikanb a');
     return $this->db->get()->result_array(); 
 }
 

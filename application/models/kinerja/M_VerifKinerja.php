@@ -37,6 +37,7 @@
                                 // ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.id', $this->general_library->getId())
                                 ->where('a.flag_active', 1)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
 
             $list_pegawai = null;
@@ -87,6 +88,7 @@
                                                         ->where('a.id !=', $this->general_library->getId())
                                                         ->where('a.flag_active', 1)
                                                         ->where('c.flag_active', 1)
+                                                        ->where('id_m_status_pegawai', 1)
                                                         ->get()->result_array();
                     if($list_pegawai_tambahan){
                         $count = count($list_pegawai);
@@ -112,6 +114,7 @@
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('c.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 } else if($data['filter'] == 'eselon_tiga' || $data['filter'] == 'eselon_empat'){
@@ -159,6 +162,7 @@
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('c.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 }
@@ -171,6 +175,7 @@
                                             ->where('d.skpd', $data['filter_skpd'])
                                             ->where('a.flag_active', 1)
                                             ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 } else if($data['filter_walikota'] == 'eselon_dua'){
@@ -194,6 +199,7 @@
                                             ->or_like('b.nipbaru', $data['nama_pegawai'])
                                             ->or_like('b.nama', $data['nama_pegawai'])
                                             ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 }
@@ -209,6 +215,7 @@
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             } else if($this->general_library->isLurah()){
@@ -222,6 +229,7 @@
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             } else if($this->general_library->isCamat()){
@@ -235,6 +243,7 @@
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             }
@@ -461,6 +470,7 @@
                     ->where('a.bulan', $data['bulan'])
                     ->where('a.tahun', $data['tahun'])
                     ->order_by('c.nama', 'asc')
+                    ->where('id_m_status_pegawai', 1)
                     ->group_by('a.id');
                 if($this->general_library->isWalikota() || $this->general_library->isSetda()){
                     $this->db->join('db_pegawai.pegawai d', 'b.username = d.nipbaru_ws')
@@ -544,6 +554,7 @@
                                 ->join('m_bidang d', 'a.id_m_bidang = d.id', 'left')
                                 ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
                                 ->where_in('a.id', $list_id_pegawai)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->result_array();
 
                 if($result){
@@ -582,6 +593,7 @@
                                     ->join('m_bidang d', 'a.id_m_bidang = d.id', 'left')
                                     ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
                                     ->where('a.id', $id)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 
             $komponen =  $this->db->select('*, a.id as id_t_komponen_kinerja, 

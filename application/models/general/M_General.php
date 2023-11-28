@@ -78,6 +78,7 @@
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1);
             $result = $this->db->get()->result_array();
             if(!$result){
@@ -195,6 +196,7 @@
         public function getDataPegawai($nip){
             return $this->db->select('*')
                             ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
         }
@@ -204,6 +206,7 @@
                             ->from('m_user a')
                             ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.flag_active',1)
                             ->where('a.id', $id)
                             ->get()->row_array();
@@ -223,6 +226,7 @@
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('m_user c', 'a.nipbaru_ws = c.username')
                                 ->where('c.id', $id_m_user)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             $ukmsekolah = ['8000000', '8010000', '8020000', '8030000'];
             $explodeuk = explode(" ", $unitkerja['nm_unitkerja']);
@@ -264,6 +268,7 @@
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->where('a.id', $this->general_library->getId())
+            ->where('id_m_status_pegawai', 1)
             ->get()->row_array();
             return $query['id_peg'];
         }
@@ -276,6 +281,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){
@@ -312,6 +318,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.tmtpangkat');
 
             if($data['eselon'] != "0"){
@@ -349,6 +356,7 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                     ->where('a.statuspeg', 2)
+                    ->where('id_m_status_pegawai', 1)
                     ->order_by('c.eselon');
 
             if($data['eselon'] != "0"){
@@ -525,6 +533,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->get()->result_array();
 
             $result['total'] = count($pegawai);
@@ -597,6 +606,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('m_user h', 'a.nipbaru_ws = h.username')
                         ->where('h.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->group_by('h.id')
                         ->order_by('a.nama')
                         ->get()->result_array();

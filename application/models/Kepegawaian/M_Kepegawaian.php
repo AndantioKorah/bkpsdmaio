@@ -26,6 +26,7 @@ class M_Kepegawaian extends CI_Model
             $this->db->join('m_user', 'm_user.id = dokumen_upload.upload_by', 'left');
             $this->db->join('db_siladen.dokumen_status', 'dokumen_status.id_status = dokumen_upload.status_dokumen', 'left');	
             $this->db->or_where('dokumen_upload.nip',$cariName);
+            $this->db->where('id_m_status_pegawai', 1);
             if ($idunor <> NULL)
             {
             $this->db->where('pegawai.skpd',$idunor);
@@ -118,6 +119,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
                                 ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'gajiberkala'){
                 return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
@@ -125,6 +127,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'jabatan'){
                 return $this->db->select('*, a.skpd as unit_kerja, a.id as id_dokumen, a.tmtjabatan as tmt_jabatan, a.status as status_dokumen')
@@ -135,6 +138,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.jenisjab e','a.jenisjabatan = e.id_jenisjab')
                                 ->join('db_pegawai.statusjabatan f','a.statusjabatan = f.id_statusjabatan')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'diklat'){
                 return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
@@ -142,6 +146,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.diklat c','a.jenisdiklat = c.id_diklat')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'organisasi'){
                 return $this->db->select('a.*,b.*,c.*, d.nm_jabatan_organisasi, a.id as id_dokumen, a.status as status_dokumen')
@@ -149,7 +154,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.organisasi c','a.jenis_organisasi = c.id_organisasi')
                                 ->join('db_pegawai.jabatan_organisasi d','a.id_jabatan_organisasi = d.id')
-
+                                ->where('id_m_status_pegawai', 1)
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'penghargaan'){
@@ -158,6 +163,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.pemberipenghargaan c', 'a.pemberi = c.id')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'sumpahjanji'){
                 return $this->db->select('*, a.id as id_dokumen, a.status as status_dokumen')
@@ -165,6 +171,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.sumpah c', 'a.sumpahpeg = c.id_sumpah')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'keluarga'){
                 return $this->db->select('*,a.pendidikan as pendidikan_kel, a.tptlahir as tempat_lahir, a.tgllahir as tanggal_lahir, a.id as id_dokumen, a.status as status_dokumen')
@@ -172,6 +179,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.keluarga c', 'a.hubkel = c.id_keluarga')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'penugasan'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
@@ -179,6 +187,7 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.jenistugas c', 'a.jenispenugasan = c.id_jenistugas')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'cuti'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
@@ -186,18 +195,21 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.cuti c', 'a.jeniscuti = c.id_cuti')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'skp'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegskp a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'assesment'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegassesment a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'arsip'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen,
@@ -206,19 +218,21 @@ class M_Kepegawaian extends CI_Model
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_siladen.dokumen c', 'a.id_dokumen = c.id_dokumen')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'berkaspns'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegberkaspns a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->where('a.id', $id)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             } else if($jd == 'pendidikan'){
                 return $this->db->select('*,a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegpendidikan a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.tktpendidikanb c', 'a.tktpendidikan = c.id_tktpendidikanb')
-
+                                ->where('id_m_status_pegawai', 1)
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'timkerja'){
@@ -226,7 +240,7 @@ class M_Kepegawaian extends CI_Model
                                 ->from('db_pegawai.pegtimkerja a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.lingkup_timkerja c', 'a.lingkup_timkerja = c.id')
-
+                                ->where('id_m_status_pegawai', 1)
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'inovasi'){
@@ -234,7 +248,7 @@ class M_Kepegawaian extends CI_Model
                                 ->from('db_pegawai.peginovasi a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                                 ->join('db_pegawai.inovasi c', 'a.kriteria_inovasi = c.id')
-
+                                ->where('id_m_status_pegawai', 1)
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             }
@@ -257,6 +271,7 @@ class M_Kepegawaian extends CI_Model
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->where('a.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.created_date >=', $taw.' 00:00:00')
                         ->where('a.created_date <=', $tak.' 23:59:59')
                         ->order_by('a.created_date', 'desc');
@@ -304,6 +319,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
                 ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
                 ->where('a.nipbaru_ws', $username)
+                ->where('id_m_status_pegawai', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -343,6 +359,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->where('a.nipbaru_ws', $username)
                 ->where('l.flag_active', 1)
+                ->where('id_m_status_pegawai', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -358,6 +375,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.tglsk', 'desc');
 
                             if($kode == 1){
@@ -380,6 +398,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.tglijasah','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -399,6 +418,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where_in('c.flag_active', [1,2])
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.tmtjabatan','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -422,6 +442,7 @@ class M_Kepegawaian extends CI_Model
                           ->group_start() //this will start grouping
                           ->where("FIND_IN_SET(c.ket,'Plt,Plh')!=",0)
                           ->or_where('c.statusjabatan in (2,3)')
+                          ->where('id_m_status_pegawai', 1)
                           ->group_end() //this will end grouping
                          
                           ->order_by('c.tmtjabatan','desc');
@@ -443,6 +464,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->order_by('c.created_date','desc')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('c.flag_active', 1);
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -461,6 +483,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.tglsk','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -477,6 +500,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -493,6 +517,7 @@ class M_Kepegawaian extends CI_Model
                            ->where('a.username', $nip)
                            ->where('c.flag_active', 1)
                            ->where('a.flag_active', 1)
+                           ->where('id_m_status_pegawai', 1)
                            ->order_by('c.created_date','desc');
                            if($kode == 1){
                                $this->db->where('c.status', 2);
@@ -510,6 +535,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -525,6 +551,7 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegassesment c', 'b.id_peg = c.id_pegawai')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.flag_active', 1);
                             // ->order_by('c.tglsk','desc')
                             if($kode == 1){
@@ -542,6 +569,7 @@ class M_Kepegawaian extends CI_Model
                            ->join('db_pegawai.lingkup_timkerja d', 'c.lingkup_timkerja = d.id')
                            ->where('a.username', $nip)
                            ->where('c.flag_active', 1)
+                           ->where('id_m_status_pegawai', 1)
                            ->where('a.flag_active', 1);
                            // ->order_by('c.tglsk','desc')
                            if($kode == 1){
@@ -561,6 +589,7 @@ class M_Kepegawaian extends CI_Model
                        ->where('a.username', $nip)
                        ->where('c.flag_active', 1)
                        ->where('a.flag_active', 1)
+                       ->where('id_m_status_pegawai', 1)
                        ->order_by('c.id','desc');
                        if($kode == 1){
                            $this->db->where('c.status', 2);
@@ -578,6 +607,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('d.id_keluarga','asc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -599,6 +629,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -616,6 +647,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -633,6 +665,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -650,6 +683,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -667,6 +701,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.created_date','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -2090,6 +2125,7 @@ class M_Kepegawaian extends CI_Model
             ->where('b.id_peg', $id_peg)
             ->where('c.flag_active', 1)
             ->order_by('c.id_usul','desc')
+            ->where('id_m_status_pegawai', 1)
             ->get()->result_array();
         // }
 
@@ -2108,6 +2144,7 @@ class M_Kepegawaian extends CI_Model
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
                         ->where('c.jenis_layanan', 3)
                         ->order_by('c.id_usul', 'desc')
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
     }
 
@@ -2177,6 +2214,7 @@ class M_Kepegawaian extends CI_Model
         a.id as id_m_user, b.jk, b.alamat, j.id_unitkerjamaster,j.nm_unitkerjamaster,c.tanggal_surat,c.nomor_surat')
         ->from('m_user a')
         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        ->where('id_m_status_pegawai', 1)
         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
         // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
@@ -2390,6 +2428,7 @@ class M_Kepegawaian extends CI_Model
                         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
                         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
+                        ->where('id_m_status_pegawai', 1)
                         // ->where('c.jenis_layanan', 3)
                         ->where('c.status', $id)
                         ->where('c.flag_active', 1)
@@ -2970,6 +3009,7 @@ public function getDataKabanBkd()
     ->from('db_pegawai.pegawai a')
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
+    ->where('id_m_status_pegawai', 1)
     ->where('a.jabatan', '4018000JS01');
     
     return $this->db->get()->result_array(); 
@@ -3103,6 +3143,7 @@ public function tambahPegawai(){
                             ->get()->row_array();
             $pegawai = $this->db->select('*')
                             ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
 
@@ -3226,6 +3267,7 @@ public function getAllPelanggaranByNip($nip){
                           // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
                           ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                           ->where('a.flag_active', 1)
+                          ->where('id_m_status_pegawai', 1)
                           ->where('c.id', $id);
                           $query = $this->db->get()->result_array();
                           return $query;
@@ -3240,6 +3282,7 @@ public function getAllPelanggaranByNip($nip){
                            ->join('db_pegawai.pangkat d','c.pangkat = d.id_pangkat')
                            ->join('db_pegawai.jenispengangkatan e','c.jenispengangkatan = e.id_jenispengangkatan')
                            ->where('c.id', $id)
+                           ->where('id_m_status_pegawai', 1)
                            ->where('a.flag_active', 1)
                            ->where('c.flag_active', 1);
 
@@ -3255,7 +3298,8 @@ public function getAllPelanggaranByNip($nip){
                        ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
                        ->where('c.id', $id)
                        ->where('a.flag_active', 1)
-                       ->where('c.flag_active', 1);
+                       ->where('c.flag_active', 1)
+                       ->where('id_m_status_pegawai', 1);
                     
                        $query = $this->db->get()->result_array();
                        return $query;
@@ -3266,6 +3310,7 @@ public function getAllPelanggaranByNip($nip){
                    ->from('m_user a')
                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                    ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
+                   ->where('id_m_status_pegawai', 1)
                    ->where('c.id', $id);                
                    $query = $this->db->get()->result_array();
                    return $query;
@@ -3280,6 +3325,7 @@ public function getAllPelanggaranByNip($nip){
                    ->join('db_pegawai.tktpendidikanb e','c.tktpendidikan = e.id_tktpendidikanb')
                    ->where('c.id', $id)
                    ->where('a.flag_active', 1)
+                   ->where('id_m_status_pegawai', 1)
                    ->where('c.flag_active', 1);
                    $query = $this->db->get()->result_array();
                    return $query;
@@ -3293,7 +3339,8 @@ function getCutiEdit($id){
                    ->join('db_pegawai.cuti d', 'c.jeniscuti = d.id_cuti')
                    ->where('c.id', $id)
                    ->where('c.flag_active', 1)
-                   ->where('a.flag_active', 1);
+                   ->where('a.flag_active', 1)
+                   ->where('id_m_status_pegawai', 1);
                    $query = $this->db->get()->result_array();
                    return $query;
 }
@@ -3306,7 +3353,8 @@ function getDiklatEdit($id){
                    ->join('db_pegawai.diklat d','c.jenisdiklat = d.id_diklat')
                    ->where('c.id', $id)
                    ->where('a.flag_active', 1)
-                   ->where('c.flag_active', 1);
+                   ->where('c.flag_active', 1)
+                   ->where('id_m_status_pegawai', 1);
 
                    $query = $this->db->get()->result_array();
                    return $query;
@@ -3321,7 +3369,7 @@ function getOrganisasiEdit($id){
                     ->join('db_pegawai.pegorganisasi c', 'b.id_peg = c.id_pegawai')
                     ->join('db_pegawai.organisasi d', 'c.jenis_organisasi = d.id_organisasi')
                     ->join('db_pegawai.jabatan_organisasi e', 'c.id_jabatan_organisasi = e.id')
-
+                    ->where('id_m_status_pegawai', 1)
                     ->where('c.id', $id)
                     ->where('c.flag_active', 1)
                     ->where('a.flag_active', 1);
@@ -3337,7 +3385,8 @@ function getPenghargaanEdit($id){
                    ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id')
                    ->where('c.id', $id)
                    ->where('c.flag_active', 1)
-                   ->where('a.flag_active', 1);
+                   ->where('a.flag_active', 1)
+                   ->where('id_m_status_pegawai', 1);
                    $query = $this->db->get()->result_array();
                    return $query;
 }
@@ -3349,6 +3398,7 @@ function getSumpahJanjiEdit($id){
                    ->join('db_pegawai.pegsumpah c', 'b.id_peg = c.id_pegawai')
                    ->join('db_pegawai.sumpah d', 'c.sumpahpeg = d.id_sumpah')
                    ->where('c.id', $id)
+                   ->where('id_m_status_pegawai', 1)
                    ->where('c.flag_active', 1)
                    ->where('a.flag_active', 1);
                    $query = $this->db->get()->result_array();
@@ -4253,6 +4303,7 @@ public function submitEditJabatan(){
                                 ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id', 'left')
                                 ->join('db_pegawai.statuskawin i', 'a.status = i.id_sk')
                                 ->where('a.nipbaru_ws', $nip)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
 
         if($rs['data_pegawai']){
@@ -4262,6 +4313,7 @@ public function submitEditJabatan(){
                                             ->join('db_pegawai.tktpendidikanb c', 'a.tktpendidikan = c.id_tktpendidikanb')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->order_by('tahunlulus', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->get()->result_array();
 
             $rs['riwayat_pangkat'] = $this->db->select('a.*, c.nm_pangkat, d.nm_jenispengangkatan')
@@ -4271,6 +4323,7 @@ public function submitEditJabatan(){
                                             ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->order_by('tmtpangkat', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->get()->result_array();
 
             $rs['riwayat_diklat'] = $this->db->select('a.*, c.nm_jdiklat')
@@ -4279,6 +4332,7 @@ public function submitEditJabatan(){
                                             ->join('db_pegawai.diklat c', 'a.jenisdiklat = c.id_diklat')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->order_by('tglsttpp', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->get()->result_array();
 
             $rs['riwayat_jabatan'] = $this->db->select('a.*')
@@ -4288,6 +4342,7 @@ public function submitEditJabatan(){
                                             // ->join('db_pegawai.unitkerja d', 'c.id_unitkerja = d.id_unitkerja')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->order_by('tmtjabatan', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->get()->result_array();
 
             $rs['riwayat_keluarga'] = $this->db->select('a.*, c.nm_keluarga')
@@ -4296,6 +4351,7 @@ public function submitEditJabatan(){
                                             ->join('db_pegawai.keluarga c', 'a.hubkel = c.id_keluarga')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->order_by('tgllahir', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->get()->result_array();
         }
         return $rs;

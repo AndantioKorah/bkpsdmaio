@@ -2,10 +2,6 @@
   if($profil_pegawai){
 ?>
   <style>
-    .whatsapp_link:hover{
-      color: green !important;
-    }
-    
     .sp_profil{
       font-size: 1rem;
       font-weight: bold;
@@ -367,16 +363,7 @@
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm sp_profil_alamat">
-                  <?php if($this->general_library->isProgrammer() || 
-                  $this->general_library->isAdminAplikasi() || 
-                  $this->general_library->isHakAkses('akses_profil_pegawai')){ ?>
-                  <a class="whatsapp_link" style="text-decoration: none; color: #495057;" target="_blank" href="https://wa.me/<?=convertPhoneNumber($profil_pegawai['handphone'])?>">
-                    <i class="fab fa-whatsapp"></i>&nbsp;
-                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
-                  </a>
-                  <?php } else { ?>
-                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
-                  <?php } ?>
+                  <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
@@ -408,7 +395,7 @@
                 </span>
               </div>
               <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                 if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
@@ -450,7 +437,7 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                   <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   echo $data[0];
                   ?>
                 </span>
@@ -464,7 +451,7 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                 <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   if(isset($data[2])) { 
                     if($data[2] == 1) {
                     echo "Definitif"; 
@@ -489,7 +476,7 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?php
+                  <?php 
                    $data = explode("|", $profil_pegawai['data_jabatan']);
                    if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
                 </span>

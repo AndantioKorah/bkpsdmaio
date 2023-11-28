@@ -163,7 +163,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="1" name="myCheck" id="myCheck" onclick="myFunction()">
-      <label class="form-check-label" for="flexCheckChecked">
+      <label class="form-check-label" for="myCheck">
         Jabatan Lama
       </label>
     </div>
@@ -187,7 +187,6 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   if (checkBox.checked == true){
     text.style.display = "block";
     $('#jabatan_baru').hide('fast')
-    $("#jabatan_nama").val("");
   } else {
     text.style.display = "none";
     $('#jabatan_baru').show('fast')
@@ -363,15 +362,42 @@ $(function(){
         var ins = document.getElementById('jabatan_pdf_file').files.length;
         var tmtjabatan = $('#jabatan_tmt').val()
         var tglsk = $('#jabatan_tanggal_sk').val()
+        var checkBox = document.getElementById("myCheck")
+        var jabatan_lama = $('#jabatan_lama').val()
+        var jabatan_nama = $('#jabatan_nama').val()
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
 
-       
-        // document.getElementById('btn_upload_jabatan').disabled = true;
-        // $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+      
+        document.getElementById('btn_upload_jabatan').disabled = true;
+        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
+        if (checkBox.checked == true){
+         if(jabatan_lama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        } else {
+          if(jabatan_nama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+
+         if(jabatan_nama == null){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        }
+
 
         if(tmtjabatan == ""){
           document.getElementById('btn_upload_jabatan').disabled = false;

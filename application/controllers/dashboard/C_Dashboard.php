@@ -118,9 +118,10 @@ class C_Dashboard extends CI_Controller
 
     public function getDashboardPdmAll(){
         $param['unitkerja'] = 0;
-        $data['result'] = $this->dashboard->getDataDetailDashboardPdm($param);
-        $this->session->set_userdata('data_dashboard_pdm', $data['result']);
-        $this->load->view('dashboard/V_DashboardPdmDetailAll', $data);
+        // dd('asd');
+        // $data['result'] = $this->dashboard->getDataDetailDashboardPdm($param);
+        // $this->session->set_userdata('data_dashboard_pdm', $data['result']);
+        // $this->load->view('dashboard/V_DashboardPdmDetailAll', $data);
     }
 
     public function downloadDataPdm(){

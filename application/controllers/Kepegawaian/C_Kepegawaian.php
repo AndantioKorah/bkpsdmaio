@@ -614,7 +614,8 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormPendidikan($nip){
 		// $data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
-		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
+		// $data['list_tingkat_pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikanb', 'id_tktpendidikanb', 'asc');
+		$data['list_tingkat_pendidikan'] = $this->kepegawaian->getTingkatPendidikan();
 		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 6);
 		$data['pdm_pendidikan'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'ijazah');

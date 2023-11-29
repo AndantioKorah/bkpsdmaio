@@ -161,12 +161,46 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </select>
     </div>
 
-    <div class="form-group" style="margin-bottom:10px !important;">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="1" name="myCheck" id="myCheck" onclick="myFunction()">
+      <label class="form-check-label" for="myCheck">
+        Jabatan Lama
+      </label>
+    </div>
+
+
+ 
+
+    <div class="form-group" style="display:none" id="text">
+    <label>Nama Jabatan</label>
+    <input autocomplete="off"  class="form-control"  id="jabatan_lama" name="jabatan_lama"/>
+    </div>
+
+    <script>
+      function myFunction() {
+  // Get the checkbox
+  var checkBox = document.getElementById("myCheck");
+  // Get the output text
+  var text = document.getElementById("text");
+
+  // If the checkbox is checked, display the output text
+  if (checkBox.checked == true){
+    text.style.display = "block";
+    $('#jabatan_baru').hide('fast')
+  } else {
+    text.style.display = "none";
+    $('#jabatan_baru').show('fast')
+  }
+}
+    </script>
+
+
+    <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
     <label for="jabatan_jenis">Nama Jabatan </label>
     <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
                         <option value="" selected>Pilih Jabatan</option>
                     </select> -->
-    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
@@ -328,15 +362,42 @@ $(function(){
         var ins = document.getElementById('jabatan_pdf_file').files.length;
         var tmtjabatan = $('#jabatan_tmt').val()
         var tglsk = $('#jabatan_tanggal_sk').val()
+        var checkBox = document.getElementById("myCheck")
+        var jabatan_lama = $('#jabatan_lama').val()
+        var jabatan_nama = $('#jabatan_nama').val()
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
 
-       
+      
         document.getElementById('btn_upload_jabatan').disabled = true;
         $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
+        if (checkBox.checked == true){
+         if(jabatan_lama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        } else {
+          if(jabatan_nama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+
+         if(jabatan_nama == null){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        }
+
 
         if(tmtjabatan == ""){
           document.getElementById('btn_upload_jabatan').disabled = false;

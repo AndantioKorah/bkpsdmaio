@@ -407,7 +407,8 @@ class General_library
 
     public function getNamaUser(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
-        return $this->userLoggedIn['nama_user'];
+        // return $this->userLoggedIn['nama_user'];
+        return getNamaPegawaiFull($this->userLoggedIn);
     }
 
     public function getNamaJabatan(){

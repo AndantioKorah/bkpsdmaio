@@ -214,6 +214,7 @@
         }
 
         public function getDataDetailDashboardPdm($data){
+            // $data['unitkerja'] = 0;
             $rs = null;
             $rs['progress_keseluruhan'] = 0;
             $master = $this->db->select('*')
@@ -314,7 +315,7 @@
                                     ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                     ->where('a.id_unitkerja !=', '9050030')
                                     ->where('a.id_unitkerja !=', '5')
-                                    ->where('id_m_status_pegawai', 1)
+                                    // ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.id_unitkerja')
                                     ->get()->result_array();
 
@@ -325,38 +326,47 @@
                     $rs[$u['id_unitkerja']]['presentase'] = 0;
                     $rs[$u['id_unitkerja']]['jumlah_pegawai'] = $u['jumlah_pegawai'];
                 }
+                // dd($rs);
 
-                $data_pdm = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang, c.skpd as id_unitkerja')
-                                        ->from('t_pdm a')
-                                        ->join('m_user b', 'a.id_m_user = b.id')
-                                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                                        ->where('a.flag_active', 1)
-                                        ->where('b.flag_active', 1)
-                                        ->where('id_m_status_pegawai', 1)
-                                        ->get()->result_array();
-
-                foreach($data_pdm as $dp){
-                    $rs[$dp['id_unitkerja']]['progress']++;
-                    $rs[$dp['id_unitkerja']]['presentase'] = (floatval($rs[$dp['id_unitkerja']]['progress']) / floatval($rs[$dp['id_unitkerja']]['total'])) * 100;
-                }
-
-                $list_pegawai = $this->db->select('b.fotopeg, b.skpd')
+                $temp_list_pegawai = null;
+                $list_pegawai = $this->db->select('b.fotopeg, b.skpd, b.nipbaru_ws')
                                             ->from('db_pegawai.unitkerja a')
                                             ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                             ->where('a.id_unitkerja !=', '9050030')
                                             ->where('a.id_unitkerja !=', '5')
-                                            ->where('(b.fotopeg IS NOT NULL AND b.fotopeg != "")')
+                                            // ->where('(b.fotopeg IS NOT NULL AND b.fotopeg != "")')
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('b.nipbaru_ws')
                                             ->get()->result_array();
 
                 foreach($list_pegawai as $l){
+                    $temp_list_pegawai[$l['nipbaru_ws']] = $l['skpd'];
                     $path = './assets/fotopeg/'.$l['fotopeg'];
                     if(file_exists($path)){
                         $rs[$l['skpd']]['progress']++;
                         $rs[$l['skpd']]['presentase'] = (floatval($rs[$l['skpd']]['progress']) / floatval($rs[$l['skpd']]['total'])) * 100;
                     }
                 }
+                // dd($rs);
+                // $data_pdm = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang, c.skpd as id_unitkerja')
+                $data_pdm = $this->db->select('a.id_m_user, a.jenis_berkas, b.username, b.id_m_bidang')
+                                        ->from('t_pdm a')
+                                        ->join('m_user b', 'a.id_m_user = b.id')
+                                        // ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                        ->where('a.flag_active', 1)
+                                        ->where('b.flag_active', 1)
+                                        // ->where('id_m_status_pegawai', 1)
+                                        ->get()->result_array();
+                // dd($data_pdm);
+                foreach($data_pdm as $dp){
+                    if(isset($temp_list_pegawai[$dp['username']])){
+                        $skpd = $temp_list_pegawai[$dp['username']];
+                        $rs[$skpd]['progress']++;
+                        $rs[$skpd]['presentase'] = 
+                            (floatval($rs[$skpd]['progress']) / floatval($rs[$skpd]['total'])) * 100;
+                    }
+                }
+                // dd($rs);
             }
 
             return $rs;

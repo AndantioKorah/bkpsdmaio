@@ -783,7 +783,9 @@
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->where('id_m_status_pegawai', 1)
-                            ->order_by('b.eselon, a.nama');
+                            ->order_by('b.eselon', 'desc')
+                            ->order_by('a.nama')
+                            ->group_by('a.nipbaru_ws');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
                 $this->db->where('a.skpd', $data['id_unitkerja']);
             } else if($flag_alpha == 1){

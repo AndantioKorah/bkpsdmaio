@@ -267,7 +267,7 @@
                     foreach($master as $ms){
                         $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['detail'][$ms['singkatan']] = 0;
                     }
-                    if($lp['fotopeg'] != null && $lp['fotopeg'] != ''){
+                    // if($lp['fotopeg'] != null && $lp['fotopeg'] != ''){
                         $path = './assets/fotopeg/'.$lp['fotopeg'];
                         if (file_exists($path)) {
                             $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['total']++;
@@ -279,7 +279,7 @@
                                 $rs['bidang'][$lp['id_m_bidang']]['total_progress'] = ($rs['bidang'][$lp['id_m_bidang']]['progress'] / $rs['bidang'][$lp['id_m_bidang']]['progress_keseluruhan']) * 100;
                             }
                         }
-                    }
+                    // }
                 }
 
                 $rs['data_pdm'] = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang')
@@ -291,6 +291,7 @@
                                         ->where('id_m_status_pegawai', 1)
                                         ->where('c.skpd', $data['unitkerja'])
                                         ->get()->result_array();
+                // dd(count($rs['data_pdm']));                       
                 foreach($rs['data_pdm'] as $pd){
                     $rs['list_pegawai'][$pd['username']]['progress']['total']++;
                     // if(!isset($rs['list_pegawai'][$pd['username']]['progress']['detail'][$pd['jenis_berkas']])){
@@ -308,6 +309,7 @@
                 $rs['total_keseluruhan'] = count($rs['master']) * count($rs['list_pegawai']);
                 // $rs['progress_keseluruhan'] = count($rs['data_pdm']);
                 $rs['total_progress'] = ($rs['progress_keseluruhan'] / $rs['total_keseluruhan']) * 100;
+                // dd(($rs['progress_keseluruhan']));
             } else {
                 $rs = null;
                 $unitkerja = $this->db->select('a.*, count(b.nipbaru_ws) as jumlah_pegawai')
@@ -315,7 +317,7 @@
                                     ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                     ->where('a.id_unitkerja !=', '9050030')
                                     ->where('a.id_unitkerja !=', '5')
-                                    // ->where('id_m_status_pegawai', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.id_unitkerja')
                                     ->get()->result_array();
 
@@ -355,9 +357,10 @@
                                         // ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                         ->where('a.flag_active', 1)
                                         ->where('b.flag_active', 1)
+                                        // ->where('c.skpd', '4018000')
                                         // ->where('id_m_status_pegawai', 1)
                                         ->get()->result_array();
-                // dd($data_pdm);
+                // dd(count($data_pdm));
                 foreach($data_pdm as $dp){
                     if(isset($temp_list_pegawai[$dp['username']])){
                         $skpd = $temp_list_pegawai[$dp['username']];
@@ -366,6 +369,10 @@
                             (floatval($rs[$skpd]['progress']) / floatval($rs[$skpd]['total'])) * 100;
                     }
                 }
+                // if($skpd == '4018000'){
+                //     dd($rs[$skpd]['progress']);
+                // }
+                // dd($rs['4018000']['progress']);
                 // dd($rs);
             }
 

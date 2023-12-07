@@ -1,7 +1,5 @@
 <div class="row">
-    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()
-    || $this->general_library->isWalikota() || isKasubKepegawaian($this->general_library->getNamaJabatan() 
-    || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN)){ ?>
+    <?php if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isWalikota() || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
         <div class="col-lg-12">
             <div class="card card-default">
                 <div class="card-header">
@@ -15,7 +13,7 @@
                                 <select class="form-control select2-navy" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
                                     <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()
-                                    || $this->general_library->isWalikota()){ ?>
+                                    || $this->general_library->isWalikota() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
                                         <option value="0" selected>Semua</option>
                                     <?php } ?>
                                     <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>

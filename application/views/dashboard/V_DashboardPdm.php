@@ -1,6 +1,7 @@
 <div class="row">
     <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()
-    || $this->general_library->isWalikota() || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
+    || $this->general_library->isWalikota() || isKasubKepegawaian($this->general_library->getNamaJabatan() 
+    || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN)){ ?>
         <div class="col-lg-12">
             <div class="card card-default">
                 <div class="card-header">

@@ -364,22 +364,17 @@
         <input type="text" id="edit_email" name="edit_email" class="form-control" value="<?= $profil_pegawai['email'];?>">
       </div>
 
-      <?php if($this->general_library->isProgrammer() 
-        || $this->general_library->isAdminAplikasi() 
-        || isKasubKepegawaian($this->general_library->getNamaJabatan()) 
-        || $this->general_library->isHakAkses('akses_profil_pegawai')){ ?>
-        <div class="col-lg-2">
-          <label for="inputPassword6" class="col-form-label"> Status Pegawai </label>
-        </div>
-        <div class="col-lg-10">
-          <select class="form-control" name="edit_id_m_status_pegawai" id="id_m_status_pegawai">
-            <?php foreach($list_status_pegawai as $lsp){ ?>
-              <option value="<?=$lsp['id']?>" <?=$lsp['id'] == $profil_pegawai['id_m_status_pegawai'] ? 'selected' : ''?>><?=$lsp['nama_status_pegawai']?></option>
-            <?php } ?>
-          </select>
-        </div>
-      <?php } ?>
-
+      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Status Pegawai </label>
+      </div>
+      <div class="col-lg-10">
+        <select class="form-control" name="edit_id_m_status_pegawai" id="id_m_status_pegawai">
+          <?php foreach($list_status_pegawai as $lsp){ ?>
+            <option value="<?=$lsp['id']?>" <?=$lsp['id'] == $profil_pegawai['id_m_status_pegawai'] ? 'selected' : ''?>><?=$lsp['nama_status_pegawai']?></option>
+          <?php } ?>
+        </select>
+      </div>
          
     </div>
    

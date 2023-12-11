@@ -19,7 +19,11 @@
     }
   </style>
   <div class="modal-header pt-3 pl-3">
+       
     <h3 class="modal-title">VERIFIKASI DOKUMEN <?=strtoupper($param['jenisdokumen']['nama'])?></h3>
+    <button type="button" id="modal_verif_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
   </div>
   <div class="modal-body">
     <div class="row">
@@ -803,7 +807,7 @@
     <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
   </div>
 <br>
-<button class="btn btn-block btn-primary float-right"><i class="fa fa-save"></i> SIMPAN</button>
+<button class="btn btn-block btn-primary float-right" id="btn_verif_dok"><i class="fa fa-save"></i> SIMPAN</button>
 </form>
 <?php } ?>
 
@@ -822,7 +826,7 @@
   <input type="hidden" value="<?=$result['id']?>" name="id_batal" value="id_batal">
   <input type="hidden" name="db_dokumen_batal" id="db_dokumen_batal" value="  <?= $param['jenisdokumen']['db'];?>">
   <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai_batal" value="id_pegawai_batal">
-<button class="btn btn-block btn-danger float-right"  id=""> Batal Verifikasi</button>
+<button class="btn btn-block btn-danger float-right"  id="btn_batal_verif_doc"> Batal Verifikasi</button>
 </form>
 </div>
 
@@ -898,6 +902,9 @@
         return false;
         }
       }
+
+      document.getElementById('btn_verif_dok').disabled = true;
+      $('#btn_verif_dok').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiDokumen")?>",
@@ -909,7 +916,10 @@
         // dataType: "json",
         success:function(res){ 
           successtoast("Data berhasil disimpan")
-          const myTimeout = setTimeout(closeModal, 5000);
+          document.getElementById('btn_verif_dok').disabled = false;
+          $('#btn_verif_dok').html('Simpan')
+          setTimeout(function() {$("#modal_verif_dismis").trigger( "click" );}, 1000);
+          
             
         }  , error: function(e){
                     errortoast('Terjadi Kesalahan')
@@ -918,6 +928,9 @@
         return false;  
           
         });
+      
+
+       
         
 
       $('#form_batal_verifikasi_dokumen').on('submit', function(e){  
@@ -939,7 +952,7 @@
           successtoast("Batal verifikasi berhasil")
           // const myTimeout = setTimeout(closeModal, 5000);
           // $('#edit_data').modal('hide');
-          closeModal()
+          setTimeout(function() {$("#modal_verif_dismis").trigger( "click" );}, 1000);
          
             
         }  , error: function(e){

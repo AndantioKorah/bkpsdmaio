@@ -1038,7 +1038,13 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
     h.nm_kriteria as potensial6,
     h.skor as skor6,
     i.nm_kriteria as potensial7,
-    i.skor as skor7')
+    i.skor as skor7,
+    j.nm_kriteria as potensial8,
+    j.skor as skor8,
+    k.nm_kriteria as potensial9,
+    k.skor as skor9,
+    l.nm_kriteria as potensial10,
+    l.skor as skor10')
         ->from('db_simata.t_penilaian_potensial a')
         ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
         ->join('db_simata.m_kriteria_penilaian c', 'a.pendidikan_formal = c.id','left')
@@ -1048,6 +1054,9 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
         ->join('db_simata.m_kriteria_penilaian g', 'a.kompetensi20_jp = g.id','left')
         ->join('db_simata.m_kriteria_penilaian h', 'a.penghargaan = h.id','left')
         ->join('db_simata.m_kriteria_penilaian i', 'a.riwayat_hukdis = i.id','left')
+        ->join('db_simata.m_kriteria_penilaian j', 'a.pengalaman_organisasi = j.id','left')
+        ->join('db_simata.m_kriteria_penilaian k', 'a.aspirasi_karir = k.id','left')
+        ->join('db_simata.m_kriteria_penilaian l', 'a.asn_ceria = l.id','left')
         ->where('b.nipbaru', $nip)
         ->where('a.jabatan_target', $jt);
         // ->limit(1);

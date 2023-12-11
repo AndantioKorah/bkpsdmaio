@@ -305,7 +305,7 @@
 										<div class="col-lg-12 text-left">
 											<span class="sp_profil_sm">
 												<?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   echo $data[0];
                   ?>
 											</span>
@@ -319,7 +319,7 @@
 										<div class="col-lg-12 text-left">
 											<span class="sp_profil_sm">
 												<?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   if(isset($data[2])) { 
                     if($data[2] == 1) {
                     echo "Definitif"; 
@@ -345,7 +345,7 @@
 										<div class="col-lg-12 text-left">
 											<span class="sp_profil_sm">
 												<?php
-                   $data = explode("/", $profil_pegawai['data_jabatan']);
+                   $data = explode("|", $profil_pegawai['data_jabatan']);
                    if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
 											</span>
 										</div>

@@ -1343,12 +1343,14 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function submiDataBidang(){
-
      $this->kepegawaian->submiDataBidang();
 	 redirect('kepegawaian/profil');
-		
-
     }
+
+	public function submiDataBidang2(){
+		$this->kepegawaian->submiDataBidang();
+		redirect('welcome');
+	}
 
 
 

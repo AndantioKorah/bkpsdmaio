@@ -16,14 +16,14 @@
             return $this->db->select('*,
             (SELECT count(aa.nipbaru_ws)
             FROM db_pegawai.pegawai aa
-            WHERE aa.skpd = a.id_unitkerja) as total,
+            WHERE aa.skpd = a.id_unitkerja and id_m_status_pegawai = 1) as total,
             (SELECT count(bb.nipbaru_ws)
             FROM db_pegawai.pegawai bb
             WHERE bb.skpd = a.id_unitkerja
-            AND bb.jk = "Laki-laki") as total_laki')
+            AND bb.jk = "Laki-laki" and id_m_status_pegawai = 1) as total_laki')
                             ->from('db_pegawai.unitkerja a')
                             ->where('a.id_unitkerjamaster', $ukmaster)
-                            ->where('id_m_status_pegawai', 1)
+                            // ->where('id_m_status_pegawai', 1)
                             ->order_by('a.nm_unitkerja', 'asc')
                             ->get()->result_array();
         }

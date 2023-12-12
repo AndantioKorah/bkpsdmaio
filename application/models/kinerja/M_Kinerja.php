@@ -196,7 +196,8 @@
                       'id_t_rencana_kinerja' => $dataPost['tugas_jabatan'],
                       'bukti_kegiatan' => $image,
                       'id_m_user' => $this->general_library->getId(),
-                      'status_verif' => 1
+                      'status_verif' => 1,
+                      'tanggal_verif' => date('Y-m-d H:i:s')
         );
         $result = $this->db->insert('t_kegiatan', $data);
        

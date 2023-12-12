@@ -332,7 +332,9 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi

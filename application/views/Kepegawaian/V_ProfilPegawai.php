@@ -130,6 +130,18 @@
   margin-right: -10px !important;
 }
 
+.sp_whatsapp{
+  color: #50575e !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_whatsapp:hover{
+  color: green !important;
+  text-decoration: none;
+  transition: .2s;
+}
+
 
   </style>
 
@@ -363,7 +375,13 @@
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm sp_profil_alamat">
-                  <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php if($profil_pegawai['handphone'] != null) { ?>
+                    <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($profil_pegawai['handphone'])?>">
+                      <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                      <i class="fab fa-whatsapp"></i></a>
+                  <?php } else { ?>
+                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php } ?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">

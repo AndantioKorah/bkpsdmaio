@@ -303,7 +303,146 @@
 		Kinerja
 	</li>
 
-	<?php
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+	<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>dashboard" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fas fa-tachometer-alt"></i> 
+				<span class="align-middle">
+				Dashboard
+				</span>
+			</a>	
+		</li>
+		<?php } ?>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
+				<span class="align-middle">
+					Keterangan Presensi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="ketpresensi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/upload')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Upload
+					</a>
+				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi
+					</a>
+				</li>
+				<?php } ?>
+				
+				
+			</ul>
+		</li>
+
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
+				<span class="align-middle">
+					Rekapitulasi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+		    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Absensi
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
+						<i class="align-middle me-2 far fa-circle"></i>TPP
+					</a>
+				</li>
+				<?php } ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Presensi
+					</a>
+				</li>
+				
+				
+			</ul>
+		</li>
+		
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#skbp" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
+				<span class="align-middle">
+					SKBP
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="skbp" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rencana')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Sasaran Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/realisasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rekap')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
+					</a>
+				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai
+					</a>
+				</li>
+				<?php } ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
+					</a>
+				</li>
+				
+				
+			</ul>
+		</li>
+
+	<!-- <?php
 		$active_role = $this->session->userdata('active_role');
 		$list_menu = $this->session->userdata('list_menu');
 		if ($list_menu) {
@@ -343,12 +482,12 @@
 						<?php } ?>
 					<?php } ?>
 		<?php } ?>
+	</li> -->
 
-	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
-		<li class="sidebar-header">
+    <li class="sidebar-header">
 		Manajemen Talenta
 	</li>
 	<li class="sidebar-item ">

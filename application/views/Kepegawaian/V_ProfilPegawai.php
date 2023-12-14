@@ -414,7 +414,8 @@
               </div>
               <?php
                   $data = explode("|", $profil_pegawai['data_jabatan']);
-                if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
+                // if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") 
+                 { ?> 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Bidang/Bagian
@@ -436,7 +437,7 @@
                   <?=($profil_pegawai['nama_sub_bidang'])?>
                 </span>
               </div>
-              <?php } ?>
+              <?php } ?> 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Jenis Jabatan

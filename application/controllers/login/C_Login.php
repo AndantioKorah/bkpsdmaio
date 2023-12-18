@@ -162,4 +162,8 @@ class C_Login extends CI_Controller
         $result = $this->m_general->otentikasiUser($this->input->post(), $jenis_transaksi);
         echo json_encode($result);
     }
+
+    public function injectBidang(){
+        $this->user->injectBidang();
+    }
 }

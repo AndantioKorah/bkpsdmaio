@@ -255,6 +255,10 @@ class General_library
         return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
     }
 
+    public function isPejabatEselon(){
+        return $this->userLoggedIn['id_eselon'] != 1;
+    }
+
     public function setActiveRole($id_role){
         $this->nikita->session->set_userdata([
             'active_role_id' => null,

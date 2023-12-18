@@ -8,6 +8,7 @@ class C_Login extends CI_Controller
         $this->load->model('general/M_General', 'm_general');
         // $this->load->library('libraries/Dokumenlib', 'doklib');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
     }
 
     public function login(){
@@ -44,7 +45,10 @@ class C_Login extends CI_Controller
         // dd($data);
         // $this->session->set_userdata('live_tpp', null);
         // $data = null;
-
+        $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
+        $data['nip'] = $this->general_library->getUserName();
+        $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
         render('login/V_Welcome', '', '', $data);
     }
 

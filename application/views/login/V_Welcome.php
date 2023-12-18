@@ -28,6 +28,27 @@
     background-color: #ececed;
   }
 </style>
+<?php 
+  if($this->general_library->getUserName() == $nip){
+    $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+   
+    if($bidang){
+      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
+        $idBidang = 99;
+      } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
+        $idBidang = 99;
+      }  else {
+        $idBidang = $bidang['id_m_bidang'];
+      }
+    } else {
+    $idBidang = 99;
+    }
+    } else {
+    $idBidang = 99;
+    }
+    ?>
+
+<input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
 
 <div class="container-fluid p-0">
   <div class="row">
@@ -90,6 +111,52 @@
       
   </div>
 </div>
+
+
+<!-- Button trigger modal -->
+<button style="display:none" id="btnstatic" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+
+      </div><br>
+      <center><h3>Harap Mengisi Data Bidang/Bagian </h3></center>
+
+      <div class="modal-body">
+      <form action="<?=base_url('kepegawaian/C_Kepegawaian/submiDataBidang2');?>" method="post">
+  <div class="mb-3">
+  <label for="exampleInputPassword1" class="form-label">Bidang/Bagian</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_bidang" id="id_m_bidang" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <option value="0">-</option>
+                    <?php if($mbidang){ foreach($mbidang as $r){ ?>
+                        <option  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
+                    <?php } } ?>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Sub Bidang/Sub Bagian/Seksi</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_sub_bidang" id="id_m_sub_bidang">
+      <option value="0" selected>-</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary float-right">Simpan</button>
+</form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
   $(function(){
     <?php if($this->session->userdata('apps_error')){ ?>
@@ -100,6 +167,19 @@
 		$this->session->set_userdata('apps_error', null);
 		} ?>
     loadDashboardPdmWelcome();
+
+    var bidang = $('#bidangPegawai').val()
+    if(bidang == "" || bidang == 0){
+    $('#btnstatic').click()  
+    }
+
+    $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	})
+
+
   })
 
   function loadDashboardPdmWelcome(){
@@ -109,4 +189,24 @@
           $('#loader').hide()
       })
   }
+
+
+  $("#id_m_bidang").change(function() {
+      var id = $("#id_m_bidang").val();
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getMasterSubBidang",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '<option value=>-</option>';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].nama_sub_bidang+'</option>';
+                      }
+                      $('#id_m_sub_bidang').html(html);
+                          }
+                  });
+  });
 </script>

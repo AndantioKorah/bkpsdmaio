@@ -577,6 +577,18 @@
                   <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
                 </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Keterangan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  
+              </span>
+              </div>
+
                  <!-- end data kepegawaian  -->
 
              

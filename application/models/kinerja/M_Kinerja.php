@@ -732,8 +732,8 @@
                             ->join('m_sub_bidang g', 'g.id = a.id_m_sub_bidang', 'left')
                             ->where('a.flag_active', 1)
                             ->where('id_m_status_pegawai', 1)
-                            ->where('b.nipbaru_ws', '197405122009022003')
-                            // ->where('a.id',$this->general_library->getId())
+                            // ->where('b.nipbaru_ws', '197405122009022003')
+                            ->where('a.id',$this->general_library->getId())
                             ->get()->row_array();
 
         $data_atasan = $this->getAtasanPegawai($pegawai);

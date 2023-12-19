@@ -360,15 +360,20 @@
 				</span>
 			</a>
 			<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-		    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
-					</a>
-				</li>
+			
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Absensi
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+					<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
 					</a>
 				</li>
 				<li class="sidebar-item ">

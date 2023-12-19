@@ -28,7 +28,10 @@
     background-color: #ececed;
   }
 </style>
+
+
 <?php 
+if(!$this->general_library->isWalikota()){
   if($this->general_library->getUserName() == $nip){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
    
@@ -37,15 +40,22 @@
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
         $idBidang = 99;
-      }  else {
+      }else if($nm_jab == "walikota"){
+        $idBidang = 99;
+      }   else {
         $idBidang = $bidang['id_m_bidang'];
       }
     } else {
     $idBidang = 99;
     }
-    } else {
+    } else if($this->general_library->isWalikota()) {
     $idBidang = 99;
+    } else {
+      $idBidang = 99;
     }
+  } else {
+    $idBidang = 99;
+  }
     ?>
 
 <input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
@@ -77,7 +87,7 @@
       
         }
         </style>
-        <?php if($this->general_library->getRole() == 'programmer'){ ?>
+        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isAdminAplikasi() || $this->general_library->isWalikota()){ ?>
           <div class="row">
             <div class="col-lg-12">
               <?php

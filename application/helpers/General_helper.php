@@ -659,10 +659,11 @@ function isKasubKepegawaian($nama_jabatan){
     stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
 }
 
-function countTmtPensiun($nip){
+function countTmtPensiun($nip, $umur = 0){
     $tahun = floatval(substr($nip, 0, 4));
     $bulan = floatval(substr($nip, 4, 2));
     $tanggal = substr($nip, 6, 2);
+    $tahun += $umur;
     
     if($bulan == '12'){
         $tahun += 1;

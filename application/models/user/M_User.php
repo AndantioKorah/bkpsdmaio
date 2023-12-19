@@ -1914,7 +1914,7 @@
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
-                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -2025,6 +2025,51 @@
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
+        }
+
+        public function injectBidang(){
+            $bidang = $this->db->select('*')
+                                ->from('m_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $list_bidang = null;
+            foreach($bidang as $b){
+                if(stringStartWith('Bidang', $b['nama_bidang'])){
+                    $list_bidang['Kepala '.$b['nama_bidang']] = $b['id'];
+                }
+            }
+            // dd($list_bidang);
+
+            $jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->get()->result_array();
+
+            $pegawai = $this->db->select('a.*, a.id as id_m_user, d.nama_jabatan, c.nm_unitkerja')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'b.nipbaru_ws = a.username')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                                ->where_in('c.id_unitkerjamaster', [4000000, 3000000])
+                                ->where('d.eselon', 'III B')
+                                ->where('a.id_m_bidang IS NULL')
+                                ->where('a.id_m_sub_bidang IS NULL')
+                                ->group_by('b.nipbaru_ws')
+                                ->get()->result_array();
+            dd($pegawai);
+            $no = 1;
+            foreach($pegawai as $p){
+                if(isset($list_bidang[$p['nama_jabatan']])){
+                    echo $no++.'<br>';
+                    echo 'inserting '.$list_bidang[$p['nama_jabatan']].' ke '.$p['username'].'<br><br>';
+                    $this->db->where('id', $p['id_m_user'])
+                            ->update('m_user', [
+                                'id_m_bidang' => $list_bidang[$p['nama_jabatan']]
+                            ]);        
+                } else {
+                    dd($p);
+                }
+            }
+            // dd('done');
         }
 
 	}

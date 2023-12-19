@@ -34,8 +34,10 @@
             <tr>
                 <td style="font-weight: bold; text-align: center; width: 10%;">No</td>
                 <td style="font-weight: bold; text-align: center; width: 30%;">Pegawai</td>
-                <td style="font-weight: bold; text-align: center; width: 15%;">Eselon</td>
-                <td style="font-weight: bold; text-align: center; width: 25%;">Pangkat</td>
+                <td style="font-weight: bold; text-align: center; width: 5%;">Eselon</td>
+                <td style="font-weight: bold; text-align: center; width: 15%;">Pangkat</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">TMT Pangkat</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">TMT Jabatan</td>
                 <?php if($use_masa_kerja == 1){ ?>
                     <td style="font-weight: bold; text-align: center;">Masa Kerja</td>
                 <?php } ?>
@@ -59,6 +61,8 @@
                         </td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>
+                        <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
+                        <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtjabatan'])?></td>
                         <?php if($use_masa_kerja == 1){ ?>
                             <td style="padding: 10px; text-align: center;"><?=$rs['masa_kerja']?></td>
                         <?php } ?>

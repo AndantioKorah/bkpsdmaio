@@ -71,11 +71,12 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('id_m_status_pegawai', 1)
@@ -410,10 +411,13 @@
                             //     dd($crit);
                             // }
                             if($temp){
-                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws']);
+                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $umur);
+                                $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $umur;
-                                $result[] = $temp;
+                                if($explode[0] == $data['tahun']){
+                                    $result[] = $temp;
+                                }
                             }
                         }
 

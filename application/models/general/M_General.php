@@ -411,10 +411,13 @@
                             //     dd($crit);
                             // }
                             if($temp){
-                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws']);
+                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $umur);
+                                $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $umur;
-                                $result[] = $temp;
+                                if($explode[0] == $data['tahun']){
+                                    $result[] = $temp;
+                                }
                             }
                         }
 

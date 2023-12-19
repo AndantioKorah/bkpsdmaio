@@ -36,6 +36,8 @@
             <th class="text-center">Pegawai</th>
             <th class="text-center">Eselon</th>
             <th class="text-center">Pangkat</th>
+            <th class="text-center">TMT Pangkat</th>
+            <th class="text-center">TMT Jabatan</th>
             <?php if($use_masa_kerja == 1){ ?>
                 <th class="text-center">Masa Kerja</th>
             <?php } ?>
@@ -59,6 +61,8 @@
                     </td>
                     <td class="text-center"><?=$rs['eselon']?></td>
                     <td class="text-left"><?=$rs['nm_pangkat']?></td>
+                    <td class="text-left"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
+                    <td class="text-left"><?=formatDateNamaBulan($rs['tmtjabatan'])?></td>
                     <?php if($use_masa_kerja == 1){ ?>
                         <td class="text-center"><?=$rs['masa_kerja']?></td>
                     <?php } ?>

@@ -1914,7 +1914,7 @@
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
-                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')

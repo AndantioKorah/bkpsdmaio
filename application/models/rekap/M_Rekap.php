@@ -63,6 +63,7 @@
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -123,6 +124,7 @@
                                     ->join('m_role f', 'f.id = e.id_m_role', 'left')
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('b.id')
                                     ->order_by('c.eselon, b.username')
                                     ->get()->result_array();
@@ -135,6 +137,7 @@
                         ->where('a.bulan', $data['bulan'])
                         ->where('a.tahun', $data['tahun'])
                         ->where('c.skpd', $skpd[0])
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
@@ -504,6 +507,7 @@
                             ->where('a.bulan', floatval($bulan))
                             ->where('a.tahun', floatval($tahun))
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.status', 2);
                     if($uk){
                         $this->db->where('c.skpd', $uk['id_unitkerja']);
@@ -766,7 +770,7 @@
         return $data;
     }
 
-    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0){
+    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0){
         // dd($flag_alpha);
         $rs = null;
         $periode = null;
@@ -774,25 +778,41 @@
         $raw_data_excel = json_encode($data);
         
         if($flag_absen_aars == 1){
-            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama')
+            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
-                            ->order_by('b.eselon, a.nama');
-            if($flag_alpha == 0){
+                            ->where('id_m_status_pegawai', 1)
+                            ->order_by('b.eselon', 'desc')
+                            ->order_by('a.nama')
+                            ->group_by('a.nipbaru_ws');
+            if($flag_alpha == 0 && $flag_rekap_personal == 0){
                 $this->db->where('a.skpd', $data['id_unitkerja']);
             } else if($flag_alpha == 1){
                 $this->db->where('c.id_unitkerjamaster', 8010000);
+            }
+
+            if($flag_rekap_personal == 1){
+                $this->db->join('m_user d', 'a.nipbaru_ws = d.username')
+                        ->where('d.id', $data['id_m_user']);
             }
 
             $list_pegawai = $this->db->get()->result_array();
         }
 
         if($flag_absen_aars == 1){
-            $temp['skpd'] = $data['nm_unitkerja'];
+            if($flag_rekap_personal == 1){
+                $temp['skpd'] = $list_pegawai[0]['nm_unitkerja'];
+                $temp['id_unitkerja'] = $list_pegawai[0]['id_unitkerja'];
+                $data['unitkerja'] = $temp['id_unitkerja'].';'.$temp['skpd'];
+            } else {
+                $temp['skpd'] = $data['nm_unitkerja'];
+                $temp['id_unitkerja'] = $data['id_unitkerja'];
+            }
+            // $temp['skpd'] = $data['nm_unitkerja'];
             $temp['bulan'] = $data['bulan'];
             $temp['tahun'] = $data['tahun'];
-            $temp['id_unitkerja'] = $data['id_unitkerja'];
+            // $temp['id_unitkerja'] = $data['id_unitkerja'];
             $temp['periode'] = getNamaBulan($data['bulan']).' '.$data['tahun'];
             $periode = $temp['periode'];
             $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, $data['bulan'], $data['tahun']);
@@ -818,15 +838,23 @@
                 }
             }
 
-            $list_data_absen = $this->db->select('a.status as status_absensi, a.*, c.*, b.username as nip')
+            $this->db->select('a.status as status_absensi, a.*, c.*, b.username as nip')
                         ->from('db_sip.absen a')
                         ->join('m_user b', 'a.user_id = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('MONTH(a.tgl)', $data['bulan'])
                         ->where('YEAR(a.tgl)', $data['tahun'])
-                        ->where('c.skpd', $data['id_unitkerja'])
-                        ->group_by('a.id')
-                        ->get()->result_array();
+                        ->where('id_m_status_pegawai', 1)
+                        // ->where('c.skpd', $data['id_unitkerja'])
+                        ->group_by('a.id');
+
+            if($flag_rekap_personal == 1){
+                $this->db->where('b.id', $data['id_m_user']); 
+            } else {
+                $this->db->where('c.skpd', $data['id_unitkerja']); 
+            }
+
+            $list_data_absen = $this->db->get()->result_array();
 
             $data_absen = null;
             if($list_data_absen){
@@ -885,6 +913,7 @@
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->where('a.skpd', $rs['id_unitkerja'])
                             ->order_by('b.eselon, a.nama')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
         $lp = null;
@@ -987,6 +1016,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where('c.skpd', $uker['id_unitkerja'])
+                ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
@@ -1268,6 +1298,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1446,6 +1477,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1525,6 +1557,7 @@
                         ->where('a.tahun', $parameter['tahun'])
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
 

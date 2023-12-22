@@ -4,8 +4,8 @@
       <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
-          <th class="text-left">Nama Assesment</th>
-          <th class="text-left">File</th>
+          <th class="text-left">Tahun</th>
+          <th class="text-left">Nilai Assesment</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -16,15 +16,12 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
+            <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
+
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nm_assesment']?></td>
-              <td class="text-left">
-              <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_assesment" onclick="openFileAssesment('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                <i class="fa fa-file-pdf"></i></button>
-              <?php } ?>
-              </td>
+              <td class="text-left"><?=$rs['tahun']?></td>
+              <td class="text-left"><?=$rs['nilai_assesment']?></td>
+           
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
@@ -33,7 +30,7 @@
               <?php } ?>
                <?php } ?>
              <?php if($kode == 2) { ?>
-              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else echo '';?></td>
+              <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -81,6 +78,8 @@
          errortoast('Terjadi Kesalahan')
      }
    })
+
+   
  }
   
   function deleteData(id,file,kode){

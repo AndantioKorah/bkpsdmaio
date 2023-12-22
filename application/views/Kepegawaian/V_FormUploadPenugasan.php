@@ -4,6 +4,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modal_penugasan">
@@ -17,6 +18,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -32,6 +35,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('penugasan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
+<?php }  ?>
 <?php }  ?>
 
 <script>
@@ -121,7 +126,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 <div class="form-group col-lg-12">
 <br>
- <button class="btn btn-block btn-primary"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+ <button class="btn btn-block btn-primary"  id="btn_upload_penugasan"><i class="fa fa-save"></i> SIMPAN</button>
 </div>
 </form> 
       </div>
@@ -173,7 +178,8 @@ $(function(){
         // errortoast("Silahkan upload file terlebih dahulu");
         // return false;
         // }
-       
+        document.getElementById('btn_upload_penugasan').disabled = true;
+        $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -190,7 +196,10 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_penugasan").reset();
+                document.getElementById('btn_upload_penugasan').disabled = false;
+               $('#btn_upload_penugasan').html('Simpan')
                 loadListPenugasan()
+                setTimeout(function() {$("#modal_penugasan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;

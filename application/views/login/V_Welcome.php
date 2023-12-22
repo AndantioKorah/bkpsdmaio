@@ -29,6 +29,37 @@
   }
 </style>
 
+
+<?php 
+if(!$this->general_library->isWalikota()){
+  if($this->general_library->getUserName() == $nip){
+    $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+   
+    if($bidang){
+      if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
+        $idBidang = 99;
+      } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
+        $idBidang = 99;
+      }else if($nm_jab == "walikota"){
+        $idBidang = 99;
+      }   else {
+        $idBidang = $bidang['id_m_bidang'];
+      }
+    } else {
+    $idBidang = 99;
+    }
+    } else if($this->general_library->isWalikota()) {
+    $idBidang = 99;
+    } else {
+      $idBidang = 99;
+    }
+  } else {
+    $idBidang = 99;
+  }
+    ?>
+
+<input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
+
 <div class="container-fluid p-0">
   <div class="row">
       <div class="col-12">
@@ -55,369 +86,18 @@
           }
       
         }
-
-
-
         </style>
-        <?php if($this->general_library->getRole() == 'programmer'){ ?>
+        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isAdminAplikasi() || $this->general_library->isWalikota()){ ?>
           <div class="row">
-            <div class="col-lg-4">
-              <div onclick="openSearchPegawai()" class="card info_card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Jumlah Pegawai</h5>
-                    </div>
-                    <div class="col-auto">
-                      <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div>
-                    </div>
-                  </div>
-                  <h1 class="mt-1 mb-3" id="h1_total_pegawai"><?=$chart['total']?></h1>
-                  <div class="mb-0">
-                    <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                    <span class="text-muted">Per Hari Ini</span>
-                  </div>
-                </div>
-              </div>
+            <div class="col-lg-12">
+              <?php
+                $data['chart'] = $chart; 
+                $this->load->view('dashboard/V_DashboardKepegawaian', $data);
+              ?>
             </div>
-            <div class="col-lg-8">
-              <div class="row">
-                <div class="col-lg-4">
-                  <div onclick="openPensiunCardDetail()" class="card info_card">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col mt-0 ml-0">
-                          <h5 class="card-title">Pensiun</h5>
-                        </div>
-                        <div class="col-auto">
-                          <div class="stat text-primary">
-                            <i class="align-middle fa fa-user-slash" ></i>
-                          </div>
-                        </div>
-                      </div>
-                      <h1 class="mt-1 mb-3" id="h1_pensiun"><i class="fa fa-spin fa-spinner"></i></h1>
-                      <div class="mb-0">
-                        <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                        <span class="text-muted">Tahun <?=date('Y')?></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div onclick="openNaikPangkatCardDetail()" class="card info_card">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col mt-0 ml-0">
-                          <h5 class="card-title">Naik Pangkat</h5>
-                        </div>
-                        <div class="col-auto">
-                          <div class="stat text-primary">
-                            <i class="align-middle fa fa-upload" ></i>
-                          </div>
-                        </div>
-                      </div>
-                      <h1 class="mt-1 mb-3" id="h1_pangkat"><i class="fa fa-spin fa-spinner"></i></h1>
-                      <div class="mb-0">
-                        <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                        <span class="text-muted">Tahun <?=date('Y')?></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div onclick="openGajiBerkalaCardDetail()" class="card info_card">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col mt-0 ml-0">
-                          <h5 class="card-title">Gaji Berkala</h5>
-                        </div>
-                        <div class="col-auto">
-                          <div class="stat text-primary">
-                            <i class="align-middle fa fa-money-bill" ></i>
-                          </div>
-                        </div>
-                      </div>
-                      <h1 class="mt-1 mb-3" id="h1_gaji_berkala"><i class="fa fa-spin fa-spinner"></i></h1>
-                      <div class="mb-0">
-                        <!-- <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span> -->
-                        <span class="text-muted">Tahun <?=date('Y')?></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-lg-12 mt-0 ml-0">
-                      <h5 class="card-title">Jenis Kelamin</h5>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_jenis_kelamin['result'] = $chart['jenis_kelamin'];
-                      $data_jenis_kelamin['id_chart'] = 'chart_jenis_kelamin';
-                      $this->load->view('login/V_ChartPieDashboard', $data_jenis_kelamin);
-                    ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Agama</h5>
-                    </div>
-                    <div class="col-auto">
-                      <!-- <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div> -->
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_agama['result'] = $chart['agama'];
-                      $data_agama['id_chart'] = 'chart_agama';
-                      // dd($data_agama);
-                      $this->load->view('login/V_ChartPieDashboard', $data_agama);
-                    ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Status Pegawai</h5>
-                    </div>
-                    <div class="col-auto">
-                      <!-- <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div> -->
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_statuspeg['result'] = $chart['statuspeg'];
-                      $data_statuspeg['id_chart'] = 'chart_statuspeg';
-                      $this->load->view('login/V_ChartPieDashboard', $data_statuspeg);
-                    ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Golongan</h5>
-                    </div>
-                    <div class="col-auto">
-                      <!-- <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div> -->
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_golongan['result'] = $chart['golongan'];
-                      $data_golongan['id_chart'] = 'chart_golongan';
-                      $this->load->view('login/V_ChartPieDashboard', $data_golongan);
-                    ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Eselon</h5>
-                    </div>
-                    <div class="col-auto">
-                      <!-- <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div> -->
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_eselon['result'] = $chart['eselon'];
-                      $data_eselon['id_chart'] = 'chart_eselon';
-                      $this->load->view('login/V_ChartPieDashboard', $data_eselon);
-                    ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col mt-0 ml-0">
-                      <h5 class="card-title">Pendidikan</h5>
-                    </div>
-                    <div class="col-auto">
-                      <!-- <div class="stat text-primary">
-                        <i class="align-middle fa fa-users" ></i>
-                      </div> -->
-                    </div>
-                  </div>
-                  <div class="row">
-                    <?php
-                      $data_pendidikan['result'] = $chart['pendidikan'];
-                      $data_pendidikan['id_chart'] = 'chart_pendidikan';
-                      $this->load->view('login/V_ChartPieDashboard', $data_pendidikan);
-                    ?>
-                  </div>
-                </div>
-              </div>
+            <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
             </div>
           </div>
-
-          <!-- <script src="<?=base_url('')?>assets/adminkit/js/app.js"></script> -->
-          <!-- <script src="js/app.js"></script> -->
-          
-          <script>
-              $(function(){
-                getJumlahPensiun()
-                getJumlahNaikpangkat()
-                getJumlahGajiBerkala()
-                // getDataDashboardAdmin()
-                renderChart('<?=json_encode($data_jenis_kelamin)?>')
-                renderChart('<?=json_encode($data_agama)?>')
-                renderChart('<?=json_encode($data_statuspeg)?>')
-                renderChart('<?=json_encode($data_golongan)?>')
-                renderChart('<?=json_encode($data_eselon)?>')
-                renderChart('<?=json_encode($data_pendidikan)?>')
-
-              })
-
-              function renderChart(rs){
-                let dt = JSON.parse(rs)
-                // document.addEventListener("DOMContentLoaded", function() {
-                  let labels = [];
-                  let values = [];
-                  let temp = Object.keys(dt.result)
-                  temp.forEach(function(i) {
-                    if(dt.result[i].jumlah > 0){
-                      labels.push(dt.result[i].nama)
-                      values.push(dt.result[i].jumlah)
-                    }
-                  })
-                  console.log(labels)
-
-                  let colors = JSON.parse('<?=json_encode(CHART_COLORS)?>')                
-                  // let data_labels = 
-                  new Chart(document.getElementById(dt.id_chart), {
-                    type: "doughnut",
-                    data: {
-                      labels: labels,
-                      datasets: [{
-                        data: values,
-                        backgroundColor: colors,
-                        borderColor: "transparent"
-                      }]
-                    },
-                    options: {
-                      maintainAspectRatio: false,
-                      legend: {
-                        display: false
-                      }
-                    }
-                  });
-                // });
-              }
-
-              function openSearchPegawai(){
-                window.location="<?=base_url('list-pegawai')?>"
-              }
-
-              function openPensiunCardDetail(){
-                window.location="<?=base_url('list-pegawai/pensiun')?>"
-              }
-
-              function openNaikPangkatCardDetail(){
-                window.location="<?=base_url('list-pegawai/naik-pangkat')?>"
-              }
-
-              function openGajiBerkalaCardDetail(){
-                window.location="<?=base_url('list-pegawai/gaji-berkala')?>"
-              }
-
-              function getJumlahPensiun(){
-                $('#h1_pensiun').html('<i class="fa fa-spin fa-spinner"></i>')
-                $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiPensiunByYear/1")?>',
-                  method: 'post',
-                  data: {
-                    eselon: 0,
-                    pangkat: 0,
-                    tahun: '<?=date('Y')?>'
-                  },
-                  success: function(data){
-                    let rs = JSON.parse(data)
-                    console.log(rs)
-                    $('#h1_pensiun').html(rs.total)
-                  }, error: function(e){
-                      errortoast('Terjadi Kesalahan')
-                      console.log(e)
-                  }
-                })
-              }
-
-              function getJumlahNaikpangkat(){
-                $('#h1_pangkat').html('<i class="fa fa-spin fa-spinner"></i>')
-                $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiNaikPangkatByYear/1")?>',
-                  method: 'post',
-                  data: {
-                    eselon: 0,
-                    pangkat: 0,
-                    tahun: '<?=date('Y')?>'
-                  },
-                  success: function(data){
-                    let rs = JSON.parse(data)
-                    // console.log(data)
-                    $('#h1_pangkat').html(rs.total)
-                  }, error: function(e){
-                      errortoast('Terjadi Kesalahan')
-                      console.log(e)
-                  }
-                })
-              }
-
-              function getJumlahGajiBerkala(){
-                $('#h1_gaji_berkala').html('<i class="fa fa-spin fa-spinner"></i>')
-                $.ajax({
-                  url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/1")?>',
-                  method: 'post',
-                  data: {
-                    eselon: 0,
-                    pangkat: 0,
-                    tahun: '<?=date('Y')?>'
-                  },
-                  success: function(data){
-                    let rs = JSON.parse(data)
-                    // console.log(data)
-                    $('#h1_gaji_berkala').html(rs.total)
-                  }, error: function(e){
-                      errortoast('Terjadi Kesalahan')
-                      console.log(e)
-                  }
-                })
-              }
-          </script>
         <?php } else { ?>
           <h4><?="Selamat ".greeting().","?></h4>
           <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
@@ -441,6 +121,52 @@
       
   </div>
 </div>
+
+
+<!-- Button trigger modal -->
+<button style="display:none" id="btnstatic" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+
+      </div><br>
+      <center><h3>Harap Mengisi Data Bidang/Bagian </h3></center>
+
+      <div class="modal-body">
+      <form action="<?=base_url('kepegawaian/C_Kepegawaian/submiDataBidang2');?>" method="post">
+  <div class="mb-3">
+  <label for="exampleInputPassword1" class="form-label">Bidang/Bagian</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_bidang" id="id_m_bidang" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <option value="0">-</option>
+                    <?php if($mbidang){ foreach($mbidang as $r){ ?>
+                        <option  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
+                    <?php } } ?>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Sub Bidang/Sub Bagian/Seksi</label>
+    <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_sub_bidang" id="id_m_sub_bidang">
+      <option value="0" selected>-</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary float-right">Simpan</button>
+</form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
   $(function(){
     <?php if($this->session->userdata('apps_error')){ ?>
@@ -450,5 +176,47 @@
 		<?php
 		$this->session->set_userdata('apps_error', null);
 		} ?>
+    loadDashboardPdmWelcome();
+
+    var bidang = $('#bidangPegawai').val()
+    if(bidang == "" || bidang == 0){
+    $('#btnstatic').click()  
+    }
+
+    $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	})
+
+
   })
+
+  function loadDashboardPdmWelcome(){
+      $('#dashboard_pdm_welcome').html('')
+      $('#dashboard_pdm_welcome').append(divLoaderNavy)
+      $('#dashboard_pdm_welcome').load('<?=base_url('dashboard/C_Dashboard/getDashboardPdmAll')?>', function(){
+          $('#loader').hide()
+      })
+  }
+
+
+  $("#id_m_bidang").change(function() {
+      var id = $("#id_m_bidang").val();
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getMasterSubBidang",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '<option value=>-</option>';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].nama_sub_bidang+'</option>';
+                      }
+                      $('#id_m_sub_bidang').html(html);
+                          }
+                  });
+  });
 </script>

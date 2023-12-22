@@ -26,10 +26,10 @@
 		border-bottom-right-radius: 5px;
 		border-bottom-right-radius: 5px;
 		z-index: 10;
-		top: 8%;
+		top: 7%;
 		margin-left: 0px;
 		box-shadow: 5px 10px 20px #888888;
-		max-height: 300px;
+		max-height: 100vh;
 		overflow-y: scroll;
 		-ms-overflow-style: none;  /* IE and Edge */
 		scrollbar-width: none;  /* Firefox */
@@ -142,11 +142,11 @@
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
 	
-	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi') { ?>
-		<form class="form-inline mr-3">
+	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi' || $this->general_library->isHakAkses('akses_profil_pegawai')) { ?>
+		<form id="form_search_navbar" class="form-inline mr-3">
 			<div class="row">
 				<div class="div_search_bar">
-				<input id="search_navbar" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai" aria-label="Search">
+				<input id="search_navbar" name="search_navbar;" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai / Perangkat Daerah" aria-label="Search">
 					<!-- <div class="input-group-append"> -->
 						<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
 						<i class="fas fa-search"></i>
@@ -164,7 +164,7 @@
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">
 		<ul class="navbar-nav navbar-align">
-			<li class="nav-item dropdown">
+			<!-- <li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 					<div class="position-relative">
 						<i class="align-middle" data-feather="bell"></i>
@@ -193,7 +193,8 @@
 						<a href="#" class="text-muted">Show all notifications</a>
 					</div>
 				</div>
-			</li>
+			</li> -->
+			
 			<!-- <li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
 					<div class="position-relative">
@@ -289,7 +290,8 @@
 			</a>
 
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-				<img src="<?=$this->general_library->getProfilePicture()?>" class="avatar img-fluid rounded me-1" alt="" /> 
+				<img src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important; object-fit: cover;" 
+				class="avatar img-fluid rounded me-1" alt="" /> 
 				<!-- <span class="text-dark"><?=$this->general_library->getNamaUser();?></span> -->
 			</a>
 				<div class="dropdown-menu dropdown-menu-end">
@@ -366,4 +368,10 @@
 		}
       ,500);
     })
+
+	$('#form_search_navbar').on('submit', function(e){
+		let base_url = '<?=base_url()?>'
+		e.preventDefault()
+		window.location = base_url + 'database/'+$('#search_navbar').val()
+	})
 </script>

@@ -7,6 +7,7 @@ class C_User extends CI_Controller
         parent::__construct();
         $this->load->model('general/M_General', 'general');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('master/M_Master', 'master');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
@@ -71,6 +72,13 @@ class C_User extends CI_Controller
 
     public function deleteVerifPegawai($id){
         $this->general->update('id', $id, 't_verif_tambahan', ['flag_active' => 0]);
+    }
+
+    public function sinkronNoHp(){
+        $params['username'] = $this->general_library->getUserName();
+        $params['password'] = $this->general_library->getPassword();
+        $result = $this->apilib->getAllNoHpFromSiladen('POST', $params);
+        dd($result);
     }
 
     // public function importPegawaiByUnitKerja(){
@@ -398,7 +406,8 @@ class C_User extends CI_Controller
     }
 
     public function searchPegawaiNavbar(){
-        $data['result'] = $this->user->searchPegawai($this->input->post());
+        $data['result_pegawai'] = $this->user->searchPegawai($this->input->post());
+        $data['result_skpd'] = $this->user->searchSkpd($this->input->post());
         $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);
     }
 
@@ -420,7 +429,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_pensiun', $temp);
             $this->load->view('user/V_PegawaiPensiunItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }
@@ -450,13 +459,15 @@ class C_User extends CI_Controller
         render('user/V_PegawaiGajiBerkala', '', '', $data);
     }
 
-    public function pegawaiList(){
+    public function pegawaiList($search = ''){
+        $data['search'] = urldecode($search);
         $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
         $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
         $data['statuspeg'] = $this->m_general->getAll('db_pegawai.statuspeg', 0);
         $data['tktpendidikan'] = $this->m_general->getAll('db_pegawai.tktpendidikan', 0);
         $data['agama'] = $this->m_general->getAll('db_pegawai.agama', 0);
         $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        $data['satyalencana'] = $this->m_general->getAllWithOrderGeneral('m_satyalencana', 'nama_satya_lencana', 'asc');
         $data['golongan'] = [
             1 => [
                 'id_golongan' => 'golongan_1',
@@ -501,12 +512,43 @@ class C_User extends CI_Controller
                 'nm_jenis_kelamin' => 'Perempuan'
             ]
         ];
-        render('user/V_PegawaiAll', '', '', $data);
+        $data['jenis_jabatan'] = [
+            'Struktural' => [
+                'id_jenis_jabatan' => 'Struktural',
+                'nm_jenis_jabatan' => 'Struktural'
+            ],
+            'JFT' => [
+                'id_jenis_jabatan' => 'JFT',
+                'nm_jenis_jabatan' => 'JFT'
+            ],
+            'JFU' => [
+                'id_jenis_jabatan' => 'JFU',
+                'nm_jenis_jabatan' => 'JFU'
+            ],
+        ];
+        render('user/V_Database', '', '', $data);
     }
 
     public function searchAllPegawai(){
-        $data['result'] = $this->user->searchAllPegawai($this->input->post());
+        list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
+        $this->session->set_userdata('data_search_database', $data);
         $this->load->view('user/V_PegawaiAllResult', $data);
+    }
+
+    public function downloadDataSearch($flag_excel = 0){
+        $data = $this->session->userdata('data_search_database');
+        if($flag_excel == 0){
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                'debug' => true
+            ]);
+            $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output('DATA ASN Kota Manado.pdf', 'D');
+        } else {
+            $this->load->view('user/V_PegawaiAllResultExcel', $data);
+        }
     }
 
     public function getListPegawaiGajiBerkalaByYear($flag_welcome_view = 0){
@@ -517,7 +559,7 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_gaji_berkala', $temp);
             $this->load->view('user/V_PegawaiGajiBerkalaItem', $data);
         } else {
-            $count['total'] = count($data['result']);
+            $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }
     }
@@ -550,6 +592,15 @@ class C_User extends CI_Controller
 
     public function detailPdmUser(){
         $data['result'] = $this->user->loadDetailPdmUser();
-    $this->load->view('user/V_PdmDetail', $data);
+        $data['foto'] =  $this->user->getFotoPegawai();
+        $this->load->view('user/V_PdmDetail', $data);
+    }
+
+    public function rekapKehadiranPersonal($bulan, $tahun, $id_m_user){
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+        $data['id_m_user'] = $id_m_user;
+        $result = $this->rekap->buildDataAbsensi($data, 1, 0, 1);
+        echo json_encode($result);
     }
 }

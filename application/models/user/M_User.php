@@ -35,6 +35,7 @@
                             ->join('m_sub_bidang c', 'a.id_m_sub_bidang = c.id', 'left')
                             ->where('c.skpd', $id_unitkerja)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
         }
@@ -64,7 +65,7 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('a.*, c.nm_unitkerja')
+                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -74,7 +75,7 @@
                                 ->limit(5)
                                 ->get()->result_array();
 
-                $nip = $this->db->select('a.*, c.nm_unitkerja')
+                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -92,6 +93,21 @@
                     $result[] = $np;
                 }
 
+            }
+
+            return $result;
+        }
+
+        public function searchSkpd($data){
+            $result = null;
+
+            if($data['search_param'] != ''){
+                $result = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->like('nm_unitkerja', $data['search_param'])
+                                ->order_by('nm_unitkerja', 'asc')
+                                ->limit(5)
+                                ->get()->result_array();
             }
 
             return $result;
@@ -623,6 +639,7 @@
                             ->from('db_pegawai.pegawai')
                             ->where('skpd', $id_unitkerja)
                             ->order_by('nama', 'asc')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -636,6 +653,7 @@
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                             ->or_like('a.nipbaru_ws', $data['search_value'])
                             ->or_like('a.nama', $data['search_value'])
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -651,6 +669,7 @@
             } else {
                 $list_pegawai = $this->db->select('*')
                                     ->from('db_pegawai.pegawai')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->where('skpd', $unitkerja)
                                     ->get()->result_array();
             }
@@ -775,6 +794,7 @@
                             ->where('b.skpd', $idskpd)
                             ->where('a.id !=', $iduser)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('b.nama', 'asc')
                             ->get()->result_array();
         }
@@ -900,6 +920,7 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja', 'left')
                             ->where('a.skpd', $id_unitkerja)
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.flag_active', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
@@ -959,6 +980,7 @@
         public function getListPegawaiSkpdMutasi($id_peg){
             return $this->db->select('a.nama as nama_pegawai, a.id_peg, a.skpd, a.nipbaru')
                             ->from('db_pegawai.pegawai a')
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.skpd', $idskpd)
                             ->where('a.id_peg ', $id_peg)
                             // ->where('a.flag_active', 1)
@@ -975,6 +997,7 @@
                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                             ->where('a.id_pegawai', $id_peg)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                               ->order_by('a.id', 'desc')
                             ->get()->result_array();
         }
@@ -986,6 +1009,7 @@
                             ->from('db_pegawai_new.pegawai a')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja', 'left')
                             ->where('a.id_peg NOT IN (SELECT b.id_peg FROM db_pegawai.pegawai b)')
+                            
                             ->get()->result_array();
         }
 
@@ -1218,6 +1242,7 @@
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                     ->join('m_user_role d', 'b.id = d.id_m_user', 'left')
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.nipbaru_ws')
                                     ->get()->result_array();
             $bulkroles = null;
@@ -1318,6 +1343,7 @@
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id_pegawai)
                             ->get()->row_array();
         }
@@ -1688,6 +1714,7 @@
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id)
                             ->get()->row_array();
             return $pegawai;
@@ -1783,6 +1810,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.handphone', $nohp)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1791,6 +1819,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.nipbaru_ws', $nip)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1812,6 +1841,7 @@
                             // ->like('b.nama_jabatan', 'kepegawaian')
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('c.flag_active', 1);
 
             if(!$hak_akses){
@@ -1843,6 +1873,7 @@
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.nipbaru_ws', $nip);
 
             if(!$hak_akses){
@@ -1860,22 +1891,30 @@
 
         public function loadDetailPdmUser(){
             $result = null;
-            $data = $this->db->select('*')
-                            ->from('t_pdm')
-                            ->where('id_m_user', $this->general_library->getId())
-                            ->where('flag_active', 1)
+            $data = $this->db->select('a.*,c.fotopeg')
+                            ->from('t_pdm as a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->where('a.id_m_user', $this->general_library->getId())
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
+                            
             if($data){
                 foreach($data as $d){
                     $result[$d['jenis_berkas']] = $d;
+                     $result[$d['jenis_berkas']] = $d;
                 }
             }
             return $result;
         }
 
         public function searchAllPegawai($data){
+            $result = null;
+            $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
-                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -1884,11 +1923,20 @@
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
                     ->order_by('c.eselon, a.nama');
+            if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
+                $this->db->like('a.nama', $data['nama_pegawai']);
+            }
             if($data['unitkerja'] != 0){
                 $this->db->where('a.skpd', $data['unitkerja']);
             }
             if(isset($data['eselon'])){
                 $this->db->where_in('g.id_eselon', $data['eselon']);
+            }
+            if(isset($data['jenis_jabatan'])){
+                $this->db->where_in('c.jenis_jabatan', $data['jenis_jabatan']);
+                if(in_array('JFT', $data['jenis_jabatan'])){
+                    $this->db->where('f.id_statuspeg != 1');
+                }
             }
             if(isset($data['statuspeg'])){
                 $this->db->where_in('f.id_statuspeg', $data['statuspeg']);
@@ -1936,10 +1984,97 @@
                 $this->db->where_in('e.id_pangkat', $golongan);
             }
 
-            return $this->db->get()->result_array();
+            $result = $this->db->get()->result_array();
+
+            if(isset($data['satyalencana'])){
+                $flag_use_masa_kerja = 1;
+                $masa_kerja_satyalencana = $data['satyalencana'][0];
+                $batas_atas = floatval($masa_kerja_satyalencana) + 10;
+                if($batas_atas > 30){
+                    $batas_atas = 100;
+                }
+                $temp = $result;
+                if($temp){
+                    $result = null;
+                    foreach($temp as $t){
+                        $tahun = substr($t['nipbaru_ws'], 8, 4);
+                        $bulan = substr($t['nipbaru_ws'], 12, 2);
+                        $tmt = $tahun.'-'.$bulan.'-01';
+                        $masa_kerja = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun']);
+                        $explode_masa_kerja = explode(" ", trim($masa_kerja));
+                        
+                        if($explode_masa_kerja[0] != '' && $explode_masa_kerja[0]){
+                            if(floatval($explode_masa_kerja[0] >= $masa_kerja_satyalencana && floatval($explode_masa_kerja[0]) < $batas_atas)){
+                                if(!isset($result[$t['nipbaru_ws']])){
+                                    $result[$t['nipbaru_ws']] = $t;
+                                    $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return [$result, $flag_use_masa_kerja];
+        }
+
+        public function getFotoPegawai(){
+            $username = $this->general_library->getUserName();
+            $this->db->select('a.fotopeg')
+                ->from('db_pegawai.pegawai a')
+                ->where('a.nipbaru_ws', $username)
+                ->limit(1);
+            return $this->db->get()->row_array();
+        }
+
+        public function injectBidang(){
+            $bidang = $this->db->select('*')
+                                ->from('m_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $list_bidang = null;
+            foreach($bidang as $b){
+                if(stringStartWith('Bidang', $b['nama_bidang'])){
+                    $list_bidang['Kepala '.$b['nama_bidang']] = $b['id'];
+                }
+            }
+            // dd($list_bidang);
+
+            $jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->get()->result_array();
+
+            $pegawai = $this->db->select('a.*, a.id as id_m_user, d.nama_jabatan, c.nm_unitkerja')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'b.nipbaru_ws = a.username')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                                ->where_in('c.id_unitkerjamaster', [4000000, 3000000])
+                                ->where('d.eselon', 'III B')
+                                ->where('a.id_m_bidang IS NULL')
+                                ->where('a.id_m_sub_bidang IS NULL')
+                                ->group_by('b.nipbaru_ws')
+                                ->get()->result_array();
+            dd($pegawai);
+            $no = 1;
+            foreach($pegawai as $p){
+                if(isset($list_bidang[$p['nama_jabatan']])){
+                    echo $no++.'<br>';
+                    echo 'inserting '.$list_bidang[$p['nama_jabatan']].' ke '.$p['username'].'<br><br>';
+                    $this->db->where('id', $p['id_m_user'])
+                            ->update('m_user', [
+                                'id_m_bidang' => $list_bidang[$p['nama_jabatan']]
+                            ]);        
+                } else {
+                    dd($p);
+                }
+            }
+            // dd('done');
         }
 
 	}
+
+
 
    
 ?>

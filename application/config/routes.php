@@ -82,7 +82,25 @@ $route['kepegawaian/verifikasi/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/veri
 $route['kepegawaian/dokumen/verifikasi'] = 'kepegawaian/C_Kepegawaian/verifikasiDokumen';
 
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
-$route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1';
+$route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1'; 
+$route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai';
+
 
 //api
 $route['api/get-sasaran-kerja'] = 'api/C_ApiKinerja/getKinerja';
+$route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
+
+// simata 
+$route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';
+$route['mt/data-master-interval'] = 'simata/C_Simata/masterInterval';
+// $route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanTarget/$1';
+$route['mt/jabatan-target'] = 'simata/C_Simata/jabatanTarget';
+$route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
+$route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
+$route['mt/penilaian-kinerja'] = 'simata/C_Simata/penilaianKinerja';
+$route['mt/ninebox'] = 'simata/C_Simata/nineBox';
+$route['mt/penilaian-potensial'] = 'simata/C_Simata/penilaianPotensial';
+$route['mt/profil-talenta'] = 'simata/C_Simata/profilTalenta';
+
+
+

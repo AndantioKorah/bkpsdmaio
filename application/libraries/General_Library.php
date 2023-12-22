@@ -38,11 +38,10 @@ class General_library
         return $result;
     }
 
-    public function isHakAksesLayanan(){
-        $exclude_layanan = ['rekap_absen_pd'];
+    public function isHakAksesVerifLayanan(){
         if(count($this->hakAkses) > 0){
             foreach($this->hakAkses as $hk){
-                if(floatval($hk['meta_name']) > 0){
+                if(stringStartWith('layanan', $hk['meta_name'])){
                     return true;
                 }
             }
@@ -50,6 +49,23 @@ class General_library
             return false;
         }
         return false;
+    }
+
+    public function isHavingHakAkses(){
+        $flag_ada = 0;
+        $exclude_layanan = ['rekap_absen_pd'];
+        if(count($this->hakAkses) > 0){
+            $flag_ada = 1;
+            foreach($this->hakAkses as $hk){
+                if(in_array($hk, $exclude_layanan)){
+                    $flag_ada = 0;
+                    break;
+                }
+            }
+        } else {
+            return false;
+        }
+        return $flag_ada == 1 ? true : false;
     }
 
     public function isHakAkses($meta_name){
@@ -102,9 +118,10 @@ class General_library
 
     public function getProfilePicture(){
         $photo = 'assets/img/user-icon.png';
-        if($this->userLoggedIn['fotopeg']){
-            // $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-            $photo = 'assets/img/user-icon.png';
+        $photo_saved = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+        if(file_exists($photo_saved)){
+            $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+            // $photo = 'assets/img/user-icon.png';
         }
         return base_url().$photo;
     }
@@ -174,6 +191,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isManajemenTalenta(){
+        return $this->getActiveRoleName() == 'manajemen_talenta';
+    }
+
     public function isAdminAplikasi(){
         return $this->getActiveRoleName() == 'admin_aplikasi';
     }
@@ -230,6 +251,14 @@ class General_library
         return $this->nikita->session->userdata('pegawai')['skpd'];
     }
 
+    public function isPegawaiBkpsdm(){
+        return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
+    }
+
+    public function isPejabatEselon(){
+        return $this->userLoggedIn['id_eselon'] != 1;
+    }
+
     public function setActiveRole($id_role){
         $this->nikita->session->set_userdata([
             'active_role_id' => null,
@@ -273,6 +302,7 @@ class General_library
             if($this->isProgrammer()){
                 return true;
             }
+            
             $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
@@ -381,7 +411,13 @@ class General_library
 
     public function getNamaUser(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
-        return $this->userLoggedIn['nama_user'];
+        // return $this->userLoggedIn['nama_user'];
+        return getNamaPegawaiFull($this->userLoggedIn);
+    }
+
+    public function getNamaJabatan(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['nama_jabatan'];
     }
 
     public function getId(){
@@ -541,6 +577,38 @@ class General_library
         } 
 
         return $tembusan;
+    }
+
+
+    public function uploadImageAdmin($path, $input_file_name,$nip){
+        if (!file_exists(URI_UPLOAD.$path)) {
+            mkdir(URI_UPLOAD.$path, 0777, true);
+        }
+        $file = $_FILES["$input_file_name"];
+        $fileName = $nip.'_profile_pict_'.date('ymdhis').'_'.$file['name'];
+        
+        $_FILES[$input_file_name]['name'] = $file['name'];
+        $_FILES[$input_file_name]['type'] = $file['type'];
+        $_FILES[$input_file_name]['tmp_name'] = $file['tmp_name'];
+        $_FILES[$input_file_name]['error'] = $file['error'];
+        $_FILES[$input_file_name]['size'] = $file['size'];
+        
+        $config['upload_path'] = URI_UPLOAD.$path; //buat folder dengan nama assets di root folder
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = '*';
+        $config['max_size'] = '2000';
+
+        $this->nikita->load->library('upload', $config);
+
+        if(!$this->nikita->upload->do_upload($input_file_name)){
+            $this->nikita->upload->display_errors();
+        }
+        if($this->nikita->upload->error_msg){
+            return ['code' => '500', 'message' => $this->nikita->upload->error_msg[0]];
+        }
+        $image = $this->nikita->upload->data();
+      
+        return ['code' => '0', 'data' => $image, 'nip' => $nip];
     }
 
 

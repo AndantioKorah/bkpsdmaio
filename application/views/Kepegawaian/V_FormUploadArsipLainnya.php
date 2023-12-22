@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalArsipLainnya">
@@ -20,6 +21,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -35,6 +38,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('data_lainnya')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
+<?php }  ?>
 <?php }  ?>
 
 <script>
@@ -79,7 +84,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         <div class="modal-body" id="modal_view_file_content">
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_arsip"  frameborder="0" ></iframe>
-      </div>
+     
+          </div>
         </div>
       </div>
     </div>
@@ -129,7 +135,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_arsip"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -146,7 +152,43 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 </div>
 
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        DOKUMEN
+      </div> -->
+      <div class="modal-body" id="">
+       
+      </div>
+    </div>
+  </div>
+</div>  
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_arsip_lain" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail </h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_arsip_lain_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 
@@ -154,7 +196,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 $(function(){
   $(".select2").select2({   
 		width: '100%',
-		dropdownAutoWidth: true,
+		// dropdownAutoWidth: true,
 		allowClear: true,
 	});
     loadListArsip()
@@ -182,7 +224,8 @@ $(function(){
         return false;
         }
        
-      
+        document.getElementById('btn_upload_arsip').disabled = true;
+        $('#btn_upload_arsip').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadArsipLainnya")?>",
@@ -199,6 +242,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_arsip_lainnya").reset();
+                document.getElementById('btn_upload_arsip').disabled = false;
+               $('#btn_upload_arsip').html('Simpan')
                 loadListArsip()
               } else {
                 errortoast(result.msg)
@@ -233,11 +278,12 @@ $(function(){
 
   $("#pdf_file_arsip_lainnya").change(function (e) {
 
-        var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        // var extension = pdf_file_arsip_lainnya.value.split('.')[1];
+        var doc = pdf_file_arsip_lainnya.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
        
-     
         if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');

@@ -4,9 +4,8 @@
 		margin-bottom:10px !important;
     }
 </style>
-
 <!-- Button trigger modal -->
-
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>
@@ -17,6 +16,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+  
 <?php if($pdm_pangkat) {?>
 <?php
 if($pdm_pangkat[0]['flag_active'] == 1) {?>
@@ -24,19 +25,25 @@ if($pdm_pangkat[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm_pangkat[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokpangkat" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokpangkat" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('pangkat')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }?>
+<?php }?>
   
   <script>
     function openModalStatusPmd(jenisberkas){
+      var jumlah = $('#jumlahdokpangkat').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
@@ -124,6 +131,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       </div>
     </div>
 </div>
+
 <div class="modal fade" id="modal_view_file" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -132,9 +140,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
           </div>
         <div class="modal-body">
            <div id="modal_view_file_content">
-            <h5 id="iframe_loader" class="text-center"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-         </div>
+
+          </div>
         </div>
       </div>
     </div>
@@ -174,7 +183,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group " style="margin-bottom:10px !important;">
     <label >Jenis Pengangkatan</label>
-    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" required>
+    <select  class="form-control select2 " data-dropdown-css-class="select2-navy" name="jenis_pengangkatan" id="jenis_pengangkatan" autocomplete="off" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($jenis_pengangkatan){ foreach($jenis_pengangkatan as $r){ ?>
                         <option value="<?=$r['id_jenispengangkatan']?>"><?=$r['nm_jenispengangkatan']?></option>
@@ -184,7 +193,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Pangkat - Gol/Ruang </label>
-    <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" required>
+    <select style="width: 100% important!" class="form-control select2" data-dropdown-css-class="select2-navy" name="pangkat" id="pangkat" autocomplete="off" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($list_pangkat){ foreach($list_pangkat as $r){ ?>
                         <option value="<?=$r['id_pangkat']?>"><?=$r['nm_pangkat']?></option>
@@ -197,27 +206,27 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
    <div class="form-group">
     <label>TMT Pangkat</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tmt_pangkat" name="tmt_pangkat" readonly  required/>
   </div>
   
   <div class="form-group">
     <label>Masa Kerja</label>
-    <input class="form-control" type="text" id="masa_kerja" name="masa_kerja"  required/>
+    <input class="form-control" type="text" id="masa_kerja" name="masa_kerja" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
     <label>Pejabat Yang Menetapkan</label>
-    <input class="form-control" type="text" id="pejabat" name="pejabat"  required/>
+    <input class="form-control" type="text" id="pejabat" name="pejabat" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
     <label>Nomor SK</label>
-    <input class="form-control" type="text" id="no_sk" name="no_sk"  required/>
+    <input class="form-control" type="text" id="no_sk" name="no_sk" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="tanggal_sk" name="tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="tanggal_sk" name="tanggal_sk" readonly required/>
   </div>
 
   <div class="form-group">
@@ -228,7 +237,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary"  id="btn_upload_pangkat"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -256,7 +265,17 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       </div> -->
     </div>
   </div>
+</div>   
+
+
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+     
+    </div>
+  </div>
 </div>                      
+
 
 
 <div class="modal fade" id="modalRiwayatUsulPangkat" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -273,11 +292,35 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </div>  
 
 
+
+
+<div class="modal fade" id="modal_edit_pangkat" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Pangkat</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_pangkat_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript">
 
 
 $(function(){
-        // $('.select2').select2()
 
    $(".select2").select2({   
 		width: '100%',
@@ -285,7 +328,7 @@ $(function(){
 		allowClear: true,
 	});
   
-        $('#datatable').dataTable()
+    $('#datatable').dataTable()
         loadListPangkat()
     })
 
@@ -305,13 +348,28 @@ $(function(){
         var formvalue = $('#upload_form');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('pdf_file').files.length;
-        
+        var tmtpangkat = $('#tmt_pangkat').val()
+        var tglskpangkat = $('#tanggal_sk').val()
+
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
+
+        if(tmtpangkat == ""){
+          errortoast("tmt pangkat masih kosong")
+          document.getElementById("tmt_pangkat").focus();
+          return false;
+        }
+
+        if(tglskpangkat == ""){
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("tanggal_sk").focus();
+          return false;
+        }
        
-      
+        document.getElementById('btn_upload_pangkat').disabled = true;
+        $('#btn_upload_pangkat').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -328,7 +386,12 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form").reset();
-                loadListPangkat()
+                document.getElementById('btn_upload_pangkat').disabled = false;
+               $('#btn_upload_pangkat').html('Simpan')
+                // loadListPangkat()
+                // setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-pangkat-tab").trigger( "click" );}, 2000);
               } else {
                 errortoast(result.msg)
                 return false;
@@ -360,7 +423,9 @@ $(function(){
 
   $("#pdf_file").change(function (e) {
 
-        var extension = pdf_file.value.split('.')[1];
+        // var extension = pdf_file.value.split('.')[1];
+        var doc = pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>

@@ -6,20 +6,23 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkasPns">
-  Tambah Data SK CPNS & PNS
+  Tambah Data SK CPNS, PNS & PPPK
 </button>
 
 
 
 <button onclick="loadRiwayatUsulBerkasPns()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalBerkasPns">
-  Riwayat Usul SK CPNS & PNS
+  Riwayat Usul SK CPNS, PNS & PPPK
 </button>
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -27,19 +30,28 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokberkas" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('cpns_pns')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokberkas" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('cpns_pns')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
+<?php }  ?>
+<?php }  ?>
+
 
 <script>
+  
     function openModalStatusPmd(jenisberkas){
-        $(".modal-body #jenis_berkas").val( jenisberkas );
+      var jumlah = $('#jumlahdokberkas').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
+      $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
 
@@ -105,6 +117,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <option  selected>- Pilih Jenis SK -</option>
     <option value="1">SK CPNS</option>
     <option value="2">SK PNS</option>
+    <option value="3">SK PPPK</option>
         </select>
         </div>
         <br>
@@ -119,7 +132,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_berkas"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -179,6 +192,8 @@ $(function(){
         return false;
         }
        
+        document.getElementById('btn_upload_berkas').disabled = true;
+        $('#btn_upload_berkas').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
       
         $.ajax({  
@@ -196,7 +211,15 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_berkas_pns").reset();
-                loadListBerkasPns()
+                document.getElementById('btn_upload_berkas').disabled = false;
+               $('#btn_upload_berkas').html('Simpan')
+                // loadListBerkasPns()
+                // $("#myModalBerkasPns").modal("hide");
+                // setTimeout(function() {$("#pills-berkaspns-tab").trigger( "click" );}, 1500);
+                // $('#pills-berkaspns-tab').click()
+                setTimeout(function() {$("#modalBerkasPns").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-berkaspns-tab").trigger( "click" );}, 2000);
+
               } else {
                 errortoast(result.msg)
                 return false;
@@ -206,6 +229,10 @@ $(function(){
         });  
           
         }); 
+
+ $("#myModalBerkasPns").on('hide.bs.modal', function(){
+          $("#pills-berkaspns-tab").trigger( "click" )
+  });
 
     function loadListBerkasPns(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
@@ -229,7 +256,9 @@ $(function(){
 
   $("#pdf_file_pns").change(function (e) {
 
-        var extension = pdf_file_pns.value.split('.')[1];
+        // var extension = pdf_file_pns.value.split('.')[1];
+        var doc = pdf_file_pns.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>

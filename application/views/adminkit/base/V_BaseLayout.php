@@ -11,7 +11,7 @@
 	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/iconSiladen.png" />
+	<link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/logo-siladen-small.png" />
 
 	<link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>">
 	<!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
@@ -54,7 +54,8 @@
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datepicker.css')?>">
   <script src="<?=base_url('assets/js/bootstrap-datepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>"> 
-	<style>
+	
+  <style>
 
 :root{
   --primary-color: #222e3c;

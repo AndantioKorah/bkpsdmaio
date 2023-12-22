@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalSkp">
@@ -18,8 +19,9 @@
   Riwayat Usul SKP
 </button>
 
-
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -27,19 +29,27 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokskp" value="<?php if($profil_pegawai['statuspeg'] == "3")  echo "1"; else echo $dok['total'];?>">
   <button  onclick="openModalStatusPmd('skp_tahunan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+<input type="hidden"  id="jumlahdokskp" value="<?php if($profil_pegawai['statuspeg'] == "3")  echo "1"; else echo $dok['total'];?>">
 <button  onclick="openModalStatusPmd('skp_tahunan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
+<?php }  ?>
+<?php }  ?>
+
 
 <script>
     function openModalStatusPmd(jenisberkas){
-        $(".modal-body #jenis_berkas").val( jenisberkas );
+      var jumlahskp = $('#jumlahdokskp').val()
+      if(jumlahskp == 0){
+        jenisberkas = null 
+      }
+      $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
 
@@ -106,9 +116,29 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   </div>
 
   <div class="form-group">
-    <label>Predikat</label>
-    <input class="form-control customInput" type="text" id="gb_pejabat" name="skp_predikat"  required/>
+    <label>Nilai</label>
+    <input min=0 step=0.01 class="form-control customInput" type="number" id="skp_nilai" name="skp_nilai" />
   </div>
+
+  <!-- <div class="form-group">
+    <label>Predikat</label>
+    <input class="form-control customInput" type="text" id="skp_predikat" name="skp_predikat"  required/>
+  </div> -->
+
+  <div class="form-group " style="margin-bottom:10px !important;">
+<label >Predikat</label>
+<select  class="form-control  "  name="skp_predikat" id="skp_predikat" required>
+                <option value="" disabled selected>Pilih Predikat</option>
+                <option value="Sangat Baik">Sangat Baik</option>
+                <option value="Baik">Baik</option>
+                <option value="Butuh Perbaikan">Butuh Perbaikan</option>
+                <option value="Kurang">Kurang</option>
+                <option value="Sangat Kurang">Sangat Kurang</option>
+                <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
+                  <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
+                <?php } } ?>
+</select>
+</div>
 
  
   <div class="form-group">
@@ -119,7 +149,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_skp"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -179,7 +209,8 @@ $(function(){
         return false;
         }
        
-      
+        document.getElementById('btn_upload_skp').disabled = true;
+        $('#btn_upload_skp').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -196,7 +227,13 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_skp").reset();
-                loadListSkp()
+                document.getElementById('btn_upload_skp').disabled = false;
+               $('#btn_upload_skp').html('Simpan')
+                // loadListSkp()
+                // setTimeout(function() {$("#modalSkp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modalSkp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#pills-skp-tab").trigger( "click" );}, 2000);
+
               } else {
                 errortoast(result.msg)
                 return false;
@@ -229,10 +266,11 @@ $(function(){
 
   $("#pdf_file_skp").change(function (e) {
 
-        var extension = pdf_file_skp.value.split('.')[1];
-      
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>
+
+        var doc = pdf_file_skp.value.split('.')
+        var extension = doc[doc.length - 1]
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")

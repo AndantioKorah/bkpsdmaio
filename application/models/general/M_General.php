@@ -69,12 +69,17 @@
 
         public function authenticate($username, $password)
         {
-            $this->db->select('*, a.nama as nama_user')
+            $exclude_username = ['prog', 'walikota'];
+
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                        ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1);
             $result = $this->db->get()->result_array();
             if(!$result){
@@ -192,6 +197,7 @@
         public function getDataPegawai($nip){
             return $this->db->select('*')
                             ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
         }
@@ -201,6 +207,7 @@
                             ->from('m_user a')
                             ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.flag_active',1)
                             ->where('a.id', $id)
                             ->get()->row_array();
@@ -220,6 +227,7 @@
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('m_user c', 'a.nipbaru_ws = c.username')
                                 ->where('c.id', $id_m_user)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             $ukmsekolah = ['8000000', '8010000', '8020000', '8030000'];
             $explodeuk = explode(" ", $unitkerja['nm_unitkerja']);
@@ -261,6 +269,7 @@
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->where('a.id', $this->general_library->getId())
+            ->where('id_m_status_pegawai', 1)
             ->get()->row_array();
             return $query['id_peg'];
         }
@@ -273,6 +282,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){
@@ -309,6 +319,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->order_by('a.tmtpangkat');
 
             if($data['eselon'] != "0"){
@@ -340,11 +351,13 @@
         public function getListPegawaiPensiunByYear($data){
             // dd($data);
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-                    d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru')
+                    d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                    ->where('a.statuspeg', 2)
+                    ->where('id_m_status_pegawai', 1)
                     ->order_by('c.eselon');
 
             if($data['eselon'] != "0"){
@@ -355,6 +368,10 @@
                 $this->db->where('d.id_pangkat', $data['pangkat']);
             }
 
+            if(isset($data['jenis_jabatan']) && $data['jenis_jabatan'] != "0"){
+                $this->db->where('c.jenis_jabatan', $data['jenis_jabatan']);
+            }
+
             if(isset($data['skpd'])){
                 $this->db->where('a.skpd', $data['skpd']);
             }
@@ -362,37 +379,76 @@
 
             $result = null;
             if($query){
+                $id_pangkat_ahli_madya = [41, 42, 43];
+                $id_pangkat_ahli_utama = [44, 45];
                 foreach($query as $d){
                     $temp = null;
                     if($d['tgllahir'] != null){
-                    $tgl_lahir = explode("-", $d['tgllahir']);
-                    if(floatval($data['tahun']) - $tgl_lahir[0] >= 58){ //pejabat berumum lebih dari 58 tahun pada saat $data['tahun']
-                        $id_pangkat_ahli_madya = [41, 42, 43];
-                        $id_pangkat_ahli_utama = [44, 45];
-                        if(floatval($data['tahun']) - $tgl_lahir[0] >= 60){ //jika berumur 60 tahun
-                            if($d['eselon'] == 'II A' || $d['eselon'] == 'II B'){ // pejabat pimpinan tinggi
+                        $tgl_lahir = explode("-", $d['tgllahir']);
+                        $umur = floatval($data['tahun']) - $tgl_lahir[0];
+                        $crit = 0;
+                        if($umur >= 58){
+                            if($d['jenis_jabatan'] == 'JFU' && $umur == 58){ //jika 58 dan JFU
+                                $crit = 1;
                                 $temp = $d;
-                            } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //fungsional ahli madya
+                            } else if($d['jenis_jabatan'] == 'JFT' && $umur == 60 && in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //jika 60 dan JFT dan golongan IV
+                                $crit = 2;
                                 $temp = $d;
-                            } else if((stringStartWith('Guru', $d['nama_jabatan'])) && (stringStartWith('Dokter', $d['nama_jabatan']))){ //bukan guru atau dokter
+                            } else if($umur == 60 && ($d['eselon'] == 'II A' || $d['eselon'] == 'II B')){
+                                $crit = 3;
+                                $temp = $d;
+                            } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                                $crit = 4;
+                                $temp = $d;
+                            } else if($umur == 58 &&
+                            !in_array($d['id_pangkat'], $id_pangkat_ahli_utama) &&
+                            !in_array($d['id_pangkat'], $id_pangkat_ahli_madya) &&
+                            ($d['eselon'] != 'II A' && $d['eselon'] != 'II B')){
+                                $crit = 5;
                                 $temp = $d;
                             }
-                        } else if((floatval($data['tahun']) - $tgl_lahir[0] >= 65) &&
-                            (in_array($d['id_pangkat'], $id_pangkat_ahli_madya))){ //umur 65 dan pejabat fungsional ahli utama
-                                $temp = $d;
-                        } else if($d['eselon'] != 'II A' && $d['eselon'] != 'II B' &&
-                            (!stringStartWith('Guru', $d['nama_jabatan']) &&
-                            !stringStartWith('Dokter', $d['nama_jabatan']))){ //umur 58, bukan guru dan bukan dokter
-                                $temp = $d;
+                            // if($d['nipbaru_ws'] == '196609201989022003'){
+                            //     dd($crit);
+                            // }
+                            if($temp){
+                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $umur);
+                                $explode = explode("-", $temp['tmt_pensiun']);
+                                // dd($temp['tmt_pensiun']);
+                                $temp['umur'] = $umur;
+                                if($explode[0] == $data['tahun']){
+                                    $result[] = $temp;
+                                }
+                            }
                         }
-                        $umur = floatval($data['tahun']) - $tgl_lahir[0];
-                        if($temp){
-                            $temp['umur'] = floatval($data['tahun']) - $tgl_lahir[0];
-                            $result[] = $temp;
-                        }
+
+
+                        // if(floatval($data['tahun']) - $tgl_lahir[0] >= 58){ //pejabat berumur lebih dari 58 tahun pada saat $data['tahun']
+                        //     $id_pangkat_ahli_madya = [41, 42, 43];
+                        //     $id_pangkat_ahli_utama = [44, 45];
+                        //     if(floatval($data['tahun']) - $tgl_lahir[0] >= 60){ //jika berumur 60 tahun
+                        //         if($d['eselon'] == 'II A' || $d['eselon'] == 'II B'){ // pejabat pimpinan tinggi
+                        //             $temp = $d;
+                        //         } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //fungsional ahli madya
+                        //             $temp = $d;
+                        //         } else if((stringStartWith('Guru', $d['nama_jabatan'])) && (stringStartWith('Dokter', $d['nama_jabatan']))){ //jika guru atau dokter
+                        //             $temp = $d;
+                        //         }
+                        //     } else if((floatval($data['tahun']) - $tgl_lahir[0] >= 65) &&
+                        //         (in_array($d['id_pangkat'], $id_pangkat_ahli_madya))){ //umur 65 dan pejabat fungsional ahli utama
+                        //             $temp = $d;
+                        //     } else if($d['eselon'] != 'II A' && $d['eselon'] != 'II B' &&
+                        //         (!stringStartWith('Guru', $d['nama_jabatan']) &&
+                        //         !stringStartWith('Dokter', $d['nama_jabatan']))){ //umur 58, bukan guru dan bukan dokter
+                        //             $temp = $d;
+                        //     }
+                        //     $umur = floatval($data['tahun']) - $tgl_lahir[0];
+                        //     if($temp){
+                        //         $temp['umur'] = floatval($data['tahun']) - $tgl_lahir[0];
+                        //         $result[] = $temp;
+                        //     }
+                        // }
                     }
                 }
-            }
             }
             return $result;
         }
@@ -481,6 +537,7 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->get()->result_array();
 
             $result['total'] = count($pegawai);
@@ -546,6 +603,47 @@
                 'request' => $request,
                 'response' => $response,
             ]);
+        }
+
+        public function getAllPegawai(){
+            return $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws as nip, h.id as id_m_user')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user h', 'a.nipbaru_ws = h.username')
+                        ->where('h.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
+                        ->group_by('h.id')
+                        ->order_by('a.nama')
+                        ->get()->result_array();
+        }
+
+        public function getGroupUnitKerja($id_unitkerja){
+            $id_unitkerjamaster = null;
+            $unitkerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $id_unitkerja)
+                                ->get()->row_array();
+            if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){
+                $id_unitkerjamaster = [$unitkerja['id_unitkerjamaster']]; // Kelurahan di bawah kecamatan
+            } else if($id_unitkerja == 3012000){ // dinas kesehatan
+                $id_unitkerjamaster = [7005000, 6000000]; // Puskesmas & RS
+            } else if($id_unitkerja == 3010000){ //diknas
+                $id_unitkerjamaster = [8000000, 8010000, 8020000]; // TK, SD, SMP
+            }
+            $result = null;
+            if($id_unitkerjamaster){
+                $result = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where_in('id_unitkerjamaster', $id_unitkerjamaster)
+                                ->order_by('nm_unitkerja')
+                                ->get()->result_array();
+            }
+            if($result && ($result[0]['id_unitkerja'] != $unitkerja['id_unitkerja'])){
+                $result[] = $unitkerja;
+            } else if($result == null){
+                $result[] = $unitkerja;
+            }
+
+            return $result;
         }
 
 	}

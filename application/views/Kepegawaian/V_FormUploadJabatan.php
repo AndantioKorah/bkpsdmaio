@@ -9,6 +9,7 @@
 
 
 <!-- Button trigger modal -->
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
   Tambah Data Jabatan
@@ -21,6 +22,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -28,18 +31,24 @@ if($pdm[0]['flag_active'] == 1) {?>
   Batal Berkas Sudah Lengkap
 </button>
 <?php } else if($pdm[0]['flag_active'] == 0) { ?>
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('jabatan')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
   Berkas Sudah Lengkap
 </button>
 <?php }  ?>
 <?php } else { ?> 
-
+  <input type="hidden"  id="jumlahdokjab" value="<?=$dok['total'];?>">
 <button  onclick="openModalStatusPmd('jabatan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }  ?>
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
+      var jumlah = $('#jumlahdokjab').val()
+      if(jumlah == 0){
+        jenisberkas = null 
+      }
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
@@ -94,7 +103,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Data Jabatan</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" id="modal_jabatan_dismis" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -152,16 +161,64 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </select>
     </div>
 
-    <div class="form-group" style="margin-bottom:10px !important;">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="1" name="myCheck" id="myCheck" onclick="myFunction()">
+      <label class="form-check-label" for="myCheck">
+        Jabatan Lama
+      </label>
+    </div>
+
+
+ 
+
+    <div class="form-group" style="display:none" id="text">
+    <label>Nama Jabatan</label>
+    <input autocomplete="off"  class="form-control"  id="jabatan_lama" name="jabatan_lama"/>
+    </div>
+
+    <script>
+      function myFunction() {
+  // Get the checkbox
+  var checkBox = document.getElementById("myCheck");
+  // Get the output text
+  var text = document.getElementById("text");
+
+  // If the checkbox is checked, display the output text
+  if (checkBox.checked == true){
+    text.style.display = "block";
+    $('#jabatan_baru').hide('fast')
+  } else {
+    text.style.display = "none";
+    $('#jabatan_baru').show('fast')
+  }
+}
+    </script>
+
+
+    <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
     <label for="jabatan_jenis">Nama Jabatan </label>
     <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
                         <option value="" selected>Pilih Jabatan</option>
                     </select> -->
-    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" required>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
+    </select>
+    </div>
+    <div class="form-group" style="margin-bottom:10px !important;">
+    <label for="jabatan_jenis">Status Jabatan </label>
+    <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
+                        <option value="" selected>Pilih Jabatan</option>
+                    </select> -->
+                    <select class="form-control select2" data-dropdown-css-class="" name="jabatan_status" id="jabatan_status" required>
+                   <?php if($statusjabatan == 'def') { ?>
+                    <option value=1 >Definitif</option>
+                   <?php } else { ?>
+                    <option value=2 >Plt</option>
+                    <option value=3 >Plh</option>
+                    <?php } ?>
     </select>
     </div>
    
@@ -173,13 +230,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>TMT Jabatan</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tmt" name="jabatan_tmt" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tmt" name="jabatan_tmt" readonly required/>
   </div>
 
 
   <div class="form-group" style="margin-bottom:10px !important;">
     <label >Eselon </label>
-    <select class="form-control " data-dropdown-css-class="select2-navy" name="jabatan_eselon" id="jabatan_eselon" required>
+    <select class="form-control select2"  data-dropdown-css-class="select2-navy" name="jabatan_eselon" id="jabatan_eselon" required>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($eselon){ foreach($eselon as $r){ ?>
                         <option value="<?=$r['id_eselon']?>"><?=$r['nm_eselon']?></option>
@@ -194,7 +251,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Tanggal SK</label>
-    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tanggal_sk" name="jabatan_tanggal_sk" required/>
+    <input autocomplete="off"  class="form-control datepicker"   id="jabatan_tanggal_sk" name="jabatan_tanggal_sk" readonly required/>
   </div>
 
 
@@ -211,13 +268,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_jabatan"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -235,6 +292,44 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 </div>
 
+
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        DOKUMEN
+      </div> -->
+      <div class="modal-body" id="">
+       
+      </div>
+    </div>
+  </div>
+</div>  
+
+
+
+
+<div class="modal fade" id="modal_edit_jabatan" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Jabatan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_jabatan_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script type="text/javascript">
@@ -265,13 +360,64 @@ $(function(){
         var formvalue = $('#upload_form_jabatan');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('jabatan_pdf_file').files.length;
+        var tmtjabatan = $('#jabatan_tmt').val()
+        var tglsk = $('#jabatan_tanggal_sk').val()
+        var checkBox = document.getElementById("myCheck")
+        var jabatan_lama = $('#jabatan_lama').val()
+        var jabatan_nama = $('#jabatan_nama').val()
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-       
+
       
+        document.getElementById('btn_upload_jabatan').disabled = true;
+        $('#btn_upload_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
+        if (checkBox.checked == true){
+         if(jabatan_lama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        } else {
+          if(jabatan_nama == ""){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+
+         if(jabatan_nama == null){
+          errortoast("Silahkan isi nama jabatan  terlebih dahulu");
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          return false
+         }
+        }
+
+
+        if(tmtjabatan == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          errortoast("tmt jabatan masih kosong")
+          document.getElementById("jabatan_tmt").focus();
+          return false;
+        }
+
+        if(tglsk == ""){
+          document.getElementById('btn_upload_jabatan').disabled = false;
+          $('#btn_upload_jabatan').html('Simpan')
+          errortoast("tanggal sk masih kosong")
+          document.getElementById("jabatan_tanggal_sk").focus();
+          return false;
+        }
+        
+        
+       
+     
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -288,7 +434,11 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_jabatan").reset();
-                loadListJabatan()
+                document.getElementById('btn_upload_jabatan').disabled = false;
+               $('#btn_upload_jabatan').html('Simpan')
+               setTimeout(function() {$("#modal_jabatan_dismis").trigger( "click" );}, 1500);
+              location.reload();
+                // loadListJabatan()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -301,18 +451,20 @@ $(function(){
 
     function loadListJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+      var statusjabatan = "<?= $statusjabatan?>";
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
-    $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1', function(){
+    $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1'+'/'+statusjabatan, function(){
       $('#loader').hide()
     })
   }
 
   function loadRiwayatUsulJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
+      var statusjabatan = "<?= $statusjabatan?>";
     $('#riwayat_usul_jabatan').html('')
     $('#riwayat_usul_jabatan').append(divLoaderNavy)
-    $('#riwayat_usul_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2', function(){
+    $('#riwayat_usul_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2'+'/'+statusjabatan, function(){
       $('#loader').hide()
     })
   }
@@ -324,7 +476,10 @@ $(function(){
 
   $("#jabatan_pdf_file").change(function (e) {
 
-        var extension = jabatan_pdf_file.value.split('.')[1];
+        // var extension = jabatan_pdf_file.value.split('.')[1];
+        var doc = jabatan_pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
+
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
         
@@ -335,7 +490,7 @@ $(function(){
         }
 
         if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
+          errortoast("Maksimal Ukuran File 1 MB")
           $(this).val('');
         }
 

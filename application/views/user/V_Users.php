@@ -15,6 +15,9 @@
                     <button class="btn btn-sm btn-navy" data-toggle="modal" data-target="#modal_import_user">
                         <i class="fa fa-file-import"></i> Import dari Data Pegawai
                     </button>
+                    <button class="btn btn-sm btn-navy" onclick="sinkronNoHp()" data-toggle="modal" data-target="#modal_sinkron_nohp">
+                        <i class="fa fa-sync"></i> Sinkronasi Nomor HP
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,6 +88,11 @@
         <div id="list_users" class="row table-responsive">
         </div>
     </div>
+</div>
+<div class="modal fade" id="modal_sinkron_nohp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content" id="modal_sinkron_nohp_detail"></div>
+	</div>
 </div>
 <div class="modal fade" id="modal_import_user" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<div id="modal-dialog" class="modal-dialog modal-xl">
@@ -219,6 +227,14 @@
         $('#div_create_list_pegawai').html('')
         $('#div_create_list_pegawai').append(divLoaderNavy)
         $('#div_create_list_pegawai').load('<?=base_url("user/C_User/loadPegawaiBySkpd")?>'+'/'+$('#id_skpd').val(), function(){
+            $('#loader').hide()
+        })
+    }
+
+    function sinkronNoHp(){
+        $('#modal_sinkron_nohp_detail').html('')
+        $('#modal_sinkron_nohp_detail').append(divLoaderNavy)
+        $('#modal_sinkron_nohp_detail').load('<?=base_url("user/C_User/sinkronNoHp")?>', function(){
             $('#loader').hide()
         })
     }

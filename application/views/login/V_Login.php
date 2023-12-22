@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<style>
+		.text-toggle-password{
+			font-weight: bold;
+		}
+
+		.text-toggle-password:hover{
+			color: white !important;
+			cursor: pointer;
+			transition: .2s;
+		}
+	</style>
+
 	<title><?=TITLES?></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +38,7 @@
 	<link rel="stylesheet" type="text/css" href="assets/new_login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="assets/new_login/css/main.css">
 	<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
-    <link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/iconSiladen.png" />
+    <link rel="shortcut icon" href="<?=base_url('')?>assets/adminkit/img/logo-siladen-small.png" />
 
 <!--===============================================================================================-->
 </head>
@@ -52,11 +64,25 @@
 						</div>
 						
 						
-						<div class="wrap-input100 validate-input" data-validate="Password Anda">
-							<input class="input100" type="password" name="password">
+						<div id="div_password_hide" class="wrap-input100 validate-input" data-validate="Password Anda">
+							<input id="input_hide_password" class="input100" type="password" name="password">
 							<span class="focus-input100"></span>
 							<span class="label-input100">Password</span>
 						</div>
+
+						<div style="display: none;" id="div_password_show" class="wrap-input100 validate-input" data-validate="Password Anda">
+							<input id="input_show_password" class="input100" type="text" name="password">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Password</span>
+						</div>
+
+						<div class="text-right">
+							<!-- <input class="input100" type="password" name="password">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Password</span> -->
+							<span class="text-toggle-password txt2 text-show-password"><i class="fa fa-eye"></i> Show Password</span>
+							<span style="display: none;" class="text-toggle-password txt2 text-hide-password"><i class="fa fa-eye-slash"></i> Hide Password</span>
+						</div>						
 
 						<div class="flex-sb-m w-full p-t-3 p-b-32">
 							<!-- <div class="contact100-form-checkbox">
@@ -155,6 +181,30 @@
 		<?php
 		$this->session->set_flashdata('message', null);
 		} ?>
+	})
+
+	$('#input_hide_password').on('input', function(){
+		$('#input_show_password').val($(this).val())
+	})
+
+	$('#input_show_password').on('input', function(){
+		$('#input_hide_password').val($(this).val())
+	})
+
+	$('.text-show-password').on('click', function(){
+		$('.text-show-password').hide()
+		$('.text-hide-password').show()
+
+		$('#div_password_show').show()
+		$('#div_password_hide').hide()
+	})
+
+	$('.text-hide-password').on('click', function(){
+		$('.text-hide-password').hide()
+		$('.text-show-password').show()
+
+		$('#div_password_show').hide()
+		$('#div_password_hide').show()
 	})
 
 	function errortoast(message = '', timertoast = 3000){

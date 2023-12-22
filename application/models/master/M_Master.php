@@ -16,13 +16,14 @@
             return $this->db->select('*,
             (SELECT count(aa.nipbaru_ws)
             FROM db_pegawai.pegawai aa
-            WHERE aa.skpd = a.id_unitkerja) as total,
+            WHERE aa.skpd = a.id_unitkerja and id_m_status_pegawai = 1) as total,
             (SELECT count(bb.nipbaru_ws)
             FROM db_pegawai.pegawai bb
             WHERE bb.skpd = a.id_unitkerja
-            AND bb.jk = "Laki-laki") as total_laki')
+            AND bb.jk = "Laki-laki" and id_m_status_pegawai = 1) as total_laki')
                             ->from('db_pegawai.unitkerja a')
                             ->where('a.id_unitkerjamaster', $ukmaster)
+                            // ->where('id_m_status_pegawai', 1)
                             ->order_by('a.nm_unitkerja', 'asc')
                             ->get()->result_array();
         }
@@ -91,6 +92,7 @@
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->where('a.skpd', $data)
                             ->order_by('a.nama', 'asc')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -103,6 +105,7 @@
                             ->where('e.flag_active', 1)
                             ->where('a.skpd', $data)
                             ->order_by('a.nama', 'asc')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -563,6 +566,7 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('a.skpd', $id_unitkerja)
+            ->where('id_m_status_pegawai', 1)
             ->order_by('c.eselon')
             ->get()->result_array();
 
@@ -587,7 +591,11 @@
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }
-                $result['agama'][$peg['agama']]['jumlah']++;
+                if(isset($result['agama'][$peg['agama']]['jumlah'])){
+                    $result['agama'][$peg['agama']]['jumlah']++;
+                } else {
+                    $result['agama'][$peg['agama']]['jumlah'] = 1;
+                }
                 if($peg['jk'] == 'Laki-Laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {
@@ -609,6 +617,7 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('a.skpd', $data['id_unitkerja'])
+            ->where('id_m_status_pegawai', 1)
             ->order_by('c.eselon');
 
             if($data['eselon'] != "0"){
@@ -636,7 +645,8 @@
             }
 
             if($data['nama_pegawai']){
-                $this->db->like('a.nama', $data['nama_pegawai']);
+                // $this->db->like('a.nama', $data['nama_pegawai']);
+                $this->db->where('(a.nama LIKE "%'.$data['nama_pegawai'].'%" OR a.nipbaru_ws LIKE "%'.$data['nama_pegawai'].'%")');
             }
 
             // $result = $this->db->get()->result_array();
@@ -661,6 +671,7 @@
                             ->join('m_hak_akses f', 'a.id_m_hak_akses = f.id')
                             ->where('a.id_m_hak_akses', $id)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('c.nama')
                             ->get()->result_array();
         }
@@ -679,6 +690,7 @@
                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                     ->where('b.flag_active', 1)
                     ->order_by('a.nama')
+                    ->where('id_m_status_pegawai', 1)
                     ->get()->result_array();
         }
 
@@ -705,5 +717,14 @@
 
             return $rs;
         }
+
+        public function loadDetailPelanggaran($id){
+            return $this->db->select('*')
+                            ->from('m_pelanggaran_detail')
+                            ->where('id_m_pelanggaran', $id)
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        }
+
 	}
 ?>

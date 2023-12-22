@@ -23,12 +23,14 @@ header("Content-Disposition: attachment; filename=$filename");
         <div class="col-lg-12">
             <table border=1 id="table_result" class="table table-hover datatable">
                 <thead>
-                    <th style="text-align: center";>No</th>
-                    <th style="text-align: center";>Nama Pegawai</th>
-                    <th style="text-align: center";>NIP</th>
-                    <th style="text-align: center";>Pangkat</th>
-                    <th style="text-align: center";>Jabatan</th>
-                    <th style="text-align: center";>Unit Kerja</th>
+                    <th style="text-align: center;">No</th>
+                    <th style="text-align: center;">Nama Pegawai</th>
+                    <th style="text-align: center;">NIP</th>
+                    <th style="text-align: center;">Pangkat</th>
+                    <th style="text-align: center;">Jabatan</th>
+                    <th style="text-align: center;">Jenis Jabatan</th>
+                    <th style="text-align: center;">Unit Kerja</th>
+                    <th style="text-align: center;" class="text-center">TMT Pensiun</th>
                     <!-- <th style="text-align: center";>TMT Naik Pangkat</th> -->
                 </thead>
                 <tbody>
@@ -45,7 +47,9 @@ header("Content-Disposition: attachment; filename=$filename");
                                 <span class="text-small"><?=($rs['nm_pangkat'])?></span><br>
                             </td>
                             <td style="text-align: left" class="text-center"><?=($rs['nama_jabatan'])?></td>
+                            <td style="text-align: left" class="text-center"><?=($rs['jenis_jabatan'])?></td>
                             <td style="text-align: left" class="text-left"><?=($rs['nm_unitkerja'])?></td>
+                            <td style="text-align: center;"><?=formatDateNamaBulan($rs['tmt_pensiun'])?></td>
                             <!-- <td style="text-align: left" class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>
                     <?php } ?>

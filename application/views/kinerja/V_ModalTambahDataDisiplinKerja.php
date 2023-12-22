@@ -1,7 +1,9 @@
 <div class="modal-body">
     <form id="form_input">
         <div class="row">
-            <?php if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()) {
+            <?php if($this->general_library->isProgrammer() || 
+            $this->general_library->isAdminAplikasi() || 
+            isKasubKepegawaian($this->general_library->getNamaJabatan())) {
             ?>
                 <div class="col-lg-12 col-md-12">
                     <label>Pilih Pegawai</label>

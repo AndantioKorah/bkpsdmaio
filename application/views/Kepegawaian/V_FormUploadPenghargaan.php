@@ -7,6 +7,9 @@
     }
 </style>
 
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
+
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
   Tambah Data Penghargaan
@@ -19,6 +22,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -35,6 +40,10 @@ if($pdm[0]['flag_active'] == 1) {?>
 <button  onclick="openModalStatusPmd('penghargaan')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
+<?php }  ?>
+<?php }  ?>
+
+
 
 <script>
     function openModalStatusPmd(jenisberkas){
@@ -94,15 +103,37 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="upload_form_penghargaan" enctype="multipart/form-data" >
-   
+
+  <form method="post" id="upload_form_penghargaan" enctype="multipart/form-data" >
    <input type="hidden" id="id_pegpenghargaan" name="id_pegpenghargaan" value="">
    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
-
+   <input type="hidden" id="id_dokumen" name="id_dokumen" value="<?= $format_dok['id_dokumen'];?>">
 
   <div class="form-group">
+    <label>Penghargaan</label>
+    <select onchange="myFunction()" class="form-control select2"  type="text" id="pegpenghargaan" name="pegpenghargaan" autocomplete="off"  required>
+    <option selected disabled value="">Pilih Item</option>
+    <option value="1">Satyalencana Karya Satya 10 tahun</option>
+    <option value="2">Satyalencana Karya Satya 20 tahun</option>           
+    <option value="3">Satyalencana Karya Satya 30 tahun</option>           
+    <option value="4">Penghargaan Lainnya</option>         
+    </select>
+  </div>
+
+  <script>
+    function myFunction(val) {
+    var val = $('#pegpenghargaan').val()
+    if(val == 4){
+    $('#nama_peg').show('fast')
+    } else {
+      $('#nama_peg').hide('fast')
+    }
+    }
+  </script>
+  
+  <div class="form-group" style="display:none" id="nama_peg">
     <label>Nama Penghargaan</label>
-    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  required/>
+    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  />
   </div>
 
   <div class="form-group">
@@ -123,13 +154,25 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Asal Perolehan</label>
-    <input class="form-control customInput" type="text" id="asal" name="asal"  required/>
+    <select class="form-control select2" data-dropdown-parent="#modalPenghargaan" data-dropdown-css-class="select2-navy" name="pemberi" id="pemberi" required>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($pemberi){ foreach($pemberi as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['nm_pemberipenghargaan']?></option>
+                    <?php } } ?>
+    </select>
+  </div>
+
+
+  <div class="form-group">
+    <label>File SK</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_penghargaan" name="file"   />
+    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_penghargaan"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -150,20 +193,46 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 
+<div class="modal fade" id="modal_view_file_penghargaan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_penghargaan"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
 
 
-<div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_penghargaan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <!-- <div class="modal-header">
-        DOKUMEN
-      </div> -->
-      <div class="modal-body" id="modal_view_file_content">
-        <iframe id="iframe_view_file" style="width: 100%; height: 80vh;" src=""></iframe>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Penghargaaan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_penghargaan_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
       </div>
     </div>
   </div>
-</div>                      
+</div>
 
 <script type="text/javascript">
 
@@ -196,9 +265,24 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_penghargaan');
         var form_data = new FormData(formvalue[0]);
+
+        var pegpenghargaan = $('#pegpenghargaan').val()
+        var nm_penghargaan = $('#nm_pegpenghargaan').val()
+
+        var ins = document.getElementById('pdf_file_penghargaan').files.length;
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
+
+        if(pegpenghargaan == 4){
+          if(nm_penghargaan == ""){
+            errortoast("Silahkan isi nama penghargaan");
+          }
+        }
        
-       
-      
+        document.getElementById('btn_upload_penghargaan').disabled = true;
+        $('#btn_upload_penghargaan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -215,7 +299,10 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_penghargaan").reset();
+                document.getElementById('btn_upload_penghargaan').disabled = false;
+               $('#btn_upload_penghargaan').html('Simpan')
                 loadListPenghargaan()
+                setTimeout(function() {$("#modalPenghargaan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;
@@ -257,5 +344,25 @@ $(function(){
             orientation: 'bottom',
             autoclose: true
         });
+
+        $("#pdf_file_penghargaan").change(function (e) {
+
+      var doc = pdf_file_penghargaan.value.split('.');
+      var MaxSize = <?=$format_dok['file_size']?>;
+      var fileSize = this.files[0].size/1024;
+      var extension = doc[doc.length - 1]
+
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
   
 </script>

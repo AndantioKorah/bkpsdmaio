@@ -13,8 +13,12 @@ $route['master/bidang'] = 'master/C_Master/masterBidang';
 $route['master/bidang/sub'] = 'master/C_Master/masterSubBidang';
 $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
+$route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 
+
+//pelanggaran
+$route['pelanggaran'] = 'kinerja/C_Kinerja/pelanggaran';
 
 // $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerja';
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerjaNew';
@@ -36,9 +40,13 @@ $route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
 $route['master/tpp'] = 'master/C_Master/tpp';
 
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
+$route['pdm/dashboard'] = 'dashboard/C_Dashboard/dashboardPdm';
+$route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 
+$route['database'] = 'user/C_User/pegawaiList';
+$route['database/(:any)'] = 'user/C_User/pegawaiList/$1';
 $route['list-pegawai'] = 'user/C_User/pegawaiList';
 $route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
 $route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';
@@ -51,3 +59,6 @@ $route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';
 //cron
 $route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';
 $route['cron/rekap-absensi-pd'] = 'cron/C_Cron/cronRekapAbsenPD';
+
+//walikota
+$route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';

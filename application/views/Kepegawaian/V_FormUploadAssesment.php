@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalAssesment">
@@ -21,6 +22,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm) {?>
 <?php
 if($pdm[0]['flag_active'] == 1) {?>
@@ -36,6 +39,8 @@ if($pdm[0]['flag_active'] == 1) {?>
 
 <button  onclick="openModalStatusPmd('assesment')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
+<?php }  ?>
+<?php }  ?>
 <?php }  ?>
 
 <script>
@@ -99,20 +104,26 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <div class="modal-body">
       <form method="post" id="upload_form_assesment" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
-  <div class="form-group">
-    <label>Nama Assesment</label>
-    <input class="form-control" type="text" id="nm_assesment" name="nm_assesment" autocomplete="off"  required/>
+ 
+      <div class="form-group">
+    <label>Tahun</label>
+    <input min=0 step=0.01 class="form-control yearpicker" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
   </div>
 
- 
   <div class="form-group">
+    <label>Nilai Assesment Manajerial dan Sosial Kultural</label>
+    <input min=0 step=0.01 class="form-control" type="number" id="nilai_assesment" name="nilai_assesment" autocomplete="off"  required/>
+  </div>
+
+
+  <!-- <div class="form-group">
     <label>File Assesment</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_assesment" name="file"   />
-  </div>
+  </div> -->
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_assesment"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -165,14 +176,15 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_assesment');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_assesment').files.length;
+        // var ins = document.getElementById('pdf_file_assesment').files.length;
         
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
        
-      
+        document.getElementById('btn_upload_assesment').disabled = true;
+        $('#btn_upload_assesment').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUploadAssesment")?>",
@@ -189,6 +201,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_assesment").reset();
+                document.getElementById('btn_upload_assesment').disabled = false;
+               $('#btn_upload_assesment').html('Simpan')
                 loadListAssesment()
               } else {
                 errortoast(result.msg)
@@ -221,7 +235,9 @@ $(function(){
     
   $("#pdf_file_assesment").change(function (e) {
 
-        var extension = pdf_file_assesment.value.split('.')[1];
+        // var extension = pdf_file_assesment.value.split('.')[1];
+        var doc = pdf_file_assesment.value.split('.')
+        var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
      

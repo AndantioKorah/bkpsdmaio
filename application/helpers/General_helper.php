@@ -314,7 +314,7 @@ function getPphByIdPangkat($id_pangkat)
 function greeting(){
     date_default_timezone_set("Asia/Singapore");
 
-    $time = date('h');
+    $time = date('H');
     $greeting = "Pagi";
     if(intval($time) >= 11 && intval($time) < 15){
         $greeting = "Siang";
@@ -395,7 +395,7 @@ function getProgressBarColor($progress, $use_important = true)
         $bgcolor = '#ffcf00 !important';
     } else if ($progress > 65 && $progress <= 85) {
         $bgcolor = '#5bff00 !important';
-    } else if ($progress > 85 && $progress <= 99) {
+    } else if ($progress > 85 && $progress < 100) {
         $bgcolor = '#41b302 !important';
     } else if ($progress >= 100) {
         $bgcolor = '#006600 !important';
@@ -646,6 +646,34 @@ function logErrorTelegram($data)
     $this->general_library->logErrorTelegram($data);
 }
 
+function convertPhoneNumber($nohp){
+    return "62".substr($nohp, 1, strlen($nohp)-1);
+}
+
+function isKasubKepegawaian($nama_jabatan){
+    return (stringStartWith('Kepala Sub', $nama_jabatan) || 
+    stringStartWith('Kepala Seksi', $nama_jabatan) ||
+    stringStartWith('Kasubag', $nama_jabatan) ||
+    stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
+    stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
+    stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
+}
+
+function countTmtPensiun($nip, $umur = 0){
+    $tahun = floatval(substr($nip, 0, 4));
+    $bulan = floatval(substr($nip, 4, 2));
+    $tanggal = substr($nip, 6, 2);
+    $tahun += $umur;
+    
+    if($bulan == '12'){
+        $tahun += 1;
+        return $tahun."-01-01";
+    } else {
+        $bulan += 1;
+        return $tahun.'-'.$bulan.'-01';
+    }
+}
+
 function get_client_ip()
 {
     $ipaddress = '';
@@ -767,3 +795,199 @@ function decrypt_custom($encrypted_string)
 //   }       
 //   return $hasil;
 //  }
+
+function pemeringkatanKriteriaKinerja($nilai){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalKinerja();
+    $pemeringkatan = null;
+    $badge = null;
+
+    foreach ($list_interval as $li) {
+        if($nilai == 0) {
+            // $badge = "primary";
+            // $pemeringkatan = "-";
+            $badge = "danger";
+            $pemeringkatan = "<span class='badge bg-".$badge."'>Di bawah ekspektasi</span>";
+        } else {
+            if($nilai >= $li['dari'] AND $nilai <= $li['sampai']){
+                if($li['id'] == 1) {
+                $badge = "success";
+                } else if($li['id'] == 3) {
+                $badge = "secondary";
+                } else if($li['id'] == 4) {
+                $badge = "danger";
+                }
+                $pemeringkatan = "<span class='badge bg-".$badge."'>".$li['kriteria']."</span>";
+            }   
+        }
+       
+       
+    }
+
+    return $pemeringkatan;
+}
+
+function pemeringkatanKriteriaPotensial($nilai){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalPotensial();
+
+    
+    $pemeringkatan = null;
+    $badge = null;
+    foreach ($list_interval as $li) {
+        if($nilai == 0) {
+            $badge = "danger";
+            // $pemeringkatan = "-";
+            $pemeringkatan = "<span class='badge bg-".$badge."'>Rendah</span>";
+
+        } else {
+            if($nilai >= $li['dari'] AND $nilai <= $li['sampai']){
+                if($li['id'] == 2) {
+                $badge = "success";
+                } else if($li['id'] == 5) {
+                $badge = "secondary";
+                } else if($li['id'] == 6) {
+                $badge = "danger";
+                }
+                $pemeringkatan = "<span class='badge bg-".$badge."'>".$li['kriteria']."</span>";
+            }   
+        }
+       
+       
+    }
+
+    return $pemeringkatan;
+}
+
+function pemetaanTalenta($nilaix,$nilaiy){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalPotensial();
+
+    
+    $hasil = null;
+    $badge = null;
+    if($nilaix >= 85 && $nilaiy >= 85) {
+        $hasil = "IX";
+       } 
+       if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        // print_r($nilaix."-".$nilaiy.",");
+        $hasil = "VIII";
+       }
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+        $hasil = "VII";
+       } 
+      if($nilaix >= 85 && $nilaiy < 70) {
+        $hasil = "VI";
+       } 
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "V";
+      } 
+      if($nilaix < 70 && $nilaiy >= 85) {
+        $hasil = "IV";
+      } 
+      if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+        $hasil = "III";
+      }
+      if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "II";
+      }
+      if($nilaix < 70 && $nilaiy < 70) {
+        $hasil = "I";
+      }  
+
+    return $hasil;
+}
+
+function rekomendasi($nilaix,$nilaiy){
+    $helper = &get_instance();
+    $helper->load->model('simata/M_Simata', 'simata');
+    $list_interval = $helper->simata->getListIntervalPotensial();
+
+    
+    $hasil = null;
+    $badge = null;
+    if($nilaix >= 85 && $nilaiy >= 85) {
+        $hasil = "IX";
+        $rekom = "1. Dipromosikan dan dipertahankan
+        2. Masuk Kelompok Rencana Suksesi
+        Instansi/Nasional
+        3. Penghargaan";
+       } 
+       if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        // print_r($nilaix."-".$nilaiy.",");
+        $hasil = "VIII";
+        $rekom = "1. Dipertahankan<br>
+        2. Masuk Kelompok Rencana Suksesi
+        Instansi<br>
+        3. Rotasi/Perluasan jabatan<br>
+        4. Bimbingan kinerja";
+       }
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+        $hasil = "VII";
+        $rekom = "1. Dipertahankan <br>
+        2. Masuk Kelompok Rencana Suksesi 
+        Instansi<br>
+        3. Rotasi/Pengayaan jabatan <br>
+        4. Pengembangan kompetensi <br>
+        5. Tugas belajar"; 
+       } 
+      if($nilaix >= 85 && $nilaiy < 70) {
+        $hasil = "VI";
+        $rekom = "1. Penempatan yang sesuai<br>
+        2. Bimbingan kinerja<br>
+        3. Konseling kinerja
+        ";
+       } 
+       if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "V";
+        $rekom = "1. Penempatan yang sesuai<br>
+        2. Bimbingan kinerja<br>
+        3. Pengembangan kompetensi";
+      } 
+      if($nilaix < 70 && $nilaiy >= 85) {
+        $hasil = "IV";
+        $rekom = "1. Rotasi<br>
+        2. Pengembangan kompetensi";
+      } 
+      if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+        $hasil = "III";
+        $rekom = "1. Bimbingan kinerja<br>
+        2. Konseling kinerja<br>
+        3. Pengembangan kompetensi<br>
+        4. Penempatan yang sesuai";
+      }
+      if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+        $hasil = "II";
+        $rekom = "1. Bimbingan kinerja<br>
+        2. Pengembangan kompetensi<br>
+        3. Penempatan yang sesuai
+        ";
+      }
+      if($nilaix < 70 && $nilaiy < 70) {
+        $hasil = "I";
+        $rekom = "Diproses sesuai ketentuan peraturan
+        perundangan";
+      }  
+
+    return $rekom;
+}
+
+
+
+function numberToRoman($number) {
+    $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+    $returnValue = '';
+    while ($number > 0) {
+        foreach ($map as $roman => $int) {
+            if($number >= $int) {
+                $number -= $int;
+                $returnValue .= $roman;
+                break;
+            }
+        }
+    }
+    return $returnValue;
+}

@@ -6,7 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
-
+<?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPendidikan">
   Tambah Data Pendidikan
@@ -18,6 +18,8 @@
 
 
 <!-- status pdm -->
+<?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
+
 <?php if($pdm_pendidikan) {?>
 <?php
 if($pdm_pendidikan[0]['flag_active'] == 1) {?>
@@ -34,7 +36,8 @@ if($pdm_pendidikan[0]['flag_active'] == 1) {?>
 <button  onclick="openModalStatusPmd('ijazah')"   
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
-
+<?php }  ?>
+<?php }  ?>
 <script>
     function openModalStatusPmd(jenisberkas){
         $(".modal-body #jenis_berkas").val( jenisberkas );
@@ -78,7 +81,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         <div class="modal-body" id="modal_view_file_content">
         <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_pendidikan"  frameborder="0" ></iframe>	
-      </div>
+           
+          </div>
         </div>
       </div>
     </div>
@@ -140,7 +144,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>No. STTB/Ijazah</label>
-    <input class="form-control customInput" type="text" id="pendidikan_nama_pimpinan" name="pendidikan_nama_pimpinan"  required/>
+    <input class="form-control customInput" type="text" id="pendidikan_no_ijazah" name="pendidikan_no_ijazah"  required/>
   </div>
 
   <div class="form-group">
@@ -156,7 +160,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group col-lg-12">
     <br>
-     <button class="btn btn-block btn-primary customButton"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton"  id="btn_upload_pendidikan"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
       </div>
@@ -176,8 +180,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 </div>
 
-<!-- 
-<div class="modal fade" id="modal_view_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div id="modal-dialog" class="modal-dialog modal-xl">
     <div class="modal-content">
  
@@ -186,7 +190,32 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       </div>
     </div>
   </div>
-</div>                       -->
+</div>                      
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_pendidikan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Pendidikan</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_pendidikan_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <script type="text/javascript">
@@ -222,7 +251,9 @@ $(function(){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-       
+
+        document.getElementById('btn_upload_pendidikan').disabled = true;
+        $('#btn_upload_pendidikan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
       
         $.ajax({  
@@ -240,7 +271,10 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 document.getElementById("upload_form_pendidikan").reset();
+                document.getElementById('btn_upload_pendidikan').disabled = false;
+               $('#btn_upload_pendidikan').html('Simpan')
                 loadListPendidikan()
+                setTimeout(function() {$("#modalPendidikan").trigger( "click" );}, 1000);
               } else {
                 errortoast(result.msg)
                 return false;
@@ -277,7 +311,10 @@ $(function(){
 
   $("#pendidikan_pdf_file").change(function (e) {
 
-        var extension = pendidikan_pdf_file.value.split('.')[1];
+        // var extension = pendidikan_pdf_file.value.split('.')[1];
+        var doc = pendidikan_pdf_file.value.split('.')
+        var extension = doc[doc.length - 1]
+
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;
         

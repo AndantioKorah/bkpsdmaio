@@ -57,6 +57,21 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
+                            <label class="label-filter">Nama Pegawai</label>
+                            <div class="filter-option">
+                                <input value="<?=$search != "" || $search != null ? $search : ''?>" style="margin-top: -5px;" class="form-control" name="nama_pegawai" id="nama_pegawai" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="label-filter">Jenis Jabatan</label>
+                            <div class="filter-option">
+                                <?php foreach($jenis_jabatan as $e){ ?>
+                                    <span id="btn_filter_jenis_jabatan_<?=$e['id_jenis_jabatan']?>" onclick="filterClicked('jenis_jabatan_<?=$e['id_jenis_jabatan']?>')"
+                                    class="filter-btn filter-unselect"><?=$e['nm_jenis_jabatan']?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Eselon</label>
                             <div class="filter-option">
                                 <?php foreach($eselon as $e){ ?>
@@ -97,6 +112,27 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
+                            <label class="label-filter">Unit Kerja</label>
+                            <div class="">
+                                <select class="form-control select2-navy" 
+                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
+                                    <option value="0" selected>Semua</option>
+                                    <?php foreach($unitkerja as $u){ ?>
+                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="label-filter">Satyalencana</label>
+                            <div class="filter-option">
+                                <?php foreach($satyalencana as $sl){ ?>
+                                    <span id="btn_filter_satyalencana_<?=$sl['masa_kerja']?>" onclick="filterClicked('satyalencana_<?=$sl['masa_kerja']?>')"
+                                    class="filter-btn btn-filter-satyalencana filter-unselect"><?=$sl['nama_satya_lencana']?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Pangkat</label>
                             <div class="filter-option">
                                 <?php foreach($pangkat as $p){ ?>
@@ -123,18 +159,6 @@
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="col-lg-12 mt-2">
-                            <label class="label-filter">Unit Kerja</label>
-                            <div class="">
-                                <select class="form-control select2-navy" 
-                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
-                                    <option value="0" selected>Semua</option>
-                                    <?php foreach($unitkerja as $u){ ?>
-                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-9"></div>
@@ -147,9 +171,10 @@
     </div>
 </div>
 
-<div class="card card-default" id="div_result">
+<div class="card card-default mt-2" id="div_result">
 </div>
 <script>
+    
     let eselon = [];
     let statuspeg = [];
     let tktpendidikan = [];
@@ -157,8 +182,14 @@
     let pangkat = [];
     let golongan = [];
     let agama = [];
+    let satyalencana = [];
+    let jenis_jabatan = [];
     $(function(){
+        // $('#form_search').submit()
         $('.select2-navy').select2()
+        <?php if($search != "" && $search != null){ ?>
+            $('#form_search').submit()
+        <?php } ?>
     })
 
     $('#tahun').on('change', function(){
@@ -172,7 +203,7 @@
             $('#btn_filter_'+btn).addClass('filter-select')
             if(jenis[0] == 'eselon'){
                 eselon.push(jenis[1])
-            } else if(jenis[0] == 'jenis'){
+            } else if(jenis[1] == 'kelamin'){
                 jeniskelamin.push(jenis[2])
             } else if(jenis[0] == 'statuspeg'){
                 statuspeg.push(jenis[1])
@@ -180,6 +211,11 @@
                 agama.push(jenis[1])
             } else if(jenis[0] == 'tktpendidikan'){
                 tktpendidikan.push(jenis[1])
+            } else if(jenis[1] == 'jabatan'){
+                jenis_jabatan.push(jenis[2])
+            } else if(jenis[0] == 'satyalencana'){
+                satyalencana = []
+                satyalencana.push(jenis[1])
             } else if(jenis[0] == 'pangkat'){
                 pangkat.push(jenis[1])
             } else if(jenis[0] == 'golongan'){
@@ -192,7 +228,7 @@
                 eselon = eselon.filter(function(e){
                     return e !== jenis[1]
                 })
-            } else if(jenis[0] == 'jenis'){
+            } else if(jenis[1] == 'kelamin'){
                 jeniskelamin = jeniskelamin.filter(function(e){
                     return e !== jenis[2]
                 })
@@ -208,6 +244,14 @@
                 tktpendidikan = tktpendidikan.filter(function(e){
                     return e !== jenis[1]
                 })
+            } else if(jenis[0] == 'satyalencana'){
+                satyalencana = satyalencana.filter(function(e){
+                    return e !== jenis[1]
+                })
+            } else if(jenis[1] == 'jabatan'){
+                jenis_jabatan = jenis_jabatan.filter(function(e){
+                    return e !== jenis[2]
+                })
             } else if(jenis[0] == 'pangkat'){
                 pangkat = pangkat.filter(function(e){
                     return e !== jenis[1]
@@ -218,7 +262,7 @@
                 })
             }
         }
-        console.log(golongan)
+        console.log(satyalencana)
     }
 
     $('#form_search').on('submit', function(e){
@@ -236,7 +280,10 @@
                 pangkat: pangkat,
                 agama: agama,
                 statuspeg: statuspeg,
+                satyalencana: satyalencana,
+                jenis_jabatan: jenis_jabatan,
                 unitkerja: $('#unitkerja').val(),
+                nama_pegawai: $('#nama_pegawai').val()
             },
             success: function(data){
                 $('#div_result').html('')

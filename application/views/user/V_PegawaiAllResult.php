@@ -20,12 +20,27 @@
     }
 </style>
 <div class="col-lg-12 p-3">
+    <div class="row mb-3">
+        <div class="col-lg-12 text-right">
+            <form action="<?=base_url('user/C_User/downloadDataSearch')?>" target="_blank">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+            </form>
+            <form class="mt-2" action="<?=base_url('user/C_User/downloadDataSearch/1')?>" target="_blank">
+                <button type="submit" class="btn btn-success"><i class="fa fa-file-pdf"></i> Download as Excel</button>
+            </form>
+        </div>
+    </div>
     <table class="table table-hover" id="result_all_pegawai">
         <thead>
             <th class="text-center">No</th>
             <th class="text-center">Pegawai</th>
             <th class="text-center">Eselon</th>
             <th class="text-center">Pangkat</th>
+            <th class="text-center">TMT Pangkat</th>
+            <th class="text-center">TMT Jabatan</th>
+            <?php if($use_masa_kerja == 1){ ?>
+                <th class="text-center">Masa Kerja</th>
+            <?php } ?>
             <th class="text-center">Unit Kerja</th>
         </thead>
         <tbody>
@@ -46,6 +61,11 @@
                     </td>
                     <td class="text-center"><?=$rs['eselon']?></td>
                     <td class="text-left"><?=$rs['nm_pangkat']?></td>
+                    <td class="text-left"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
+                    <td class="text-left"><?=formatDateNamaBulan($rs['tmtjabatan'])?></td>
+                    <?php if($use_masa_kerja == 1){ ?>
+                        <td class="text-center"><?=$rs['masa_kerja']?></td>
+                    <?php } ?>
                     <td class="text-left"><?=$rs['nm_unitkerja']?></td>
                 </tr>
             <?php } } ?>

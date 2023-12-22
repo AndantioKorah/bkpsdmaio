@@ -148,32 +148,33 @@ class C_Maxchat extends CI_Controller
                 "2. *#rekap_absensi_(bulan)_(tahun)*: untuk melihat rekapan absensi SKPD pada bulan dan tahun yang Anda pilih. \nContoh: #rekap_absensi_07_2023 adalah untuk melihat rekap absensi pada bulan Juli tahun 2023 \n\n";
             } else if(substr($result->text, 0, 1) == "#" && count($explode) > 1){
                 if(strcasecmp($explode[0], "#rekap") == 0 && strcasecmp($explode[1], "absensi") == 0){
-                    $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
-                    if($aksespegawai){
-                        if(count($explode) != 4){
-                            $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan format yang ditentukan. \nKetik '#info' untuk melihat pilihan yang tersedia.";
-                        } else {
-                            if(is_numeric($explode[2]) && is_numeric($explode[3])){
-                                if(checkIfValidDate($explode[2], $explode[3])){
-                                    $data_cron = [
-                                        'id_unitkerja' => $pegawai_simpeg['skpd'],
-                                        'no_hp' => $result->from,
-                                        'bulan' => clearString($explode[2]),
-                                        'tahun' => clearString($explode[3]),
-                                        'created_by' => $aksespegawai['id_m_user']
-                                    ];
-                                    $this->rekap->saveToCronRekapAbsen($data_cron);
-                                    $this->rekap->cronRekapAbsen();
-                                } else {
-                                    $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati Bulan dan Tahun berjalan.";
-                                }
-                            } else {
-                                $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan format bulan dan tahun yang ditentukan. \nKetik '#info' untuk melihat pilihan yang tersedia.";
-                            }
-                        }
-                    } else {
-                        $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
-                    }
+                    $reply = "Mohon maaf, untuk sementara layanan ini sedang ditutup. Untuk melakukan Rekap Absen silahkan menghubungi Admin SILADEN.\nTerima kasih";
+                    // $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
+                    // if($aksespegawai){
+                    //     if(count($explode) != 4){
+                    //         $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan format yang ditentukan. \nKetik '#info' untuk melihat pilihan yang tersedia.";
+                    //     } else {
+                    //         if(is_numeric($explode[2]) && is_numeric($explode[3])){
+                    //             if(checkIfValidDate($explode[2], $explode[3])){
+                    //                 $data_cron = [
+                    //                     'id_unitkerja' => $pegawai_simpeg['skpd'],
+                    //                     'no_hp' => $result->from,
+                    //                     'bulan' => clearString($explode[2]),
+                    //                     'tahun' => clearString($explode[3]),
+                    //                     'created_by' => $aksespegawai['id_m_user']
+                    //                 ];
+                    //                 $this->rekap->saveToCronRekapAbsen($data_cron);
+                    //                 $this->rekap->cronRekapAbsen();
+                    //             } else {
+                    //                 $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati Bulan dan Tahun berjalan.";
+                    //             }
+                    //         } else {
+                    //             $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan format bulan dan tahun yang ditentukan. \nKetik '#info' untuk melihat pilihan yang tersedia.";
+                    //         }
+                    //     }
+                    // } else {
+                    //     $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
+                    // }
                 } else if ($explode[0] == '#cek' && $explode[1] == 'profil'){
                     $pegawai = $this->user->getProfilUserByNoHp($result->from);
                     if($pegawai){

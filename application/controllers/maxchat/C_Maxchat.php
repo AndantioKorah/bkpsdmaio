@@ -146,7 +146,7 @@ class C_Maxchat extends CI_Controller
         if($reply == null){
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
             $explode = explode("_", $result->text);
-            if(strcasecmp($result->text, "#info") == 0 || strcasecmp($result->text, "tabea") == 0){
+            if(strcasecmp($result->text, "info") == 0 || strcasecmp($result->text, "tabea") == 0 || strcasecmp($result->text, "halo") == 0 || strcasecmp($result->text, "hai") == 0){
                 $reply = "Selamat Datang ".getNamaPegawaiFull($pegawai_simpeg).
                 ", Silahkan memilih jenis layanan melalui perintah di bawah ini: \n\n".
                 "1. *#cek_profil*: untuk melihat data pegawai yang terdaftar dengan nomor HP ini. \n\n".

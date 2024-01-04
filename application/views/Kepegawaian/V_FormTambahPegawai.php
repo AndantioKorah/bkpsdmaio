@@ -5,6 +5,15 @@
 		height:35px !important;
 		margin-bottom:10px !important;
     }
+
+    .gelar::-webkit-input-placeholder {
+        color: grey;
+        font-style: italic;
+        opacity: 0.6;
+    }
+
+
+
 </style>
 
 <div class="container-fluid p-0">
@@ -26,13 +35,13 @@
         <label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
       </div>
       <div class="col-lg-2">
-        <input type="text" id="gelar1" name="gelar1" class="form-control" >
+        <input type="text" id="gelar1" name="gelar1" class="form-control gelar" placeholder="gelar depan" >
       </div>
       <div class="col-lg-6">
         <input type="text" id="nama" name="nama" class="form-control" required>
       </div>
       <div class="col-lg-2">
-        <input type="text" id="gelar2" name="gelar2" class="form-control">
+        <input type="text" id="gelar2" name="gelar2" class="form-control gelar" placeholder="gelar belakang">
       </div>
 
       <div class="col-lg-2">

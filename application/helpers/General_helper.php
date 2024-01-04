@@ -56,7 +56,11 @@ function checkIfValidDate($bulan, $tahun){
         if($bulan <= $thisMonth){
             $result = true;
         } else {
-            $result = false;
+            if($tahun == ($thisYear - 1)){
+                $result = true;
+            } else {
+                $result = false;
+            }
         }
     } else {
         $result = false;

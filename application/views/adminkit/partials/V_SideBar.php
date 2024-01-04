@@ -289,8 +289,8 @@
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
 				<li class="sidebar-item ">
-					<a title="Dokumen Upload" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Dokumen Upload
+					<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pendataaan Data Mandiri
 					</a>
 				</li>
 				<?php } ?>
@@ -397,6 +397,13 @@
 						<i class="align-middle me-2 far fa-circle"></i>Presensi
 					</a>
 				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+					<li class="sidebar-item ">
+						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM
+						</a>
+					</li>
+				<?php } ?>
 				
 				
 			</ul>

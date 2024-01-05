@@ -67,10 +67,10 @@
     }
 
     #profile_pegawai{
-      width: 250px;
-      height: calc(250px * 1.25);
+      width: 300px;
+      height: calc(300px * 1.25);
       background-size: cover;
-      /* object-fit: contain; */
+      object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
     }

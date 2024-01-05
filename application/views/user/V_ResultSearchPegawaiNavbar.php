@@ -12,6 +12,12 @@
         color: white;
         cursor: pointer;
     }
+
+    @media only screen and (max-width: 991px) { /* if mobile */ 
+        #search_profile_pic{
+            height: 9vh !important;
+        }
+    }
 </style>
 
 <div style="padding: 5px; background-color: #c6c6c6; color: var(--primary-color); font-weight: bold; font-size: .8rem;">
@@ -24,11 +30,11 @@
         <?php $i = 0; foreach($result_pegawai as $rs){ ?>
             <div onclick="openProfilePegawai('<?=$rs['username']?>')" class="col_result col-lg-12">
                 <div class="row" style="line-height: 1rem;">
-                    <div class="col-lg-3 my-auto align-self-center">
+                    <div class="col-md-3 col-sm-3 col-lg-3 my-auto align-self-center">
                         <!-- <img src="<?=$this->general_library->getFotoPegawai('./assets/fotopeg/'.$rs['fotopeg'])?>"
                         style="border-radius: 30px !important; width: 6vw; object-fit: cover;" /> -->
                         <center>
-                        <img style="width: 100%; height: 8vh; object-fit: cover" class="img-fluid rounded-circle b-lazy"
+                        <img id="search_profile_pic" style="border-radius: 100rem !important; width: 100%; height: 7vh; object-fit: cover" class="img-fluid b-lazy"
                             src="<?php
                                 $path = './assets/fotopeg/'.$rs['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
@@ -46,7 +52,7 @@
                                 echo base_url().$src;?>" /> 
                         </center>
                     </div>
-                    <div class="col-lg-9 my-auto align-self-center" style="margin-left: -10px; text-align: left;">
+                    <div class="col-md-9 col-sm-9 col-lg-9 my-auto align-self-center" style="margin-left: -10px; text-align: left;">
                         <span style="font-size: .85rem; font-weight: bold;"><?=($rs['nama'])?></span><br>
                         <span style="font-size: .70rem; font-weight: bold;">NIP. <?=formatNip($rs['username'])?></span>
                     </div>

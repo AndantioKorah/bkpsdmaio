@@ -337,10 +337,12 @@
 
             if($query){
                 foreach($query as $q){
-                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
-                    $angka = explode(" ",$diff);
-                    if($diff >= 4){
-                        $result[] = $q;
+                    if($q['tmtpangkat'] && $q['tmtpangkat'] != '0000-00-00'){
+                        $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
+                        $angka = explode(" ",$diff);
+                        if($diff >= 4){
+                            $result[] = $q;
+                        }
                     }
                 }
             }

@@ -1863,5 +1863,86 @@
         $this->cronRekapAbsen(0);
 
     }
+
+    public function searchRekapVerifPdm($data){
+        $result = null;
+        $list_master = null;
+        $tanggal = explodeRangeDateNew($data['tanggal']);
+        $master = $this->db->select('*')
+                        ->from('m_pdm')
+                        ->where('flag_active', 1)
+                        ->where('id !=', 15) //pas foto
+                        ->get()->result_array();
+
+        foreach($master as $m){
+            $list_master[$m['singkatan']]['id'] = $m['id'];
+            $list_master[$m['singkatan']]['nama_berkas'] = $m['nama_berkas'];
+            $list_master[$m['singkatan']]['singkatan'] = $m['singkatan'];
+            $list_master[$m['singkatan']]['total'] = 0;
+        }
+
+        $users = $this->db->select('c.*, a.id as id_m_user')
+                        ->from('m_user a')
+                        ->join('t_hak_akses b', 'a.id = b.id_m_user')
+                        ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
+                        ->where('b.flag_active', 1)
+                        ->where('b.id_m_hak_akses', 5)
+                        ->get()->result_array();
+        if($users){
+            foreach($users as $u){
+                $result[$u['id_m_user']]['nama_pegawai'] = getNamaPegawaiFull($u);
+                $result[$u['id_m_user']]['nip'] = $u['nipbaru_ws'];
+                $result[$u['id_m_user']]['total_verif'] = 0;
+                $result[$u['id_m_user']]['detail_verif'] = $list_master;
+            }
+        }
+
+        foreach($master as $mst){
+            $this->db->select('a.*')
+                    ->from('db_pegawai.'.$mst['table'].' a')
+                    ->where('flag_active', 1)
+                    ->where('a.status', 2)
+                    ->where('a.id_m_user_verif !=', 0);
+            if(!isset($data['all'])){
+                $this->db->where('DATE(a.tanggal_verif) >=', $tanggal[0])
+                            ->where('DATE(a.tanggal_verif) <=', $tanggal[1]);
+            }
+
+            $dataresult = $this->db->get()->result_array();
+            if($dataresult){
+                foreach($dataresult as $dr){
+                    if(isset($result[$dr['id_m_user_verif']])){
+                        $result[$dr['id_m_user_verif']]['total_verif'] ++;
+                        $result[$dr['id_m_user_verif']]['detail_verif']['pangkat']['total'] ++;
+                    } else {
+                        $user = $this->db->select('c.*, a.id as id_m_user')
+                                        ->from('m_user a')
+                                        ->join('t_hak_akses b', 'a.id = b.id_m_user')
+                                        ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
+                                        ->where('b.flag_active', 1)
+                                        ->where('a.id', $dr['id_m_user_verif'])
+                                        ->get()->row_array();
+                        if($user){
+                            $result[$u['id_m_user']]['nama_pegawai'] = getNamaPegawaiFull($user);
+                            $result[$u['id_m_user']]['nip'] = $user['nipbaru_ws'];
+                            $result[$u['id_m_user']]['total_verif'] = 0;
+                            $result[$u['id_m_user']]['detail_verif'] = $list_master;
+                            $this->db->insert('t_hak_akses',
+                            [
+                                'id_m_user' => $user['id_m_user'],
+                                'id_m_hak_akses' => 5,
+                                'created_by' => 0
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+        function cmp($a, $b) {
+            return $b['total_verif'] > $a['total_verif'];
+        }
+        usort($result, "cmp");
+        return $result;
+    }
 }
 ?>

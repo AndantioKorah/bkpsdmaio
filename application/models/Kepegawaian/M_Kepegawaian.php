@@ -2608,11 +2608,14 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
+        // dd($getJabatan['statusjabatan']);
+
         if($getJabatan['statusjabatan'] == 1){
         $getJabatanOld = $this->db->select('*')
         ->from('db_pegawai.pegjabatan a')
         ->where('a.id_pegawai', $getJabatan['id_pegawai'])
         ->where_in('a.flag_active', [1,2])
+        ->where_not_in('a.statusjabatan', [2,3])
         ->order_by('tmtjabatan', 'desc')
         ->limit(1)
         ->get()->row_array();

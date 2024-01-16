@@ -572,19 +572,19 @@
                 <select class="form-select select2" name="kriteria1" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_1){ foreach($kriteria_kinerja_1 as $r){ ?>
-                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo "";} else { if($kinerja_n_1 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
             </tr>
 
             <tr>
-            <td style="width:25%">Penilaian Kinerja N-2</td>
+            <td style="width:25%">Penilaian Kinerja N-2 </td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria2" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}  else { if($kinerja_n_2 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
@@ -600,7 +600,7 @@
                 <select class="form-select select2" name="kriteria3" required>
                 <option value=""  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_3){ foreach($kriteria_kinerja_3 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else echo "";} else { if($inovasi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>

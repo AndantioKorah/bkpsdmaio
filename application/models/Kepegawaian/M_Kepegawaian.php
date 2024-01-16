@@ -2914,7 +2914,7 @@ public function submitEditProfil(){
     $data["goldarah"] = $goldar;
     $data["agama"] = $datapost["edit_agama"];
     $data["skpd"] = $datapost["edit_unit_kerja"];
-    // $data["jabatan"] = $datapost["edit_gelar1"];
+    $data["pendidikan"] = $datapost["edit_pendidikan"];
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];

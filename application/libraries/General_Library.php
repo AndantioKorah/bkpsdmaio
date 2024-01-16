@@ -612,5 +612,56 @@ class General_library
     }
 
 
+    public function getIdPenilaianKinerjaSimata($id_perdikat,$x){
+
+        $perdikat = null;
+
+        if($x == 1){
+            if($id_perdikat == "Sangat Baik"){
+                $perdikat = "66";
+            } else if($id_perdikat == "Baik"){
+                $perdikat = "67";
+            } else if($id_perdikat == "Butuh Perbaikan"){
+                $perdikat = "68";
+            } else if($id_perdikat == "Kurang"){
+                $perdikat = "69";
+            } else if($id_perdikat == "Sangat Kurang"){
+                $perdikat = "70";
+            } 
+        } else {
+            if($id_perdikat == "Sangat Baik"){
+                $perdikat = "71";
+            } else if($id_perdikat == "Baik"){
+                $perdikat = "72";
+            } else if($id_perdikat == "Butuh Perbaikan"){
+                $perdikat = "73";
+            } else if($id_perdikat == "Kurang"){
+                $perdikat = "74";
+            } else if($id_perdikat == "Sangat Kurang"){
+                $perdikat = "75";
+            } 
+        }
+ 
+
+        return $perdikat;
+    }
+
+    public function getIdPenilaianInovasiSimata($id_inovasi){
+
+        $inovasi = null;
+
+            if($id_inovasi == "1"){
+                $inovasi = "76";
+            } else if($id_inovasi == "2"){
+                $inovasi = "77";
+            } else if($id_inovasi == "3"){
+                $inovasi = "78";
+            } else {
+                $inovasi = "129";
+            } 
+        return $inovasi;
+    }
+
+
 
 }

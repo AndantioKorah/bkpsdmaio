@@ -616,6 +616,30 @@ public function getPegawaiPenilaianKinerjaJpt(){
             return $this->db->get()->row_array();
         }
 
+        function getPenilaianKinerja($id,$tahun,$x){
+            $this->db->select('*')
+                ->from('db_pegawai.pegskp a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.tahun', $tahun)
+                ->order_by('a.tahun', 'desc')
+                ->limit(1);
+            $pk = $this->db->get()->row_array();
+            $id_predikat = $this->general_library->getIdPenilaianKinerjaSimata($pk['predikat'],$x);
+            return $id_predikat;
+        }
+
+        function getInovasiPegawai($id){
+            $this->db->select('*')
+                ->from('db_pegawai.peginovasi a')
+                ->where('a.id_pegawai', $id)
+                ->limit(1);
+            $inovasi = $this->db->get()->row_array();
+            $id_inovasi = $this->general_library->getIdPenilaianInovasiSimata($inovasi['kriteria_inovasi']);
+            return $id_inovasi;
+        }
+
+        
+
 
         public function submitPenilaianPotensialCerdas(){
     

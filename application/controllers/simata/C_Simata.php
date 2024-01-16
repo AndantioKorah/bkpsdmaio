@@ -206,7 +206,15 @@ class C_Simata extends CI_Controller
         $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
         $data['id_t_penilaian'] = $id;
         $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
-        $data['kode'] = $kode;  
+        $data['kode'] = $kode; 
+        $currentYear = date('Y'); 
+        $previous1Year = $currentYear - 1;   
+        $previous2Year = $currentYear - 2;                     
+        $id_peg = $data['profil_pegawai']['id_peg'];
+        $data['kinerja_n_1'] = $this->simata->getPenilaianKinerja($id_peg,$previous1Year,1);
+        $data['kinerja_n_2'] = $this->simata->getPenilaianKinerja($id_peg,$previous2Year,2);
+        $data['inovasi'] = $this->simata->getInovasiPegawai($id_peg);
+       
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
 

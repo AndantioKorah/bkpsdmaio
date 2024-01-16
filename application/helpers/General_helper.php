@@ -255,7 +255,7 @@ function explodeRangeDate($date)
 }
 
 function explodeRangeDateNew($date)
-{
+{   
     $tanggal = explode("-", $date);
     $awal = explode("/", $tanggal[0]);
     $akhir = explode("/", $tanggal[1]);

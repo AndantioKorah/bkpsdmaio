@@ -80,7 +80,7 @@ class C_Login extends CI_Controller
         // var_dump($password);
         // die();
         $result = $this->m_general->authenticate($username, $password);
-        
+        // dd($result);
         if($result != null){
             $params = $this->m_general->getAll('m_parameter');
             $all_menu = $this->m_general->getAll('m_menu');

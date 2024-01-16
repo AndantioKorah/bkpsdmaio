@@ -15,6 +15,7 @@ $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
 $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
+$route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 
 
 //pelanggaran

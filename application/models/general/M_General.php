@@ -337,10 +337,12 @@
 
             if($query){
                 foreach($query as $q){
-                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
-                    $angka = explode(" ",$diff);
-                    if($diff >= 4){
-                        $result[] = $q;
+                    if($q['tmtpangkat'] && $q['tmtpangkat'] != '0000-00-00'){
+                        $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
+                        $angka = explode(" ",$diff);
+                        if($diff >= 4){
+                            $result[] = $q;
+                        }
                     }
                 }
             }
@@ -532,7 +534,7 @@
             }
 
             $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg, a.agama')
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -545,7 +547,7 @@
             foreach($pegawai as $peg){
                 // $result['pangkat'][$peg['id_pangkat']]['jumlah']++;
 
-                if(substr($peg['nipbaru'], 9, 6) == '202321'){
+                // if(substr($peg['nipbaru'], 9, 6) == '202321'){
                     // dd(substr($peg['id_pangkat'], 0, 1));\
                     // if($peg['id_pangkat'] == '59') {
                     //     $result['golongan'][6]['nama'] = 'Golongan IX';
@@ -556,7 +558,7 @@
                     //     $result['golongan'][6]['jumlah'] = 0;
                     // }
                    
-                }
+                // }
                 
                 $result['golongan'][substr($peg['id_pangkat'], 0, 1)]['jumlah']++;
                 // $gol1 = [11, 12, 13, 14];

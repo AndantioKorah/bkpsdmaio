@@ -397,7 +397,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Presensi
 					</a>
 				</li>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		
 					<li class="sidebar-item ">
 						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM

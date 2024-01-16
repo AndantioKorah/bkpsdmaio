@@ -583,7 +583,7 @@
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('id_m_status_pegawai', 1)
             ->get()->result_array();

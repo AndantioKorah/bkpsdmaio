@@ -1953,6 +1953,9 @@
             if(isset($data['agama'])){
                 $this->db->where_in('a.agama', $data['agama']);
             }
+            if(isset($data['keteranganpegawai'])){
+                $this->db->where_in('a.id_m_status_pegawai', $data['keteranganpegawai']);
+            }
             if(isset($data['golongan'])){
                 $golongan = [];
                 foreach($data['golongan'] as $g){

@@ -1276,17 +1276,20 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_EditSumjan', $data);
     }
 
+	public function permohonanCuti(){
+		$data['master_jenis_cuti'] = $this->general->getAllWithOrderGeneral('db_pegawai.cuti', 'id_cuti', 'asc');
+        render('kepegawaian/V_PermohonanCuti', '', '', $data);
+	}
 
-
-
+	public function submitPermohonanCuti(){
+		echo json_encode($this->kepegawaian->submitPermohonanCuti());
+	}
 
 	public function submitEditJabatan()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditJabatan());
 	}
 	
-
-
 	public function submitEditPangkat()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditPangkat());

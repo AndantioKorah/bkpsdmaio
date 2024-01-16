@@ -159,6 +159,15 @@
                                 <?php } ?>
                             </div>
                         </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="label-filter">Keterangan Pegawai</label>
+                            <div class="filter-option">
+                                <?php foreach($keteranganpegawai as $kp){ ?>
+                                    <span id="btn_filter_keteranganpegawai_<?=$kp['id']?>" onclick="filterClicked('keteranganpegawai_<?=$kp['id']?>')"
+                                    class="filter-btn filter-unselect"><?=$kp['nama_status_pegawai']?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-9"></div>
@@ -184,6 +193,7 @@
     let agama = [];
     let satyalencana = [];
     let jenis_jabatan = [];
+    let keteranganpegawai = [];
     $(function(){
         // $('#form_search').submit()
         $('.select2-navy').select2()
@@ -220,6 +230,8 @@
                 pangkat.push(jenis[1])
             } else if(jenis[0] == 'golongan'){
                 golongan.push(jenis[2])
+            } else if(jenis[0] == 'keteranganpegawai'){
+                keteranganpegawai.push(jenis[1])
             }
         } else {
             $('#btn_filter_'+btn).addClass('filter-unselect')
@@ -260,9 +272,12 @@
                 golongan = golongan.filter(function(e){
                     return e !== jenis[2]
                 })
+            } else if(jenis[0] == 'keteranganpegawai'){
+                keteranganpegawai = keteranganpegawai.filter(function(e){
+                    return e !== jenis[1]
+                })
             }
         }
-        console.log(satyalencana)
     }
 
     $('#form_search').on('submit', function(e){
@@ -282,6 +297,7 @@
                 statuspeg: statuspeg,
                 satyalencana: satyalencana,
                 jenis_jabatan: jenis_jabatan,
+                keteranganpegawai: keteranganpegawai,
                 unitkerja: $('#unitkerja').val(),
                 nama_pegawai: $('#nama_pegawai').val()
             },

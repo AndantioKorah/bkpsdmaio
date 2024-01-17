@@ -253,9 +253,23 @@
 	?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
-		<a class="sidebar-link" href="#">
-			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
+		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-folder-open"></i> 
+			<span class="align-middle">Layanan
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
 		</a>
+		<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			<li class="sidebar-item ">
+				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+				</a>
+			</li>
+		</ul>
 	</li>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 

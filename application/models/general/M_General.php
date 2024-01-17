@@ -282,7 +282,10 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
+            ->where('c.jenis_jabatan !=', 'JFT')
+            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){
@@ -300,10 +303,14 @@
 
             if($query){
                 foreach($query as $q){
-                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
-                    $angka = explode(" ",$diff);
-                    if($diff >= 2){
-                        $result[] = $q;
+                    if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
+                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
+                        $explode = explode("-", $q['tmtgjberkala']);
+                        $tahuntmtgajiberkala = $explode[0];
+                        $diff = $data['tahun'] - $tahuntmtgajiberkala;
+                        if($diff >= 2){
+                            $result[] = $q;
+                        }
                     }
                 }
             }
@@ -313,13 +320,16 @@
 
         public function getListPegawaiNaikPangkatByYear($data){
             $result = null;
-            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtpangkat')
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, a.jabatan, a.pangkat,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtpangkat, a.pendidikan')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
+            ->where('c.jenis_jabatan !=', 'JFT')
+            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtpangkat');
 
             if($data['eselon'] != "0"){
@@ -335,13 +345,49 @@
             }
             $query = $this->db->get()->result_array();
 
+            $list_pensiun = null;
+            $pensiun = $this->getListPegawaiPensiunByYear($data);
+            if($pensiun){
+                foreach($pensiun as $p){
+                    $list_pensiun[$p['nipbaru_ws']] = $p;
+                }
+            }
+
             if($query){
                 foreach($query as $q){
                     if($q['tmtpangkat'] && $q['tmtpangkat'] != '0000-00-00'){
-                        $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
-                        $angka = explode(" ",$diff);
-                        if($diff >= 4){
-                            $result[] = $q;
+                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
+                        $explode = explode("-", $q['tmtpangkat']);
+                        $tahuntmtpangkat = $explode[0];
+                        $diff = $data['tahun'] - $tahuntmtpangkat;
+                        if($diff >= 4 && !isset($list_pensiun[$q['nipbaru_ws']])){
+                            $flag_valid = 1;
+                            if($q['pendidikan'] == "0000" && $q['pangkat'] >= 21 ){ //SD dan II A ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "1000" && $q['pangkat'] >= 23){ // SMP dan II C ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "2000" && $q['pangkat'] >= 32){ // SMA dan III B ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "7000" && $q['pangkat'] >= 34){ // S1 dan III D ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "8000" && $q['pangkat'] >= 41){ // S2 dan IV A ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "9000" && $q['pangkat'] >= 42){ // S3 dan IV B ke atas
+                                $flag_valid = 0;
+                            }
+
+                            if($q['eselon'] == "III B" && $q['pangkat'] >= 41){ // eselon III B dan pangkat IV A ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "III A" && $q['pangkat'] >= 42){ // eselon III A dan pangkat IV B ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "II B" && $q['pangkat'] >= 43){ // eselon II B dan pangkat IV C ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "II A" && $q['pangkat'] >= 44){ // eselon II A dan pangkat IV D ke atas
+                                $flag_valid = 0;
+                            }
+                            if($flag_valid == 1){
+                                $result[] = $q;
+                            }
                         }
                     }
                 }
@@ -537,7 +583,7 @@
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('id_m_status_pegawai', 1)
             ->get()->result_array();

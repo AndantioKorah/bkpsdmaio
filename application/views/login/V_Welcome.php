@@ -87,7 +87,10 @@ if(!$this->general_library->isWalikota()){
       
         }
         </style>
-        <?php if($this->general_library->getRole() == 'programmer' || $this->general_library->isAdminAplikasi() || $this->general_library->isWalikota()){ ?>
+        <?php if($this->general_library->getRole() == 'programmer' || 
+        $this->general_library->isAdminAplikasi() || 
+        $this->general_library->isWalikota() ||
+        $this->general_library->isPegawaiBkpsdm()){ ?>
           <div class="row">
             <div class="col-lg-12">
               <?php

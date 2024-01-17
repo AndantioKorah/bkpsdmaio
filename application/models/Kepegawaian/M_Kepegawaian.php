@@ -298,7 +298,7 @@ class M_Kepegawaian extends CI_Model
             $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
-                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
+                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
@@ -327,14 +327,14 @@ class M_Kepegawaian extends CI_Model
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
-                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan')
+                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
-                ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk')
+                ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk', 'left')
                 ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg')
-                ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg')
-                ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab')
+                ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
+                ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
                 ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
                 ->join('m_user l', 'a.nipbaru_ws = l.username')
                 ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
@@ -4380,7 +4380,24 @@ public function submitEditJabatan(){
     
         return $res;
     }
-    
+
+    public function submitPermohonanCuti(){
+        $data = $this->input->post();
+        $res['code'] = 0;
+        $res['message'] = "Data Berhasil Disimpan";
+        dd($data);
+        $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+        $_FILES['surat_pendukung']['name'] = 'SuratPendukungCuti_'.$this->general_library->getUserName().'_'.date('Ymdhis'); 
+        $this->load->library('upload',$config);
+        if($this->upload->do_upload('surat_pendukung')){
+            $upload = $this->upload->data();
+            $filename = $upload['file_name'];
+        } else {
+            $res['code'] = 1;
+            $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+        }
+        return $res;
+    }
     
     public function updateJabatan($id_peg){
         $res['code'] = 0;

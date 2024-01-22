@@ -214,7 +214,7 @@ class C_Simata extends CI_Controller
         $data['kinerja_n_1'] = $this->simata->getPenilaianKinerja($id_peg,$previous1Year,1);
         $data['kinerja_n_2'] = $this->simata->getPenilaianKinerja($id_peg,$previous2Year,2);
         $data['inovasi'] = $this->simata->getInovasiPegawai($id_peg);
-       
+        $data['timkerja'] = $this->simata->getPengalamanTimPegawai($id_peg);
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
 
@@ -292,6 +292,13 @@ class C_Simata extends CI_Controller
         $data['jabatan_target'] = $jt;
         $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jt);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        $data['pendidikan_formal'] = $this->simata->getPendidikanFormal($id_peg);
+        $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
+        $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
+        $eselonjt = $this->simata->getEselonJT($jt);
+        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$eselonjt[0]['eselon']);
+        $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
+
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
@@ -355,7 +362,6 @@ class C_Simata extends CI_Controller
         $data['jabatan_target'] = $jt;
         $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPT($nip,$jt);
         $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPT($nip);
-        // dd($data['nilai_potensial']);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalDetailProfilTalenta', $data);

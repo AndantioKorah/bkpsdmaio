@@ -436,11 +436,11 @@
 					<input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>">
 
 					<div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Pendidikan Formal</label>
+                        <label for="exampleInputEmail1" class="form-label">Pendidikan Formal  </label>
                         <select class="form-select select2" name="rekamjjk1" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($list_pendidikan_formal){ foreach($list_pendidikan_formal as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pendidikan_formal'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pendidikan_formal'] == $r['id']) echo "selected"; else if($pendidikan_formal == $r['id'])  echo "selected"; else echo "";} else { if($pendidikan_formal == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -448,9 +448,9 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pangkat/Golongan Ruang</label>
                         <select class="form-select select2" name="rekamjjk2" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($pangkat_gol){ foreach($pangkat_gol as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pangkat_gol'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pangkat_gol'] == $r['id']) echo "selected"; else if($pangkatgol == $r['id'])  echo "selected"; else echo "";}  else { if($pangkatgol == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -458,7 +458,7 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Masa Kerja Jabatan</label>
                         <select class="form-select select2" name="rekamjjk3" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($masa_kerja_jabatan){ foreach($masa_kerja_jabatan as $r){ ?>
                         <option  <?php if($nilai_potensial) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
@@ -468,7 +468,7 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan dan Pelatihan Kepemimpinan</label>
                         <select class="form-select select2" name="rekamjjk4" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($diklat){ foreach($diklat as $r){ ?>
                         <option  <?php if($nilai_potensial) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
@@ -478,19 +478,19 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengembangan Kompetensi 20 JP</label>
                         <select class="form-select select2" name="rekamjjk5" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($kompetensi20_jp){ foreach($kompetensi20_jp as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['kompetensi20_jp'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['kompetensi20_jp'] == $r['id']) echo "selected"; else if($jp_kompetensi == $r['id'])  echo "selected"; else echo "";} else { if($jp_kompetensi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Penghargaan</label>
+                        <label for="exampleInputEmail1" class="form-label">Penghargaan </label>
                         <select class="form-select select2" name="rekamjjk6" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($penghargaan){ foreach($penghargaan as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['penghargaan'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['penghargaan'] == $r['id']) echo "selected"; else if($id_penghargaan == $r['id'])  echo "selected"; else echo "";} else { if($id_penghargaan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -498,7 +498,7 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Riwayat Hukuman Disiplin</label>
                         <select class="form-select select2" name="rekamjjk7" required>
-                        <option value=""  selected>Pilih Item</option>
+                        <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($riwayat_hukdis){ foreach($riwayat_hukdis as $r){ ?>
                         <option  <?php if($nilai_potensial) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
@@ -521,7 +521,7 @@
 						<select class="form-select select2" name="lainnya1" required>
                         <option value=""  selected>Pilih Item</option>
                         <?php if($pengalaman_org){ foreach($pengalaman_org as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pengalaman_organisasi'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pengalaman_organisasi'] == $r['id']) echo "selected"; else if($porganisasi == $r['id'])  echo "selected"; else echo "";} else { if($porganisasi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>

@@ -229,14 +229,18 @@
                                             <tr>
                                             <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-1</span></td>
                                                 <td style="width:75%">
+                                                <?php if($nilai_kinerja['skor1']) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor1'];?> Point] <?=$nilai_kinerja['kinerja1'];?></span>
+                                                <?php } ?>
                                             </td>
                                             </tr>
 
                                             <tr>
                                             <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-2</span></td>
                                                 <td style="width:25%">
+                                                <?php if($nilai_kinerja['skor2']) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor2'];?> Point] <?=$nilai_kinerja['kinerja2'];?></span>
+                                                <?php } ?>
                                             </td>
                                             </tr>
 
@@ -246,19 +250,25 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Inovatif</span></td>
                                                 <td style="width:25%">
+                                                <?php if($nilai_kinerja['skor3']) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor3'];?> Point] <?=$nilai_kinerja['kinerja3'];?></span>
+                                                <?php } ?>
                                             </td>
                                             </tr>
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Tim</span></td>
                                                 <td style="width:25%">
+                                                <?php if($nilai_kinerja['skor4']) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor4'];?> Point] <?=$nilai_kinerja['kinerja4'];?></span>
+                                                <?php } ?>
                                             </td>
                                             </tr>
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Amanah</span></td>
                                                 <td style="width:25%">
+                                                <?php if($nilai_kinerja['skor5']) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor5'];?> Point] <?=$nilai_kinerja['kinerja5'];?></span>
+                                                <?php } ?>
                                             </td>
                                             </tr>
                                         </table>

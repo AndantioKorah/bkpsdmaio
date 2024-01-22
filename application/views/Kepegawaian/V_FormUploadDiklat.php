@@ -104,7 +104,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
     
 
-    <div class="form-group" style="margin-bottom:10px !important;">
+    <div class="form-group" style="margin-bottom:10px !important;" >
     <label >Jenis Diklat </label>
     <select class="form-control select2" data-dropdown-parent="#modalDiklat" data-dropdown-css-class="select2-navy" name="diklat_jenis" id="diklat_jenis" required>
                     <option value="" disabled selected>Pilih Item</option>
@@ -113,6 +113,14 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                     <?php } } ?>
     </select>
     </div>
+
+    <div class="form-group" style="display:none" id="inputjd">
+      <label>Jenjang Diklat </label>
+    
+      <select  class="form-control select2 jdiklat"  data-dropdown-css-class="select2-navy"  name="diklat_jenjang" id="diklat_jenjang">     
+    <option value=""></option>
+    </select>
+      </div>
 
   <div class="form-group">
     <label>Nama Diklat</label>
@@ -330,4 +338,34 @@ $(function(){
             orientation: 'bottom',
             autoclose: true
         });
+
+  
+
+  $("#diklat_jenis").change(function() {
+      var id = $("#diklat_jenis").val();
+      $('#inputjd').show('fast')
+      if(id == "00"){
+      $('#inputjd').show('fast')
+      } else if(id == "10") {
+        $('#inputjd').show('fast')
+      } else {
+        $('#inputjd').hide('fast')
+      }
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getJenjangDiklat",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].jenjang_diklat+'</option>';
+                      }
+                      $('.jdiklat').html(html);
+                          }
+                  });
+  });
+
 </script>

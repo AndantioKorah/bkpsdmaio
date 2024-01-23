@@ -2676,6 +2676,9 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
+    if(trim($datapost["jenis_dokumen"]) == "jabatan"){
+    $data["tmtjabatan"] = $datapost["edit_tmt_jabatan_verif"];
+    }
 
  
     

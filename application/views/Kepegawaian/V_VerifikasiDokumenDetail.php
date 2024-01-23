@@ -166,8 +166,38 @@
           <tr>
             <td class="td-lab-dd">TMT Jabatan</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=formatDateNamaBulan($result['tmt_jabatan'])?></td>
+            <td class="td-val-dd">
+
+       
+            <table>
+              <tr>
+                <td><input style="display:none"  autocomplete="off"  class="form-control datepicker"   id="jabatan_tmt_verif" name="jabatan_tmt_verif" readonly value="<?=$result['tmt_jabatan']?>" /></td>
+                <td><span  id="texttmt"><?=formatDateNamaBulan($result['tmt_jabatan'])?></span> </td>
+                <td><button class="btn btn-sm btn-primary" id="btn_edit_tmt">  <i class="fa fa-edit"></i> </button></td>
+              </tr>
+            </table>
+          
+
+           
+        
+
+           
+            </td>
           </tr>
+
+          <script>
+            $("#btn_edit_tmt").click(function(){
+              var tmt = $("#jabatan_tmt_verif").val()
+              $("#edit_tmt_jabatan_verif").val(tmt);
+              $("#jabatan_tmt_verif").toggle();
+              $("#texttmt").toggle();
+            });
+
+            $('#jabatan_tmt_verif').on('change', function() {
+              $("#edit_tmt_jabatan_verif").val(this.value);
+          });
+
+          </script>
           <tr>
             <td class="td-lab-dd">Eselon</td>
             <td class="td-smc-dd">:</td>
@@ -797,11 +827,13 @@
   <div class="form-group">
     <label for="exampleInputEmail1">Verifikasi</label>
     <select onchange="showKeterangan()" class="form-select" aria-label="Default select example" name="verif" id="verif">
-  <option selected></option>
-  <option value="2">ACC</option>
+  <!-- <option ></option> -->
+  <option selected value="2">ACC</option>
   <option value="3">Tolak</option>
   </select>
   </div>
+
+  <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif">
   <div class="form-group" style="display:none" id="field_ket">
     <label for="exampleFormControlTextarea1">Keterangan</label>
     <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
@@ -839,6 +871,15 @@
   <script>
     $(function(){
       getDokumenWs()
+
+      $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+    });
+
     })
 
      function getDokumenWs(){

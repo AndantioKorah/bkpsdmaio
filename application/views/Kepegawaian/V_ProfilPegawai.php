@@ -569,7 +569,7 @@
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  TMT CPNS
+                  TMT CPNS/PPPK
                 </span>
               </div>
               <div class="col-lg-12 text-left" >

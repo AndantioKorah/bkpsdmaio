@@ -312,7 +312,7 @@
         <label for="inputPassword6" class="col-form-label"> Pendidikan Terakhir </label>
       </div>
       <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
-      <select class="form-control" data-dropdown-css-class="" name="" id="" required>
+      <select class="form-control" data-dropdown-css-class="" name="edit_pendidikan" id="edit_pendidikan" required>
                     <option value="" disabled selected>Pilih Pendidikan</option>
                     <?php if($pendidikan){ foreach($pendidikan as $r){ ?>
                         <option <?php if($profil_pegawai['id_tktpendidikan'] == $r['id_tktpendidikan']) echo "selected"; else echo ""; ?>   value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>

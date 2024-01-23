@@ -437,11 +437,12 @@ class M_Kepegawaian extends CI_Model
 
 
         function getDiklat($nip,$kode){
-             $this->db->select('c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
+             $this->db->select('e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
                             ->join('db_pegawai.diklat d','c.jenisdiklat = d.id_diklat')
+                            ->join('db_pegawai.jenjang_diklat e','c.jenjang_diklat = e.id')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->order_by('c.created_date','desc')
@@ -537,7 +538,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getTimKerja($nip,$kode){
-            $this->db->select('*')
+            $this->db->select('*, c.id as id_pegtimkerja')
                            ->from('m_user a')
                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                            ->join('db_pegawai.pegtimkerja c', 'b.id_peg = c.id_pegawai')
@@ -920,6 +921,7 @@ class M_Kepegawaian extends CI_Model
            
             $dataInsert['id_pegawai']     = $id_peg;
             $dataInsert['jenisdiklat']      = $this->input->post('diklat_jenis');
+            $dataInsert['jenjang_diklat']      = $this->input->post('diklat_jenjang');
             $dataInsert['nm_diklat']      = $this->input->post('diklat_nama');
             $dataInsert['tptdiklat']     = $this->input->post('diklat_tempat');
             $dataInsert['penyelenggara']      = $this->input->post('diklat_penyelenggara');
@@ -2556,6 +2558,7 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
     $res['message'] = 'ok';
     $res['data'] = null;
    
+   
     $this->db->trans_begin();
 
     if($tableName == "db_pegawai.pegpangkat"){
@@ -2586,6 +2589,8 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         $path = './arsipassesment/'.$file;
     } else if($tableName == "db_pegawai.pegarsip"){
         $path = './arsiplain/'.$file;
+    } else if($tableName == "db_pegawai.pegtimkerja"){
+        $path = './arsiptimkerja/'.$file;
     }
 
    
@@ -2915,7 +2920,7 @@ public function submitEditProfil(){
     $data["goldarah"] = $goldar;
     $data["agama"] = $datapost["edit_agama"];
     $data["skpd"] = $datapost["edit_unit_kerja"];
-    // $data["jabatan"] = $datapost["edit_gelar1"];
+    $data["pendidikan"] = $datapost["edit_pendidikan"];
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
@@ -3157,6 +3162,22 @@ public function tambahPegawai(){
     return $res;
 }
 
+
+function getJenjangDiklat($id)
+{        
+    $this->db->select('*');
+    $this->db->where('id_jenisdiklat', $id);
+    $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('db_pegawai.jenjang_diklat');
+    $datajd = $fetched_records->result_array();
+
+    $data = array();
+    foreach ($datajd as $jd) {
+        $data[] = array("id" => $jd['id'], "jenjang_diklat" => $jd['jenjang_diklat']);
+    }
+    return $data;
+}
+
 public function getKabKota($tableName, $orderBy = 'created_date', $whatType = 'desc')
 {
     $this->db->select('*')
@@ -3229,10 +3250,18 @@ public function getAllPelanggaranByNip($nip){
 
         }
 
+        function getJenjangDiklatEdit($id){
+            $this->db->select('*')
+            ->where('id_jenisdiklat', $id)
+            ->from('db_pegawai.jenjang_diklat a');
+            return $this->db->get()->result_array(); 
+
+        }
+
         function getJabatanOrganisasi(){
             $this->db->select('*')
             ->where('id !=', 0)
-            // ->group_by('a.nama_jabatan')
+            ->order_by('a.no_urut','asc')
             ->from('db_pegawai.jabatan_organisasi a');
             return $this->db->get()->result_array(); 
 
@@ -3324,6 +3353,7 @@ function getDiklatEdit($id){
                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                    ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
                    ->join('db_pegawai.diklat d','c.jenisdiklat = d.id_diklat')
+                   ->join('db_pegawai.jenjang_diklat e','c.jenjang_diklat = e.id')
                    ->where('c.id', $id)
                    ->where('a.flag_active', 1)
                    ->where('c.flag_active', 1);
@@ -3354,7 +3384,7 @@ function getPenghargaanEdit($id){
                    ->from('m_user a')
                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                    ->join('db_pegawai.pegpenghargaan c', 'b.id_peg = c.id_pegawai')
-                   ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id')
+                   ->join('db_pegawai.pemberipenghargaan d', 'c.pemberi = d.id', 'left')
                    ->where('c.id', $id)
                    ->where('c.flag_active', 1)
                    ->where('a.flag_active', 1);
@@ -3896,6 +3926,7 @@ public function submitEditJabatan(){
            
             $id = $datapost['id'];
             $data["jenisdiklat"] = $datapost["edit_diklat_jenis"];
+            $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
             $data["nm_diklat"] = $datapost["edit_diklat_nama"];
             $data["tptdiklat"] = $datapost["edit_diklat_tempat"];
             $data["penyelenggara"] = $datapost["edit_diklat_penyelenggara"];
@@ -3913,6 +3944,7 @@ public function submitEditJabatan(){
         } else {
             $id = $datapost['id'];
             $data["jenisdiklat"] = $datapost["edit_diklat_jenis"];
+            $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
             $data["nm_diklat"] = $datapost["edit_diklat_nama"];
             $data["tptdiklat"] = $datapost["edit_diklat_tempat"];
             $data["penyelenggara"] = $datapost["edit_diklat_penyelenggara"];

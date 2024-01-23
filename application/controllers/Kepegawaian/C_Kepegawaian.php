@@ -1093,25 +1093,25 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->updateStatusBerkas());
 	}
 
-	public function updateProfilePict(){
-        $photo = $_FILES['profilePict']['name'];
-		$nip = $this->input->post('nip');
-        $upload = $this->general_library->uploadImageAdmin('fotopeg','profilePict',$nip);
+	// public function deleteData(){
+    //     $photo = $_FILES['profilePict']['name'];
+	// 	$nip = $this->input->post('nip');
+    //     $upload = $this->general_library->uploadImageAdmin('fotopeg','profilePict',$nip);
 	
-        if($upload['code'] != 0){
-            $this->session->set_flashdata('message', $upload['message']);
-        } else {
-            $message = $this->kepegawaian->updateProfilePicture($upload);
-            $this->session->set_flashdata('message', $message['message']);
-        }
+    //     if($upload['code'] != 0){
+    //         $this->session->set_flashdata('message', $upload['message']);
+    //     } else {
+    //         $message = $this->kepegawaian->updateProfilePicture($upload);
+    //         $this->session->set_flashdata('message', $message['message']);
+    //     }
 
-		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-        redirect('kepegawaian/profil-pegawai/'.$nip);
-		} else {
-		redirect('kepegawaian/profil');
-		}
+	// 	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+    //     redirect('kepegawaian/profil-pegawai/'.$nip);
+	// 	} else {
+	// 	redirect('kepegawaian/profil');
+	// 	}
 
-    }
+    // }
 
 	public function updateJabatanPeg()
 	{ 
@@ -1163,6 +1163,14 @@ class C_Kepegawaian extends CI_Controller
 
         $this->load->view('kepegawaian/V_EditProfilPegawai', $data);
     }
+
+	public function getJenjangDiklat()
+    {
+        $id = $this->input->post('id');
+        $response   = $this->kepegawaian->getJenjangDiklat($id);
+        echo json_encode($response);
+    }
+
 
 	public function getdatakec()
     {
@@ -1271,6 +1279,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_diklat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.diklat', 'id_diklat', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 20);
 		$data['diklat'] = $this->kepegawaian->getDiklatEdit($id);
+		$data['jenjang_diklat'] = $this->kepegawaian->getJenjangDiklatEdit($data['diklat'][0]['jenisdiklat']);
         $this->load->view('kepegawaian/V_EditDiklat', $data);
     }
 

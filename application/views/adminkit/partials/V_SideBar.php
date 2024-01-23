@@ -230,8 +230,13 @@
 			</a>
 		</li>
 		<li class="sidebar-item">
-		<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
+			</a>
+		</li>
+		<li class="sidebar-item">
+			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Nomor Surat</span>
 			</a>
 		</li>
 	<?php } ?>
@@ -281,7 +286,12 @@
 		</li>
 	<?php } ?> -->
 	<?php
-	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
+	if($this->general_library->isProgrammer() ||
+	$this->general_library->isAdminAplikasi() ||
+	$this->general_library->isHakAksesVerifLayanan() ||
+	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
+	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
@@ -302,11 +312,21 @@
 				</li>
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
-				<li class="sidebar-item ">
-					<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Pendataaan Data Mandiri
-					</a>
-				</li>
+					<li class="sidebar-item ">
+						<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pendataan Data Mandiri
+						</a>
+					</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() ||
+				$this->general_library->isAdminAplikasi() || 
+				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+				$this->general_library->isKepalaPd()){ ?>
+					<li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+						</a>
+					</li>
 				<?php } ?>
 			</ul>
 		</li>

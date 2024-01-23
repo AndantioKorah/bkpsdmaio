@@ -255,6 +255,13 @@ class General_library
         return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
     }
 
+    public function getDataUnitKerjaPegawai(){
+        $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
+        $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];
+        $result['id_unitkerjamaster'] = $this->nikita->session->userdata('pegawai')['id_unitkerjamaster'];
+        return $result;
+    }
+
     public function isPejabatEselon(){
         return $this->userLoggedIn['id_eselon'] != 1;
     }
@@ -420,6 +427,26 @@ class General_library
         return $this->userLoggedIn['nama_jabatan'];
     }
 
+    public function getIdJabatan(){
+        return $this->userLoggedIn['jabatan'];
+    }
+
+    public function isKepalaBkpsdm(){
+        return $this->getIdJabatan() == "4018000JS01";
+    }
+
+    public function getIdEselon(){
+        return $this->userLoggedIn['id_eselon'];
+    }
+
+    public function isKepalaPd(){
+        return $this->userLoggedIn['kepalaskpd'] == "1";
+    }
+
+    public function getIdUnitKerjaPegawai(){
+        return $this->userLoggedIn['id_unitkerja'];
+    }
+
     public function getId(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn ? $this->userLoggedIn['id'] : '';
@@ -447,6 +474,13 @@ class General_library
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();
         return $this->userLoggedIn['id_peg'];
+    }
+
+    public function getAbsensiPegawai($id_pegawai, $bulan, $tahun){
+        $params['bulan'] = $bulan;
+        $params['tahun'] = $tahun;
+        $params['id_pegawai'] = $id_pegawai;
+        return $this->nikita->m_user->getAbsensiPegawai($params, 0);
     }
 
     public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){

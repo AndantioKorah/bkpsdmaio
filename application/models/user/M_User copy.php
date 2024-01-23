@@ -1468,9 +1468,9 @@
                                         ->join('m_user c', 'b.nipbaru_ws = c.username')
                                         ->where('c.id', $id_pegawai)
                                         ->get()->row_array();
-            }
-            if($flag_count_tpp == 1){
-                $bobot_komponen_kinerja = 0;
+                }
+                if($flag_count_tpp == 1){
+                    $bobot_komponen_kinerja = 0;
                 if($pk['komponen_kinerja']){
                     list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
                     $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
@@ -1579,7 +1579,6 @@
                 }
             }
 
-            $result['hadir'] = 0;
             $result['pengurangan_dk'] = 0;
             $result['rincian_pengurangan_dk']['TK'] = 0;
             $result['rincian_pengurangan_dk']['tmk1'] = 0;
@@ -1613,10 +1612,7 @@
                             // echo("dokpen_before: ".$result['pengurangan_dk']);
                             if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                                 // tambah capaian disiplin kerja
-                                $result['hadir']++;
-                                if($flag_count_tpp == 1){
-                                    $result['capaian_dk'] += $result['pagu_harian'];
-                                }
+                                $result['capaian_dk'] += $result['pagu_harian'];
                             }
                             // if(!in_array($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'], ['18', '19'])){ //cek jika dokumen pendukung bukan Tugas Luar Pagi atau Sore
                                 $result['pengurangan_dk'] = floatval($result['pengurangan_dk']) + floatval($result['dokpen'][$tga]['pengurangan']);
@@ -1629,11 +1625,9 @@
                                 if(!isset($result['dokpen'][$tga])){ //tidak ada dokumen pendukung
                                     $result['pengurangan_dk'] += 10;
                                     $result['rincian_pengurangan_dk']['TK']++;
-                                    
+    
                                     // tambah capaian disiplin kerja
-                                    if($flag_count_tpp == 1){
-                                        $result['capaian_dk'] += $result['pagu_harian'];
-                                    }
+                                    $result['capaian_dk'] += $result['pagu_harian'];
                                     $keterangan[] = "TK";
                                 } else {
                                     $result['pengurangan_dk'] += 3;
@@ -1641,10 +1635,7 @@
                                     $keterangan[] = "tmk3";
                                 }
                             } else { //kalau ada, cek keterlambatan
-                                $result['hadir']++;
-                                if($flag_count_tpp == 1){
-                                    $result['capaian_dk'] += $result['pagu_harian'];
-                                }
+                                $result['capaian_dk'] += $result['pagu_harian'];
                                 if(!isset($result['dokpen'][$tga]) || //cek kalo tidak ada dokpen, cek keterlambatan
                                     (isset($result['dokpen'][$tga]) && $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == 20)){ // kalo ada dokpen dan dokpen tugas luar sore, cek keterlambatan
                                         $diff_masuk = strtotime($data_absen[$tga]['masuk']) - strtotime($jam_masuk.'+ 59 seconds');
@@ -1718,7 +1709,6 @@
                     } else if(isset($result['dokpen'][$tga])){ //cek jika ada data dokumen pendukung
                         if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                             // tambah capaian disiplin kerja
-                            $result['hadir']++;
                             if($flag_count_tpp == 1){
                                 $result['capaian_dk'] += $result['pagu_harian'];
                             }

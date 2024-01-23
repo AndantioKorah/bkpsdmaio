@@ -43,7 +43,7 @@ $route['master/tpp'] = 'master/C_Master/tpp';
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
 $route['pdm/dashboard'] = 'dashboard/C_Dashboard/dashboardPdm';
 $route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
-$route['kepegawaian/permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/permohonanCuti';
+$route['kepegawaian/nomor-surat'] = 'kepegawaian/C_Kepegawaian/nomorSurat';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 
@@ -64,3 +64,7 @@ $route['cron/rekap-absensi-pd'] = 'cron/C_Cron/cronRekapAbsenPD';
 
 //walikota
 $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';
+
+//cuti
+$route['kepegawaian/permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/permohonanCuti';
+$route['kepegawaian/verifikasi-permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/verifikasiPermohonanCuti';

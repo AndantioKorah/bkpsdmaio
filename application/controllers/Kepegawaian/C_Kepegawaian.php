@@ -1,5 +1,10 @@
 <?php
 
+use Spatie\PdfToText\Exceptions\CouldNotExtractText;
+use Spatie\PdfToText\Exceptions\PdfNotFound;
+use Spatie\PdfToText\Pdf;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
+
 class C_Kepegawaian extends CI_Controller
 {
 	public function __construct()
@@ -10,6 +15,25 @@ class C_Kepegawaian extends CI_Controller
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
 		};
+	}
+
+	public function autocuti($year){
+		$path = 'assets/autocuti/'.$year;
+		$files = array_diff(scandir($path), array('.', '..'));
+		$i = 0;
+		foreach($files as $file){
+			$filename = $path.'/'.$file;
+			$text = pdf2text($filename);
+			$string = trim(preg_replace('!\s+!', ' ', $text));
+			$explode = explode(" ", $string);
+			$validate = isSuratCutiTahunan($explode); 
+			if($validate['result']){
+				dd($validate);
+			} else {
+				dd('alkdmsakdl');
+			}
+			$i++;
+		}
 	}
 
 	public function fetchDokumenWs(){
@@ -1286,12 +1310,127 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function permohonanCuti(){
+		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
 		$data['master_jenis_cuti'] = $this->general->getAllWithOrderGeneral('db_pegawai.cuti', 'id_cuti', 'asc');
         render('kepegawaian/V_PermohonanCuti', '', '', $data);
 	}
 
 	public function submitPermohonanCuti(){
 		echo json_encode($this->kepegawaian->submitPermohonanCuti());
+	}
+
+	public function countJumlahHariCuti(){
+		$data = $this->input->post();
+		$res['code'] = 0;
+		$res['message'] = 'OK';
+		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+		echo json_encode($res);
+	}
+
+	public function loadRiwayatPermohonanCuti(){
+		$data['result'] = $this->kepegawaian->loadRiwayatPermohonanCuti();
+		$this->session->set_userdata('riwayat_cuti', $data['result']);
+		$this->load->view('kepegawaian/V_PermohonanCutiItem', $data);
+	}
+
+	public function loadDetailCuti($id){
+		$data['result'] = $this->session->userdata('riwayat_cuti')[$id];
+		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
+	}
+
+	public function deletePermohonanCuti($id){
+		$this->general->delete('id', $id, 't_pengajuan_cuti');
+	}
+
+	public function verifikasiPermohonanCuti(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		$data['master_status'] = $this->general->getAllWithOrder('m_status_pengajuan_cuti', 'id', 'asc');
+        render('kepegawaian/V_VerifPermohonanCuti', '', '', $data);
+	}
+
+	public function searchPermohonanCuti(){
+		$data['result'] = $this->kepegawaian->searchPermohonanCuti();
+		$data['param'] = $this->input->post();
+		$this->load->view('kepegawaian/V_VerifPermohonanCutiItem', $data);
+	}
+
+	public function loadDetailCutiVerif($id){
+		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+        $data['list_disiplin_kerja'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'keterangan', 'asc');
+		$count = (count($data['list_disiplin_kerja']));
+		$tambahan = ["TK", "TMK1", "TMK2", "TMK3", "PKSW1", "PKSW2", "PKSW3"];
+		$tambahan = [
+			0 => [
+				'keterangan' => 'tmk1',
+				'nama_jenis_disiplin_kerja' => 'Terlambat Masuk Kerja kategori 1'
+			],
+			1 => [
+				'keterangan' => 'tmk2',
+				'nama_jenis_disiplin_kerja' => 'Terlambat Masuk Kerja kategori 2'
+			],
+			2 => [
+				'keterangan' => 'tmk3',
+				'nama_jenis_disiplin_kerja' => 'Terlambat Masuk Kerja kategori 3'
+			],
+			3 => [
+				'keterangan' => 'pksw1',
+				'nama_jenis_disiplin_kerja' => 'Pulang Kerja Sebelum Wakti kategori 1'
+			],
+			4 => [
+				'keterangan' => 'pksw2',
+				'nama_jenis_disiplin_kerja' => 'Pulang Kerja Sebelum Wakti kategori 2'
+			],
+			5 => [
+				'keterangan' => 'pksw3',
+				'nama_jenis_disiplin_kerja' => 'Pulang Kerja Sebelum Wakti kategori 3'
+			],
+		];
+
+		foreach($tambahan as $t){
+			$data['list_disiplin_kerja'][$count] = $t;
+			$count++;
+		}
+		$this->load->view('kepegawaian/V_VerifPermohonanCutiDetail', $data);
+	}
+
+	public function saveVerifikasiPermohonanCuti($status, $id){
+		$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id);
+		// if($data['result']['code'] == 0 && $data['result']['data']['id_m_status_pengajuan_cuti'] == 2 && $status == 1){
+		// 	$path_file = 'arsipcuti/nods/CUTI_'.$data['result']['data']['nipbaru_ws'].'_'.date("Y", strtotime($data['result']['data']['created_date'])).'.pdf';
+		// 	// dd($path_file);
+		// 	$mpdf = new \Mpdf\Mpdf([
+		// 		'format' => 'Legal-P',
+		// 		// 'debug' => true
+		// 	]);
+		// 	$html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $data, true);
+		// 	$mpdf->WriteHTML($html);
+		// 	$mpdf->showImageErrors = true;
+		// 	$mpdf->Output($path_file, 'F');
+		// }
+		
+		echo json_encode($data['result']);
+	}
+
+	public function dsCuti($id){
+		echo json_encode($this->kepegawaian->dsCuti($id));
+	}
+
+	public function batalVerifikasiPermohonanCuti($id){
+		echo json_encode($this->kepegawaian->batalVerifikasiPermohonanCuti($id));
+	}
+
+	public function nomorSurat(){
+		$data['jenis_layanan'] = $this->general->getAllWithOrder('m_jenis_layanan', 'nomor_surat', 'asc');
+        render('kepegawaian/V_NomorSurat', '', '', $data);
+	}
+
+	public function saveNomorSurat(){
+		echo json_encode($this->kepegawaian->saveNomorSurat());
+	}
+
+	public function loadNomorSurat(){
+		$data['result'] = $this->kepegawaian->loadNomorSurat();
+		$this->load->view('kepegawaian/V_NomorSuratRiwayat', $data);
 	}
 
 	public function submitEditJabatan()

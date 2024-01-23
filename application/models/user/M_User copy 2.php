@@ -1408,87 +1408,24 @@
             $result['pagu_dk'] = (floatval(TARGET_BOBOT_DISIPLIN_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
             list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
 
-            $params['id_pegawai'] = $id_pegawai;
-            $params['bulan'] = $bulan;
-            $params['tahun'] = $tahun;
-            $params['unitkerja'] = $unitkerja;
-            $params['pk'] = $pk;
-            $params['tpp'] = $tpp;
-            $params['pagu_tpp'] = $result['pagu_tpp'];
-            $params['pagu_pk'] = $result['pagu_pk'];
-            $params['pagu_dk'] = $result['pagu_dk'];
-
-            $result = $this->getAbsensiPegawai($params, 1);
-            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
-            $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
-            if($result['capaian_dk'] < 0){
-                $result['capaian_dk'] = 0;
+            $bobot_komponen_kinerja = 0;
+            if($pk['komponen_kinerja']){
+                list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
+                $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
             }
-            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
-            $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
-            if($result['pagu_tpp']['pagu_tpp'] == '0' || $result['pagu_tpp']['pagu_tpp'] == 0){
-                $result['presentase_capaian_tpp'] = 0;    
-                $result['presentase_pk'] = 0;
-                $result['presentase_dk'] = 0;
-            } else {
-                $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
-                $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
-                $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
-            }
-
-            return $result;
-        }
-
-        public function getAbsensiPegawai($params, $flag_count_tpp = 0){
-            $result = null;
-            $id_pegawai = isset($params['id_pegawai']) ? $params['id_pegawai'] : null;
-            $bulan = isset($params['bulan']) ? $params['bulan'] : date('m');
-            $tahun = isset($params['tahun']) ? $params['tahun'] : date('Y');
-            $unitkerja = isset($params['unitkerja']) ? $params['unitkerja'] : null;
-            $pk = isset($params['pk']) ? $params['pk'] : null;
-            $tpp = isset($params['tpp']) ? $params['tpp'] : null;
-            $result['pagu_tpp'] = isset($params['pagu_tpp']) ? $params['pagu_tpp'] : null;
-            $result['pagu_dk'] = isset($params['pagu_dk']) ? $params['pagu_dk'] : null;
-            $result['pagu_pk'] = isset($params['pagu_pk']) ? $params['pagu_pk'] : null;
             
-            if(!$id_pegawai){
-                $id_pegawai = $this->general_library->getId();
+            $bobot_skp = 0;
+            if($pk['kinerja']){
+                $pk['nilai_skp'] = countNilaiSkp($pk['kinerja']);
+                $bobot_skp = $pk['nilai_skp']['bobot'];
             }
-            if(!$bulan){
-                $bulan = date('m');
-            }
-            if(!$tahun){
-                $tahun = date('Y');
-            }
-            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
-            if(!$unitkerja){
-                $unitkerja = $this->db->select('a.*')
-                                        ->from('db_pegawai.unitkerja a')
-                                        ->join('db_pegawai.pegawai b', 'a.id_unitkerja = b.skpd')
-                                        ->join('m_user c', 'b.nipbaru_ws = c.username')
-                                        ->where('c.id', $id_pegawai)
-                                        ->get()->row_array();
-            }
-            if($flag_count_tpp == 1){
-                $bobot_komponen_kinerja = 0;
-                if($pk['komponen_kinerja']){
-                    list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
-                    $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
-                }
-                
-                $bobot_skp = 0;
-                if($pk['kinerja']){
-                    $pk['nilai_skp'] = countNilaiSkp($pk['kinerja']);
-                    $bobot_skp = $pk['nilai_skp']['bobot'];
-                }
-                $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
-                $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
-                $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
-                $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
-                $result['capaian_dk'] = 0;
-                $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
-                $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
-            }
+            $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
+            $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
+            $result['capaian_dk'] = 0;
+            $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
+            $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
 
             //data absen
             $list_data_absen = $this->db->select('*')
@@ -1579,7 +1516,6 @@
                 }
             }
 
-            $result['hadir'] = 0;
             $result['pengurangan_dk'] = 0;
             $result['rincian_pengurangan_dk']['TK'] = 0;
             $result['rincian_pengurangan_dk']['tmk1'] = 0;
@@ -1613,10 +1549,7 @@
                             // echo("dokpen_before: ".$result['pengurangan_dk']);
                             if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                                 // tambah capaian disiplin kerja
-                                $result['hadir']++;
-                                if($flag_count_tpp == 1){
-                                    $result['capaian_dk'] += $result['pagu_harian'];
-                                }
+                                $result['capaian_dk'] += $result['pagu_harian'];
                             }
                             // if(!in_array($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'], ['18', '19'])){ //cek jika dokumen pendukung bukan Tugas Luar Pagi atau Sore
                                 $result['pengurangan_dk'] = floatval($result['pengurangan_dk']) + floatval($result['dokpen'][$tga]['pengurangan']);
@@ -1629,11 +1562,9 @@
                                 if(!isset($result['dokpen'][$tga])){ //tidak ada dokumen pendukung
                                     $result['pengurangan_dk'] += 10;
                                     $result['rincian_pengurangan_dk']['TK']++;
-                                    
+    
                                     // tambah capaian disiplin kerja
-                                    if($flag_count_tpp == 1){
-                                        $result['capaian_dk'] += $result['pagu_harian'];
-                                    }
+                                    $result['capaian_dk'] += $result['pagu_harian'];
                                     $keterangan[] = "TK";
                                 } else {
                                     $result['pengurangan_dk'] += 3;
@@ -1641,10 +1572,7 @@
                                     $keterangan[] = "tmk3";
                                 }
                             } else { //kalau ada, cek keterlambatan
-                                $result['hadir']++;
-                                if($flag_count_tpp == 1){
-                                    $result['capaian_dk'] += $result['pagu_harian'];
-                                }
+                                $result['capaian_dk'] += $result['pagu_harian'];
                                 if(!isset($result['dokpen'][$tga]) || //cek kalo tidak ada dokpen, cek keterlambatan
                                     (isset($result['dokpen'][$tga]) && $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == 20)){ // kalo ada dokpen dan dokpen tugas luar sore, cek keterlambatan
                                         $diff_masuk = strtotime($data_absen[$tga]['masuk']) - strtotime($jam_masuk.'+ 59 seconds');
@@ -1718,25 +1646,20 @@
                     } else if(isset($result['dokpen'][$tga])){ //cek jika ada data dokumen pendukung
                         if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                             // tambah capaian disiplin kerja
-                            $result['hadir']++;
-                            if($flag_count_tpp == 1){
-                                $result['capaian_dk'] += $result['pagu_harian'];
-                            }
+                            $result['capaian_dk'] += $result['pagu_harian'];
                         }
                         // if(!in_array($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'], ['18', '19'])){ //cek jika dokumen pendukung bukan Tugas Luar Pagi atau Sore
-                            if($flag_count_tpp == 1){
-                                $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
-                            }
+                            $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
                             $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
+
                             $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
                         // }
                     } else if(isset($result['hari_libur'][$tga])){ //cek jika hari libur
                         
                     } else { // asumsi tidak masuk kerja
                         // tambah capaian disiplin kerja
-                        if($flag_count_tpp == 1){
-                            $result['capaian_dk'] += $result['pagu_harian'];
-                        }
+                        $result['capaian_dk'] += $result['pagu_harian'];
+
                         $result['pengurangan_dk'] += 10;
                         $result['rincian_pengurangan_dk']['TK']++;
                         $keterangan[] = "TK";
@@ -1754,6 +1677,29 @@
                 // echo $data_absen[$tga]['masuk'].'<br>';
                 // dd($result['pengurangan_dk']);
             }
+            // echo 'capaian_dk: '.$result['capaian_dk'].'<br>';
+            // echo 'pengurangan_dk: '.$result['pengurangan_dk'].'<br>';
+            // echo 'pagu_dk: '.$result['pagu_dk'].'<br>';
+            // echo 'pagu_pengurangan: '.(($result['pengurangan_dk'] / 100) * $result['pagu_dk']).'<br>';
+            // dd('');
+
+            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
+            $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            if($result['capaian_dk'] < 0){
+                $result['capaian_dk'] = 0;
+            }
+            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
+            if($result['pagu_tpp']['pagu_tpp'] == '0' || $result['pagu_tpp']['pagu_tpp'] == 0){
+                $result['presentase_capaian_tpp'] = 0;    
+                $result['presentase_pk'] = 0;
+                $result['presentase_dk'] = 0;
+            } else {
+                $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
+                $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+                $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
+            }
+
             return $result;
         }
 

@@ -470,7 +470,7 @@
                         <select class="form-select select2" name="rekamjjk4" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($diklat){ foreach($diklat as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if($nilai_potensial) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else if($dklt == $r['id'])  echo "selected"; else echo "";}  else { if($dklt == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>

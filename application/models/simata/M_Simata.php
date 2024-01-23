@@ -265,21 +265,19 @@
         }
 
         function getPegawaiDinilaiToJpt($id){
-            $id_pangkat = array(41,42,34);
+            $id_pangkat = array(41,42,43,34);
             $this->db->select('TIMESTAMPDIFF(year,a.tmtjabatan, now()) as masakerjajabatan , a.id_peg, a.nipbaru, a.nama,a.gelar1,a.gelar2, b.nama_jabatan, a.tmtjabatan, c.nm_pangkat')
                 ->from('db_pegawai.pegawai  a')
                 ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
-                // ->where('b.eselon like', '%IV%')
-                // ->where("FIND_IN_SET(b.eselon,'IV A,IV B,III B')!=",0)
-                ->group_start()
-                ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
-                ->where("FIND_IN_SET(b.eselon,'III A,III B,Non Eselon')!=",0)
-                ->or_where_in('a.pangkat',$id_pangkat)
-                ->group_end()
+                // ->group_start()
+                // ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
+                // ->where("FIND_IN_SET(b.eselon,'II B,III A,III B,Non Eselon')!=",0)
+                // ->or_where_in('a.pangkat',$id_pangkat)
+                // ->group_end()
                 ->where_in('a.pangkat', $id_pangkat)
                 ->where('b.nama_jabatan !=', 'Pelaksana')
-                ->where("FIND_IN_SET(b.eselon,'III A,III B')!=",0)
+                ->where("FIND_IN_SET(b.eselon,'II B,III A,III B')!=",0)
 
                 // ->where('b.eselon', 'III B')
                 ->where('a.skpd', $id)
@@ -827,6 +825,85 @@ public function getPegawaiPenilaianKinerjaJpt(){
                 $id_org = 123;
             }
             return $id_org;
+        }
+
+        function getDiklatPengawai($id,$eselonjt,$eselonpegawai){
+            $id_diklat = null;
+            if($eselonjt == "II B"){
+            $this->db->select('*')
+                ->from('db_pegawai.pegdiklat a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.jenjang_diklat', 3)
+                ->where('a.flag_active', 1);
+            $diklat = $this->db->get()->result_array();
+            if($diklat){
+                $id_diklat = 105;
+            }
+            } else if($eselonjt == "III B" || $eselonpegawai == "III A"){
+            $this->db->select('*')
+                ->from('db_pegawai.pegdiklat a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.jenjang_diklat', 2)
+                ->where('a.flag_active', 1);
+            $diklat = $this->db->get()->result_array();
+            if($diklat){
+                $id_diklat = 105;
+            }
+            } else if($eselonpegawai == "III B" || $eselonpegawai == "III A"){
+                $this->db->select('*')
+                ->from('db_pegawai.pegdiklat a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.jenjang_diklat', 2)
+                ->where('a.flag_active', 1);
+                $diklat = $this->db->get()->result_array();
+                if($diklat){
+                    $id_diklat = 106;
+                } else {
+                    $this->db->select('*')
+                    ->from('db_pegawai.pegdiklat a')
+                    ->where('a.id_pegawai', $id)
+                    ->where('a.jenjang_diklat', 1)
+                    ->where('a.flag_active', 1);
+                    $diklat = $this->db->get()->result_array();
+                    if($diklat){
+                        $id_diklat = 107;
+                    } 
+                }
+            } else if($eselonpegawai == "II B"){
+                $this->db->select('*')
+                ->from('db_pegawai.pegdiklat a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.jenjang_diklat', 3)
+                ->where('a.flag_active', 1);
+                $diklat = $this->db->get()->result_array();
+                if($diklat){
+                    $id_diklat = 106;
+                } else {
+                    $this->db->select('*')
+                    ->from('db_pegawai.pegdiklat a')
+                    ->where('a.id_pegawai', $id)
+                    ->where('a.jenjang_diklat', 2)
+                    ->where('a.flag_active', 1);
+                    $diklat = $this->db->get()->result_array();
+                    if($diklat){
+                        $id_diklat = 107;
+                    } 
+                }
+            } else if($eselonpegawai == "IV A"){
+                $this->db->select('*')
+                ->from('db_pegawai.pegdiklat a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.jenjang_diklat', 1)
+                ->where('a.flag_active', 1);
+                $diklat = $this->db->get()->result_array();
+                if($diklat){
+                    $id_diklat = 106;
+                }
+            } 
+
+            return $id_diklat;
+            
+
         }
 
         

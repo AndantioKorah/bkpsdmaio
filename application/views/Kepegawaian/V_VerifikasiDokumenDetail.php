@@ -833,7 +833,7 @@
   </select>
   </div>
 
-  <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif">
+  <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif" value="<?php if(isset($result['tmt_jabatan'])) echo $result['tmt_jabatan']; else echo "";?>">
   <div class="form-group" style="display:none" id="field_ket">
     <label for="exampleFormControlTextarea1">Keterangan</label>
     <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
@@ -943,6 +943,11 @@
         return false;
         }
       }
+
+      var tmt = $("#jabatan_tmt_verif").val()
+      $("#edit_tmt_jabatan_verif").val(tmt);
+      // return false;
+    
 
       document.getElementById('btn_verif_dok').disabled = true;
       $('#btn_verif_dok').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

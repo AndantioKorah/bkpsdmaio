@@ -210,7 +210,7 @@
                                             <button id="button_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan Verifikasi </button>
                                             <button style="display: none;" id="button_submit_loader" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
                                         <?php } else if(($result['kepalapd'] && ($result['data']['id_m_status_pengajuan_cuti'] == 2 || $result['data']['id_m_status_pengajuan_cuti'] == 3) && !$result['kepalabkpsdm']) || 
-                                        ($result['data']['id_m_status_pengajuan_cuti'] == 4 && $result['data']['url_sk'] == null && $result['kepalabkpsdm'])){ ?>
+                                        ((($result['data']['id_m_status_pengajuan_cuti'] == 4 && $result['data']['url_sk'] == null) || $result['data']['id_m_status_pengajuan_cuti'] == 5) && $result['kepalabkpsdm'])){ ?>
                                             <button id="btn_batal_verif" onclick="batalVerifikasi()" type="button" class="btn btn-danger"><i class="fa fa-times"></i> Batal Verifikasi </button>
                                             <button style="display: none;" id="btn_batal_verif_loading" type="button" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
                                         <?php } ?>

@@ -4677,8 +4677,8 @@ public function submitEditJabatan(){
                 ->update('t_pengajuan_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         }
 
-        $this->db->where('id_t_penggunaan_cuti', $id)
-                ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        // $this->db->where('id_t_penggunaan_cuti', $id)
+        //         ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -5324,7 +5324,8 @@ public function submitEditJabatan(){
                         ->join('m_user b', 'a.created_by = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('a.flag_active', 1)
-                        ->order_by('a.tanggal_surat', 'asc')
+                        ->order_by('a.tanggal_surat', 'desc')
+                        ->order_by('a.created_date', 'desc')
                         ->get()->result_array();
     }
 

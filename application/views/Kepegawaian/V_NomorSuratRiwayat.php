@@ -17,7 +17,7 @@
           <td class="text-left"><?=$rs['nomor_surat']?></td>
           <td class="text-center"><?=formatDateNamaBulan($rs['tanggal_surat'])?></td>
           <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
-          <td class="text-center"><?=formatDateNamaBulan($rs['created_date'])?></td>
+          <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
           <!-- <th class="text-center">Pilihan</th> -->
         </tr>
       <?php } } ?>

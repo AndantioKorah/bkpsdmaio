@@ -100,11 +100,6 @@
             <td class="td-val-dd"><?=$result['masakerja']?></td>
           </tr>
           <tr>
-            <td class="td-lab-dd">Pejabat</td>
-            <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['pejabat']?></td>
-          </tr>
-          <tr>
             <td class="td-lab-dd">Pejabat Yang Menetapkan</td>
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd"><?=$result['pejabat']?></td>
@@ -677,7 +672,7 @@
             <td class="td-lab-dd">Tgl. STTB/Ijazah</td>
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd">
-            <?= $result['tglijasah']?> </td>
+            <?= formatDateNamaBulan($result['tglijasah'])?> </td>
           </tr>
    
         </table>

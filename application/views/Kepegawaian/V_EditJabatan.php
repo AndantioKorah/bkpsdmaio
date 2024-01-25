@@ -1,5 +1,6 @@
 <form method="post" id="form_edit_jabatann" enctype="multipart/form-data" >
     <input type="hidden" id="id" name="id" value="<?= $jabatan[0]['id'];?>">
+    <input type="hidden" id="id_peg" name="id_peg" value="<?= $jabatan[0]['id_pegawai'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $jabatan[0]['gambarsk'];?>">
 
 
@@ -63,6 +64,16 @@
     <label for="jabatan_jenis">Nama Jabatan </label>
     <input class="form-control customInput" type="text" id="edit_jabatan_nama" name="edit_jabatan_nama"  value="<?=$jabatan[0]['nama_jabatan']?>"/>
     </div>
+
+    <!-- <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
+    <label for="jabatan_jenis">Nama Jabatan </label>
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
+                        <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+    </select>
+    </div> -->
 
  
 
@@ -162,6 +173,7 @@ $('#form_edit_jabatann').on('submit', function(e){
              setTimeout(function() {$("#modal_edit_jabatan").trigger( "click" );}, 1000);
              const myTimeout = setTimeout(loadListJabatan, 2000);
              loadRiwayatUsulJabatan()
+             location.reload()
            } else {
              errortoast(result.msg)
              return false;

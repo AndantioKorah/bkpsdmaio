@@ -971,6 +971,37 @@ public function getPegawaiPenilaianKinerjaJpt(){
         return $id_diklat;   
     }
 
+    function getHukdisPengawai($id){
+        $this->db->select('*')
+            ->from('db_pegawai.pegdisiplin a')
+            ->where('a.id_pegawai', $id)
+            ->where('a.flag_active', 1);
+        $hukdis = $this->db->get()->row_array();
+        $id_hukdis = null;
+        if($hukdis){
+            $yearHukdis = date('Y', strtotime($hukdis['tglsurat']));
+            $currentYear = date('Y-m-d'); 
+            $sdate = $hukdis['tglsurat'];
+            $edate = date('Y-m-d');
+            $date_diff = abs(strtotime($edate) - strtotime($sdate));
+            $years = floor($date_diff / (365*60*60*24));
+            $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+            $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+            if($years >= 10){
+                $id_hukdis = 115;
+            } else if($years >= 6 && $years <= 9){
+                $id_hukdis = 116;
+            } else if($years >= 3 && $years <= 6){
+                $id_hukdis = 117;
+            } else if($years < 2){
+                $id_hukdis = 118;
+            }
+        } else {
+        $id_hukdis = 115;
+        }
+    return $id_hukdis;   
+    }
+
         
 
         function getPenilaianKinerja($id,$tahun,$x){
@@ -1045,7 +1076,8 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $this->db->select('*')
                 ->from('db_pegawai.pegtimkerja a')
                 ->where('a.id_pegawai', $id)
-                ->where('a.flag_active', 1);
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2);
                 // ->where('a.lingkup_timkerja', 1)
                 // ->where('a.jabatan', 1);
             $timkerja = $this->db->get()->result_array();

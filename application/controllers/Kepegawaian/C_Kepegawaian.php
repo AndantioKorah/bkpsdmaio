@@ -656,7 +656,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function LoadFormJabatan($nip,$statusjab){
 		$data['nip'] = $nip;
-		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
@@ -1179,6 +1179,14 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($response);
     }
 
+	public function getdatajab()
+    {
+        
+        $response   = $this->kepegawaian->getdatajab();
+        echo json_encode($response);
+    }
+
+
 	
 	public function getdatakel()
     {
@@ -1225,7 +1233,6 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanEdit();
-
         $this->load->view('kepegawaian/V_EditJabatan', $data);
     }
 

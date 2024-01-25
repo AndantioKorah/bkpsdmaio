@@ -302,6 +302,7 @@ class C_Simata extends CI_Controller
         $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$eselonjt['eselon']);
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
         $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$eselonjt['eselon'],$eselonpegawai,$jabatanpegawai);
+        $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
 
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);

@@ -826,7 +826,6 @@ class M_Kepegawaian extends CI_Model
             $result = $this->db->insert('db_pegawai.pegpendidikan', $dataInsert);
         } else if($id_dok == 8){
 
-
             if($this->input->post('myCheck')) {
                 $id_jabatan = "";
                 $nama_jabatan = $this->input->post('jabatan_lama');
@@ -838,7 +837,7 @@ class M_Kepegawaian extends CI_Model
             }
 
             $skpd = $this->input->post('jabatan_unitkerja');
-            $newSkpd = explode(",", $skpd);
+            $newSkpd = explode("/", $skpd);
             $id_skpd = $newSkpd[0];
             $nama_skpd = $newSkpd[1];
 
@@ -1301,11 +1300,10 @@ class M_Kepegawaian extends CI_Model
             //     $path = './arsiplain/'.$file;
             // }
 
-         
-           
-            if($target_dir != null){
-                unlink($target_dir."$nama_file.pdf");
-            }
+        
+            // if($target_dir != null){
+            //     unlink($target_dir."$nama_file.pdf");
+            // }
 
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
@@ -2534,6 +2532,14 @@ function getNamaJabatan(){
     return $this->db->get()->result_array(); 
 }
 
+function getJenisJabatan(){
+    $this->db->select('*')
+    ->where_in('id_jenisjab', ['00','10'])
+    // ->where('flag_active', 1)
+    ->from('db_pegawai.jenisjab a');
+    return $this->db->get()->result_array(); 
+}
+
 function getTingkatPendidikan(){
     $this->db->select('*')
     ->where_not_in('id_tktpendidikanb', [2004,2005,2027])
@@ -2676,6 +2682,9 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
+    if(trim($datapost["jenis_dokumen"]) == "jabatan"){
+    $data["tmtjabatan"] = $datapost["edit_tmt_jabatan_verif"];
+    }
 
  
     
@@ -3206,6 +3215,49 @@ function getkec($id_kab)
 
 
 
+function getdatajab()
+{        
+    $id = $this->input->post('id');
+    $skpd = $this->input->post('skpd');
+    $newSkpd = explode("/", $skpd);
+    $id_skpd = $newSkpd[0];
+    $nama_skpd = $newSkpd[1];
+    $jnsfung = $this->input->post('jnsfung');
+    
+
+    if($id == "00"){
+        $this->db->select('id_jabatanpeg, nama_jabatan');
+        $this->db->where('jenis_jabatan', "Struktural");
+        $this->db->where('id_unitkerja', $id_skpd);
+        $fetched_records = $this->db->get('db_pegawai.jabatan');
+        $datajab = $fetched_records->result_array();
+    } else {
+        if($jnsfung == "1"){
+            $this->db->select('id_jabatanpeg, nama_jabatan');
+            $this->db->or_where('jenis_jabatan', "JFT");
+            $this->db ->where_not_in('nama_jabatan', ['Pelaksana']);
+            $this->db->group_by('nama_jabatan');
+            $fetched_records = $this->db->get('db_pegawai.jabatan');
+            $datajab = $fetched_records->result_array();
+        } else {
+            $this->db->select('id_jabatanpeg, nama_jabatan');
+            $this->db->where('jenis_jabatan', "JFU");
+            $this->db->where('id_unitkerja', $id_skpd);
+            $fetched_records = $this->db->get('db_pegawai.jabatan');
+            $datajab = $fetched_records->result_array();
+        }
+       
+    }
+    
+
+    $data = array();
+    foreach ($datajab as $jab) {
+        $data[] = array("id" => $jab['id_jabatanpeg'], "nama_jabatan" => $jab['nama_jabatan']);
+    }
+    return $data;
+}
+
+
 
 function getkel($id_kec)
 {        
@@ -3520,7 +3572,8 @@ public function submitEditJabatan(){
     } else {
         $this->db->trans_commit();
     }
-
+    $id_peg = $datapost['id_peg'];
+    $this->updateJabatan($id_peg);
     return $res;
 
    }

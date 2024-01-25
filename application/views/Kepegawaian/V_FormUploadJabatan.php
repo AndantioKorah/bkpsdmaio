@@ -117,7 +117,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="jabatan_unitkerja" id="jabatan_unitkerja" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
                     <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
-                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>,<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                        <option <?php if($profil_pegawai['skpd'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>/<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
                     <?php } } ?>
     </select>
 
@@ -161,6 +161,16 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </select>
     </div>
 
+    <div class="form-group" style="margin-bottom:10px !important; display:none" id="div_jf">
+    <label for="jabatan_jenis">Jenis Fungsional </label>
+    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jenis_fungsional" id="jenis_fungsional" required>
+                    <option value="1" selected>JFT</option>
+                    <option value="2" >JFU</option>
+                  
+    </select>
+    </div>
+
+
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="1" name="myCheck" id="myCheck" onclick="myFunction()">
       <label class="form-check-label" for="myCheck">
@@ -178,35 +188,116 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <script>
       function myFunction() {
-  // Get the checkbox
-  var checkBox = document.getElementById("myCheck");
-  // Get the output text
-  var text = document.getElementById("text");
+        // Get the checkbox
+        var checkBox = document.getElementById("myCheck");
+        // Get the output text
+        var text = document.getElementById("text");
 
-  // If the checkbox is checked, display the output text
-  if (checkBox.checked == true){
-    text.style.display = "block";
-    $('#jabatan_baru').hide('fast')
-  } else {
-    text.style.display = "none";
-    $('#jabatan_baru').show('fast')
-  }
-}
-    </script>
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true){
+          text.style.display = "block";
+          $('#jabatan_baru').hide('fast')
+        } else {
+          text.style.display = "none";
+          $('#jabatan_baru').show('fast')
+        }
+      }
+      </script>
 
 
     <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
     <label for="jabatan_jenis">Nama Jabatan </label>
-    <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
+     <select class="form-control select2 nama_jab" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
                         <option value="" selected>Pilih Jabatan</option>
-                    </select> -->
-    <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
+                    </select>
+    <!-- <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
-    </select>
+    </select> -->
     </div>
+
+    <script>
+      
+       $("#jenis_fungsional").change(function() {
+      var id = $("#jabatan_jenis").val();
+      var skpd = $("#jabatan_unitkerja").val();
+      var jnsfung = $("#jenis_fungsional").val();
+     
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getdatajab",
+              method : "POST",
+              data : {id: id, skpd: skpd, jnsfung: jnsfung},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                        html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                      }
+                      $('.nama_jab').html(html);
+                          }
+                  });
+            });
+
+            $("#jabatan_jenis").change(function() {
+                var id = $("#jabatan_jenis").val();
+                var skpd = $("#jabatan_unitkerja").val();
+                var jnsfung = $("#jenis_fungsional").val();
+
+                if(id == "00"){
+                  $("#div_jf").hide('fast');
+                } else {
+                  $("#div_jf").show('fast');
+                }
+
+                $.ajax({
+                        url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getdatajab",
+                        method : "POST",
+                        data : {id: id, skpd: skpd, jnsfung: jnsfung},
+                        async : false,
+                        dataType : 'json',
+                        success: function(data){
+                        var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                }
+                                $('.nama_jab').html(html);
+                                    }
+                            });
+            });
+
+            $("#jabatan_unitkerja").change(function() {
+                var id = $("#jabatan_jenis").val();
+                var skpd = $("#jabatan_unitkerja").val();
+                var jnsfung = $("#jenis_fungsional").val();
+
+                if(id == "00"){
+                  $("#div_jf").hide('fast');
+                } else {
+                  $("#div_jf").show('fast');
+                }
+
+                $.ajax({
+                        url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getdatajab",
+                        method : "POST",
+                        data : {id: id, skpd: skpd, jnsfung: jnsfung},
+                        async : false,
+                        dataType : 'json',
+                        success: function(data){
+                        var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                }
+                                $('.nama_jab').html(html);
+                                    }
+                            });
+            });
+    </script>
     <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_jenis">Status Jabatan </label>
     <!-- <select id="jabatan_nama" name="jabatan_nama" class="form-control select2">
@@ -365,6 +456,7 @@ $(function(){
         var checkBox = document.getElementById("myCheck")
         var jabatan_lama = $('#jabatan_lama').val()
         var jabatan_nama = $('#jabatan_nama').val()
+       
         
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");

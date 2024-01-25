@@ -202,7 +202,7 @@
               <div class="row">
                 <div class="col-lg-6 text-left">
                   <?php if($result['id_m_status_pengajuan_cuti'] == 4 && !$result['url_sk']){ ?>
-                    <button onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button>
+                    <button type="button" onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button>
                     <button style="display: none;" id="button_ds_loader" disabled class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu... </button>
                   <?php } ?>
                 </div>
@@ -212,9 +212,10 @@
                   ($result['id_m_status_pengajuan_cuti'] == 1 && $this->general_library->isKepalaBkpsdm() && $this->general_library->getIdUnitKerjaPegawai() == $result['id_unitkerja'])){ ?> 
                     <button id="button_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan Verifikasi </button>
                     <button style="display: none;" id="button_submit_loader" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
-                  <?php } else if(($this->general_library->isKepalaPd() && $result['id_m_status_pengajuan_cuti'] == 2 && !$this->general_library->isKepalaBkpsdm()) || 
+                  <?php } else if(($this->general_library->isKepalaPd() && ($result['id_m_status_pengajuan_cuti'] == 2 || $result['id_m_status_pengajuan_cuti'] == 3) && !$this->general_library->isKepalaBkpsdm()) || 
                   ($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk'] == null && $this->general_library->isKepalaBkpsdm())){ ?>
-                    <button onclick="batalVerifikasi()" type="button" class="btn btn-danger"><i class="fa fa-times"></i> Batal Verifikasi </button>
+                    <button id="btn_batal_verif" onclick="batalVerifikasi()" type="button" class="btn btn-danger"><i class="fa fa-times"></i> Batal Verifikasi </button>
+                    <button style="display: none;" id="btn_batal_verif_loading" type="button" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
                   <?php } ?>
                 </div>
               </div>
@@ -264,6 +265,8 @@
   }
 
   function batalVerifikasi(){
+    $('#btn_batal_verif').hide()
+    $('#btn_batal_verif_loading').show()
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPermohonanCuti/")?>'+'<?=$result['id']?>',
       method:"POST",  
@@ -272,12 +275,16 @@
         let rs = JSON.parse(res)
         if(rs.code == 1){
           errortoast(rs.message)
+          $('#btn_batal_verif').show()
+          $('#btn_batal_verif_loading').hide()
         } else {
           successtoast('Pembatalan Verifikasi Berhasil')
           loadDetailCutiVerif('<?=$result["id"]?>')
         }
       }, error: function(err){
         errortoast('Terjadi Kesalahan')
+        $('#btn_batal_verif').show()
+        $('#btn_batal_verif_loading').hide()
       }
     })
   }

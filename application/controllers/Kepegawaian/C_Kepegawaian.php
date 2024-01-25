@@ -1339,7 +1339,8 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function deletePermohonanCuti($id){
-		$this->general->delete('id', $id, 't_pengajuan_cuti');
+		$this->kepegawaian->deletePermohonanCuti($id);
+		// $this->general->delete('id', $id, 't_pengajuan_cuti');
 	}
 
 	public function verifikasiPermohonanCuti(){
@@ -1394,7 +1395,10 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function saveVerifikasiPermohonanCuti($status, $id){
-		$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id);
+		$data['result'] = null;
+		if($status == 1 || $status == 0){
+			$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id);
+		}
 		// if($data['result']['code'] == 0 && $data['result']['data']['id_m_status_pengajuan_cuti'] == 2 && $status == 1){
 		// 	$path_file = 'arsipcuti/nods/CUTI_'.$data['result']['data']['nipbaru_ws'].'_'.date("Y", strtotime($data['result']['data']['created_date'])).'.pdf';
 		// 	// dd($path_file);

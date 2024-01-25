@@ -14,6 +14,15 @@ function render($pageContent, $parent_active, $active, $data)
     $CI->load->view('adminkit/base/V_BaseLayout', $data);
 }
 
+function renderVerifWhatsapp($pageContent, $parent_active, $active, $data)
+{
+    $CI = &get_instance();
+    $data['page_content'] = $pageContent;
+    $data['parent_active'] = $parent_active;
+    $data['active'] = $active;
+    $CI->load->view('adminkit/base/V_BaseLayoutVerifWhatsapp', $data);
+}
+
 function validateKey($arr_needed, $arr_request){
     foreach($arr_request as $ar){
         if(!array_key_exists($ar, $arr_needed)){
@@ -1314,4 +1323,26 @@ function numberToRoman($number) {
         }
     }
     return $returnValue;
+}
+
+function simpleEncrypt($string){
+    // $key = "SILADEN_KEY";
+    // $ciphering = "AES-128-CTR";
+    // $iv_length = openssl_cipher_iv_length($ciphering);
+    // $options = 0;
+    // $encryption_iv = '1234567891011121';
+    // $encryption_key = "W3docs";
+    // return openssl_encrypt($string, $ciphering, $encryption_key, $options, $encryption_iv);
+    return strtr(base64_encode($string), '+/=', '-_,');
+}
+
+function simpleDecrypt($decrypted){
+    // $key = "SILADEN_KEY";
+    // $ciphering = "AES-128-CTR";
+    // $iv_length = openssl_cipher_iv_length($ciphering);
+    // $options = 0;
+    // $decryption_iv = '1234567891011121';
+    // $decryption_key = "W3docs";
+    // return openssl_decrypt($decrypted, $ciphering, $decryption_key, $options, $decryption_iv);
+    return base64_decode(strtr($decrypted, '-_,', '+/='));
 }

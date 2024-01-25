@@ -268,13 +268,13 @@
 					margin-top: .35rem;"></i>
 			</span>
 		</a>
-		<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+		<!-- <ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 			<li class="sidebar-item ">
 				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
 			</li>
-		</ul>
+		</ul> -->
 	</li>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 

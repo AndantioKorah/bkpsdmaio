@@ -429,7 +429,8 @@ class General_library
     }
 
     public function getIdJabatan(){
-        return $this->userLoggedIn['jabatan'];
+        return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
+        // return $this->userLoggedIn['jabatan'];
     }
 
     public function isKepalaBkpsdm(){

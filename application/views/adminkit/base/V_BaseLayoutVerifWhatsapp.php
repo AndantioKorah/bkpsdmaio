@@ -140,7 +140,7 @@
 		</nav> -->
 
 		<div class="main">
-      <?php $this->load->view('adminkit/partials/V_NavBarVerifWHatsapp')?>      
+      <?php $this->load->view('adminkit/partials/V_NavBarVerifWhatsapp')?>      
 			
 		<main class="content">
             <?php (isset($page_content)) ? $this->load->view($page_content) : ''?>

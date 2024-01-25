@@ -4524,18 +4524,16 @@ public function submitEditJabatan(){
         $total_year = 3;
         $tahunIni = date('Y');
         $count = 0;
-        
         $this->db->trans_begin();
-
         if($data['id_cuti'] == "00"){
             for($i = $total_year-1; $i >= 0; $i--){
                 $tahun = $tahunIni - $i;
-                if($data['sisa_cuti'][$tahun] < $data['keterangan_cuti'][$tahun]){
+                if($data['sisa_cuti'][$tahun] < floatval($data['keterangan_cuti'][$tahun])){
                     $res['code'] = 1;
                     $res['message'] = "Keterangan Cuti tahun ".$tahun." melebihi Sisa Cuti";
                     break;
                 } else {
-                    $count += $data['keterangan_cuti'][$tahun];
+                    $count += floatval($data['keterangan_cuti'][$tahun]);
                     if($count > floatval($data['lama_cuti'])){
                         $res['code'] = 1;
                         $res['message'] = "Akumulasi Keterangan Cuti melebihi jumlah Lama Cuti";
@@ -4547,7 +4545,7 @@ public function submitEditJabatan(){
                     }
                 }
 
-                $new_sisa = $data['sisa_cuti'][$tahun] - $data['keterangan_cuti'][$tahun];
+                $new_sisa = $data['sisa_cuti'][$tahun] - floatval($data['keterangan_cuti'][$tahun]);
                 $this->db->where('id_m_user', $this->general_library->getId())
                         ->where('tahun', $tahun)
                         ->update('t_sisa_cuti', ['sisa' => $new_sisa]);
@@ -4636,7 +4634,7 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function deletePermohonanCuti($id){
+    public function deletePermohonanCuti($id, $flag_delete_record = 1){
         $res['code'] = 0;
         $res['message'] = 'OK';
         $res['data'] = null; 
@@ -4659,7 +4657,6 @@ public function submitEditJabatan(){
                 $meta_cuti[$lmc['tahun']] = $lmc;
             }
         // }
-
         $sisa_cuti = $this->db->select('*')
                             ->from('t_sisa_cuti')
                             ->where('id_m_user', $data['id_m_user'])
@@ -4670,16 +4667,18 @@ public function submitEditJabatan(){
                 $this->db->where('id', $sc['id'])
                         ->update('t_sisa_cuti', [
                             'sisa' => floatval($sc['sisa']) + floatval($meta_cuti[$sc['tahun']]['jumlah']),
-                            'updated_by' => $this->general_library->getId()
+                            'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                         ]);
             }
         // }
 
-        $this->db->where('id', $id)
-                ->update('t_pengajuan_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
+        if($flag_delete_record == 1){
+            $this->db->where('id', $id)
+                ->update('t_pengajuan_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        }
 
         $this->db->where('id_t_penggunaan_cuti', $id)
-                ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
+                ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -4939,7 +4938,7 @@ public function submitEditJabatan(){
             $meta = $this->db->select('a.*')
                         ->from('t_meta_cuti a')
                         ->where('a.id_t_penggunaan_cuti', $result['id'])
-                        ->where('flag_active', 1)
+                        // ->where('flag_active', 1)
                         ->order_by('tahun', 'desc')
                         ->get()->result_array();
             if($meta){
@@ -4969,8 +4968,10 @@ public function submitEditJabatan(){
                         ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
                         ->where('a.id', $id)
                         ->get()->row_array();
-                        
-        if($this->general_library->isKepalaBkpsdm() || $kepalabkpsdm == 1){
+
+        $res['data'] = $data;
+
+        if($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()){
             if($data['id_m_status_pengajuan_cuti'] != 2){
                 if($data['id_m_status_pengajuan_cuti'] == 1 && $data['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){
                     $update['id_m_status_pengajuan_cuti'] = $status == 0 ? 5 : 4;
@@ -4990,7 +4991,7 @@ public function submitEditJabatan(){
                 $update['tanggal_verifikasi_kepala_bkpsdm'] = date('Y-m-d H:i:s');
                 $update['keterangan_verifikasi_kepala_bkpsdm'] = $data_verif['keterangan_verif'];
             }
-        } else if($this->general_library->isKepalaPd() || $kepalapd == 1){
+        } else if($kepalapd == 1 || $this->general_library->isKepalaPd()){
             if($data['id_m_status_pengajuan_cuti'] != 1){
                 $res['code'] = 1;
                 $res['message'] = "Tidak bisa melakukan Verifikasi pada tahap ini";
@@ -5037,10 +5038,12 @@ public function submitEditJabatan(){
                 $this->maxchatlibrary->sendText($kepala_bkpsdm['handphone'], $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI, 0, 0);
             } else if($update['id_m_status_pengajuan_cuti'] == 3){ //ditolak atasan
                 $message_to_pegawai .= '*ditolak oleh Kepala PD* Anda dengan keterangan: *"'.$update['keterangan_verifikasi_atasan'].'"*';
+                $this->deletePermohonanCuti($id, 0);
             } else if($update['id_m_status_pengajuan_cuti'] == 4){ //diterima kepala bkpsdm dan menunggu DS
                 $message_to_pegawai .= 'telah *disetujui oleh Kepala BKPSDM* dan saat ini sedang menunggu untuk proses *DS (Digital Sign)*. Terima kasih.';
             } else if($update['id_m_status_pengajuan_cuti'] == 5){ //ditolak oleh kepala BKPSDM
                 $message_to_pegawai .= '*ditolak oleh Kepala BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*';
+                $this->deletePermohonanCuti($id, 0);
             }
             $this->maxchatlibrary->sendText($send_to_pegawai, $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
 
@@ -5057,9 +5060,10 @@ public function submitEditJabatan(){
     public function batalVerifikasiPermohonanCuti($id, $kepalapd = 0, $kepalabkpsdm = 0){
         $res['code'] = 0;
         $res['message'] = 'ok';
+        $flag_kurang_jatah_cuti = 0;
 
         $result = $this->db->select('a.*, b.nm_cuti, d.handphone, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
-                        f.nama_jabatan, g.nm_unitkerja, g.id_unitkerja')
+                        f.nama_jabatan, g.nm_unitkerja, g.id_unitkerja, c.id as id_m_user')
                         ->from('t_pengajuan_cuti a')
                         ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
                         ->join('m_user c', 'c.id = a.id_m_user')
@@ -5070,7 +5074,7 @@ public function submitEditJabatan(){
                         ->where('a.id', $id)
                         ->get()->row_array();
                         
-        $message_to_pegawai = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($result)."\nMohon maaf, Verifikasi Permohonan Pengajuan ".$result['nm_cuti']." Anda telah dibatalkan oleh ";
+        $message_to_pegawai = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($result)."\nVerifikasi Permohonan Pengajuan ".$result['nm_cuti']." Anda telah dibatalkan oleh ";
 
         // $result = $this->db->select('*')
         //                 ->from('t_pengajuan_cuti')
@@ -5084,6 +5088,9 @@ public function submitEditJabatan(){
                 $update['tanggal_verifikasi_kepala_bkpsdm'] = null;
                 $update['keterangan_verifikasi_kepala_bkpsdm'] = "Pembatalan Verifikasi";
                 $message_to_pegawai .= "*Kepala BKPSDM*";
+                if($result['id_m_status_pengajuan_cuti'] == 5){
+                    $flag_kurang_jatah_cuti = 1;
+                }
             } else {
                 $res['code'] = 1;
                 $res['message'] = 'Pembatalan Verifikasi tidak dapat dilakukan pada tahap ini';
@@ -5095,6 +5102,9 @@ public function submitEditJabatan(){
                 $update['tanggal_verifikasi_atasan'] = null;
                 $update['keterangan_verifikasi_atasan'] = "Pembatalan Verifikasi";
                 $message_to_pegawai .= "*Kepala PD Anda*";
+                if($result['id_m_status_pengajuan_cuti'] == 5){
+                    $flag_kurang_jatah_cuti = 1;
+                }
             } else {
                 $res['code'] = 1;
                 $res['message'] = 'Pembatalan Verifikasi tidak dapat dilakukan pada tahap ini';
@@ -5102,6 +5112,32 @@ public function submitEditJabatan(){
         }
 
         if($res['code'] == 0){
+            if($flag_kurang_jatah_cuti == 1){
+                $list_meta_cuti = null;
+                $meta_cuti = $this->db->select('*')
+                                ->from('t_meta_cuti')
+                                ->where('id_t_penggunaan_cuti', $id)
+                                ->get()->result_array();
+
+                $list_sisa_cuti = null;
+                $sisa_cuti = $this->db->select('*')
+                                ->from('t_sisa_cuti')
+                                ->where('id_m_user', $result['id_m_user'])
+                                ->get()->result_array();
+
+                foreach($sisa_cuti as $sc){
+                    $list_sisa_cuti[$sc['tahun']] = $sc;
+                }
+
+                foreach($meta_cuti as $mc){
+                    $new_sisa_cuti = floatval($list_sisa_cuti[$mc['tahun']]['sisa']) - floatval($mc['jumlah']);
+                    $this->db->where('id', $list_sisa_cuti[$mc['tahun']]['id'])
+                                ->update('t_sisa_cuti', [
+                                    'sisa' => $new_sisa_cuti
+                                ]);
+                }
+            }
+
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', $update);
 
@@ -5168,7 +5204,7 @@ public function submitEditJabatan(){
             $mpdf->showImageErrors = true;
             $mpdf->Output($path_file, 'F');
 
-            $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+            $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
             $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
 
             $this->db->where('id', $id)
@@ -5188,8 +5224,8 @@ public function submitEditJabatan(){
             //simpan di dokumen pendukung agar tersinkron dengan rekap absen
             $dokumen_pendukung = null;
             $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
-            $i = 0;
             if($hariKerja){
+                $i = 0;
                 foreach($hariKerja[2] as $h){
                     $explode = explode("-", $h);
                     $dokumen_pendukung[$i] = [
@@ -5208,6 +5244,7 @@ public function submitEditJabatan(){
                         'url_outside' => $path_file,
                         'created_by' => $kepala_bkpsdm['id_m_user']
                     ];
+                    $i++;
                 }
             }
 

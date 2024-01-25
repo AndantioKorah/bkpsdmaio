@@ -149,7 +149,7 @@
       </div>
       <div class="row mt-2">
         <hr>
-        <h5>REKAP ABSENSI 3 BULAN TERAKHIR</h5>
+        <h5>REKAP ABSENSI 3 (TIGA) BULAN TERAKHIR</h5>
         <div class="col-lg-12">
           <div class="row">
             <?php

@@ -30,7 +30,9 @@ class C_VerifWhatsapp extends CI_Controller
 	}
 
 	public function saveVerifikasiPermohonanCuti($status, $id, $kepalapd = 0, $kepalabkpsdm = 0){
-		$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id, $kepalapd, $kepalabkpsdm);
+		if($status == 1 || $status == 0){
+			$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id, $kepalapd, $kepalabkpsdm);
+		}
 		echo json_encode($data['result']);
 	}
 

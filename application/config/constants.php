@@ -168,3 +168,5 @@ define('CHART_COLORS', ["#deb887", "#00ffff", "#ff0000", "#5f9ea0", "#bdb76b", "
 define('URL_FILE', 'http://localhost/bkpsdmaio/arsipelektronik/');
 define('GROUP_CHAT_HELPDESK', '120363161928273333');
 define('WA_BOT', '62895355011333');
+
+define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");

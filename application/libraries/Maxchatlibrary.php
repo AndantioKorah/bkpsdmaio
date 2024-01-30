@@ -44,7 +44,7 @@ class Maxchatlibrary{
         return $this->postCurl($url, $data);
     }
 
-    function sendText($to, $text, $replyId = "0") {
+    function sendText($to, $text, $replyId = "0", $flag_no_feedback = 0) {
         // kirim pesan ke kontak yang sudah disimpan
         $url = $this->API_URL . "/messages";
 
@@ -63,7 +63,11 @@ class Maxchatlibrary{
             );
         }
 
-        return $this->postCurl($url, $data);
+        $resp = $this->postCurl($url, $data);
+
+        if($flag_no_feedback == 1){
+            return $resp;
+        }
     }
 
     function pushText($to, $text) {
@@ -156,6 +160,32 @@ class Maxchatlibrary{
         return $response;
     }
 
+    function sendDocument($to, $fileurl, $filename, $caption) {
+        // jika kontak belum dikenali pakai "/api/messages/push/file"
+        $url = $this->API_URL . "/messages";
+        
+        $data = array(
+            "to" => $to,
+            'type' => 'document',
+            "caption" => $caption,
+            // "file" => fileToBase64($fileurl),
+            "url" => ("http://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $fileurl)),
+            // "url" => (base_url().str_replace(' ', '%20', $fileurl)),
+            "fileName" => $filename,
+            "useTyping" => true
+        );
+
+        $response = $this->postCurl($url, $data);
+
+        $this->maxchat->general->insert('t_log_maxchat', [
+            'url' => $url,
+            'request' => json_encode($data),
+            'response' => ($response),
+        ]);
+
+        return $response;
+    }
+
     function sendLink($to, $text, $url) {
         // jika kontak belum dikenali pakai "/api/messages/push/link"
         $url = $this->API_URL . "/messages/link";
@@ -206,10 +236,10 @@ class Maxchatlibrary{
         ]);
 
         if ($err) {
-        echo "cURL Error #:" . $err;
+        // echo "cURL Error #:" . $err;
         return $err;
         } else {
-        echo $response;
+        // echo $response;
         return $response;
         }
     }

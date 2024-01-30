@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer" style="height: 10vh;">
 	<div class="container-fluid">
 		<div class="row text-muted">
 			<div class="col-6 text-start">

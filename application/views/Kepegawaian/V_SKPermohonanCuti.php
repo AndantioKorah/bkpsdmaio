@@ -146,15 +146,15 @@
           <table>
             <tr>
               <td>a.</td>
-              <td>Sebelum menjalankan cuti tahunan wajib menyerahkan pekerjaannya kepada atasan langsung atau pejabat lain yang ditunjuk.</td>
+              <td>Sebelum menjalankan <?=strtolower($rs['nm_cuti'])?> wajib menyerahkan pekerjaannya kepada atasan langsung atau pejabat lain yang ditunjuk.</td>
             </tr>
             <tr>
               <td>b.</td>
-              <td>Setelah selesai menjalankan cuti tahunan wajib melaporkan diri kepada atasan langsung dan bekerja kembali sebagaimana biasanya</td>
+              <td>Setelah selesai menjalankan <?=strtolower($rs['nm_cuti'])?> wajib melaporkan diri kepada atasan langsung dan bekerja kembali sebagaimana biasanya</td>
             </tr>
           </table>
           <br>
-          Demikian surat izin cuti tahunan ini dibuat untuk digunakan sebagaimana mestinya.
+          Demikian surat izin <?=strtolower($rs['nm_cuti'])?> ini dibuat untuk digunakan sebagaimana mestinya.
           <br>
           <br>
           <table style="width: 100%;">

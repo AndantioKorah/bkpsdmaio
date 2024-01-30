@@ -160,15 +160,19 @@ class C_Maxchat extends CI_Controller
                         } else {
                             if(is_numeric($explode[2]) && is_numeric($explode[3])){
                                 if(checkIfValidDate($explode[2], $explode[3])){
-                                    $data_cron = [
-                                        'id_unitkerja' => $pegawai_simpeg['skpd'],
-                                        'no_hp' => $result->from,
-                                        'bulan' => clearString($explode[2]),
-                                        'tahun' => clearString($explode[3]),
-                                        'created_by' => $aksespegawai['id_m_user']
-                                    ];
-                                    $this->rekap->saveToCronRekapAbsen($data_cron);
-                                    $this->rekap->cronRekapAbsen();
+                                    if($pegawai_simpeg['skpd'] == 3027000){
+                                        $reply = "Mohon maaf, untuk sementara absensi Dinas Kebakaran belum bisa ditarik secara otomatis dari sistem. Silahkan menghubungi BKPSDM untuk melakukan penarikan absen secara manual.";
+                                    } else {
+                                        $data_cron = [
+                                            'id_unitkerja' => $pegawai_simpeg['skpd'],
+                                            'no_hp' => $result->from,
+                                            'bulan' => clearString($explode[2]),
+                                            'tahun' => clearString($explode[3]),
+                                            'created_by' => $aksespegawai['id_m_user']
+                                        ];
+                                        $this->rekap->saveToCronRekapAbsen($data_cron);
+                                        $this->rekap->cronRekapAbsen();
+                                    }
                                 } else {
                                     $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati Bulan dan Tahun berjalan.";
                                 }
@@ -243,6 +247,10 @@ class C_Maxchat extends CI_Controller
         $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
         $aksespegawai = $this->m_user->cekAksesPegawaiRekapAbsen($pegawai_simpeg['nipbaru_ws']);
         dd($aksespegawai);
+    }
+
+    public function runCronRekapAbsen(){
+        $this->rekap->cronRekapAbsen(1);
     }
 
 }

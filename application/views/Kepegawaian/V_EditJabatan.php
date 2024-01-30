@@ -43,7 +43,7 @@
 
   <div class="form-group" style="margin-bottom:10px !important;">
     <label >Eselon </label>
-    <select class="form-control select2"  data-dropdown-css-class="select2-navy" name="edit_jabatan_eselon" id="edit_jabatan_eselon" >
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan"  data-dropdown-css-class="select2-navy" name="edit_jabatan_eselon" id="edit_jabatan_eselon" >
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($eselon){ foreach($eselon as $r){ ?>
                         <option <?php if($jabatan[0]['eselon'] == $r['id_eselon']) echo "selected"; else echo ""; ?>  value="<?=$r['id_eselon']?>"><?=$r['nm_eselon']?></option>

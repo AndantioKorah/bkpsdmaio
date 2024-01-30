@@ -1129,6 +1129,8 @@
                 setTimeout(LoadFormInovasi, 1500);
                 } else if(jb == "tim_kerja"){
                 setTimeout(LoadFormTimKerja, 1500);
+                } else if(jb == "disiplin"){
+                setTimeout(loadFormDisiplin, 1500);
                 }
               } else {
                 errortoast(result.msg)
@@ -1417,6 +1419,14 @@
   $('#form_berkaspns').html(' ')
     $('#form_berkaspns').append(divLoaderNavy)
     $('#form_berkaspns').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormBerkasPns/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormDisiplin(){
+  $('#form_disipilin').html(' ')
+    $('#form_disipilin').append(divLoaderNavy)
+    $('#form_disipilin').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormDisiplin/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

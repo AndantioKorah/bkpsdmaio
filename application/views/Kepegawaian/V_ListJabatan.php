@@ -60,6 +60,7 @@
               <div class="btn-group" role="group" aria-label="Basic example">
 
                 <?php if($rs['status'] == 1) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -67,6 +68,7 @@
                 data-tmt_jabatan="<?=$rs['tmtjabatan']?>"
                 href="#modal_edit_jabatan"
                 onclick="loadEditJabatan('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                <?php } ?>
                 <?php } ?>
 
                 <?php if($kode == 1) { ?>
@@ -83,7 +85,7 @@
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-                </div>
+              </div>
                 </td>
                 <?php } ?>
                 <?php } ?>
@@ -94,8 +96,10 @@
               <td>
              
               <?php if($rs['status'] == 1) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-               <?php } ?>
+              <?php } ?> 
+              <?php } ?>
               </td>
               <?php } ?>
             </tr>

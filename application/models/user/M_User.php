@@ -1971,11 +1971,11 @@
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
                     ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
-                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
+                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
                     ->order_by('c.eselon, a.nama');
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);

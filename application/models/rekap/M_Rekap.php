@@ -1901,7 +1901,7 @@
             $this->db->select('a.*')
                     ->from('db_pegawai.'.$mst['table'].' a')
                     ->where('flag_active', 1)
-                    ->where('a.status', 2)
+                    // ->where('a.status', 2)
                     ->where('a.id_m_user_verif !=', 0);
             if(!isset($data['all'])){
                 $this->db->where('DATE(a.tanggal_verif) >=', $tanggal[0])

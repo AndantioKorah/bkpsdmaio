@@ -76,7 +76,7 @@
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
-                        ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon')
+                        ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon', 'left')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
                         ->where('id_m_status_pegawai', 1)

@@ -5404,6 +5404,7 @@ public function submitEditJabatan(){
         
             $getJabatan = $this->db->select('*')
             ->from('db_pegawai.pegjabatan a')
+            ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
             ->where('a.id_pegawai', $id_peg)
             ->where_in('a.flag_active', [1,2])
             // ->where('a.statusjabatan !=', 2)
@@ -5412,8 +5413,7 @@ public function submitEditJabatan(){
             ->order_by('tmtjabatan', 'desc')
             ->limit(1)
             ->get()->row_array();
-            // dd($getJabatan);
-
+        
             if($getJabatan) {
             if($getJabatan['id_unitkerja']){
                 $dataUpdate["skpd"] =  $getJabatan['id_unitkerja'];

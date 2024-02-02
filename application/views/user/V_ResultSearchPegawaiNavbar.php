@@ -27,7 +27,27 @@
     if($result_pegawai){
 ?>
     <div class="p-0">
-        <?php $i = 0; foreach($result_pegawai as $rs){ ?>
+        <?php $i = 0; foreach($result_pegawai as $rs){
+            $badge_status = 'badge-cpns';
+            if($rs['statuspeg'] == 2){
+              $badge_status = 'badge-pns';
+            } else if($rs['statuspeg'] == 3){
+              $badge_status = 'badge-pppk';
+            }
+
+            $badge_aktif = 'badge-aktif';
+            if($rs['id_m_status_pegawai'] == 2){
+              $badge_aktif = 'badge-pensiun-bup';
+            } else if($rs['id_m_status_pegawai'] == 3){
+              $badge_aktif = 'badge-pensiun-dini';
+            } else if($rs['id_m_status_pegawai'] == 4){
+              $badge_aktif = 'badge-diberhentikan';
+            } else if($rs['id_m_status_pegawai'] == 5){
+              $badge_aktif = 'badge-mutasi';
+            } else if($rs['id_m_status_pegawai'] == 6){
+              $badge_aktif = 'badge-meninggal';
+            }
+        ?>
             <div onclick="openProfilePegawai('<?=$rs['username']?>')" class="col_result col-lg-12">
                 <div class="row" style="line-height: 1rem;">
                     <div class="col-md-3 col-sm-3 col-lg-3 my-auto align-self-center">
@@ -54,7 +74,9 @@
                     </div>
                     <div class="col-md-9 col-sm-9 col-lg-9 my-auto align-self-center" style="margin-left: -10px; text-align: left;">
                         <span style="font-size: .85rem; font-weight: bold;"><?=($rs['nama'])?></span><br>
-                        <span style="font-size: .70rem; font-weight: bold;">NIP. <?=formatNip($rs['username'])?></span>
+                        <span style="font-size: .70rem; font-weight: bold;">NIP. <?=formatNip($rs['username'])?></span><br>
+                        <span class="badge <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>&nbsp;
+                        <span class="badge <?=$badge_aktif?>"><?=$rs['nama_status_pegawai']?>
                     </div>
                 </div>
             </div>

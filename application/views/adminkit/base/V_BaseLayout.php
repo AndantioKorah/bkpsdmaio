@@ -59,8 +59,79 @@
 
     :root{
       --primary-color: #222e3c;
+      --badge-pppk-color: #efa304;
+      --badge-cpns-color: #990000;
+      --badge-pns-color: #222e3c;
+      --badge-aktif-color: #22a74a;
+      --badge-pensiun-bup-color: #9c22a7;
+      --badge-pensiun-dini-color: #a6a722;
+      --badge-diberhentikan-color: #b1220f;
+      --badge-mutasi-color: #0fb1ab;
+      --badge-meninggal-color: #000000;
     }
 
+    .badge-pppk{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pppk-color);
+      border: 2px solid var(--badge-pppk-color);
+      color: white;
+    }
+
+    .badge-cpns{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-cpns-color);
+      border: 2px solid var(--badge-cpns-color);
+      color: white;
+    }
+
+    .badge-pns{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pns-color);
+      border: 2px solid var(--badge-pns-color);
+      color: white;
+    }
+
+    .badge-aktif{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-aktif-color);
+      border: 2px solid var(--badge-aktif-color);
+      color: white;
+    }
+
+    .badge-pensiun-bup{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pensiun-bup-color);
+      border: 2px solid var(--badge-pensiun-bup-color);
+      color: white;
+    }
+
+    .badge-pensiun-dini{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pensiun-dini-color);
+      border: 2px solid var(--badge-pensiun-dini-color);
+      color: white;
+    }
+
+    .badge-diberhentikan{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-diberhentikan-color);
+      border: 2px solid var(--badge-diberhentikan-color);
+      color: white;
+    }
+
+    .badge-mutasi{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-mutasi-color);
+      border: 2px solid var(--badge-mutasi-color);
+      color: white;
+    }
+
+    .badge-meninggal{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-meninggal-color);
+      border: 2px solid var(--badge-meninggal-color);
+      color: white;
+    }
     .progress {
       --bs-progress-height: 1rem;
       --bs-progress-font-size: 0.65625rem;

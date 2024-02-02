@@ -97,7 +97,11 @@ class C_Dashboard extends CI_Controller
     }
 
     public function dashboardPdm(){
-        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        if(isKasubKepegawaian($this->general_library->getNamaJabatan())){
+            $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+        } else {
+            $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        }
         render('dashboard/V_DashboardPdm', '', '', $data);
     }
 

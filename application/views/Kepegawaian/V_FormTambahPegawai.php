@@ -272,7 +272,7 @@
          
     </div>
    
-      <button class="btn btn-block btn-primary float-right"><i class="fa fa-save"></i> SIMPAN</button>
+      <button class="btn btn-block btn-primary float-right" id="btn_tambah_pegawai"><i class="fa fa-save"></i> SIMPAN</button>
     </form>
     </div>
     </div>
@@ -302,6 +302,10 @@ $('#form_profil').on('submit', function(e){
   var base_url = "<?= base_url();?>"
      
         e.preventDefault();
+
+        document.getElementById('btn_tambah_pegawai').disabled = true;
+        $('#btn_tambah_pegawai').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
         $.ajax({
             url: '<?=base_url("kepegawaian/C_Kepegawaian/tambahPegawai")?>',
             method: 'post',

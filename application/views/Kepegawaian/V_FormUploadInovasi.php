@@ -13,7 +13,7 @@
   Tambah Data Inovasi
 </button>
 
-<button onclick="loadRiwayatUsulInovasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
+<button onclick="loadRiwayatUsulInovasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalInovasi">
   Riwayat Usul Inovasi
 </button>
 
@@ -56,7 +56,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 }
    
 </style>
-<div class="modal fade" id="myModalTimKerja">
+<div class="modal fade" id="myModalInovasi">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">

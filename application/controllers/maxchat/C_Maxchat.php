@@ -61,7 +61,7 @@ class C_Maxchat extends CI_Controller
             $response['to'] = $sendTo;
             $response['log'] = $log;
     
-            $this->general->saveLogWebhook(json_encode($result), json_encode($response));
+            // $this->general->saveLogWebhook(json_encode($result), json_encode($response));
         }
     }
 
@@ -218,7 +218,7 @@ class C_Maxchat extends CI_Controller
         $response['to'] = $sendTo;
         $response['log'] = $log;
 
-        $this->general->saveLogWebhook(json_encode($result), json_encode($response));
+        // $this->general->saveLogWebhook(json_encode($result), json_encode($response));
     }
 
     public function sendMessage($id){

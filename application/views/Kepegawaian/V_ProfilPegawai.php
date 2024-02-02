@@ -680,7 +680,7 @@
                 <button onclick="loadFormAssesment()" class="nav-link nav-link-profile" id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Hasil Assesment</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS & PNS</button>
+                <button onclick="loadFormBerkasPns()" class="nav-link nav-link-profile" id="pills-berkaspns-tab" data-bs-toggle="pill" data-bs-target="#pills-berkaspns" type="button" role="tab" aria-controls="pills-berkaspns" aria-selected="false">SK CPNS, PNS & PPPK</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormTimKerja()" class="nav-link nav-link-profile" id="pills-tk-tab" data-bs-toggle="pill" data-bs-target="#pills-tk" type="button" role="tab" aria-controls="pills-tk" aria-selected="false">Tim Kerja</button>
@@ -948,6 +948,7 @@
   <label for="exampleInputPassword1" class="form-label">Bidang/Bagian</label>
     <select class="form-control select2" data-dropdown-parent="#staticBackdrop" data-dropdown-css-class="select2-navy" name="id_m_bidang" id="id_m_bidang" required>
                     <option value="" disabled selected>Pilih Item</option>
+                    <option value="0">-</option>
                     <?php if($mbidang){ foreach($mbidang as $r){ ?>
                         <option  value="<?=$r['id']?>"><?=$r['nama_bidang']?></option>
                     <?php } } ?>
@@ -1168,7 +1169,16 @@
   $('.datepickeronly').datepicker({
           format: 'yyyy-mm-dd'
         });
+
+  var bidang = $('#bidangPegawai').val()
+  if(bidang == ""){
+  $('#btnstatic').click()  
+  }
+
+
   })
+
+
 
  function loadDrh(nip){
   $('#modal_drh_content').html('')

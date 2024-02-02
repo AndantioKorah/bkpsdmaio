@@ -222,7 +222,7 @@
                 $rs['master'][$m['singkatan']]['progress']['total'] = 0;
             }
 
-            if($data['unitkerja'] != 0){
+            if(isset($data['unitkerja']) && $data['unitkerja'] != 0){
                 $bidang = $this->db->select('*')
                             ->from('m_bidang')
                             ->where('id_unitkerja', $data['unitkerja'])

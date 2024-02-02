@@ -176,8 +176,7 @@
 			</ul>
 		</li>
 		<?php } ?>
-	<?php // if($this->general_library->isProrgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
-		<?php if(!$this->general_library->isWalikota()) { ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
 		<li class="sidebar-item ">
 			<a title="Manajemen User" data-bs-target="#user-management" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-users"></i> 
@@ -208,8 +207,7 @@
 				</li>
 			</ul>
 		</li>
-		<?php } ?>
-	<?php // } ?>
+	<?php } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian
@@ -237,17 +235,22 @@
 			</a>
 		</li>
 	<?php } ?>
-	<?php if($this->general_library->isProgrammer() 
-	|| $this->general_library->isAdminAplikasi() 
-	// || $this->general_library->isWalikota() 
-	// || $this->general_library->isWakilWalikota()
-	){ ?>
+	<?php
+		// if($this->general_library->isProgrammer() 
+		// || $this->general_library->isAdminAplikasi() 
+		// || $this->general_library->isWalikota() 
+		// // || $this->general_library->isWakilWalikota()
+		// || isKasubKepegawaian($this->general_library->getNamaJabatan())
+		// ){ 
+	?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>pdm/dashboard">
 				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
 			</a>
 		</li>
-	<?php } ?>
+	<?php
+		// }
+	?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a class="sidebar-link" href="#">

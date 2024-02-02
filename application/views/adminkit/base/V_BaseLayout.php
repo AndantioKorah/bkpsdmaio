@@ -68,6 +68,7 @@
       --badge-diberhentikan-color: #b1220f;
       --badge-mutasi-color: #0fb1ab;
       --badge-meninggal-color: #000000;
+      --badge-tidak-aktif-color: #000000;
     }
 
     .badge-pppk{
@@ -132,6 +133,14 @@
       border: 2px solid var(--badge-meninggal-color);
       color: white;
     }
+
+    .badge-tidak-aktif{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-meninggal-color);
+      border: 2px solid var(--badge-meninggal-color);
+      color: white;
+    }
+
     .progress {
       --bs-progress-height: 1rem;
       --bs-progress-font-size: 0.65625rem;

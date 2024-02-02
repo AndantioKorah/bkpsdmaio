@@ -73,6 +73,7 @@
                                 ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
                                 ->like('a.nama', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();
@@ -85,6 +86,7 @@
                                 ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
                                 ->like('a.username', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();

@@ -46,7 +46,9 @@
               $badge_aktif = 'badge-mutasi';
             } else if($rs['id_m_status_pegawai'] == 6){
               $badge_aktif = 'badge-meninggal';
-            }
+            } else if($rs['id_m_status_pegawai'] == 8){
+                $badge_aktif = 'badge-tidak-aktif';
+              }
         ?>
             <div onclick="openProfilePegawai('<?=$rs['username']?>')" class="col_result col-lg-12">
                 <div class="row" style="line-height: 1rem;">

@@ -438,4 +438,10 @@ class C_Rekap extends CI_Controller
         $data['result'] = $this->rekap->searchRekapVerifPdm($this->input->post());
         $this->load->view('kepegawaian/V_RekapVerifikasiPdmResult', $data);
     }
+
+    public function rekapPegawaiPerjabatan($unitkerja = 0){
+        $data['result'] = $this->rekap->rekapPegawaiPerjabatan($unitkerja);
+        // $this->load->view('kepegawaian/V_RekapPegawaiPerJabatan', $data);
+        render('kepegawaian/V_RekapPegawaiPerJabatan', '', '', $data);
+    }
 }

@@ -45,24 +45,26 @@
         </thead>
         <tbody>
             <?php if($result){ $no=1; foreach($result as $rs){
-                $badge_status = 'badge-cpns';
+                    $badge_status = 'badge-cpns';
                 if($rs['statuspeg'] == 2){
-                $badge_status = 'badge-pns';
+                    $badge_status = 'badge-pns';
                 } else if($rs['statuspeg'] == 3){
-                $badge_status = 'badge-pppk';
+                    $badge_status = 'badge-pppk';
                 }
 
                 $badge_aktif = 'badge-aktif';
                 if($rs['id_m_status_pegawai'] == 2){
-                $badge_aktif = 'badge-pensiun-bup';
+                    $badge_aktif = 'badge-pensiun-bup';
                 } else if($rs['id_m_status_pegawai'] == 3){
-                $badge_aktif = 'badge-pensiun-dini';
+                    $badge_aktif = 'badge-pensiun-dini';
                 } else if($rs['id_m_status_pegawai'] == 4){
-                $badge_aktif = 'badge-diberhentikan';
+                    $badge_aktif = 'badge-diberhentikan';
                 } else if($rs['id_m_status_pegawai'] == 5){
-                $badge_aktif = 'badge-mutasi';
+                    $badge_aktif = 'badge-mutasi';
                 } else if($rs['id_m_status_pegawai'] == 6){
-                $badge_aktif = 'badge-meninggal';
+                    $badge_aktif = 'badge-meninggal';
+                } else if($rs['id_m_status_pegawai'] == 8){
+                    $badge_aktif = 'badge-tidak-aktif';
                 }
             ?>
                 <tr>

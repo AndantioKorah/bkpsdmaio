@@ -405,7 +405,7 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
                     ->where('a.statuspeg', 2)
-                    // ->where('id_m_status_pegawai', 1)
+                    // ->where('id_m_status_pegawai', 2)
                     ->group_by('a.nipbaru_ws')
                     ->order_by('c.eselon');
 
@@ -467,16 +467,18 @@
                                 $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $umur;
-                                // if($d['nipbaru_ws'] == '196212131986032013'){
-                                    // dd($temp);
+                                // if($d['nipbaru_ws'] == '196501271985022001'){
+                                    // $temp['umur'] .= '  '.$crit;
+                                    // dd($crit);
                                 // }
-                                // dd(date("Y-m-d", strtotime($temp['tmt_pensiun'])) < date("Y-m-d"));
-                                if(date("Y-m-d", strtotime($temp['tmt_pensiun'])) < date("Y-m-d")){
-                                    // dd($temp);
-                                    // $temp['umur'] .= 'ssss';
+                                // if(date("Y-m-d", strtotime($temp['tmt_pensiun'])) < date("Y-m-d")){
+                                if($crit == 5 && $d['jenis_jabatan'] == 'JFT'){
+                                    // $temp['umur'] = "harusnya belum";
+                                //     // dd($temp);
+                                //     // $temp['umur'] .= 'ssss';
                                     // $this->db->where('nipbaru_ws', $temp['nipbaru_ws'])
                                     //     ->update('db_pegawai.pegawai', [
-                                    //         'id_m_status_pegawai' => 2
+                                    //         'id_m_status_pegawai' => 1
                                     //     ]);
                                 }
                                 if($explode[0] == $data['tahun']){

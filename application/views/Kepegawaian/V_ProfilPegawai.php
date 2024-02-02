@@ -170,6 +170,8 @@
                   $badge_aktif = 'badge-mutasi';
                 } else if($profil_pegawai['id_m_status_pegawai'] == 6){
                   $badge_aktif = 'badge-meninggal';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 8){
+                  $badge_aktif = 'badge-tidak-aktif';
                 }
               ?>
               <div class="col-lg-6 col-md-6 col-sm-6 text-left">

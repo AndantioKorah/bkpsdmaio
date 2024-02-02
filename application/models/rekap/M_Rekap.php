@@ -1944,5 +1944,83 @@
         usort($result, "cmp");
         return $result;
     }
+
+    public function rekapPegawaiPerjabatan($id_unitkerja){
+        $result = null;
+        $this->db->select('*')
+                ->from('db_pegawai.unitkerja')
+                ->where('id_unitkerja != ',0)
+                ->order_by('nm_unitkerja');
+        if($id_unitkerja != 0){
+            $this->db->where('id_unitkerja', $id_unitkerja);
+        }
+        $unitkerja = $this->db->get()->result_array();
+
+        foreach($unitkerja as $u){
+            $result[$u['id_unitkerja']] = $u;
+            $result[$u['id_unitkerja']]['nm_unikeraj'] = $u['nm_unitkerja'];
+            $result[$u['id_unitkerja']]['eselon_2'] = 0;
+            $result[$u['id_unitkerja']]['eselon_3'] = 0;
+            $result[$u['id_unitkerja']]['eselon_4'] = 0;
+            $result[$u['id_unitkerja']]['jf_utama'] = 0;
+            $result[$u['id_unitkerja']]['jf_madya'] = 0;
+            $result[$u['id_unitkerja']]['jf_muda'] = 0;
+            $result[$u['id_unitkerja']]['jf_pertama'] = 0;
+            $result[$u['id_unitkerja']]['jf_terampil'] = 0;
+            $result[$u['id_unitkerja']]['pelaksana'] = 0;
+            $result[$u['id_unitkerja']]['total'] = 0;
+            $result[$u['id_unitkerja']]['anonym'] = null;
+        }
+
+        $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai,
+                    h.nama_status_pegawai, f.nm_statuspeg, b.id_unitkerja, c.jenis_jabatan, e.id_pangkat, a.statuspeg')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
+                    ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
+                    ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
+                    ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('a.statuspeg', 2)
+                    ->where('b.id_unitkerja !=', 5)
+                    ->order_by('c.eselon, a.nama');
+        if($id_unitkerja != 0){
+            $this->db->where('a.skpd', $id_unitkerja);
+        }
+        $list_pegawai = $this->db->get()->result_array();
+
+        foreach($list_pegawai as $l){
+            $result[$l['id_unitkerja']]['total']++;
+            if($l['eselon'] == "II A" || $l['eselon'] == "II B"){
+                $result[$l['id_unitkerja']]['eselon_2']++;
+            } else if($l['eselon'] == "III A" || $l['eselon'] == "III B"){
+                $result[$l['id_unitkerja']]['eselon_3']++;
+            } else if($l['eselon'] == "IV A" || $l['eselon'] == "IV B"){
+                $result[$l['id_unitkerja']]['eselon_4']++;
+            } else if($l['jenis_jabatan'] == "JFT"){
+                if($l['id_pangkat'] == 45 || $l['id_pangkat'] == 44){
+                    $result[$l['id_unitkerja']]['jf_utama']++;
+                } else if($l['id_pangkat'] == 43 || $l['id_pangkat'] == 42 || $l['id_pangkat'] == 41){
+                    $result[$l['id_unitkerja']]['jf_madya']++;
+                } else if($l['id_pangkat'] == 34 || $l['id_pangkat'] == 33){
+                    $result[$l['id_unitkerja']]['jf_muda']++;
+                } else if($l['id_pangkat'] == 32 || $l['id_pangkat'] == 31){
+                    $result[$l['id_unitkerja']]['jf_pertama']++;
+                } else if($l['id_pangkat'] == 24 || $l['id_pangkat'] == 23){
+                    $result[$l['id_unitkerja']]['jf_terampil']++;
+                }
+            } else if($l['jenis_jabatan'] == "JFU"){
+                $result[$l['id_unitkerja']]['pelaksana']++;
+            } else {
+                // dd($l);
+                $result[$l['id_unitkerja']]['anonym'][] = $l;
+            }
+        }
+
+        return $result;
+    }
 }
 ?>

@@ -165,7 +165,7 @@
       <label> Kabupaten/Kota  </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kab_kota" id="edit_kab_kota" required>     
+      <select  class="form-control select2" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kab_kota" id="edit_kab_kota" >     
       <option value="" disabled selected>Pilih Kabupaten/Kota</option>
                     <?php if($kabkota){ foreach($kabkota as $r){ ?>
                         <option <?php if($profil_pegawai['id_m_kabupaten_kota'] == $r['id']) echo "selected"; else echo ""; ?>   value="<?=$r['id']?>"><?=$r['nama_kabupaten_kota']?></option>
@@ -177,7 +177,7 @@
       <label> Kecamatan   </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2 kecamatan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy"  name="edit_kecamatan" id="edit_kecamatan" required>     
+      <select  class="form-control select2 kecamatan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy"  name="edit_kecamatan" id="edit_kecamatan" >     
     <option value="<?=$profil_pegawai['id_m_kecamatan'];?>"> <?=$profil_pegawai['nama_kecamatan'];?></option>
     </select>
       </div>
@@ -186,7 +186,7 @@
       <label> Kelurahan  </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2 kelurahan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kelurahan" id="edit_kelurahan" required>     
+      <select  class="form-control select2 kelurahan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kelurahan" id="edit_kelurahan" >     
       <option value="<?=$profil_pegawai['id_m_kelurahan'];?>"> <?=$profil_pegawai['nama_kelurahan'];?></option>
     </select>
       </div>

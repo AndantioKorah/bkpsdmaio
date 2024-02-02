@@ -60,20 +60,20 @@
     </div>
    <?php } ?>
 
-   <div class="form-group" style="margin-bottom:10px !important;">
+   <!-- <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_jenis">Nama Jabatan </label>
     <input class="form-control customInput" type="text" id="edit_jabatan_nama" name="edit_jabatan_nama"  value="<?=$jabatan[0]['nama_jabatan']?>"/>
-    </div>
+    </div> -->
 
-    <!-- <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
+    <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
     <label for="jabatan_jenis">Nama Jabatan </label>
-    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
-                    <option value="" disabled selected>Pilih Item</option>
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="edit_jabatan_nama" id="edit_jabatan_nama" >
+                    <option value="<?=$jabatan[0]['id_jabatan'];?>" selected><?=$jabatan[0]['nama_jabatan'];?></option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
     </select>
-    </div> -->
+    </div>
 
  
 

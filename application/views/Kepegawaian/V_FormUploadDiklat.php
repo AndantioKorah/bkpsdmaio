@@ -116,9 +116,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group" style="display:none" id="inputjd">
       <label>Jenjang Diklat </label>
-    
       <select  class="form-control select2 jdiklat"  data-dropdown-css-class="select2-navy"  name="diklat_jenjang" id="diklat_jenjang">     
-    <option value=""></option>
+    <option selected value="0"></option>
     </select>
       </div>
 
@@ -144,7 +143,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Total Jam Pelatihan</label>
-    <input class="form-control customInput" type="text" id="diklat_jam" name="diklat_jam"  required/>
+    <input class="form-control customInput" type="number" id="diklat_jam" name="diklat_jam"  required/>
   </div>
 
   <div class="form-group">

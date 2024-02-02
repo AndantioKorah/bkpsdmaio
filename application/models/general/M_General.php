@@ -269,7 +269,7 @@
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->where('a.id', $this->general_library->getId())
-            ->where('id_m_status_pegawai', 1)
+            // ->where('id_m_status_pegawai', 1)u
             ->get()->row_array();
             return $query['id_peg'];
         }

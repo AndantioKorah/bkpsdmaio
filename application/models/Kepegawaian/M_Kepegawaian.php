@@ -4682,7 +4682,7 @@ public function submitEditJabatan(){
 
                     $encrypt = simpleEncrypt($atasan['nipbaru_ws'].'-'.$insert_id);
                     $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                    $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawaiegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
+                    $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
                     $sendTo = convertPhoneNumber($atasan['handphone']);
                     $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
                 } else {

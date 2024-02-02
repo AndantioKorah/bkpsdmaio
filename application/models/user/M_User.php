@@ -65,22 +65,28 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
+                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id')
+                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
                                 ->like('a.nama', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();
 
-                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg')
+                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id')
+                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
                                 ->like('a.username', $data['search_param'])
                                 ->where('a.flag_active', 1)
+                                ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
                                 ->limit(5)
                                 ->get()->result_array();
@@ -1968,7 +1974,8 @@
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
-                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai,
+                    h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -1976,6 +1983,7 @@
                     ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
+                    ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
                     ->order_by('c.eselon, a.nama');
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);

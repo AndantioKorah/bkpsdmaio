@@ -402,10 +402,11 @@
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                    ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
                     ->where('a.statuspeg', 2)
-                    ->where('id_m_status_pegawai', 1)
+                    // ->where('id_m_status_pegawai', 2)
+                    ->group_by('a.nipbaru_ws')
                     ->order_by('c.eselon');
 
             if($data['eselon'] != "0"){
@@ -434,35 +435,52 @@
                     if($d['tgllahir'] != null){
                         $tgl_lahir = explode("-", $d['tgllahir']);
                         $umur = floatval($data['tahun']) - $tgl_lahir[0];
+                        $bup = 0;
                         $crit = 0;
                         if($umur >= 58){
-                            if($d['jenis_jabatan'] == 'JFU' && $umur == 58){ //jika 58 dan JFU
+                            if(($d['jenis_jabatan'] == 'JFU' && $umur == 58) || ($d['eselon'] == null)){ //jika 58 dan JFU
                                 $crit = 1;
                                 $temp = $d;
+                                $bup = 58;
                             } else if($d['jenis_jabatan'] == 'JFT' && $umur == 60 && in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //jika 60 dan JFT dan golongan IV
                                 $crit = 2;
                                 $temp = $d;
-                            } else if($umur == 60 && ($d['eselon'] == 'II A' || $d['eselon'] == 'II B')){
+                                $bup = 60;
+                            } else if($umur == 60 && ($d['eselon'] == 'II A' || $d['eselon'] == 'II B' || $d['jenis_jabatan'] == 'JFT')){
                                 $crit = 3;
                                 $temp = $d;
+                                $bup = 60;
                             } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
                                 $crit = 4;
                                 $temp = $d;
+                                $bup = 65;
                             } else if($umur == 58 &&
                             !in_array($d['id_pangkat'], $id_pangkat_ahli_utama) &&
                             !in_array($d['id_pangkat'], $id_pangkat_ahli_madya) &&
                             ($d['eselon'] != 'II A' && $d['eselon'] != 'II B')){
                                 $crit = 5;
                                 $temp = $d;
+                                $bup = 58;
                             }
-                            // if($d['nipbaru_ws'] == '196609201989022003'){
-                            //     dd($crit);
-                            // }
                             if($temp){
-                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $umur);
+                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
                                 $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $umur;
+                                // if($d['nipbaru_ws'] == '196501271985022001'){
+                                    // $temp['umur'] .= '  '.$crit;
+                                    // dd($crit);
+                                // }
+                                // if(date("Y-m-d", strtotime($temp['tmt_pensiun'])) < date("Y-m-d")){
+                                if($crit == 5 && $d['jenis_jabatan'] == 'JFT'){
+                                    // $temp['umur'] = "harusnya belum";
+                                //     // dd($temp);
+                                //     // $temp['umur'] .= 'ssss';
+                                    // $this->db->where('nipbaru_ws', $temp['nipbaru_ws'])
+                                    //     ->update('db_pegawai.pegawai', [
+                                    //         'id_m_status_pegawai' => 1
+                                    //     ]);
+                                }
                                 if($explode[0] == $data['tahun']){
                                     $result[] = $temp;
                                 }

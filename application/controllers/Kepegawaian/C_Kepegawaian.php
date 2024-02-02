@@ -116,6 +116,15 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListDiklat', $data);
 	}
 
+	
+	public function loadListDisiplin($nip,$kode = null){
+		$data['result'] = $this->kepegawaian->getDisiplin($nip,$kode);
+		$data['kode'] = $kode;
+		$data['nip'] = $nip;
+		$this->load->view('kepegawaian/V_ListDisiplin', $data);
+	}
+
+
 	public function loadListJabatan($nip,$kode = null,$statusjabatan){
 		
 		$data['nip'] = $nip;
@@ -773,6 +782,26 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadBerkasPns', $data);
     }
 
+	
+	public function loadFormDisiplin($nip){
+		$data['nip'] = $nip;
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 18);
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'disiplin');
+		
+		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
+		// $data['dok'] = $this->kepegawaian->getDataDok('db_pegawai.pegdisiplin', $id_peg );
+		$data['hd'] = $this->kepegawaian->getAllWithOrder('db_pegawai.hd', 'idk', 'asc');
+		$data['jhd'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jhd', 'id_jhd', 'asc');
+	
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+		} else {
+			
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_FormUploadDisiplin', $data);
+    }
+
 	public function loadFormAssesment($nip){
 		$data['nip'] = $nip;
 		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 5);
@@ -1232,7 +1261,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
-		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanEdit();
+		// dd($data['jabatan']);
+		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
+		// dd($data['nama_jabatan']);
         $this->load->view('kepegawaian/V_EditJabatan', $data);
     }
 
@@ -1288,6 +1319,15 @@ class C_Kepegawaian extends CI_Controller
 		$data['diklat'] = $this->kepegawaian->getDiklatEdit($id);
 		$data['jenjang_diklat'] = $this->kepegawaian->getJenjangDiklatEdit($data['diklat'][0]['jenisdiklat']);
         $this->load->view('kepegawaian/V_EditDiklat', $data);
+    }
+
+	public function loadEditDisiplin($id)
+    {
+		$data['hd'] = $this->kepegawaian->getAllWithOrder('db_pegawai.hd', 'idk', 'asc');
+		$data['jhd'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jhd', 'id_jhd', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 18);
+		$data['disiplin'] = $this->kepegawaian->getDisiplinEdit($id);
+        $this->load->view('kepegawaian/V_EditDisiplin', $data);
     }
 
 	public function loadEditOrganisasi($id)

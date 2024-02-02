@@ -720,6 +720,9 @@
                 <button onclick="loadFormCuti()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormDisiplin()" class="nav-link nav-link-profile" id="pills-disiplin-tab" data-bs-toggle="pill" data-bs-target="#pills-disiplin" type="button" role="tab" aria-controls="pills-disiplin" aria-selected="false">Disiplin</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormSkp()" class="nav-link nav-link-profile" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
@@ -788,6 +791,9 @@
               </div>
               <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">
                 <div id="form_cuti"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-disiplin" role="tabpanel" aria-labelledby="pills-disiplin-tab">
+              <div id="form_disiplin"></div>
               </div>
               <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
                 <div id="form_skp"></div>
@@ -1144,6 +1150,8 @@
                 setTimeout(LoadFormInovasi, 1500);
                 } else if(jb == "tim_kerja"){
                 setTimeout(LoadFormTimKerja, 1500);
+                } else if(jb == "disiplin"){
+                setTimeout(loadFormDisiplin, 1500);
                 }
               } else {
                 errortoast(result.msg)
@@ -1432,6 +1440,14 @@
   $('#form_berkaspns').html(' ')
     $('#form_berkaspns').append(divLoaderNavy)
     $('#form_berkaspns').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormBerkasPns/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormDisiplin(){
+  $('#form_disiplin').html(' ')
+    $('#form_disiplin').append(divLoaderNavy)
+    $('#form_disiplin').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormDisiplin/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

@@ -565,18 +565,14 @@
       <div class="col-lg-6">
         <table style="width: 100%;" class="table table_dok_detail">
           <tr>
-            <td class="td-lab-dd">Nama Assesment</td>
+            <td class="td-lab-dd">Nilao Assesment</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['nm_assesment']?></td>
+            <td class="td-val-dd"><?=$result['nilai_assesment']?></td>
           </tr>
    
         </table>
       </div>
-      <div class="col-lg-6">
-        <span style="font-weight: bold;">File Assesment</span>
-        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
-      </div>
+      
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'arsip') { ?>
       <div class="row">
@@ -604,7 +600,7 @@
             <td class="td-lab-dd">Jenis SK</td>
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd">
-            <?php if($result['jenissk'] == 1) echo 'SK CPNS'; else echo 'SK PNS';?> </td>
+            <?php if($result['jenissk'] == 1) echo 'SK CPNS'; else if($result['jenissk'] == 2) echo 'SK PNS'; else echo 'SK PPPK';?> </td>
           </tr>
    
         </table>
@@ -912,6 +908,7 @@
     var number = Math.floor(Math.random() * 1000);
     var path = "<?= $path?>"
     $link = "http://siladen.manadokota.go.id/bidik/"+path+"?v="+number;
+    // $link = "<?=base_url();?>"+path+"?v="+number;
 
 
     $('.view_file_ws').attr('src', $link)

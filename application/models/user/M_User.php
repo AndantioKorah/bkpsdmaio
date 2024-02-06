@@ -1984,6 +1984,7 @@
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
                     ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+                    ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->order_by('c.eselon, a.nama');
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);

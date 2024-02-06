@@ -604,6 +604,7 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('id_m_status_pegawai', 1)
+            ->where_not_in('c.id_unitkerja', [5, 9050030])
             ->get()->result_array();
 
             $result['total'] = count($pegawai);

@@ -255,6 +255,17 @@ class General_library
         return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
     }
 
+    public function getDataUnitKerjaPegawai(){
+        $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
+        $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];
+        $result['id_unitkerjamaster'] = $this->nikita->session->userdata('pegawai')['id_unitkerjamaster'];
+        return $result;
+    }
+
+    public function isPejabatEselon(){
+        return $this->userLoggedIn['id_eselon'] != 1;
+    }
+
     public function setActiveRole($id_role){
         $this->nikita->session->set_userdata([
             'active_role_id' => null,
@@ -299,7 +310,8 @@ class General_library
                 return true;
             }
             
-            $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
+            // $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
+            $current_url = substr($_SERVER["REQUEST_URI"], 1, strlen($_SERVER["REQUEST_URI"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
             // dd($list_url);
@@ -407,12 +419,34 @@ class General_library
 
     public function getNamaUser(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
-        return $this->userLoggedIn['nama_user'];
+        // return $this->userLoggedIn['nama_user'];
+        return getNamaPegawaiFull($this->userLoggedIn);
     }
 
     public function getNamaJabatan(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn['nama_jabatan'];
+    }
+
+    public function getIdJabatan(){
+        return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
+        // return $this->userLoggedIn['jabatan'];
+    }
+
+    public function isKepalaBkpsdm(){
+        return $this->getIdJabatan() == "4018000JS01";
+    }
+
+    public function getIdEselon(){
+        return $this->userLoggedIn['id_eselon'];
+    }
+
+    public function isKepalaPd(){
+        return $this->userLoggedIn['kepalaskpd'] == "1";
+    }
+
+    public function getIdUnitKerjaPegawai(){
+        return $this->userLoggedIn['id_unitkerja'];
     }
 
     public function getId(){
@@ -442,6 +476,13 @@ class General_library
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();
         return $this->userLoggedIn['id_peg'];
+    }
+
+    public function getAbsensiPegawai($id_pegawai, $bulan, $tahun){
+        $params['bulan'] = $bulan;
+        $params['tahun'] = $tahun;
+        $params['id_pegawai'] = $id_pegawai;
+        return $this->nikita->m_user->getAbsensiPegawai($params, 0);
     }
 
     public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
@@ -605,7 +646,6 @@ class General_library
       
         return ['code' => '0', 'data' => $image, 'nip' => $nip];
     }
-
 
 
 }

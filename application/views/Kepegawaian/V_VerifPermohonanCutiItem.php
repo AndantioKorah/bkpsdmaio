@@ -1,0 +1,67 @@
+<div class="card-body table-responsive">
+  <table style="border: 1px solid grey;" class="table table-hover table-striped" id="table_riwayat_cuti">
+    <thead>
+      <th style="border: 1px solid grey;" class="text-center">No</th>
+      <th style="border: 1px solid grey;" class="text-left">Pegawai</th>
+      <?php if(isset($param['id_unitkerja']) && $param['id_unitkerja'] == "0"){ ?>
+        <th style="border: 1px solid grey;" class="text-center">Unit Kerja</th>
+      <?php } ?>
+      <th style="border: 1px solid grey;" class="text-center">Jenis Cuti</th>
+      <th style="border: 1px solid grey;" class="text-center">Tanggal Pengajuan</th>
+      <th style="border: 1px solid grey;" class="text-center">Tanggal Cuti</th>
+      <th style="border: 1px solid grey;" class="text-center">Lama Cuti</th>
+      <?php if(isset($param['id_m_status_pengajuan_cuti']) && $param['id_m_status_pengajuan_cuti'] == "0"){ ?>
+        <th style="border: 1px solid grey;" class="text-center">Status</th>
+      <?php } ?>
+      <th style="border: 1px solid grey;" class="text-center">Pilihan</th>
+    </thead>
+    <tbody>
+      <?php if($result){
+        $no = 1;
+        foreach($result as $rs){
+      ?>
+        <tr>
+          <td style="border: 1px solid grey;" class="text-center"><?=$no++;?></td>
+          <td style="border: 1px solid grey;" class="text-left">
+            <span class="fw-bold"><?=getNamaPegawaiFull($rs)?></span><br>
+            <span style="font-size: .7rem; font-weight: bold;">NIP. <?=$rs['nipbaru_ws']?></span>
+          </td>
+          <?php if(isset($param['id_unitkerja']) && $param['id_unitkerja'] == "0"){ ?>
+            <td style="border: 1px solid grey;" class="text-left"><?=($rs['nm_unitkerja'])?></td>
+          <?php } ?>
+          <td style="border: 1px solid grey;" class="text-center"><?=($rs['nm_cuti'])?></td>
+          <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
+          <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
+          <td style="border: 1px solid grey;" class="text-center"><?=$rs['lama_cuti'].' hari'?></td>
+          <?php if(isset($param['id_m_status_pengajuan_cuti']) && $param['id_m_status_pengajuan_cuti'] == "0"){ ?>
+            <td style="border: 1px solid grey;" class="text-center"><span class="lbl_status_pengajuan_<?=$rs['id_m_status_pengajuan_cuti']?>"><?=($rs['nama_status'])?></span></td>
+          <?php } ?>
+          <td style="border: 1px solid grey;" class="text-center">
+            <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"
+            data-toggle="modal" class="btn btn-navy">Detail</button> -->
+            <button type="button"onclick="loadDetailCutiVerif('<?=$rs['id']?>')" class="btn btn-navy">Detail</button>
+          </td>
+        </tr>
+      <?php } } ?>
+    </tbody>
+  </table>
+</div>
+<div class="modal fade" id="modal_detail_cuti" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div id="modal-dialog" class="modal-dialog modal-xl">
+		<div class="modal-content" id="content_modal_detail_cuti">
+		</div>
+	</div>
+</div>
+<script>
+  $(function(){
+    $('#table_riwayat_cuti').dataTable()
+  })
+
+  function loadDetailCutiVerif(id){
+    $('#result_search').html('')
+    $('#result_search').append(divLoaderNavy)
+    $('#result_search').load('<?=base_url('kepegawaian/C_Kepegawaian/loadDetailCutiVerif/')?>'+id, function(){
+      $('#loader').hide()
+    })
+  }
+</script>

@@ -30,6 +30,7 @@ header("Content-Disposition: attachment; filename=$filename");
                     <th style="text-align: center;">Jabatan</th>
                     <th style="text-align: center;">Jenis Jabatan</th>
                     <th style="text-align: center;">Unit Kerja</th>
+                    <th style="text-align: center;">Umur</th>
                     <th style="text-align: center;" class="text-center">TMT Pensiun</th>
                     <!-- <th style="text-align: center";>TMT Naik Pangkat</th> -->
                 </thead>
@@ -49,7 +50,8 @@ header("Content-Disposition: attachment; filename=$filename");
                             <td style="text-align: left" class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td style="text-align: left" class="text-center"><?=($rs['jenis_jabatan'])?></td>
                             <td style="text-align: left" class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                            <td style="text-align: center;"><?=formatDateNamaBulan($rs['tmt_pensiun'])?></td>
+                            <td style="text-align: center" class="text-left"><?=($rs['umur'])?></td>
+                            <td style="text-align: center;"><?=formatDateOnly($rs['tmt_pensiun'])?></td>
                             <!-- <td style="text-align: left" class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>
                     <?php } ?>

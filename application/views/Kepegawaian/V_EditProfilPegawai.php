@@ -165,7 +165,7 @@
       <label> Kabupaten/Kota  </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kab_kota" id="edit_kab_kota" required>     
+      <select  class="form-control select2" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kab_kota" id="edit_kab_kota" >     
       <option value="" disabled selected>Pilih Kabupaten/Kota</option>
                     <?php if($kabkota){ foreach($kabkota as $r){ ?>
                         <option <?php if($profil_pegawai['id_m_kabupaten_kota'] == $r['id']) echo "selected"; else echo ""; ?>   value="<?=$r['id']?>"><?=$r['nama_kabupaten_kota']?></option>
@@ -177,7 +177,7 @@
       <label> Kecamatan   </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2 kecamatan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy"  name="edit_kecamatan" id="edit_kecamatan" required>     
+      <select  class="form-control select2 kecamatan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy"  name="edit_kecamatan" id="edit_kecamatan" >     
     <option value="<?=$profil_pegawai['id_m_kecamatan'];?>"> <?=$profil_pegawai['nama_kecamatan'];?></option>
     </select>
       </div>
@@ -186,7 +186,7 @@
       <label> Kelurahan  </label>
       </div>
       <div class="col-lg-10">
-      <select  class="form-control select2 kelurahan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kelurahan" id="edit_kelurahan" required>     
+      <select  class="form-control select2 kelurahan" data-dropdown-parent="#editProfileModal"  data-dropdown-css-class="select2-navy" name="edit_kelurahan" id="edit_kelurahan" >     
       <option value="<?=$profil_pegawai['id_m_kelurahan'];?>"> <?=$profil_pegawai['nama_kelurahan'];?></option>
     </select>
       </div>
@@ -312,7 +312,7 @@
         <label for="inputPassword6" class="col-form-label"> Pendidikan Terakhir </label>
       </div>
       <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
-      <select class="form-control" data-dropdown-css-class="" name="" id="" required>
+      <select class="form-control" data-dropdown-css-class="" name="edit_pendidikan" id="edit_pendidikan" required>
                     <option value="" disabled selected>Pilih Pendidikan</option>
                     <?php if($pendidikan){ foreach($pendidikan as $r){ ?>
                         <option <?php if($profil_pegawai['id_tktpendidikan'] == $r['id_tktpendidikan']) echo "selected"; else echo ""; ?>   value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
@@ -364,6 +364,17 @@
         <input type="text" id="edit_email" name="edit_email" class="form-control" value="<?= $profil_pegawai['email'];?>">
       </div>
 
+      
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Status Pegawai </label>
+      </div>
+      <div class="col-lg-10">
+        <select class="form-control" name="edit_id_m_status_pegawai" id="id_m_status_pegawai">
+          <?php foreach($list_status_pegawai as $lsp){ ?>
+            <option value="<?=$lsp['id']?>" <?=$lsp['id'] == $profil_pegawai['id_m_status_pegawai'] ? 'selected' : ''?>><?=$lsp['nama_status_pegawai']?></option>
+          <?php } ?>
+        </select>
+      </div>
          
     </div>
    

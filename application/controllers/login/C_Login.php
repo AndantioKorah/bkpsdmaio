@@ -8,6 +8,7 @@ class C_Login extends CI_Controller
         $this->load->model('general/M_General', 'm_general');
         // $this->load->library('libraries/Dokumenlib', 'doklib');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
     }
 
     public function login(){
@@ -44,7 +45,12 @@ class C_Login extends CI_Controller
         // dd($data);
         // $this->session->set_userdata('live_tpp', null);
         // $data = null;
-
+        $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
+        $data['nip'] = $this->general_library->getUserName();
+        $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        if(isset($data['profil_pegawai']['skpd'])){
+         $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
+        }
         render('login/V_Welcome', '', '', $data);
     }
 
@@ -74,7 +80,7 @@ class C_Login extends CI_Controller
         // var_dump($password);
         // die();
         $result = $this->m_general->authenticate($username, $password);
-        
+        // dd($result);
         if($result != null){
             $params = $this->m_general->getAll('m_parameter');
             $all_menu = $this->m_general->getAll('m_menu');
@@ -161,5 +167,9 @@ class C_Login extends CI_Controller
     public function otentikasiUser($jenis_transaksi){
         $result = $this->m_general->otentikasiUser($this->input->post(), $jenis_transaksi);
         echo json_encode($result);
+    }
+
+    public function injectBidang(){
+        $this->user->injectBidang();
     }
 }

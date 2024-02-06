@@ -25,6 +25,7 @@
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->where('a.skpd', $id_skpd)
                             ->where('b.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->row_array();
         }
 
@@ -63,6 +64,7 @@
                     ->where('c.skpd', $id_skpd)
                     ->where('a.bulan', $data['bulan'])
                     ->where('a.tahun', $data['tahun'])
+                    ->where('id_m_status_pegawai', 1)
                     ->where('a.flag_active', 1);
             if(isset($data['bidang']) && $data['bidang'] != 0){
                 $this->db->where('b.id_m_bidang', $data['bidang']);
@@ -79,6 +81,7 @@
                     ->where('a.flag_active', 1)
                     ->where('b.flag_active', 1)
                     ->where('b.bulan', $data['bulan'])
+                    ->where('id_m_status_pegawai', 1)
                     ->where('b.tahun', $data['tahun']);
             if(isset($data['bidang']) && $data['bidang'] != 0){
                 $this->db->where('c.id_m_bidang', $data['bidang']);
@@ -160,6 +163,7 @@
                     ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
                     // ->where('a.pulang >=', $agenda['buka_pulang']) //buka ini
                     ->group_by('a.id')
+                    ->where('id_m_status_pegawai', 1)
                     ->where_in('a.aktivitas', [1,2,3]) //buka ini
                     // ->order_by('a.masuk', 'desc'); //komen ini
                     ->order_by('a.pulang', 'desc'); //buka ini
@@ -210,6 +214,7 @@
         }
 
         public function getDataDetailDashboardPdm($data){
+            // $data['unitkerja'] = 0;
             $rs = null;
             $rs['progress_keseluruhan'] = 0;
             $master = $this->db->select('*')
@@ -245,6 +250,7 @@
                                             ->join('m_bidang e', 'd.id_m_bidang = e.id', 'left')
                                             ->where('a.skpd', $data['unitkerja'])
                                             ->where('d.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
                                             ->order_by('b.eselon', 'asc')
                                             ->group_by('a.nipbaru')
                                             ->get()->result_array();
@@ -261,7 +267,7 @@
                     foreach($master as $ms){
                         $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['detail'][$ms['singkatan']] = 0;
                     }
-                    if($lp['fotopeg'] != null && $lp['fotopeg'] != ''){
+                    // if($lp['fotopeg'] != null && $lp['fotopeg'] != ''){
                         $path = './assets/fotopeg/'.$lp['fotopeg'];
                         if (file_exists($path)) {
                             $rs['list_pegawai'][$lp['nipbaru_ws']]['progress']['total']++;
@@ -273,7 +279,7 @@
                                 $rs['bidang'][$lp['id_m_bidang']]['total_progress'] = ($rs['bidang'][$lp['id_m_bidang']]['progress'] / $rs['bidang'][$lp['id_m_bidang']]['progress_keseluruhan']) * 100;
                             }
                         }
-                    }
+                    // }
                 }
 
                 $rs['data_pdm'] = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang')
@@ -282,8 +288,10 @@
                                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                         ->where('a.flag_active', 1)
                                         ->where('b.flag_active', 1)
+                                        ->where('id_m_status_pegawai', 1)
                                         ->where('c.skpd', $data['unitkerja'])
                                         ->get()->result_array();
+                // dd(count($rs['data_pdm']));                       
                 foreach($rs['data_pdm'] as $pd){
                     $rs['list_pegawai'][$pd['username']]['progress']['total']++;
                     // if(!isset($rs['list_pegawai'][$pd['username']]['progress']['detail'][$pd['jenis_berkas']])){
@@ -301,12 +309,15 @@
                 $rs['total_keseluruhan'] = count($rs['master']) * count($rs['list_pegawai']);
                 // $rs['progress_keseluruhan'] = count($rs['data_pdm']);
                 $rs['total_progress'] = ($rs['progress_keseluruhan'] / $rs['total_keseluruhan']) * 100;
+                // dd(($rs['progress_keseluruhan']));
             } else {
                 $rs = null;
                 $unitkerja = $this->db->select('a.*, count(b.nipbaru_ws) as jumlah_pegawai')
                                     ->from('db_pegawai.unitkerja a')
                                     ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                     ->where('a.id_unitkerja !=', '9050030')
+                                    ->where('a.id_unitkerja !=', '5')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.id_unitkerja')
                                     ->get()->result_array();
 
@@ -317,35 +328,52 @@
                     $rs[$u['id_unitkerja']]['presentase'] = 0;
                     $rs[$u['id_unitkerja']]['jumlah_pegawai'] = $u['jumlah_pegawai'];
                 }
+                // dd($rs);
 
-                $data_pdm = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang, c.skpd as id_unitkerja')
-                                        ->from('t_pdm a')
-                                        ->join('m_user b', 'a.id_m_user = b.id')
-                                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                                        ->where('a.flag_active', 1)
-                                        ->where('b.flag_active', 1)
-                                        ->get()->result_array();
-
-                foreach($data_pdm as $dp){
-                    $rs[$dp['id_unitkerja']]['progress']++;
-                    $rs[$dp['id_unitkerja']]['presentase'] = (floatval($rs[$dp['id_unitkerja']]['progress']) / floatval($rs[$dp['id_unitkerja']]['total'])) * 100;
-                }
-
-                $list_pegawai = $this->db->select('b.fotopeg, b.skpd')
+                $temp_list_pegawai = null;
+                $list_pegawai = $this->db->select('b.fotopeg, b.skpd, b.nipbaru_ws')
                                             ->from('db_pegawai.unitkerja a')
                                             ->join('db_pegawai.pegawai b', 'b.skpd = a.id_unitkerja')
                                             ->where('a.id_unitkerja !=', '9050030')
-                                            ->where('(b.fotopeg IS NOT NULL AND b.fotopeg != "")')
+                                            ->where('a.id_unitkerja !=', '5')
+                                            // ->where('(b.fotopeg IS NOT NULL AND b.fotopeg != "")')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('b.nipbaru_ws')
                                             ->get()->result_array();
 
                 foreach($list_pegawai as $l){
+                    $temp_list_pegawai[$l['nipbaru_ws']] = $l['skpd'];
                     $path = './assets/fotopeg/'.$l['fotopeg'];
                     if(file_exists($path)){
                         $rs[$l['skpd']]['progress']++;
                         $rs[$l['skpd']]['presentase'] = (floatval($rs[$l['skpd']]['progress']) / floatval($rs[$l['skpd']]['total'])) * 100;
                     }
                 }
+                // dd($rs);
+                // $data_pdm = $this->db->select('a.*, b.username, c.nama, b.id_m_bidang, c.skpd as id_unitkerja')
+                $data_pdm = $this->db->select('a.id_m_user, a.jenis_berkas, b.username, b.id_m_bidang')
+                                        ->from('t_pdm a')
+                                        ->join('m_user b', 'a.id_m_user = b.id')
+                                        // ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                        ->where('a.flag_active', 1)
+                                        ->where('b.flag_active', 1)
+                                        // ->where('c.skpd', '4018000')
+                                        // ->where('id_m_status_pegawai', 1)
+                                        ->get()->result_array();
+                // dd(count($data_pdm));
+                foreach($data_pdm as $dp){
+                    if(isset($temp_list_pegawai[$dp['username']])){
+                        $skpd = $temp_list_pegawai[$dp['username']];
+                        $rs[$skpd]['progress']++;
+                        $rs[$skpd]['presentase'] = 
+                            (floatval($rs[$skpd]['progress']) / floatval($rs[$skpd]['total'])) * 100;
+                    }
+                }
+                // if($skpd == '4018000'){
+                //     dd($rs[$skpd]['progress']);
+                // }
+                // dd($rs['4018000']['progress']);
+                // dd($rs);
             }
 
             return $rs;

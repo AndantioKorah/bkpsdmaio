@@ -35,6 +35,7 @@
                             ->join('m_sub_bidang c', 'a.id_m_sub_bidang = c.id', 'left')
                             ->where('c.skpd', $id_unitkerja)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
         }
@@ -638,6 +639,7 @@
                             ->from('db_pegawai.pegawai')
                             ->where('skpd', $id_unitkerja)
                             ->order_by('nama', 'asc')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -651,6 +653,7 @@
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                             ->or_like('a.nipbaru_ws', $data['search_value'])
                             ->or_like('a.nama', $data['search_value'])
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
 
@@ -666,6 +669,7 @@
             } else {
                 $list_pegawai = $this->db->select('*')
                                     ->from('db_pegawai.pegawai')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->where('skpd', $unitkerja)
                                     ->get()->result_array();
             }
@@ -790,6 +794,7 @@
                             ->where('b.skpd', $idskpd)
                             ->where('a.id !=', $iduser)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->order_by('b.nama', 'asc')
                             ->get()->result_array();
         }
@@ -915,6 +920,7 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja', 'left')
                             ->where('a.skpd', $id_unitkerja)
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.flag_active', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();
@@ -974,6 +980,7 @@
         public function getListPegawaiSkpdMutasi($id_peg){
             return $this->db->select('a.nama as nama_pegawai, a.id_peg, a.skpd, a.nipbaru')
                             ->from('db_pegawai.pegawai a')
+                            ->where('id_m_status_pegawai', 1)
                             // ->where('a.skpd', $idskpd)
                             ->where('a.id_peg ', $id_peg)
                             // ->where('a.flag_active', 1)
@@ -990,6 +997,7 @@
                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                             ->where('a.id_pegawai', $id_peg)
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                               ->order_by('a.id', 'desc')
                             ->get()->result_array();
         }
@@ -1001,6 +1009,7 @@
                             ->from('db_pegawai_new.pegawai a')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja', 'left')
                             ->where('a.id_peg NOT IN (SELECT b.id_peg FROM db_pegawai.pegawai b)')
+                            
                             ->get()->result_array();
         }
 
@@ -1233,6 +1242,7 @@
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                     ->join('m_user_role d', 'b.id = d.id_m_user', 'left')
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('a.nipbaru_ws')
                                     ->get()->result_array();
             $bulkroles = null;
@@ -1333,6 +1343,7 @@
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id_pegawai)
                             ->get()->row_array();
         }
@@ -1397,24 +1408,87 @@
             $result['pagu_dk'] = (floatval(TARGET_BOBOT_DISIPLIN_KERJA) / 100) * floatval($tpp['pagu_tpp']); 
             list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
 
-            $bobot_komponen_kinerja = 0;
-            if($pk['komponen_kinerja']){
-                list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
-                $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
+            $params['id_pegawai'] = $id_pegawai;
+            $params['bulan'] = $bulan;
+            $params['tahun'] = $tahun;
+            $params['unitkerja'] = $unitkerja;
+            $params['pk'] = $pk;
+            $params['tpp'] = $tpp;
+            $params['pagu_tpp'] = $result['pagu_tpp'];
+            $params['pagu_pk'] = $result['pagu_pk'];
+            $params['pagu_dk'] = $result['pagu_dk'];
+
+            $result = $this->getAbsensiPegawai($params, 1);
+            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
+            $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            if($result['capaian_dk'] < 0){
+                $result['capaian_dk'] = 0;
             }
+            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
+            $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
+            if($result['pagu_tpp']['pagu_tpp'] == '0' || $result['pagu_tpp']['pagu_tpp'] == 0){
+                $result['presentase_capaian_tpp'] = 0;    
+                $result['presentase_pk'] = 0;
+                $result['presentase_dk'] = 0;
+            } else {
+                $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
+                $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+                $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
+            }
+
+            return $result;
+        }
+
+        public function getAbsensiPegawai($params, $flag_count_tpp = 0){
+            $result = null;
+            $id_pegawai = isset($params['id_pegawai']) ? $params['id_pegawai'] : null;
+            $bulan = isset($params['bulan']) ? $params['bulan'] : date('m');
+            $tahun = isset($params['tahun']) ? $params['tahun'] : date('Y');
+            $unitkerja = isset($params['unitkerja']) ? $params['unitkerja'] : null;
+            $pk = isset($params['pk']) ? $params['pk'] : null;
+            $tpp = isset($params['tpp']) ? $params['tpp'] : null;
+            $result['pagu_tpp'] = isset($params['pagu_tpp']) ? $params['pagu_tpp'] : null;
+            $result['pagu_dk'] = isset($params['pagu_dk']) ? $params['pagu_dk'] : null;
+            $result['pagu_pk'] = isset($params['pagu_pk']) ? $params['pagu_pk'] : null;
             
-            $bobot_skp = 0;
-            if($pk['kinerja']){
-                $pk['nilai_skp'] = countNilaiSkp($pk['kinerja']);
-                $bobot_skp = $pk['nilai_skp']['bobot'];
+            if(!$id_pegawai){
+                $id_pegawai = $this->general_library->getId();
             }
-            $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
-            $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
-            $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
-            $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
-            $result['capaian_dk'] = 0;
-            $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
-            $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
+            if(!$bulan){
+                $bulan = date('m');
+            }
+            if(!$tahun){
+                $tahun = date('Y');
+            }
+            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hari_kerja']) = $this->countHariKerjaBulanan($bulan, $tahun); //get jumlah hari kerja bulanan
+            if(!$unitkerja){
+                $unitkerja = $this->db->select('a.*')
+                                        ->from('db_pegawai.unitkerja a')
+                                        ->join('db_pegawai.pegawai b', 'a.id_unitkerja = b.skpd')
+                                        ->join('m_user c', 'b.nipbaru_ws = c.username')
+                                        ->where('c.id', $id_pegawai)
+                                        ->get()->row_array();
+            }
+            if($flag_count_tpp == 1){
+                $bobot_komponen_kinerja = 0;
+                if($pk['komponen_kinerja']){
+                    list($pk['komponen_kinerja']['capaian'], $pk['komponen_kinerja']['bobot']) = countNilaiKomponen($pk['komponen_kinerja']);
+                    $bobot_komponen_kinerja = $pk['komponen_kinerja']['bobot'];
+                }
+                
+                $bobot_skp = 0;
+                if($pk['kinerja']){
+                    $pk['nilai_skp'] = countNilaiSkp($pk['kinerja']);
+                    $bobot_skp = $pk['nilai_skp']['bobot'];
+                }
+                $bobot_pk = floatval($bobot_komponen_kinerja) + floatval($bobot_skp); //bobot produktivitas kerja
+                $result['capaian_pk'] = ($bobot_pk * $result['pagu_tpp']['pagu_tpp']) / 100;
+                $result['capaian_komponen_kinerja'] = ($bobot_komponen_kinerja * $result['pagu_tpp']['pagu_tpp']) / 100;
+                $result['capaian_skp'] = ($bobot_skp * $result['pagu_tpp']['pagu_tpp']) / 100;
+                $result['capaian_dk'] = 0;
+                $result['pagu_harian'] = $result['pagu_dk'] / $result['jhk'];
+                $result['capaian_harian'] = $result['pagu_harian'] * $result['hari_kerja'];
+            }
 
             //data absen
             $list_data_absen = $this->db->select('*')
@@ -1505,6 +1579,7 @@
                 }
             }
 
+            $result['hadir'] = 0;
             $result['pengurangan_dk'] = 0;
             $result['rincian_pengurangan_dk']['TK'] = 0;
             $result['rincian_pengurangan_dk']['tmk1'] = 0;
@@ -1538,7 +1613,10 @@
                             // echo("dokpen_before: ".$result['pengurangan_dk']);
                             if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                                 // tambah capaian disiplin kerja
-                                $result['capaian_dk'] += $result['pagu_harian'];
+                                $result['hadir']++;
+                                if($flag_count_tpp == 1){
+                                    $result['capaian_dk'] += $result['pagu_harian'];
+                                }
                             }
                             // if(!in_array($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'], ['18', '19'])){ //cek jika dokumen pendukung bukan Tugas Luar Pagi atau Sore
                                 $result['pengurangan_dk'] = floatval($result['pengurangan_dk']) + floatval($result['dokpen'][$tga]['pengurangan']);
@@ -1551,9 +1629,11 @@
                                 if(!isset($result['dokpen'][$tga])){ //tidak ada dokumen pendukung
                                     $result['pengurangan_dk'] += 10;
                                     $result['rincian_pengurangan_dk']['TK']++;
-    
+                                    
                                     // tambah capaian disiplin kerja
-                                    $result['capaian_dk'] += $result['pagu_harian'];
+                                    if($flag_count_tpp == 1){
+                                        $result['capaian_dk'] += $result['pagu_harian'];
+                                    }
                                     $keterangan[] = "TK";
                                 } else {
                                     $result['pengurangan_dk'] += 3;
@@ -1561,7 +1641,10 @@
                                     $keterangan[] = "tmk3";
                                 }
                             } else { //kalau ada, cek keterlambatan
-                                $result['capaian_dk'] += $result['pagu_harian'];
+                                $result['hadir']++;
+                                if($flag_count_tpp == 1){
+                                    $result['capaian_dk'] += $result['pagu_harian'];
+                                }
                                 if(!isset($result['dokpen'][$tga]) || //cek kalo tidak ada dokpen, cek keterlambatan
                                     (isset($result['dokpen'][$tga]) && $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == 20)){ // kalo ada dokpen dan dokpen tugas luar sore, cek keterlambatan
                                         $diff_masuk = strtotime($data_absen[$tga]['masuk']) - strtotime($jam_masuk.'+ 59 seconds');
@@ -1635,20 +1718,25 @@
                     } else if(isset($result['dokpen'][$tga])){ //cek jika ada data dokumen pendukung
                         if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 3){ //cek jika dokumen pendukung bukan Tidak Kerja
                             // tambah capaian disiplin kerja
-                            $result['capaian_dk'] += $result['pagu_harian'];
+                            $result['hadir']++;
+                            if($flag_count_tpp == 1){
+                                $result['capaian_dk'] += $result['pagu_harian'];
+                            }
                         }
                         // if(!in_array($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'], ['18', '19'])){ //cek jika dokumen pendukung bukan Tugas Luar Pagi atau Sore
-                            $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
+                            if($flag_count_tpp == 1){
+                                $result['pengurangan_dk'] = $result['pengurangan_dk'] + $result['dokpen'][$tga]['pengurangan'];
+                            }
                             $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
-
                             $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
                         // }
                     } else if(isset($result['hari_libur'][$tga])){ //cek jika hari libur
                         
                     } else { // asumsi tidak masuk kerja
                         // tambah capaian disiplin kerja
-                        $result['capaian_dk'] += $result['pagu_harian'];
-
+                        if($flag_count_tpp == 1){
+                            $result['capaian_dk'] += $result['pagu_harian'];
+                        }
                         $result['pengurangan_dk'] += 10;
                         $result['rincian_pengurangan_dk']['TK']++;
                         $keterangan[] = "TK";
@@ -1666,29 +1754,6 @@
                 // echo $data_absen[$tga]['masuk'].'<br>';
                 // dd($result['pengurangan_dk']);
             }
-            // echo 'capaian_dk: '.$result['capaian_dk'].'<br>';
-            // echo 'pengurangan_dk: '.$result['pengurangan_dk'].'<br>';
-            // echo 'pagu_dk: '.$result['pagu_dk'].'<br>';
-            // echo 'pagu_pengurangan: '.(($result['pengurangan_dk'] / 100) * $result['pagu_dk']).'<br>';
-            // dd('');
-
-            $result['capaian_dk_tanpa_pengurangan'] = $result['capaian_dk'];
-            $result['capaian_dk'] = $result['capaian_dk'] - ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
-            if($result['capaian_dk'] < 0){
-                $result['capaian_dk'] = 0;
-            }
-            $result['rupiah_pengurangan_dk'] = ((($result['pengurangan_dk'] / 100) * $result['pagu_dk']));
-            $result['capaian_tpp'] = $result['capaian_dk'] + $result['capaian_pk'];
-            if($result['pagu_tpp']['pagu_tpp'] == '0' || $result['pagu_tpp']['pagu_tpp'] == 0){
-                $result['presentase_capaian_tpp'] = 0;    
-                $result['presentase_pk'] = 0;
-                $result['presentase_dk'] = 0;
-            } else {
-                $result['presentase_capaian_tpp'] = ($result['capaian_tpp'] / $result['pagu_tpp']['pagu_tpp']) * 100;
-                $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
-                $result['presentase_dk'] = ($result['capaian_dk'] / $result['pagu_dk']) * 100;
-            }
-
             return $result;
         }
 
@@ -1703,6 +1768,7 @@
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id)
                             ->get()->row_array();
             return $pegawai;
@@ -1798,6 +1864,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.handphone', $nohp)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1806,6 +1873,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                         ->where('a.nipbaru_ws', $nip)
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
         }
 
@@ -1827,6 +1895,7 @@
                             // ->like('b.nama_jabatan', 'kepegawaian')
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('c.flag_active', 1);
 
             if(!$hak_akses){
@@ -1858,6 +1927,7 @@
                             // ->where_in('b.eselon', ['IV A', 'IV B'])
                             // ->where('a.nipbaru_ws', $nip)
                             ->where('c.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.nipbaru_ws', $nip);
 
             if(!$hak_akses){
@@ -1882,6 +1952,7 @@
                             ->where('a.id_m_user', $this->general_library->getId())
                             ->where('a.flag_active', 1)
                             ->where('b.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
                             
             if($data){
@@ -1897,14 +1968,14 @@
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
-                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg')
+                    a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
                     ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
-                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
+                    ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
                     ->order_by('c.eselon, a.nama');
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);
@@ -1935,6 +2006,9 @@
             }
             if(isset($data['agama'])){
                 $this->db->where_in('a.agama', $data['agama']);
+            }
+            if(isset($data['keteranganpegawai'])){
+                $this->db->where_in('a.id_m_status_pegawai', $data['keteranganpegawai']);
             }
             if(isset($data['golongan'])){
                 $golongan = [];
@@ -2008,6 +2082,51 @@
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
+        }
+
+        public function injectBidang(){
+            $bidang = $this->db->select('*')
+                                ->from('m_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $list_bidang = null;
+            foreach($bidang as $b){
+                if(stringStartWith('Bidang', $b['nama_bidang'])){
+                    $list_bidang['Kepala '.$b['nama_bidang']] = $b['id'];
+                }
+            }
+            // dd($list_bidang);
+
+            $jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->get()->result_array();
+
+            $pegawai = $this->db->select('a.*, a.id as id_m_user, d.nama_jabatan, c.nm_unitkerja')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'b.nipbaru_ws = a.username')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                                ->where_in('c.id_unitkerjamaster', [4000000, 3000000])
+                                ->where('d.eselon', 'III B')
+                                ->where('a.id_m_bidang IS NULL')
+                                ->where('a.id_m_sub_bidang IS NULL')
+                                ->group_by('b.nipbaru_ws')
+                                ->get()->result_array();
+            dd($pegawai);
+            $no = 1;
+            foreach($pegawai as $p){
+                if(isset($list_bidang[$p['nama_jabatan']])){
+                    echo $no++.'<br>';
+                    echo 'inserting '.$list_bidang[$p['nama_jabatan']].' ke '.$p['username'].'<br><br>';
+                    $this->db->where('id', $p['id_m_user'])
+                            ->update('m_user', [
+                                'id_m_bidang' => $list_bidang[$p['nama_jabatan']]
+                            ]);        
+                } else {
+                    dd($p);
+                }
+            }
+            // dd('done');
         }
 
 	}

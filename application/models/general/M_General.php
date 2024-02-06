@@ -71,13 +71,15 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon', 'left')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1);
             $result = $this->db->get()->result_array();
             if(!$result){
@@ -195,6 +197,7 @@
         public function getDataPegawai($nip){
             return $this->db->select('*')
                             ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
         }
@@ -204,6 +207,7 @@
                             ->from('m_user a')
                             ->join('m_bidang b', 'a.id_m_bidang = b.id', 'left')
                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.flag_active',1)
                             ->where('a.id', $id)
                             ->get()->row_array();
@@ -223,6 +227,7 @@
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('m_user c', 'a.nipbaru_ws = c.username')
                                 ->where('c.id', $id_m_user)
+                                ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
             $ukmsekolah = ['8000000', '8010000', '8020000', '8030000'];
             $explodeuk = explode(" ", $unitkerja['nm_unitkerja']);
@@ -264,6 +269,7 @@
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->where('a.id', $this->general_library->getId())
+            // ->where('id_m_status_pegawai', 1)u
             ->get()->row_array();
             return $query['id_peg'];
         }
@@ -276,6 +282,10 @@
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where_in('a.statuspeg', [1, 2])
+            ->where('id_m_status_pegawai', 1)
+            ->where('c.jenis_jabatan !=', 'JFT')
+            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){
@@ -293,10 +303,14 @@
 
             if($query){
                 foreach($query as $q){
-                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
-                    $angka = explode(" ",$diff);
-                    if($diff >= 2){
-                        $result[] = $q;
+                    if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
+                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
+                        $explode = explode("-", $q['tmtgjberkala']);
+                        $tahuntmtgajiberkala = $explode[0];
+                        $diff = $data['tahun'] - $tahuntmtgajiberkala;
+                        if($diff >= 2){
+                            $result[] = $q;
+                        }
                     }
                 }
             }
@@ -306,12 +320,16 @@
 
         public function getListPegawaiNaikPangkatByYear($data){
             $result = null;
-            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtpangkat')
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, a.jabatan, a.pangkat,
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtpangkat, a.pendidikan')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where_in('a.statuspeg', [1, 2])
+            ->where('id_m_status_pegawai', 1)
+            ->where('c.jenis_jabatan !=', 'JFT')
+            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtpangkat');
 
             if($data['eselon'] != "0"){
@@ -327,12 +345,50 @@
             }
             $query = $this->db->get()->result_array();
 
+            $list_pensiun = null;
+            $pensiun = $this->getListPegawaiPensiunByYear($data);
+            if($pensiun){
+                foreach($pensiun as $p){
+                    $list_pensiun[$p['nipbaru_ws']] = $p;
+                }
+            }
+
             if($query){
                 foreach($query as $q){
-                    $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
-                    $angka = explode(" ",$diff);
-                    if($diff >= 4){
-                        $result[] = $q;
+                    if($q['tmtpangkat'] && $q['tmtpangkat'] != '0000-00-00'){
+                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtpangkat'], ['tahun']);
+                        $explode = explode("-", $q['tmtpangkat']);
+                        $tahuntmtpangkat = $explode[0];
+                        $diff = $data['tahun'] - $tahuntmtpangkat;
+                        if($diff >= 4 && !isset($list_pensiun[$q['nipbaru_ws']])){
+                            $flag_valid = 1;
+                            if($q['pendidikan'] == "0000" && $q['pangkat'] >= 21 ){ //SD dan II A ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "1000" && $q['pangkat'] >= 23){ // SMP dan II C ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "2000" && $q['pangkat'] >= 32){ // SMA dan III B ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "7000" && $q['pangkat'] >= 34){ // S1 dan III D ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "8000" && $q['pangkat'] >= 41){ // S2 dan IV A ke atas
+                                $flag_valid = 0;
+                            } else if($q['pendidikan'] == "9000" && $q['pangkat'] >= 42){ // S3 dan IV B ke atas
+                                $flag_valid = 0;
+                            }
+
+                            if($q['eselon'] == "III B" && $q['pangkat'] >= 41){ // eselon III B dan pangkat IV A ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "III A" && $q['pangkat'] >= 42){ // eselon III A dan pangkat IV B ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "II B" && $q['pangkat'] >= 43){ // eselon II B dan pangkat IV C ke atas
+                                $flag_valid = 0;
+                            } else if($q['eselon'] == "II A" && $q['pangkat'] >= 44){ // eselon II A dan pangkat IV D ke atas
+                                $flag_valid = 0;
+                            }
+                            if($flag_valid == 1){
+                                $result[] = $q;
+                            }
+                        }
                     }
                 }
             }
@@ -349,6 +405,7 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                     ->where('a.statuspeg', 2)
+                    ->where('id_m_status_pegawai', 1)
                     ->order_by('c.eselon');
 
             if($data['eselon'] != "0"){
@@ -402,10 +459,13 @@
                             //     dd($crit);
                             // }
                             if($temp){
-                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws']);
+                                $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $umur);
+                                $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $umur;
-                                $result[] = $temp;
+                                if($explode[0] == $data['tahun']){
+                                    $result[] = $temp;
+                                }
                             }
                         }
 
@@ -520,11 +580,12 @@
             }
 
             $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg, a.agama')
+            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->where('id_m_status_pegawai', 1)
             ->get()->result_array();
 
             $result['total'] = count($pegawai);
@@ -532,7 +593,7 @@
             foreach($pegawai as $peg){
                 // $result['pangkat'][$peg['id_pangkat']]['jumlah']++;
 
-                if(substr($peg['nipbaru'], 9, 6) == '202321'){
+                // if(substr($peg['nipbaru'], 9, 6) == '202321'){
                     // dd(substr($peg['id_pangkat'], 0, 1));\
                     // if($peg['id_pangkat'] == '59') {
                     //     $result['golongan'][6]['nama'] = 'Golongan IX';
@@ -543,7 +604,7 @@
                     //     $result['golongan'][6]['jumlah'] = 0;
                     // }
                    
-                }
+                // }
                 
                 $result['golongan'][substr($peg['id_pangkat'], 0, 1)]['jumlah']++;
                 // $gol1 = [11, 12, 13, 14];
@@ -597,6 +658,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('m_user h', 'a.nipbaru_ws = h.username')
                         ->where('h.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->group_by('h.id')
                         ->order_by('a.nama')
                         ->get()->result_array();

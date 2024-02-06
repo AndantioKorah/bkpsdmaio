@@ -230,8 +230,13 @@
 			</a>
 		</li>
 		<li class="sidebar-item">
-		<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
+			</a>
+		</li>
+		<li class="sidebar-item">
+			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Nomor Surat</span>
 			</a>
 		</li>
 	<?php } ?>
@@ -253,9 +258,23 @@
 	?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
-		<a class="sidebar-link" href="#">
-			<i class="fa fa-folder-open"></i> <span class="align-middle">Layanan</span>
+		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-folder-open"></i> 
+			<span class="align-middle">Layanan
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
 		</a>
+		<!-- <ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			<li class="sidebar-item ">
+				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+				</a>
+			</li>
+		</ul> -->
 	</li>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
@@ -267,7 +286,12 @@
 		</li>
 	<?php } ?> -->
 	<?php
-	if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')) { ?>
+	if($this->general_library->isProgrammer() ||
+	$this->general_library->isAdminAplikasi() ||
+	$this->general_library->isHakAksesVerifLayanan() ||
+	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
+	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-check-square"></i> 
@@ -288,11 +312,21 @@
 				</li>
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
-				<li class="sidebar-item ">
-					<a title="Dokumen Upload" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Dokumen Upload
-					</a>
-				</li>
+					<li class="sidebar-item ">
+						<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pendataan Data Mandiri
+						</a>
+					</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() ||
+				$this->general_library->isAdminAplikasi() || 
+				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+				$this->general_library->isKepalaPd()){ ?>
+					<li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+						</a>
+					</li>
 				<?php } ?>
 			</ul>
 		</li>
@@ -303,7 +337,160 @@
 		Kinerja
 	</li>
 
-	<?php
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+	<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>dashboard" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fas fa-tachometer-alt"></i> 
+				<span class="align-middle">
+				Dashboard
+				</span>
+			</a>	
+		</li>
+		<?php } ?>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
+				<span class="align-middle">
+					Keterangan Presensi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="ketpresensi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/upload')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Upload
+					</a>
+				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi
+					</a>
+				</li>
+				<?php } ?>
+				
+				
+			</ul>
+		</li>
+
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
+				<span class="align-middle">
+					Rekapitulasi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Absensi
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+					<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
+						<i class="align-middle me-2 far fa-circle"></i>TPP
+					</a>
+				</li>
+				<?php } ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Presensi
+					</a>
+				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		
+					<li class="sidebar-item ">
+						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM
+						</a>
+					</li>
+				<?php } ?>
+				
+				
+			</ul>
+		</li>
+		
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#skbp" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
+				<span class="align-middle">
+					SKBP
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="skbp" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rencana')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Sasaran Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/realisasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rekap')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
+					</a>
+				</li>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isPejabatEselon()){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai
+					</a>
+				</li>
+				<?php } ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
+					</a>
+				</li>
+				
+				
+			</ul>
+		</li>
+
+	<!-- <?php
 		$active_role = $this->session->userdata('active_role');
 		$list_menu = $this->session->userdata('list_menu');
 		if ($list_menu) {
@@ -343,12 +530,12 @@
 						<?php } ?>
 					<?php } ?>
 		<?php } ?>
+	</li> -->
 
-	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
-		<li class="sidebar-header">
+    <li class="sidebar-header">
 		Manajemen Talenta
 	</li>
 	<li class="sidebar-item ">

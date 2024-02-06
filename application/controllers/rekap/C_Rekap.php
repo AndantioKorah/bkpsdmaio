@@ -429,4 +429,13 @@ class C_Rekap extends CI_Controller
         $this->mpdf->Output('Rekap TPP ' . $skpd[1] . ' ' . $bulan . ' ' . $data['parameter']['tahun'] . '.pdf', 'I'); // view in the explorer
 
     }
+
+    public function rekapVerifPdm(){
+        render('kepegawaian/V_RekapVerifikasiPdm', '', '', null);
+    }
+
+    public function searchRekapVerifPdm(){
+        $data['result'] = $this->rekap->searchRekapVerifPdm($this->input->post());
+        $this->load->view('kepegawaian/V_RekapVerifikasiPdmResult', $data);
+    }
 }

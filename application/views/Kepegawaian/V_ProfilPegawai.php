@@ -67,10 +67,10 @@
     }
 
     #profile_pegawai{
-      width: 250px;
-      height: calc(250px * 1.25);
+      width: 300px;
+      height: calc(300px * 1.25);
       background-size: cover;
-      /* object-fit: contain; */
+      object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
     }
@@ -128,6 +128,18 @@
   padding: 0 !important;
   margin-left: -10px !important;
   margin-right: -10px !important;
+}
+
+.sp_whatsapp{
+  color: #50575e !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_whatsapp:hover{
+  color: green !important;
+  text-decoration: none;
+  transition: .2s;
 }
 
 
@@ -363,7 +375,13 @@
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm sp_profil_alamat">
-                  <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php if($profil_pegawai['handphone'] != null) { ?>
+                    <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($profil_pegawai['handphone'])?>">
+                      <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                      <i class="fab fa-whatsapp"></i></a>
+                  <?php } else { ?>
+                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php } ?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">
@@ -395,8 +413,9 @@
                 </span>
               </div>
               <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
-                if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") { ?>
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
+                // if($data[0] == "Pelaksana" || $data[0] == "Staff" || $data[0] == "Staf") 
+                 { ?> 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Bidang/Bagian
@@ -418,7 +437,7 @@
                   <?=($profil_pegawai['nama_sub_bidang'])?>
                 </span>
               </div>
-              <?php } ?>
+              <?php } ?> 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Jenis Jabatan
@@ -437,7 +456,7 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                   <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   echo $data[0];
                   ?>
                 </span>
@@ -451,7 +470,7 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                 <?php
-                  $data = explode("/", $profil_pegawai['data_jabatan']);
+                  $data = explode("|", $profil_pegawai['data_jabatan']);
                   if(isset($data[2])) { 
                     if($data[2] == 1) {
                     echo "Definitif"; 
@@ -476,8 +495,8 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?php
-                   $data = explode("/", $profil_pegawai['data_jabatan']);
+                  <?php 
+                   $data = explode("|", $profil_pegawai['data_jabatan']);
                    if(isset($data[1])) echo formatDateNamaBulan($data[1]);?>
                 </span>
               </div>
@@ -550,7 +569,7 @@
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  TMT CPNS
+                  TMT CPNS/PPPK
                 </span>
               </div>
               <div class="col-lg-12 text-left" >
@@ -558,6 +577,18 @@
                   <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
                 </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Keterangan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  
+              </span>
+              </div>
+
                  <!-- end data kepegawaian  -->
 
              
@@ -674,6 +705,9 @@
                 <button onclick="loadFormCuti()" class="nav-link nav-link-profile" id="pills-cuti-tab" data-bs-toggle="pill" data-bs-target="#pills-cuti" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">Cuti</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="loadFormDisiplin()" class="nav-link nav-link-profile" id="pills-disiplin-tab" data-bs-toggle="pill" data-bs-target="#pills-disiplin" type="button" role="tab" aria-controls="pills-disiplin" aria-selected="false">Disiplin</button>
+              </li>
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormSkp()" class="nav-link nav-link-profile" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">SKP</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
@@ -742,6 +776,9 @@
               </div>
               <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">
                 <div id="form_cuti"></div>
+              </div>
+              <div class="tab-pane fade" id="pills-disiplin" role="tabpanel" aria-labelledby="pills-disiplin-tab">
+              <div id="form_disiplin"></div>
               </div>
               <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
                 <div id="form_skp"></div>
@@ -1098,6 +1135,8 @@
                 setTimeout(LoadFormInovasi, 1500);
                 } else if(jb == "tim_kerja"){
                 setTimeout(LoadFormTimKerja, 1500);
+                } else if(jb == "disiplin"){
+                setTimeout(loadFormDisiplin, 1500);
                 }
               } else {
                 errortoast(result.msg)
@@ -1386,6 +1425,14 @@
   $('#form_berkaspns').html(' ')
     $('#form_berkaspns').append(divLoaderNavy)
     $('#form_berkaspns').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormBerkasPns/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function loadFormDisiplin(){
+  $('#form_disiplin').html(' ')
+    $('#form_disiplin').append(divLoaderNavy)
+    $('#form_disiplin').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormDisiplin/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

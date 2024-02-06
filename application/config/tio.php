@@ -15,6 +15,7 @@ $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
 $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
+$route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 
 
 //pelanggaran
@@ -42,6 +43,7 @@ $route['master/tpp'] = 'master/C_Master/tpp';
 $route['dashboard'] = 'dashboard/C_Dashboard/dashboard';
 $route['pdm/dashboard'] = 'dashboard/C_Dashboard/dashboardPdm';
 $route['kepegawaian/dashboard'] = 'dashboard/C_Dashboard/dashboardKepegawaian';
+$route['kepegawaian/nomor-surat'] = 'kepegawaian/C_Kepegawaian/nomorSurat';
 $route['pegawai/tpp/detail'] = 'user/C_User/detailTppPegawai';
 $route['rekap/presensi-pegawai'] = 'user/C_User/absensiPegawai';
 
@@ -59,6 +61,12 @@ $route['api/maxchat/message/send/(:any)'] = 'maxchat/C_Maxchat/sendMessage/$1';
 //cron
 $route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';
 $route['cron/rekap-absensi-pd'] = 'cron/C_Cron/cronRekapAbsenPD';
+$route['cron/send-wa-message'] = 'cron/C_Cron/cronSendWa';
 
 //walikota
 $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';
+
+//cuti
+$route['kepegawaian/permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/permohonanCuti';
+$route['kepegawaian/verifikasi-permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/verifikasiPermohonanCuti';
+$route['whatsapp-verification/cuti/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/verifWhatsapp/$1';

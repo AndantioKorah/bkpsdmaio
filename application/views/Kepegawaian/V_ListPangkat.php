@@ -52,6 +52,7 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                 <?php if($rs['status'] == 1) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -60,7 +61,7 @@
                 href="#modal_edit_pangkat"
                 onclick="loadEditPangkat('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPangkat btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
-
+                <?php } ?>
                 <?php if($kode == 1) { ?>
                 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
                 <button 
@@ -84,7 +85,9 @@
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
               <td>
               <?php if($rs['status'] == 1) { ?>
+              <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
               <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+               <?php } ?>
                <?php } ?>
               </td>
               <?php  } ?>

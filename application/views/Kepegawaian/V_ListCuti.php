@@ -74,7 +74,8 @@
   })
 
   // function openFileCuti(filename){
-  //   var nip = "<?=$this->general_library->getUserName()?>";
+  //   var number = Math.floor(Math.random() * 1000);
+  //   $link = "http://siladen.manadokota.go.id/bidik/arsipcuti/"+filename+"?v="+number;
   //   $('#iframe_view_file_cuti').attr('src', '<?=base_url();?>arsipcuti/'+filename)
   // }
 
@@ -111,7 +112,8 @@
     // })
 
     var number = Math.floor(Math.random() * 1000);
-   $link = "http://siladen.manadokota.go.id/bidik/arsipcuti/"+filename+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/arsipcuti/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipcuti/"+filename+"?v="+number;
 
     $('#iframe_view_file_cuti').attr('src', $link)
         $('#iframe_view_file_cuti').on('load', function(){

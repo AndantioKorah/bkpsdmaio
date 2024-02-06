@@ -5,7 +5,7 @@
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Jenis Diklat</th>
-         
+          <th class="text-left">Jenjang Diklat</th>
           <th class="text-left">Nama Diklat</th>
           <th class="text-left">Tempat Diklat</th>
           <th class="text-left">Penyelenggara</th>
@@ -29,6 +29,7 @@
 
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_jdiklat']?></td>
+              <td class="text-left"><?=$rs['jenjang_diklat']?></td>
               <td class="text-left"><?=$rs['nm_diklat']?></td>
               <td class="text-left"><?=$rs['tptdiklat']?></td>
               <td class="text-left"><?=$rs['penyelenggara']?></td>

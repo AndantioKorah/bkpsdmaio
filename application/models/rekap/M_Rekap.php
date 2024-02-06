@@ -63,6 +63,7 @@
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
+                                    ->where('id_m_status_pegawai', 1)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -123,6 +124,7 @@
                                     ->join('m_role f', 'f.id = e.id_m_role', 'left')
                                     ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
+                                    ->where('id_m_status_pegawai', 1)
                                     ->group_by('b.id')
                                     ->order_by('c.eselon, b.username')
                                     ->get()->result_array();
@@ -135,6 +137,7 @@
                         ->where('a.bulan', $data['bulan'])
                         ->where('a.tahun', $data['tahun'])
                         ->where('c.skpd', $skpd[0])
+                        ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
@@ -504,6 +507,7 @@
                             ->where('a.bulan', floatval($bulan))
                             ->where('a.tahun', floatval($tahun))
                             ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
                             ->where('a.status', 2);
                     if($uk){
                         $this->db->where('c.skpd', $uk['id_unitkerja']);
@@ -778,7 +782,10 @@
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
-                            ->order_by('b.eselon, a.nama');
+                            ->where('id_m_status_pegawai', 1)
+                            ->order_by('b.eselon', 'desc')
+                            ->order_by('a.nama')
+                            ->group_by('a.nipbaru_ws');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
                 $this->db->where('a.skpd', $data['id_unitkerja']);
             } else if($flag_alpha == 1){
@@ -837,6 +844,7 @@
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('MONTH(a.tgl)', $data['bulan'])
                         ->where('YEAR(a.tgl)', $data['tahun'])
+                        ->where('id_m_status_pegawai', 1)
                         // ->where('c.skpd', $data['id_unitkerja'])
                         ->group_by('a.id');
 
@@ -905,6 +913,7 @@
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->where('a.skpd', $rs['id_unitkerja'])
                             ->order_by('b.eselon, a.nama')
+                            ->where('id_m_status_pegawai', 1)
                             ->get()->result_array();
         }
         $lp = null;
@@ -1007,6 +1016,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where('c.skpd', $uker['id_unitkerja'])
+                ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
@@ -1288,6 +1298,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1466,6 +1477,7 @@
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
+                        ->where('id_m_status_pegawai', 1)
                         ->get()->result_array();
 
         $data_rekap =  $this->db->select('*')
@@ -1545,6 +1557,7 @@
                         ->where('a.tahun', $parameter['tahun'])
                         ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1)
                         ->where_in('a.id_m_jenis_disiplin_kerja', [1,2,14,15,16,17])
                         ->get()->result_array();
 
@@ -1849,6 +1862,87 @@
         }
         $this->cronRekapAbsen(0);
 
+    }
+
+    public function searchRekapVerifPdm($data){
+        $result = null;
+        $list_master = null;
+        $tanggal = explodeRangeDateNew($data['tanggal']);
+        $master = $this->db->select('*')
+                        ->from('m_pdm')
+                        ->where('flag_active', 1)
+                        ->where('id !=', 15) //pas foto
+                        ->get()->result_array();
+
+        foreach($master as $m){
+            $list_master[$m['singkatan']]['id'] = $m['id'];
+            $list_master[$m['singkatan']]['nama_berkas'] = $m['nama_berkas'];
+            $list_master[$m['singkatan']]['singkatan'] = $m['singkatan'];
+            $list_master[$m['singkatan']]['total'] = 0;
+        }
+
+        $users = $this->db->select('c.*, a.id as id_m_user')
+                        ->from('m_user a')
+                        ->join('t_hak_akses b', 'a.id = b.id_m_user')
+                        ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
+                        ->where('b.flag_active', 1)
+                        ->where('b.id_m_hak_akses', 5)
+                        ->get()->result_array();
+        if($users){
+            foreach($users as $u){
+                $result[$u['id_m_user']]['nama_pegawai'] = getNamaPegawaiFull($u);
+                $result[$u['id_m_user']]['nip'] = $u['nipbaru_ws'];
+                $result[$u['id_m_user']]['total_verif'] = 0;
+                $result[$u['id_m_user']]['detail_verif'] = $list_master;
+            }
+        }
+
+        foreach($master as $mst){
+            $this->db->select('a.*')
+                    ->from('db_pegawai.'.$mst['table'].' a')
+                    ->where('flag_active', 1)
+                    // ->where('a.status', 2)
+                    ->where('a.id_m_user_verif !=', 0);
+            if(!isset($data['all'])){
+                $this->db->where('DATE(a.tanggal_verif) >=', $tanggal[0])
+                            ->where('DATE(a.tanggal_verif) <=', $tanggal[1]);
+            }
+
+            $dataresult = $this->db->get()->result_array();
+            if($dataresult){
+                foreach($dataresult as $dr){
+                    if(isset($result[$dr['id_m_user_verif']])){
+                        $result[$dr['id_m_user_verif']]['total_verif'] ++;
+                        $result[$dr['id_m_user_verif']]['detail_verif']['pangkat']['total'] ++;
+                    } else {
+                        $user = $this->db->select('c.*, a.id as id_m_user')
+                                        ->from('m_user a')
+                                        ->join('t_hak_akses b', 'a.id = b.id_m_user')
+                                        ->join('db_pegawai.pegawai c', 'a.username = c.nipbaru_ws')
+                                        ->where('b.flag_active', 1)
+                                        ->where('a.id', $dr['id_m_user_verif'])
+                                        ->get()->row_array();
+                        if($user){
+                            $result[$u['id_m_user']]['nama_pegawai'] = getNamaPegawaiFull($user);
+                            $result[$u['id_m_user']]['nip'] = $user['nipbaru_ws'];
+                            $result[$u['id_m_user']]['total_verif'] = 0;
+                            $result[$u['id_m_user']]['detail_verif'] = $list_master;
+                            $this->db->insert('t_hak_akses',
+                            [
+                                'id_m_user' => $user['id_m_user'],
+                                'id_m_hak_akses' => 5,
+                                'created_by' => 0
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+        function cmp($a, $b) {
+            return $b['total_verif'] > $a['total_verif'];
+        }
+        usort($result, "cmp");
+        return $result;
     }
 }
 ?>

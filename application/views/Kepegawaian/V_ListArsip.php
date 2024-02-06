@@ -112,6 +112,8 @@
 
     var number = Math.floor(Math.random() * 1000);
     $link = "http://siladen.manadokota.go.id/bidik/arsiplain/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    
     $('#iframe_view_file_arsip').attr('src', $link)
         $('#iframe_view_file_arsip').on('load', function(){
           $('.iframe_loader').hide()

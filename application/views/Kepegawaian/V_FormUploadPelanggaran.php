@@ -8,9 +8,9 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPelanggaran">
+<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPelanggaran">
   Tambah Data Pelanggaran
-</button>
+</button> -->
 
 
 <!-- <button onclick="loadRiwayatUsulPelanggaran()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPelanggaran">

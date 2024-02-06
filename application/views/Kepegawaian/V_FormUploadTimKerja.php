@@ -14,9 +14,9 @@
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalTimKerja">
+<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalTimKerja">
   Tambah Data Tim Kerja
-</button>
+</button> -->
 
 <button onclick="loadRiwayatUsulTimKerja()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalTimKerja">
   Riwayat Usul Tim Kerja

@@ -93,7 +93,8 @@
     // })
 
     var number = Math.floor(Math.random() * 1000);
-    $link = "http://siladen.manadokota.go.id/bidik/arsipberkaspns/"+filename+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/arsipberkaspns/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
     $('#iframe_view_file_berkas_pns').attr('src', $link)
         $('#iframe_view_file_berkas_pns').on('load', function(){
           $('.iframe_loader').hide()

@@ -805,6 +805,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
         }
         $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
+        $this->updatePangkat($id_peg);
           // PANGKAT
         } else if($id_dok == 7){
             $tgl_sk = date("Y-m-d", strtotime($this->input->post('gb_tanggal_sk')));
@@ -2660,6 +2661,19 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
     $this->db->where($fieldName, $fieldValue)
          ->update($tableName, ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
 
+
+    if($tableName == "db_pegawai.pegpangkat"){
+        $getPangkat = $this->db->select('*')
+        ->from('db_pegawai.pegpangkat a')
+        ->where('a.id', $fieldValue)
+        ->order_by('tmtpangkat', 'desc')
+        ->limit(1)
+        ->get()->row_array();
+ 
+        $id_peg = $getPangkat['id_pegawai'];
+        $this->updatePangkat($id_peg);
+    }
+
     if($tableName == "db_pegawai.pegjabatan"){
         $getJabatan = $this->db->select('*')
         ->from('db_pegawai.pegjabatan a')
@@ -2671,33 +2685,34 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         // dd($getJabatan['statusjabatan']);
 
         if($getJabatan['statusjabatan'] == 1){
-        $getJabatanOld = $this->db->select('*')
-        ->from('db_pegawai.pegjabatan a')
-        ->where('a.id_pegawai', $getJabatan['id_pegawai'])
-        ->where_in('a.flag_active', [1,2])
-        ->where_not_in('a.statusjabatan', [2,3])
-        ->order_by('tmtjabatan', 'desc')
-        ->limit(1)
-        ->get()->row_array();
+            $id_peg = $getJabatan['id_pegawai'];
+            $this->updateJabatan($id_peg);
+    //     $getJabatanOld = $this->db->select('*')
+    //     ->from('db_pegawai.pegjabatan a')
+    //     ->where('a.id_pegawai', $getJabatan['id_pegawai'])
+    //     ->where_in('a.flag_active', [1,2])
+    //     ->where_not_in('a.statusjabatan', [2,3])
+    //     ->order_by('tmtjabatan', 'desc')
+    //     ->limit(1)
+    //     ->get()->row_array();
 
       
-       if($getJabatanOld){
-        // $dataUpdate["skpd"] =  $getJabatanOld['skpd'];
-        if($getJabatanOld['id_unitkerja'] != null){
-            $dataUpdate["skpd"] =  $getJabatanOld['id_unitkerja'];
-        }
-        $dataUpdate["tmtjabatan"] =  $getJabatanOld['tmtjabatan'];
-        $dataUpdate["jabatan"] =   $getJabatanOld['id_jabatan'];
-        $dataUpdate["jenisjabpeg"] =  $getJabatanOld['jenisjabatan'];
-        $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
-                ->update('db_pegawai.pegawai as a', $dataUpdate);
-       } else {
-        $dataUpdate2["tmtjabatan"] =  "";
-        $dataUpdate2["jabatan"] =   0;
-        $dataUpdate2["jenisjabpeg"] =  0;
-        $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
-                ->update('db_pegawai.pegawai as a', $dataUpdate2);
-       }
+    //    if($getJabatanOld){
+    //     if($getJabatanOld['id_unitkerja'] != null){
+    //         $dataUpdate["skpd"] =  $getJabatanOld['id_unitkerja'];
+    //     }
+    //     $dataUpdate["tmtjabatan"] =  $getJabatanOld['tmtjabatan'];
+    //     $dataUpdate["jabatan"] =   $getJabatanOld['id_jabatan'];
+    //     $dataUpdate["jenisjabpeg"] =  $getJabatanOld['jenisjabatan'];
+    //     $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
+    //             ->update('db_pegawai.pegawai as a', $dataUpdate);
+    //    } else {
+    //     $dataUpdate2["tmtjabatan"] =  "";
+    //     $dataUpdate2["jabatan"] =   0;
+    //     $dataUpdate2["jenisjabpeg"] =  0;
+    //     $this->db->where('a.id_peg', $getJabatan['id_pegawai'])
+    //             ->update('db_pegawai.pegawai as a', $dataUpdate2);
+    //    }
     }
            
     }
@@ -3382,7 +3397,7 @@ public function getAllPelanggaranByNip($nip){
       }
 
         function getPangkatPegawaiEdit($id){
-            $this->db->select('c.id,e.id_jenispengangkatan,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+            $this->db->select('b.id_peg,c.id,e.id_jenispengangkatan,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                            c.nosk, c.tglsk, c.gambarsk,c.pangkat')
                            ->from('m_user a')
                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -3746,6 +3761,9 @@ public function submitEditJabatan(){
         } else {
             $this->db->trans_commit();
         }
+
+        $id_peg = $datapost['id_peg'];
+        $this->updatePangkat($id_peg);
     
         return $res;
 
@@ -5398,11 +5416,10 @@ public function submitEditJabatan(){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
-        $datapost = $this->input->post();
        
         $this->db->trans_begin();
         
-            $getJabatan = $this->db->select('*')
+            $getJabatan = $this->db->select('a.id_unitkerja,a.tmtjabatan,a.id_jabatan,a.jenisjabatan')
             ->from('db_pegawai.pegjabatan a')
             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
             ->where('a.id_pegawai', $id_peg)
@@ -5410,6 +5427,7 @@ public function submitEditJabatan(){
             // ->where('a.statusjabatan !=', 2)
             ->where_not_in('a.statusjabatan', [2,3])
             ->where('a.status', 2)
+            ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
             ->limit(1)
             ->get()->row_array();
@@ -5421,6 +5439,45 @@ public function submitEditJabatan(){
                 $dataUpdate["tmtjabatan"] =  $getJabatan['tmtjabatan'];
                 $dataUpdate["jabatan"] =   $getJabatan['id_jabatan'];
                 $dataUpdate["jenisjabpeg"] =  $getJabatan['jenisjabatan'];
+                $this->db->where('id_peg', $id_peg)
+                        ->update('db_pegawai.pegawai', $dataUpdate);
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
+
+    public function updatePangkat($id_peg){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        
+       
+        $this->db->trans_begin();
+        
+            $getPangkat = $this->db->select('*')
+            ->from('db_pegawai.pegpangkat a')
+            ->join('db_pegawai.pangkat b', 'b.id_pangkat = a.pangkat')
+            ->where('a.id_pegawai', $id_peg)
+            ->where_in('a.flag_active', [1,2])
+            ->where('a.status', 2)
+            ->where('a.flag_active', 1)
+            ->order_by('a.tmtpangkat', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+        
+            if($getPangkat) {
+  
+                $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
+                $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
                 $this->db->where('id_peg', $id_peg)
                         ->update('db_pegawai.pegawai', $dataUpdate);
             }

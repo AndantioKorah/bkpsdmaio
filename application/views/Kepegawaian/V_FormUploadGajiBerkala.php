@@ -8,9 +8,9 @@
 </style>
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?> 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
+<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalBerkala">
   Tambah Data Gaji Berkala
-</button>
+</button> -->
 
 <button onclick="loadRiwayatGajiBerkala()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalBerkala">
   Riwayat Usul Gaji Berkala

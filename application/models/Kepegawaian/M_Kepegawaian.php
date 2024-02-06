@@ -3109,7 +3109,6 @@ public function updateStatusBerkas(){
 
 public function updateProfilePicture($data){ 
    
-
                 $getFP = $this->db->select('fotopeg')
                 ->from('db_pegawai.pegawai a')
                 ->where('a.nipbaru_ws', $data['nip'])

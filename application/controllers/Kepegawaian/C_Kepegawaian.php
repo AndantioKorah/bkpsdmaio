@@ -1536,7 +1536,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDataDrh($nip){
 		$data['result'] = $this->kepegawaian->loadDataDrh($nip);
-		$this->load->view('Kepegawaian/V_DrhPegawai', $data);
+		$this->load->view('kepegawaian/V_DrhPegawai', $data);
 	}
 	public function getMasterSubBidang()
     {

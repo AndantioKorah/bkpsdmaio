@@ -44,7 +44,29 @@
             <th class="text-center">Unit Kerja</th>
         </thead>
         <tbody>
-            <?php if($result){ $no=1; foreach($result as $rs){ ?>
+            <?php if($result){ $no=1; foreach($result as $rs){
+                    $badge_status = 'badge-cpns';
+                if($rs['statuspeg'] == 2){
+                    $badge_status = 'badge-pns';
+                } else if($rs['statuspeg'] == 3){
+                    $badge_status = 'badge-pppk';
+                }
+
+                $badge_aktif = 'badge-aktif';
+                if($rs['id_m_status_pegawai'] == 2){
+                    $badge_aktif = 'badge-pensiun-bup';
+                } else if($rs['id_m_status_pegawai'] == 3){
+                    $badge_aktif = 'badge-pensiun-dini';
+                } else if($rs['id_m_status_pegawai'] == 4){
+                    $badge_aktif = 'badge-diberhentikan';
+                } else if($rs['id_m_status_pegawai'] == 5){
+                    $badge_aktif = 'badge-mutasi';
+                } else if($rs['id_m_status_pegawai'] == 6){
+                    $badge_aktif = 'badge-meninggal';
+                } else if($rs['id_m_status_pegawai'] == 8){
+                    $badge_aktif = 'badge-tidak-aktif';
+                }
+            ?>
                 <tr>
                     <td class="text-center"><?=$no++?></td>
                     <td class="text-left">
@@ -53,11 +75,8 @@
                         </span><br>
                         <span><?=($rs['nama_jabatan'])?></span><br>
                         <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br>
-                        <?php if($rs['id_statuspeg'] == 1){ ?>
-                            <span class="badge badge-cpns"><?=$rs['nm_statuspeg']?></span>
-                        <?php } else if($rs['id_statuspeg'] == 3){ ?>
-                            <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span>
-                        <?php } ?>
+                        <span class="badge <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>
+                        <span class="badge <?=$badge_aktif?>"><?=$rs['nama_status_pegawai']?></span>
                     </td>
                     <td class="text-center"><?=$rs['eselon']?></td>
                     <td class="text-left"><?=$rs['nm_pangkat']?></td>

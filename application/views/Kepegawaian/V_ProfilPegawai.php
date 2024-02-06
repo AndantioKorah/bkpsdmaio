@@ -74,14 +74,7 @@
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
     }
-
-    .badge{
-      box-shadow: 3px 3px 10px #888888;
-      background-color: #ed1818;
-      border: 2px solid #ed1818;
-      color: white;
-    }
-
+    
     .foto_container {
       position: relative;
       /* width: 50%; */
@@ -158,11 +151,35 @@
         <div class="row p-3">
           <div class="col-lg-4">
             <div class="row">
-              <?php if($profil_pegawai['statuspeg'] == 1){ ?>
-                <div class="col-lg-12 text-left">
-                  <h3><span class="badge">CPNS</span></h3>
-                </div>
-              <?php } ?>
+              <?php
+                $badge_status = 'badge-cpns';
+                if($profil_pegawai['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($profil_pegawai['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                }
+
+                $badge_aktif = 'badge-aktif';
+                if($profil_pegawai['id_m_status_pegawai'] == 2){
+                  $badge_aktif = 'badge-pensiun-bup';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 3){
+                  $badge_aktif = 'badge-pensiun-dini';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 4){
+                  $badge_aktif = 'badge-diberhentikan';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 5){
+                  $badge_aktif = 'badge-mutasi';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 6){
+                  $badge_aktif = 'badge-meninggal';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 8){
+                  $badge_aktif = 'badge-tidak-aktif';
+                }
+              ?>
+              <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                <h3><span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span></h3>
+              </div>
             
 
               <div class="col-lg-12 text-center">
@@ -234,9 +251,9 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
-                <!-- <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
                   <i class="fa fa-id-badge"></i> DRH
-                </button> -->
+                </button>
             
                 <?php }?>
 

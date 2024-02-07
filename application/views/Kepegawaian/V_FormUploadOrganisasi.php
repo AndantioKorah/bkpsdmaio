@@ -130,9 +130,9 @@
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalOrganisasi">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalOrganisasi">
   Tambah Data Organisasi
-</button> -->
+</button>
 
 
 <button onclick="loadRiwayatUsulOrganisasi()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalOrganisasi">

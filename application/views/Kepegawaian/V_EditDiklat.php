@@ -24,7 +24,7 @@
     <div class="form-group" style="margin-bottom:10px !important;">
     <label >Jenjang Diklat </label>
     <select class="form-control select2" data-dropdown-parent="#modal_edit_diklat" data-dropdown-css-class="select2-navy" name="edit_diklat_jenjang" id="edit_diklat_jenjang" required>
-                    <option value="0" disabled selected>Pilih Item</option>
+                    <option value="0"  selected>Pilih Item</option>
                     <?php if($jenjang_diklat){ foreach($jenjang_diklat as $r){ ?>
                         <option <?php if($diklat[0]['jenjang_diklat'] == $r['id']) echo "selected"; else echo ""; ?>  value="<?=$r['id']?>"><?=$r['jenjang_diklat']?></option>
                     <?php } } ?>

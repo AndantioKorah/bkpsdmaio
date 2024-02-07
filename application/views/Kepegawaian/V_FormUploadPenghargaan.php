@@ -11,9 +11,9 @@
 
 
 <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPenghargaan">
   Tambah Data Penghargaan
-</button> -->
+</button>
 
 
 <button onclick="loadRiwayatUsulPenghargaan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPenghargaan">

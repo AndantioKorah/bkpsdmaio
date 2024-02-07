@@ -8,9 +8,9 @@
 </style>
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPendidikan">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalPendidikan">
   Tambah Data Pendidikan
-</button> -->
+</button>
 
 <button onclick="loadRiwayatUsulPendidikan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalPendidikan">
   Riwayat Usul Pendidikan

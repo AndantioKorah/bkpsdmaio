@@ -3542,7 +3542,7 @@ public function submitEditJabatan(){
     $datapost = $this->input->post();
     $this->db->trans_begin();
     $target_dir = './arsipjabatan/';
-    $filename = $this->input->post('gambarsk');
+    $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
    
     if($_FILES['file']['name'] != ""){
       
@@ -3550,12 +3550,15 @@ public function submitEditJabatan(){
             $filename = $_FILES['file']['name'];
         } 
 
+    $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+    $filename = $random_number.$filename;
 
     $config['upload_path']          = $target_dir;
     $config['allowed_types']        = 'pdf';
     $config['encrypt_name']			= FALSE;
     $config['overwrite']			= TRUE;
     $config['detect_mime']			= TRUE; 
+    $config['file_name']            = "$filename";
 
     $this->load->library('upload', $config);
 
@@ -3574,19 +3577,19 @@ public function submitEditJabatan(){
         $dataFile = $this->upload->data();
  
 
-        $file_tmp = $_FILES['file']['tmp_name'];
-        $data_file = file_get_contents($file_tmp);
-        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-        $filename = $random_number.$filename;
+        // $file_tmp = $_FILES['file']['tmp_name'];
+        // $data_file = file_get_contents($file_tmp);
+        // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        // $filename = $random_number.$filename;
 
-        $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-        $path = substr($target_dir,2);
-        $res = $this->dokumenlib->setDokumenWs('POST',[
-            'username' => "199401042020121011",
-            'password' => "039945c6ccf8669b8df44612765a492a",
-            'filename' => $path.$filename,
-            'docfile'  => $base64
-        ]);
+        // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+        // $path = substr($target_dir,2);
+        // $res = $this->dokumenlib->setDokumenWs('POST',[
+        //     'username' => "199401042020121011",
+        //     'password' => "039945c6ccf8669b8df44612765a492a",
+        //     'filename' => $path.$filename,
+        //     'docfile'  => $base64
+        // ]);
        
             // $str = $this->input->post('edit_jabatan_nama');
             // $newStr = explode(",", $str);
@@ -3664,7 +3667,7 @@ public function submitEditJabatan(){
         $datapost = $this->input->post();
         $this->db->trans_begin();
         $target_dir = './arsipelektronik/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
           
@@ -3672,17 +3675,15 @@ public function submitEditJabatan(){
                 $filename = $_FILES['file']['name'];
             } 
 
-            // $res = $this->dokumenlib->delDokumenWs('POST',[
-            //     'username' => $this->general_library->getUsername(),
-            //     'password' => $this->general_library->getPassword(),
-            //     'filename' => $path
-            // ]);
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = $random_number.$filename;
 
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE; 
+        $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 
@@ -3700,19 +3701,19 @@ public function submitEditJabatan(){
 		} else {
 			$dataFile = $this->upload->data();
             // $dataFile 			= $this->upload->data();
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $random_number.$filename;
+            // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            // $filename = $random_number.$filename;
 
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             // if($target_dir != null){
             //     unlink($target_dir."$nama_file");
@@ -3774,21 +3775,26 @@ public function submitEditJabatan(){
         $datapost = $this->input->post();
         $this->db->trans_begin();
         $target_dir = './arsipgjberkala/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
           
             if($filename == ""){
                 $filename = $_FILES['file']['name'];
-            } 
+            } else {
+                
+            }
 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
-
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
+    
 		$this->load->library('upload', $config);
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
@@ -3799,20 +3805,20 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $random_number.$filename;
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            // $filename = $random_number.$filename;
 
             
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["pangkat"] = $datapost["edit_gb_pangkat"];
@@ -4023,7 +4029,7 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsipdiklat/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
        
@@ -4032,11 +4038,15 @@ public function submitEditJabatan(){
             } 
            
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4048,20 +4058,22 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["jenisdiklat"] = $datapost["edit_diklat_jenis"];
-            $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
+            if(isset($datapost["edit_diklat_jenjang"])){
+                $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
+            }
             $data["nm_diklat"] = $datapost["edit_diklat_nama"];
             $data["tptdiklat"] = $datapost["edit_diklat_tempat"];
             $data["penyelenggara"] = $datapost["edit_diklat_penyelenggara"];
@@ -4079,7 +4091,9 @@ public function submitEditJabatan(){
         } else {
             $id = $datapost['id'];
             $data["jenisdiklat"] = $datapost["edit_diklat_jenis"];
-            $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
+            if(isset($datapost["edit_diklat_jenjang"])){
+                $data["jenjang_diklat"] = $datapost["edit_diklat_jenjang"];
+            }
             $data["nm_diklat"] = $datapost["edit_diklat_nama"];
             $data["tptdiklat"] = $datapost["edit_diklat_tempat"];
             $data["penyelenggara"] = $datapost["edit_diklat_penyelenggara"];
@@ -4113,7 +4127,7 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsiporganisasi/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
        
@@ -4122,11 +4136,15 @@ public function submitEditJabatan(){
             } 
            
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4138,16 +4156,16 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["jenis_organisasi"] = $datapost["edit_jenis_organisasi"];
@@ -4195,7 +4213,7 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsippenghargaan/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
        
@@ -4204,11 +4222,15 @@ public function submitEditJabatan(){
             } 
            
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4220,16 +4242,16 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["nm_pegpenghargaan"] = $datapost["edit_nm_pegpenghargaan"];
@@ -4272,7 +4294,7 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsipsumpah/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
        
@@ -4281,11 +4303,15 @@ public function submitEditJabatan(){
             } 
            
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4297,16 +4323,16 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["sumpahpeg"] = $datapost["edit_sumpahpeg"];
@@ -4347,7 +4373,8 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsiplain/';
-        $filename = $this->input->post('gambarsk');
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+        
        
         if($_FILES['file']['name'] != ""){
        
@@ -4356,11 +4383,15 @@ public function submitEditJabatan(){
             } 
            
     
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE; 
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4372,19 +4403,19 @@ public function submitEditJabatan(){
 
 		} else {
 			$dataFile = $this->upload->data();
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $this->general_library->getId().$random_number.$filename;
+            // $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            // $filename = $this->general_library->getId().$random_number.$filename;
 
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["gambarsk"] = $filename;

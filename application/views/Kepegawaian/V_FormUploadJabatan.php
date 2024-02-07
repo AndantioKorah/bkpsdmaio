@@ -15,9 +15,9 @@
 <!-- Button trigger modal -->
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
-<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalJabatan">
   Tambah Data Jabatan
-</button> -->
+</button>
 
 
 <button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">

@@ -1301,14 +1301,14 @@ class M_Kepegawaian extends CI_Model
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
 
-            if($this->input->post('id_dokumen') != 18) {
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$dataFile['file_name'],
-                'docfile'  => $base64
-            ]);
-            }
+            // if($this->input->post('id_dokumen') != 18) {
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$dataFile['file_name'],
+            //     'docfile'  => $base64
+            // ]);
+            // }
 
             
 
@@ -1539,12 +1539,12 @@ class M_Kepegawaian extends CI_Model
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
 
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_timkerja']      = $this->input->post('nm_timkerja');
@@ -1560,9 +1560,9 @@ class M_Kepegawaian extends CI_Model
                 }
             $result = $this->db->insert('db_pegawai.pegtimkerja', $dataInsert);
 
-            if($target_dir != null){
-                unlink($target_dir.$dataFile['file_name']);
-            }
+            // if($target_dir != null){
+            //     unlink($target_dir.$dataFile['file_name']);
+            // }
 
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
@@ -1615,12 +1615,12 @@ class M_Kepegawaian extends CI_Model
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
 
             
 
@@ -1637,9 +1637,9 @@ class M_Kepegawaian extends CI_Model
                 }
             $result = $this->db->insert('db_pegawai.peginovasi', $dataInsert);
 
-            if($target_dir != null){
-                unlink($target_dir.$dataFile['file_name']);
-            }
+            // if($target_dir != null){
+            //     unlink($target_dir.$dataFile['file_name']);
+            // }
 
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
@@ -1694,12 +1694,12 @@ class M_Kepegawaian extends CI_Model
             $filename = $this->general_library->getId().$random_number.$dataFile['file_name'];
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
 
            
 
@@ -1717,9 +1717,9 @@ class M_Kepegawaian extends CI_Model
                 }
             $result = $this->db->insert('db_pegawai.pegtimkerja', $dataInsert);
 
-            if($target_dir != null){
-                unlink($target_dir.$dataFile['file_name']);
-            }
+            // if($target_dir != null){
+            //     unlink($target_dir.$dataFile['file_name']);
+            // }
 
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
@@ -1772,12 +1772,12 @@ class M_Kepegawaian extends CI_Model
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path. $filename,
-                'docfile'  => $base64
-            ]);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path. $filename,
+            //     'docfile'  => $base64
+            // ]);
 
             
 
@@ -1793,9 +1793,9 @@ class M_Kepegawaian extends CI_Model
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
 
-            if($target_dir != null){
-                unlink($target_dir.$dataFile['file_name']);
-            }
+            // if($target_dir != null){
+            //     unlink($target_dir.$dataFile['file_name']);
+            // }
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
    
 		}
@@ -3109,7 +3109,6 @@ public function updateStatusBerkas(){
 
 public function updateProfilePicture($data){ 
    
-
                 $getFP = $this->db->select('fotopeg')
                 ->from('db_pegawai.pegawai a')
                 ->where('a.nipbaru_ws', $data['nip'])

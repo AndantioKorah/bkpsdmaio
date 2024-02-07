@@ -109,7 +109,8 @@
   //    }
   //  })
   var number = Math.floor(Math.random() * 1000);
-  $link = "http://siladen.manadokota.go.id/bidik/arsipsumpah/"+filename+"?v="+number;
+  // $link = "http://siladen.manadokota.go.id/bidik/arsipsumpah/"+filename+"?v="+number;
+  $link = "<?=base_url();?>/arsipsumpah/"+filename+"?v="+number;
 
 $('#iframe_view_file_sumjan').attr('src', $link)
     $('#iframe_view_file_sumjan').on('load', function(){

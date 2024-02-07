@@ -70,6 +70,8 @@
 
     var number = Math.floor(Math.random() * 1000);
     $link = "http://siladen.manadokota.go.id/bidik/arsiptimkerja/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsiptimkerja/"+filename+"?v="+number;
+    
     $('#iframe_view_file_tk').attr('src', $link)
         $('#iframe_view_file_tk').on('load', function(){
           $('.iframe_loader').hide()

@@ -121,7 +121,8 @@
     // })
 
     var number = Math.floor(Math.random() * 1000);
-    $link = "http://siladen.manadokota.go.id/bidik/arsipgjberkala/"+filename+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/arsipgjberkala/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipgjberkala/"+filename+"?v="+number;
 
   $('#iframe_view_file_gaji_berkala').attr('src', $link)
         $('#iframe_view_file_gaji_berkala').on('load', function(){

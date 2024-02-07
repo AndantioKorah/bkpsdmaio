@@ -236,7 +236,8 @@
     //   }
     // })
     var number = Math.floor(Math.random() * 1000);
-    $link = "http://siladen.manadokota.go.id/bidik/arsipjabatan/"+filename+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/arsipjabatan/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
 
 
     $('#iframe_view_file_jabatan').attr('src', $link)

@@ -135,6 +135,7 @@
     // })
     var number = Math.floor(Math.random() * 1000);
     $link = "http://siladen.manadokota.go.id/bidik/arsipdiklat/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipdiklat/"+filename+"?v="+number;
 
     $('#iframe_view_file_diklat').attr('src', $link)
         $('#iframe_view_file_diklat').on('load', function(){

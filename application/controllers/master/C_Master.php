@@ -27,8 +27,13 @@ class C_Master extends CI_Controller
 
     public function loadSkpdDetailPegawai(){
         $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
-     
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
+    }
+
+    public function openStrukturOrganisasiSkpd($id_unitkerja){
+        $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
+        // dd(json_encode($data['result']));
+        $this->load->view('master/V_MasterSkpdStrukturOrganisasi', $data);
     }
 
     public function searchPegawaiSkpdByFilter(){

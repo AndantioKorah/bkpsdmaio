@@ -560,14 +560,17 @@
             $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
             a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
-            a.fotopeg, b.id_unitkerja')
+            a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->join('m_user e', 'a.nipbaru_ws = e.username')
             ->where('a.skpd', $id_unitkerja)
             ->where('id_m_status_pegawai', 1)
+            ->where('e.flag_active', 1)
             ->order_by('c.eselon')
+            ->group_by('a.id_peg')
             ->get()->result_array();
 
             $result['total'] = count($pegawai);
@@ -724,6 +727,105 @@
                             ->where('id_m_pelanggaran', $id)
                             ->where('flag_active', 1)
                             ->get()->result_array();
+        }
+
+        public function loadStrukturOrganisasiSkpd($id_unitkerja){
+            $result = null;
+            $list_pegawai = $this->session->userdata('list_pegawai_detail_skpd');
+            $result['kepalaskpd'] = $this->db->select('*')
+                                    ->from('db_pegawai.jabatan')
+                                    ->where('jenis_jabatan', 'Struktural')
+                                    ->where('id_unitkerja', $id_unitkerja)
+                                    ->where('kepalaskpd', 1)
+                                    // ->order_by('eselon')
+                                    ->get()->row_array();
+
+            $list_bidang = null;
+            $bidang = $this->db->select('a.id as id_m_bidang, a.nama_bidang')
+                                    ->from('m_bidang a')
+                                    ->where('a.id_unitkerja', $id_unitkerja)
+                                    ->where('a.flag_active', 1)
+                                    ->get()->result_array();
+            if($bidang){
+                foreach($bidang as $b){
+                    $list_bidang[$b['id_m_bidang']] = $b;
+                    $list_bidang[$b['id_m_bidang']]['kepala'] = null;
+                    $list_bidang[$b['id_m_bidang']]['sub_bidang'] = null;
+                    $list_bidang[$b['id_m_bidang']]['list_pegawai'] = null;
+                }
+                $list_bidang['belum_setting']['nama_bidang'] = 'Belum Setting Bidang / Bagian';
+                $list_bidang['belum_setting']['kepala'] = null;
+                $list_bidang['belum_setting']['sub_bidang'] = null;
+                $list_bidang['belum_setting']['list_pegawai'] = null;
+            }
+
+            $list_sub_bidang = null;
+            $sub_bidang = $this->db->select('b.id as id_m_sub_bidang, b.nama_sub_bidang, a.id as id_m_bidang')
+                                    ->from('m_bidang a')
+                                    ->join('m_sub_bidang b', 'a.id = b.id_m_bidang')
+                                    ->where('a.id_unitkerja', $id_unitkerja)
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
+                                    ->get()->result_array();
+            if($sub_bidang){
+                foreach($sub_bidang as $sb){
+                    $list_bidang[$sb['id_m_bidang']]['sub_bidang'][$sb['id_m_sub_bidang']] = $sb;
+                    $list_bidang[$sb['id_m_bidang']]['sub_bidang'][$sb['id_m_sub_bidang']]['kepala'] = null;
+                    $list_bidang[$sb['id_m_bidang']]['sub_bidang'][$sb['id_m_sub_bidang']]['list_pegawai'] = null;
+
+                    // $list_sub_bidang[$sb['id_m_sub_bidang']][]
+                }
+            }
+
+            $list_struktural_pegawai = null;
+            foreach($list_pegawai['list_pegawai'] as $lp){
+                if($lp['jenis_jabatan'] == "Struktural"){
+                    $list_struktural_pegawai[$lp['jabatan']] = $lp;
+                    if($lp['kepalaskpd'] == 1){ //jika kepala
+                        $result['kepalaskpd']['pegawai'] = $lp;
+                    } else if(isset($list_bidang[$lp['id_m_bidang']])){ //jika kabid atau kasubag
+                        if($lp['id_m_sub_bidang'] == null || $lp['id_m_sub_bidang'] == 0 || $lp['id_m_sub_bidang'] == ""){
+                            $list_bidang[$lp['id_m_bidang']]['kepala'] = $lp;
+                        } else {
+                            $list_bidang[$lp['id_m_bidang']]['sub_bidang'][$lp['id_m_sub_bidang']]['kepala'] = $lp;
+                        }
+                    }
+                } else {
+                    if($lp['id_m_sub_bidang'] == null || $lp['id_m_sub_bidang'] == 0 || $lp['id_m_sub_bidang'] == ""){
+                        if(isset($list_bidang[$lp['id_m_bidang']])){
+                            $list_bidang[$lp['id_m_bidang']]['list_pegawai'][] = $lp;
+                        } else {
+                            $list_bidang['belum_setting']['list_pegawai'][] = $lp;
+                        }
+                    } else {
+                        if(isset($list_bidang[$lp['id_m_bidang']]['sub_bidang'][$lp['id_m_sub_bidang']]['kepala'])){
+                            $list_bidang[$lp['id_m_bidang']]['sub_bidang'][$lp['id_m_sub_bidang']]['list_pegawai'][] = $lp;
+                        } else {
+                            if(isset($list_bidang[$lp['id_m_bidang']])){
+                                $list_bidang[$lp['id_m_bidang']]['list_pegawai'][] = $lp;
+                            } else {
+                                $list_bidang['belum_setting']['list_pegawai'][] = $lp;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $result['bidang'] = $list_bidang;
+
+            // $list_struktural;
+            // foreach($list_jabatan as $j){
+            //     $list_struktural[$j['id_jabatanpeg']]['nama_jabatan'] = $j['nama_jabatan'];
+            //     $list_struktural[$j['id_jabatanpeg']]['eselon'] = $j['eselon'];
+            //     $list_struktural[$j['id_jabatanpeg']]['kepalaskpd'] = $j['kepalaskpd'];
+            //     $list_struktural[$j['id_jabatanpeg']]['pegawai'] = null;
+            //     if(isset($list_struktural_pegawai[$j['id_jabatanpeg']])){
+            //         $list_struktural[$j['id_jabatanpeg']]['pegawai'] = $list_struktural_pegawai[$j['id_jabatanpeg']]; //pegawai pemangku jabatan
+            //         $list_bidang[$list_struktural_pegawai[$j['id_jabatanpeg']]['id_m_bidang']]['kepala'] = $list_struktural_pegawai[$j['id_jabatanpeg']];
+            //     }
+            // }
+
+            return $result;
         }
 
 	}

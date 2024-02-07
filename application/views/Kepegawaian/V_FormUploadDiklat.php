@@ -9,14 +9,14 @@
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDiklat">
-  Tambah Data Diklat
-</button> -->
+<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDiklat">
+  Tambah Data Bangkom
+</button>
 
 
 
 <button onclick="loadRiwayatUsulDiklat()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalDiklat">
-  Riwayat Usul Diklat
+  Riwayat Usul Bangkom
 </button>
 
 
@@ -93,7 +93,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Diklat</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Bangkom</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

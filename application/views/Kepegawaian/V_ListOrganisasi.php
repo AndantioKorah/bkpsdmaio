@@ -99,7 +99,8 @@ $('.iframe_loader').show()
 $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
 
 var number = Math.floor(Math.random() * 1000);
-    $link = "http://siladen.manadokota.go.id/bidik/arsiporganisasi/"+filename+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/arsiporganisasi/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsiporganisasi/"+filename+"?v="+number;
 
 
 $('#iframe_view_file_organisasi').attr('src', $link)

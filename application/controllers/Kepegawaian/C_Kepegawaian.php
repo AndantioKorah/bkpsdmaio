@@ -1556,6 +1556,20 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 
+	public function updateProfilePict(){
+        $photo = $_FILES['profilePict']['name'];
+        $upload = $this->general_library->uploadImage('fotopeg','profilePict');
+		$upload['nip'] = $this->input->post('nip');
+        if($upload['code'] != 0){
+            $this->session->set_flashdata('message', $upload['message']);
+        } else {
+            $message = $this->kepegawaian->updateProfilePicture($upload);
+            $this->session->set_flashdata('message', $message['message']);
+        }
+        redirect('kepegawaian/profil-pegawai/'.$this->input->post('nip'));
+    }
+
+
 
 
 	

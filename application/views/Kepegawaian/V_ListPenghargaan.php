@@ -118,7 +118,8 @@
               $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
 
               var number = Math.floor(Math.random() * 1000);
-              $link = "http://siladen.manadokota.go.id/bidik/arsippenghargaan/"+filename+"?v="+number;
+              // $link = "http://siladen.manadokota.go.id/bidik/arsippenghargaan/"+filename+"?v="+number;
+              $link = "<?=base_url();?>/arsippenghargaan/"+filename+"?v="+number;
 
               $('#iframe_view_file_penghargaan').attr('src', $link)
                   $('#iframe_view_file_penghargaan').on('load', function(){

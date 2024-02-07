@@ -907,8 +907,8 @@
 
     var number = Math.floor(Math.random() * 1000);
     var path = "<?= $path?>"
-    $link = "http://siladen.manadokota.go.id/bidik/"+path+"?v="+number;
-    // $link = "<?=base_url();?>"+path+"?v="+number;
+    // $link = "http://siladen.manadokota.go.id/bidik/"+path+"?v="+number;
+    $link = "<?=base_url();?>"+path+"?v="+number;
 
 
     $('.view_file_ws').attr('src', $link)

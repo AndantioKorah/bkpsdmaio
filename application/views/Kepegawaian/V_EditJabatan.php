@@ -63,7 +63,7 @@
    <div class="form-group" style="margin-bottom:10px !important;">
     <label for="jabatan_jenis">Nama Jabatan </label>
     <input class="form-control customInput" type="text" list="jabatan" id="edit_jabatan_nama" name="edit_jabatan_nama"  value="<?=$jabatan[0]['nama_jabatan']?>"/>
-    <datalist id="jabatan">
+    <!-- <datalist id="jabatan">
       <?php if($nama_jabatan){
                                 foreach($nama_jabatan as $r){
                                 ?>
@@ -71,7 +71,7 @@
                                     <?=$r['nama_jabatan']?>
                                 </option>
                                 <?php } } ?>
-      </datalist>  
+      </datalist>   -->
   </div>
 
     <!-- <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">

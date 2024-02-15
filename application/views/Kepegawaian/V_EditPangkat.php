@@ -1,5 +1,6 @@
 <form method="post" id="form_edit_pangkat" enctype="multipart/form-data" >
     <input type="hidden" id="id" name="id" value="<?= $pangkat[0]['id'];?>">
+    <input type="hidden" id="id_peg" name="id_peg" value="<?= $pangkat[0]['id_peg'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $pangkat[0]['gambarsk'];?>">
   
     <!-- <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       

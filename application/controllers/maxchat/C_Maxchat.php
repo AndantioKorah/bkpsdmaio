@@ -127,16 +127,19 @@ class C_Maxchat extends CI_Controller
 
         $pegawai = null;
         // $nohp = "0".substr($result->from, 2);
-        $ws = $this->dokumenlib->getPegawaiSiladen($result->from);
+        // $ws = $this->dokumenlib->getPegawaiSiladen($result->from);
+        $ws = $this->user->getProfilUserByNoHp($result->from);
         if($ws){
-            $resp = json_decode($ws['response'], true);
-            if($resp['code'] == 200){
-                $pegawai = $resp['data'];
-                $reply = null;
-            }
-            else {
-                $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-            }
+            $reply = NULL;
+            $pegawai = $ws;
+            // $resp = json_decode($ws['response'], true);
+            // if($resp['code'] == 200){
+            //     $pegawai = $resp['data'];
+            //     $reply = null;
+            // }
+            // else {
+            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
+            // }
         } else {
             $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         }

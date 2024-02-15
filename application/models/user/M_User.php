@@ -1866,9 +1866,10 @@
 
         public function getProfilUserByNoHp($nohp){
             $nohp = "0".substr($nohp, 2);
-            return $this->db->select('a.*, b.nm_unitkerja')
+            return $this->db->select('a.*, b.nm_unitkerja, c.username')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                        ->join('m_user c', 'a.nipbaru_ws = c.username')
                         ->where('a.handphone', $nohp)
                         ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();

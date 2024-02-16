@@ -354,7 +354,7 @@
         <label for="inputPassword6" class="col-form-label"> No Handphone </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="edit_no_hp" name="edit_no_hp" class="form-control" value="<?= $profil_pegawai['handphone'];?>">
+        <input type="number" id="edit_no_hp" name="edit_no_hp" class="form-control" value="<?= $profil_pegawai['handphone'];?>">
       </div>
 
       <div class="col-lg-2">

@@ -2168,8 +2168,7 @@
         return $result;
     }
 
-    public function countPaguTpp($data, $id_pegawai = null){
-
+    public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0){
         $result = null;
 
         $unitkerja = $this->db->select('*')
@@ -2181,30 +2180,34 @@
 
         $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                             
-        $pegawai = $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user,
-                            b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg,
-                            (SELECT CONCAT(
-                                IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
-                                    ";",
-                                IF( c.kepalaskpd IS NULL, "", c.kepalaskpd ),
-                                    ";",
-                                IF( aa.jenisjabatan IS NULL, "", aa.jenisjabatan ),
-                                    ";",
-                                IF( d.id_eselon IS NULL, "", d.id_eselon ) 
-                                ) 
-                            FROM db_pegawai.pegjabatan aa
-                            WHERE aa.id_pegawai = a.id_peg
-                            ORDER BY tmtjabatan DESC
-                            LIMIT 1) as jabatan')
-                            ->from('db_pegawai.pegawai a')
-                            ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
-                            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                            ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
-                            ->join('m_user e', 'a.nipbaru_ws = e.username')
-                            ->where('a.skpd', $data['id_unitkerja'])
-                            ->order_by('c.eselon, a.nama')
-                            ->where('id_m_status_pegawai', 1)
-                            ->get()->result_array();
+        $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user,
+                    b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg,
+                    (SELECT CONCAT(
+                        IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
+                            ";",
+                        IF( c.kepalaskpd IS NULL, "", c.kepalaskpd ),
+                            ";",
+                        IF( aa.jenisjabatan IS NULL, "", aa.jenisjabatan ),
+                            ";",
+                        IF( d.id_eselon IS NULL, "", d.id_eselon ) 
+                        ) 
+                    FROM db_pegawai.pegjabatan aa
+                    WHERE aa.id_pegawai = a.id_peg
+                    ORDER BY tmtjabatan DESC
+                    LIMIT 1) as jabatan')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                    ->where('a.skpd', $data['id_unitkerja'])
+                    ->order_by('c.eselon, a.nama');
+                    // ->where('id_m_status_pegawai', 1)
+                    // ->get()->result_array();
+        if($flag_profil == 1){
+            $this->db->where('id_m_status_pegawai', 1);
+        }
+        $pegawai = $this->db->get()->result_array();
         // dd($pegawai);
         if($pegawai){
             $i = 0;

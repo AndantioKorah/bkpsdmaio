@@ -377,7 +377,7 @@ class C_User extends CI_Controller
         $dt = $this->input->post();
         $data['flag_edit'] = $flag_edit;
         if($flag_edit == 1){
-            $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun']);
+            $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);
         } else {
             $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
         }

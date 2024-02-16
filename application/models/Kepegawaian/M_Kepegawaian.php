@@ -5457,7 +5457,7 @@ public function submitEditJabatan(){
             // ->where('a.statusjabatan !=', 2)
             ->where_not_in('a.statusjabatan', [2,3])
             ->where('a.status', 2)
-            ->where('a.flag_active', 1)
+            // ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
             ->limit(1)
             ->get()->row_array();

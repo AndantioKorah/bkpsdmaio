@@ -1344,14 +1344,19 @@
             }
         }
 
-        public function getUnitKerjaByPegawai($id_pegawai){
-            return $this->db->select('c.*')
-                            ->from('m_user a')
-                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                            ->where('id_m_status_pegawai', 1)
-                            ->where('a.id', $id_pegawai)
-                            ->get()->row_array();
+        public function getUnitKerjaByPegawai($id_pegawai,$flag_profil){
+            $this->db->select('c.*')
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+            ->where('a.id', $id_pegawai);
+
+            if($flag_profil == 1){
+                $this->db->where('id_m_status_pegawai', 1);
+            }
+            return $this->db->get()->row_array();
+            $this->db->get()->row_array();
+
         }
 
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){

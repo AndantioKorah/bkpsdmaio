@@ -494,7 +494,7 @@ class General_library
     }
 
     public function getPaguTppPegawai($bulan, $tahun){
-        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($this->getId());
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($this->getId(),1);
         $data['id_unitkerja'] = $this->userLoggedIn['skpd'];
         $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $this->getId());
         // $jumlahharikerja = $this->countHariKerjaBulanan($bulan, $tahun);
@@ -502,10 +502,10 @@ class General_library
         return $this->nikita->m_user->getTppPegawai($this->getId(), $pagu_tpp, $produktivitas_kerja, $bulan, $tahun, $unitkerja);
     }
 
-    public function getPaguTppPegawaiByIdPegawai($id_m_user, $bulan, $tahun){
-        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($id_m_user);
+    public function getPaguTppPegawaiByIdPegawai($id_m_user, $bulan, $tahun, $flag_profil = null){
+        $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($id_m_user,$flag_profil);
         $data['id_unitkerja'] = $unitkerja['id_unitkerja'];
-        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $id_m_user);
+        $pagu_tpp = $this->nikita->m_kinerja->countPaguTpp($data, $id_m_user,$flag_profil);
         if(!isset($pagu_tpp['pagu_tpp'])){
             $temp = $pagu_tpp;
             $pagu_tpp = null;

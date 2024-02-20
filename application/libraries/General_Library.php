@@ -216,7 +216,7 @@ class General_library
     }
 
     public function isWalikota(){
-        return $this->getActiveRoleName() == 'walikota' || $this->getActiveRoleName() == 'guest';
+        return $this->getActiveRoleName() == 'walikota' || $this->getActiveRoleName() == 'guest' || $this->getActiveRoleName() == 'wakilwalikota';
     }
 
     public function isKepalaSekolah(){

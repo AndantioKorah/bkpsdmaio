@@ -474,7 +474,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isPejabatEselon()){ ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isPejabatEselon() || $this->general_library->isKepalaSekolah()){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai

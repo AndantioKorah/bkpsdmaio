@@ -13,6 +13,8 @@
 
         public function getListIdPegawaiForVerif($data = null, $return_data_pegawai = false){
             $role = $this->general_library->getRole();
+            $eselon = $this->general_library->getIdEselon();
+            
             $vt = $this->db->select('*')
                         ->from('t_verif_tambahan')
                         ->where('id_m_user', $this->general_library->getId())
@@ -41,15 +43,18 @@
                                 ->get()->row_array();
 
             $list_pegawai = null;
-            if($role == 'subkoordinator'){
+            // if($role == 'subkoordinator'){
+            if($eselon == 8){
                 //pegawai yang diverif adalah staf pelaksana di sub bidang yang sama
                 $list_pegawai = $this->db->select('*, id as id_m_user')
                                         ->from('m_user')
-                                        ->where('id_m_bidang', $this_user['id_m_bidang'])
+                                        ->where('id_m_sub_bidang', $this_user['id_m_sub_bidang'])
+                                        // ->where('id_m_bidang', $this_user['id_m_bidang'])
                                         ->where('id !=', $this->general_library->getId())
                                         ->where('flag_active', 1)
                                         ->get()->result_array();
-            } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
+            // } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
+            } else if($eselon == 6 || $eselon == 7){
                 //pegawai yang diverif adalah subkoordinator di bidang yang sama
                 // $subbidang = $this->db->select('*')
                 //                         ->from('m_sub_bidang a')
@@ -57,14 +62,13 @@
                 //                         ->where('a.flag_active', 1)
                 //                         ->get()->row_array();
                 $list_role = ['subkoordinator', 'staffpelaksana'];
-
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                         ->from('m_user a')
                                         ->join('m_bidang b', 'a.id_m_bidang = b.id')
                                         ->join('m_user_role c', 'a.id = c.id_m_user')
                                         ->join('m_role d', 'c.id_m_role = d.id')
                                         ->where('b.id', $this_user['id_m_bidang'])
-                                        ->where_in('d.role_name', $list_role)
+                                        // ->where_in('d.role_name', $list_role)
                                         ->where('a.id !=', $this->general_library->getId())
                                         ->where('a.flag_active', 1)
                                         ->where('c.flag_active', 1)
@@ -99,20 +103,21 @@
                     }
                 }
             // } else if($role == 'kepalabadan'){
-            } else if($this->general_library->isKaban()){
+            // } else if($this->general_library->isKaban()){
+            } else if($eselon == 5){
                 
                 if($data['filter'] == '0'){
                    
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
-                                            ->join('m_user_role b', 'a.id = b.id_m_user')
-                                            ->join('m_role d', 'd.id = b.id_m_role')
+                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            // ->join('m_role d', 'd.id = b.id_m_role')
                                             ->join('m_bidang c', 'c.id = a.id_m_bidang')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
                                             ->where('a.flag_active', 1)
                                             ->where('a.flag_active', 1)
-                                            ->where('b.flag_active', 1)
+                                            // ->where('b.flag_active', 1)
                                             ->where('c.flag_active', 1)
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
@@ -131,20 +136,26 @@
                         }
                     }
                     
-                    $list_role = ['kepalabidang', 'sekretarisbadan'];
+                    // $list_role = ['kepalabidang', 'sekretarisbadan'];
+                    $list_eselon = ['III B', 'III A'];
                     if($data['filter'] == 'eselon_empat'){
-                        $list_role = ['subkoordinator'];
+                        // $list_role = ['subkoordinator'];
+                        $list_eselon = ['IV A'];
                     }
+                    
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
-                                            ->join('m_user_role b', 'a.id = b.id_m_user')
-                                            ->join('m_role d', 'd.id = b.id_m_role')
+                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            // ->join('m_role d', 'd.id = b.id_m_role')
                                             ->join('m_bidang c', 'c.id = a.id_m_bidang')
+                                            ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = a.username')
+                                            ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
                                             ->where('a.id !=', $this->general_library->getId())
-                                            ->where_in('d.role_name', $list_role)
+                                            // ->where_in('d.role_name', $list_role)
+                                            ->where_in('e.eselon',$list_eselon)
                                             ->where_in('c.id', $list_bidang)
                                             ->where('a.flag_active', 1)
-                                            ->where('b.flag_active', 1)
+                                            // ->where('b.flag_active', 1)
                                             ->where('c.flag_active', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
@@ -152,15 +163,15 @@
                  
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
-                                            ->join('m_user_role b', 'a.id = b.id_m_user')
-                                            ->join('m_role d', 'd.id = b.id_m_role')
+                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            // ->join('m_role d', 'd.id = b.id_m_role')
                                             ->join('m_bidang c', 'c.id = a.id_m_bidang')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
                                             ->where('c.id', $data['filter'])
                                             ->where('a.flag_active', 1)
                                             ->where('a.flag_active', 1)
-                                            ->where('b.flag_active', 1)
+                                            // ->where('b.flag_active', 1)
                                             ->where('c.flag_active', 1)
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
@@ -168,7 +179,7 @@
                 }
               
             } else if($this->general_library->isWalikota() || $this->general_library->isSetda()){
-                if($data['filter_walikota'] == 'skpd'){
+                if($data['filter_walikota'] == 'skpd'){     
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
@@ -179,14 +190,33 @@
                                             ->group_by('a.id')
                                             ->get()->result_array();
                 } else if($data['filter_walikota'] == 'eselon_dua'){
-                    $list_role = ['kepalabadan', 'setda', 'camat', 'asisten'];
+                    // $list_role = ['kepalabadan', 'setda', 'camat', 'asisten'];
+                    $list_eselon = ['II B', 'II A'];
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
-                                            ->join('m_user_role b', 'a.id = b.id_m_user')
-                                            ->join('m_role c', 'c.id = b.id_m_role')
-                                            ->where_in('c.role_name', $list_role)
+                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            // ->join('m_role c', 'c.id = b.id_m_role')
+                                            ->join('db_pegawai.pegawai d', 'd.nipbaru_ws= a.username')
+                                            ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
+                                            // ->where_in('c.role_name', $list_role)
+                                            ->where_in('e.eselon', $list_eselon)
                                             ->where('a.flag_active', 1)
-                                            ->where('b.flag_active', 1)
+                                            // ->where('b.flag_active', 1)
+                                            ->where('a.flag_active', 1)
+                                            ->group_by('a.id')
+                                            ->get()->result_array();
+                } else if($data['filter_walikota'] == 'eselon_tiga'){
+                    $list_eselon = ['III B', 'III A'];
+                    $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                                            ->from('m_user a')
+                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            // ->join('m_role c', 'c.id = b.id_m_role')
+                                            ->join('db_pegawai.pegawai d', 'd.nipbaru_ws= a.username')
+                                            ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
+                                            // ->where_in('c.role_name', $list_role)
+                                            ->where_in('e.eselon', $list_eselon)
+                                            ->where('a.flag_active', 1)
+                                            // ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
@@ -212,6 +242,7 @@
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where_in('c.role_name', $list_role)
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.id !=', $this->general_library->getId())
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)

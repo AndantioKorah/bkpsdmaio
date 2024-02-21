@@ -955,7 +955,7 @@
         success:function(res){ 
           successtoast("Data berhasil disimpan")
           document.getElementById('btn_verif_dok').disabled = false;
-          $('#btn_verif_dok').html('Simpan')
+          $('#btn_verif_dok').html('<i class="fa fa-check"></i> Simpan')
           setTimeout(function() {$("#modal_verif_dismis").trigger( "click" );}, 1000);
           
             

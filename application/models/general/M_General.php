@@ -738,30 +738,30 @@
                         $req = $this->maxchatlibrary->sendFile($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
                     }
                     $req = json_decode($req, true);
-                    // dd($req);
-                    if($l['sendTo'] == '120363161928273333'){
-                        $this->db->where('id', $l['id'])
-                                ->update('t_cron_wa', 
-                                [
-                                    'chatId' => $req['id'],
-                                    'flag_sending' => 1,
-                                    'date_sending' => date('Y-m-d H:i:s'),
-                                    'flag_sent' => 1,
-                                    'date_sent' => date('Y-m-d H:i:s'),
-                                    'log' => json_encode($req),
-                                    'status' => 'sent'
-                                ]);
-                    }
                     if(!isset($req['error'])){
-                        $this->db->where('id', $l['id'])
-                                ->update('t_cron_wa', 
-                                [
-                                    'chatId' => $req['id'],
-                                    'flag_sending' => 1,
-                                    'date_sending' => date('Y-m-d H:i:s'),
-                                    'log' => json_encode($req),
-                                    'status' => $req['status']
-                                ]);
+                        if($l['sendTo'] == '120363161928273333'){
+                            $this->db->where('id', $l['id'])
+                                    ->update('t_cron_wa', 
+                                    [
+                                        'chatId' => $req['id'],
+                                        'flag_sending' => 1,
+                                        'date_sending' => date('Y-m-d H:i:s'),
+                                        'flag_sent' => 1,
+                                        'date_sent' => date('Y-m-d H:i:s'),
+                                        'log' => json_encode($req),
+                                        'status' => 'sent'
+                                    ]);
+                        } else {
+                            $this->db->where('id', $l['id'])
+                                    ->update('t_cron_wa', 
+                                    [
+                                        'chatId' => $req['id'],
+                                        'flag_sending' => 1,
+                                        'date_sending' => date('Y-m-d H:i:s'),
+                                        'log' => json_encode($req),
+                                        'status' => $req['status']
+                                    ]);
+                        }
                     } else {
                         $this->db->where('id', $l['id'])
                                 ->update('t_cron_wa', 

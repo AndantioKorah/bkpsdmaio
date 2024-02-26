@@ -4735,7 +4735,7 @@ public function submitEditJabatan(){
                     $sendTo = convertPhoneNumber($atasan['handphone']);
                     // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
                     $cronWa = [
-                        'sendTo' => '6282115407812',
+                        'sendTo' => $sendTo,
                         'message' => $message.FOOTER_MESSAGE_CUTI,
                         'type' => 'text'
                     ];

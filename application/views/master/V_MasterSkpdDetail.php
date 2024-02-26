@@ -36,9 +36,9 @@
                     <li class="nav-item" onclick="openListPegawai()" role="presentation">
                         <button class="nav-link" id="pegawai-tab" data-bs-toggle="tab" data-bs-target="#pegawai" type="button" role="tab" aria-controls="Pegawai" aria-selected="true">Pegawai</button>
                     </li>
-                    <!-- <li class="nav-item" onclick="openStrukturOrganisasi()" role="presentation">
+                    <li class="nav-item" onclick="openStrukturOrganisasi()" role="presentation">
                         <button class="nav-link" id="struktur-tab" data-bs-toggle="tab" data-bs-target="#struktur" type="button" role="tab" aria-controls="Struktur" aria-selected="true">Struktur Organisasi</button>
-                    </li> -->
+                    </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -346,8 +346,11 @@
                     </div>
                     <div class="tab-pane fade" id="pegawai" role="tabpanel" aria-labelledby="pegawai-tab">                        
                     </div>
-                    <!-- <div class="tab-pane fade" id="struktur" role="tabpanel" aria-labelledby="struktur-tab">                        
-                    </div> -->
+                    <div class="tab-pane fade" id="struktur" style="
+                    display:inline-block;
+                    overflow-x: auto;
+                    " role="tabpanel" aria-labelledby="struktur-tab">                        
+                    </div>
                 </div>
             </div>
         </div>

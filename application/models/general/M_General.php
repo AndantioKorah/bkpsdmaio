@@ -713,5 +713,88 @@
             return $result;
         }
 
+        public function saveToCronWa($data){
+            $this->db->insert('t_cron_wa', $data);
+        }
+
+        public function cronSendWa(){
+            $list = $this->db->select('*')
+                            ->from('t_cron_wa')
+                            // ->where('flag_sending', 0)
+                            ->where('flag_sent', 0)
+                            ->where('flag_active', 1)
+                            ->order_by('created_date', 'desc')
+                            ->limit(5)
+                            ->get()->result_array();
+            if($list){
+                foreach($list as $l){
+                    if($l['type'] == 'text'){
+                        if($l['replyId']){
+                            $req = $this->maxchatlibrary->sendText($l['sendTo'], $l['message'], $l['replyId'], 1);
+                        } else {
+                            $req = $this->maxchatlibrary->sendText($l['sendTo'], $l['message'], 0, 1);
+                        }
+                    } else if($l['type'] == 'document'){
+                        $req = $this->maxchatlibrary->sendFile($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
+                    }
+                    $req = json_decode($req, true);
+                    // dd($req);
+                    if($l['sendTo'] == '120363161928273333'){
+                        $this->db->where('id', $l['id'])
+                                ->update('t_cron_wa', 
+                                [
+                                    'chatId' => $req['id'],
+                                    'flag_sending' => 1,
+                                    'date_sending' => date('Y-m-d H:i:s'),
+                                    'flag_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s'),
+                                    'log' => json_encode($req),
+                                    'status' => 'sent'
+                                ]);
+                    }
+                    if(!isset($req['error'])){
+                        $this->db->where('id', $l['id'])
+                                ->update('t_cron_wa', 
+                                [
+                                    'chatId' => $req['id'],
+                                    'flag_sending' => 1,
+                                    'date_sending' => date('Y-m-d H:i:s'),
+                                    'log' => json_encode($req),
+                                    'status' => $req['status']
+                                ]);
+                    } else {
+                        $this->db->where('id', $l['id'])
+                                ->update('t_cron_wa', 
+                                [
+                                    'flag_sending' => 1,
+                                    'date_sending' => date('Y-m-d H:i:s'),
+                                    'log' => json_encode($req),
+                                    'status' => $req['message']
+                                ]);
+                    }
+                }
+            }
+        }
+
+        public function updateCronWa($resp){
+            $data = $this->db->select('*')
+                            ->from('t_cron_wa')
+                            ->where('chatId', $resp->id)
+                            ->get()->row_array();
+            if($data){
+                $update = [];
+                if($resp->status == 'delivered' || $resp->status == 'read'){
+                    $update['flag_sent'] = 1;
+                    $update['date_sent'] = date('Y-m-d H:i:s');
+                }
+
+                $update['status'] = $resp->status;
+                $update['log'] = json_encode($resp);
+
+                $this->db->where('id', $data['id'])
+                        ->update('t_cron_wa', $update);
+            }
+        }
+
 	}
 ?>

@@ -1807,20 +1807,27 @@
 
                 if($flag_send_wa == 1){
                     $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
-
-                    if($sendWa == true){
+                    $cronWa = [
+                        'sendTo' => $c['no_hp'],
+                        'message' => $filename,
+                        'filename' => $filename,
+                        'fileurl' => $fileurl,
+                        'type' => 'document'
+                    ];
+                    $this->general->saveToCronWa($cronWa);
+                    // if($sendWa == true){
                         $this->db->where('id', $c['id'])
                             ->update('t_cron_rekap_absen', [
                                 'flag_sent' => 1,
                                 'done_date' => date('Y-m-d H:i:s'),
                                 'response' => 'success'
                             ]);
-                    } else {
-                        $this->db->where('id', $c['id'])
-                            ->update('t_cron_rekap_absen', [
-                                'response' => $sendWa
-                            ]);
-                    }
+                    // } else {
+                    //     $this->db->where('id', $c['id'])
+                    //         ->update('t_cron_rekap_absen', [
+                    //             'response' => $sendWa
+                    //         ]);
+                    // }
                 } else {
                     $this->db->where('id', $c['id'])
                             ->update('t_cron_rekap_absen', [

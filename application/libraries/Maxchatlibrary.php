@@ -205,9 +205,10 @@ class Maxchatlibrary{
 
     function postCurl($url, $data, $method = "POST") {
         $curl = curl_init();
+        $url = $url."?skipBusy=true";
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $url."?skipBusy=true",
+        CURLOPT_URL => $url,
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_RETURNTRANSFER => true,

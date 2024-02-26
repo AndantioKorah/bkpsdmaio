@@ -264,13 +264,22 @@
 			</li> -->
 			
 			<!-- role  -->
-			<li class="nav-item dropdown">
+
+
+			<?php 
+			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
+			if($cari_role == false){ ?>		
+				<a class="nav-link  d-none d-sm-inline-block" href="#" >
+				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?php if($this->general_library->isWalikota()) echo $active_role['nama']; else echo "Pegawai"  ?>  </span>
+				</a>
+			<?php } else { ?>
+				<li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 					<i class="align-middle" data-feather="user-check"></i>
 				</a>
-
+                
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"><?=$active_role['nama']?></span>
+				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?=$active_role['nama']?>  </span>
 				</a>
 
 				<div class="dropdown-menu dropdown-menu-end">
@@ -281,6 +290,11 @@
 					<?php } ?>
 				</div>
 			</li>
+			<?php } ?>
+				
+			
+
+			
 
 			<!-- tutup role  -->
 

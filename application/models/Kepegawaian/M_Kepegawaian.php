@@ -5275,7 +5275,13 @@ public function submitEditJabatan(){
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', $update);
 
-            $this->maxchatlibrary->sendText($result['handphone'], $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
+            // $this->maxchatlibrary->sendText($result['handphone'], $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
+            $cronWa = [
+                'sendTo' => convertPhoneNumber($result['handphone']),
+                'message' => $message_to_pegawai.FOOTER_MESSAGE_CUTI,
+                'type' => 'text'
+            ];
+            $this->general->saveToCronWa($cronWa);
         }
 
         return $res;
@@ -5339,7 +5345,15 @@ public function submitEditJabatan(){
             $mpdf->Output($path_file, 'F');
 
             $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
-            $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
+            // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
+            $cronWa = [
+                'sendTo' => convertPhoneNumber($data['handphone']),
+                'message' => $caption,
+                'filename' => $filename,
+                'fileurl' => $path_file,
+                'type' => 'document'
+            ];
+            $this->general->saveToCronWa($cronWa);
 
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', [

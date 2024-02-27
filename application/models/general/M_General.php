@@ -735,7 +735,7 @@
                             $req = $this->maxchatlibrary->sendText($l['sendTo'], $l['message'], 0, 1);
                         }
                     } else if($l['type'] == 'document'){
-                        $req = $this->maxchatlibrary->sendFile($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
+                        $req = $this->maxchatlibrary->sendDocument($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
                     }
                     $req = json_decode($req, true);
                     if(!isset($req['error'])){

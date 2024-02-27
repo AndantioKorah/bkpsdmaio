@@ -1806,7 +1806,7 @@
                 }
 
                 if($flag_send_wa == 1){
-                    $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
+                    // $sendWa = $this->maxchatlibrary->sendFile($c['no_hp'], $fileurl, $filename, $filename);
                     $cronWa = [
                         'sendTo' => $c['no_hp'],
                         'message' => $filename,

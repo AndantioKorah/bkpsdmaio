@@ -143,8 +143,8 @@ class Maxchatlibrary{
             'type' => 'document',
             "caption" => $caption,
             // "file" => fileToBase64($fileurl),
-            "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".str_replace(' ', '%20', $filename)),
-            // "url" => ("http://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".rawurlencode($filename)),
+            "url" => ("https://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $filename)),
+            // "url" => ("https://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".rawurlencode($filename)),
             "fileName" => $filename,
             "useTyping" => true
         );
@@ -169,7 +169,7 @@ class Maxchatlibrary{
             'type' => 'document',
             "caption" => $caption,
             // "file" => fileToBase64($fileurl),
-            "url" => ("http://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $fileurl)),
+            "url" => ("https://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $fileurl)),
             // "url" => (base_url().str_replace(' ', '%20', $fileurl)),
             "fileName" => $filename,
             "useTyping" => true

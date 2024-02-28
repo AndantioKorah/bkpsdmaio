@@ -294,7 +294,7 @@ Thanks :)*/
                         </a>
                         <?php if($b['hide_sub_bidang'] == false){ ?>
                         <ul>
-                            <?php if(isset($b['sub_bidang'])){ foreach($b['sub_bidang'] as $sb){ if(count($sb['list_pegawai']) > 0){ ?>
+                            <?php if(isset($b['sub_bidang'])){ foreach($b['sub_bidang'] as $sb){ if($sb['list_pegawai'] && count($sb['list_pegawai']) > 0){ ?>
                                 <li>
                                     <a class="sub_bidang">
                                         <table>

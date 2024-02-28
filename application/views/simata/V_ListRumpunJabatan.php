@@ -15,8 +15,8 @@
                 <?=$rs['nm_rumpun_jabatan']?>
                 </td>
                 <td>
-                <button onclick="deleteRumpunJabatan('<?=$rs['id_rumpun']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
-                </td>
+                <a onclick="deleteRumpunJabatan('<?=$rs['id_rumpun']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </a>  
+              </td>
             </tr>
           <?php } ?>
            
@@ -34,6 +34,10 @@
  
 <script>
  
+
+ $("#modal_input_rumpun_jabatan").on('hide.bs.modal', function(){
+    loadListMasterJabatan()
+  });
 
 
  function deleteRumpunJabatan(id){

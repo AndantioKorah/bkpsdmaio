@@ -4,7 +4,7 @@
            <div class="row">
                <div class="col-lg-12">
                    <div class="form-group">
-                       <label class="bmd-label-floating">Rumpun Jabatan</label>
+                       <!-- <label class="bmd-label-floating">Rumpun Jabatan</label> -->
                        <select class="form-control select2" data-dropdown-parent="#modal_input_rumpun_jabatan"  name="id_m_rumpun_jabatan" id="id_m_rumpun_jabatan" required>
                         <option value="" disabled selected>Pilih Rumpun Jabatan</option>
                         <?php if($rumpun_jabatan){ foreach($rumpun_jabatan as $r){ ?>
@@ -17,7 +17,7 @@
               
                <div class="col-lg-8 col-md-8"></div>
                <div class="col-lg-12 col-md-4 text-right mt-2 mb-2">
-                   <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
+                   <button id="btn_tambah_rumpun" class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
                </div>
          
        </form>
@@ -50,6 +50,9 @@
        e.preventDefault();
        var formvalue = $('#form_tambah_rumpun_jabatan');
        var form_data = new FormData(formvalue[0]);
+       document.getElementById('btn_tambah_rumpun').disabled = true;
+        $('#btn_tambah_rumpun').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
        $.ajax({  
        url:"<?=base_url("simata/C_Simata/submitTambahRumpunJabatan")?>",
        method:"POST",  
@@ -65,9 +68,13 @@
            if(result.success == true){
                successtoast(result.msg)
                document.getElementById("form_tambah_rumpun_jabatan").reset();
+               document.getElementById('btn_tambah_rumpun').disabled = false;
+               $('#btn_tambah_rumpun').html('<i class="fa fa-save"></i> Simpan')
                loadListRumpunJabatan()
             //    loadListMasterJabatan()
              } else {
+                document.getElementById('btn_tambah_rumpun').disabled = false;
+                $('#btn_tambah_rumpun').html('<i class="fa fa-save"></i> Simpan')
                errortoast(result.msg)
                return false;
              } 

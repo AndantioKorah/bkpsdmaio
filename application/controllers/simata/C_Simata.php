@@ -381,7 +381,7 @@ class C_Simata extends CI_Controller
 
     public function loadListMasterJabatan($id){
         $data['jabatan'] = $this->simata->getMasterJabatan($id);
-        
+        // dd($data);
         $this->load->view('simata/V_MasterJabatanItem', $data);
     }
 

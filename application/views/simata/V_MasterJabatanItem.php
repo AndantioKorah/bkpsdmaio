@@ -24,14 +24,49 @@
 					<td class="align-top">
 						<?=$rs['nama_jabatan'];?>
 					</td>
-          <td></td>
+          <td>
+          <h4>
+          <?php foreach($rs['rumpun'] as $rj){ ?>
+            <?php 
+            if($rj['id_m_rumpun_jabatan'] == 1){
+              $color = "#007bff";
+            } else if($rj['id_m_rumpun_jabatan'] == 2) {
+              $color = "#6c757d";
+            } else if($rj['id_m_rumpun_jabatan'] == 3) {
+              $color = "#28a745";
+            } else if($rj['id_m_rumpun_jabatan'] == 4) {
+              $color = "#dc3545";
+            } else if($rj['id_m_rumpun_jabatan'] == 5) {
+              $color = "#ffc107";
+            } else if($rj['id_m_rumpun_jabatan'] == 6) {
+              $color = "#17a2b8";
+            } else if($rj['id_m_rumpun_jabatan'] == 7) {
+              $color = "#602d66";
+            } else if($rj['id_m_rumpun_jabatan'] == 8) {
+              $color = "#343a40";
+            } ;?>
+            <span style="background-color:<?=$color;?>" class="badge"><?=$rj['nm_rumpun_jabatan'];?></span>
+            <!-- <table class="table table-hover table-striped table-bordered">
+										<tr>	
+											<td style="width:90%;"> <b><?=$rj['nm_rumpun_jabatan'];?> 
+											</td>
+											<td>
+												<a onclick="deleteRumpunJabatan('<?=$rj['id']?>','adm')" class="btn btn-sm"> <i
+														style="color:red;" class="fa fa-trash"></i> </a>
+											</td>
+										</tr>
+									</table> -->
+            <?php } ?>
+            </h4>
+          </td>
 					<td class="align-top">
               <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id_jabatanpeg']?>"
                 data-nm_jabatan="<?=$rs['nama_jabatan']?>"
                 href="#modal_input_rumpun_jabatan"
-                class="open-DetailJabatan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
+                onclick="loadDetail('<?=$rs['id_jabatanpeg']?>')"
+                class="open-DetailJabatanx btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
 					</td>
 				</tr>
 				<?php } ?>
@@ -72,18 +107,17 @@
 		$('.datatable').dataTable()
 	})
 
-    $(document).on("click", ".open-DetailJabatan", function () {
-    var id = $(this).data('id');
+
+    function loadDetail(id){
     $('#form_tambah_rumpun').html('')
     $('#form_tambah_rumpun').append(divLoaderNavy)
     $('#form_tambah_rumpun').load('<?=base_url("simata/C_Simata/loadFormTambahRumpun/")?>'+id, function(){
       $('#loader').hide()
     })
-    });
+    }
 
-  //   $("#modal_input_rumpun_jabatan").on('hide.bs.modal', function(){
-  //   loadListMasterJabatan()
-  // });
+ 
+
 
 
 </script>

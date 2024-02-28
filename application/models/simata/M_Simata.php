@@ -1596,11 +1596,32 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
 }
 
 function getMasterJabatan($id){
-    $this->db->select('*')
-    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
-    ->where('a.id_unitkerja',$id)
-    ->from('db_pegawai.jabatan a');
-    return $this->db->get()->result_array(); 
+    // $this->db->select('*')
+    // ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+    // ->where('a.id_unitkerja',$id)
+    // ->from('db_pegawai.jabatan a');
+    // $query = $this->db->get();
+    $data = null; 
+    $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
+    
+
+        foreach($query->result_array() as $item)
+        {
+            // dd($item['id_jabatanpeg']);
+            $id_jabatanpeg = $item['id_jabatanpeg'];
+            $this->db->select('a.id_m_rumpun_jabatan,a.id,b.nm_rumpun_jabatan')
+            ->join('db_simata.m_rumpun_jabatan b', 'a.id_m_rumpun_jabatan = b.id')
+            ->where('a.id_jabatan', $id_jabatanpeg)
+            ->where('a.flag_active', 1)
+            ->from('db_simata.t_rumpun_jabatan a');
+            $result = $this->db->get()->result_array(); 
+            $item['rumpun'] = $result;
+            $data[] = $item;
+        }
+    
+
+    // $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
+    return $data;
 
 }
 
@@ -1614,6 +1635,7 @@ public function submitTambahRumpunJabatan(){
     ->from('db_simata.t_rumpun_jabatan a')
     ->where('a.id_jabatan', $datapost["id_jabatan"])
     ->where('a.id_m_rumpun_jabatan', $datapost["id_m_rumpun_jabatan"])
+    ->where('a.flag_active', 1)
     ->get()->row_array();
 
 

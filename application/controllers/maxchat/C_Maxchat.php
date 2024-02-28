@@ -16,6 +16,7 @@ class C_Maxchat extends CI_Controller
         $this->general->insert('t_chat_group', [
             'text' => json_encode($result)
         ]);
+        $this->general->updateCronWa($result);
         if (($result->type == "text" || $result->type == "image") && 
             $result->chatType != "story" &&
             $result->from != GROUP_CHAT_HELPDESK && !isset($result->replyId)) {
@@ -108,13 +109,20 @@ class C_Maxchat extends CI_Controller
                     $reply = $result->text;
                     if($reply != null && $reply != ""){
                         $reply .= "\n";
-                        $log = $this->maxchatlibrary->sendText($sender['data']['from'], trim($reply), $sender['data']['id']);
+                        // $log = $this->maxchatlibrary->sendText($sender['data']['from'], trim($reply), $sender['data']['id']);
+                        $cronWa = [
+                            'sendTo' => $sender['data']['from'],
+                            'message' => trim($reply),
+                            'replyId' => $sender['data']['id'],
+                            'type' => 'text'
+                        ];
+                        $this->general->saveToCronWa($cronWa);
                     }
                 }
         
-                $response['text'] = $reply;
-                $response['to'] = $sendTo;
-                $response['log'] = $log;
+                // $response['text'] = $reply;
+                // $response['to'] = $sendTo;
+                // $response['log'] = $log;
         
                 // $this->general->saveLogWebhook(json_encode($result), json_encode($response));
             }
@@ -126,20 +134,10 @@ class C_Maxchat extends CI_Controller
         $sendTo = $result->from;
 
         $pegawai = null;
-        // $nohp = "0".substr($result->from, 2);
-        // $ws = $this->dokumenlib->getPegawaiSiladen($result->from);
         $ws = $this->user->getProfilUserByNoHp($result->from);
         if($ws){
             $reply = NULL;
             $pegawai = $ws;
-            // $resp = json_decode($ws['response'], true);
-            // if($resp['code'] == 200){
-            //     $pegawai = $resp['data'];
-            //     $reply = null;
-            // }
-            // else {
-            //     $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
-            // }
         } else {
             $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         }
@@ -211,7 +209,13 @@ class C_Maxchat extends CI_Controller
 
         if($reply != null && $reply != ""){
             if($result->type == "text"){
-                $log = $this->maxchatlibrary->sendText($sendTo, $reply);
+                // $log = $this->maxchatlibrary->sendText($sendTo, $reply);
+                $cronWa = [
+                    'sendTo' => $sendTo,
+                    'message' => $reply,
+                    'type' => 'text'
+                ];
+                $this->general->saveToCronWa($cronWa);
             } else if($result->type == "image"){
                 $filename = explode("/", $str);
                 $log = $this->maxchatlibrary->sendImg($sendTo, $reply, $filename[5], $result->url);
@@ -221,9 +225,9 @@ class C_Maxchat extends CI_Controller
             }
         }
 
-        $response['text'] = $reply;
-        $response['to'] = $sendTo;
-        $response['log'] = $log;
+        // $response['text'] = $reply;
+        // $response['to'] = $sendTo;
+        // $response['log'] = $log;
 
         // $this->general->saveLogWebhook(json_encode($result), json_encode($response));
     }

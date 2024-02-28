@@ -4,6 +4,7 @@ class M_Kepegawaian extends CI_Model
     public function __construct()
     {
         parent::__construct();
+		$this->load->model('general/M_General', 'general');
         // $this->db = $this->load->database('main', true);
     }
 
@@ -4732,7 +4733,13 @@ public function submitEditJabatan(){
                     $link = base_url('whatsapp-verification/cuti/'.$encrypt);
                     $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
                     $sendTo = convertPhoneNumber($atasan['handphone']);
-                    $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
+                    // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
+                    $cronWa = [
+                        'sendTo' => $sendTo,
+                        'message' => $message.FOOTER_MESSAGE_CUTI,
+                        'type' => 'text'
+                    ];
+                    $this->general->saveToCronWa($cronWa);
                 } else {
                     $res['code'] = 1;
                     $res['message'] = "Terjadi Kesalahan";
@@ -5148,7 +5155,15 @@ public function submitEditJabatan(){
                 $encrypt = simpleEncrypt($kepala_bkpsdm['nipbaru_ws'].'-'.$id);
                 $link = base_url('whatsapp-verification/cuti/'.$encrypt);
                 $message_to_kepala_bkpsdm = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Permohonan Pengajuan ".$data['nm_cuti']." pegawai atas nama ".getNamaPegawaiFull($data)." telah diverifikasi oleh Kepala PD dan membutuhkan verifikasi Kepala BKPSDM. Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
-                $this->maxchatlibrary->sendText($kepala_bkpsdm['handphone'], $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI, 0, 0);
+                
+                // $this->maxchatlibrary->sendText($kepala_bkpsdm['handphone'], $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI, 0, 0);
+                $cronWa = [
+                    'sendTo' => $kepala_bkpsdm['handphone'],
+                    'message' => $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI,
+                    'type' => 'text'
+                ];
+                $this->general->saveToCronWa($cronWa);
+
             } else if($update['id_m_status_pengajuan_cuti'] == 3){ //ditolak atasan
                 $message_to_pegawai .= '*ditolak oleh Kepala PD* Anda dengan keterangan: *"'.$update['keterangan_verifikasi_atasan'].'"*';
                 $this->deletePermohonanCuti($id, 0);
@@ -5158,7 +5173,13 @@ public function submitEditJabatan(){
                 $message_to_pegawai .= '*ditolak oleh Kepala BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*';
                 $this->deletePermohonanCuti($id, 0);
             }
-            $this->maxchatlibrary->sendText($send_to_pegawai, $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
+            $cronWa = [
+                'sendTo' => convertPhoneNumber($send_to_pegawai),
+                'message' => $message_to_pegawai.FOOTER_MESSAGE_CUTI,
+                'type' => 'text'
+            ];
+            $this->general->saveToCronWa($cronWa);
+            // $this->maxchatlibrary->sendText($send_to_pegawai, $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
 
             // if($this->general_library->isKepalaBkpsdm() && $status == 1){
             //     //pembuatan file SK simpan di url_sk_temp sebelum DS
@@ -5254,7 +5275,13 @@ public function submitEditJabatan(){
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', $update);
 
-            $this->maxchatlibrary->sendText($result['handphone'], $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
+            // $this->maxchatlibrary->sendText($result['handphone'], $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
+            $cronWa = [
+                'sendTo' => convertPhoneNumber($result['handphone']),
+                'message' => $message_to_pegawai.FOOTER_MESSAGE_CUTI,
+                'type' => 'text'
+            ];
+            $this->general->saveToCronWa($cronWa);
         }
 
         return $res;
@@ -5318,7 +5345,15 @@ public function submitEditJabatan(){
             $mpdf->Output($path_file, 'F');
 
             $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
-            $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
+            // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
+            $cronWa = [
+                'sendTo' => convertPhoneNumber($data['handphone']),
+                'message' => $caption,
+                'filename' => $filename,
+                'fileurl' => $path_file,
+                'type' => 'document'
+            ];
+            $this->general->saveToCronWa($cronWa);
 
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', [

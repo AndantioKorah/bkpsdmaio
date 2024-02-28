@@ -30,6 +30,10 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
     }
 
+    public function refactorIdJabatanToMasterBidang(){
+        $this->master->refactorIdJabatanToMasterBidang();
+    }
+
     public function openStrukturOrganisasiSkpd($id_unitkerja){
         $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
         // dd(json_encode($data['result']));

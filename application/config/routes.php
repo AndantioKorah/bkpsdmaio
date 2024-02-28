@@ -101,6 +101,6 @@ $route['mt/penilaian-kinerja'] = 'simata/C_Simata/penilaianKinerja';
 $route['mt/ninebox'] = 'simata/C_Simata/nineBox';
 $route['mt/penilaian-potensial'] = 'simata/C_Simata/penilaianPotensial';
 $route['mt/profil-talenta'] = 'simata/C_Simata/profilTalenta';
-
+$route['mt/data-master-jabatan'] = 'simata/C_Simata/masterJabatan';
 
 

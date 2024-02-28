@@ -13,6 +13,16 @@
                         ->update($tableName, ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
         }
 
+        public function getAllWithOrder($tableName, $orderBy = 'created_date', $whatType = 'desc')
+        {
+            $this->db->select('*')
+            // ->where('id !=', 0)
+            // ->where('flag_active', 1)
+            ->order_by($orderBy, $whatType)
+            ->from($tableName);
+            return $this->db->get()->result_array(); 
+        }
+
         public function getMasterUnsurPenilaian(){
             return $this->db->select('*')
                             ->from('db_simata.m_unsur_penilaian a')
@@ -1583,6 +1593,60 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
         ->where('a.jabatan_target', $jt);
         // ->limit(1);
     return $this->db->get()->row_array();
+}
+
+function getMasterJabatan($id){
+    $this->db->select('*')
+    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+    ->where('a.id_unitkerja',$id)
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+
+}
+
+public function submitTambahRumpunJabatan(){
+    
+    $datapost = $this->input->post();
+    
+    $this->db->trans_begin();
+
+    $exists = $this->db->select('*')
+    ->from('db_simata.t_rumpun_jabatan a')
+    ->where('a.id_jabatan', $datapost["id_jabatan"])
+    ->where('a.id_m_rumpun_jabatan', $datapost["id_m_rumpun_jabatan"])
+    ->get()->row_array();
+
+
+    if($exists){
+        $res = array('msg' => 'Rumpun Jabatan Sudah ada', 'success' => false);
+    } else {
+        $data["id_jabatan"] = $datapost["id_jabatan"];
+        $data["id_m_rumpun_jabatan"] = $datapost["id_m_rumpun_jabatan"];
+        $this->db->insert('db_simata.t_rumpun_jabatan', $data);
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    }
+
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        // $res['code'] = 1;
+        // $res['message'] = 'Terjadi Kesalahan';
+        // $res['data'] = null;
+        $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+}
+
+public function getListRumpunJabatan($id){
+    return $this->db->select('*,a.id as id_rumpun')
+                    ->from('db_simata.t_rumpun_jabatan a') 
+                    ->join('db_simata.m_rumpun_jabatan b', 'a.id_m_rumpun_jabatan = b.id') 
+                    ->where('a.id_jabatan', $id)
+                    ->where('a.flag_active', 1)
+                    ->get()->result_array();
 }
           
       

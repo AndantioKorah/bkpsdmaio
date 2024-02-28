@@ -374,7 +374,40 @@ class C_Simata extends CI_Controller
 
 
 
-    
+    public function masterJabatan(){
+        $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');        
+        render('simata/V_MasterJabatan', '', '', $data);
+    }
+
+    public function loadListMasterJabatan($id){
+        $data['jabatan'] = $this->simata->getMasterJabatan($id);
+        
+        $this->load->view('simata/V_MasterJabatanItem', $data);
+    }
+
+    public function loadFormTambahRumpun($id)
+    {
+        $data['id_jabatan'] = $id;
+        $data['rumpun_jabatan'] = $this->kepegawaian->getAllWithOrder('db_simata.m_rumpun_jabatan', 'id', 'asc');
+        $this->load->view('simata/V_ModalFormTambahRumpun', $data);
+    }
+
+    public function submitTambahRumpunJabatan()
+	{ 
+		echo json_encode( $this->simata->submitTambahRumpunJabatan());
+	}
+
+    public function loadListRumpunJabatan($id){
+        $data['result'] = $this->simata->getListRumpunJabatan($id);
+        $this->load->view('simata/V_ListRumpunJabatan', $data);
+    }
+
+    public function deleteRumpunJabatan($id)
+    {
+        $this->simata->delete('id', $id, "db_simata.t_rumpun_jabatan");
+    }
+
+
     
 
     

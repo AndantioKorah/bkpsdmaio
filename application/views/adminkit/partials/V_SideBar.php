@@ -241,12 +241,12 @@
 		</li>
 	<?php } ?>
 	<?php
-		// if($this->general_library->isProgrammer() 
-		// || $this->general_library->isAdminAplikasi() 
-		// || $this->general_library->isWalikota() 
-		// // || $this->general_library->isWakilWalikota()
-		// || isKasubKepegawaian($this->general_library->getNamaJabatan())
-		// ){ 
+		if($this->general_library->isProgrammer() 
+		|| $this->general_library->isAdminAplikasi() 
+		|| $this->general_library->isWalikota() 
+		// || $this->general_library->isWakilWalikota()
+		|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+		){ 
 	?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>pdm/dashboard">
@@ -254,7 +254,7 @@
 			</a>
 		</li>
 	<?php
-		// }
+		}
 	?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
@@ -561,6 +561,11 @@
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-interval')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Interval
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-master-jabatan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Jabatan
 					</a>
 				</li>
 				

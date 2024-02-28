@@ -168,19 +168,22 @@
                             
                             $file = json_decode($lp['bukti_kegiatan']);
                             $nodok = 1;
+                            $tanggal = new DateTime($lp['tanggal_kegiatan']);
+                            $tahun = $tanggal->format("Y");
+                            $bulan = $tanggal->format("m");
                             if($file) {
                             foreach($file as $file_name)
                                 {
                                   $data = $file_name;    
-                                  $ekstension = substr($data, strpos($data, ".") + 1);    
-
+                                  // $ekstension = substr($data, strpos($data, ".") + 1); 
+                                  $ekstension = pathinfo($data, PATHINFO_EXTENSION);
                                   
                                     if($file_name == null){
                                         echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                     } else {
                                       if($ekstension == "png" || $ekstension == "jpg" || $ekstension == "jpeg"){
                                         // echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
-                                        echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
+                                        echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
 
                                       } else {
                                         echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
@@ -376,7 +379,7 @@ var span = document.getElementsByClassName("close")[0];
 
             modal.find('#img2').attr("src","http://placekitten.com/120/120/");
             // console.log(div.data('gambar'))
-            $('#gambar_lama').append('<img id="img" class="img-fluid" alt="Responsive image"  src="<?php echo base_url();?>/assets/bukti_kegiatan/'+div.data('gambar')+'?=t'+new Date().getTime()+'" class="thumb">');
+            $('#gambar_lama').append('<img id="img" class="img-fluid" alt="Responsive image"  src="<?php echo base_url();?>/assets/bukti_kegiatan/'+div.data('tahun')+'/'+div.data('bulan')+'/'+div.data('gambar')+'?=t'+new Date().getTime()+'" class="thumb">');
             
         });
 </script>

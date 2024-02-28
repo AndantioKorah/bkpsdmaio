@@ -1566,7 +1566,12 @@ class C_Kepegawaian extends CI_Controller
             $message = $this->kepegawaian->updateProfilePicture($upload);
             $this->session->set_flashdata('message', $message['message']);
         }
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
         redirect('kepegawaian/profil-pegawai/'.$this->input->post('nip'));
+        } else {
+		redirect('kepegawaian/profil');
+		}
+
     }
 
 

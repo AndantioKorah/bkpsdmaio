@@ -1596,18 +1596,12 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
 }
 
 function getMasterJabatan($id){
-    // $this->db->select('*')
-    // ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
-    // ->where('a.id_unitkerja',$id)
-    // ->from('db_pegawai.jabatan a');
-    // $query = $this->db->get();
     $data = null; 
     $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
     
 
         foreach($query->result_array() as $item)
         {
-            // dd($item['id_jabatanpeg']);
             $id_jabatanpeg = $item['id_jabatanpeg'];
             $this->db->select('a.id_m_rumpun_jabatan,a.id,b.nm_rumpun_jabatan')
             ->join('db_simata.m_rumpun_jabatan b', 'a.id_m_rumpun_jabatan = b.id')
@@ -1618,9 +1612,7 @@ function getMasterJabatan($id){
             $item['rumpun'] = $result;
             $data[] = $item;
         }
-    
 
-    // $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
     return $data;
 
 }

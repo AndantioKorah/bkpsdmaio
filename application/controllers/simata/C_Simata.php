@@ -407,6 +407,19 @@ class C_Simata extends CI_Controller
         $this->simata->delete('id', $id, "db_simata.t_rumpun_jabatan");
     }
 
+    public function rumpun($search = ''){
+        $data['search'] = urldecode($search);
+        $data['rumpun'] = $this->kepegawaian->getAllWithOrder('db_simata.m_rumpun_jabatan', 'id', 'asc');        
+        $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
+        render('simata/V_RumpunJabatan', '', '', $data);
+    }
+
+    public function searchRumpunJabatan(){
+        $data['result']= $this->simata->searchRumpunJabatan($this->input->post());
+        $this->session->set_userdata('data_search_database', $data);
+        $this->load->view('simata/V_RumpunJabatanResult', $data);
+    }
+
 
     
 

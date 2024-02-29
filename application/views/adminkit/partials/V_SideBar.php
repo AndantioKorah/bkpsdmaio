@@ -570,6 +570,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Jabatan
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/data-rumpun')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Rumpun Jabatan
+					</a>
+				</li>
 				
 				
 			</ul>

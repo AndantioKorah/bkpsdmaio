@@ -1597,8 +1597,12 @@ function getPegawaiNilaiPotensialPT($nip,$jt){
 
 function getMasterJabatan($id){
     $data = null; 
-    $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
-    
+    // $query = $this->db->get_where('db_pegawai.jabatan',array('id_unitkerja' => $id));
+    $this->db->select('*')
+    ->where('a.id_unitkerja', $id)
+    ->order_by('a.eselon','asc')
+    ->from('db_pegawai.jabatan a');
+    $query = $this->db->get(); 
 
         foreach($query->result_array() as $item)
         {
@@ -1661,6 +1665,26 @@ public function getListRumpunJabatan($id){
                     ->where('a.id_jabatan', $id)
                     ->where('a.flag_active', 1)
                     ->get()->result_array();
+}
+
+public function searchRumpunJabatan($data){
+    $result = null;
+    $this->db->select('*')
+            ->from('db_simata.t_rumpun_jabatan as a')
+            ->join('db_simata.m_rumpun_jabatan as b', 'a.id_m_rumpun_jabatan = b.id')
+            ->join('db_pegawai.jabatan as c', 'a.id_jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon', 'left')
+            ->join('db_pegawai.unitkerja e', 'c.id_unitkerja = e.id_unitkerja')
+            ->where('a.flag_active', 1);
+    if($data['rumpun'] != 0){
+        $this->db->where('a.id_m_rumpun_jabatan', $data['rumpun']);
+    }
+    if(isset($data['eselon'])){
+        $this->db->where_in('d.id_eselon', $data['eselon']);
+    }
+
+    $result = $this->db->get()->result_array();
+    return $result;
 }
           
       

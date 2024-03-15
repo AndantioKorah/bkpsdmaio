@@ -6,6 +6,13 @@
 		margin-bottom:10px !important;
     }
 </style>
+
+<?php  if($this->general_library->isProgrammer() == false AND $this->general_library->isHakAkses('akses_profil_pegawai') AND $this->general_library->getUserName() != $nip AND $this->general_library->isAdminAplikasi() == false){ ?>
+  <button onclick="loadRiwayatUsulDiklat()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalDiklat">
+  Riwayat Usul Bangkom
+</button>
+<?php }  ?>
+
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->

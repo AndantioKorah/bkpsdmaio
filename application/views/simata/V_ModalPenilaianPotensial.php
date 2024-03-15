@@ -496,11 +496,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Riwayat Hukuman Disiplin</label>
+                        <label for="exampleInputEmail1" class="form-label">Riwayat Hukuman Disiplin </label>
                         <select class="form-select select2" name="rekamjjk7" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($riwayat_hukdis){ foreach($riwayat_hukdis as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else echo "";} { if($hukdis == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+							<option  <?php if($nilai_potensial) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else if($hukdis == $r['id'])  echo "selected"; else echo "";} else { if($hukdis == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      
                         <?php } } ?>
                         </select>
                     </div>

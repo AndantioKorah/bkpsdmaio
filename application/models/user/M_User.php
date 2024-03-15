@@ -2004,7 +2004,7 @@
             if(isset($data['jenis_jabatan'])){
                 $this->db->where_in('c.jenis_jabatan', $data['jenis_jabatan']);
                 if(in_array('JFT', $data['jenis_jabatan'])){
-                    $this->db->where('f.id_statuspeg != 1');
+                    // $this->db->where('f.id_statuspeg != 1');
                 }
             }
             if(isset($data['statuspeg'])){

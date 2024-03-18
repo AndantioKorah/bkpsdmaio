@@ -75,7 +75,7 @@
                         </center>
                     </div>
                     <div class="col-md-9 col-sm-9 col-lg-9 my-auto align-self-center" style="margin-left: -10px; text-align: left;">
-                        <span style="font-size: .85rem; font-weight: bold;"><?=($rs['nama'])?></span><br>
+                        <span style="font-size: .85rem; font-weight: bold;"><?=getNamaPegawaiFull($rs)?></span><br>
                         <span style="font-size: .70rem; font-weight: bold;">NIP. <?=formatNip($rs['username'])?></span><br>
                         <span class="badge <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>&nbsp;
                         <span class="badge <?=$badge_aktif?>"><?=$rs['nama_status_pegawai']?>

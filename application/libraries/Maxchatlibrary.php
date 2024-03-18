@@ -47,7 +47,12 @@ class Maxchatlibrary{
     function sendText($to, $text, $replyId = "0", $flag_no_feedback = 0) {
         // kirim pesan ke kontak yang sudah disimpan
         $url = $this->API_URL . "/messages";
-
+        $text = str_replace("U+", "&#x", $text);
+        // $text = preg_replace(
+        //     '/[\x{1F600}-\x{1F64F}\x{2700}-\x{27BF}\x{1F680}-\x{1F6FF}\x{24C2}-\x{1F251}\x{1F30D}-\x{1F567}\x{1F900}-\x{1F9FF}\x{1F300}-\x{1F5FF}]/u',
+        //     '[emoji]$0[/emoji]',
+        //     $text
+        // );
         $data = array(
             "to" => $to,
             "type" => 'text',
@@ -220,8 +225,9 @@ class Maxchatlibrary{
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_HTTPHEADER => array(
             "Authorization: Bearer " . $this->TOKEN,
-            "Content-Type: application/json",
-            "cache-control: no-cache"
+            "Content-Type: application/json; charset=utf-8",
+            "cache-control: no-cache",
+            // 'Content-Type: text/html; charset=utf-8'
         ),
         ));
 

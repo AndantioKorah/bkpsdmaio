@@ -144,17 +144,22 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <?php 
                                 $file = json_decode($rs['bukti_kegiatan']);
+                                $tanggal = new DateTime($rs['tanggal_kegiatan']);
+                                $tahun = $tanggal->format("Y");
+                                $bulan = $tanggal->format("m");
                                 $nomor = 1;
                                 if($file) {
                                 foreach($file as $file_name)
                                     {
                                          $data = $file_name;    
-                                  $ekstension = substr($data, strpos($data, ".") + 1); 
+                                        //  $ekstension = substr($data, strpos($data, ".") + 1); 
+                                         $ekstension = pathinfo($data, PATHINFO_EXTENSION);
+
                                         if($file_name == null){
                                             echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                         } else {
-                                            echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nomor."</a>";
-                                            // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$rs['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nomor."</a>";
+                                            echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nomor."</a>";  
+                                            // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$rs['id']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nomor."</a>";
                                         }
                                     $nomor++;
                                     } 
@@ -217,8 +222,9 @@
             </div>
             <div class="button_wrapper" style="text-align: center;">
                 <div class="button">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <i class="fa fa-window-close" aria-hidden="true"></i>
+                <!-- <button class="btn_close" type="button" class="close" aria-label="Close"> -->
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+                <!-- <i class="fa fa-window-close" aria-hidden="true"></i> -->
                 </button>
                 </div>
             </div>
@@ -236,6 +242,11 @@
                     float: right;
                 }
             </style>
+            <script>
+              $( ".btn_close" ).on( "click", function() {
+                $('#edit-data').modal('hide');
+            } );
+            </script>
 
            
                 <center>
@@ -314,7 +325,8 @@ var span = document.getElementsByClassName("close")[0];
 
             modal.find('#img2').attr("src","http://placekitten.com/120/120/");
             // console.log(div.data('gambar'))
-            $('#gambar_lama').append('<img id="img" class="img-fluid" alt="Responsive image"  src="<?php echo base_url();?>/assets/bukti_kegiatan/'+div.data('gambar')+'?=t'+new Date().getTime()+'" class="thumb">');
+            $('#gambar_lama').append('<img id="img" class="img-fluid" alt="Responsive image"  src="<?php echo base_url();?>/assets/bukti_kegiatan/'+div.data('tahun')+'/'+div.data('bulan')+'/'+div.data('gambar')+'?=t'+new Date().getTime()+'" class="thumb">');
+
             
         });
   

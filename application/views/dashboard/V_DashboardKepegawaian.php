@@ -30,6 +30,7 @@
   </div>
   <div class="col-lg-8">
     <div class="row">
+    
       <div class="col-lg-4">
         <div onclick="openPensiunCardDetail()" class="card info_card">
           <div class="card-body">
@@ -95,6 +96,73 @@
       </div>
     </div>
   </div>
+
+  <!-- <div class="col-lg-4">
+    <div  class="card info_card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mt-0 ml-0">
+            <h5 class="card-title">Jabatan Struktural</h5>
+          </div>
+          <div class="col-auto">
+            <div class="stat text-primary">
+              <i class="align-middle fa fa-users" ></i>
+            </div>
+          </div>
+        </div>
+        <h1 class="mt-1 mb-3"><?=$chart['jenis_jabatan']['struktural']['jumlah']?></h1>
+        <div class="mb-0">
+          <span class="text-muted">Per Hari Ini</span>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  
+  <!-- <div class="col-lg-4">
+    <div  class="card info_card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mt-0 ml-0">
+            <h5 class="card-title">Jabatan Fungsional Tertentu</h5>
+          </div>
+          <div class="col-auto">
+            <div class="stat text-primary">
+              <i class="align-middle fa fa-users" ></i>
+            </div>
+          </div>
+        </div>
+        <h1 class="mt-1 mb-3"><?=$chart['jenis_jabatan']['jft']['jumlah']?></h1>
+        <div class="mb-0">
+          <span class="text-muted">Per Hari Ini</span>
+        </div>
+      </div>
+    </div>
+  </div>
+   -->
+
+  <!-- <div class="col-lg-4">
+    <div  class="card info_card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mt-0 ml-0">
+            <h5 class="card-title">Jabatan Fungsional Umum</h5>
+          </div>
+          <div class="col-auto">
+            <div class="stat text-primary">
+              <i class="align-middle fa fa-users" ></i>
+            </div>
+          </div>
+        </div>
+        <h1 class="mt-1 mb-3"><?=$chart['jenis_jabatan']['jfu']['jumlah']?></h1>
+        <div class="mb-0">
+          <span class="text-muted">Per Hari Ini</span>
+        </div>
+      </div>
+    </div>
+  </div>
+   -->
+
+  
   <div class="col-lg-6">
     <div class="card">
       <div class="card-body">

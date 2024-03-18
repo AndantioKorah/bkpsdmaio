@@ -82,6 +82,7 @@ class C_Login extends CI_Controller
         $result = $this->m_general->authenticate($username, $password);
         // dd($result);
         if($result != null){
+           
             $params = $this->m_general->getAll('m_parameter');
             $all_menu = $this->m_general->getAll('m_menu');
             $list_menu = null;
@@ -93,6 +94,7 @@ class C_Login extends CI_Controller
             $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
             // $sub_bidang = $this->m_general->getAllSubBidang();
             $list_sub_bidang = null;
+          
             if($list_role){
                 $active_role = $list_role[0];
                 $list_menu = $this->general_library->getListMenu($active_role['id'], $active_role['role_name'], $result[0]['id_m_bidang']);
@@ -107,16 +109,17 @@ class C_Login extends CI_Controller
                     }
                 }
             }
+            // dd($all_menu);
             if($all_menu){
                 foreach($all_menu as $m){
                     $list_exist_url[$m['url']] = $m['flag_general_menu'];
                 }
             }
 
-            if(!$active_role){
-                $this->session->set_flashdata('message', 'Akun Anda belum memiliki Role. Silahkan menghubungi Administrator.');
-                // redirect('login');
-            }
+            // if(!$active_role){
+            //     $this->session->set_flashdata('message', 'Akun Anda belum memiliki Role. Silahkan menghubungi Administrator.');
+            //     redirect('login');
+            // }
 
             $list_tpp_kelas_jabatan = null;
             if($tpp_kelas_jabatan){
@@ -125,7 +128,11 @@ class C_Login extends CI_Controller
                 }
             }
             
-
+            if($active_role) {
+                $landing_page = $active_role['landing_page'];
+            } else {
+                $landing_page = 'welcome';
+            }
             $this->session->set_userdata([
                 'user_logged_in' => $result,
                 'params' => $params,
@@ -138,7 +145,7 @@ class C_Login extends CI_Controller
                 'active_role' =>  $active_role,
                 'active_role_id' =>  $active_role['id'],
                 'active_role_name' =>  $active_role['role_name'],
-                'landing_page' =>  $active_role['landing_page'],
+                'landing_page' =>  $landing_page,
                 'pegawai' => $pegawai,
                 // 'getBidangBySub' => $list_sub_bidang,
                 'ID_PENDAFTARAN_PASIEN' =>  null,
@@ -150,7 +157,8 @@ class C_Login extends CI_Controller
                     $this->session->set_userdata([$p['parameter_name'] => $p]);
                 }
             }
-            redirect(base_url($this->session->userdata('landing_page')));                
+            redirect(base_url($landing_page));   
+            // redirect(base_url($this->session->userdata('landing_page')));                
         } else {
             $this->session->set_flashdata('message', $this->session->flashdata('message'));
             redirect('login');

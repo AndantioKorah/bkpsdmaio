@@ -1007,6 +1007,18 @@ function countTmtPensiun($nip, $umur = 0){
     }
 }
 
+function emojiToString($text) {
+    $str = preg_replace_callback(
+        "%(?:\xF0[\x90-\xBF][\x80-\xBF]{2} | [\xF1-\xF3][\x80-\xBF]{3} | \xF4[\x80-\x8F][\x80-\xBF]{2})%xs",
+        function($emoji){
+            $emojiStr = mb_convert_encoding($emoji[0], 'UTF-32', 'UTF-8');
+            return strtoupper(preg_replace("/^[0]+/","U+",bin2hex($emojiStr)));
+        },
+        $text
+    );
+    return $str;
+}
+
 function get_client_ip()
 {
     $ipaddress = '';

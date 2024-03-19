@@ -65,7 +65,7 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
+                $nama = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -78,7 +78,7 @@
                                 ->limit(5)
                                 ->get()->result_array();
 
-                $nip = $this->db->select('a.*, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
+                $nip = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')

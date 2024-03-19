@@ -49,8 +49,17 @@
 			<div class="wrap-login100">
 				<form class="login100-form  validate-form" method="post" action="<?=base_url('login/C_Login/authenticateAdmin')?>">
 					<div class="login-form-web">
+						<?php 
+							$selamatdatang = "SELAMAT DATANG! U+1F92FU+1F601";
+							$selamatdatang = str_replace("U+", "&#x", $selamatdatang);
+							// $selamatdatang = preg_replace(
+							// 	    '/[\x{1F600}-\x{1F64F}\x{2700}-\x{27BF}\x{1F680}-\x{1F6FF}\x{24C2}-\x{1F251}\x{1F30D}-\x{1F567}\x{1F900}-\x{1F9FF}\x{1F300}-\x{1F5FF}]/u',
+							// 	    '[emoji]$0[/emoji]',
+							// 	    $selamatdatang
+							// 	);
+						?>
 						<span class="login100-form-title p-b-10">
-							SELAMAT DATANG !
+							<?=$selamatdatang?>
 						</span>
 						<center>
 							<img style="height: 10vh; border-radius: 5px;" class="mb-4  p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==

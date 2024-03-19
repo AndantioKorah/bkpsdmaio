@@ -725,6 +725,7 @@
         }
 
         public function saveToCronWa($data){
+            $data['message'] = emojiToUnicode($data['message']);
             $this->db->insert('t_cron_wa', $data);
         }
 

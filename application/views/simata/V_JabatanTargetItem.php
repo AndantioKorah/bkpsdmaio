@@ -11,13 +11,16 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item" role="presentation">
-		<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
-			role="tab" aria-controls="home" aria-selected="true">Administrator</button>
+		<!-- <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+			role="tab" aria-controls="home" aria-selected="true">Administrator</button> -->
+			<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+			role="tab" aria-controls="home" aria-selected="true">List Pegawai</button>
 	</li>
-	<li class="nav-item" role="presentation">
+	</li>
+	<!-- <li class="nav-item" role="presentation">
 		<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
 			role="tab" aria-controls="profile" aria-selected="false">JTP Pratama</button>
-	</li>
+	</li> -->
 
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -149,7 +152,7 @@
 											<input type="hidden" name="tab" value="jpt">
 
 											<input type="hidden" name="id_pegawai" value="<?=$rs['id_peg'];?>">
-											<select class="form-control js-example-basic-multiple"
+											<select class="form-control js-example-basic-multiple hsl"
 												name="jabatan_target[]" multiple="multiple" required>
 												<!-- <option disabled selected>Pilih Jabatan Target</option> -->
 												<?php if($jabatan_jpt){ foreach($jabatan_jpt as $r){ ?>
@@ -238,7 +241,7 @@
 		var base_url = "<?=base_url();?>";
 		var count_data = 0;
 		event.preventDefault();
-
+       
 		$('.hsl').each(function () {
 			count_data = count_data + 1;
 		});

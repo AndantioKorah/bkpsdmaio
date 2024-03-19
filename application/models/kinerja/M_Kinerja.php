@@ -519,7 +519,36 @@
                         $atasan = $kepala;
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
-                    $atasan = $kepala;
+                    // $atasan = $kepala;
+                    
+                    $atasan = $this->baseQueryAtasan()
+                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                    ->where('nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
+                    ->get()->row_array();
+                    if(!$atasan){ //cari kepala bidang
+                        $atasan = $this->baseQueryAtasan()
+                                        ->where('b.skpd', $pegawai['id_unitkerja'])
+                                        ->where('nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
+                                        ->get()->row_array();
+                        if(!$atasan){ //cari sek
+                            if(stringStartWith('Inspektorat', $pegawai['nm_unitkerja'])){
+                                $atasan = $this->baseQueryAtasan()
+                                                ->where('b.skpd', $pegawai['id_unitkerja'])
+                                                ->where('a.id_m_bidang', 202)
+                                                ->where('f.id_eselon', 6)
+                                                ->get()->row_array();
+                            } else {
+                                $atasan = $this->baseQueryAtasan()
+                                                ->where('b.skpd', $pegawai['id_unitkerja'])
+                                                ->where('f.id_eselon', 6)
+                                                ->get()->row_array();
+                            }
+                            if(!$atasan){ //cari kepala
+                                $atasan = $kepala;
+                            }
+                        }
+                    }
+                    
                 }
             } else if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
                 if(!stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || !stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //bukan kepsek
@@ -701,7 +730,7 @@
                             // ->where('b.nipbaru_ws', '197405122009022003')
                             ->where('a.id',$this->general_library->getId())
                             ->get()->row_array();
-
+        
         $data_atasan = $this->getAtasanPegawai($pegawai);
         // dd($data_atasan);
         $kepala_pd = $data_atasan['kepala'];

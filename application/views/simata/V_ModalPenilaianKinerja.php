@@ -621,12 +621,12 @@
 
             <tr>
               
-                <td style="width:25%">Amanah</td>
+                <td style="width:25%">Penugasan</td>
                 <td style="width:25%">
                 <select class="form-select select2" name="kriteria5">
                 <option value="0,0,0"  selected>Pilih Item</option>
                     <?php if($kriteria_kinerja_5){ foreach($kriteria_kinerja_5 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else echo "";} else { if($penugasan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>

@@ -530,6 +530,10 @@
             $result['jenis_kelamin']['perempuan']['nama'] = 'Perempuan';
             $result['jenis_kelamin']['perempuan']['jumlah'] = 0;
             $result['statuspeg'] = null;
+            $result['jenis_jabatan']['jft']['jumlah'] = 0;
+            $result['jenis_jabatan']['jfu']['jumlah'] = 0;
+            $result['jenis_jabatan']['struktural']['jumlah'] = 0;
+
 
             $result['golongan'][1]['nama'] = 'Golongan I';
             $result['golongan'][1]['jumlah'] = 0;
@@ -597,7 +601,7 @@
                 $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
             }
 
-            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $pegawai = $this->db->select('c.jenis_jabatan,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
@@ -652,9 +656,16 @@
                 if($peg['statuspeg'] != null){
                     $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
                 }
+
+                if($peg['jenis_jabatan'] == 'JFT'){
+                    $result['jenis_jabatan']['jft']['jumlah']++;
+                } else if($peg['jenis_jabatan'] == 'JFU'){
+                    $result['jenis_jabatan']['jfu']['jumlah']++;
+                } else if($peg['jenis_jabatan'] == 'Struktural'){
+                    $result['jenis_jabatan']['struktural']['jumlah']++;
+                } 
                
             }
-            // dd($result);
             return $result;
         }
 
@@ -714,6 +725,7 @@
         }
 
         public function saveToCronWa($data){
+            $data['message'] = emojiToUnicode($data['message']);
             $this->db->insert('t_cron_wa', $data);
         }
 

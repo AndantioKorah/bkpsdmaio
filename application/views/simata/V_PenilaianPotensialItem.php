@@ -27,7 +27,7 @@
                 <th>Nama</th>
                 <th>Nilai Rekam Jejak (40%)</th>
                 <th>Nilai Pertimbangan Lainnya (10%)</th>
-                <!-- <th>Total</th> -->
+                <th>Total Nilai</th>
 				<th>Pemeringkatan</th>
 				<th></th>
             </tr>
@@ -41,7 +41,7 @@
                 <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
                 <td><?=$rs2['res_potensial_lainnya'];?></td>
-                <!-- <td><?=$total_nilai;?></td> -->
+                <td><?=$total_nilai;?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"

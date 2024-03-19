@@ -19,7 +19,7 @@
 		color: #fff;
 	}
 </style>
-<table id="example" class="display table table-bordered" style="width:100%">
+<table id="" class="display table table-bordered table_pt" style="width:100%">
         <thead>
             <tr>
                 <th>Jabatan Target</th>
@@ -31,6 +31,7 @@
                 <th>Nilai Pertimbangan Lainnya (10%)</th>
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
+                <th>Total Nilai </th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
 				<th></th>
@@ -43,12 +44,13 @@
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
-                <td><?= pemeringkatanKriteriaPotensial($rs2['res_kinerja'])?></td>
+                <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
                 <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
                 <td><?=$rs2['res_potensial_lainnya'];?></td>
                 <td><?=$rs2['res_potensial_total'];?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
+                <td><?=($total_nilai+$rs2['res_kinerja'])/2;?></td>
                 <td><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></td>
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
@@ -85,7 +87,7 @@
 
 <script>
 	var groupColumn = 2;
-var table = $('#example').DataTable({
+var table = $('.table_pt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: 0,orderable: false}],
     order: [[groupColumn, 'asc']],

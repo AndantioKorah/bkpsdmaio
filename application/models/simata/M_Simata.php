@@ -262,15 +262,17 @@
                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
                 // ->where('b.eselon like', '%IV%')
                 // ->where("FIND_IN_SET(b.eselon,'IV A,IV B,III B')!=",0)
-                ->group_start()
-                ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
-                ->where("FIND_IN_SET(b.eselon,'IV A,IV B,Non Eselon')!=",0)
-                ->or_where_in('a.pangkat',$id_pangkat)
-                ->group_end()
-                ->where_in('a.pangkat', $id_pangkat)
-                ->where('b.nama_jabatan !=', 'Pelaksana')
-                ->where('b.eselon !=', 'III B')
-                ->where('a.skpd', $id);
+                // ->group_start()
+                // ->where('TIMESTAMPDIFF(year,a.tmtjabatan, now()) >=', '3')
+                // ->where("FIND_IN_SET(b.eselon,'IV A,IV B,Non Eselon')!=",0)
+                // ->or_where_in('a.pangkat',$id_pangkat)
+                // ->group_end()
+                // ->where_in('a.pangkat', $id_pangkat)
+                // ->where('b.nama_jabatan !=', 'Pelaksana')
+                // ->where('b.eselon !=', 'III B')
+                ->where('a.id_m_status_pegawai', 1)
+                ->where('a.skpd', $id)
+                ->order_by('b.eselon', 'asc');
             return $this->db->get()->result_array();
         }
 
@@ -288,7 +290,7 @@
                 ->where_in('a.pangkat', $id_pangkat)
                 ->where('b.nama_jabatan !=', 'Pelaksana')
                 ->where("FIND_IN_SET(b.eselon,'II B,III A,III B')!=",0)
-
+                ->where('a.id_m_status_pegawai', 1)
                 // ->where('b.eselon', 'III B')
                 ->where('a.skpd', $id)
                 ->order_by('a.pangkat', 'desc');
@@ -312,7 +314,8 @@ function getNamaJabatanAdministrator(){
     // ->where('id !=', 0)
     // ->where('flag_active', 1)
     ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
-    ->where("FIND_IN_SET(a.eselon,'III B')!=",0)
+    // ->where("FIND_IN_SET(a.eselon,'III B')!=",0)
+    ->where_in('a.eselon',["II A", "II B", "III A", "III B"])
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
@@ -325,8 +328,9 @@ function getNamaJabatanJpt(){
     // ->where('flag_active', 1)
     ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
     // ->where("FIND_IN_SET(a.eselon,'II B')!=",0)
-    ->where('a.eselon','II B')
-    ->or_where('a.eselon','III A')
+    // ->where('a.eselon','II B')
+    // ->or_where('a.eselon','III A')
+    ->where_in('a.eselon', ["II A", "II B", "III A"])
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
@@ -997,19 +1001,53 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $years = floor($date_diff / (365*60*60*24));
             $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
             $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-            if($years >= 10){
+            if($years > 10){
                 $id_hukdis = 115;
-            } else if($years >= 6 && $years <= 9){
+            } else if($years >= 10){
                 $id_hukdis = 116;
-            } else if($years >= 3 && $years <= 6){
+            } else if($years > 5){
                 $id_hukdis = 117;
-            } else if($years < 2){
+            } else if($years > 2){
                 $id_hukdis = 118;
             }
         } else {
         $id_hukdis = 115;
         }
     return $id_hukdis;   
+    }
+
+    function getPenugasanPengawai($id){
+        $this->db->select('*')
+            ->from('db_pegawai.pegjabatan a')
+            ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
+            ->where('a.id_pegawai', $id)
+            // ->where('b.eselon', $eselon)
+            ->where('a.statusjabatan', 2)
+            ->where('a.flag_active', 1);
+        $penugasan = $this->db->get()->result_array();
+       
+        $id_penugasan = null;
+        $qty1 = 0;
+        $qty2 = 0;
+
+        if($penugasan){
+            foreach ($penugasan as $peng) {  
+                if($peng['eselon'] == "II B" || $peng['eselon'] == "II A"){ 
+                 $qty1++;
+                } 
+                if($peng['eselon'] == "III B" || $peng['eselon'] == "III A"){ 
+                 $qty2++;
+                } 
+             }
+
+            if($qty1 != 0){
+                $id_penugasan = 88; 
+            } else if($qty2 != 0) {
+                $id_penugasan = 89;
+            } 
+  
+        }
+    return $id_penugasan;   
     }
 
         
@@ -1063,6 +1101,7 @@ public function getPegawaiPenilaianKinerjaJpt(){
                 ->from('db_pegawai.peginovasi a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.flag_active', 1)
+                ->where('a.status', 2)
                 ->limit(1);
             $inovasi = $this->db->get()->row_array();
             if($inovasi){
@@ -1163,7 +1202,7 @@ public function getPegawaiPenilaianKinerjaJpt(){
                                     ->where('a.nilai_assesment is not null')
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
-
+          
 
             if($cek){
                 $this->db->where('id_peg', $datapost['id_peg'])
@@ -1182,7 +1221,7 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $total_nilai = $datapost["nilai_assesment"] * 50 / 100;
 
             $this->db->where('id_peg', $datapost['id_peg'])
-                     ->where('id_jabatan_target', $datapost['jabatan_target'])
+                    //  ->where('id_jabatan_target', $datapost['jabatan_target'])
                         ->update('db_simata.t_penilaian', 
                         ['res_potensial_cerdas' => $total_nilai]);
             
@@ -1519,15 +1558,20 @@ public function getPegawaiPenilaianKinerjaJpt(){
 
 
         
-public function loadListProfilTalentaAdm(){
-    return $this->db->select('*')
+public function loadListProfilTalentaAdm($id){
+     $this->db->select('*')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
-                    ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
+                    // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                     ->where('a.flag_active', 1)
-                    ->order_by('a.id', 'asc') 
-                    ->get()->result_array();
+                    ->order_by('a.id', 'asc') ;
+                    if($id == 1){
+                        $this->db->where_in('c.eselon', ["III A","III B"]);
+                    }else if($id == 2){
+                        $this->db->where_in('c.eselon', ["II A","II B"]);
+                    }
+    return $this->db->get()->result_array();
 }
 
 function getPegawaiNilaiKinerjaPT($nip){

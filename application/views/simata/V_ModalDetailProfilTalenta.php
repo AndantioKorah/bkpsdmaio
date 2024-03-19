@@ -229,7 +229,7 @@
                                             <tr>
                                             <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-1</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_kinerja['skor1']) { ?>
+                                                <?php if(isset($nilai_kinerja['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor1'];?> Point] <?=$nilai_kinerja['kinerja1'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -238,7 +238,7 @@
                                             <tr>
                                             <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-2</span></td>
                                                 <td style="width:25%">
-                                                <?php if($nilai_kinerja['skor2']) { ?>
+                                                <?php if(isset($nilai_kinerja['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor2'];?> Point] <?=$nilai_kinerja['kinerja2'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -250,7 +250,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Inovatif</span></td>
                                                 <td style="width:25%">
-                                                <?php if($nilai_kinerja['skor3']) { ?>
+                                                <?php if(isset($nilai_kinerja['skor3'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor3'];?> Point] <?=$nilai_kinerja['kinerja3'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -258,7 +258,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Tim</span></td>
                                                 <td style="width:25%">
-                                                <?php if($nilai_kinerja['skor4']) { ?>
+                                                <?php if(isset($nilai_kinerja['skor4'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor4'];?> Point] <?=$nilai_kinerja['kinerja4'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -266,7 +266,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Amanah</span></td>
                                                 <td style="width:25%">
-                                                <?php if($nilai_kinerja['skor5']) { ?>
+                                                <?php if(isset($nilai_kinerja['skor5'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor5'];?> Point] <?=$nilai_kinerja['kinerja5'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -283,7 +283,11 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Nilai Assement</span></td>
                                                 <td style="width:75%">
-                                                <span class="sp_profil_sm"><?=$nilai_potensial['nilai_assesment'];?></span>
+                                                <span class="sp_profil_sm">
+                                                <?php if(isset($nilai_potensial['nilai_assesment'])) { ?>
+                                                        <?=$nilai_potensial['nilai_assesment'];?>
+                                                <?php } ?>
+                                                </span>
                                             </td>
                                             </tr>
                                         </table>
@@ -297,7 +301,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pedidikan Terakhir</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor1']) { ?>
+                                                <?php if(isset($nilai_potensial['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor1'];?> Point] <?=$nilai_potensial['potensial1'];?></span>
                                                 <?php } ?>
 
@@ -306,7 +310,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pangkat/Golongan Ruang</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor2']) { ?>
+                                                <?php if(isset($nilai_potensial['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor2'];?> Point] <?=$nilai_potensial['potensial2'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -314,7 +318,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Masa Kerja Jabatan</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor3']) { ?>
+                                                <?php if(isset($nilai_potensial['skor3'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor3'];?> Point] <?=$nilai_potensial['potensial3'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -322,7 +326,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pendidikan dan Pelatihan Kepemimpinan</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor4']) { ?>
+                                                <?php if(isset($nilai_potensial['skor4'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor4'];?> Point] <?=$nilai_potensial['potensial4'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -330,7 +334,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengembangan Kompetensi 20 JP</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor5']) { ?>
+                                                <?php if(isset($nilai_potensial['skor5'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor5'];?> Point] <?=$nilai_potensial['potensial5'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -338,7 +342,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Penghargaan</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor6']) { ?>
+                                                <?php if(isset($nilai_potensial['skor6'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor6'];?> Point] <?=$nilai_potensial['potensial6'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -346,7 +350,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Riwayat Hukuman Disiplin</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor7']) { ?>
+                                                <?php if(isset($nilai_potensial['skor7'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor7'];?> Point] <?=$nilai_potensial['potensial7'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -362,7 +366,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Kepemimpinan Organisasi</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor1']) { ?>
+                                                <?php if(isset($nilai_potensial['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor8'];?> Point] <?=$nilai_potensial['potensial8'];?></span>
                                                 <?php } ?>
 
@@ -371,7 +375,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pertimbangan Aspirasi Karier</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor2']) { ?>
+                                                <?php if(isset($nilai_potensial['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor9'];?> Point] <?=$nilai_potensial['potensial9'];?></span>
                                                 <?php } ?>
                                             </td>
@@ -379,7 +383,7 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Survey Pegawai ASN Ceria</span></td>
                                                 <td style="width:75%">
-                                                <?php if($nilai_potensial['skor3']) { ?>
+                                                <?php if(isset($nilai_potensial['skor3'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor10'];?> Point] <?=$nilai_potensial['potensial10'];?></span>
                                                 <?php } ?>
                                             </td>

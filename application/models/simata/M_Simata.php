@@ -1268,16 +1268,27 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $getAllNilaiPotensial =  $this->db->select('*')
                         ->from('db_simata.t_penilaian a')
                         ->where('a.id_peg', $datapost["id_peg"])
-                        ->where('a.id_jabatan_target', $datapost['jabatan_target'])
+                        // ->where('a.id_jabatan_target', $datapost['jabatan_target'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
 
-            $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+            foreach ($getAllNilaiPotensial as $rs2) {
+              
+                $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+               
+                $this->db->where('id_peg', $datapost['id_peg'])
+                ->where('id_jabatan_target', $rs2['id_jabatan_target'])
+                   ->update('db_simata.t_penilaian', 
+                   ['res_potensial_total' => $total_potensial]);
+                        
+            }
 
-            $this->db->where('id_peg', $datapost['id_peg'])
-            ->where('id_jabatan_target', $datapost['jabatan_target'])
-               ->update('db_simata.t_penilaian', 
-               ['res_potensial_total' => $total_potensial]);
+            // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+            // $this->db->where('id_peg', $datapost['id_peg'])
+            // ->where('id_jabatan_target', $datapost['jabatan_target'])
+            //    ->update('db_simata.t_penilaian', 
+            //    ['res_potensial_total' => $total_potensial]);
         
         
             if($this->db->trans_status() == FALSE){
@@ -1499,16 +1510,25 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $getAllNilaiPotensial =  $this->db->select('*')
                         ->from('db_simata.t_penilaian a')
                         ->where('a.id_peg', $data["id_peg"])
-                        ->where('a.id_jabatan_target', $datapost['lainnya_jabatan_target'])
+                        // ->where('a.id_jabatan_target', $datapost['lainnya_jabatan_target'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
-                        
-            $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
 
-            $this->db->where('id_peg', $data['id_peg'])
+            foreach ($getAllNilaiPotensial as $rs2) {
+                            $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                            $this->db->where('id_peg', $data['id_peg'])
+                            ->where('id_jabatan_target', $rs2['id_jabatan_target'])
+                               ->update('db_simata.t_penilaian', 
+                               ['res_potensial_total' => $total_potensial]);
+                                    
+                        }
+                        
+            // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+            // $this->db->where('id_peg', $data['id_peg'])
             // ->where('id_jabatan_target', $datapost['lainnya_jabatan_target'])
-               ->update('db_simata.t_penilaian', 
-               ['res_potensial_total' => $total_potensial]);
+            //    ->update('db_simata.t_penilaian', 
+            //    ['res_potensial_total' => $total_potensial]);
 
                         
         

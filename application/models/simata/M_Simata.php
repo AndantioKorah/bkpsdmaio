@@ -1275,7 +1275,7 @@ public function getPegawaiPenilaianKinerjaJpt(){
             $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
 
             $this->db->where('id_peg', $datapost['id_peg'])
-            // ->where('id_jabatan_target', $datapost['jabatan_target'])
+            ->where('id_jabatan_target', $datapost['jabatan_target'])
                ->update('db_simata.t_penilaian', 
                ['res_potensial_total' => $total_potensial]);
         
@@ -1779,6 +1779,22 @@ public function searchRumpunJabatan($data){
     $result = $this->db->get()->result_array();
     return $result;
 }
+
+
+function getSuksesor($jabatan_target_jpt){
+    $this->db->select('*, SUM(res_kinerja + res_potensial_total) as total')
+        ->from('db_simata.t_penilaian a')
+        ->join('db_pegawai.jabatan as b', 'a.id_jabatan_target = b.id_jabatanpeg')
+        ->join('db_pegawai.pegawai as c', 'a.id_peg = c.id_peg')
+        ->where('a.id_jabatan_target', $jabatan_target_jpt)
+        ->where('a.flag_active', 1)
+        ->group_by('a.id_peg')
+        ->order_by('total', 'desc')
+        ->limit(3);
+    $suksesor = $this->db->get()->result_array();
+
+    return $suksesor;   
+    }
           
       
             

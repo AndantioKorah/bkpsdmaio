@@ -1496,15 +1496,16 @@ animation06
     $nilaix = 0;
     $nilaiy = 0;
     if($result){
+        // dd($result);
     foreach($result as $rs){ 
-          
+        
         //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
         //   $nilaix = $rs->res_kinerja;
 
           $nilaiy = $rs->res_kinerja;
           $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
-
              if($nilaix >= 85 && $nilaiy >= 85) {
+              
               $ix++;
              } 
              if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {

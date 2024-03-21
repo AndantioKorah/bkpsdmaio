@@ -1827,6 +1827,105 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm){
 
     return $suksesor;   
     }
+
+
+    function getKriteriaKompetensi1(){
+        $this->db->select('a.*,b.bobot')
+        ->where('a.id_m_indikator_penilaian', 38)
+        ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
+        ->from('db_simata.m_kriteria_penilaian a');
+        return $this->db->get()->result_array(); 
+    }
+
+    function getKriteriaKompetensi2(){
+        $this->db->select('a.*,b.bobot')
+        ->where('a.id_m_indikator_penilaian', 39)
+        ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
+        ->from('db_simata.m_kriteria_penilaian a');
+        return $this->db->get()->result_array(); 
+    }
+
+
+    public function submitPenilaianKompetensi(){
+    
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+        $total_kompetensi = null;
+
+       
+       
+        for($x=1;$x<=2;$x++){
+            $krit = $this->input->post('kriteria'.$x.'');
+              $kriteria = explode(",", $krit);
+              $id_kriteria = $kriteria[0];
+              $skor = $kriteria[1];
+              $bobot = $kriteria[2];
+              $total_kompetensi += $skor * $bobot / 100;   
+        }
+    //  }
+
+       $krit1 = $this->input->post('kriteria1');
+       $kriteria1 = explode(",", $krit1);
+       $id_kriteria1 = $kriteria1[0];
+
+       $krit2 = $this->input->post('kriteria2');
+       $kriteria2 = explode(",", $krit2);
+       $id_kriteria2 = $kriteria2[0];
+
+     
+
+        $data["id_peg"] = $datapost["id_peg"];
+        $data["kriteria1"] = $id_kriteria1;
+        $data["kriteria2"] = $id_kriteria2;
+        $data["jabatan_target"] = $this->input->post('jabatan_target');
+
+        $cek =  $this->db->select('*')
+                                ->from('db_simata.t_penilaian_kompetensi a')
+                                ->where('a.id_peg', $data["id_peg"])
+                                ->where('a.jabatan_target', $this->input->post('jabatan_target'))
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+
+        if($cek){
+            $this->db->where('id_peg', $datapost['id_peg'])
+            ->update('db_simata.t_penilaian_kompetensi', 
+            ['kriteria1' => $id_kriteria1,
+            'kriteria2' => $id_kriteria2,
+                ]);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        } else {
+            $this->db->insert('db_simata.t_penilaian_kompetensi', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        $this->db->where('id_peg', $datapost['id_peg'])
+              ->where('id_jabatan_target', $this->input->post('jabatan_target'))
+                    ->update('db_simata.t_penilaian', 
+                    ['res_kompetensi' => $total_kompetensi]);
+
+    
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            // $res['code'] = 1;
+            // $res['message'] = 'Terjadi Kesalahan';
+            // $res['data'] = null;
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
+
+    function getPegawaiNilaiKompetensiPegawai($id_peg,$jt){
+        $this->db->select('a.*')
+            ->from('db_simata.t_penilaian_kompetensi a')
+            ->where('a.id_peg', $id_peg);
+        return $this->db->get()->row_array();
+    }
+       
           
       
             

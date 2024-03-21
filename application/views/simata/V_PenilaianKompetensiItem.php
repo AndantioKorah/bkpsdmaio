@@ -26,6 +26,7 @@
                 <th>Nilai (80% Nilai Nine Box) </th>
                 <th>Nama</th>
 				<th>Nilai Kompetensi </th>
+                <th>Total Nilai </th>
 				<th></th>
             </tr>
         </thead>
@@ -34,12 +35,15 @@
             <?php 
                 $total = $rs2['total']/2;
                 $total = $total * 80 / 100;
+                $total_kompentesi = $rs2['res_kompetensi'] * 20 / 100;
+                $total_nilai = $total + $total_kompentesi;
                   ?>
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
                 <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
-				<td></td>
+				<td><?=$total_kompentesi;?></td>
+                <td><?=$total_nilai;?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_kompetensi" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">

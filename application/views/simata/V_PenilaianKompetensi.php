@@ -124,20 +124,35 @@ $(function(){
 		loadListSuksesor()
 		});
 
-
     $(document).on("click", ".open-DetailPenilaian", function () {
 
       var id = $(this).data('id');
       var nip = $(this).data('nip');
       var kode = $(this).data('kode');
+      var jt = $(this).data('jt');
 
       $('#div_modal_penilaian_kinerja').html('')
       $('#div_modal_penilaian_kinerja').append(divLoaderNavy)
-      $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKompetensi/")?>'+id+'/'+nip+'/'+kode, function(){
+      $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKompetensi/")?>'+id+'/'+nip+'/'+kode+'/'+jt, function(){
         $('#loader').hide()
       })
 
       });
+
+
+    // $(document).on("click", ".open-DetailPenilaian", function () {
+
+    //   var id = $(this).data('id');
+    //   var nip = $(this).data('nip');
+    //   var kode = $(this).data('kode');
+
+    //   $('#div_modal_penilaian_kinerja').html('')
+    //   $('#div_modal_penilaian_kinerja').append(divLoaderNavy)
+    //   $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKompetensi/")?>'+id+'/'+nip+'/'+kode, function(){
+    //     $('#loader').hide()
+    //   })
+
+    //   });
 
 
 </script>

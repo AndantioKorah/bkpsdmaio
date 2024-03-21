@@ -25,7 +25,7 @@
                 <th>Jabatan Target</th>
                 <th>Nilai (80% Nilai Nine Box) </th>
                 <th>Nama</th>
-				<th>Nilai Kompetensi Bidang</th>
+				<th>Nilai Kompetensi </th>
 				<th></th>
             </tr>
         </thead>
@@ -42,7 +42,7 @@
 				<td></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
-										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
+										href="#modal_penilaian_kompetensi" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
 				</td>
             </tr>

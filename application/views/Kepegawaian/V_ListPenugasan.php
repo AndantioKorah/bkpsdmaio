@@ -10,6 +10,7 @@
           <th class="text-left">Nomor SK</th>
           <th class="text-left">Tanggal SK</th>
           <th class="text-left">Lamanya</th>
+          <th></th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -34,6 +35,12 @@
               <td class="text-left"><?= $rs['nosk']?></td> 
               <td class="text-left"><?= $rs['tglsk']?></td> 
               <td class="text-left"><?= $rs['lamanya']?></td> 
+              <td>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_penugasan" onclick="openFilePenugasan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
@@ -63,6 +70,25 @@
   $(function(){
     $('.datatable').dataTable()
   })
+
+  async function openFilePenugasan(filename){
+
+$('#iframe_view_file_penugasan').hide()
+$('.iframe_loader').show()  
+$('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+
+var number = Math.floor(Math.random() * 1000);
+    // $link = "http://siladen.manadokota.go.id/bidik/arsiporganisasi/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsippenugasan/"+filename+"?v="+number;
+
+
+$('#iframe_view_file_penugasan').attr('src', $link)
+    $('#iframe_view_file_penugasan').on('load', function(){
+      $('.iframe_loader').hide()
+      $(this).show()
+})
+
+}
 
   function deleteData(id,kode){
                    

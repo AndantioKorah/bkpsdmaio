@@ -453,10 +453,35 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianKompetensi', '', '', $data);
     }
 
-    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt){
-        $data['result'] = $this->simata->getSuksesor($jabatan_target_jpt);
+    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm){
+        $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm);
         // dd($data);
         $this->load->view('simata/V_PenilaianKompetensiItem', $data);
+    }
+
+    public function loadModalPenilaianKompetensi($id,$nip,$kode)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+        $data['kriteria_kinerja_1'] = $this->simata->getKriteriaKinerja1();
+        $data['kriteria_kinerja_2'] = $this->simata->getKriteriaKinerja2();
+        $data['kriteria_kinerja_3'] = $this->simata->getKriteriaKinerja3();
+        $data['kriteria_kinerja_4'] = $this->simata->getKriteriaKinerja4();
+        $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
+        $data['id_t_penilaian'] = $id;
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
+        $data['kode'] = $kode; 
+        $currentYear = date('Y'); 
+        $previous1Year = $currentYear - 1;   
+        $previous2Year = $currentYear - 2;                     
+        $id_peg = $data['profil_pegawai']['id_peg'];
+        $data['kinerja_n_1'] = $this->simata->getPenilaianKinerja($id_peg,$previous1Year,1);
+        $data['kinerja_n_2'] = $this->simata->getPenilaianKinerja($id_peg,$previous2Year,2);
+        $data['inovasi'] = $this->simata->getInovasiPegawai($id_peg);
+        $data['timkerja'] = $this->simata->getPengalamanTimPegawai($id_peg);
+        $eselonpegawai = $data['profil_pegawai']['eselon']; 
+        $data['penugasan'] = $this->simata->getPenugasanPengawai($id_peg,$eselonpegawai);
+
+        $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
 
     

@@ -15,7 +15,7 @@
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_adm" id="jabatan_target_adm" >
-                <!-- <option value=""  selected>Semua</option> -->
+                <option value="" selected disabled>Pilih Jabatan</option>
                     <?php if($jabatan_target_adm){ foreach($jabatan_target_adm as $r){ ?>
                      <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
@@ -25,7 +25,7 @@
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" id="jabatan_target_jpt" >
-                <!-- <option value=""  selected>Semua</option> -->
+                <option value="" selected disabled>Pilih Jabatan</option>
                     <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
@@ -50,6 +50,31 @@
 		</div>
 	</div>
 </div>
+
+   
+<!-- modal detail indikator -->
+<div class="modal fade" id="modal_penilaian_kompetensi" tabindex="-1" role="dialog" aria-labelledby="table-admModalLabelIndikator" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="table-admModalLabelIndikator"><span id="nm_indikator"></span></h3>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div id="div_modal_penilaian_kinerja">
+      
+        </div>
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+<!-- tutup modal detail indikator -->
+
 
 <?php } ?>
 
@@ -82,10 +107,11 @@ $(function(){
 		var jenis_jabatan = $('#jenis_jabatan').val()
 		var jabatan_target_jpt = $('#jabatan_target_jpt').val()
 		var jabatan_target_adm = $('#jabatan_target_adm').val()
+  
 		
 		$('#list_pegawai').html('')
 		$('#list_pegawai').append(divLoaderNavy)
-		$('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListSuksesor/")?>' + jenis_jabatan +'/'+jabatan_target_jpt, function () {
+		$('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListSuksesor/")?>' + jenis_jabatan +'/'+jabatan_target_jpt+'/'+jabatan_target_adm, function () {
 			$('#loader').hide()
 		})
 
@@ -98,6 +124,20 @@ $(function(){
 		loadListSuksesor()
 		});
 
+
+    $(document).on("click", ".open-DetailPenilaian", function () {
+
+      var id = $(this).data('id');
+      var nip = $(this).data('nip');
+      var kode = $(this).data('kode');
+
+      $('#div_modal_penilaian_kinerja').html('')
+      $('#div_modal_penilaian_kinerja').append(divLoaderNavy)
+      $('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKompetensi/")?>'+id+'/'+nip+'/'+kode, function(){
+        $('#loader').hide()
+      })
+
+      });
 
 
 </script>

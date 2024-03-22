@@ -30,7 +30,7 @@
 <table style="width: 100%;">
 	<tr>
 		<td valign=bottom style="width: 5%;">
-			<img style="width: 80px; height: 100px;" src="<?=base_url('assets/adminkit/img/logo-pemkot-small.png')?>">
+			<img style="width: 100px;" src="<?=base_url('assets/adminkit/img/logo-pemkot-small.png')?>">
 		</td>
 		<td valign=bottom style="width: 95%; text-align:center;">
 			<h5 class="top_header_secondary">PEMERINTAH KOTA MANADO</h5>

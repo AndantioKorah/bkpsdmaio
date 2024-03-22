@@ -170,3 +170,7 @@ define('GROUP_CHAT_HELPDESK', '120363161928273333');
 define('WA_BOT', '62895355011333');
 
 define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");
+
+define('TTE_STATE', 'DEV'); //DEV = development, PROD = production
+define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = production
+define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production

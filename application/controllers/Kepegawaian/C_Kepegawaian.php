@@ -1462,6 +1462,12 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($data['result']);
 	}
 
+	public function loadAuthModalTte($id){
+		$data['user'] = $this->general->getDataPegawai($this->general_library->getUserName());
+		$data['id'] = $id;
+		$this->load->view('kepegawaian/V_ModalAuthTte', $data);
+	}
+
 	public function dsCuti($id){
 		echo json_encode($this->kepegawaian->dsCuti($id));
 	}

@@ -1,9 +1,15 @@
 <?php
 
+// require 'vendor/autoload.php';
+
 use Spatie\PdfToText\Exceptions\CouldNotExtractText;
 use Spatie\PdfToText\Exceptions\PdfNotFound;
 use Spatie\PdfToText\Pdf;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
+
+use Endroid\QrCode\QrCode;
+
+// include dirname(__FILE__)."\..\..\libraries\phpqrcode\qrlib.php";
 
 class C_VerifWhatsapp extends CI_Controller
 {
@@ -29,6 +35,10 @@ class C_VerifWhatsapp extends CI_Controller
 		renderVerifWhatsapp('verif_whatsapp/V_VerifWhatsapp', '', '', $data);
 	}
 
+	public function surveyKepuasan($enc_string){
+		dd(simpleDecrypt($enc_string));
+	}
+
 	public function saveVerifikasiPermohonanCuti($status, $id, $kepalapd = 0, $kepalabkpsdm = 0){
 		if($status == 1 || $status == 0){
 			$data['result'] = $this->kepegawaian->saveVerifikasiPermohonanCuti($status, $id, $kepalapd, $kepalabkpsdm);
@@ -42,5 +52,33 @@ class C_VerifWhatsapp extends CI_Controller
 
 	public function dsCuti($id){
 		echo json_encode($this->kepegawaian->dsCuti($id));
+	}
+
+	public function tesSkCuti(){
+		$data['data'] = $this->kepegawaian->getDetailCuti();
+		$data['data']['ds'] = 1;
+
+		// $filepath = ('assets/new_login/images/generatedQr.png');
+		$content = 'https://presensi.manadokota.go.id/siladen';
+		$data['qr'] = generateQr($content);
+		
+		$this->load->view('kepegawaian/V_SKPermohonanCuti', $data);
+	}
+
+	public function qr(){
+		$filepath = ('assets/new_login/images/generatedQr.png');
+
+		$logo = (base_url('assets/img/logopemkot.png'));
+		$url = 'https://presensi.manadokota.go.id/siladen';
+
+		$qr = new QrCode();
+		$qr->setText($url)
+			->setLogoPath('assets/img/logopemkot.png')
+			->setLogoWidth(50)
+			->setSize(300)
+			->setMargin(0)
+			->setValidateResult(false)
+			->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]); 
+		echo $qr->writeDataUri();
 	}
 }

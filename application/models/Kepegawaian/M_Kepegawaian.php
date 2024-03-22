@@ -4850,7 +4850,7 @@ public function submitEditJabatan(){
                     $progress[1]['font-color'] = "white";
                     $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
                     if($result[$rw['id']]['url_sk']){
-                        $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm']).". SK Cuti sudah dapat diunduh.";
+                        $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result[$rw['id']]['updated_date']).". SK Cuti sudah dapat diunduh.";
                         $progress[2]['icon'] = "fa fa-check";
                         $progress[2]['color'] = "green";
                         $progress[2]['font-color'] = "white";
@@ -4929,6 +4929,7 @@ public function submitEditJabatan(){
                 ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
                 ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
                 ->where('a.flag_active', 1)
+                ->order_by('a.id_m_status_pengajuan_cuti', 'asc')
                 ->order_by('created_date', 'asc');
 
         if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -5030,7 +5031,7 @@ public function submitEditJabatan(){
                 $progress[1]['font-color'] = "white";
                 $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
                 if($result['url_sk']){
-                    $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". SK Cuti sudah dapat diunduh.";
+                    $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result['updated_date']).". SK Cuti sudah dapat diunduh.";
                     $progress[2]['icon'] = "fa fa-check";
                     $progress[2]['color'] = "green";
                     $progress[2]['font-color'] = "white";
@@ -5067,6 +5068,21 @@ public function submitEditJabatan(){
         }
 
         return $result;
+    }
+
+    public function getDetailCuti(){
+        $data = $this->db->select('a.*, b.nm_cuti, d.handphone, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
+                        f.nama_jabatan, g.nm_unitkerja, g.id_unitkerja')
+                        ->from('t_pengajuan_cuti a')
+                        ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
+                        ->join('m_user c', 'c.id = a.id_m_user')
+                        ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
+                        ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
+                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                        ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
+                        ->where('a.id', 7)
+                        ->get()->row_array();
+        return $data;
     }
 
     public function saveVerifikasiPermohonanCuti($status, $id, $kepalapd = 0, $kepalabkpsdm = 0){
@@ -5127,7 +5143,8 @@ public function submitEditJabatan(){
             $message_to_pegawai = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data)."\nPermohonan Pengajuan ".$data['nm_cuti']." Anda ";
             $send_to_pegawai = $data['handphone'];
             $path_file = null;
-            if($res['code'] == 0 && $res['data']['id_m_status_pengajuan_cuti'] == 2 && $status == 1){
+            if(($res['code'] == 0 && $res['data']['id_m_status_pengajuan_cuti'] == 2 && $status == 1) ||
+            (($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()) && $status == 1)){
                 $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
                 $update['url_sk_temp'] = $path_file;
                 // dd($path_file);
@@ -5291,6 +5308,7 @@ public function submitEditJabatan(){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
+        $input_post = $this->input->post();
 
         $this->db->trans_begin();
 
@@ -5334,6 +5352,9 @@ public function submitEditJabatan(){
             $filename = 'CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date']))."_".date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'_signed.pdf';
             $path_file = 'arsipcuti/'.$filename;
 
+            $contentQr = base_url('verifPdf/'.simpleEncrypt($path_file));
+    		$res['qr'] = generateQr($contentQr);
+
             // dd($path_file);
             $mpdf = new \Mpdf\Mpdf([
                 'format' => 'Legal-P',
@@ -5344,6 +5365,48 @@ public function submitEditJabatan(){
             $mpdf->showImageErrors = true;
             $mpdf->Output($path_file, 'F');
 
+            $fileBase64 = convertToBase64(($path_file));
+            $signatureProperties = array();
+            $signatureProperties = [
+                'tampilan' => 'INVISIBLE',
+                'reason' => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado (Donald Franky Supit, SH, MH - NIP. 197402061998031008)"
+            ];
+
+            $request_tte = [
+                'id_ref' => [$data['id']],
+                'table_ref' => 't_pengajuan_cuti',
+                'nik' => $input_post['nik'],
+                'passphrase' => $input_post['passphrase'],
+                'signatureProperties' => [$signatureProperties],
+                'file' => [
+                    $fileBase64
+                ]
+            ];
+
+            $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
+            if(isset($request_sign['file'])){
+                unlink($path_file);
+                base64ToFile($request_sign['file'][0], $path_file);
+                if(!file_exists($path_file)){
+                    $res['code'] = 1;
+                    $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
+                    $res['data'] = null;
+                    $this->db->trans_rollback();
+                    return $res;
+                }
+                // readfile($path_file);
+                // dd($request_sign['file'][0]);
+            } else {
+                $error_message = isset($request_sign['error']) ? $request_sign['error'] : $request_sign;
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan saat Sign Pdf, error: ".$error_message;
+                $res['data'] = null;
+                $this->db->trans_rollback();
+                return $res;
+            }
+            // dd(json_decode($request_sign));
+
+            $path_file = $path_file;
             $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
             // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
             $cronWa = [

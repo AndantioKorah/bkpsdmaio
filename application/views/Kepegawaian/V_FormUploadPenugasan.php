@@ -91,7 +91,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 <div class="form-group " style="margin-bottom:10px !important;">
 <label >Jenis Penugasan</label>
-<select  class="form-control  "  name="jenispenugasan" id="jenispenugasan" required>
+<select  class="form-control"  name="jenispenugasan" id="jenispenugasan" required>
                 <option value="" disabled selected>Pilih Jenis Penugasan</option>
                 <?php if($jenis_penugasan){ foreach($jenis_penugasan as $r){ ?>
                   <option value="<?=$r['id_jenistugas']?>"><?=$r['nm_jenistugas']?></option>
@@ -124,6 +124,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <input class="form-control" type="text" id="lamanya" name="lamanya"  required/>
 </div>
 
+<div class="form-group">
+    <label>File SK</label>
+    <input  class="form-control my-image-field" type="file" id="pdf_file_penugasan" name="file"   />
+    <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
+  </div>
+
 <div class="form-group col-lg-12">
 <br>
  <button class="btn btn-block btn-primary"  id="btn_upload_penugasan"><i class="fa fa-save"></i> SIMPAN</button>
@@ -137,6 +143,21 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 <div id="list_penugasan">
 
+</div>
+
+<div class="modal fade" id="modal_view_file_penugasan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_penugasan" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 
@@ -172,14 +193,14 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#upload_form_penugasan');
         var form_data = new FormData(formvalue[0]);
-        // var ins = document.getElementById('pdf_file').files.length;
+        var ins = document.getElementById('pdf_file_penugasan').files.length;
         
-        // if(ins == 0){
-        // errortoast("Silahkan upload file terlebih dahulu");
-        // return false;
-        // }
-        document.getElementById('btn_upload_penugasan').disabled = true;
-        $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
+        // document.getElementById('btn_upload_penugasan').disabled = true;
+        // $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -227,6 +248,28 @@ $(function(){
       $('#loader').hide()
     })
   }
+
+  $("#pdf_file_penugasan").change(function (e) {
+
+// var extension = pdf_file_penugasan.value.split('.')[1];
+var doc = pdf_file_penugasan.value.split('.')
+var extension = doc[doc.length - 1]
+
+
+var MaxSize = 1024;
+var fileSize = this.files[0].size/1024;
+
+if (extension != "pdf"){
+  errortoast("Harus File PDF")
+  $(this).val('');
+}
+
+if (fileSize > MaxSize ){
+  errortoast("Maksimal Ukuran File 1 MB")
+  $(this).val('');
+}
+
+});
   
 
   

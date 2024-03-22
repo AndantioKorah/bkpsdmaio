@@ -195,7 +195,7 @@ $(function(){
    var id = $('#unit_kerja').val()
    $('#list_pegawai_penilaian_kinerja').html('')
    $('#list_pegawai_penilaian_kinerja').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/")?>'+id, function(){
+   $('#list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/1")?>', function(){
      $('#loader').hide()
    })
   }
@@ -204,7 +204,7 @@ $(function(){
    var id = $('#unit_kerja').val()
    $('#list_pegawai_penilaian_kinerja_jpt').html('')
    $('#list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id, function(){
+   $('#list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/2")?>', function(){
      $('#loader').hide()
    })
   }

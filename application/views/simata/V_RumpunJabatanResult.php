@@ -45,6 +45,8 @@
               $badge_aktif = 'badge-mutasi';
           } else if($rs['id_m_rumpun_jabatan'] == 6){
               $badge_aktif = 'badge-meninggal';
+          } else if($rs['id_m_rumpun_jabatan'] == 7){
+            $badge_aktif = 'badge-pppk';
           } else if($rs['id_m_rumpun_jabatan'] == 8){
               $badge_aktif = 'badge-tidak-aktif';
           } else if($rs['id_m_rumpun_jabatan'] == 9){

@@ -1,119 +1,125 @@
 <?php
   if($profil_pegawai){
 ?>
-  <style>
-    .sp_profil{
-      font-size: .9rem;
-      font-weight: bold;
-    }
+<style>
+	.sp_profil {
+		font-size: .9rem;
+		font-weight: bold;
+	}
 
-    .sp_profil_sm{
-      font-size: .8rem;
-      font-weight: bold;
-    }
-    
-    .hr_class{
-      margin-top: 0px;
-      margin-bottom: 0px;
-      border: .05rem solid black;
-    }
+	.sp_profil_sm {
+		font-size: .8rem;
+		font-weight: bold;
+	}
 
-    .sp_profil_alamat{
-      /* line-height: 100px; */
-    }
-    
-    .sp_label{
-      font-size: .6rem;
-      font-style: italic;
-      font-weight: 600;
-      color: grey;
-    }
+	.hr_class {
+		margin-top: 0px;
+		margin-bottom: 0px;
+		border: .05rem solid black;
+	}
 
-    .div_label{
-      margin-bottom: -5px;
-    }
+	.sp_profil_alamat {
+		/* line-height: 100px; */
+	}
 
-    .nav-link-profile{
-      padding: 5px !important;
-      font-size: .7rem;
-      color: black;
-      border: .5px solid var(--primary-color) !important;
-      border-bottom-left-radius: 0px;
-    }
+	.sp_label {
+		font-size: .6rem;
+		font-style: italic;
+		font-weight: 600;
+		color: grey;
+	}
 
-    .nav-item-profile:hover, .nav-link-profile:hover{
-      color: white !important;
-      background-color: #222e3c91;
-    }
+	.div_label {
+		margin-bottom: -5px;
+	}
 
-    .nav-tabs .nav-link.active, .nav-tabs .show>.nav-link{
-      /* border-radius: 3px; */
-      background-color: var(--primary-color);
-      color: white;
-    }
+	.nav-link-profile {
+		padding: 5px !important;
+		font-size: .7rem;
+		color: black;
+		border: .5px solid var(--primary-color) !important;
+		border-bottom-left-radius: 0px;
+	}
 
-    .div.dataTables_wrapper div.dataTables_length select{
-      height: 10px !important;
-      width: 40px !important;
-    }
+	.nav-item-profile:hover,
+	.nav-link-profile:hover {
+		color: white !important;
+		background-color: #222e3c91;
+	}
 
-    .div.dataTables_wrapper div.dataTables_filter input{
-      height: 10px !important;
-    }
+	.nav-tabs .nav-link.active,
+	.nav-tabs .show>.nav-link {
+		/* border-radius: 3px; */
+		background-color: var(--primary-color);
+		color: white;
+	}
 
-    #profile_pegawai{
-      width: 250px;
-      height: calc(250px * 1.25);
-      background-size: cover;
-      /* object-fit: contain; */
-      box-shadow: 5px 5px 10px #888888;
-      border-radius: 10%;
-    }
+	.div.dataTables_wrapper div.dataTables_length select {
+		height: 10px !important;
+		width: 40px !important;
+	}
 
-    /* .badge{
+	.div.dataTables_wrapper div.dataTables_filter input {
+		height: 10px !important;
+	}
+
+	#profile_pegawai {
+		width: 250px;
+		height: calc(250px * 1.25);
+		background-size: cover;
+		/* object-fit: contain; */
+		box-shadow: 5px 5px 10px #888888;
+		border-radius: 10%;
+	}
+
+	/* .badge{
       box-shadow: 3px 3px 10px #888888;
       background-color: #ed1818;
       border: 2px solid #ed1818;
       color: white;
     } */
 
-    .foto_container {
-  position: relative;
-  /* width: 50%; */
-}
+	.foto_container {
+		position: relative;
+		/* width: 50%; */
+	}
 
-.image-settings {
-  opacity: 1;
-  display: block;
-  /* width: 100%; */
-  height: auto;
-  transition: .5s ease;
-  backface-visibility: hidden;
-}
+	.image-settings {
+		opacity: 1;
+		display: block;
+		/* width: 100%; */
+		height: auto;
+		transition: .5s ease;
+		backface-visibility: hidden;
+	}
 
-.middle {
-  transition: .5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  text-align: center;
-}
+	.middle {
+		transition: .5s ease;
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		text-align: center;
+	}
 
-.foto_container:hover .image {
-  opacity: 0.3;
-  cursor:pointer;
-}
+	.foto_container:hover .image {
+		opacity: 0.3;
+		cursor: pointer;
+	}
 
-.foto_container:hover .middle {
-  opacity: 1;
-  cursor:pointer;
-}
+	.foto_container:hover .middle {
+		opacity: 1;
+		cursor: pointer;
+	}
 
+	label{
+		color:#222e3c;
+		font-weight:bold
+	}
 
-  </style>
+</style>
 
 
 
@@ -554,85 +560,34 @@
     
   <div class="row">
     <div class="col-lg-12">
-        <span><b>Penilaian Kinerja</b></span>
+        <span><h4><b>Penilaian Kompetensi</b></h4></span>
         <hr>
-    <form id="form_penilaian_kinerja" method="post" enctype="multipart/form-data" >
+    <form id="form_penilaian_kompetensi" method="post" enctype="multipart/form-data" >
       <input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
       <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
       <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
-
+      <input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>">
         <div class="table-responsive">
-        <table class="table table-bordered" >
-            <tr>
-                <td style="background-color:#2e4963;color:#fff" style="width:50%" colspan="4"><b>Spesifik</b></td>
-            </tr>
-            <tr>
-            <td style="width:25%">Penilaian Kinerja N-1</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria1" required>
-                <option value="0,0,0"  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_1){ foreach($kriteria_kinerja_1 as $r){ ?>
-                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo "";} else { if($kinerja_n_1 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+        <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Kualifikasi dan/atau Sertifikasi Kompetensi </label>
+                        <select class="form-select select2" name="kriteria1" required>
+                        <option value="0,0,0"  selected>Pilih Item</option>
+                        <?php if($kriteria_potensi_1){ foreach($kriteria_potensi_1 as $r){ ?>
+                      <option  <?php if($nilai_kompetensi) { if($nilai_kompetensi['kriteria1'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
-                </select>
-               </td>
-            </tr>
+                        </select>
+                    </div>
 
-            <tr>
-            <td style="width:25%">Penilaian Kinerja N-2 </td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria2" required>
-                <option value="0,0,0"  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}  else { if($kinerja_n_2 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+        <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">	Pengalaman dalam bidang jabatan </label>
+                        <select class="form-select select2" name="kriteria2" required>
+                        <option value="0,0,0"  selected>Pilih Item</option>
+                        <?php if($kriteria_potensi_2){ foreach($kriteria_potensi_2 as $r){ ?>
+                      <option  <?php if($nilai_kompetensi) { if($nilai_kompetensi['kriteria2'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
-                </select>
-               </td>
-            </tr>
-
-            <tr>
-            <td style="background-color:#2e4963;color:#fff" colspan="2"><b>Generik</b></td>
-            </tr>
-            <tr>
-                
-                <td style="width:25%">Inovatif</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria3" required>
-                <option value="0,0,0"  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_3){ foreach($kriteria_kinerja_3 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else echo "";} else { if($inovasi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
-                    <?php } } ?>
-                </select>
-            </td>
-            </tr>
-
-            <tr>
-                
-                <td style="width:25%">Pengalaman dalam Tim</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria4" required>
-                <option value="0,0,0"  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_4){ foreach($kriteria_kinerja_4 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria4'] == $r['id']) echo "selected"; else echo "";} else { if($timkerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
-                    <?php } } ?>
-                </select>
-            </td>
-            </tr>
-
-            <tr>
-              
-                <td style="width:25%">Penugasan</td>
-                <td style="width:25%">
-                <select class="form-select select2" name="kriteria5">
-                <option value="0,0,0"  selected>Pilih Item</option>
-                    <?php if($kriteria_kinerja_5){ foreach($kriteria_kinerja_5 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else echo "";} else { if($penugasan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
-                    <?php } } ?>
-                </select>
-            </td>
-            </tr>
-
-        </table>
+                        </select>
+                    </div>
+        
         </div>
         <div class="modal-footer" style="margin-bottom:5px;">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -648,22 +603,22 @@
    
 
    $(".select2").select2({   
-        width: '500px',
+        width: '100%',
         // dropdownAutoWidth: true,
         allowClear: true,
     });
 
 
-    $('#form_penilaian_kinerja').on('submit', function(e){
+    $('#form_penilaian_kompetensi').on('submit', function(e){
       var kode = $('#jenis_jab').val()
 
       
                 e.preventDefault();
-                var formvalue = $('#form_penilaian_kinerja');
+                var formvalue = $('#form_penilaian_kompetensi');
                 var form_data = new FormData(formvalue[0]);
                
                 $.ajax({  
-                url:"<?=base_url("simata/C_Simata/submitPenilaianKinerja")?>",
+                url:"<?=base_url("simata/C_Simata/submitPenilaianKompetensi")?>",
                 method:"POST",  
                 data:form_data,  
                 contentType: false,  
@@ -677,13 +632,12 @@
                     if(result.success == true){
                         successtoast(result.msg)
                         setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
-                        if(kode == 1){
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaAdm, 1000);
-                        } else {
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt, 1000);
-
-                        }
-                        // loadListPegawaiPenilaianKinerjaAdm()
+                        // if(kode == 1){
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaAdm, 1000);
+                        // } else {
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt, 1000);
+                        // }
+                        loadListSuksesor()
                     
                     } else {
                         errortoast(result.msg)

@@ -1086,6 +1086,22 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
                 $result = $this->insert('db_pegawai.pegpenghargaan',$dataInsert);
+        } else if($this->input->post('jenispenugasan')){
+            
+            $dataInsert['id_pegawai']      = $id_peg;
+            $dataInsert['jenispenugasan']      = $this->input->post('jenispenugasan');
+            $dataInsert['tujuan']      = $this->input->post('tujuan');
+            $dataInsert['pejabat']      = $this->input->post('pejabat');
+            $dataInsert['nosk']      = $this->input->post('nosk');
+            $dataInsert['tglsk']      = $this->input->post('tglsk');
+            $dataInsert['lamanya']            = $this->input->post('lamanya');
+            $dataInsert['gambarsk']            = $data['nama_file'];
+            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+                }
+                $result = $this->insert('db_pegawai.pegdatalain',$dataInsert);
         }
 
       
@@ -1221,7 +1237,6 @@ class M_Kepegawaian extends CI_Model
         if($_FILES){         
         $id_dok = $this->input->post('id_dokumen');
         $create_nama_file =  $this->prosesName($id_dok);
-        
        
 		// cek file size apa diperbolehkan		
 		// $cekFile	= $this->isAllowSize($_FILES['file'], $id_dok);
@@ -1258,9 +1273,11 @@ class M_Kepegawaian extends CI_Model
             $target_dir						= './arsiporganisasi/';
         } else if($this->input->post('pegpenghargaan')){
             $target_dir						= './arsippenghargaan/';
-        }    
+        } else if($this->input->post('jenispenugasan')){
+            $target_dir						= './arsippenugasan/';
+        }     
 
-        // dd($target_dir);
+        // dd($this->input->post());
 
         // else {
         //     $target_dir						= './uploads/';
@@ -1866,6 +1883,7 @@ class M_Kepegawaian extends CI_Model
     function prosesName($id_dok)
     {
        
+        
         $query = $this->db->select('*')
         ->from('db_siladen.dokumen a')
         ->where('a.id_dokumen', $id_dok)
@@ -1945,10 +1963,9 @@ class M_Kepegawaian extends CI_Model
                 $name = "PENGHARGAAN_".$nip;
         } else if($id_dok == 18){
             $name = "HD_".$nip;
-        }  
-
-        
-
+        } 
+       } else {
+        $name = $_FILES['file']['name'];
        }
     return $name;
     }

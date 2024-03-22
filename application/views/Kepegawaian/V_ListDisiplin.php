@@ -7,8 +7,8 @@
           <th class="text-left">Hukuman Disiplin</th>
           <th class="text-left">Jenis Hukuman Disiplin</th>
           <th class="text-left">Jenis Pelanggaran</th>
-          <!-- <th class="text-left">Tanggal Mulai Berlaku</th>
-          <th class="text-left">Tanggal Selesai Berlaku</th> -->
+          <th class="text-left">Tanggal Mulai Berlaku</th>
+          <th class="text-left">Tanggal Selesai Berlaku</th>
           <th class="text-left">No Surat</th>
           <th class="text-left">Tanggal Surat</th>
           <th></th>
@@ -28,8 +28,8 @@
               <td class="text-left"><?=$rs['nama']?></td>
               <td class="text-left"><?=$rs['nama_jhd']?></td>
               <td class="text-left"><?=$rs['jp']?></td>
-              <!-- <td class="text-left"></td>
-              <td class="text-left"></td> -->
+              <td class="text-left"></td>
+              <td class="text-left"></td>
               <td class="text-left"><?=$rs['nosurat']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsurat'])?></td>
               <td class="text-left">

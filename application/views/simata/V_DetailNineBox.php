@@ -25,9 +25,10 @@
         <thead>
             <tr>
                 <th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+                <th class="text-center">Nilai Kinerja</th>
                 <th>Nama</th>
-                <th>Nilai Potensial</th>
+                <th class="text-center">Nilai Potensial</th>
+                <th class="text-center">Total Nilai</th>
                 <th>Hasil Pemetaan Talenta</th>
                 <?php if($jt == 0) { ?>
                 <th>Rekomendasi</th>
@@ -46,6 +47,7 @@
                 <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff">   <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></a>
              </td>
                 <td class="text-center"><?=$rs2['res_potensial_total'];?> </td>
+                <td class="text-center"><?=$total_nilai/2;?> </td>
                 <td class="text-center"><?=numberToRoman($kotak);?></td>
                 <?php if($jt == 0) { ?>
                 <td class="text-left">

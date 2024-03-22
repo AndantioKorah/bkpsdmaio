@@ -122,6 +122,64 @@
     <?php } ?>
     <span style="margin-left:0px;">Total Bobot = <?= $bobot;?></span>
 
+    
+  <a class="list-group-item list-group-item-action active" aria-current="true">
+  C. Penilaian Kompetensi
+  </a>
+  <?php $bobot = null; $no = 1; foreach($sub_unsur as $su){ ?>
+    
+    <?php if($su['id_m_unsur_penilaian'] == 3) { ?>
+       
+    <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>B.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></b></a>
+    <a class="list-group-item list-group-item-action">
+    <?php $no++;?>
+    <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered " style="width:100%;">
+            <thead>
+            <th class="text-center">No</th>
+                <th style="width:50%;">Indikator</th>
+                <th style="width:25%;">Bobot</th>
+                <th style="width:25%;"></th>
+            </thead>
+            <tbody>
+                <?php $nomor = 1; foreach($result as $rs){ ?>
+                     <?php if($su['id'] == $rs['id_sub_unsur_penilaian']) { ?>
+                      <?php $bobot += $rs['bobot'];?>
+                    <tr>
+                    <td align="center"><?=$nomor++;?></td>
+                        <td><?=$rs['nm_indikator'];?></td>
+                        <td><?=$rs['bobot'];?>%</td>
+                        <td>
+                        <button 
+                        data-toggle="modal" 
+                        data-id="<?=$rs['id']?>"
+                        data-nm_indikator="<?=$rs['nm_indikator']?>"
+                        data-nm_indikator="<?=$rs['nm_indikator']?>"
+                        data-kode="1"
+                        href="#modal_detail_indikator"
+                        class="open-DetailIndikator btn btn-sm btn-primary"> <i class="fa fa-search"></i> Detail</button>
+                        <button 
+                        data-toggle="modal" 
+                        data-id="<?=$rs['id']?>"
+                        data-nm_indikator="<?=$rs['nm_indikator']?>"
+                        data-nm_indikator="<?=$rs['nm_indikator']?>"
+                        data-kode="2"
+                        href="#modal_detail_indikator"
+                        title="Ubah Data" class="open-DetailIndikator btn btn-sm btn-info"> <i class="fa fa-edit"></i> Edit</button> 
+                        <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                    
+                <?php } ?>
+            </tbody>
+        </table>
+        </div>
+    </a>
+    <?php } ?>
+    <?php } ?>
+    <span style="margin-left:0px;">Total Bobot = <?= $bobot;?></span>
+
 </div>
 
 <!-- modal detail indikator -->

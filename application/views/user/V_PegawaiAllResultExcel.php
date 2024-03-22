@@ -34,6 +34,7 @@
             <tr>
                 <td style="font-weight: bold; text-align: center; width: 10%;">No</td>
                 <td style="font-weight: bold; text-align: center; width: 30%;">Pegawai</td>
+                <td style="font-weight: bold; text-align: center; width: 30%;">Jabatan</td>
                 <td style="font-weight: bold; text-align: center; width: 5%;">Eselon</td>
                 <td style="font-weight: bold; text-align: center; width: 15%;">Pangkat</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">TMT Pangkat</td>
@@ -51,7 +52,7 @@
                             <span class="fw-bold namapegawai">
                                 <a target="_blank" style="font-weight: bold; color: black !important;" href="<?=base_url('kepegawaian/profil-pegawai/'.$rs['nipbaru_ws'])?>"><?=getNamaPegawaiFull($rs)?></a>
                             </span><br>
-                            <span><?=($rs['nama_jabatan'])?></span><br>
+                            <!-- <span><?=($rs['nama_jabatan'])?></span><br> -->
                             <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br>
                             <?php if($rs['id_statuspeg'] == 1){ ?>
                                 <span class="badge badge-cpns"><?=$rs['nm_statuspeg']?></span>
@@ -59,6 +60,7 @@
                                 <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span>
                             <?php } ?>
                         </td>
+                        <td style="padding: 10px; text-align: center;"><?=$rs['nama_jabatan']?></td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>
                         <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>

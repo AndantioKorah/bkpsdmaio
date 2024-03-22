@@ -1496,15 +1496,16 @@ animation06
     $nilaix = 0;
     $nilaiy = 0;
     if($result){
+        // dd($result);
     foreach($result as $rs){ 
-          
+        
         //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
         //   $nilaix = $rs->res_kinerja;
 
           $nilaiy = $rs->res_kinerja;
           $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
-
              if($nilaix >= 85 && $nilaiy >= 85) {
+              
               $ix++;
              } 
              if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
@@ -1542,8 +1543,8 @@ animation06
         <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
         <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
+        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
       </select>
       </div>
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">

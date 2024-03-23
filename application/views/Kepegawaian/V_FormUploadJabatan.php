@@ -58,7 +58,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </script>
 
 
-<style>
+<!-- <style>
   .modal:nth-of-type(even) {
     z-index: 1052 !important;
 }
@@ -66,7 +66,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     z-index: 1051 !important;
 }
    
-</style>
+</style> -->
 <div class="modal fade" id="myModalJabatan">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">

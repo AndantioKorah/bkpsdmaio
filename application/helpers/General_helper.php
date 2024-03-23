@@ -1,5 +1,7 @@
 <?php
 
+use Endroid\QrCode\QrCode;
+
 function dd($var)
 {
     die(var_dump($var));
@@ -32,6 +34,13 @@ function validateKey($arr_needed, $arr_request){
     return ['code' => 0, 'message' => ''];
 }
 
+function convertToBase64($path){
+    if(file_exists($path)){
+        return (base64_encode(file_get_contents($path)));
+    }
+    return null;
+}
+
 function fileToBase64($filename){
     if(file_exists($filename)){
         $type = pathinfo($filename, PATHINFO_EXTENSION);
@@ -49,10 +58,29 @@ function fileToBytes($file){
 }
 
 function base64ToFile($base64_string, $output_file) {
+    // $ifp = fopen( $output_file, 'wb' ); 
+    // $data = explode(',', $base64_string );
+    // fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+    // fclose( $ifp );
+
+    $str_file = str_replace(" ", "+", $base64_string);
     $ifp = fopen( $output_file, 'wb' ); 
-    $data = explode(',', $base64_string );
-    fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+    $data = explode(',', $str_file );
+    fwrite( $ifp, base64_decode( $data[ 0 ] ) );
     fclose( $ifp );
+
+    // $pdf_base64 = $base64_string;
+    // //Get File content from txt file
+    // $pdf_base64_handler = fopen($pdf_base64,'r');
+    // $pdf_content = fread ($pdf_base64_handler,filesize($pdf_base64));
+    // fclose ($pdf_base64_handler);
+    // //Decode pdf content
+    // $pdf_decoded = base64_decode ($pdf_content);
+    // //Write data back to pdf file
+    // $pdf = fopen ($output_file,'w');
+    // fwrite ($pdf,$pdf_decoded);
+    // //close output file
+    // fclose ($pdf);
 
     return $output_file; 
 }
@@ -1173,6 +1201,44 @@ function pemeringkatanKriteriaKinerja($nilai){
     return $pemeringkatan;
 }
 
+function generateQrOld($content, $filepath ){
+    // $logo = (base_url('assets/img/logopemkot.png'));
+    $logo = (base_url('assets/adminkit/img/logo-pemkot-small.png'));
+    $QR = imagecreatefrompng("https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=".urlencode($content)."&choe=UTF-8");
+    // if($logo !== FALSE){
+        $logo = imagecreatefromstring(file_get_contents($logo));
+
+        $QR_width = imagesx($QR);
+        $QR_height = imagesy($QR);
+        
+        $logo_width = imagesx($logo);
+        $logo_height = imagesy($logo);
+        
+        // Scale logo to fit in the QR Code
+        $logo_qr_width = $QR_width/6;
+        $scale = $logo_width/$logo_qr_width;
+        $logo_qr_height = $logo_height/$scale;
+        
+        imagecopyresampled($QR, $logo, $QR_width/2.5, $QR_height/2.5, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height);
+    // }
+    // header('Content-Type: image/png');
+    imagepng($QR, $filepath);
+    return $filepath;
+}
+
+function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $type = 'uri'){
+    $logo = (base_url('assets/img/logopemkot.png'));
+    $qr = new QrCode();
+    $qr->setText($content)
+        ->setLogoPath('assets/img/logopemkot.png')
+        ->setLogoWidth(75)
+        ->setSize(300)
+        ->setMargin(0)
+        ->setValidateResult(false)
+        ->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]);
+    return $qr->writeDataUri();
+}
+
 function pemeringkatanKriteriaPotensial($nilai){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
@@ -1338,23 +1404,9 @@ function numberToRoman($number) {
 }
 
 function simpleEncrypt($string){
-    // $key = "SILADEN_KEY";
-    // $ciphering = "AES-128-CTR";
-    // $iv_length = openssl_cipher_iv_length($ciphering);
-    // $options = 0;
-    // $encryption_iv = '1234567891011121';
-    // $encryption_key = "W3docs";
-    // return openssl_encrypt($string, $ciphering, $encryption_key, $options, $encryption_iv);
     return strtr(base64_encode($string), '+/=', '-_,');
 }
 
 function simpleDecrypt($decrypted){
-    // $key = "SILADEN_KEY";
-    // $ciphering = "AES-128-CTR";
-    // $iv_length = openssl_cipher_iv_length($ciphering);
-    // $options = 0;
-    // $decryption_iv = '1234567891011121';
-    // $decryption_key = "W3docs";
-    // return openssl_decrypt($decrypted, $ciphering, $decryption_key, $options, $decryption_iv);
     return base64_decode(strtr($decrypted, '-_,', '+/='));
 }

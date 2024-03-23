@@ -532,6 +532,20 @@
            
 		</div>
 	</div>
+  <div class="modal fade" id="auth_modal_tte" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">MASUKKAN PASSPHRASE TANDA TANGAN ELEKTRONIK (TTE) ANDA</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="auth_modal_tte_content">
+            </div>
+        </div>
+    </div>
+  </div>
   <div id="print_div" style="display:none;"></div>
   <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
   <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->

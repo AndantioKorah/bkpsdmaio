@@ -19,6 +19,7 @@
 		color: #fff;
 	}
 </style>
+
 <table id="example" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>

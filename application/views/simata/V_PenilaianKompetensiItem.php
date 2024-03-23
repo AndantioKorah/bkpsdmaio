@@ -19,6 +19,11 @@
 		color: #fff;
 	}
 </style>
+<div class="col-lg-12 text-right mb-2">
+            <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+            </form>
+        </div>
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
@@ -60,7 +65,7 @@
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
-                <td><b><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?> <br> <i><?=$rs2['jabatan_sekarang'];?></i></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
 				<td><?=$total_kompentesi;?></td>
                 <td><?=$total_nilai;?></td>
                 <td><?=$keterangan;?></td>
@@ -76,9 +81,11 @@
         <tfoot>
             <tr>
 			<th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+                <th>Nilai (80% Nilai Talent Pool) </th>
                 <th>Nama</th>
-				<th>Pemeringkatan</th>
+				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
+                <th>Total Nilai </th>
+                <th>Keterangan </th>
 				<th></th>
             </tr>
         </tfoot>

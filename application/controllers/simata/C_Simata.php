@@ -456,6 +456,7 @@ class C_Simata extends CI_Controller
     public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
         $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp);
         $data['jenis_jabatan'] = $jenis_jabatan;
+        $this->session->set_userdata('data_rencana_suksesi', $data);
         $this->load->view('simata/V_PenilaianKompetensiItem', $data);
     }
 
@@ -479,6 +480,23 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianKompetensi());
 	}
+
+    public function downloadDataSearch($flag_excel = 0){
+        $data = $this->session->userdata('data_rencana_suksesi');
+        // $this->load->view('simata/V_RencanaSuksesiPdf', $data);
+        if($flag_excel == 0){
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                'debug' => true
+            ]);
+            $html = $this->load->view('simata/V_RencanaSuksesiPdf', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output('Rencana Suksesi '.$data['result'][0]['nama_jabatan'].' Kota Manado .pdf', 'D');
+        } else {
+            $this->load->view('user/V_RencanaSuksesiExcel', $data);
+        }
+    }
 
     
 

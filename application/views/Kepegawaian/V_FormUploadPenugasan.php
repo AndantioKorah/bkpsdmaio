@@ -199,8 +199,8 @@ $(function(){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-        // document.getElementById('btn_upload_penugasan').disabled = true;
-        // $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_penugasan').disabled = true;
+        $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",

@@ -560,7 +560,7 @@
     
   <div class="row">
     <div class="col-lg-12">
-        <span><h4><b>Penilaian Kompetensi</b></h4></span>
+        <span><h4><b>Penilaian Kompetensi Teknis Bidang</b></h4></span>
         <hr>
     <form id="form_penilaian_kompetensi" method="post" enctype="multipart/form-data" >
       <input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">

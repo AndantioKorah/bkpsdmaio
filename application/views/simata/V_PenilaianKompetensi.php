@@ -8,8 +8,8 @@
         <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+        <option value="2">JPT</option>
+        <option value="1">Administrator</option>
       </select>
       </div>
       <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
@@ -30,6 +30,15 @@
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
+      </div>
+
+      <div class="mb-3" style="display:none;">
+        <label for="exampleInputEmail1" class="form-label">Jenis Pengisian Jabatan</label>
+        <select class="form-select select2" name="jenis_pengisian" id="jenis_pengisian"  required>
+        <option value="0" selected>Pilih Jenis Pengisian Jabatan</option>
+        <option value="1">Rotasi</option>
+        <option value="2">Promosi</option>
+      </select>
       </div>
 
       <button type="submit" class="btn btn-primary float-right mb-2">Lihat</button>
@@ -107,11 +116,12 @@ $(function(){
 		var jenis_jabatan = $('#jenis_jabatan').val()
 		var jabatan_target_jpt = $('#jabatan_target_jpt').val()
 		var jabatan_target_adm = $('#jabatan_target_adm').val()
-  
+		var jenis_pengisian = $('#jenis_pengisian').val()
+    
 		
 		$('#list_pegawai').html('')
 		$('#list_pegawai').append(divLoaderNavy)
-		$('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListSuksesor/")?>' + jenis_jabatan +'/'+jabatan_target_jpt+'/'+jabatan_target_adm, function () {
+		$('#list_pegawai').load('<?=base_url("simata/C_Simata/loadListSuksesor/")?>' + jenis_jabatan +'/'+jabatan_target_jpt+'/'+jabatan_target_adm+'/'+jenis_pengisian, function () {
 			$('#loader').hide()
 		})
 

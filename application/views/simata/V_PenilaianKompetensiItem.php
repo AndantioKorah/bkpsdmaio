@@ -23,10 +23,11 @@
         <thead>
             <tr>
                 <th>Jabatan Target</th>
-                <th>Nilai (80% Nilai Nine Box) </th>
+                <th>Nilai (80% Nilai Talent Pool) </th>
                 <th>Nama</th>
-				<th>Nilai Kompetensi </th>
+				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
                 <th>Total Nilai </th>
+                <th>Keterangan </th>
 				<th></th>
             </tr>
         </thead>
@@ -37,13 +38,32 @@
                 $total = $total * 80 / 100;
                 $total_kompentesi = $rs2['res_kompetensi'] * 20 / 100;
                 $total_nilai = $total + $total_kompentesi;
+                
+                if($jenis_jabatan == 2){
+                    if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+
+                if($jenis_jabatan == 1){
+                    if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+                
+                  
                   ?>
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><b><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?> <br> <i><?=$rs2['jabatan_sekarang'];?></i></td>
 				<td><?=$total_kompentesi;?></td>
                 <td><?=$total_nilai;?></td>
+                <td><?=$keterangan;?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_kompetensi" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
@@ -86,7 +106,7 @@ var table = $('#kinerja_adm').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="5">' +
+                            '<tr class="group"><td colspan="6">' +
                                 group +
                                 '</td></tr>'
                         );

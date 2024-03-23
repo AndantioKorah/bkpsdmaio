@@ -1256,9 +1256,9 @@ function rekomendasi($nilaix,$nilaiy){
     $badge = null;
     if($nilaix >= 85 && $nilaiy >= 85) {
         $hasil = "IX";
-        $rekom = "1. Dipromosikan dan dipertahankan
+        $rekom = "1. Dipromosikan dan dipertahankan<br>
         2. Masuk Kelompok Rencana Suksesi
-        Instansi/Nasional
+        Instansi/Nasional<br>
         3. Penghargaan";
        } 
        if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {

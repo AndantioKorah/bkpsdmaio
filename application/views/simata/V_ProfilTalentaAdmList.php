@@ -43,7 +43,7 @@
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$rs2['res_kinerja'];?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
                 <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
@@ -104,7 +104,7 @@ var table = $('.table_pt').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="11">' +
+                            '<tr class="group"><td colspan="12">' +
                                 group +
                                 '</td></tr>'
                         );

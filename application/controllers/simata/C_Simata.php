@@ -453,9 +453,9 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianKompetensi', '', '', $data);
     }
 
-    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm){
-        $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm);
-        // dd($data);
+    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
+        $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp);
+        $data['jenis_jabatan'] = $jenis_jabatan;
         $this->load->view('simata/V_PenilaianKompetensiItem', $data);
     }
 

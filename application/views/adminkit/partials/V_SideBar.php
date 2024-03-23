@@ -608,7 +608,7 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
-				Nine Box & Rencana Suksesi
+				Talent Pool
 				</span>
 			</a>	
 		</li>
@@ -626,7 +626,7 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kompetensi" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 				<span class="align-middle">
-				Penilaian Kompetensi
+				Rencana Suksesi
 				</span>
 			</a>	
 		</li>

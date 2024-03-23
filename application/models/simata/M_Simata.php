@@ -388,7 +388,8 @@ public function getPegawaiPenilaianKinerjaJptGroupBy(){
 
 
 public function getPegawaiPenilaianKinerjaAdministrator(){
-    return $this->db->select('*')
+    return $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+    where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -399,7 +400,8 @@ public function getPegawaiPenilaianKinerjaAdministrator(){
 }
 
 public function getPegawaiPenilaianPotensialAdministrator(){
-    return $this->db->select('*')
+    return $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+    where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -410,7 +412,8 @@ public function getPegawaiPenilaianPotensialAdministrator(){
 }
 
 public function getPegawaiPenilaianKinerjaJpt(){
-    return $this->db->select('*')
+    return $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+    where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -713,7 +716,10 @@ public function getPegawaiPenilaianKinerjaJpt(){
             foreach ($jpkompetensi as $jp) {
                 $string = $jp['jam'];
                 $jam = filter_var($string, FILTER_SANITIZE_NUMBER_INT);
-                $totaljam += $jam;
+                if($jam != "-"){
+                    $totaljam += $jam;
+                }
+              
              }
             }
          
@@ -1077,6 +1083,18 @@ public function getPegawaiPenilaianKinerjaJpt(){
                 $id_penugasan = 89;
             } 
   
+        }
+        if($id_penugasan == null){
+            $this->db->select('*')
+            ->from('db_pegawai.pegdatalain a')
+            ->where('a.id_pegawai', $id)
+            ->where('a.status', 2)
+            ->where('a.jenispenugasan', 99)
+            ->where('a.flag_active', 1);
+           $pegpenugasan = $this->db->get()->result_array();
+           if($pegpenugasan){
+            $id_penugasan = 90;
+           }
         }
     return $id_penugasan;   
     }
@@ -1566,7 +1584,8 @@ public function getPegawaiPenilaianKinerjaJpt(){
         }
 
         public function getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box){
-             $this->db->select('*')
+             $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+             where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                             ->from('db_simata.t_penilaian a')
                             ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                             ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -1630,7 +1649,8 @@ public function getPegawaiPenilaianKinerjaJpt(){
 
         
 public function loadListProfilTalentaAdm($id){
-     $this->db->select('*')
+     $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -1803,17 +1823,29 @@ public function searchRumpunJabatan($data){
 }
 
 
-function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm){
+function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
 
-    $this->db->select('*, SUM(res_kinerja + res_potensial_total) as total')
+
+    
+    $this->db->select('a.*,b.*,c.*,e.eselon as es_jabatan, SUM(res_kinerja + res_potensial_total) as total,
+    (SELECT d.nama_jabatan from db_pegawai.jabatan as d
+    where c.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
         ->from('db_simata.t_penilaian a')
         ->join('db_pegawai.jabatan as b', 'a.id_jabatan_target = b.id_jabatanpeg')
         ->join('db_pegawai.pegawai as c', 'a.id_peg = c.id_peg')
-      
+        ->join('db_pegawai.jabatan as e', 'c.jabatan = e.id_jabatanpeg')
         ->where('a.flag_active', 1)
         ->group_by('a.id_peg')
         ->order_by('total', 'desc')
         ->limit(3);
+
+    if($jp == 1){
+        $this->db->where_in('e.eselon', ["II B", "II A"]);
+    }
+
+    if($jp == 2){
+        $this->db->where_in('e.eselon', ["III B", "III A"]);
+    }
    
     if($jenis_jabatan == 2){
         $this->db->where('a.id_jabatan_target', $jabatan_target_jpt);

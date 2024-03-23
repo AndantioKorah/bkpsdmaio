@@ -602,12 +602,18 @@ class C_Kepegawaian extends CI_Controller
     // }
 
 	public function LoadFormDokPenugasan($nip){
+		
 		$data['nip'] = $nip;
         // $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerja($tahun,$bulan);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'penugasan');
 
 		$data['jenis_penugasan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenistugas', 'id_jenistugas', 'desc');
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai')){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
         $this->load->view('kepegawaian/V_FormUploadPenugasan', $data);
     }
 

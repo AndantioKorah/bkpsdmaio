@@ -615,7 +615,7 @@
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/profil-talenta" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 				<span class="align-middle">
 				Profil Talenta
 				</span>
@@ -624,7 +624,7 @@
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kompetensi" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
 				<span class="align-middle">
 				Rencana Suksesi
 				</span>

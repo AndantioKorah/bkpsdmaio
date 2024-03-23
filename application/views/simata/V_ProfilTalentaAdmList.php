@@ -91,7 +91,7 @@ var table = $('.table_pt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: 0,orderable: false}],
     order: [[groupColumn, 'asc']],
-    displayLength: 25,
+    displayLength: 100,
     drawCallback: function (settings) {
         var api = this.api();
         var rows = api.rows({ page: 'current' }).nodes();

@@ -6,6 +6,7 @@
 		margin-bottom:10px !important;
     }
 </style>
+
 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 

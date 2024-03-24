@@ -293,7 +293,7 @@ class C_Simata extends CI_Controller
         $id_peg = $data['profil_pegawai']['id_peg'];
         $eselonpegawai = $data['profil_pegawai']['eselon']; 
         $jabatanpegawai = $data['profil_pegawai']['nama_jabatan']; 
-       
+        $eselonidpegawai = $data['profil_pegawai']['eselon']; 
        
         $data['id_t_penilaian'] = $id;
         $data['jabatan_target'] = $jt;
@@ -307,8 +307,8 @@ class C_Simata extends CI_Controller
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
         $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$eselonjt['eselon'],$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
-        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$eselonjt);
-
+        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$eselonjt,$eselonpegawai);
+        // dd($data['masa_kerja']);
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
@@ -357,12 +357,14 @@ class C_Simata extends CI_Controller
 
     public function loadListProfilTalentaAdm($id){
         $data['result'] = $this->simata->loadListProfilTalentaAdm($id);  
+        $data['jenis_jabatan'] = $id;
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
             $this->load->view('simata/V_ProfilTalentaJptList', $data);
 
         }
+        
     }
 
 

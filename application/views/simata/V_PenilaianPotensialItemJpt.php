@@ -103,10 +103,10 @@ var table = $('#potensial_jpt').DataTable({
 $('#potensial_jpt tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
+        // table.order([groupColumn, 'desc']).draw();
     }
     else {
-        table.order([groupColumn, 'asc']).draw();
+        // table.order([groupColumn, 'asc']).draw();
     }
 });
 </script>

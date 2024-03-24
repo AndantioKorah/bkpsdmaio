@@ -72,7 +72,8 @@
 
 <script>
 	var groupColumn = 2;
-var table = $('#example').DataTable({
+    var table = $('#example').DataTable({
+    order: [[5, 'asc']],
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: 0,orderable: false}],
     order: [[groupColumn, 'asc']],
@@ -104,10 +105,10 @@ var table = $('#example').DataTable({
 $('#example tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
+        // table.order([groupColumn, 'desc']).draw();
     }
     else {
-        table.order([groupColumn, 'asc']).draw();
+        // table.order([groupColumn, 'asc']).draw();
     }
 });
 </script>

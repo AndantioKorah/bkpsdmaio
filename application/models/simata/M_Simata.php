@@ -1028,27 +1028,113 @@ public function getPegawaiPenilaianKinerjaJpt(){
     return $id_hukdis;   
     }
 
-    function getMasaKerjaJabatan($id,$eselonjt){
+    function getMasaKerjaJabatan($id,$eselonjt,$eselonpegawai){
         $eselon[] = null;
+        $id_masakerja = null;
         if($eselonjt['eselon'] == "II B" || $eselonjt['eselon'] == "II A"){
-            $eselon = [4, 5];
+            $eselon = ["II B", "II A"];
         }
+        if($eselonjt['eselon'] == "III B" || $eselonjt['eselon'] == "III A"){
+            $eselon = ["III B", "III A"];
+        }
+
+
         $this->db->select('*')
             ->from('db_pegawai.pegjabatan a')
             ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg','left')
+            ->join('db_pegawai.eselon c', 'a.eselon = c.id_eselon','left')
             ->where('a.id_pegawai', $id)
             ->where('a.status', 2)
-            ->where_in('a.eselon', $eselon)
+            ->where('a.tmtjabatan !=', "0000-00-00")
+            ->where_not_in('a.ket ', ["Plt", "Plh"])
             ->where('a.statusjabatan !=', 2)
-            ->where('a.flag_active', 1)
+            ->where_in('a.flag_active', [1,2])
             ->order_by('a.tmtjabatan', 'asc');
         $jabatan = $this->db->get()->result_array();
+        // dd($jabatan);
+        $eselon_peg =0;
+        $tglawal = null;
+        $tglakhir = null;
+        $id_pegjabatan = 0;
+        $x= 0;
+        $i= 0;
         foreach ($jabatan as $jab) {  
-            // dd($jab);
+          if($jab['id_eselon'] == "4" || $jab['id_eselon'] == "5"){
+            $x++;
+            if($x == 1){
+                $tglawal = $jab['tmtjabatan'];
+                $tglakhir = $jab['tmtjabatan'];
+            } else {
+                $tglakhir = $jab['tmtjabatan']; 
+            }
+          
+          } else if($jab['id_eselon'] == "6" || $jab['id_eselon'] == "7") {
+            $i++;
+            if($i == 1){
+                $tglawal = $jab['tmtjabatan'];
+                $tglakhir = $jab['tmtjabatan'];
+            } else {
+                $tglakhir = $jab['tmtjabatan']; 
+            }
+          } else if($jab['id_eselon'] == "8" || $jab['id_eselon'] == "9") {
+            $i++;
+            if($i == 1){
+                $tglawal = $jab['tmtjabatan'];
+                $tglakhir = $jab['tmtjabatan'];
+            } else {
+                $tglakhir = $jab['tmtjabatan']; 
+            }
+          }  
          }
-      
-        $id_masakerja = null;
-       
+
+
+         $this->db->select('a.tmtjabatan')
+         ->from('db_pegawai.pegjabatan a')
+         ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg','left')
+         ->join('db_pegawai.eselon c', 'a.eselon = c.id_eselon','left')
+         ->where('a.id_pegawai', $id)
+         ->where('a.status', 2)
+         ->where_not_in('a.ket ', ["Plt", "Plh"])
+         ->where('tmtjabatan >', $tglakhir)
+         ->where('a.statusjabatan !=', 2)
+         ->where_in('a.flag_active', [1,2]);
+         $cekJabTerakhir = $this->db->get()->result_array();
+         
+
+         $sdate = $tglawal;
+         if($cekJabTerakhir){
+            $edate = $cekJabTerakhir[0]['tmtjabatan'];
+         } else {
+            $edate = date('Y-m-d');
+         }
+         $date_diff = abs(strtotime($edate) - strtotime($sdate));
+         $years = floor($date_diff / (365*60*60*24));
+
+        //  dd($edate);
+        
+         if(in_array($eselonpegawai, $eselon)){
+            if($years > 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 102;
+            } else if($years == 2){
+                $id_masakerja = 103;
+            } else if($years < 2){
+                $id_masakerja = 104;
+            }
+         } else {
+            if($years > 5){
+                $id_masakerja = 129;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 130;
+            } else if($years == 2){
+                $id_masakerja = 131;
+            } else if($years < 2){
+                $id_masakerja = 132;
+            }
+         } 
+        
+         $id_masakerja = null;
     return $id_masakerja;   
     }
 
@@ -1649,11 +1735,12 @@ public function getPegawaiPenilaianKinerjaJpt(){
 
         
 public function loadListProfilTalentaAdm($id){
-     $this->db->select('*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     $this->db->select('a.*,b.*,c.*,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
      where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_simata.t_penilaian a')
                     ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                     ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
+                    ->join('db_pegawai.jabatan e', 'b.jabatan = e.id_jabatanpeg')
                     // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                     ->where('a.flag_active', 1)
                     ->order_by('a.id', 'asc') ;

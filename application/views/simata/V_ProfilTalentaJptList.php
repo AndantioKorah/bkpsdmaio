@@ -34,12 +34,30 @@
                 <th>Total Nilai </th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
+                <th>keterangan</th>
 				<th></th>
             </tr>
         </thead>
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
-			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
+            
+			<?php 
+                if($jenis_jabatan == 2){
+                    if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+
+                if($jenis_jabatan == 1){
+                    if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+                $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$rs2['res_kinerja'];?></td>
@@ -55,6 +73,7 @@
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
                 </td>
+                <td><?=$keterangan;?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT btn btn-sm btn-info">
@@ -77,6 +96,7 @@
 				<th>Pemeringkatan Potensial</th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
+                <th>keterangan</th>
 				<th></th>
             </tr>
         </tfoot>
@@ -87,11 +107,12 @@
 
 <script>
 	var groupColumn = 2;
-var table = $('.table_pt_jpt').DataTable({
+    var table = $('.table_pt_jpt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn },
-    {targets: 0,orderable: false}],
+    {targets: 0,orderable: false},
+    { "searchable": false, "targets": [11] }],
     order: [[groupColumn, 'asc']],
-    displayLength: 100,
+    displayLength: 200,
     drawCallback: function (settings) {
         var api = this.api();
         var rows = api.rows({ page: 'current' }).nodes();
@@ -105,7 +126,7 @@ var table = $('.table_pt_jpt').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="12">'+no+'. '+
+                            '<tr class="group"><td colspan="13">'+no+'. '+
                                 group +
                                 '</td></tr>'
                         );
@@ -116,14 +137,14 @@ var table = $('.table_pt_jpt').DataTable({
     }
 });
  
-// Order by the grouping
+Order by the grouping
 $('#example tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
+        // table.order([groupColumn, 'desc']).draw();
     }
     else {
-        table.order([groupColumn, 'asc']).draw();
+        // table.order([groupColumn, 'asc']).draw();
     }
 });
 </script>

@@ -201,17 +201,19 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianKinerja', '', '', $data);
     }
 
-    public function loadListPegawaiPenilainKinerjaAdm(){
+    public function loadListPegawaiPenilainKinerjaAdm($id=2){
         
         // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministratorGroupBy();  
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaAdministrator();  
-        $this->load->view('simata/V_PenilaianKinerjaItem', $data);
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id); 
+        
+        $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
     }
 
-    public function loadListPegawaiPenilainKinerjaJpt(){
+    public function loadListPegawaiPenilainKinerjaJpt($id){
         
         // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id); 
+        $data['kode'] = $id;  
         $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
     }
 
@@ -223,7 +225,7 @@ class C_Simata extends CI_Controller
         $data['kriteria_kinerja_3'] = $this->simata->getKriteriaKinerja3();
         $data['kriteria_kinerja_4'] = $this->simata->getKriteriaKinerja4();
         $data['kriteria_kinerja_5'] = $this->simata->getKriteriaKinerja5();
-        $data['id_t_penilaian'] = $id;
+        // $data['id_t_penilaian'] = $id;
         $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPegawai($nip);
         $data['kode'] = $kode; 
         $currentYear = date('Y'); 
@@ -292,9 +294,10 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
-    public function loadListPegawaiPenilainPotensialJpt(){
-        
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt();  
+    public function loadListPegawaiPenilainPotensialJpt($id){
+       
+        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id);  
+        $data['kode'] = $id;  
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
 

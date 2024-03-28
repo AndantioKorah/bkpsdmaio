@@ -191,7 +191,7 @@ class C_Simata extends CI_Controller
 
         public function deleteDataJabatanTarget($id)
         {
-            $this->simata->delete('id', $id, "db_simata.t_penilaian");
+            $this->simata->delete('id', $id, "db_simata.t_jabatan_target");
         }
 
 
@@ -466,6 +466,7 @@ class C_Simata extends CI_Controller
         $data['jt_jpt'] = null;
         $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
         $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
+        $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
         if($_POST) {
         $data['post'] = $_POST;
         if($_POST['jenis_jabatan'] == 1){

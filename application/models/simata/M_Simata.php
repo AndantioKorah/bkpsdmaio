@@ -299,8 +299,8 @@
         
         function getJabatanTargetPegawai(){
             $this->db->select('a.*,b.nama_jabatan,c.nm_unitkerja')
-                ->from('db_simata.t_penilaian a')
-                ->join('db_pegawai.jabatan b', 'a.id_jabatan_target = b.id_jabatanpeg')
+                ->from('db_simata.t_jabatan_target a')
+                ->join('db_pegawai.jabatan b', 'a.jabatan_target = b.id_jabatanpeg')
                 ->join('db_pegawai.unitkerja c', 'b.id_unitkerja = c.id_unitkerja')
                 // ->where('a.id_peg ', 'PEG0000000ei390')
                 
@@ -330,7 +330,7 @@ function getNamaJabatanJpt(){
     // ->where("FIND_IN_SET(a.eselon,'II B')!=",0)
     // ->where('a.eselon','II B')
     // ->or_where('a.eselon','III A')
-    ->where_in('a.eselon', ["II A", "II B", "III A"])
+    ->where_in('a.eselon', ["II A", "II B"])
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
@@ -349,11 +349,11 @@ function getNamaJabatanJpt(){
   
     
     $data["id_peg"] = $id_peg;
-    $data["id_jabatan_target"] = $jt;
+    $data["jabatan_target"] = $jt;
     $data["created_by"] = $this->general_library->getId();
   
     
-    $this->db->insert('db_simata.t_penilaian', $data);
+    $this->db->insert('db_simata.t_jabatan_target', $data);
     $res = array('msg' => 'Data berhasil disimpan', 'success' => true,'tab' => $tab);
 
     }    
@@ -1991,14 +1991,14 @@ public function searchRumpunJabatan($data){
 function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
 
 
-    
-    $this->db->select('a.*,b.*,c.*,e.eselon as es_jabatan, SUM(res_kinerja + res_potensial_total) as total,
+    $this->db->select('a.*,c.*,g.nama_jabatan,e.eselon as es_jabatan, SUM(res_kinerja + res_potensial_total) as total,
     (SELECT d.nama_jabatan from db_pegawai.jabatan as d
     where c.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
         ->from('db_simata.t_penilaian a')
-        ->join('db_pegawai.jabatan as b', 'a.id_jabatan_target = b.id_jabatanpeg')
         ->join('db_pegawai.pegawai as c', 'a.id_peg = c.id_peg')
         ->join('db_pegawai.jabatan as e', 'c.jabatan = e.id_jabatanpeg')
+        ->join('db_simata.t_jabatan_target as f', 'a.id_peg = f.id_peg','left')
+        ->join('db_pegawai.jabatan as g', 'f.jabatan_target = g.id_jabatanpeg')
         ->where('a.res_potensial_total >=', 85)
         ->where('a.res_kinerja >=', 85)
         ->where('a.flag_active', 1)
@@ -2015,12 +2015,12 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     // }
    
     if($jenis_jabatan == 2){
-        $this->db->where('a.id_jabatan_target', $jabatan_target_jpt);
+        $this->db->where('f.jabatan_target', $jabatan_target_jpt);
         $this->db->where_in('e.eselon', ["II B", "II A"]);
     }
 
     if($jenis_jabatan == 1){
-        $this->db->where('a.id_jabatan_target', $jabatan_target_jpt);
+        $this->db->where('f.jabatan_target', $jabatan_target_jpt);
         $this->db->where_in('e.eselon', ["III B", "III A"]);
     }
 

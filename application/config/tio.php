@@ -73,3 +73,9 @@ $route['whatsapp-verification/cuti/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/ve
 
 //rating layanan
 $route['survey-kepuasan-layanan/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/surveyKepuasan/$1';
+
+//verifikasi TTE pdf
+$route['verifPdf/(:any)'] = 'kepegawaian/C_VerifTte/verifPdf/$1';
+
+//DS
+$route['kepegawaian/digital-signature'] = 'kepegawaian/C_Kepegawaian/digitalSignature';

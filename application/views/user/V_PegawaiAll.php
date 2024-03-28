@@ -107,6 +107,18 @@
                                 <?php } ?>
                             </div>
                         </div>
+                        <div class="col-lg-12 mt-2">
+                            <label class="label-filter">Jabatan Fungsional</label>
+                            <div class="">
+                                <select class="form-control select2-navy" 
+                                    id="jft" data-dropdown-css-class="select2-navy" name="jft" required>
+                                    <option value="0" selected>Semua</option>
+                                    <?php foreach($jft as $u){ ?>
+                                        <option value="<?=$u['id_jabatanpeg']?>"><?=$u['nama_jabatan']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -299,6 +311,7 @@
                 jenis_jabatan: jenis_jabatan,
                 keteranganpegawai: keteranganpegawai,
                 unitkerja: $('#unitkerja').val(),
+                jft: $('#jft').val(),
                 nama_pegawai: $('#nama_pegawai').val()
             },
             success: function(data){

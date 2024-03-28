@@ -468,6 +468,7 @@ class C_User extends CI_Controller
         $data['agama'] = $this->m_general->getAll('db_pegawai.agama', 0);
         $data['keteranganpegawai'] = $this->m_general->getAll('m_status_pegawai', 0);
         $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        $data['jft'] = $this->user->getListJabatanByJenis('JFT');
         $data['satyalencana'] = $this->m_general->getAllWithOrderGeneral('m_satyalencana', 'nama_satya_lencana', 'asc');
         $data['golongan'] = [
             1 => [

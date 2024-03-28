@@ -236,6 +236,14 @@
             return ['message' => 'Terjadi Kesalahan'];
         }
 
+        public function getListJabatanByJenis($jenis = 'Struktural'){
+            return $this->db->select('*')
+                            ->from('db_pegawai.jabatan')
+                            ->where('jenis_jabatan', $jenis)
+                            ->order_by('nama_jabatan', 'asc')
+                            ->get()->result_array();
+        }
+
         public function deleteProfilePict(){
             $this->db->where('id', $this->general_library->getId())
                         ->update('m_user', ['profile_picture' => null]);
@@ -1919,6 +1927,13 @@
             return $this->db->get()->row_array();
         }
 
+        public function checkRandomStringFileDs($string){
+            return $this->db->select('*')
+                            ->from('t_file_ds')
+                            ->where('random_string', $string)
+                            ->get()->row_array();
+        }
+
         public function cekAksesPegawaiRekapAbsen($nip){
             $hak_akses = $this->db->select('*')
                                 ->from('t_hak_akses a')
@@ -1997,6 +2012,9 @@
             }
             if($data['unitkerja'] != 0){
                 $this->db->where('a.skpd', $data['unitkerja']);
+            }
+            if($data['jft'] != '0'){
+                $this->db->where('c.id_jabatanpeg', $data['jft']);
             }
             if(isset($data['eselon'])){
                 $this->db->where_in('g.id_eselon', $data['eselon']);

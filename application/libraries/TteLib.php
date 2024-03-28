@@ -43,15 +43,22 @@ class TteLib{
         return $this->postCurl($url, $data, 'POST');
     }
 
+    public function verifPdf($data){
+        $hash = $this->hash();
+        $url = $hash['url'].'api/v2/verify/pdf';
+
+        return $this->postCurl($url, $data, 'POST');
+    }
+
     public function saveLog($data){
         $this->tte->general->insert('t_log_tte', $data);
     }
 
     function postCurl($url, $data, $method = "POST") {
-        $id_ref = $data['id_ref'];
+        $id_ref = isset($data['id_ref']) ? $data['id_ref'] : 0;
         unset($data['id_ref']);
         
-        $table_ref = $data['table_ref'];
+        $table_ref = isset($data['table_ref']) ? $data['table_ref'] : 0;
         unset($data['table_ref']);
 
         $hash = $this->hash();

@@ -24,6 +24,15 @@
     font-size: .7rem;
     color: white;
   }
+
+  .lbl_status_pengajuan_6{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #0077af;
+    font-weight: bold;
+    font-size: .7rem;
+    color: white;
+  }
 </style>
 <table class="table table-hover table-striped" id="table_riwayat_cuti">
   <thead>

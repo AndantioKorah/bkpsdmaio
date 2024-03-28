@@ -36,6 +36,10 @@ class C_Kepegawaian extends CI_Controller
 		}
 	}
 
+	public function digitalSignature(){
+		render('kepegawaian/V_DigitalSignature', null, null, null);
+	}
+
 	public function fetchDokumenWs(){
 		$res = $this->dokumenlib->getDokumenWs('POST', $this->input->post());
 		$response = json_decode($res['response'], true);
@@ -1579,7 +1583,7 @@ class C_Kepegawaian extends CI_Controller
 		}
 
     }
-
+	
 
 
 

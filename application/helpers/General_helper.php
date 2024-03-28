@@ -320,7 +320,7 @@ function getStatusTransaksi($status)
     }
 }
 
-function generateRandomString($length = 10)
+function generateRandomString($length = 10, $flag_check = 0, $table = '')
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -328,7 +328,18 @@ function generateRandomString($length = 10)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    return $randomString;
+    if($flag_check == 0) {
+        return $randomString;
+    } else {
+        $helper = &get_instance();
+        $helper->load->model('general/M_General', 'general');
+        $exists = $helper->general->getOne($table, 'random_string', $randomString, 1);
+        if($exists){
+            $this->generateRandomString($length, $flag_check, $table);
+        } else {
+            return $randomString;
+        }
+    }
 }
 
 function generateRandomNumber($length = 10)
@@ -1228,7 +1239,7 @@ function generateQrOld($content, $filepath ){
 
 function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $type = 'uri'){
     $logo = (base_url('assets/img/logopemkot.png'));
-    $qr = new QrCode();
+    $qr = new QrCode($content);
     $qr->setText($content)
         ->setLogoPath('assets/img/logopemkot.png')
         ->setLogoWidth(75)
@@ -1236,6 +1247,7 @@ function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $typ
         ->setMargin(0)
         ->setValidateResult(false)
         ->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]);
+    dd($qr);
     return $qr->writeDataUri();
 }
 

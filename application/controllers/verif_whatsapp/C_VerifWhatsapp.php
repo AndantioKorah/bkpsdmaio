@@ -59,8 +59,11 @@ class C_VerifWhatsapp extends CI_Controller
 		$data['data']['ds'] = 1;
 
 		// $filepath = ('assets/new_login/images/generatedQr.png');
-		$content = 'https://presensi.manadokota.go.id/siladen';
-		$data['qr'] = generateQr($content);
+		$path_file = 'arsipcuti;CUTI_199502182020121013_2024_03_22_signed.pdf';
+		$encUrl = simpleEncrypt($path_file);
+		$contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $encUrl)));
+		// $content = 'https://presensi.manadokota.go.id/siladen';
+		$data['qr'] = generateQr($contentQr);
 		
 		$this->load->view('kepegawaian/V_SKPermohonanCuti', $data);
 	}
@@ -69,7 +72,7 @@ class C_VerifWhatsapp extends CI_Controller
 		$filepath = ('assets/new_login/images/generatedQr.png');
 
 		$logo = (base_url('assets/img/logopemkot.png'));
-		$url = 'https://presensi.manadokota.go.id/siladen';
+		$url = 'http://localhost/bkpsdmaio/verifPdf/YXJzaXBjdXRpO0NVVElfMTk5NTAyMTgyMDIwMTIxMDEzXzIwMjRfMDNfMjJfc2lnbmVkLnBkZg';
 
 		$qr = new QrCode();
 		$qr->setText($url)
@@ -79,6 +82,6 @@ class C_VerifWhatsapp extends CI_Controller
 			->setMargin(0)
 			->setValidateResult(false)
 			->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]); 
-		echo $qr->writeDataUri();
+		echo '<img src='.$qr->writeDataUri().' />';
 	}
 }

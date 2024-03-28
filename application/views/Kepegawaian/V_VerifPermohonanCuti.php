@@ -35,7 +35,10 @@
       <div class="card-body">
         <form id="form_search">
           <div class="row" style="margin-top: -40px;">
-            <?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isAdminAplikasi() || $this->general_library->isProgrammer()){?>
+            <?php if($this->general_library->isKepalaBkpsdm() 
+            || $this->general_library->isAdminAplikasi() 
+            || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+            || $this->general_library->isProgrammer()){?>
               <div class="col">
                 <label>Unit Kerja</label>
                 <select class="form-control select2-navy" style="width: 100%"
@@ -62,11 +65,15 @@
                       <option 
                       <?php
                         if($this->general_library->isKepalaBkpsdm()){
-                          if($ms['id'] == 2){
+                          if($ms['id'] == 4){
                             echo "selected";
                           }
                         } else if($this->general_library->isKepalaPd() && !$this->general_library->isKepalaBkpsdm()){
                           if($ms['id'] == 1){
+                            echo "selected";
+                          }
+                        } else if($this->general_library->isHakAkses('verifikasi_permohonan_cuti')){
+                          if($ms['id'] == 2){
                             echo "selected";
                           }
                         }

@@ -199,7 +199,10 @@
                                     <div class="row">
                                         <div class="col-lg-6 text-left">
                                         <?php if($result['data']['id_m_status_pengajuan_cuti'] == 4 && !$result['data']['url_sk']){ ?>
-                                            <button onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button>
+                                            <!-- <button onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button> -->
+                                            <button type="button" onclick="digitalSign()" id="button_ds" class="btn btn-success" data-toggle="modal" href="#auth_modal_tte">
+                                                <i class="fa fa-signature fa-2x"></i> Digital Sign
+                                            </button>
                                             <button style="display: none;" id="button_ds_loader" disabled class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu... </button>
                                         <?php } ?>
                                         </div>
@@ -231,6 +234,19 @@
         </div>
     <?php } ?>
 </div>
+<div class="modal fade" id="auth_modal_tte" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">MASUKKAN PASSPHRASE TANDA TANGAN ELEKTRONIK (TTE) ANDA</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="auth_modal_tte_content">
+            </div>
+        </div>
+    </div>
 <script>
     $('#form_verifikasi').on('submit', function(e){
         e.preventDefault()
@@ -259,29 +275,59 @@
     })
 
     function digitalSign(){
-        $('#button_ds').hide()
-        $('#button_ds_loader').show()
-        $.ajax({
-        url: '<?=base_url("verif_whatsapp/C_VerifWhatsapp/dsCuti/")?>'+'<?=$result['data']['id']?>',
-        method:"POST",  
-        data: $(this).serialize(),
-        success: function(res){
-            let rs = JSON.parse(res)
-            if(rs.code == 1){
-                errortoast(rs.message)
-            } else {
-                successtoast('DS Berhasil')
-                window.location = ""
-            }
-            $('#button_ds').show()
-            $('#button_ds_loader').hide()
-        }, error: function(err){
-            errortoast('Terjadi Kesalahan')
-            $('#button_ds').show()
-            $('#button_ds_loader').hide()
-        }
+        $('#auth_modal_tte_content').html('')
+        // $('#auth_modal_tte_content').append(divLoaderNavy)
+        $('#auth_modal_tte_content').load('<?=base_url('kepegawaian/C_Kepegawaian/loadAuthModalTte/'.$result['data']['id'])?>', function(){
+            $('#loader').hide()
         })
+        // $('#button_ds').hide()
+        // $('#button_ds_loader').show()
+        // $.ajax({
+        //   url: '<?=base_url("kepegawaian/C_Kepegawaian/dsCuti/")?>'+'<?=$result['data']['id']?>',
+        //   method:"POST",  
+        //   data: $(this).serialize(),
+        //   success: function(res){
+        //     let rs = JSON.parse(res)
+        //     if(rs.code == 1){
+        //       errortoast(rs.message)
+        //     } else {
+        //       successtoast('DS Berhasil')
+        //       loadDetailCutiVerif('<?=$result['data']['id']?>')
+        //     }
+        //     $('#button_ds').show()
+        //     $('#button_ds_loader').hide()
+        //   }, error: function(err){
+        //     errortoast('Terjadi Kesalahan')
+        //     $('#button_ds').show()
+        //     $('#button_ds_loader').hide()
+        //   }
+        // })
     }
+
+    // function digitalSign(){
+    //     $('#button_ds').hide()
+    //     $('#button_ds_loader').show()
+    //     $.ajax({
+    //     url: '<?=base_url("verif_whatsapp/C_VerifWhatsapp/dsCuti/")?>'+'<?=$result['data']['id']?>',
+    //     method:"POST",  
+    //     data: $(this).serialize(),
+    //     success: function(res){
+    //         let rs = JSON.parse(res)
+    //         if(rs.code == 1){
+    //             errortoast(rs.message)
+    //         } else {
+    //             successtoast('DS Berhasil')
+    //             window.location = ""
+    //         }
+    //         $('#button_ds').show()
+    //         $('#button_ds_loader').hide()
+    //     }, error: function(err){
+    //         errortoast('Terjadi Kesalahan')
+    //         $('#button_ds').show()
+    //         $('#button_ds_loader').hide()
+    //     }
+    //     })
+    // }
 
     function batalVerifikasi(){
         $('#btn_batal_verif').hide()

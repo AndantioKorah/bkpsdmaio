@@ -4,12 +4,12 @@
   <div class="row p-3">
     <div class="col-lg-12 form-group">
       <label>NIK:</label>
-      <input name="nik" id="nik" value="<?=$user['nik']?>" class="form-control" />
-      <small autocomplete="false" <?=$user['nik'] ? 'autofocus' : ''?> class="form-text text-muted">Jika NIK kosong, harap mengisi NIK Anda</small>
+      <input required name="nik" id="nik" value="<?=$user['nik']?>" class="form-control" />
+      <small autocomplete="off" <?=$user['nik'] ? 'autofocus' : ''?> class="form-text text-muted">Jika NIK kosong, harap mengisi NIK Anda</small>
     </div>
     <div class="col-lg-12 mt-2 form-group">
       <label>Passphrase:</label>
-      <input autocomplete="false" <?=!$user['nik'] ? 'autofocus' : ''?> type="password" name="passphrase" id="passphrase" class="form-control" />
+      <input required autocomplete="off" <?=$user['nik'] ? '' : 'autofocus'?> type="password" name="passphrase" id="passphrase" class="form-control" />
     </div>
     <div class="col-lg-12 mt-2 text-right">
       <button type="submit" class="btn btn-navy" id="btn_submit_auth">SUBMIT</button>
@@ -25,7 +25,7 @@
     $('#btn_submit_auth_loader').show()
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/dsCuti/")?>'+'<?=$id?>',
-      method:"POST",  
+      method:"POST",
       data: $(this).serialize(),
       success: function(res){
         let rs = JSON.parse(res)

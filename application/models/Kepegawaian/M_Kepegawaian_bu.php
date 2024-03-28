@@ -4828,6 +4828,76 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function loadProgressPermohonanCuti($data){
+        $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
+        $progress[0]['icon'] = "fa fa-spin fa-spinner";
+        $progress[0]['color'] = "yellow";
+        $progress[0]['font-color'] = "black";
+        if($data['id_m_status_pengajuan_cuti'] == 2){
+            $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
+            $progress[1]['icon'] = "fa fa-spin fa-spinner";
+            $progress[1]['color'] = "yellow";
+            $progress[1]['font-color'] = "black";
+        } else if($data['id_m_status_pengajuan_cuti'] == 3){
+            $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_atasan'])." : ".$data['keterangan_verifikasi_atasan'];
+            $progress[1]['icon'] = "fa fa-times";
+            $progress[1]['color'] = "red";
+            $progress[1]['font-color'] = "white";
+        }
+
+        if($data['id_m_status_pengajuan_cuti'] == 4){
+            $progress[1]['icon'] = "fa fa-check";
+            $progress[1]['color'] = "green";
+            $progress[1]['font-color'] = "white";
+            $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
+            // if($data['url_sk']){
+            //     $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($data['updated_date']).". SK Cuti sudah dapat diunduh.";
+            //     $progress[2]['icon'] = "fa fa-check";
+            //     $progress[2]['color'] = "green";
+            //     $progress[2]['font-color'] = "white";
+            // }
+            // else {
+                $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
+                $progress[2]['icon'] = "fa fa-spin fa-spinner";
+                $progress[2]['color'] = "yellow";
+                $progress[2]['font-color'] = "black";
+            // }
+        } else if($data['id_m_status_pengajuan_cuti'] == 5){
+            $progress[1]['icon'] = "fa fa-check";
+            $progress[1]['color'] = "green";
+            $progress[1]['font-color'] = "white";
+            $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
+
+            $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_kepala_bkpsdm'])." : ".$data['keterangan_verifikasi_kepala_bkpsdm'];
+            $progress[2]['icon'] = "fa fa-times";
+            $progress[2]['color'] = "red";
+            $progress[2]['font-color'] = "white";
+        } else if($data['id_m_status_pengajuan_cuti'] == 6){
+            $progress[1]['icon'] = "fa fa-check";
+            $progress[1]['color'] = "green";
+            $progress[1]['font-color'] = "white";
+            $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_atasan']).". Menunggu Verifikasi BKPSDM";
+
+            $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($data['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
+            $progress[2]['icon'] = "fa fa-check";
+            $progress[2]['color'] = "green";
+            $progress[2]['font-color'] = "white";
+
+            $progress[3]['keterangan'] = "SK SUDAH SELESAI DS PADA ".formatDateNamaBulanWT($data['updated_date']);
+            $progress[3]['icon'] = "fa fa-check";
+            $progress[3]['color'] = "green";
+            $progress[3]['font-color'] = "white";
+        }
+
+        if($data['id_m_status_pengajuan_cuti'] != 1){
+            $progress[0]['icon'] = "fa fa-check";
+            $progress[0]['color'] = "green";
+            $progress[0]['font-color'] = "white";
+        }
+
+        return $progress;
+    }
+
     public function loadRiwayatPermohonanCuti(){
         $result = null;
         $riwayat = $this->db->select('a.*, b.nama_status, c.nm_cuti')
@@ -4845,52 +4915,8 @@ public function submitEditJabatan(){
                 $list_id[] = $rw['id'];
                 $result[$rw['id']] = $rw;
                 $result[$rw['id']]['detail'] = null;
-                $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
-                $progress[0]['icon'] = "fa fa-spin fa-spinner";
-                $progress[0]['color'] = "yellow";
-                $progress[0]['font-color'] = "black";
-                if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 2){
-                    $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                    $progress[1]['icon'] = "fa fa-spin fa-spinner";
-                    $progress[1]['color'] = "yellow";
-                    $progress[1]['font-color'] = "black";
-                } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 3){
-                    $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan'])." : ".$result[$rw['id']]['keterangan_verifikasi_atasan'];
-                    $progress[1]['icon'] = "fa fa-times";
-                    $progress[1]['color'] = "red";
-                    $progress[1]['font-color'] = "white";
-                }
 
-                if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 4){
-                    $progress[1]['icon'] = "fa fa-check";
-                    $progress[1]['color'] = "green";
-                    $progress[1]['font-color'] = "white";
-                    $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                    if($result[$rw['id']]['url_sk']){
-                        $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result[$rw['id']]['updated_date']).". SK Cuti sudah dapat diunduh.";
-                        $progress[2]['icon'] = "fa fa-check";
-                        $progress[2]['color'] = "green";
-                        $progress[2]['font-color'] = "white";
-                    } else {
-                        $progress[2]['keterangan'] = "DITERIMA OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-                        $progress[2]['icon'] = "fa fa-spin fa-spinner";
-                        $progress[2]['color'] = "yellow";
-                        $progress[2]['font-color'] = "black";
-                    }
-                } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 5){
-                    $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm'])." : ".$result[$rw['id']]['keterangan_verifikasi_kepala_bkpsdm'];
-                    $progress[2]['icon'] = "fa fa-times";
-                    $progress[2]['color'] = "red";
-                    $progress[2]['font-color'] = "white";
-                }
-
-                if($result[$rw['id']]['id_m_status_pengajuan_cuti'] != 1){
-                    $progress[0]['icon'] = "fa fa-check";
-                    $progress[0]['color'] = "green";
-                    $progress[0]['font-color'] = "white";
-                }
-                
-                $result[$rw['id']]['progress'] = $progress;
+                $result[$rw['id']]['progress'] = $this->loadProgressPermohonanCuti($rw);
             }
         }
         $meta = null;
@@ -5026,52 +5052,52 @@ public function submitEditJabatan(){
                 ->get()->row_array();
 
         if($result){
-            $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
-            $progress[0]['icon'] = "fa fa-spin fa-spinner";
-            $progress[0]['color'] = "yellow";
-            $progress[0]['font-color'] = "black";
-            if($result['id_m_status_pengajuan_cuti'] == 2){
-                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                $progress[1]['icon'] = "fa fa-spin fa-spinner";
-                $progress[1]['color'] = "yellow";
-                $progress[1]['font-color'] = "black";
-            } else if($result['id_m_status_pengajuan_cuti'] == 3){
-                $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan'])." : ".$result['keterangan_verifikasi_atasan'];
-                $progress[1]['icon'] = "fa fa-times";
-                $progress[1]['color'] = "red";
-                $progress[1]['font-color'] = "white";
-            }
+        //     $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
+        //     $progress[0]['icon'] = "fa fa-spin fa-spinner";
+        //     $progress[0]['color'] = "yellow";
+        //     $progress[0]['font-color'] = "black";
+        //     if($result['id_m_status_pengajuan_cuti'] == 2){
+        //         $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
+        //         $progress[1]['icon'] = "fa fa-spin fa-spinner";
+        //         $progress[1]['color'] = "yellow";
+        //         $progress[1]['font-color'] = "black";
+        //     } else if($result['id_m_status_pengajuan_cuti'] == 3){
+        //         $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan'])." : ".$result['keterangan_verifikasi_atasan'];
+        //         $progress[1]['icon'] = "fa fa-times";
+        //         $progress[1]['color'] = "red";
+        //         $progress[1]['font-color'] = "white";
+        //     }
 
-            if($result['id_m_status_pengajuan_cuti'] == 4){
-                $progress[1]['icon'] = "fa fa-check";
-                $progress[1]['color'] = "green";
-                $progress[1]['font-color'] = "white";
-                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                if($result['url_sk']){
-                    $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result['updated_date']).". SK Cuti sudah dapat diunduh.";
-                    $progress[2]['icon'] = "fa fa-check";
-                    $progress[2]['color'] = "green";
-                    $progress[2]['font-color'] = "white";
-                } else {
-                    $progress[2]['keterangan'] = "DITERIMA OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-                    $progress[2]['icon'] = "fa fa-spin fa-spinner";
-                    $progress[2]['color'] = "yellow";
-                    $progress[2]['font-color'] = "black";
-                }
-            } else if($result['id_m_status_pengajuan_cuti'] == 5){
-                $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm'])." : ".$result['keterangan_verifikasi_kepala_bkpsdm'];
-                $progress[2]['icon'] = "fa fa-times";
-                $progress[2]['color'] = "red";
-                $progress[2]['font-color'] = "white";
-            }
+        //     if($result['id_m_status_pengajuan_cuti'] == 4){
+        //         $progress[1]['icon'] = "fa fa-check";
+        //         $progress[1]['color'] = "green";
+        //         $progress[1]['font-color'] = "white";
+        //         $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
+        //         if($result['url_sk']){
+        //             $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result['updated_date']).". SK Cuti sudah dapat diunduh.";
+        //             $progress[2]['icon'] = "fa fa-check";
+        //             $progress[2]['color'] = "green";
+        //             $progress[2]['font-color'] = "white";
+        //         } else {
+        //             $progress[2]['keterangan'] = "DITERIMA OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
+        //             $progress[2]['icon'] = "fa fa-spin fa-spinner";
+        //             $progress[2]['color'] = "yellow";
+        //             $progress[2]['font-color'] = "black";
+        //         }
+        //     } else if($result['id_m_status_pengajuan_cuti'] == 5){
+        //         $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm'])." : ".$result['keterangan_verifikasi_kepala_bkpsdm'];
+        //         $progress[2]['icon'] = "fa fa-times";
+        //         $progress[2]['color'] = "red";
+        //         $progress[2]['font-color'] = "white";
+        //     }
 
-            if($result['id_m_status_pengajuan_cuti'] != 1){
-                $progress[0]['icon'] = "fa fa-check";
-                $progress[0]['color'] = "green";
-                $progress[0]['font-color'] = "white";
-            }
+        //     if($result['id_m_status_pengajuan_cuti'] != 1){
+        //         $progress[0]['icon'] = "fa fa-check";
+        //         $progress[0]['color'] = "green";
+        //         $progress[0]['font-color'] = "white";
+        //     }
             
-            $result['progress'] = $progress;
+            $result['progress'] = $this->loadProgressPermohonanCuti($result);
 
             $meta = $this->db->select('a.*')
                         ->from('t_meta_cuti a')
@@ -5124,7 +5150,8 @@ public function submitEditJabatan(){
 
         $res['data'] = $data;
 
-        if($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()){
+        // if($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()){ yang lama
+        if($this->general_library->isHakAkses('verifikasi_permohonan_cuti')){ 
             if($data['id_m_status_pengajuan_cuti'] != 2){
                 if($data['id_m_status_pengajuan_cuti'] == 1 && $data['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){
                     $update['id_m_status_pengajuan_cuti'] = $status == 0 ? 5 : 4;
@@ -5185,10 +5212,10 @@ public function submitEditJabatan(){
                                         ->get()->row_array();
 
             if($update['id_m_status_pengajuan_cuti'] == 2){ //disetujui atasan, kirim whatsapp ke pegawai dan ke kepala bkpsdm untuk verif
-                $message_to_pegawai .= "telah *disetujui oleh Kepala PD Anda* dan saat ini sedang menunggu Verifikasi oleh Keplaa BKPSDM. Terima kasih.";
+                $message_to_pegawai .= "telah *disetujui oleh Kepala PD Anda* dan saat ini sedang menunggu Verifikasi oleh BKPSDM. Terima kasih.";
                 $encrypt = simpleEncrypt($kepala_bkpsdm['nipbaru_ws'].'-'.$id);
                 $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                $message_to_kepala_bkpsdm = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Permohonan Pengajuan ".$data['nm_cuti']." pegawai atas nama ".getNamaPegawaiFull($data)." telah diverifikasi oleh Kepala PD dan membutuhkan verifikasi Kepala BKPSDM. Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
+                $message_to_kepala_bkpsdm = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", Permohonan Pengajuan ".$data['nm_cuti']." pegawai atas nama ".getNamaPegawaiFull($data)." telah diverifikasi oleh Kepala PD dan membutuhkan verifikasi BKPSDM. Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
                 
                 // $this->maxchatlibrary->sendText($kepala_bkpsdm['handphone'], $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI, 0, 0);
                 $cronWa = [
@@ -5202,9 +5229,11 @@ public function submitEditJabatan(){
                 $message_to_pegawai .= '*ditolak oleh Kepala PD* Anda dengan keterangan: *"'.$update['keterangan_verifikasi_atasan'].'"*';
                 $this->deletePermohonanCuti($id, 0);
             } else if($update['id_m_status_pengajuan_cuti'] == 4){ //diterima kepala bkpsdm dan menunggu DS
-                $message_to_pegawai .= 'telah *disetujui oleh Kepala BKPSDM* dan saat ini sedang menunggu untuk proses *DS (Digital Sign)*. Terima kasih.';
+                $message_to_pegawai .= 'telah *disetujui oleh BKPSDM* dan saat ini sedang menunggu untuk proses *DS (Digital Sign)*. Terima kasih.';
+                // $message_to_pegawai .= 'telah *disetujui oleh Kepala BKPSDM* dan saat ini sedang menunggu untuk proses *DS (Digital Sign)*. Terima kasih.'; // yang lama
             } else if($update['id_m_status_pengajuan_cuti'] == 5){ //ditolak oleh kepala BKPSDM
-                $message_to_pegawai .= '*ditolak oleh Kepala BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*';
+                // $message_to_pegawai .= '*ditolak oleh Kepala BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*'; // yang lama
+                $message_to_pegawai .= '*ditolak oleh BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*';
                 $this->deletePermohonanCuti($id, 0);
             }
             $cronWa = [
@@ -5371,6 +5400,7 @@ public function submitEditJabatan(){
 
             // $encUrl = simpleEncrypt($path_file);
             $randomString = generateRandomString(30, 1, 't_file_ds'); 
+            // dd($randomString); 
             $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
             // dd($contentQr);
     		$res['qr'] = generateQr($contentQr);
@@ -5422,11 +5452,10 @@ public function submitEditJabatan(){
                 $res['message'] = "Terjadi Kesalahan saat Sign Pdf, error: ".$error_message;
                 $res['data'] = null;
                 $this->db->trans_rollback();
-                return $res;
+                return $res; 
             }
             // dd(json_decode($request_sign));
 
-            $path_file = $path_file;
             $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
             // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
             $cronWa = [
@@ -5446,7 +5475,8 @@ public function submitEditJabatan(){
 
             $this->db->where('id', $id)
                     ->update('t_pengajuan_cuti', [
-                                'url_sk' => $path_file
+                                'url_sk' => $path_file,
+                                'id_m_status_pengajuan_cuti' => 6
                     ]);
 
             

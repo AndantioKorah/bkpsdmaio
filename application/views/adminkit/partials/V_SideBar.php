@@ -332,6 +332,13 @@
 				<?php } ?>
 			</ul>
 		</li>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/digital-signature">
+			<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
+				<i class="align-middle me-2 fa fa-signature"></i> 
+				<span class="align-middle">Digital Sign (DS)</span>
+			</a>
+		</li>
 	<?php } ?>
 	
 

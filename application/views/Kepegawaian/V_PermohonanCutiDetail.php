@@ -103,6 +103,7 @@
         </div>
       <?php } ?>
       <?php if($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk']){ ?>
+      <?php //if($result['id_m_status_pengajuan_cuti'] == 6){ ?>
         <hr>
         <div class="col-lg-12 text-center">
           <a class="btn btn-navy" target="_blank" href="<?=base_url($result['url_sk'])?>"><fa class="fa fa-file-signature"></fa> LIHAT SK CUTI</a>

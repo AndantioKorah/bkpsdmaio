@@ -460,7 +460,7 @@
                         <select class="form-select select2" name="rekamjjk3" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($masa_kerja_jabatan){ foreach($masa_kerja_jabatan as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+							<option  <?php if($nilai_potensial) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else if($masa_kerja == $r['id'])  echo "selected"; else echo "";}  else { if($masa_kerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>

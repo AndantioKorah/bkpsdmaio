@@ -24,12 +24,12 @@
 <table id="example2" class="display table table-bordered" style="width:100%;color:#000">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th class="text-center">Nilai Kinerja</th>
                 <th>Nama</th>
                 <th class="text-center">Nilai Potensial</th>
                 <th class="text-center">Total Nilai</th>
-                <th>Hasil Pemetaan Talenta</th>
+                <th class="text-center">Hasil Pemetaan Talenta</th>
                 <?php if($jt == 0) { ?>
                 <th>Rekomendasi</th>
                 <?php } else { ?>
@@ -40,12 +40,11 @@
         <tbody >
 		<?php $no = 1; foreach($result as $rs2){ ?>
 			<?php $total_nilai = $rs2['res_kinerja'] + $rs2['res_potensial_total'];?>
+            <?php ;?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td class="text-center"><?=$rs2['res_kinerja'];?></td>
-                <td><?=$rs2['gelar1'];?> 
-                <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff">   <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></a>
-             </td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td class="text-center"><?=$rs2['res_potensial_total'];?> </td>
                 <td class="text-center"><?=$total_nilai/2;?> </td>
                 <td class="text-center"><?=numberToRoman($kotak);?></td>
@@ -65,12 +64,17 @@
         </tbody>
         <tfoot>
             <tr>
-            <th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+           <!-- <th>Jabatan Target</th> -->
+                <th class="text-center">Nilai Kinerja</th>
                 <th>Nama</th>
-                <th>Nilai Potensial</th>
-                <th>Hasil Pemetaan Talenta</th>
+                <th class="text-center">Nilai Potensial</th>
+                <th class="text-center">Total Nilai</th>
+                <th class="text-center">Hasil Pemetaan Talenta</th>
+                <?php if($jt == 0) { ?>
+                <th>Rekomendasi</th>
+                <?php } else { ?>
                 <th>Peringkat</th>
+               <?php } ?>
             </tr>
         </tfoot>
     </table>
@@ -80,27 +84,33 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+var groupColumn = 1;
 var table = $('#example2').DataTable({
     order: [[5, 'asc']],
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: [0],orderable: false}],
-    // order: [[groupColumn, 'asc']],
-    displayLength: 25,
+    <?php if($jt == 0) { ?>
+    order: [[groupColumn, 'asc']],
+    <?php } ?>
+    displayLength: 100,
+    // ordering: false,
     drawCallback: function (settings) {
         var api = this.api();
         var rows = api.rows({ page: 'current' }).nodes();
         var last = null;
+       
+        let no = 0;
  
         api.column(groupColumn, { page: 'current' })
             .data()
             .each(function (group, i) {
                 if (last !== group) {
+                    no += 1;
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="7">' +
-                                group +
+                            '<tr class="group"><td colspan="7">'+no+'. '+
+                            group + 
                                 '</td></tr>'
                         );
  

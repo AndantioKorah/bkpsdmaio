@@ -19,13 +19,18 @@
 		color: #fff;
 	}
 </style>
+<div class="col-lg-12 text-right mb-2">
+            <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
+            </form>
+        </div>
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th>Jabatan Target</th>
-                <th>Nilai (80% Nilai Nine Box) </th>
+                <th>Nilai (80% Nilai Talent Pool) </th>
                 <th>Nama</th>
-				<th>Nilai Kompetensi </th>
+				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
                 <th>Total Nilai </th>
 				<th></th>
             </tr>
@@ -37,11 +42,29 @@
                 $total = $total * 80 / 100;
                 $total_kompentesi = $rs2['res_kompetensi'] * 20 / 100;
                 $total_nilai = $total + $total_kompentesi;
+                
+                if($jenis_jabatan == 2){
+                    if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+
+                if($jenis_jabatan == 1){
+                    if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+                
+                  
                   ?>
             <tr>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
 				<td><?=$total_kompentesi;?></td>
                 <td><?=$total_nilai;?></td>
 				<td>
@@ -56,9 +79,10 @@
         <tfoot>
             <tr>
 			<th>Jabatan Target</th>
-                <th>Nilai Kinerja</th>
+                <th>Nilai (80% Nilai Talent Pool) </th>
                 <th>Nama</th>
-				<th>Pemeringkatan</th>
+				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
+                <th>Total Nilai </th>
 				<th></th>
             </tr>
         </tfoot>
@@ -86,7 +110,7 @@ var table = $('#kinerja_adm').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="5">' +
+                            '<tr class="group"><td colspan="6">' +
                                 group +
                                 '</td></tr>'
                         );

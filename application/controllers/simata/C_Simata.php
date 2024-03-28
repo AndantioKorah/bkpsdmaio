@@ -138,9 +138,15 @@ class C_Simata extends CI_Controller
 
     }
 
+    public function jabatanKosong(){
+        $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('simata/V_JabatanKosong', '', '', $data);
+    }
+
     public function loadListJabatanTarget(){
         $data['sub_unsur'] = $this->simata->getMasterSubUnsurPenilaian();
         $data['result'] = $this->simata->getMasterIndikator();
+        
       
         $this->load->view('simata/V_MasterIndikatorItem', $data);
     }
@@ -160,6 +166,19 @@ class C_Simata extends CI_Controller
         
         $data['tab'] = $tab;
         $this->load->view('simata/V_JabatanTargetItem', $data);
+    }
+    
+
+    public function loadListJabatanKosong($id){
+        $tab=null;
+        $data['tab'] = $tab;
+        $data['result_jpt'] = $this->simata->loadListTalentaIx($id);
+        $data['result_adm'] = $this->simata->loadListTalentaIx($id);
+        $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
+        $data['jabatan_adm'] = $this->simata->getNamaJabatanAdministrator();
+        $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
+        // dd($data);
+        $this->load->view('simata/V_JabatanKosongItem', $data);
     }
 
         public function submitJabatanTarget(){
@@ -234,21 +253,24 @@ class C_Simata extends CI_Controller
         $data['result']=null;
         $data['jt_adm'] = null;
         $data['jt_jpt'] = null;
-        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        // $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxJpt();
         $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
         if($_POST) {
         $data['post'] = $_POST;
-        if($_POST['jenis_jabatan'] == 1){
-            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
-            $data['jt_adm'] = $_POST['jabatan_target_adm'];
-            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
+       
+        if($_POST['jenis_jabatan'] == 2){
+            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
         } else {
             $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
-            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
-            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
+            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
         }
         }
-        // dd($data['result']);
+        // dd($data['result']);      
         render('simata/V_ChartNineBox', '', '', $data);
     }
 
@@ -293,7 +315,7 @@ class C_Simata extends CI_Controller
         $id_peg = $data['profil_pegawai']['id_peg'];
         $eselonpegawai = $data['profil_pegawai']['eselon']; 
         $jabatanpegawai = $data['profil_pegawai']['nama_jabatan']; 
-       
+        $eselonidpegawai = $data['profil_pegawai']['eselon']; 
        
         $data['id_t_penilaian'] = $id;
         $data['jabatan_target'] = $jt;
@@ -307,8 +329,8 @@ class C_Simata extends CI_Controller
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
         $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$eselonjt['eselon'],$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
-        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$eselonjt);
-
+        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$eselonjt,$eselonpegawai);
+        // dd($data['masa_kerja']);
         $data['kode'] = $kode;  
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
@@ -357,12 +379,14 @@ class C_Simata extends CI_Controller
 
     public function loadListProfilTalentaAdm($id){
         $data['result'] = $this->simata->loadListProfilTalentaAdm($id);  
+        $data['jenis_jabatan'] = $id;
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
             $this->load->view('simata/V_ProfilTalentaJptList', $data);
 
         }
+        
     }
 
 
@@ -453,9 +477,10 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianKompetensi', '', '', $data);
     }
 
-    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm){
-        $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm);
-        // dd($data);
+    public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
+        $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp);
+        $data['jenis_jabatan'] = $jenis_jabatan;
+        $this->session->set_userdata('data_rencana_suksesi', $data);
         $this->load->view('simata/V_PenilaianKompetensiItem', $data);
     }
 
@@ -479,6 +504,23 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianKompetensi());
 	}
+
+    public function downloadDataSearch($flag_excel = 0){
+        $data = $this->session->userdata('data_rencana_suksesi');
+        // $this->load->view('simata/V_RencanaSuksesiPdf', $data);
+        if($flag_excel == 0){
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                'debug' => true
+            ]);
+            $html = $this->load->view('simata/V_RencanaSuksesiPdf', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output('Rencana Suksesi '.$data['result'][0]['nama_jabatan'].' Kota Manado .pdf', 'D');
+        } else {
+            $this->load->view('user/V_RencanaSuksesiExcel', $data);
+        }
+    }
 
     
 

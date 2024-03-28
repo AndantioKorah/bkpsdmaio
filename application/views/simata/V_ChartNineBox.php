@@ -1495,59 +1495,144 @@ animation06
     $i = 0;
     $nilaix = 0;
     $nilaiy = 0;
+    $talenta9 = 0;
+    $talenta8 = 0;
+    $talenta7 = 0;
+    $talenta6 = 0;
+    $talenta5 = 0;
+    $talenta4 = 0;
+    $talenta3 = 0;
+    $talenta2 = 0;
+    $talenta1 = 0;
+    $data['talenta'] = null;
     if($result){
-        // dd($result);
+    // dd($result);
+
+    
     foreach($result as $rs){ 
-        
+        $data['talenta'][10][$rs->id_peg]['jumlah'] = 0;
         //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
         //   $nilaix = $rs->res_kinerja;
-
+       
           $nilaiy = $rs->res_kinerja;
           $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
              if($nilaix >= 85 && $nilaiy >= 85) {
-              
+              $data['talenta'][9][$rs->id_peg] = 0;
+            //   echo $rs->id_peg.'<br>';
               $ix++;
              } 
              if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
-              // print_r($nilaix."-".$nilaiy.",");
+             $data['talenta'][8][$rs->id_peg] = 0;
               $viii++;
              }
              if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+             $data['talenta'][7][$rs->id_peg] = 0;
               $vii++;
              } 
             if($nilaix >= 85 && $nilaiy < 70) {
+             $data['talenta'][6][$rs->id_peg] = 0;
               $vi++;
              } 
              if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+             $data['talenta'][5][$rs->id_peg] = 0;
               $v++;
             } 
             if($nilaix < 70 && $nilaiy >= 85) {
+             $data['talenta'][4][$rs->id_peg] = 0;
               $iv++;
             } 
             if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+             $data['talenta'][3][$rs->id_peg] = 0;
               $iii++;
             }
             if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+              $data['talenta'][2][$rs->id_peg] = 0;
               $ii++;
             }
             if($nilaix < 70 && $nilaiy < 70) {
+             $data['talenta'][1][$rs->id_peg] = 0;
              $i++;
             }  
-			 } }?>
+			}
+            // dd($data['talenta'][9]);
+            // dd($ix);
+
+        // foreach($result as $a){
+        //     if(isset($data['talenta'][9])){
+        //     $data['talenta'][9][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][8])){
+        //     $data['talenta'][8][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][7])){
+        //         $data['talenta'][7][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][6])){
+        //         $data['talenta'][6][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][5])){
+        //         $data['talenta'][5][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][4])){
+        //         $data['talenta'][4][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][3])){
+        //         $data['talenta'][3][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][2])){
+        //         $data['talenta'][2][$a->id_peg]['jumlah']++;
+        //     }
+        //     if(isset($data['talenta'][1])){
+        //         $data['talenta'][1][$a->id_peg]['jumlah']++;
+        //     }
+            
+        // }
+        
+        if(isset($data['talenta'][9])){
+            $talenta9 = count($data['talenta'][9]);
+        } 
+        if(isset($data['talenta'][8])){
+            $talenta8 = count($data['talenta'][8]);
+        }
+        if(isset($data['talenta'][7])){
+            $talenta7 = count($data['talenta'][7]);
+        } 
+        if(isset($data['talenta'][6])){
+            $talenta6 = count($data['talenta'][6]);
+        } 
+        if(isset($data['talenta'][5])){
+            $talenta5 = count($data['talenta'][5]);
+        } 
+        if(isset($data['talenta'][4])){
+            $talenta4 = count($data['talenta'][4]);
+        } 
+        if(isset($data['talenta'][3])){
+            $talenta3 = count($data['talenta'][3]);
+        } 
+        if(isset($data['talenta'][2])){
+            $talenta2 = count($data['talenta'][2]);
+        } 
+        if(isset($data['talenta'][1])){
+            $talenta1 = count($data['talenta'][1]);
+        }  
+
+            // dd($data['talenta'][1]);
+            // dd($i);
+        }?>
     <div class="card card-default" style="background-color:#2e4963;">
       <div class="row" >
       <div class="col-lg-3" >
       <div class="card-body">
       <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
+        <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
         <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
         <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
       </select>
       </div>
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
+      <!-- <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_adm" >
                 <option value=""  selected>Semua</option>
@@ -1555,9 +1640,9 @@ animation06
                      <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
-      </div>
+      </div> -->
       
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
+      <div class="mb-3"  id="jpt" style="display:none">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
                 <option value=""  selected>Semua</option>
@@ -1704,7 +1789,7 @@ animation06
     <thead>
       <tr>
         <th valign="top" class="text-center">Kotak</th>
-        <th class="text-center">Jumlah Suksesi</th>
+        <th class="text-center">Jumlah Talenta </th>
       </tr>
 
 
@@ -1712,8 +1797,8 @@ animation06
       </thead>
       <tbody>
       <tr class="text-center" style="background-color: #1cbb8c">
-      <td >IX</td>
-      <td ><?=$ix;?></td>
+      <td >IX  </td>
+      <td ><?=$talenta9;?></td>
       <td>
         <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="9" data-jumlah="<?=$ix;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1722,7 +1807,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #1cbb8c">
       <td>VIII</td>
-      <td><?=$viii;?></td>
+      <td><?=$talenta8;?></td>
       <td>
       <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="8" data-jumlah="<?=$viii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1731,7 +1816,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #1cbb8c">
       <td>VII</td>
-      <td><?=$vii;?></td>
+      <td><?=$talenta7;?></td>
       <td>
       <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="7" data-jumlah="<?=$vii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1740,7 +1825,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #fcb92c">
       <td>VI</td>
-      <td><?=$vi;?></td>
+      <td><?=$talenta6;?></td>
       <td>
       <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="6" data-jumlah="<?=$vi;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1749,7 +1834,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #fcb92c">
       <td>V</td>
-      <td><?=$v;?></td>
+      <td><?=$talenta5;?></td>
       <td>
       <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="5" data-jumlah="<?=$v;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1759,7 +1844,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #fcb92c">
       <td>IV</td>
-      <td><?=$iv;?></td>
+      <td><?=$talenta4;?></td>
            <td>
            <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="4" data-jumlah="<?=$iv;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1768,7 +1853,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #be4d4d">
       <td>III</td>
-      <td><?=$iii;?></td>
+      <td><?=$talenta3;?></td>
            <td>
            <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="3" data-jumlah="<?=$iii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1777,7 +1862,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #be4d4d">
       <td>II</td>
-      <td><?=$ii;?></td>
+      <td><?=$talenta2;?></td>
            <td>
            <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="2" data-jumlah="<?=$ii;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1786,7 +1871,7 @@ animation06
       </tr>
       <tr class="text-center" style="background-color: #be4d4d">
       <td>I</td>
-      <td><?=$i;?></td>
+      <td><?=$talenta1;?></td>
            <td>
            <?php if($post) { ?>
         <button style="border-radius:8px;" data-box="1" data-jumlah="<?=$i;?>" class="open-DetailNinebox btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_detail"><i class="fa fa-search"></i></button>
@@ -1825,13 +1910,10 @@ animation06
 
 <?php if($post) { ?>
 <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$post['jenis_jabatan'];?>">
-<?php if($jt_adm) { ?>
-<input type="hidden" name="jt" id="jt" value="<?=$jt_adm;?>">
-<?php } else if($jt_jpt) { ?>
+<?php if($jt_jpt) { ?>
 <input type="hidden" name="jt" id="jt" value="<?=$jt_jpt;?>">
-<?php } else { ?> 
+<?php }  else { ?> 
 <input type="hidden" name="jt" id="jt" value="0">
-
 <?php } ?>
 <?php } ?>
 
@@ -1872,15 +1954,15 @@ $(function(){
    })
  }
 
- $('#jenis_jabatan').on('change', function() {
-  if(this.value == 1) {
-   $('#adm').show('fast')
-   $('#jpt').hide()
-  } else {
-    $('#jpt').show('fast')
-    $('#adm').hide()
-  }
-});
+//  $('#jenis_jabatan').on('change', function() {
+//   if(this.value == 1) {
+//    $('#adm').show('fast')
+//    $('#jpt').hide()
+//   } else {
+//     $('#jpt').show('fast')
+//     $('#adm').hide()
+//   }
+// });
 
     
     var dx = JSON.parse('<?=json_encode($nilai)?>');

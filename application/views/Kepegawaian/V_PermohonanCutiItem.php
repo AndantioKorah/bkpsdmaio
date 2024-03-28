@@ -61,9 +61,7 @@
           data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
           <?php if($rs['id_m_status_pengajuan_cuti'] == 1){ ?>
             <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
-          <?php }
-            
-          ?>
+          <?php } ?>
         </td>
       </tr>
     <?php } } ?>

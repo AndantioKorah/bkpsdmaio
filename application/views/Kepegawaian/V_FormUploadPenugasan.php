@@ -45,7 +45,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   }
 </script>
 
-
+<!-- 
 <style>
   .modal:nth-of-type(even) {
     z-index: 1052 !important;
@@ -54,7 +54,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     z-index: 1051 !important;
 }
    
-</style>
+</style> -->
 <div class="modal fade" id="myModalPenugasan">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -199,8 +199,8 @@ $(function(){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
-        // document.getElementById('btn_upload_penugasan').disabled = true;
-        // $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_penugasan').disabled = true;
+        $('#btn_upload_penugasan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",

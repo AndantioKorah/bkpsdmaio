@@ -8,7 +8,7 @@
 </style>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDisiplin">
+<!-- <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDisiplin">
   Tambah Data Disiplin
 </button>
 
@@ -16,10 +16,10 @@
 
 <button onclick="loadRiwayatUsulDisiplin()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalDiklat">
   Riwayat Usul Disiplin
-</button>
+</button> -->
 
 
-
+<!-- 
 
 <style>
   .modal:nth-of-type(even) {
@@ -29,7 +29,7 @@
     z-index: 1051 !important;
 }
    
-</style>
+</style> -->
 <div class="modal fade" id="myModalDiklat">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">

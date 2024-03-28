@@ -22,7 +22,7 @@
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
 				<th>Pemeringkatan</th>
@@ -32,9 +32,9 @@
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td><?=$rs2['res_kinerja'];?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
 				<td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
@@ -47,7 +47,7 @@
         </tbody>
         <tfoot>
             <tr>
-			<th>Jabatan Target</th>
+			<!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
 				<th>Pemeringkatan</th>
@@ -60,7 +60,7 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+	var groupColumn = 1;
 var table = $('#kinerja_adm').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: 0,orderable: false}],
@@ -93,10 +93,10 @@ var table = $('#kinerja_adm').DataTable({
 $('#kinerja_adm tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
+        // table.order([groupColumn, 'desc']).draw();
     }
     else {
-        table.order([groupColumn, 'asc']).draw();
+        // table.order([groupColumn, 'asc']).draw();
     }
 });
 </script>

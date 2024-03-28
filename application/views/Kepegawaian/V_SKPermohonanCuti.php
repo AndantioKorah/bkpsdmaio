@@ -36,7 +36,7 @@
         padding-top: 30px;
         font-size: 1rem;
         text-align: justify;
-        line-height: .4rem;
+        line-height: 1.5rem;
       }
 
       .div_sp_content table{
@@ -45,13 +45,13 @@
       }
 
       .content_footer{
-        /* line-height: .6rem; */
+        line-height: 1.1rem;
         font-size: 1rem;
         /* padding-top: 100px; */
       }
       
       .content_footer table{
-        line-height: .8rem;
+        line-height: .9rem;
         font-size: 1rem;
       }
 
@@ -59,9 +59,7 @@
         /* padding-right: 5rem; */
         position: fixed;
         bottom: 0;
-        /* margin-top: 50px; */
-        /* padding-bottom: 60px; */
-        /* display: none; */
+        padding-bottom: 10px;
         /* width: 100%; */
       }
 
@@ -139,16 +137,12 @@
               <td style="width: 75%;"><?=formatDateNamaBulan($rs['tanggal_akhir'])?></td>
             </tr>
           </table>
-          <table>
-            <tr>
-              <td>
-              sesuai dengan Peraturan Pemerintah Nomor 17 Tahun 2020 tentang Perubahan atas Peraturan Pemerintah
-              Nomor 11 Tahun 2017 tentang Manajemen Pegawai Negeri Sipil dan Peraturan Badan Kepegawaian Negara
-              Nomor 7 tahun 2021 tentang Perubahan Atas Peraturan Badan Kepegawaian Negara Nomor 24 Tahun 2017
-              tentang Tata Cara Pemberian Cuti Pegawai Negeri Sipil, dengan ketentuan sebagai berikut:
-              </td>
-            </tr>
-          </table>
+          <br>
+          sesuai dengan Peraturan Pemerintah Nomor 17 Tahun 2020 tentang Perubahan atas Peraturan Pemerintah
+          Nomor 11 Tahun 2017 tentang Manajemen Pegawai Negeri Sipil dan Peraturan Badan Kepegawaian Negara
+          Nomor 7 tahun 2021 tentang Perubahan Atas Peraturan Badan Kepegawaian Negara Nomor 24 Tahun 2017
+          tentang Tata Cara Pemberian Cuti Pegawai Negeri Sipil, dengan ketentuan sebagai berikut:
+          <br>
           <table>
             <tr>
               <td>a.</td>
@@ -163,7 +157,7 @@
           Demikian surat izin <?=strtolower($rs['nm_cuti'])?> ini dibuat untuk digunakan sebagaimana mestinya.
           <br>
           <br>
-          <table style="width: 100%; margin-top: 30px">
+          <table style="width: 100%;">
             <tr>
               <td style="width: 50%;"></td>
               <td style="width: 50%; text-align: center;">
@@ -172,22 +166,16 @@
                   <?php
                   $padding_top_content_footer = "100px";
                   if(isset($rs['ds']) && $rs['ds'] == 1){
-                    $rs['width'] = 100;
-                    $padding_top_content_footer = "30px";
+                  $padding_top_content_footer = "50px";
                   ?>
-                    <div style="width: 100%;">
-                      <?php
-                        $this->load->view('adminkit/partials/V_TemplateTte', $rs);
-                      ?>
-                    </div>
-                    <!-- <img style="width: 30%;" src="<?=(base_url('assets/adminkit/img/example-ds.png'))?>"> -->
+                    <img style="width: 30%;" src="<?=(base_url('assets/adminkit/img/example-ds.png'))?>">
                   <?php } ?>
               </td>
             </tr>
           </table>
         </div>
         <div class="content_footer"
-          style="display: block; padding-top: <?=$padding_top_content_footer;?>"
+          style="padding-top: <?=$padding_top_content_footer;?>"
         >
           Tembusan Yth.:
           <table>
@@ -221,13 +209,13 @@
       <div class="footer-sk">
         <table style="width: 100%;">
           <tr>
-            <td colspan=2 style="width: 100%; text-align: right; font-size: 14px;">
+            <td colspan=2 style="width: 100%; text-align: right; font-size: 130px;">
               "Manado Maju dan Sejahtera Sulut Hebat"
             </td>
           </tr>
           <tr>
-            <td colspan=1 style="width: 90%;">
-              <table style="width: 100%; font-size: 14px;">
+            <td colspan=1 style="width: 70%;">
+              <table style="width: 100%; font-size: 130px;">
                 <tr style="vertical-align: top;">
                   <td style="width: 1%;">-</td>
                   <td style="width: 99%;">UU ITE No. 11 Pasal 5 Ayat 1 "Informasi Elektronik dan/atau Dokumen dan/atau hasil cetaknya merupakan alat bukti hukum yang sah"</td>
@@ -238,8 +226,8 @@
                 </tr>
               </table>
             </td>
-            <td colspan=1 style="width: 10% !important; vertical-align: middle;">
-              <img style="width: 10%;" src="<?=(base_url('assets/adminkit/img/logo-bsre.png'))?>">
+            <td colspan=1 style="width: 30%; vertical-align: middle;">
+              <img style="width: 100%;" src="<?=(base_url('assets/adminkit/img/logo-bsre.png'))?>">
             </td>
           </tr>
         </table>

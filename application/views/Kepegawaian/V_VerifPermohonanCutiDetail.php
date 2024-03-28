@@ -202,9 +202,7 @@
               <div class="row">
                 <div class="col-lg-6 text-left">
                   <?php if($result['id_m_status_pengajuan_cuti'] == 4 && !$result['url_sk']){ ?>
-                    <button type="button" onclick="digitalSign()" id="button_ds" class="btn btn-success" data-toggle="modal" href="#auth_modal_tte">
-                      <i class="fa fa-signature fa-2x"></i> Digital Sign
-                    </button>
+                    <button type="button" onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button>
                     <button style="display: none;" id="button_ds_loader" disabled class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu... </button>
                   <?php } ?>
                 </div>
@@ -242,33 +240,28 @@
   }
 
   function digitalSign(){
-    $('#auth_modal_tte_content').html('')
-    $('#auth_modal_tte_content').append(divLoaderNavy)
-    $('#auth_modal_tte_content').load('<?=base_url('kepegawaian/C_Kepegawaian/loadAuthModalTte/'.$result['id'])?>', function(){
-      $('#loader').hide()
+    $('#button_ds').hide()
+    $('#button_ds_loader').show()
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/dsCuti/")?>'+'<?=$result['id']?>',
+      method:"POST",  
+      data: $(this).serialize(),
+      success: function(res){
+        let rs = JSON.parse(res)
+        if(rs.code == 1){
+          errortoast(rs.message)
+        } else {
+          successtoast('DS Berhasil')
+          loadDetailCutiVerif('<?=$result["id"]?>')
+        }
+        $('#button_ds').show()
+        $('#button_ds_loader').hide()
+      }, error: function(err){
+        errortoast('Terjadi Kesalahan')
+        $('#button_ds').show()
+        $('#button_ds_loader').hide()
+      }
     })
-    // $('#button_ds').hide()
-    // $('#button_ds_loader').show()
-    // $.ajax({
-    //   url: '<?=base_url("kepegawaian/C_Kepegawaian/dsCuti/")?>'+'<?=$result['id']?>',
-    //   method:"POST",  
-    //   data: $(this).serialize(),
-    //   success: function(res){
-    //     let rs = JSON.parse(res)
-    //     if(rs.code == 1){
-    //       errortoast(rs.message)
-    //     } else {
-    //       successtoast('DS Berhasil')
-    //       loadDetailCutiVerif('<?=$result["id"]?>')
-    //     }
-    //     $('#button_ds').show()
-    //     $('#button_ds_loader').hide()
-    //   }, error: function(err){
-    //     errortoast('Terjadi Kesalahan')
-    //     $('#button_ds').show()
-    //     $('#button_ds_loader').hide()
-    //   }
-    // })
   }
 
   function batalVerifikasi(){

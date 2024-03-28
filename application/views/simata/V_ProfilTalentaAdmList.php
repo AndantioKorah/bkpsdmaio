@@ -22,7 +22,7 @@
 <table id="" class="display table table-bordered table_pt" style="width:100%">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -39,11 +39,27 @@
         </thead>
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
-			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
+			<?php 
+                if($jenis_jabatan == 2){
+                    if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+
+                if($jenis_jabatan == 1){
+                    if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
+                        $keterangan = "Rotasi";
+                    } else {
+                        $keterangan = "Promosi";
+                    }
+                }
+                $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td><?=$rs2['res_kinerja'];?></td>
-                <td><?=$rs2['gelar1'];?><?=$rs2['nama'];?> <?=$rs2['gelar2'];?></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
                 <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
@@ -66,7 +82,7 @@
         </tbody>
         <tfoot>
             <tr>
-            <th>Jabatan Target</th>
+            <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -86,12 +102,13 @@
 </div>
 
 <script>
-	var groupColumn = 2;
-var table = $('.table_pt').DataTable({
-    columnDefs: [{ visible: false, targets: groupColumn },
-    {targets: 0,orderable: false}],
+	var groupColumn = 1;
+    var table = $('.table_pt').DataTable({
+    columnDefs: [{ visible: false, targets: groupColumn},
+    {targets: 0,orderable: false},
+    { "searchable": false, "targets": [11] }],
     order: [[groupColumn, 'asc']],
-    displayLength: 25,
+    displayLength: 200,
     drawCallback: function (settings) {
         var api = this.api();
         var rows = api.rows({ page: 'current' }).nodes();
@@ -104,7 +121,7 @@ var table = $('.table_pt').DataTable({
                     $(rows)
                         .eq(i)
                         .before(
-                            '<tr class="group"><td colspan="11">' +
+                            '<tr class="group"><td colspan="13">' +
                                 group +
                                 '</td></tr>'
                         );
@@ -119,10 +136,10 @@ var table = $('.table_pt').DataTable({
 $('#example tbody').on('click', 'tr.group', function () {
     var currentOrder = table.order()[0];
     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
+        // table.order([groupColumn, 'desc']).draw();
     }
     else {
-        table.order([groupColumn, 'asc']).draw();
+        // table.order([groupColumn, 'asc']).draw();
     }
 });
 </script>

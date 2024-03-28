@@ -69,7 +69,7 @@
                   
                   ?>
             <tr>
-                <td class="tdnama"><?=$no++;?></td>
+                <td class="text-center tdnama"><?=$no++;?></td>
             <td class="tdnama"><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> <br> NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>

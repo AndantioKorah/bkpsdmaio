@@ -25,8 +25,8 @@
         <thead>
             <tr>
                 <!-- <th>Jabatan Target</th> -->
-                <th >No</th>
-                <th>Nama</th>
+                <th valign="middle">No</th>
+                <th valign="middle" class="text-center">Nama</th>
                 <th style="width:10%" class="text-center">Nilai Asessment (50%)</th>
                 <th style="width:10%" class="text-center">Nilai Rekam<br> Jejak (40%)</th>
                 <th style="width:5%" class="text-center">Nilai Pertimbangan Lainnya (10%)</th>
@@ -58,13 +58,14 @@
         <tfoot>
             <tr>
 			<!-- <th>Jabatan Target</th> -->
-            <th style="display:none"x>No</th>
-                <th>Nama</th>
-                <th>Nilai Asessment (50%)</th>
-                <th>Nilai Rekam Jejak (40%)</th>
-                <th>Nilai Pertimbangan Lainnya (10%)</th>
-                <th>Total Nilai</th>
-				<th>Pemeringkatan</th>
+            <th valign="middle">No</th>
+                <th valign="middle" class="text-center">Nama</th>
+                <th style="width:10%" class="text-center">Nilai Asessment (50%)</th>
+                <th style="width:10%" class="text-center">Nilai Rekam<br> Jejak (40%)</th>
+                <th style="width:5%" class="text-center">Nilai Pertimbangan Lainnya (10%)</th>
+                <th class="text-center">Total Nilai</th>
+				<th class="text-center">Pemeringkatan</th>
+                <th></th>
             </tr>
         </tfoot>
     </table>

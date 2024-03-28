@@ -29,7 +29,7 @@
             <tr>
                 <!-- <th>Jabatan Target</th> -->
                 <th class="text-center" style="width:5%">No</th>
-                <th >Nama</th>
+                <th class="text-center">Nama</th>
                 <th>Nilai Kinerja</th>
 				<th>Pemeringkatan</th>
 				<th></th>

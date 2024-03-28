@@ -1506,7 +1506,7 @@ animation06
     $talenta1 = 0;
     $data['talenta'] = null;
     if($result){
-    
+    // dd($result);
 
     
     foreach($result as $rs){ 
@@ -1625,14 +1625,14 @@ animation06
       <div class="card-body">
       <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
+        <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
         <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
         <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
       </select>
       </div>
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
+      <!-- <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_adm" >
                 <option value=""  selected>Semua</option>
@@ -1640,9 +1640,9 @@ animation06
                      <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
-      </div>
+      </div> -->
       
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
+      <div class="mb-3"  id="jpt" style="display:none">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
                 <option value=""  selected>Semua</option>
@@ -1910,13 +1910,10 @@ animation06
 
 <?php if($post) { ?>
 <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$post['jenis_jabatan'];?>">
-<?php if($jt_adm) { ?>
-<input type="hidden" name="jt" id="jt" value="<?=$jt_adm;?>">
-<?php } else if($jt_jpt) { ?>
+<?php if($jt_jpt) { ?>
 <input type="hidden" name="jt" id="jt" value="<?=$jt_jpt;?>">
-<?php } else { ?> 
+<?php }  else { ?> 
 <input type="hidden" name="jt" id="jt" value="0">
-
 <?php } ?>
 <?php } ?>
 
@@ -1957,15 +1954,15 @@ $(function(){
    })
  }
 
- $('#jenis_jabatan').on('change', function() {
-  if(this.value == 1) {
-   $('#adm').show('fast')
-   $('#jpt').hide()
-  } else {
-    $('#jpt').show('fast')
-    $('#adm').hide()
-  }
-});
+//  $('#jenis_jabatan').on('change', function() {
+//   if(this.value == 1) {
+//    $('#adm').show('fast')
+//    $('#jpt').hide()
+//   } else {
+//     $('#jpt').show('fast')
+//     $('#adm').hide()
+//   }
+// });
 
     
     var dx = JSON.parse('<?=json_encode($nilai)?>');

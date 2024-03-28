@@ -31,19 +31,24 @@
 
 
 <?php 
-if(!$this->general_library->isWalikota()){
+if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   if($this->general_library->getUserName() == $nip){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
-   
     if($bidang){
+    
       if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
         $idBidang = 99;
       }else if($nm_jab == "walikota"){
         $idBidang = 99;
-      }   else {
+      } else {        
+        if($this->general_library->isGuest()){
+        $idBidang = 99;
+        } else {
         $idBidang = $bidang['id_m_bidang'];
+
+        }
       }
     } else {
     $idBidang = 99;
@@ -56,6 +61,7 @@ if(!$this->general_library->isWalikota()){
   } else {
     $idBidang = 99;
   }
+  
     ?>
 
 <input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
@@ -90,6 +96,7 @@ if(!$this->general_library->isWalikota()){
         <?php if($this->general_library->getRole() == 'programmer' || 
         $this->general_library->isAdminAplikasi() || 
         $this->general_library->isWalikota() ||
+        $this->general_library->isGuest() ||
         $this->general_library->isPegawaiBkpsdm())
         { ?>
           <div class="row">

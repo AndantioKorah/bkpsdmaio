@@ -23,7 +23,7 @@
 <table id="example" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Asessment (50%)</th>
                 <th>Nama</th>
                 <th>Nilai Rekam Jejak (40%)</th>
@@ -37,7 +37,7 @@
 		<?php $no = 1; foreach($result as $rs2){ ?>
 			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
@@ -55,12 +55,12 @@
         </tbody>
         <tfoot>
             <tr>
-            <th>Jabatan Target</th>
+            <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Asessment (50%)</th>
                 <th>Nama</th>
                 <th>Nilai Rekam Jejak (40%)</th>
                 <th>Nilai Pertimbangan Lainnya (10%)</th>
-                <!-- <th>Total</th> -->
+                <th>Total</th>
 				<th>Pemeringkatan</th>
 				<th></th>
             </tr>
@@ -71,7 +71,7 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+	var groupColumn = 1;
     var table = $('#example').DataTable({
     order: [[5, 'asc']],
     columnDefs: [{ visible: false, targets: groupColumn },

@@ -61,7 +61,7 @@
 
 
 <ul class="sidebar-nav">
-<?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
+<?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
 	<div><hr class="sidebar-divider"></div>
 	<div  onclick="openDetailTppPegawai()" class="div_live_tpp" title="Klik untuk melihat detail">
 		<li class="">
@@ -103,6 +103,7 @@
 	</div>
 	<div><hr class="sidebar-divider"></div>
 	<?php } ?>
+	<?php if(!$this->general_library->isGuest()) { ?>
 	<li class="sidebar-header">
 		Main
 	</li>
@@ -112,7 +113,7 @@
 			<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 		</a>
 	</li> -->
-	<?php if(!$this->general_library->isWalikota()) { ?>
+	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>kepegawaian/profil">
 			<i class="fa fa-user"></i> <span class="align-middle">Profile</span>
@@ -534,13 +535,14 @@
 					<?php } ?>
 		<?php } ?>
 	</li> -->
-
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+	<?php } ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
 		Manajemen Talenta
 	</li>
+	
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
@@ -575,19 +577,17 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rumpun Jabatan
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-kosong')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Jabatan Kosong
+					</a>
+				</li>
 				
 				
 			</ul>
 		</li>
 
-		<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-target" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
-				<span class="align-middle">
-				Jabatan Target
-				</span>
-			</a>	
-		</li>
+
 		<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kinerja" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-check-square"></i> 
@@ -609,6 +609,15 @@
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
 				Talent Pool
+				</span>
+			</a>	
+		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-kosong" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
+				<span class="align-middle">
+				Jabatan Target
 				</span>
 			</a>	
 		</li>

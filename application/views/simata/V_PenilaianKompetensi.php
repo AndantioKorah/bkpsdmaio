@@ -5,14 +5,14 @@
 	<div class="card-body div_form_tambah_interval" id="div_form_tambah_interval">
 	<form method="post" id="form_jabatan" enctype="multipart/form-data">
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Jenis Jabatan</label>
+        <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
-        <option value=""  selected>Pilih Jenis Jabatan</option>
+        <option value=""  selected>Pilih Jenis Penjenjangan Jabatan</option>
         <option value="2">JPT</option>
         <option value="1">Administrator</option>
       </select>
       </div>
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
+      <!-- <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_adm" id="jabatan_target_adm" >
                 <option value="" selected disabled>Pilih Jabatan</option>
@@ -20,9 +20,9 @@
                      <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
-      </div>
+      </div> -->
       
-      <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 2) echo ""; else echo "display:none";} else echo "display:none";?>' id="jpt">
+      <div class="mb-3"  id="jpt">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" id="jabatan_target_jpt" >
                 <option value="" selected disabled>Pilih Jabatan</option>
@@ -100,15 +100,15 @@ $(function(){
 
 
 
- $('#jenis_jabatan').on('change', function() {
-  if(this.value == 1) {
-   $('#adm').show('fast')
-   $('#jpt').hide()
-  } else {
-    $('#jpt').show('fast')
-    $('#adm').hide()
-  }
-});
+//  $('#jenis_jabatan').on('change', function() {
+//   if(this.value == 1) {
+//    $('#adm').show('fast')
+//    $('#jpt').hide()
+//   } else {
+//     $('#jpt').show('fast')
+//     $('#adm').hide()
+//   }
+// });
 
 
 		function loadListSuksesor(tab = null) {

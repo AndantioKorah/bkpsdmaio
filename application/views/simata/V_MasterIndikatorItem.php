@@ -124,13 +124,13 @@
 
     
   <a class="list-group-item list-group-item-action active" aria-current="true">
-  C. Penilaian Kompetensi
+  C. Penilaian Kompetensi Teknis Bidang
   </a>
   <?php $bobot = null; $no = 1; foreach($sub_unsur as $su){ ?>
     
     <?php if($su['id_m_unsur_penilaian'] == 3) { ?>
        
-    <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>B.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></b></a>
+    <!-- <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;"><b>B.<?=$no;?>&nbsp;<?=$su['nm_sub_unsur_penilaian'];?></b></a> -->
     <a class="list-group-item list-group-item-action">
     <?php $no++;?>
     <div class="table-responsive">

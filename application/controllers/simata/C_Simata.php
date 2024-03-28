@@ -138,9 +138,15 @@ class C_Simata extends CI_Controller
 
     }
 
+    public function jabatanKosong(){
+        $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('simata/V_JabatanKosong', '', '', $data);
+    }
+
     public function loadListJabatanTarget(){
         $data['sub_unsur'] = $this->simata->getMasterSubUnsurPenilaian();
         $data['result'] = $this->simata->getMasterIndikator();
+        
       
         $this->load->view('simata/V_MasterIndikatorItem', $data);
     }
@@ -160,6 +166,19 @@ class C_Simata extends CI_Controller
         
         $data['tab'] = $tab;
         $this->load->view('simata/V_JabatanTargetItem', $data);
+    }
+    
+
+    public function loadListJabatanKosong($id){
+        $tab=null;
+        $data['tab'] = $tab;
+        $data['result_jpt'] = $this->simata->loadListTalentaIx($id);
+        $data['result_adm'] = $this->simata->loadListTalentaIx($id);
+        $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
+        $data['jabatan_adm'] = $this->simata->getNamaJabatanAdministrator();
+        $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
+        // dd($data);
+        $this->load->view('simata/V_JabatanKosongItem', $data);
     }
 
         public function submitJabatanTarget(){
@@ -234,21 +253,24 @@ class C_Simata extends CI_Controller
         $data['result']=null;
         $data['jt_adm'] = null;
         $data['jt_jpt'] = null;
-        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        // $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
+        $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxJpt();
         $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
         if($_POST) {
         $data['post'] = $_POST;
-        if($_POST['jenis_jabatan'] == 1){
-            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
-            $data['jt_adm'] = $_POST['jabatan_target_adm'];
-            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
+       
+        if($_POST['jenis_jabatan'] == 2){
+            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
         } else {
             $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
-            $data['result'] = $this->simata->getPenilaianPegawaiJpt();
-            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
+            $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
         }
         }
-        // dd($data['result']);
+        // dd($data['result']);      
         render('simata/V_ChartNineBox', '', '', $data);
     }
 

@@ -32,7 +32,6 @@
                 <th>Nama</th>
 				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
                 <th>Total Nilai </th>
-                <th>Keterangan </th>
 				<th></th>
             </tr>
         </thead>
@@ -68,7 +67,6 @@
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
 				<td><?=$total_kompentesi;?></td>
                 <td><?=$total_nilai;?></td>
-                <td><?=$keterangan;?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_kompetensi" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
@@ -85,7 +83,6 @@
                 <th>Nama</th>
 				<th>Nilai Kompetensi Teknis Bidang (20%) </th>
                 <th>Total Nilai </th>
-                <th>Keterangan </th>
 				<th></th>
             </tr>
         </tfoot>

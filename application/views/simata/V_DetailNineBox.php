@@ -24,7 +24,7 @@
 <table id="example2" class="display table table-bordered" style="width:100%;color:#000">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th class="text-center">Nilai Kinerja</th>
                 <th>Nama</th>
                 <th class="text-center">Nilai Potensial</th>
@@ -42,7 +42,7 @@
 			<?php $total_nilai = $rs2['res_kinerja'] + $rs2['res_potensial_total'];?>
             <?php ;?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td class="text-center"><?=$rs2['res_kinerja'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td class="text-center"><?=$rs2['res_potensial_total'];?> </td>
@@ -64,7 +64,7 @@
         </tbody>
         <tfoot>
             <tr>
-           <th>Jabatan Target</th>
+           <!-- <th>Jabatan Target</th> -->
                 <th class="text-center">Nilai Kinerja</th>
                 <th>Nama</th>
                 <th class="text-center">Nilai Potensial</th>
@@ -84,7 +84,7 @@
 </div>
 
 <script>
-var groupColumn = 2;
+var groupColumn = 1;
 var table = $('#example2').DataTable({
     order: [[5, 'asc']],
     columnDefs: [{ visible: false, targets: groupColumn },

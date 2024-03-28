@@ -22,7 +22,7 @@
 <table id="" class="display table table-bordered table_pt" style="width:100%">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
+                <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -34,7 +34,6 @@
                 <th>Total Nilai </th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
-                <th>keterangan</th>
 				<th></th>
             </tr>
         </thead>
@@ -58,7 +57,7 @@
                 }
                 $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
-                <td><?=$rs2['nama_jabatan'];?></td>
+                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
@@ -72,7 +71,6 @@
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
                 </td>
-                <td><?=$keterangan;?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
 										href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT btn btn-sm btn-info">
@@ -84,7 +82,7 @@
         </tbody>
         <tfoot>
             <tr>
-            <th>Jabatan Target</th>
+            <!-- <th>Jabatan Target</th> -->
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -95,7 +93,6 @@
 				<th>Pemeringkatan Potensial</th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
-                <th>keterangan</th>
 				<th></th>
             </tr>
         </tfoot>
@@ -105,7 +102,7 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+	var groupColumn = 1;
     var table = $('.table_pt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn},
     {targets: 0,orderable: false},

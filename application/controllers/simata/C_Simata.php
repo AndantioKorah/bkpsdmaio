@@ -301,7 +301,7 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
 
-    public function loadModalPenilaianPotensial($id,$nip,$kode,$jt)
+    public function loadModalPenilaianPotensial($id,$nip,$kode)
     {
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
         $data['list_pendidikan_formal'] = $this->simata->getKriteriaPotensial(26);
@@ -321,20 +321,21 @@ class C_Simata extends CI_Controller
         $eselonidpegawai = $data['profil_pegawai']['eselon']; 
        
         $data['id_t_penilaian'] = $id;
-        $data['jabatan_target'] = $jt;
-        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jt);
+        $data['jabatan_target'] = null;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
         $data['pendidikan_formal'] = $this->simata->getPendidikanFormal($id_peg);
         $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
         $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
-        $eselonjt = $this->simata->getEselonJT($jt);
-        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$eselonjt['eselon']);
+        // $eselonjt = $this->simata->getEselonJT($jt);
+        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode);
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
-        $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$eselonjt['eselon'],$eselonpegawai,$jabatanpegawai);
+        $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
-        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$eselonjt,$eselonpegawai);
+        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai);
         // dd($data['masa_kerja']);
         $data['kode'] = $kode;  
+       
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
 

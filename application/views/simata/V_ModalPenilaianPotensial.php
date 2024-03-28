@@ -406,9 +406,9 @@
 						aria-labelledby="pills-cerdas-tab">
 			<form id="form_penilaian_potensial_cerdas" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
-				<input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
+				<!-- <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 				<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
-				<input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>">
+				<!-- <input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>"> -->
 
                 <?php
                 if($nilai_assesment){
@@ -431,9 +431,9 @@
 					<div class="tab-pane show" id="pills-rj" role="tabpanel" aria-labelledby="pills-rj-tab">
 					<form id="form_penilaian_potensial_rj" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="rj_id_peg" value="<?=($profil_pegawai['id_peg'])?>">
-					<input type="hidden" name="rj_id_t_penilaian" value="<?=$id_t_penilaian?>">
+					<!-- <input type="hidden" name="rj_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="rj_jenis_jab" id="rj_jenis_jab" value="<?=$kode?>">
-					<input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>">
+					<!-- <input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>"> -->
 
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan Formal  </label>
@@ -514,9 +514,9 @@
                     <div class="tab-pane show" id="pills-pertimbangan" role="tabpanel" aria-labelledby="pills-pertimbangan-tab">
 					<form id="form_penilaian_potensial_lainnya" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="lainnya_id_peg" value="<?=($profil_pegawai['id_peg'])?>">
-					<input type="hidden" name="lainnya_id_t_penilaian" value="<?=$id_t_penilaian?>">
+					<!-- <input type="hidden" name="lainnya_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="lainnya_jenis_jab" id="lainnya_jenis_jab" value="<?=$kode?>">
-					<input type="hidden" name="lainnya_jabatan_target" value="<?=$jabatan_target?>">
+					<!-- <input type="hidden" name="lainnya_jabatan_target" value="<?=$jabatan_target?>"> -->
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengalaman dalam Kepemimpinan Organisasi</label>
 						<select class="form-select select2" name="lainnya1" >
@@ -599,10 +599,10 @@
 							// 	$("#modal_penilaian_kinerja").trigger("click");
 							// }, 500);
 							if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
 									1000);
 							}
 						
@@ -640,13 +640,14 @@
 						console.log(result)
 						if (result.success == true) {
 							successtoast(result.msg)
-							if(kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
+							if (kode == 1) {
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
 									1000);
 							}
+						
 						} else {
 							errortoast(result.msg)
 							return false;
@@ -680,13 +681,14 @@
 					console.log(result)
 					if (result.success == true) {
 						successtoast(result.msg)
-						if(kode == 1) {
-							const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialAdm,
-								1000);
-						} else {
-							const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt,
-								1000);
-						}
+						if (kode == 1) {
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+									1000);
+							} else {
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+									1000);
+							}
+						
 					} else {
 						errortoast(result.msg)
 						return false;

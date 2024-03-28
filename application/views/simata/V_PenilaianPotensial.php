@@ -222,8 +222,7 @@ $(document).on("click", ".open-DetailPenilaian", function () {
 var id = $(this).data('id');
 var nip = $(this).data('nip');
 var kode = $(this).data('kode');
-var jt = $(this).data('jt');
-alert(jt)
+
 
 $('#div_modal_penilaian_potensial').html('')
 $('#div_modal_penilaian_potensial').append(divLoaderNavy)

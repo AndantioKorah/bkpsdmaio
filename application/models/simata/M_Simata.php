@@ -808,7 +808,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
         return $jabatan;
         }
 
-        function getPangkatGolPengawai($id,$eselon){
+        function getPangkatGolPengawai($id,$kode){
             
             $id_pangkat = null;
             $this->db->select('*')
@@ -819,7 +819,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 ->limit(1);
             $pangkat =  $this->db->get()->result_array();
             
-            if($eselon == "III B"){
+            if($kode == 1){
                 if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
                     $id_pangkat = 96;
                 } else if($pangkat[0]['pangkat'] =  33) {
@@ -1093,13 +1093,13 @@ public function getPegawaiPenilaianKinerjaJpt($id){
     return $id_hukdis;   
     }
 
-    function getMasaKerjaJabatan($id,$eselonjt,$eselonpegawai){
+    function getMasaKerjaJabatan($id,$kode,$eselonpegawai){
         $eselon[] = null;
         $id_masakerja = null;
-        if($eselonjt['eselon'] == "II B" || $eselonjt['eselon'] == "II A"){
+        if($kode == 2){
             $eselon = ["II B", "II A"];
         }
-        if($eselonjt['eselon'] == "III B" || $eselonjt['eselon'] == "III A"){
+        if($kode == 1){
             $eselon = ["III B", "III A"];
         }
 
@@ -1399,7 +1399,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
             $cek =  $this->db->select('*')
                                     ->from('db_simata.t_penilaian_potensial a')
                                     ->where('a.id_peg', $data["id_peg"])
-                                    ->where('a.jabatan_target', $this->input->post('jabatan_target'))
+                                    // ->where('a.jabatan_target', $this->input->post('jabatan_target'))
                                     ->where('a.nilai_assesment is not null')
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
@@ -1412,19 +1412,22 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                     ]);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             } else {
-                $getJabatanTarget =  $this->db->select('*')
-                ->from('db_simata.t_penilaian a')
-                ->where('a.id_peg', $data["id_peg"])
-                ->where('a.flag_active', 1)
-                ->get()->result_array();
+                // $getJabatanTarget =  $this->db->select('*')
+                // ->from('db_simata.t_penilaian a')
+                // ->where('a.id_peg', $data["id_peg"])
+                // ->where('a.flag_active', 1)
+                // ->get()->result_array();
 
-                foreach ($getJabatanTarget as $rs) {
-                    $dataInsert['id_peg']      = $data["id_peg"];
-                    $dataInsert['nilai_assesment']      = $this->input->post('nilai_assesment');
-                    $dataInsert['jabatan_target']      = $rs['id_jabatan_target'];
-                    $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
-                }
-
+                // foreach ($getJabatanTarget as $rs) {
+                //     $dataInsert['id_peg']      = $data["id_peg"];
+                //     $dataInsert['nilai_assesment']      = $this->input->post('nilai_assesment');
+                //     $dataInsert['jabatan_target']      = $rs['id_jabatan_target'];
+                //     $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
+                // }
+                $dataInsert['id_peg']      = $data["id_peg"];
+                $dataInsert['nilai_assesment']      = $this->input->post('nilai_assesment');
+                // $dataInsert['jabatan_target']      = $rs['id_jabatan_target'];
+                $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
 
@@ -1448,7 +1451,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
                
                 $this->db->where('id_peg', $datapost['id_peg'])
-                ->where('id_jabatan_target', $rs2['id_jabatan_target'])
+                // ->where('id_jabatan_target', $rs2['id_jabatan_target'])
                    ->update('db_simata.t_penilaian', 
                    ['res_potensial_total' => $total_potensial]);
                         
@@ -1538,18 +1541,18 @@ public function getPegawaiPenilaianKinerjaJpt($id){
             $data["kompetensi20_jp"] = $id_rekamjjk5;
             $data["penghargaan"] = $id_rekamjjk6;
             $data["riwayat_hukdis"] = $id_rekamjjk7;
-            $data["jabatan_target"] = $this->input->post('rj_jabatan_target');
+            // $data["jabatan_target"] = $this->input->post('rj_jabatan_target');
 
             $cek =  $this->db->select('*')
                                     ->from('db_simata.t_penilaian_potensial a')
                                     ->where('a.id_peg', $data["id_peg"])
-                                    ->where('a.jabatan_target', $this->input->post('rj_jabatan_target'))
+                                    // ->where('a.jabatan_target', $this->input->post('rj_jabatan_target'))
                                     ->where('a.flag_active', 1)
                                     ->get()->result_array();
 
             if($cek){
                 $this->db->where('id_peg', $data['id_peg'])
-                         ->where('jabatan_target', $this->input->post('rj_jabatan_target'))
+                //  ->where('jabatan_target', $this->input->post('rj_jabatan_target'))
                 ->update('db_simata.t_penilaian_potensial', 
                 ['pendidikan_formal' => $id_rekamjjk1,
                 'pangkat_gol' => $id_rekamjjk2,
@@ -1574,7 +1577,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
             $getAllNilaiPotensial =  $this->db->select('*')
                         ->from('db_simata.t_penilaian a')
                         ->where('a.id_peg', $data["id_peg"])
-                        ->where('a.id_jabatan_target', $datapost['rj_jabatan_target'])
+                        // ->where('a.id_jabatan_target', $datapost['rj_jabatan_target'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
                         
@@ -1736,7 +1739,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
 
         public function getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box){
              $this->db->select('a.*,b.*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
-             where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
+             where b.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,  SUM(res_kinerja + res_potensial_total) as total')
                             ->from('db_simata.t_penilaian a')
                             ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                             // ->join('db_pegawai.jabatan c', 'a.id_jabatan_target = c.id_jabatanpeg')
@@ -1744,7 +1747,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                             ->where('a.flag_active', 1)
                             ->group_by('a.id_peg')
                            
-                            ->order_by('(a.res_kinerja) + (a.res_potensial_total) DESC');
+                            ->order_by('total', 'desc');
                             if($jenis_jab == 2){
                                 $this->db->where_in('e.eselon', ["II A", "II B"]);
                             }

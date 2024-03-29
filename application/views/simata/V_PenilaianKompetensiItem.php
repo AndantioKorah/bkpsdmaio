@@ -32,12 +32,12 @@
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
+                <!-- <th>No</th> -->
                 <th>No</th>
-            <th >Nama</th>
+            <th class="text-center" >Nama Pegawai</th>
                 <th>Jabatan Target</th>
                 <th style="width:10%">Nilai (80% Nilai Talent Pool) </th>
-               
-				<th style="width:10%">Nilai Kompetensi Teknis Bidang (20%) </th>
+				<th style="width:10%">Nilai Kompetensi Teknis Bidang (20%)</th>
                 <th>Total Nilai </th>
 				<th></th>
             </tr>
@@ -45,9 +45,9 @@
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
             <?php 
-                $total = $rs2['total']/2;
+                $total = $rs2['total_talent_pool']/2;
                 $total = $total * 80 / 100;
-                $total_kompentesi = $rs2['res_kompetensi'] * 20 / 100;
+                $total_kompentesi = $rs2['nilai_kompetensi'] * 20 / 100;
                 $total_nilai = $total + $total_kompentesi;
                 
                 if($jenis_jabatan == 2){
@@ -74,9 +74,9 @@
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
 				<td><?=$total_kompentesi;?></td>
-                <td><?=$total_nilai;?></td>
+                <td><?=$total_nilai;?> </td>
 				<td>
-				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
+				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['jabatan_target']?>" data-kode="1"
 										href="#modal_penilaian_kompetensi" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
 				</td>
@@ -105,7 +105,7 @@
 var table = $('#kinerja_adm').DataTable({
     // columnDefs: [{ visible: false, targets: groupColumn },
     // {targets: 0,orderable: false}],
-    // order: [[groupColumn, 'asc']],
+    order: [[4, 'desc']],
     displayLength: 25,
     // drawCallback: function (settings) {
     //     var api = this.api();

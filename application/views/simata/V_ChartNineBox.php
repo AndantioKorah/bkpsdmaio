@@ -1506,52 +1506,61 @@ animation06
     $talenta1 = 0;
     $data['talenta'] = null;
     if($result){
-    // dd($result);
 
     
     foreach($result as $rs){ 
-        $data['talenta'][10][$rs->id_peg]['jumlah'] = 0;
+        // $data['talenta'][10][$rs->id_peg]['jumlah'] = 0;
         //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
         //   $nilaix = $rs->res_kinerja;
+        // dd($rs);
        
           $nilaiy = $rs->res_kinerja;
           $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
-             if($nilaix >= 85 && $nilaiy >= 85) {
-              $data['talenta'][9][$rs->id_peg] = 0;
-            //   echo $rs->id_peg.'<br>';
+          if($nilaiy == null){
+            $nilaiy = 0;
+          }  
+          if($nilaix == null){
+            $nilaix = 0;
+          }  
+          
+          if($nilaix >= 85 && $nilaiy >= 85) {
+              $data['talenta'][9][$rs->id_pegawai] = 0;
               $ix++;
+              
              } 
              if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
-             $data['talenta'][8][$rs->id_peg] = 0;
+             $data['talenta'][8][$rs->id_pegawai] = 0;
               $viii++;
              }
              if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
-             $data['talenta'][7][$rs->id_peg] = 0;
+             $data['talenta'][7][$rs->id_pegawai] = 0;
               $vii++;
              } 
             if($nilaix >= 85 && $nilaiy < 70) {
-             $data['talenta'][6][$rs->id_peg] = 0;
+             $data['talenta'][6][$rs->id_pegawai] = 0;
               $vi++;
              } 
              if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
-             $data['talenta'][5][$rs->id_peg] = 0;
+             $data['talenta'][5][$rs->id_pegawai] = 0;
               $v++;
             } 
             if($nilaix < 70 && $nilaiy >= 85) {
-             $data['talenta'][4][$rs->id_peg] = 0;
+             $data['talenta'][4][$rs->id_pegawai] = 0;
               $iv++;
             } 
             if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
-             $data['talenta'][3][$rs->id_peg] = 0;
+             $data['talenta'][3][$rs->id_pegawai] = 0;
               $iii++;
             }
             if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
-              $data['talenta'][2][$rs->id_peg] = 0;
+              $data['talenta'][2][$rs->id_pegawai] = 0;
               $ii++;
             }
             if($nilaix < 70 && $nilaiy < 70) {
-             $data['talenta'][1][$rs->id_peg] = 0;
+             $data['talenta'][1][$rs->id_pegawai] = 0;
+          
              $i++;
+            //  echo $rs->id_pegawai;
             }  
 			}
             // dd($data['talenta'][9]);
@@ -1616,7 +1625,6 @@ animation06
             $talenta1 = count($data['talenta'][1]);
         }  
 
-            // dd($data['talenta'][1]);
             // dd($i);
         }?>
     <div class="card card-default" style="background-color:#2e4963;">
@@ -1642,10 +1650,10 @@ animation06
                 </select>
       </div> -->
       
-      <div class="mb-3"  id="jpt" style="display:none">
+      <div class="mb-3"  id="jpt" style="display:nonex">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
-                <option value=""  selected>Semua</option>
+                <option value=""  selected>Pilih Jabatan</option>
                     <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
@@ -1982,8 +1990,17 @@ $(function(){
     temp.forEach((i) => {
         //   let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
         //   let nilaix = parseFloat(dx.result[i].res_kinerja)
-          let nilaix = parseFloat(dx.result[i].res_potensial_total);
-          let nilaiy = parseFloat(dx.result[i].res_kinerja)
+          let nilaix = dx.result[i].res_potensial_total;
+          let nilaiy = dx.result[i].res_kinerja
+
+          if(nilaix == null){
+            nilaix = 0;
+          }
+          if(nilaiy == null){
+            nilaiy = 0;
+          }
+          console.log(nilaix)
+
           if(nilaix < 70 && nilaiy < 70) {
             point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }

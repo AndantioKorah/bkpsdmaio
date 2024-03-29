@@ -156,7 +156,7 @@ class C_Simata extends CI_Controller
         $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
         
        
-        $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
+        $data['jabatan_target'] = $this->simata->getNamaJabatanJpt();
         // if($id == 0){
         //     $data['result_jpt'] = $this->simata->getPegawaiDinilaiToJpt($id=4018000);
         //     $data['result_adm'] = $this->simata->getPegawaiDinilaiToAdministrator($id=4018000);
@@ -497,6 +497,7 @@ class C_Simata extends CI_Controller
         $data['jabatan_target'] = $jt;
         $data['id_t_penilaian'] = $id;
         $id_peg = $data['profil_pegawai']['id_peg'];
+        
         $data['nilai_kompetensi'] = $this->simata->getPegawaiNilaiKompetensiPegawai($id_peg,$jt);
         $data['kode'] = $kode; 
                         

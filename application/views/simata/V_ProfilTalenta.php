@@ -226,6 +226,15 @@ $(function(){
         var kode = $(this).data('kode');
         var jt = $(this).data('jt');
 
+        if(id == ""){
+          id = 0;
+        }
+
+        if(jt == ""){
+          jt = 0;
+        }
+     
+
         $('#div_modal_detail_profil_talenta').html('')
         $('#div_modal_detail_profil_talenta').append(divLoaderNavy)
         $('#div_modal_detail_profil_talenta').load('<?=base_url("simata/C_Simata/loadModalDetailProfilTalenta/")?>'+id+'/'+nip+'/'+kode+'/'+jt, function(){

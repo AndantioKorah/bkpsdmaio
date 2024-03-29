@@ -584,12 +584,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rumpun Jabatan
 					</a>
 				</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-kosong')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Jabatan Kosong
 					</a>
 				</li>
-				
+				 -->
 				
 			</ul>
 		</li>
@@ -621,7 +621,7 @@
 		</li>
 
 		<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-kosong" class="sidebar-link">
+			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-target" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
 				<span class="align-middle">
 				Jabatan Target

@@ -2146,7 +2146,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     (select res_kompetensi from db_simata.t_penilaian_kompetensi as z where z.id_peg = a.id_peg and z.jabatan_target = f.jabatan_target) as nilai_kompetensi,
     (SELECT d.nama_jabatan from db_pegawai.jabatan as d
     where c.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
-        ->from('db_simata.t_penilaianx a')
+        ->from('db_simata.t_penilaian a')
         ->join('db_pegawai.pegawai as c', 'a.id_peg = c.id_peg')
         ->join('db_pegawai.jabatan as e', 'c.jabatan = e.id_jabatanpeg')
         ->join('db_simata.t_jabatan_target as f', 'a.id_peg = f.id_peg','left')

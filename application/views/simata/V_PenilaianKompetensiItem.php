@@ -29,7 +29,7 @@
                 <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
             </form>
         </div>
-<table id="kinerja_admx" class="display table table-bordered" style="width:100%">
+<table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
                 <!-- <th>No</th> -->
@@ -105,7 +105,7 @@
 var table = $('#kinerja_adm').DataTable({
     // columnDefs: [{ visible: false, targets: groupColumn },
     // {targets: 0,orderable: false}],
-    order: [[4, 'desc']],
+    order: [[5, 'desc']],
     displayLength: 25,
     // drawCallback: function (settings) {
     //     var api = this.api();

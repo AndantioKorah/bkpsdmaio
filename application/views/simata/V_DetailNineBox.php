@@ -86,7 +86,7 @@
 <script>
 var groupColumn = 1;
 var table = $('#example2').DataTable({
-    order: [[5, 'asc']],
+    order: [[3, 'desc']],
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: [0],orderable: false}],
 

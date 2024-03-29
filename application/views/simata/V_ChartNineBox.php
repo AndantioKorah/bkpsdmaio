@@ -1650,7 +1650,7 @@ animation06
                 </select>
       </div> -->
       
-      <div class="mb-3"  id="jpt" style="display:nonex">
+      <div class="mb-3"  id="jpt" style="display:none">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
                 <option value=""  selected>Pilih Jabatan</option>

@@ -342,7 +342,7 @@ function getNamaJabatanJpt(){
 function getJabatanTargetJpt(){
     $this->db->select('*')
     // ->where('id !=', 0)
-    // ->where('flag_active', 1)
+    ->where('c.flag_active', 1)
     ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
     ->join('db_simata.t_jabatan_target c', 'a.id_jabatanpeg = c.jabatan_target')
     // ->where("FIND_IN_SET(a.eselon,'II B')!=",0)

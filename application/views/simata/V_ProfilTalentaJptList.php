@@ -95,6 +95,7 @@
                 <th>Nilai Pertimbangan Lainnya (10%)</th>
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
+                <th>Total Nilai </th>
                 <th>Hasil Pemetanaan</th>
                 <th>Rekomendasi</th>
                 <th style="display:none">eselon</th>
@@ -111,7 +112,7 @@
     var table = $('.table_pt_jpt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn},
     { "searchable": false, "targets": [11] }],
-    order: [[groupColumn, 'asc']],
+    order: [[9, 'desc']],
     displayLength: 200,
     drawCallback: function (settings) {
         var api = this.api();

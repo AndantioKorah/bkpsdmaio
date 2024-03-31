@@ -121,7 +121,7 @@
 	</li>
 	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
-	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || !$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
 			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
@@ -235,11 +235,13 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
 			</a>
 		</li>
+		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Nomor Surat</span>
 			</a>
 		</li>
+		<?php } ?>
 	<?php } ?>
 	<?php
 		if($this->general_library->isProgrammer() 
@@ -257,6 +259,7 @@
 	<?php
 		}
 	?>
+	<?php if(!$this->general_library->isWalikota()){ ?>
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
@@ -279,6 +282,7 @@
 			</ul>
 		<?php } ?>
 	</li>
+	<?php } ?>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
@@ -357,6 +361,7 @@
 			</a>	
 		</li>
 		<?php } ?>
+		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
@@ -385,12 +390,9 @@
 					</a>
 				</li>
 				<?php } ?>
-				
-				
 			</ul>
 		</li>
-
-
+		<?php } ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
@@ -408,7 +410,8 @@
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-				||  $this->general_library->isHakAkses('rekap_absensi_aars') ){ ?>
+				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
+				|| $this->general_library->isWalikota()){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Absensi
@@ -437,11 +440,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if(!$this->general_library->isWalikota()){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Presensi
 					</a>
 				</li>
+				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		
 					<li class="sidebar-item ">
 						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
@@ -468,7 +473,7 @@
 				</span>
 			</a>
 			<ul id="skbp" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				
+				<?php if(!$this->general_library->isWalikota()){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rencana')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Sasaran Kerja
@@ -484,6 +489,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
@@ -495,12 +506,6 @@
 					</a>
 				</li>
 				<?php } ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
-					</a>
-				</li>
-				
 				
 			</ul>
 		</li>

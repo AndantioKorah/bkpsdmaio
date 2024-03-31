@@ -1,4 +1,4 @@
-<?php if(!$this->general_library->isWalikota()) { ?>
+<?php // if(!$this->general_library->isWalikota()) { ?>
 <div class="card card-default">
     <div class="card-header">
         <h4>Verifikasi Kinerja dari Pejabat Penilai</h4>
@@ -23,7 +23,7 @@
                         </select>
                     </div>
                     </div>
-                    <?php } else if($this->general_library->isWalikota() || $this->general_library->getIdEselon() == 4) { ?>
+                    <?php } else if($this->general_library->getIdEselon() == 4) { ?>
                     <div class="col">
                         <label class="bmd-label-floating">Filter Berdasarkan</label>
                         <select class="form-control select2-navy" style="width: 100%"
@@ -82,7 +82,7 @@
 
 <div class="col-12 card card-default p-3" id="result">
 </div>
-<?php } ?>
+<?php // } ?>
 <script>
     $(function(){
         $('.select2').select2()

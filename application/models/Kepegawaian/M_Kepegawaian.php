@@ -5428,7 +5428,7 @@ public function submitEditJabatan(){
 
             $path_file = $path_file;
             $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
-            // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), $path_file, $filename, $caption);
+            // $this->maxchatlibrary->sendDocument(convertPhoneNumber($data['handphone']), @$path_file, $filename, $caption);
             $cronWa = [
                 'sendTo' => convertPhoneNumber($data['handphone']),
                 'message' => $caption,

@@ -128,20 +128,20 @@
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianKinerjaAdm()" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
+            <button onclick="loadListPegawaiPenilaianKinerjaJpt(1)" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianKinerjaJpt()" class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
+            <button onclick="loadListPegawaiPenilaianKinerjaJpt(2)" class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
        
         </ul>
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-         <br> <div id="list_pegawai_penilaian_kinerja"></div>
+         <br> <div id="list_pegawai_penilaian_kinerjax" class="list_pegawai_penilaian_kinerja_jpt"></div>
         </div>
 
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <br> <div id="list_pegawai_penilaian_kinerja_jpt"></div>
+        <br> <div id="list_pegawai_penilaian_kinerja_jptx"  class="list_pegawai_penilaian_kinerja_jpt"></div>
         </div>
         </div>
 
@@ -186,23 +186,25 @@ $(function(){
         allowClear: true,
     });
    
-    loadListPegawaiPenilaianKinerjaAdm()
+    loadListPegawaiPenilaianKinerjaJpt(1)
     })
 
-    function loadListPegawaiPenilaianKinerjaAdm(){
-   var id = $('#unit_kerja').val()
-   $('#list_pegawai_penilaian_kinerja').html('')
-   $('#list_pegawai_penilaian_kinerja').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaAdm/")?>'+id, function(){
+    function loadListPegawaiPenilaianKinerjaAdm(id){
+
+  //  var id = $('#unit_kerja').val()
+   $('.list_pegawai_penilaian_kinerja_jpt').html('')
+   $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaAdm/")?>'+id, function(){
      $('#loader').hide()
    })
   }
 
-  function loadListPegawaiPenilaianKinerjaJpt(){
-   var id = $('#unit_kerja').val()
-   $('#list_pegawai_penilaian_kinerja_jpt').html('')
-   $('#list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaJpt/")?>'+id, function(){
+  function loadListPegawaiPenilaianKinerjaJpt(id){
+
+  //  var id = $('#unit_kerja').val()
+   $('.list_pegawai_penilaian_kinerja_jpt').html('')
+   $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaJpt/")?>'+id, function(){
      $('#loader').hide()
    })
   }

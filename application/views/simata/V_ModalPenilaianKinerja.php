@@ -558,7 +558,7 @@
         <hr>
     <form id="form_penilaian_kinerja" method="post" enctype="multipart/form-data" >
       <input type="hidden" name="id_peg" value="<?=($profil_pegawai['id_peg'])?>">
-      <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>">
+      <!-- <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
       <input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 
         <div class="table-responsive">
@@ -678,9 +678,9 @@
                         successtoast(result.msg)
                         setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
                         if(kode == 1){
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaAdm, 1000);
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt(kode), 1000);
                         } else {
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt, 1000);
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt(kode), 1000);
 
                         }
                         // loadListPegawaiPenilaianKinerjaAdm()

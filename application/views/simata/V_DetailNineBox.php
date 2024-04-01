@@ -86,12 +86,10 @@
 <script>
 var groupColumn = 1;
 var table = $('#example2').DataTable({
-    order: [[5, 'asc']],
+    order: [[3, 'desc']],
     columnDefs: [{ visible: false, targets: groupColumn },
     {targets: [0],orderable: false}],
-    <?php if($jt == 0) { ?>
-    order: [[groupColumn, 'asc']],
-    <?php } ?>
+
     displayLength: 100,
     // ordering: false,
     drawCallback: function (settings) {

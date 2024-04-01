@@ -1,13 +1,4 @@
 <?php if($result){ ?>
-<style>
-	.list-group-item.active {
-		background-color: #222e3c;
-		border-color: var(--bs-list-group-active-border-color);
-		color: var(--bs-list-group-active-color);
-		z-index: 2;
-	}
-
-</style>
 
 <div class="table-responsive">
 
@@ -18,17 +9,29 @@
 		background-color: #2e4963 !important;
 		color: #fff;
 	}
+    .tdnama {
+		background-color: #2e4963 !important;
+		color: #fff;
+        width:90% !important;
+	}
+
+    .tdno {
+		background-color: #2e4963 !important;
+		color: #fff;
+        width:2% !important;
+	}
 </style>
-<table id="potensial_jpt" class="display table table-bordered" style="width:100%">
+<table  class="display table table-bordered potensial_jpt" >
         <thead>
             <tr>
                 <!-- <th>Jabatan Target</th> -->
-                <th>Nilai Asessment (50%)</th>
-                <th>Nama</th>
-                <th>Nilai Rekam Jejak (40%)</th>
-                <th>Nilai Pertimbangan Lainnya (10%)</th>
-                <th>Total Nilai</th>
-				<th>Pemeringkatan</th>
+                <th valign="middle">No</th>
+                <th valign="middle" class="text-center">Nama</th>
+                <th style="width:10%" class="text-center">Nilai Asessment (50%)</th>
+                <th style="width:10%" class="text-center">Nilai Rekam<br> Jejak (40%)</th>
+                <th style="width:5%" class="text-center">Nilai Pertimbangan Lainnya (10%)</th>
+                <th class="text-center">Total Nilai</th>
+				<th class="text-center">Pemeringkatan</th>
 				<th></th>
             </tr>
         </thead>
@@ -36,15 +39,15 @@
 		<?php $no = 1; foreach($result as $rs2){ ?>
 			<?php $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr>
-                <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
-                <td><?=$rs2['res_potensial_cerdas'];?></td>
-                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
-                <td><?=$rs2['res_potensial_rj'];?></td>
-                <td><?=$rs2['res_potensial_lainnya'];?></td>
-                <td><?=$total_nilai;?></td>
-				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
+                <td class="text-center tdno" style="display:nonex"><?=$no++;?> </td>
+                <td  class="tdnama"><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> <br> NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
+                <td class="text-center"><?php if($rs2['res_potensial_cerdas']) echo $rs2['res_potensial_cerdas']; else echo "0.00" ;?></td>
+                <td class="text-center"><?php if($rs2['res_potensial_rj']) echo $rs2['res_potensial_rj']; else echo "0.00" ;?></td>
+                <td class="text-center"><?php if($rs2['res_potensial_lainnya']) echo $rs2['res_potensial_lainnya']; else echo "0.00" ;?></td>
+                <td class="text-center"><?=$total_nilai;?></td>
+				<td class="text-center"><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
 				<td>
-				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="2"
+				<button data-toggle="modal" data-id="<?=$rs2['id_pegawai']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="<?=$kode;?>"
 										href="#modal_penilaian_potensial" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
 				</td>
@@ -55,12 +58,14 @@
         <tfoot>
             <tr>
 			<!-- <th>Jabatan Target</th> -->
-                <th>Nilai Asessment (50%)</th>
-                <th>Nama</th>
-                <th>Nilai Rekam Jejak (40%)</th>
-                <th>Nilai Pertimbangan Lainnya (10%)</th>
-                <th>Total Nilai</th>
-				<th>Pemeringkatan</th>
+            <th valign="middle">No</th>
+                <th valign="middle" class="text-center">Nama</th>
+                <th style="width:10%" class="text-center">Nilai Asessment (50%)</th>
+                <th style="width:10%" class="text-center">Nilai Rekam<br> Jejak (40%)</th>
+                <th style="width:5%" class="text-center">Nilai Pertimbangan Lainnya (10%)</th>
+                <th class="text-center">Total Nilai</th>
+				<th class="text-center">Pemeringkatan</th>
+                <th></th>
             </tr>
         </tfoot>
     </table>
@@ -69,56 +74,43 @@
 </div>
 
 <script>
+     $(function(){
+    // $('.datatable').dataTable()
+  })
 	var groupColumn = 1;
-var table = $('#potensial_jpt').DataTable({
-    columnDefs: [{ visible: false, targets: groupColumn },
-    {targets: 0,orderable: false}],
-    order: [[groupColumn, 'asc']],
-    displayLength: 25,
-    drawCallback: function (settings) {
-        var api = this.api();
-        var rows = api.rows({ page: 'current' }).nodes();
-        var last = null;
+    var table = $('.potensial_jpt').DataTable({
+        
+
+    // columnDefs: [{ visible: false, targets: groupColumn },
+    // {targets: 0,orderable: false}],
+    // order: [[groupColumn, 'asc']],
+    displayLength: 100,
+    // drawCallback: function (settings) {
+    //     var api = this.api();
+    //     var rows = api.rows({ page: 'current' }).nodes();
+    //     var last = null;
  
-        api.column(groupColumn, { page: 'current' })
-            .data()
-            .each(function (group, i) {
-                if (last !== group) {
-                    $(rows)
-                        .eq(i)
-                        .before(
-                            '<tr class="group"><td colspan="7">' +
-                                group +
-                                '</td></tr>'
-                        );
+    //     api.column(groupColumn, { page: 'current' })
+    //         .data()
+    //         .each(function (group, i) {
+    //             if (last !== group) {
+    //                 $(rows)
+    //                     .eq(i)
+    //                     .before(
+    //                         '<tr class="group"><td colspan="7">' +
+    //                             group +
+    //                             '</td></tr>'
+    //                     );
  
-                    last = group;
-                }
-            });
-    }
+    //                 last = group;
+    //             }
+    //         });
+    // }
 });
- 
-// Order by the grouping
-$('#potensial_jpt tbody').on('click', 'tr.group', function () {
-    var currentOrder = table.order()[0];
-    if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        // table.order([groupColumn, 'desc']).draw();
-    }
-    else {
-        // table.order([groupColumn, 'asc']).draw();
-    }
-});
+
 </script>
 
 <script>
-	$(function () {
-		$('#table-adm').dataTable({
-			"ordering": false
-		});
-
-
-
-	})
 
 	function deleteDataJt(id) {
 		if (confirm('Apakah Anda yakin ingin menghapus data?')) {

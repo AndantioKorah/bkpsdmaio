@@ -4,6 +4,10 @@
             <thead>
                 <th class="text-center">No</th>
                 <th class="text-left">Nama Pegawai</th>
+                <?php if($this->general_library->isWalikota()){ ?>
+                    <th class="text-left">Unit Kerja</th>
+                    <th class="text-left">Jabatan</th>
+                <?php } ?>
                
                 <th class="text-center">Pilihan</th>
             </thead>
@@ -27,11 +31,14 @@
                 <tr>
                     <td class="text-center"><?=$no++;?></td>
                     <td><?=getNamaPegawaiFull($p)?></td>
+                    <?php if($this->general_library->isWalikota()){ ?>
+                        <td class="text-left"><?=$p['nm_unitkerja']?></td>
+                        <td class="text-left"><?=$p['nama_jabatan']?></td>
+                    <?php } ?>
                      <td class="text-center">
                         <button data-toggle="modal" href="#modal_edit_data_nilai" onclick="lihatSKP('<?=$p['id_m_user']?>')" 
                         class="btn btn-sm btn-navy"><i class="fa fa-search"></i> Lihat SKP</button>
                         <?php // if($p['komponen_kinerja'] && $p['created_by'] == $this->general_library->getId()){ ?>
-                       
                     </td>
                 </tr>
             <?php } ?>

@@ -26,7 +26,7 @@
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" id="jabatan_target_jpt" >
                 <option value="" selected disabled>Pilih Jabatan</option>
-                    <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
+                    <?php if($jabatan_jpt){ foreach($jabatan_jpt as $r){ ?>
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>

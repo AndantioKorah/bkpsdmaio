@@ -7,6 +7,10 @@
 		z-index: 2;
 	}
 
+    .tdnama {
+		background-color: #2e4963 !important;
+		color: #fff;
+	}
 </style>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -29,25 +33,25 @@
 	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
 		<div class="table-responsive">
-			<table id="table_jt" class="table table-hover table-striped table-bordered datatable" style="width:100%;">
+			<table id="table_jt" class="display table table-bordered datatable" style="width:100%;">
 				<thead>
 					<th class="text-center" style="width:5%;">No</th>
-					<th style="width:40%;">Nama/ NIP</th>
+					<th class="" style="width:40%;">Nama/ NIP</th>
 					<th style="width:55%;">Jabatan Target</th>
 				</thead>
 				<tbody>
 					<?php $nomor = 1; foreach($result_adm as $rs){ ?>
 
 					<tr>
-						<td class="align-top" align="center"><?=$nomor++;?></td>
-						<td class="align-top">
-							<?=$rs['gelar1'];?><?=$rs['nama'];?> <?=$rs['gelar2'];?> /<br><?=$rs['nipbaru'];?>
+						<td class="align-top tdnama" align="center"><?=$nomor++;?></td>
+						<td class="align-top tdnama">
+							<a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs['gelar1'];?><?=$rs['nama'];?> <?=$rs['gelar2'];?></b> <br><?=formatNip($rs['nipbaru']);?></a>
 							<br>
 							Pangkat :
 							<b><?=$rs['nm_pangkat'];?></b><br>
 
-							Jabatan Sekarang :<br>
-							<b><?=$rs['nama_jabatan'];?></b><br>
+							<!-- Jabatan Sekarang :<br> -->
+							<i><?=$rs['nama_jabatan'];?></i><br>
 
 						</td>
 						<td class="align-top">
@@ -65,7 +69,7 @@
 												<select class="form-control js-example-basic-multiple hsl"
 													name="jabatan_target[]" multiple="multiple" required>
 													<!-- <option disabled selected>Pilih Jabatan Target</option> -->
-													<?php if($jabatan_adm){ foreach($jabatan_adm as $r){ ?>
+													<?php if($jabatan_jpt){ foreach($jabatan_jpt as $r){ ?>
 													<option value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?>
 														Pada <?=$r['nm_unitkerja']?> </option>
 													<?php } } ?>
@@ -115,6 +119,7 @@
 <!-- tutup administrator -->
 
 <!-- jpt -->
+
 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
 	<div class="table-responsive">

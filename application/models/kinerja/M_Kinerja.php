@@ -1965,9 +1965,12 @@
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
-        ->where('c.skpd', $id_unitkerja)
         ->where('id_m_status_pegawai', 1)
         ->where('a.flag_active', 1);
+
+        if($id_unitkerja != 0){
+            $this->db->where('c.skpd', $id_unitkerja);
+        }
 
         if($status == 1){
             $this->db->order_by('created_date', 'asc');

@@ -161,9 +161,11 @@ class C_Maxchat extends CI_Controller
                         } else {
                             if(is_numeric($explode[2]) && is_numeric($explode[3])){
                                 if(checkIfValidDate($explode[2], $explode[3])){
-                                    if($pegawai_simpeg['skpd'] == 3027000){
-                                        $reply = "Mohon maaf, untuk sementara absensi Dinas Kebakaran belum bisa ditarik secara otomatis dari sistem. Silahkan menghubungi BKPSDM untuk melakukan penarikan absen secara manual.";
-                                    } else {
+                                    // if($pegawai_simpeg['skpd'] == 3027000){
+                                    //     $reply = "Mohon maaf, untuk sementara absensi Dinas Kebakaran belum bisa ditarik secara otomatis dari sistem. Silahkan menghubungi BKPSDM untuk melakukan penarikan absen secara manual.";
+                                    // } else if($pegawai_simpeg['skpd'] == 4011000){
+                                    //     $reply = "Mohon maaf, untuk sementara absensi Inspektorat belum bisa ditarik secara otomatis dari sistem. Silahkan menghubungi BKPSDM untuk melakukan penarikan absen secara manual.";
+                                    // } else {
                                         $data_cron = [
                                             'id_unitkerja' => $pegawai_simpeg['skpd'],
                                             'no_hp' => $result->from,
@@ -173,7 +175,7 @@ class C_Maxchat extends CI_Controller
                                         ];
                                         $this->rekap->saveToCronRekapAbsen($data_cron);
                                         $this->rekap->cronRekapAbsen();
-                                    }
+                                    // }
                                 } else {
                                     $reply = "Mohon maaf, permintaan Anda tidak dapat diproses. Harap menggunakan Bulan dan Tahun yang tidak melewati Bulan dan Tahun berjalan.";
                                 }

@@ -9,6 +9,7 @@
                     <label>Pilih Unit Kerja</label>
                     <select class="form-control select2-navy" style="width: 100%"
                         id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
+                        <option selected value="0">Semua</option>
                         <?php foreach($unitkerja as $s){ ?>
                             <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
                         <?php } ?>

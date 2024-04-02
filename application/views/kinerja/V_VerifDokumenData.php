@@ -3,7 +3,7 @@
         <thead>
             <th class="text-center">No</th>
             <th class="text-left">Nama Pegawai</th>
-            <th class="text-left">NIP</th>
+            <th class="text-left">Unit Kerja</th>
             <th class="text-center">Tanggal</th>
             <th class="text-center">Tanggal Usul</th>
             <th class="text-center">Keterangan</th>
@@ -15,8 +15,8 @@
             <?php $no = 1; foreach($result as $r){ ?>
                 <tr id="tr_<?=$r['id']?>">
                     <td class="text-center"><?=$no?></td>
-                    <td class="text-left"><?=getNamaPegawaiFull($r)?></td>
-                    <td class="text-left"><?=formatNip($r['nip'])?></td>
+                    <td class="text-left"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></td>
+                    <td class="text-left"><?=($r['nm_unitkerja'])?></td>
                     <?php
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
                         // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];

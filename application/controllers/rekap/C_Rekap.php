@@ -444,4 +444,8 @@ class C_Rekap extends CI_Controller
         // $this->load->view('kepegawaian/V_RekapPegawaiPerJabatan', $data);
         render('kepegawaian/V_RekapPegawaiPerJabatan', '', '', $data);
     }
+
+    public function cronRekapAbsen(){
+        $this->rekap->cronRekapAbsen();
+    }
 }

@@ -32,7 +32,6 @@
                     }
                 }
             }
-            
             $this_user = $this->db->select('*')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -47,11 +46,13 @@
             if($eselon == 8){
                 //pegawai yang diverif adalah staf pelaksana di sub bidang yang sama
                 $list_pegawai = $this->db->select('*, id as id_m_user')
-                                        ->from('m_user')
-                                        ->where('id_m_sub_bidang', $this_user['id_m_sub_bidang'])
-                                        // ->where('id_m_bidang', $this_user['id_m_bidang'])
-                                        ->where('id !=', $this->general_library->getId())
-                                        ->where('flag_active', 1)
+                                        ->from('m_user a')
+                                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                        ->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang'])
+                                        ->where('id_m_bidang', $this_user['id_m_bidang'])
+                                        ->where('b.skpd = ', $this_user['skpd'])
+                                        ->where('a.id !=', $this->general_library->getId())
+                                        ->where('a.flag_active', 1)
                                         ->get()->result_array();
             // } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
             } else if($eselon == 6 || $eselon == 7){
@@ -105,9 +106,7 @@
             // } else if($role == 'kepalabadan'){
             // } else if($this->general_library->isKaban()){
             } else if($eselon == 5){
-                
                 if($data['filter'] == '0'){
-                   
                     $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             // ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -241,7 +240,7 @@
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
                                             ->join('m_role c', 'c.id = b.id_m_role')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
-                                            ->where_in('c.role_name', $list_role)
+                                            // ->where_in('c.role_name', $list_role)
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
                                             ->where('a.id !=', $this->general_library->getId())
                                             ->where('a.flag_active', 1)
@@ -266,6 +265,19 @@
                                             ->get()->result_array();
             } else if($this->general_library->isCamat()){
                 $list_role = ['lurah'];
+                $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                                            ->from('m_user a')
+                                            ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            ->join('m_role c', 'c.id = b.id_m_role')
+                                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                                            ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.flag_active', 1)
+                                            ->where('b.flag_active', 1)
+                                            ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
+                                            ->group_by('a.id')
+                                            ->get()->result_array();
+            } else if($this->general_library->isKepalaPd()){
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -578,6 +590,7 @@
         public function loadPegawaiKomponenKinerja($data){
             $result = null;
             $list_id_pegawai = $this->getListIdPegawaiForVerif($data);
+            // dd($list_id_pegawai);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user')
                                 ->from('m_user a')

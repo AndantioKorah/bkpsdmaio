@@ -177,6 +177,17 @@ class C_User extends CI_Controller
         render('user/V_UserSetting', null, null, null);
     }
 
+    public function personalChangePassword(){
+        render('user/V_UserChangePassword', null, null, null);
+    }
+
+    public function personalChangePasswordSubmit(){
+        echo json_encode($this->user->changePassword($this->input->post()));
+        
+        // $this->session->set_flashdata('message', $message['message']);
+        // redirect('user/setting');
+    }
+
     public function changePassword(){
         $message = $this->user->changePassword($this->input->post());
         $this->session->set_flashdata('message', $message['message']);

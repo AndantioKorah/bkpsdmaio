@@ -587,6 +587,16 @@
                     <?php } } ?>
                         </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">	Wawancara </label>
+                        <select class="form-select select2" name="kriteria3" required>
+                        <option value="0,0,0"  selected>Pilih Item</option>
+                        <?php if($kriteria_potensi_3){ foreach($kriteria_potensi_3 as $r){ ?>
+                      <option  <?php if($nilai_kompetensi) { if($nilai_kompetensi['kriteria3'] == $r['id']) echo "selected"; else echo "";}?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] </option>
+                    <?php } } ?>
+                        </select>
+                    </div>
         
         </div>
         <div class="modal-footer" style="margin-bottom:5px;">

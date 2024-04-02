@@ -872,10 +872,12 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 ->from('db_pegawai.pegpangkat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.flag_active', 1)
+                ->where('a.status', 2)
                 ->order_by('a.tmtpangkat', 'desc')
                 ->limit(1);
             $pangkat =  $this->db->get()->result_array();
-            
+
+            if($pangkat){
             if($kode == 1){
                 if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
                     $id_pangkat = 96;
@@ -921,10 +923,10 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                     } else if($years <= 2){
                         $id_pangkat = 100;
                     }
-                    // dd($id_pangkat);
 
                 }
             }
+        }
 
             return $id_pangkat;
         }
@@ -1937,6 +1939,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                             $this->db->group_start();
                                   $this->db->where('b.res_potensial_total <', 70);
                                   $this->db->where('b.res_kinerja <', 70);
+                                //   $this->db->where('b.res_kinerja >', 0);
                                   $this->db->or_where('b.res_potensial_total is null');
                                   $this->db->or_where('b.res_kinerja is null');
                                   $this->db->group_end();
@@ -2200,6 +2203,14 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         return $this->db->get()->result_array(); 
     }
 
+    function getKriteriaKompetensi3(){
+        $this->db->select('a.*,b.bobot')
+        ->where('a.id_m_indikator_penilaian', 40)
+        ->join('db_simata.m_indikator_penilaian b', 'a.id_m_indikator_penilaian = b.id')
+        ->from('db_simata.m_kriteria_penilaian a');
+        return $this->db->get()->result_array(); 
+    }
+
 
     public function submitPenilaianKompetensi(){
     
@@ -2209,7 +2220,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
        
        
-        for($x=1;$x<=2;$x++){
+        for($x=1;$x<=3;$x++){
             $krit = $this->input->post('kriteria'.$x.'');
               $kriteria = explode(",", $krit);
               $id_kriteria = $kriteria[0];
@@ -2227,11 +2238,16 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
        $kriteria2 = explode(",", $krit2);
        $id_kriteria2 = $kriteria2[0];
 
+       $krit3 = $this->input->post('kriteria3');
+       $kriteria3 = explode(",", $krit3);
+       $id_kriteria3 = $kriteria3[0];
+
      
 
         $data["id_peg"] = $datapost["id_peg"];
         $data["kriteria1"] = $id_kriteria1;
         $data["kriteria2"] = $id_kriteria2;
+        $data["kriteria3"] = $id_kriteria3;
         $data["jabatan_target"] = $this->input->post('jabatan_target');
         $data["res_kompetensi"] = $total_kompetensi;
 
@@ -2248,6 +2264,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             ->update('db_simata.t_penilaian_kompetensi', 
             ['kriteria1' => $id_kriteria1,
             'kriteria2' => $id_kriteria2,
+            'kriteria3' => $id_kriteria3,
             'res_kompetensi' => $total_kompetensi
                 ]);
                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);

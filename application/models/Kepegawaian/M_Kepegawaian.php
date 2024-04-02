@@ -4561,11 +4561,13 @@ public function submitEditJabatan(){
             }
 
        function getBidang($id){
-            $this->db->select('a.id_m_bidang')
+            $this->db->select('a.id_m_bidang,a.id_m_sub_bidang')
                 ->from('db_efort.m_user a')
                 ->where('a.id', $id);
             return $this->db->get()->row_array();
        }
+
+
 
 
        public function submiDataBidang(){

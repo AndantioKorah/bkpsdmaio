@@ -485,6 +485,7 @@ class C_Simata extends CI_Controller
     public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
         $data['result'] = $this->simata->getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp);
         $data['jenis_jabatan'] = $jenis_jabatan;
+        // dd($data);
         $this->session->set_userdata('data_rencana_suksesi', $data);
         $this->load->view('simata/V_PenilaianKompetensiItem', $data);
     }
@@ -494,6 +495,7 @@ class C_Simata extends CI_Controller
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
         $data['kriteria_potensi_1'] = $this->simata->getKriteriaKompetensi1();
         $data['kriteria_potensi_2'] = $this->simata->getKriteriaKompetensi2();
+        $data['kriteria_potensi_3'] = $this->simata->getKriteriaKompetensi3();
         $data['jabatan_target'] = $jt;
         $data['id_t_penilaian'] = $id;
         $id_peg = $data['profil_pegawai']['id_peg'];
@@ -513,19 +515,19 @@ class C_Simata extends CI_Controller
 
     public function downloadDataSearch($flag_excel = 0){
         $data = $this->session->userdata('data_rencana_suksesi');
-        // $this->load->view('simata/V_RencanaSuksesiPdf', $data);
-        if($flag_excel == 0){
-            $mpdf = new \Mpdf\Mpdf([
-                'format' => 'Legal-P',
-                'debug' => true
-            ]);
-            $html = $this->load->view('simata/V_RencanaSuksesiPdf', $data, true);
-            $mpdf->WriteHTML($html);
-            $mpdf->showImageErrors = true;
-            $mpdf->Output('Rencana Suksesi '.$data['result'][0]['nama_jabatan'].' Kota Manado .pdf', 'D');
-        } else {
-            $this->load->view('user/V_RencanaSuksesiExcel', $data);
-        }
+        $this->load->view('simata/V_RencanaSuksesiPdf', $data);
+        // if($flag_excel == 0){
+        //     $mpdf = new \Mpdf\Mpdf([
+        //         'format' => 'Legal-P',
+        //         'debug' => true
+        //     ]);
+        //     $html = $this->load->view('simata/V_RencanaSuksesiPdf', $data, true);
+        //     $mpdf->WriteHTML($html);
+        //     $mpdf->showImageErrors = true;
+        //     $mpdf->Output('Rencana Suksesi '.$data['result'][0]['nama_jabatan'].' Kota Manado .pdf', 'D');
+        // } else {
+        //     $this->load->view('user/V_RencanaSuksesiExcel', $data);
+        // }
     }
 
     

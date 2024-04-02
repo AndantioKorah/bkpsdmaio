@@ -35,14 +35,25 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   if($this->general_library->getUserName() == $nip){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
     if($bidang){
-    
+      // dd($bidang['id_m_sub_bidang']);
+      $eselon = 0;
+      $idSubBidang = 0;
       if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
         $idBidang = 99;
       }else if($nm_jab == "walikota"){
         $idBidang = 99;
-      } else {        
+      } else if($profil_pegawai['eselon'] == "IV A"){
+        $idBidang = 99;
+         $eselon = 1;
+        if($bidang['id_m_sub_bidang'] == 0){
+          $idSubBidang = 0;
+        } else {
+          $idSubBidang = 99;
+        }
+       
+      } else  {        
         if($this->general_library->isGuest()){
         $idBidang = 99;
         } else {
@@ -65,6 +76,8 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     ?>
 
 <input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
+<input type="hidden" id="subBidangPegawai" value="<?=$idSubBidang;?>">
+<input type="hidden" id="eselon" value="<?=$eselon;?>">
 
 <div class="container-fluid p-0">
   <div class="row">
@@ -190,8 +203,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     loadDashboardPdmWelcome();
 
     var bidang = $('#bidangPegawai').val()
+    var eselon = $('#eselon').val()
+    var subBidang = $('#subBidangPegawai').val()
+
     if(bidang == "" || bidang == 0){
     $('#btnstatic').click()  
+    }
+
+    if(eselon == 1){
+      if(subBidang == "" || subBidang == 0){
+    $('#btnstatic').click()  
+    }
     }
 
     $(".select2").select2({   

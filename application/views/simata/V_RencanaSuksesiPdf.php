@@ -53,14 +53,14 @@
                 <td style="font-weight: bold; text-align: center; width: 15%;">Nilai (80% Nilai Talent Pool)</td>
                 <td style="font-weight: bold; text-align: center; width: 15%;">Nilai Kompetensi Teknis Bidang (20%)</td>
                 <td style="font-weight: bold; text-align: center; width: 15%;">Total Nilai</td>
-                <td style="font-weight: bold; text-align: center; width: 10%;">Keterangan</td>
+                <!-- <td style="font-weight: bold; text-align: center; width: 10%;">Keterangan</td> -->
             </tr>
             <tbody>
                 <?php if($result){ $no=1; foreach($result as $rs2){ ?>
                     <?php 
-                $total = $rs2['total']/2;
+                $total = $rs2['total_talent_pool']/2;
                 $total = $total * 80 / 100;
-                $total_kompentesi = $rs2['res_kompetensi'] * 20 / 100;
+                $total_kompentesi = $rs2['nilai_kompetensi'] * 20 / 100;
                 $total_nilai = $total + $total_kompentesi;
                 
                 if($jenis_jabatan == 2){
@@ -88,7 +88,7 @@
                         <td style="padding: 10px; text-align: center;"><?=$total;?></td>
                         <td style="padding: 10px; text-align: center;"><?=$total_kompentesi;?></td>
                         <td style="padding: 10px; text-align: center;"><?=$total_nilai;?></td>
-                        <td style="padding: 10px; text-align: left;"><?=$keterangan;?></td>
+                        <!-- <td style="padding: 10px; text-align: left;"><?=$keterangan;?></td> -->
                     </tr>
                 <?php } } ?>
             </tbody>

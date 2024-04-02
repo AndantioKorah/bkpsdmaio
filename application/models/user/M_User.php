@@ -196,17 +196,17 @@
                 $this->db->where('id', $this->general_library->getId())
                         ->update('m_user', ['password' => $password_baru]);
                 if($this->db->affected_rows() > 0){
-                    $this->session->set_userdata(['user_logged_in' => null]);
-                    $user[0]['password'] = $password_baru;
-                    $this->session->set_userdata([
-                        'user_logged_in' => $user,
-                        'test' => 'tiokors'
-                    ]);
-                    $this->general_library->refreshUserLoggedInData();
-                    return ['message' => '0'];
+                    // $this->session->set_userdata(['user_logged_in' => null]);
+                    // $user[0]['password'] = $password_baru;
+                    // $this->session->set_userdata([
+                    //     'user_logged_in' => $user,
+                    //     'test' => 'tiokors'
+                    // ]);
+                    // $this->general_library->refreshUserLoggedInData();
+                    return ['message' => 0];
                 }
             }
-            return ['message' => 'Update Berhasil'];
+            return ['message' => 0];
         }
 
         public function updateProfile($data){

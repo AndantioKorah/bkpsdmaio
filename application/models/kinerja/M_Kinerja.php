@@ -1923,10 +1923,13 @@
             ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
             ->where('a.bulan', floatval($data['bulan']))
             ->where('a.tahun', floatval($data['tahun']))
-            ->where('c.skpd', $data['id_unitkerja'])
+            // ->where('c.skpd', $data['id_unitkerja'])
             ->where('a.flag_active', 1)
             ->where('id_m_status_pegawai', 1)
             ->order_by('a.created_date', 'desc');
+            if($data['id_unitkerja'] != "0"){
+                $this->db->where('c.skpd', $data['id_unitkerja']);
+            }
 
         $disiplin_kerja = $this->db->get()->result_array();
         // if(!isset($data['id_unitkerja'])){
@@ -1951,12 +1954,14 @@
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
+        d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
         ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
         ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))

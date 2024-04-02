@@ -312,14 +312,14 @@
 				<div class="dropdown-menu dropdown-menu-end">
 					<a class="dropdown-item" href="#"><i class="align-middle me-1"></i><?=$this->general_library->getNamaUser();?> </a>
 						<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+					<a class="dropdown-item" href="<?=base_url('user/password/change')?>"><i class="align-middle me-1 fa fa-key"></i> Ubah Password</a>
 					<!-- <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
 					<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 					<div class="dropdown-divider"></div> -->
 					<a class="dropdown-item" href="<?=base_url('logout')?>">
-						<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">log-out</span>
+						<i class="align-middle me-2 fa fa-sign-out-alt"></i> <span class="align-middle">Log Out</span>
 					</a>
 				</div>
 			</li>

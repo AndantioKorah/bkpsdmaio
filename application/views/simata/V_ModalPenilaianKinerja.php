@@ -678,9 +678,9 @@
                         successtoast(result.msg)
                         setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
                         if(kode == 1){
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt(kode), 1000);
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
                         } else {
-                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerjaJpt(kode), 1000);
+                          const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
 
                         }
                         // loadListPegawaiPenilaianKinerjaAdm()

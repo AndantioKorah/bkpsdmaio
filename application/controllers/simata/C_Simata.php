@@ -196,10 +196,18 @@ class C_Simata extends CI_Controller
 
 
     
-    public function penilaianKinerja(){
-        $data['result'] = null;
+    public function penilaianKinerja($id = ''){
+        $data['jenis_pengisian'] = $id;
         render('simata/V_PenilaianKinerja', '', '', $data);
     }
+
+    public function penilaianKinerjaPegawai($id=null){
+        $data['result'] = null;
+      
+        $this->load->view('simata/V_PenilaianKinerja', $data);
+        // render('simata/V_PenilaianKinerja', '', '', $data);
+    }
+
 
     public function loadListPegawaiPenilainKinerjaAdm($id=2){
         
@@ -210,10 +218,10 @@ class C_Simata extends CI_Controller
     }
 
     public function loadListPegawaiPenilainKinerjaJpt($id){
-        
         // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id); 
-        $data['kode'] = $id;  
+        $data['kode'] = $id; 
+        $data['jenis_pengisian'] = $jenis_pengisian;  
         $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
     }
 
@@ -282,8 +290,8 @@ class C_Simata extends CI_Controller
 	}
 
 
-    public function penilaianPotensial(){
-        $data['result'] = null;
+    public function penilaianPotensial($id=''){
+        $data['jenis_pengisian'] = $id;
         render('simata/V_PenilaianPotensial', '', '', $data);
     }
 
@@ -294,14 +302,15 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
-    public function loadListPegawaiPenilainPotensialJpt($id){
+    public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian){
        
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id);  
         $data['kode'] = $id;  
+        $data['jenis_pengisian'] = $jenis_pengisian;  
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
 
-    public function loadModalPenilaianPotensial($id,$nip,$kode)
+    public function loadModalPenilaianPotensial($id,$nip,$kode,$jenis_pengisian)
     {
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
         $data['list_pendidikan_formal'] = $this->simata->getKriteriaPotensial(26);
@@ -328,7 +337,7 @@ class C_Simata extends CI_Controller
         $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
         $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
         // $eselonjt = $this->simata->getEselonJT($jt);
-        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode);
+        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode,$jenis_pengisian);
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
         $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
@@ -447,6 +456,7 @@ class C_Simata extends CI_Controller
 
     public function rumpun($search = ''){
         $data['search'] = urldecode($search);
+       
         $data['rumpun'] = $this->kepegawaian->getAllWithOrder('db_simata.m_rumpun_jabatan', 'id', 'asc');        
         $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
         render('simata/V_RumpunJabatan', '', '', $data);

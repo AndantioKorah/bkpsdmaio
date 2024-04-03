@@ -45,7 +45,7 @@
                  <td class="text-center"><?php if($rs2['res_kinerja']) echo $rs2['res_kinerja']; else echo "0" ;?></td>
 				<td class="text-center"><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
 				<td>
-				<button data-toggle="modal" data-id="<?=$rs2['id_pegawai']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="<?=$kode;?>"
+				<button data-toggle="modal" data-id="<?=$rs2['id_pegawai']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="<?=$kode;?>" 
 										href="#modal_penilaian_kinerja" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
 										<i class="fa fa-edit"></i></button>
 				</td>

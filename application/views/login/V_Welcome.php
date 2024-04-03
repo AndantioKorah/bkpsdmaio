@@ -36,8 +36,8 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
     $eselon = 0;
     $idSubBidang = 0;
+    // dd($bidang);
     if($bidang){
-    
       if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
@@ -45,30 +45,29 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
       }else if($nm_jab == "walikota"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "IV A"){
-       
         $idBidang = 99;
-         $eselon = 1;
-         if($nm_jab != "Lurah"){
+       $nm_jab2 = trim($nm_jab," ");
+      //  dd($nm_jab2);
+         if($nm_jab2 != "Lurah"){
           if($bidang['id_m_sub_bidang'] == 0){
             $idSubBidang = 0;
+            $eselon = 1;
           } else {
             $idSubBidang = 99;
           }
          } else {
+          $eselon = 0;
           $idBidang = 99;
          }
-
-       
-      } else  {        
+      } else {        
         if($this->general_library->isGuest()){
         $idBidang = 99;
         } else {
         $idBidang = $bidang['id_m_bidang'];
-
         }
       }
     } else {
-   $idBidang = 99;
+     $idBidang = 99;
     }
     } else if($this->general_library->isWalikota()) {
     $idBidang = 99;
@@ -79,11 +78,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     $idBidang = 99;
   }
 
-  // if($idBidang == 99){
-  //   if($profil_pegawai['skpd'] != $bidang['id_unitkerja']){
-  //     $idBidang = 0;
-  //   }
-  // }
+  if($bidang){
+    // dd($eselon);
+    if($bidang['id_unitkerja'] != NULL){
+      if($profil_pegawai['skpd'] != $bidang['id_unitkerja']){
+        $idBidang = 0;
+      }
+    }  else {
+      $idBidang = $idBidang;
+    }
+    
+  }
 
   
     ?>

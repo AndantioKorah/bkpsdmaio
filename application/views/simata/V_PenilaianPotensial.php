@@ -31,9 +31,9 @@
       margin-bottom: -5px;
     }
 
-    .nav-link-profile{
-      padding: 5px !important;
-      font-size: .7rem;
+    .nav-link-simata{
+      /* padding: 5px !important; */
+      font-size: .9rem;
       color: black;
       border: .5px solid var(--primary-color) !important;
       border-bottom-left-radius: 0px;
@@ -127,16 +127,28 @@
         <div class="card-body" style="margin-top:-20px;">
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(1)" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
         </li>
+        <?php } ?>
+        <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(2)" class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
         </li>
-       
+        <?php } ?>
+        <?php if($jenis_pengisian == 3) { ?>
+        <li class="nav-item" role="presentation">
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
+        </li>
+        <?php } ?>
         </ul>
         <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
+         <br> <div id="list_pegawai_penilaian_kinerja_jptx" class="list_pegawai_penilaian_kinerja_jpt"></div>
+        </div>
+
+        <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab">
          <br> <div id="list_pegawai_penilaian_kinerja_jptx" class="list_pegawai_penilaian_kinerja_jpt"></div>
         </div>
 
@@ -186,7 +198,7 @@ $(function(){
         allowClear: true,
     });
    
-    loadListPegawaiPenilaianPotensialJpt(1)
+    // loadListPegawaiPenilaianPotensialJpt(1)
     })
 
     function loadListPegawaiPenilaianPotensialAdm(){
@@ -198,11 +210,11 @@ $(function(){
    })
   }
 
-  function loadListPegawaiPenilaianPotensialJpt(id){
+  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian){
   //  var id = $('#unit_kerja').val()
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id, function(){
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian, function(){
      $('#loader').hide()
    })
   }
@@ -222,11 +234,12 @@ $(document).on("click", ".open-DetailPenilaian", function () {
 var id = $(this).data('id');
 var nip = $(this).data('nip');
 var kode = $(this).data('kode');
+var jenispengisian = $(this).data('jenispengisian');
 
 
 $('#div_modal_penilaian_potensial').html('')
 $('#div_modal_penilaian_potensial').append(divLoaderNavy)
-$('#div_modal_penilaian_potensial').load('<?=base_url("simata/C_Simata/loadModalPenilaianPotensial/")?>'+id+'/'+nip+'/'+kode, function(){
+$('#div_modal_penilaian_potensial').load('<?=base_url("simata/C_Simata/loadModalPenilaianPotensial/")?>'+id+'/'+nip+'/'+kode+'/'+jenispengisian, function(){
   $('#loader').hide()
 })
 

@@ -471,6 +471,11 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                     if($id == 2){
                         $this->db->where_in('c.eselon', ["II B", "II A"]);
                     }
+
+                    if($id == 3){
+                        $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                    }
+             
              
                     $query = $this->db->get()->result_array();
 
@@ -865,7 +870,8 @@ public function getPegawaiPenilaianKinerjaJpt($id){
         return $jabatan;
         }
 
-        function getPangkatGolPengawai($id,$kode){
+        function getPangkatGolPengawai($id,$kode,$jenis_pengisian){
+            
             
             $id_pangkat = null;
             $this->db->select('*')
@@ -876,11 +882,31 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 ->order_by('a.tmtpangkat', 'desc')
                 ->limit(1);
             $pangkat =  $this->db->get()->result_array();
-
+            
             if($pangkat){
             if($kode == 1){
                 if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
-                    $id_pangkat = 96;
+                    if($jenis_pengisian == 3){
+                        $sdate = $pangkat[0]['tmtpangkat'];
+                        $edate = date('Y-m-d');
+                        $date_diff = abs(strtotime($edate) - strtotime($sdate));
+                        $years = floor($date_diff / (365*60*60*24));
+                        $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+    
+                        if($years >= 5) {
+                            $id_pangkat = 97;
+                        } else if($years == 4){
+                            $id_pangkat = 98;
+                        } else if($years == 3){
+                            $id_pangkat = 99;
+                        } else if($years == 2){
+                            $id_pangkat = 100;
+                        }
+                    } else if($jenis_pengisian == 2){
+                        $id_pangkat = 96;
+                    }
+                   
                 } else if($pangkat[0]['pangkat'] =  33) {
                     $sdate = $pangkat[0]['tmtpangkat'];
                     $edate = date('Y-m-d');
@@ -901,7 +927,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
 
                 }
 
-            } else if("II B"){
+            } else if($kode == 2){
               
                 if($pangkat[0]['pangkat'] > 41 && $pangkat[0]['pangkat'] < 45) {
                     $id_pangkat = 96;

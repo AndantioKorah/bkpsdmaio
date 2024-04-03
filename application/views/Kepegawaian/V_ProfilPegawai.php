@@ -1226,10 +1226,10 @@
           format: 'yyyy-mm-dd'
         });
 
-  var bidang = $('#bidangPegawai').val()
-  if(bidang == ""){
-  $('#btnstatic').click()  
-  }
+  // var bidang = $('#bidangPegawai').val()
+  // if(bidang == ""){
+  // $('#btnstatic').click()  
+  // }
 
 
   })

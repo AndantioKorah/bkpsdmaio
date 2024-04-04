@@ -23,6 +23,20 @@
 		background-color: #2e4963 !important;
 		color: #fff;
 	}
+
+	/* table {
+    counter-reset: 1;
+    }
+
+    table tr {
+        counter-increment: rowNumber;
+    }
+
+    table tr td:first-child::before {
+        content: counter(rowNumber);
+        min-width: 1em;
+        margin-right: 0.5em;
+    } */
 </style>
 <table id="kinerja_jptx" class="display table table-bordered kinerja_jpt" style="width:100%">
         <thead>

@@ -217,8 +217,8 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianKinerjaItemJpt', $data);
     }
 
-    public function loadListPegawaiPenilainKinerjaJpt($id){
-        // $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJptGroupBy();  
+    public function loadListPegawaiPenilainKinerjaJpt($id,$jenis_pengisian=null){
+        // $data['penilaian'] = $this->simata->createPenilaianKinerja();  
         $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id); 
         $data['kode'] = $id; 
         $data['jenis_pengisian'] = $jenis_pengisian;  

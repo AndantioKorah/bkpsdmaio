@@ -701,13 +701,48 @@
 			</a>	
 		</li>
 
-		<li class="sidebar-item ">
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/jabatan-target" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-id-badge"></i> 
 				<span class="align-middle">
 				Jabatan Target
 				</span>
 			</a>	
+		</li> -->
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#jatar" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+				<span class="align-middle">
+					Jabatan Target
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="jatar" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/1')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/3')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
+					</a>
+				</li>
+			
+	
+				
+			</ul>
 		</li>
 
 		<li class="sidebar-item ">

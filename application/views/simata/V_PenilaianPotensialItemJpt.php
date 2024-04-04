@@ -20,6 +20,20 @@
 		color: #fff;
         width:2% !important;
 	}
+
+    /* table {
+    counter-reset: 1;
+    }
+
+    table tr {
+        counter-increment: rowNumber;
+    }
+
+    table tr td:first-child::before {
+        content: counter(rowNumber);
+        min-width: 1em;
+        margin-right: 0.5em;
+    } */
 </style>
 <table  class="display table table-bordered potensial_jpt" >
         <thead>

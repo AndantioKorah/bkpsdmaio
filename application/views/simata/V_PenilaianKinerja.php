@@ -144,17 +144,17 @@
        <?php } ?>
         </ul>
         <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
-         <br> <div id="list_pegawai_penilaian_kinerjax" class="list_pegawai_penilaian_kinerja_jpt"></div>
+        <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
+         <br> <div id="list_pegawai_penilaian_kinerjax" class="list_pegawai_penilaian_kinerja"></div>
         </div>
 
         <div class="tab-pane fade" id="administrator" role="tabpanel" aria-labelledby="administrator-tab">
-        <br> <div id="list_pegawai_penilaian_kinerja_jptx"  class="list_pegawai_penilaian_kinerja_jpt"></div>
+        <br> <div id="list_pegawai_penilaian_kinerjax"  class="list_pegawai_penilaian_kinerja"></div>
         </div>
      
 
         <div class="tab-pane fade" id="jpt" role="tabpanel" aria-labelledby="jpt-tab">
-        <br> <div id="list_pegawai_penilaian_kinerja_jptx"  class="list_pegawai_penilaian_kinerja_jpt"></div>
+        <br> <div id="list_pegawai_penilaian_kinerjax"  class="list_pegawai_penilaian_kinerja"></div>
         </div>
         </div>
 
@@ -204,19 +204,18 @@ $(function(){
 
     //   function loadListPegawaiPenilaianKinerjaAdm(id,jenis_pengisian){
     // //  var id = $('#unit_kerja').val()
-    //  $('.list_pegawai_penilaian_kinerja_jpt').html('')
-    //  $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-    //  $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaAdm/")?>'+id, function(){
+    //  $('.list_pegawai_penilaian_kinerja').html('')
+    //  $('.list_pegawai_penilaian_kinerja').append(divLoaderNavy)
+    //  $('.list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaAdm/")?>'+id, function(){
     //    $('#loader').hide()
     //  })
     // }
 
   function loadListPegawaiPenilaianKinerja(id,jenis_pengisian){
-
   //  var id = $('#unit_kerja').val()
-   $('.list_pegawai_penilaian_kinerja_jpt').html('')
-   $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaJpt/")?>'+id+'/'+jenis_pengisian, function(){
+   $('.list_pegawai_penilaian_kinerja').html('')
+   $('.list_pegawai_penilaian_kinerja').append(divLoaderNavy)
+   $('.list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaJpt/")?>'+id+'/'+jenis_pengisian, function(){
      $('#loader').hide()
    })
   }

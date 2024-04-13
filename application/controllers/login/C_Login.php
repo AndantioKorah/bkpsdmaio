@@ -50,6 +50,7 @@ class C_Login extends CI_Controller
         $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
         if(isset($data['profil_pegawai']['skpd'])){
          $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
+        //  dd($data['mbidang']);
         }
         render('login/V_Welcome', '', '', $data);
     }

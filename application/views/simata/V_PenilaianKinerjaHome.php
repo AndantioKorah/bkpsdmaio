@@ -1,4 +1,4 @@
-   <style>
+<style>
     
     .sp_profil{
       font-size: .9rem;
@@ -31,12 +31,12 @@
       margin-bottom: -5px;
     }
 
-    .nav-link-simata{
-      /* padding: 5px !important; */
+    .nav-link{
+      padding: 5px !important;
       font-size: .9rem;
       color: black;
       border: .5px solid var(--primary-color) !important;
-      /* border-bottom-left-radius: 0px; */
+      border-bottom-left-radius: 0px;
     }
 
     .nav-item-profile:hover, .nav-link-profile:hover{
@@ -125,36 +125,30 @@
                 </div>
         </div>
         <div class="card-body" style="margin-top:-20px;">
-        
+         <p>Pengisian Jabatan </p>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianKinerja(3,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
+            <button onclick="loadListPegawaiPenilaianKinerja(1)" class="nav-link " id="tab-pengawas" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
         </li>
-        <?php } ?>
-        <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianKinerja(1,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="administrator-tab" data-bs-toggle="tab" data-bs-target="#administrator" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
+            <button onclick="loadListPegawaiPenilaianKinerja(2)" class="nav-link " id="tab-administrator" data-bs-toggle="tab" data-bs-target="#administrator" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
         </li>
-        <?php } ?>
-        <?php if($jenis_pengisian == 3) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianKinerja(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="jpt-tab" data-bs-toggle="tab" data-bs-target="#jpt" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
+            <button onclick="loadListPegawaiPenilaianKinerja(3)" class="nav-link" id="tab-jpt" data-bs-toggle="tab" data-bs-target="#jpt" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
-       <?php } ?>
+       
         </ul>
         <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
-         <br> <div id="list_pegawai_penilaian_kinerjax" class="list_pegawai_penilaian_kinerja"></div>
+        <div class="tab-pane fade show" id="pengawas" role="tabpanel" aria-labelledby="tab-pengawas">
+         <div id="list_pegawai_penilaian_kinerja" class="list_pegawai_penilaian_kinerja"></div>
         </div>
 
-        <div class="tab-pane fade" id="administrator" role="tabpanel" aria-labelledby="administrator-tab">
-        <br> <div id="list_pegawai_penilaian_kinerjax"  class="list_pegawai_penilaian_kinerja"></div>
+        <div class="tab-pane fade" id="administrator" role="tabpanel" aria-labelledby="tab-administrator">
+        <div id="list_pegawai_penilaian_kinerja_jptx"  class="list_pegawai_penilaian_kinerja"></div>
         </div>
-     
 
-        <div class="tab-pane fade" id="jpt" role="tabpanel" aria-labelledby="jpt-tab">
-        <br> <div id="list_pegawai_penilaian_kinerjax"  class="list_pegawai_penilaian_kinerja"></div>
+        <div class="tab-pane fade" id="jpt" role="tabpanel" aria-labelledby="tab-jpt">
+        <div id="list_pegawai_penilaian_kinerja_jptx"  class="list_pegawai_penilaian_kinerja"></div>
         </div>
         </div>
 
@@ -192,58 +186,25 @@
 
 $(function(){
    
-
    $(".select2").select2({   
         width: '100%',
         dropdownAutoWidth: true,
         allowClear: true,
     });
    
-    // loadListPegawaiPenilaianKinerja(1)
+    // loadListPegawaiPenilaianKinerjaJpt(1)
     })
 
-    //   function loadListPegawaiPenilaianKinerjaAdm(id,jenis_pengisian){
-    // //  var id = $('#unit_kerja').val()
-    //  $('.list_pegawai_penilaian_kinerja').html('')
-    //  $('.list_pegawai_penilaian_kinerja').append(divLoaderNavy)
-    //  $('.list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaAdm/")?>'+id, function(){
-    //    $('#loader').hide()
-    //  })
-    // }
 
-  function loadListPegawaiPenilaianKinerja(id,jenis_pengisian){
-  //  var id = $('#unit_kerja').val()
-   $('.list_pegawai_penilaian_kinerja').html('')
-   $('.list_pegawai_penilaian_kinerja').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainKinerjaJpt/")?>'+id+'/'+jenis_pengisian, function(){
-     $('#loader').hide()
-   })
-  }
+  function loadListPegawaiPenilaianKinerja(id){
 
-  $('#form_cari').on('submit', function(e){  
+//  var id = $('#unit_kerja').val()
+ $('.list_pegawai_penilaian_kinerja').html('')
+ $('.list_pegawai_penilaian_kinerja').append(divLoaderNavy)
+ $('.list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/penilaianKinerjaPegawai/")?>'+id, function(){
+   $('#loader').hide()
+ })
+}
 
-        e.preventDefault();
-        var formvalue = $('#form_cari');
-        var form_data = new FormData(formvalue[0]);
-        loadListPegawaiDinilai()
-
-  
-}); 
-
-$(document).on("click", ".open-DetailPenilaian", function () {
-
-var id = $(this).data('id');
-var nip = $(this).data('nip');
-var kode = $(this).data('kode');
-var jenispengisian = $(this).data('jenispengisian');
-
-$('#div_modal_penilaian_kinerja').html('')
-$('#div_modal_penilaian_kinerja').append(divLoaderNavy)
-$('#div_modal_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadModalPenilaianKinerja/")?>'+id+'/'+nip+'/'+kode, function(){
-  $('#loader').hide()
-})
-
-});
-
-
+    
 </script>

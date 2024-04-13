@@ -34,24 +34,40 @@
 if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   if($this->general_library->getUserName() == $nip){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+    $eselon = 0;
+    $idSubBidang = 0;
+    // dd($bidang);
     if($bidang){
-    
       if($profil_pegawai['id_unitkerjamaster'] == "8020000" || $profil_pegawai['id_unitkerjamaster'] == "6000000" || $profil_pegawai['id_unitkerjamaster'] == "8010000" || $profil_pegawai['id_unitkerjamaster'] == "1000000" || $profil_pegawai['id_unitkerjamaster'] == "8000000"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
         $idBidang = 99;
       }else if($nm_jab == "walikota"){
         $idBidang = 99;
+      } else if($profil_pegawai['eselon'] == "IV A"){
+        $idBidang = 99;
+       $nm_jab2 = trim($nm_jab," ");
+      //  dd($nm_jab2);
+         if($nm_jab2 != "Lurah"){
+          if($bidang['id_m_sub_bidang'] == 0){
+            $idSubBidang = 0;
+            $eselon = 1;
+          } else {
+            $idSubBidang = 99;
+          }
+         } else {
+          $eselon = 0;
+          $idBidang = 99;
+         }
       } else {        
         if($this->general_library->isGuest()){
         $idBidang = 99;
         } else {
         $idBidang = $bidang['id_m_bidang'];
-
         }
       }
     } else {
-    $idBidang = 99;
+     $idBidang = 99;
     }
     } else if($this->general_library->isWalikota()) {
     $idBidang = 99;
@@ -61,10 +77,25 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   } else {
     $idBidang = 99;
   }
+
+  if($bidang){
+    // dd($eselon);
+    if($bidang['id_unitkerja'] != NULL){
+      if($profil_pegawai['skpd'] != $bidang['id_unitkerja']){
+        $idBidang = 0;
+      }
+    }  else {
+      $idBidang = $idBidang;
+    }
+    
+  }
+
   
     ?>
 
 <input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
+<input type="hidden" id="subBidangPegawai" value="<?=$idSubBidang;?>">
+<input type="hidden" id="eselon" value="<?=$eselon;?>">
 
 <div class="container-fluid p-0">
   <div class="row">
@@ -190,8 +221,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     loadDashboardPdmWelcome();
 
     var bidang = $('#bidangPegawai').val()
+    var eselon = $('#eselon').val()
+    var subBidang = $('#subBidangPegawai').val()
+
     if(bidang == "" || bidang == 0){
     $('#btnstatic').click()  
+    }
+
+    if(eselon == 1){
+      if(subBidang == "" || subBidang == 0){
+    $('#btnstatic').click()  
+    }
     }
 
     $(".select2").select2({   

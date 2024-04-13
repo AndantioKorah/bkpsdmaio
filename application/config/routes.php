@@ -94,17 +94,19 @@ $route['api/rekap-absensi/personal'] = 'api/User/getRekapAbsenPersonal';
 $route['mt/data-master-indikator'] = 'simata/C_Simata/masterIndikator';
 $route['mt/data-master-interval'] = 'simata/C_Simata/masterInterval';
 // $route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanTarget/$1';
-$route['mt/jabatan-target'] = 'simata/C_Simata/jabatanKosong';
+$route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanKosong/$1';
 $route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
 $route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
-$route['mt/penilaian-kinerja'] = 'simata/C_Simata/penilaianKinerja';
+$route['mt/penilaian-kinerja/(:any)'] = 'simata/C_Simata/penilaianKinerja/$1';
 $route['mt/ninebox'] = 'simata/C_Simata/nineBox';
-$route['mt/penilaian-potensial'] = 'simata/C_Simata/penilaianPotensial';
+$route['mt/penilaian-potensial/(:any)'] = 'simata/C_Simata/penilaianPotensial/$1';
 $route['mt/profil-talenta'] = 'simata/C_Simata/profilTalenta';
 $route['mt/data-master-jabatan'] = 'simata/C_Simata/masterJabatan';
 $route['mt/data-rumpun'] = 'simata/C_Simata/rumpun';
 $route['mt/data-rumpun/(:any)'] = 'simata/C_Simata/rumpun/$1';
 $route['mt/penilaian-kompetensi'] = 'simata/C_Simata/penilaianKompetensi';
 $route['mt/jabatan-kosong'] = 'simata/C_Simata/jabatanKosong';
+// $route['mt/penilaian-kinerja-pegawai/(:any)'] = 'simata/C_Simata/penilaianKinerjaPegawai/$1';
+
 
 

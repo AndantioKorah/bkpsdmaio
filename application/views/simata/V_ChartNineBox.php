@@ -1513,7 +1513,7 @@ animation06
         //   $nilaiy = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
         //   $nilaix = $rs->res_kinerja;
         // dd($rs);
-       
+        //  if($rs->res_kinerja > 0) {
           $nilaiy = $rs->res_kinerja;
           $nilaix = floatval($rs->res_potensial_cerdas) + floatval($rs->res_potensial_rj) + floatval($rs->res_potensial_lainnya);
           if($nilaiy == null){
@@ -1560,9 +1560,9 @@ animation06
              $data['talenta'][1][$rs->id_pegawai] = 0;
           
              $i++;
-            //  echo $rs->id_pegawai;
             }  
-			}
+			// }
+            }
             // dd($data['talenta'][9]);
             // dd($ix);
 
@@ -1992,15 +1992,15 @@ $(function(){
         //   let nilaix = parseFloat(dx.result[i].res_kinerja)
           let nilaix = dx.result[i].res_potensial_total;
           let nilaiy = dx.result[i].res_kinerja
-
+         
           if(nilaix == null){
             nilaix = 0;
           }
           if(nilaiy == null){
             nilaiy = 0;
           }
-          console.log(nilaix)
 
+        //   if(nilaiy > 0) {
           if(nilaix < 70 && nilaiy < 70) {
             point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
@@ -2028,8 +2028,9 @@ $(function(){
           if(nilaix >= 85 && nilaiy >= 85) {
             point9.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
+        // }
     });
-    console.log(point5)
+  
 
     var data1 = point;
     var data2 = point2;

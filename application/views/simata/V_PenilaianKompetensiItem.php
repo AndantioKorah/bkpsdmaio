@@ -23,16 +23,29 @@
 		background-color: #2e4963 !important;
 		color: #fff;
 	}
+
+    table {
+    counter-reset: 3;
+    }
+
+    table tr {
+        counter-increment: rowNumber;
+    }
+
+    table tr td:first-child::before {
+        content: counter(rowNumber);
+        min-width: 1em;
+        margin-right: 0.5em;
+    }
 </style>
 <div class="col-lg-12 text-right mb-2">
-            <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
+            <!-- <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
                 <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
-            </form>
+            </form> -->
         </div>
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>
             <tr>
-                <!-- <th>No</th> -->
                 <th>No</th>
             <th class="text-center" >Nama Pegawai</th>
                 <th>Jabatan Target</th>
@@ -43,7 +56,7 @@
             </tr>
         </thead>
         <tbody>
-		<?php $no = 1; foreach($result as $rs2){ ?>
+		<?php  $no = 1; foreach($result as $rs2){ ?>
             <?php 
                 $total = $rs2['total_talent_pool']/2;
                 $total = $total * 80 / 100;
@@ -69,7 +82,7 @@
                   
                   ?>
             <tr>
-                <td class="text-center tdnama"><?=$no++;?></td>
+                <td class="text-center tdnama"></td>
             <td class="tdnama"><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> <br> NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?=$rs2['nama_jabatan'];?></td>
                 <td><?=$total;?></td>
@@ -101,12 +114,12 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+// var groupColumn = 2;
 var table = $('#kinerja_adm').DataTable({
     // columnDefs: [{ visible: false, targets: groupColumn },
     // {targets: 0,orderable: false}],
     order: [[5, 'desc']],
-    displayLength: 25,
+    // displayLength: 25,
     // drawCallback: function (settings) {
     //     var api = this.api();
     //     var rows = api.rows({ page: 'current' }).nodes();
@@ -131,15 +144,15 @@ var table = $('#kinerja_adm').DataTable({
 });
  
 // Order by the grouping
-$('#kinerja_adm tbody').on('click', 'tr.group', function () {
-    var currentOrder = table.order()[0];
-    if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-        table.order([groupColumn, 'desc']).draw();
-    }
-    else {
-        table.order([groupColumn, 'asc']).draw();
-    }
-});
+// $('#kinerja_adm tbody').on('click', 'tr.group', function () {
+//     var currentOrder = table.order()[0];
+//     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+//         table.order([groupColumn, 'desc']).draw();
+//     }
+//     else {
+//         table.order([groupColumn, 'asc']).draw();
+//     }
+// });
 </script>
 
 <script>

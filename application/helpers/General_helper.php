@@ -1180,6 +1180,27 @@ function decrypt_custom($encrypted_string)
 //   return $hasil;
 //  }
 
+function isContainSeq($string, $match){
+    $explodeStr = explode(" ", $string);
+    $explodeMatch = explode(" ", $match);
+    
+    $countMatch = count($explodeMatch);
+    $i = 0;
+    $j = 0;
+
+    foreach($explodeStr as $es){
+        if($es == $explodeMatch[$i]){
+            $i++;
+            if($i == $countMatch){
+                return true;
+            }
+        } else {
+            $i = 0;
+        }
+    }
+    return false;
+}
+
 function pemeringkatanKriteriaKinerja($nilai){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');

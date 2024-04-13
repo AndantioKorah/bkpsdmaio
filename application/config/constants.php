@@ -174,3 +174,5 @@ define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jen
 define('TTE_STATE', 'DEV'); //DEV = development, PROD = production
 define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = production
 define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production
+
+define('PERHITUNGAN_TPP_TESTING', 1); //1 = testing, 0 = realtime

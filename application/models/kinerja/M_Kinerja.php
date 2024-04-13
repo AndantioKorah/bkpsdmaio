@@ -2201,7 +2201,8 @@
         $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                             
         $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
-                    c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd')
+                    c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
+                    a.flag_terima_tpp')
                     ->from('db_pegawai.pegawai a')
                     ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -2215,8 +2216,8 @@
         if($flag_profil == 1){
             $this->db->where('id_m_status_pegawai', 1);
         }
-        if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
-            $this->db->where('e.id', $p['id_m_user']);
+        if($id_pegawai != null){
+            $this->db->where('e.id', $id_pegawai);
         }
         $pegawai = $this->db->get()->result_array();
 
@@ -2297,6 +2298,9 @@
                 
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
                 $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * ($total_beban_prestasi);
+                if($p['flag_terima_tpp'] == 0){
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                }
                 
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
                     return $result[$p['id_m_user']];

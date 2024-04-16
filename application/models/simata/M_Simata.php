@@ -639,7 +639,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                $query = $this->db->get()->result_array();
 
                                foreach ($query as $rs) {
-                                // $id_peg = "IDPeg94";
+                                // $id_peg = "IDPeg167";
                                 $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
                                 $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 
@@ -2748,13 +2748,17 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
          if($x==0){
             $tglawal = $rs['tmtjabatan'];
             $tgl_akhir = date('Y-m-d');
+            $previousValue = $rs['tmtjabatan'];
          } else {
-           
+            $tglawal = $rs['tmtjabatan'];
+            $tgl_akhir = $previousValue;
             if($previousValue) {
-                $tglawal = $rs['tmtjabatan'];
-                $tgl_akhir = $previousValue." ";
+                $tgl_akhir = $previousValue;
             }
             $previousValue = $rs['tmtjabatan'];
+            // if($x==1){
+            // dd($tglawal);
+            // }
          }
         
          

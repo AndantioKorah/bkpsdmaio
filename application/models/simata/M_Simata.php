@@ -639,8 +639,8 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                $query = $this->db->get()->result_array();
 
                                foreach ($query as $rs) {
-                                $id_peg = "IDPeg94";
-                                $updateMasakerja = $this->updateMasakerja($id_peg);
+                                // $id_peg = "IDPeg94";
+                                $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
                                 $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 
                                 
@@ -2768,12 +2768,15 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
          $date_diff = abs(strtotime($edate) - strtotime($sdate));
          $years = floor($date_diff / (365*60*60*24));
          $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+
+         $tes = "$years"."."."$months";
+        //  dd($tes);
           
          $masa_kerja = $years - $rs['masa_kerja_tahun'];
 
          $this->db->where('id', $rs['id'])
          ->update('db_pegawai.pegjabatan', 
-         ['masa_kerja_tahun' => $years]);
+         ['masa_kerja_tahun' => $tes]);
          $x++;
 
 

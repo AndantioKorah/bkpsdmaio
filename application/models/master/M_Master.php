@@ -327,7 +327,8 @@
                         $insert_data[$i]['tanggal'] = $l;
                         $insert_data[$i]['tahun'] = $explode[0];
                         $insert_data[$i]['bulan'] = floatval($explode[1]);
-                        $insert_data[$i]['keterangan'] = $data['keterangan']; 
+                        $insert_data[$i]['keterangan'] = $data['keterangan'];
+                        $insert_data[$i]['flag_hari_libur_nasional'] = $data['flag_hari_libur_nasional'];
                         $i++;
                     }
                 }

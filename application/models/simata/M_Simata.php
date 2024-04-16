@@ -1450,7 +1450,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
     return $id_hukdis;   
     }
 
-    function getMasaKerjaJabatan($id,$kode,$eselonpegawai,$jenis_pengisian){
+    function getMasaKerjaJabatanOld($id,$kode,$eselonpegawai,$jenis_pengisian){
         $eselon[] = null;
         $id_masakerja = null;
 
@@ -1537,6 +1537,92 @@ public function getPegawaiPenilaianKinerjaJpt($id){
          $years = floor($date_diff / (365*60*60*24));
 
         //  dd($years);
+         if(in_array($eselonpegawai, $eselon)){
+           if($eselonpegawai == "II B" || $eselonpegawai == "II A" AND  $jenis_pengisian == 3){
+            if($years > 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 102;
+            } else if($years == 2){
+                $id_masakerja = 103;
+            } else if($years < 2){
+                $id_masakerja = 104;
+            }
+           } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 3){
+            if($years > 5){
+                $id_masakerja = 129;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 130;
+            } else if($years == 2){
+                $id_masakerja = 131;
+            } else if($years < 2){
+                $id_masakerja = 132;
+            }
+           } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 2){
+            if($years > 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 102;
+            } else if($years == 2){
+                $id_masakerja = 103;
+            } else if($years < 2){
+                $id_masakerja = 104;
+            }
+           }
+
+         } else {
+            if($years > 5){
+                $id_masakerja = 129;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 130;
+            } else if($years == 2){
+                $id_masakerja = 131;
+            } else if($years < 2){
+                $id_masakerja = 132;
+            }
+         } 
+        
+        //  $id_masakerja = null;
+    return $id_masakerja;   
+    }
+
+    function getMasaKerjaJabatan($id,$kode,$eselonpegawai,$jenis_pengisian){
+        $eselon[] = null;
+        $id_masakerja = null;
+
+        if($kode == 2){
+            $eselon = ["II B", "II A"];
+        }
+        if($kode == 1){
+            $eselon = ["III B", "III A"];
+        }
+
+
+        $this->db->select('sum(a.masa_kerja_tahun) as masa_kerja')
+            ->from('db_pegawai.pegjabatan a')
+            ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg','left')
+            ->join('db_pegawai.eselon c', 'a.eselon = c.id_eselon','left')
+            ->where('a.id_pegawai', $id)
+            ->where('a.status', 2)
+            ->where('a.tmtjabatan !=', "0000-00-00")
+            ->where_not_in('a.ket ', ["Plt", "Plh"])
+            ->where_not_in('a.statusjabatan',[2,3] )
+            ->where_in('a.flag_active', [1,2])
+            ->order_by('a.tmtjabatan', 'asc');
+
+            if($kode == 2){
+                $this->db->where_in('c.id_eselon', [4,5]);
+            }
+
+            if($kode == 1){
+                $this->db->where_in('c.id_eselon', [6,7]);
+            }
+
+
+
+        $jabatan = $this->db->get()->result_array();
+        $years = $jabatan[0]['masa_kerja'];
+        
          if(in_array($eselonpegawai, $eselon)){
            if($eselonpegawai == "II B" || $eselonpegawai == "II A" AND  $jenis_pengisian == 3){
             if($years > 5){

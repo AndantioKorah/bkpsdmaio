@@ -36,18 +36,18 @@
                 <input required autocomplete="off" id="edit_target_kuantitas"  class="form-control form-control-sm" name="edit_target_kuantitas" value="<?=$rencana['target_kuantitas']?>" />
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" style="display:none">
                 <label>Capaian (Kuantitas)</label>
                 <input required autocomplete="off" id="edit_total_realisasi"  class="form-control form-control-sm" name="edit_total_realisasi" value="<?=$rencana['total_realisasi']?>" />
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>Satuan</label>
                 <input required autocomplete="off" id="edit_satuan"  class="form-control form-control-sm" name="edit_satuan" value="<?=$rencana['satuan']?>" />
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>Target (Kualitas)</label>
                 <input required autocomplete="off" id="edit_realisasi_target_kuantitas"  class="form-control form-control-sm" name="edit_realisasi_target_kuantitas" value="100%" Readonly/>
             </div>

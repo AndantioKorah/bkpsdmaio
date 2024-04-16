@@ -304,7 +304,7 @@ class C_Simata extends CI_Controller
 
     public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian){
        
-        $data['result'] = $this->simata->getPegawaiPenilaianKinerjaJpt($id);  
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialJpt($id);  
         $data['kode'] = $id;  
         $data['jenis_pengisian'] = $jenis_pengisian;  
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
@@ -341,7 +341,7 @@ class C_Simata extends CI_Controller
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
         $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
-        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai);
+        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
         // dd($data['masa_kerja']);
         $data['kode'] = $kode;  
        

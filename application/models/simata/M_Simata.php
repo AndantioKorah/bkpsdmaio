@@ -642,7 +642,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                foreach ($query as $rs) {
                                
                                 $id_peg = "IDPeg97";
-                                $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                                // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
                                 $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 
                                 
@@ -713,6 +713,9 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                        $id_rekamjjk5 = $this->getJPKompetensi($rs['id_pegawai']); 
                        $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
                        $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
+                        
+                       $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
+                    //   dd($id_pertimbangan1);
          
                        $skor1 =  $this->getSkor($id_rekamjjk1); 
                        $bobot1 = $this->getBobot($id_rekamjjk1); 
@@ -741,9 +744,13 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                        $skor7 =  $this->getSkor($id_rekamjjk7); 
                        $bobot7 = $this->getBobot($id_rekamjjk7); 
                        $total_rj7 = $skor7  * $bobot7 / 100;
+
+                       $skor8 =  $this->getSkor($id_pertimbangan1); 
+                       $bobot8 = $this->getBobot($id_pertimbangan1); 
+                       $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
                        
                        $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
-
+                       $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
         
                         $data["id_peg"] = $rs['id_pegawai'];
                         $data["pendidikan_formal"] = $id_rekamjjk1;
@@ -754,6 +761,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                         $data["penghargaan"] = $id_rekamjjk6;
                         $data["riwayat_hukdis"] = $id_rekamjjk7;
                         $data['nilai_assesment'] = $nilaiass;
+                        $data["pengalaman_organisasi"] = $id_pertimbangan1;
                         // $data["jabatan_target"] = $this->input->post('rj_jabatan_target');
 
                         $cekkrj =  $this->db->select('*')
@@ -773,7 +781,8 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                             'kompetensi20_jp' => $id_rekamjjk5,
                             'penghargaan' => $id_rekamjjk6,
                             'riwayat_hukdis' => $id_rekamjjk7,
-                            'nilai_assesment' => $nilaiass
+                            'nilai_assesment' => $nilaiass,
+                            'pengalaman_organisasi' => $id_pertimbangan1,
                                 ]);
                                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                                 } else {
@@ -798,13 +807,14 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                     // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
 
                                         foreach ($getAllNilaiPotensial as $rs2) {
-                                        $total_potensial = $total_nilai + $total_rj + $rs2['res_potensial_lainnya'];
+                                        $total_potensial = $total_nilai + $total_rj + $total_pertimbangan_lainnya;
                                         $this->db->where('id_peg', $rs['id_pegawai'])
                                         // ->where('id_jabatan_target', $rs2['id_jabatan_target'])
                                         ->update('db_simata.t_penilaian', 
                                         ['res_potensial_total' => $total_potensial,
                                         'res_potensial_rj' => $total_rj,
-                                        'res_potensial_cerdas' => $total_nilai]);
+                                        'res_potensial_cerdas' => $total_nilai,
+                                        'res_potensial_lainnya' => $total_pertimbangan_lainnya]);
                                                     
                                         }
                                     } else {
@@ -812,6 +822,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                         $dataInsert2['res_potensial_rj']      = $total_rj;
                                         $dataInsert2['res_potensial_cerdas']      = $total_nilai;
                                         $dataInsert2['res_potensial_total']      = $total_rj;
+                                        $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
                                         $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
                                     }
     

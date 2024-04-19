@@ -495,6 +495,11 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                        $kriteria4 = $this->getPengalamanTimPegawai($rs['id_pegawai']); 
                        $kriteria5 = $this->getPenugasanPengawai($rs['id_pegawai']); 
 
+                    //   if($rs['id_pegawai'] == 'PEG0000000eh992'){
+                    //     dd($kriteria4);
+                    //    }
+
+
 
 
                        $data["id_peg"] = $rs['id_pegawai'];
@@ -524,10 +529,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                        $bobot5 = $this->getBobot($kriteria5); 
                        $total_kinerja5 = $skor5  * $bobot5 / 100;
                        
-                    //    if($rs['id_pegawai'] == 'PEG0000000eh992'){
-                    //     dd($total_kinerja5);
-                    //    }
-
+       
                        $total_kinerja = $total_kinerja1 + $total_kinerja2 + $total_kinerja3 + $total_kinerja4 + $total_kinerja5;
                    
 
@@ -611,7 +613,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
             }
 
 
-            public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian){
+            public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian){
                 $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                ->from('db_pegawai.pegawai a')
                                ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
@@ -637,11 +639,10 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                         
                         
                                $query = $this->db->get()->result_array();
-                              
-
+                               if($penilaian == 1){
+                                // dd(1);
                                foreach ($query as $rs) {
-                               
-                                $id_peg = "IDPeg97";
+                                // $id_peg = "IDPeg97";
                                 // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
                                 $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 
@@ -715,6 +716,12 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                        $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                         
                        $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
+
+
+                    //    if($rs['id_pegawai'] == 'PEG0000000eh005'){
+                    //     dd($kriteria4);
+                    //    }
+
                     //   dd($id_pertimbangan1);
          
                        $skor1 =  $this->getSkor($id_rekamjjk1); 
@@ -828,7 +835,6 @@ public function getPegawaiPenilaianKinerjaJpt($id){
     
                                 // tutup rekam jejak
                                }
-
                                $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                ->from('db_pegawai.pegawai a')
                                ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
@@ -848,13 +854,12 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                if($id == 3){
                                    $this->db->where_in('c.eselon', ["IV A", "IV B"]);
                                }
-                        
-                        
-                               $query2 = $this->db->get()->result_array();
-           
-           
-           
-                       return $query2;
+                    
+                               $query = $this->db->get()->result_array();
+
+                            }
+
+                       return $query;
                        }
 
             function getSkor($id){
@@ -1244,9 +1249,12 @@ public function getPegawaiPenilaianKinerjaJpt($id){
             foreach ($jpkompetensi as $jp) {
                 $string = $jp['jam'];
                 $jam = filter_var($string, FILTER_SANITIZE_NUMBER_INT);
-                if($jam != "-"){
-                    $totaljam += $jam;
+                if($jam){
+                    if($jam != "-"){
+                        $totaljam += $jam;
+                    }
                 }
+                
               
              }
             }
@@ -1725,6 +1733,10 @@ public function getPegawaiPenilaianKinerjaJpt($id){
         if($kode == 1){
             $eselon = ["III B", "III A"];
         }
+        if($kode == 3){
+            $eselon = ["IV B", "IV A"];
+        }
+
 
 
         $this->db->select('sum(a.masa_kerja_bulan) as masa_kerja')
@@ -1747,20 +1759,26 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 $this->db->where_in('c.id_eselon', [6,7]);
             }
 
+            if($kode == 3){
+                $this->db->where_in('c.id_eselon', [8,9]);
+            }
+            
+
 
 
         $jabatan = $this->db->get()->result_array();
         $bulan = $jabatan[0]['masa_kerja'];
         $years = $bulan / 12;
-        // dd($years);
+        
         
          if(in_array($eselonpegawai, $eselon)){
+              
            if($eselonpegawai == "II B" || $eselonpegawai == "II A" AND  $jenis_pengisian == 3){
             if($years > 5){
                 $id_masakerja = 101;
             } else if($years >= 3 AND $years <= 5){
                 $id_masakerja = 102;
-            } else if($years == 2){
+            } else if($years >= 2){
                 $id_masakerja = 103;
             } else if($years < 2){
                 $id_masakerja = 104;
@@ -1770,7 +1788,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 $id_masakerja = 129;
             } else if($years >= 3 AND $years <= 5){
                 $id_masakerja = 130;
-            } else if($years == 2){
+            } else if($years >= 2){
                 $id_masakerja = 131;
             } else if($years < 2){
                 $id_masakerja = 132;
@@ -1780,10 +1798,21 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 $id_masakerja = 101;
             } else if($years >= 3 AND $years <= 5){
                 $id_masakerja = 102;
-            } else if($years == 2){
+            } else if($years >= 2){
                 $id_masakerja = 103;
             } else if($years < 2){
                 $id_masakerja = 104;
+            }
+           } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 2){
+            // dd($years);
+            if($years > 5){
+                $id_masakerja = 129;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 130;
+            } else if($years >= 2){
+                $id_masakerja = 131;
+            } else if($years < 2){
+                $id_masakerja = 132;
             }
            }
 
@@ -1798,7 +1827,6 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                 $id_masakerja = 132;
             }
          } 
-        
         //  $id_masakerja = null;
     return $id_masakerja;   
     }

@@ -258,6 +258,7 @@ class M_Kepegawaian extends CI_Model
                         ->from('db_pegawai.'.$data['jenisdokumen'].' a')
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                        ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg','left')
                         ->where('a.flag_active', 1)
                         // ->where('a.created_date >=', $taw.' 00:00:00')
                         // ->where('a.created_date <=', $tak.' 23:59:59')
@@ -269,6 +270,11 @@ class M_Kepegawaian extends CI_Model
 
             if($data['unitkerja'] != '0'){
                 $this->db->where('b.skpd', $data['unitkerja']);
+            }
+            
+
+            if($data['eselon'] != '0'){
+                $this->db->where('d.eselon', $data['eselon']);
             }
 
             // if($data['status'] != '0'){

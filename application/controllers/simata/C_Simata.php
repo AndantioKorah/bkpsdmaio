@@ -302,9 +302,9 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
-    public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian=null){
+    public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian=null,$penilaian){
        
-        $data['result'] = $this->simata->getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian);  
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian);  
         $data['kode'] = $id;  
         $data['jenis_pengisian'] = $jenis_pengisian;  
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);

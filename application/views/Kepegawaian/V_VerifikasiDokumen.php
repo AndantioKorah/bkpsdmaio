@@ -35,7 +35,7 @@
                 id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
                 <option selected value="0">Semua</option>
                 <?php foreach($list_eselon as $skpd){ ?>
-                    <option value="<?=$skpd['id_eselon']?>"><?=$skpd['nm_eselon']?></option>
+                    <option value="<?=$skpd['nm_eselon']?>"><?=$skpd['nm_eselon']?></option>
                 <?php } ?>
             </select>
           </div>

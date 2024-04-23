@@ -23,6 +23,7 @@
                         
             $list_user_tambahan = null;
             $list_bidang_tambahan = null;
+            $list_pegawai_tambahan = null;
             if($vt){
                 foreach($vt as $v){
                     if($v['id_m_bidang']){
@@ -32,15 +33,14 @@
                     }
                 }
             }
-            $this_user = $this->db->select('*')
+            $this_user = $this->db->select('a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                                // ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.id', $this->general_library->getId())
                                 ->where('a.flag_active', 1)
                                 ->where('id_m_status_pegawai', 1)
                                 ->get()->row_array();
-
             $list_pegawai = null;
             // if($role == 'subkoordinator'){
             if($eselon == 8){
@@ -63,21 +63,44 @@
                 //                         ->where('a.flag_active', 1)
                 //                         ->get()->row_array();
                 $list_role = ['subkoordinator', 'staffpelaksana'];
-                $list_pegawai = $this->db->select('*, a.id as id_m_user')
-                                        ->from('m_user a')
-                                        ->join('m_bidang b', 'a.id_m_bidang = b.id')
-                                        ->join('m_user_role c', 'a.id = c.id_m_user')
-                                        ->join('m_role d', 'c.id_m_role = d.id')
-                                        ->where('b.id', $this_user['id_m_bidang'])
-                                        // ->where_in('d.role_name', $list_role)
-                                        ->where('a.id !=', $this->general_library->getId())
-                                        ->where('a.flag_active', 1)
-                                        ->where('c.flag_active', 1)
-                                        ->get()->result_array();
-                $list_pegawai_tambahan = null;
-                if($this_user['id_m_bidang'] == 138 || $this_user['id_m_bidang'] == 134){
+                $this->db->select('a.*, c.*, d.*, e.skpd, a.id as id_m_user')
+                    ->from('m_user a')
+                    ->join('m_user_role c', 'a.id = c.id_m_user')
+                    ->join('m_role d', 'c.id_m_role = d.id')
+                    ->join('db_pegawai.pegawai e', 'a.username = e.nipbaru_ws')
+                    // ->where_in('d.role_name', $list_role)
+                    ->where('a.id !=', $this->general_library->getId())
+                    ->where('a.flag_active', 1)
+                    ->where('c.flag_active', 1);
+
+                    if(stringStartWith("Bagian", $this_user['nm_unitkerja']) || stringStartWith('Kecamatan', $this_user['nm_unitkerja'])){
+                        $this->db->where('e.skpd', $this_user['skpd']);
+                    } else {
+                        $this->db->select('b.*')
+                        ->join('m_bidang b', 'a.id_m_bidang = b.id')
+                        ->where('b.id', $this_user['id_m_bidang']);
+                    }
+
+                    $list_pegawai = $this->db->get()->result_array();
+                    if(stringStartWith('Kecamatan', $this_user['nm_unitkerja'])){
+                        $list_pegawai_tambahan =  $this->db->select('a.*, e.skpd, a.id as id_m_user')
+                                                        ->from('m_user a')
+                                                        // ->join('m_user_role c', 'a.id = c.id_m_user')
+                                                        // ->join('m_role d', 'c.id_m_role = d.id')
+                                                        ->join('db_pegawai.pegawai e', 'a.username = e.nipbaru_ws')
+                                                        ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+                                                        ->join('db_pegawai.jabatan g', 'e.jabatan = g.id_jabatanpeg')
+                                                        ->where('f.id_unitkerjamaster', $this_user['id_unitkerjamaster'])
+                                                        ->where('a.id !=', $this->general_library->getId())
+                                                        ->where('g.nama_jabatan LIKE', 'Lurah%')
+                                                        ->where('a.flag_active', 1)
+                                                        // ->where('c.flag_active', 1)
+                                                        ->get()->result_array();
+                        // dd($list_pegawai_tambahan);
+                    }
+                if($this_user['id_m_bidang'] == 58 || $this_user['id_m_bidang'] == 57){ // jika kabid SMP atau SD
                     $unitkerjamaster = '8020000';
-                    if($this_user['id_m_bidang'] == 134){
+                    if($this_user['id_m_bidang'] == 57){ // jika kabid SD, ambil semua kepala sekolah SD
                         $unitkerjamaster = '8010000';
                     }
                     $list_role_tambahan = ['kepalasekolah'];
@@ -88,19 +111,22 @@
                                                         ->join('m_role d', 'c.id_m_role = d.id')
                                                         ->join('db_pegawai.pegawai e', 'a.username = e.nipbaru_ws')
                                                         ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
-                                                        ->where_in('d.role_name', $list_role_tambahan)
+                                                        // ->where_in('d.role_name', $list_role_tambahan)
+                                                        ->join('db_pegawai.jabatan g', 'e.jabatan = g.id_jabatanpeg')
                                                         ->where('f.id_unitkerjamaster', $unitkerjamaster)
+                                                        ->where('g.nama_jabatan LIKE', 'Kepala Sekolah%')
                                                         ->where('a.id !=', $this->general_library->getId())
                                                         ->where('a.flag_active', 1)
                                                         ->where('c.flag_active', 1)
                                                         ->where('id_m_status_pegawai', 1)
                                                         ->get()->result_array();
-                    if($list_pegawai_tambahan){
-                        $count = count($list_pegawai);
-                        foreach($list_pegawai_tambahan as $lpt){
-                            $list_pegawai[$count] = $lpt;
-                            $count++;
-                        }
+                }
+                
+                if($list_pegawai_tambahan){
+                    $count = count($list_pegawai);
+                    foreach($list_pegawai_tambahan as $lpt){
+                        $list_pegawai[$count] = $lpt;
+                        $count++;
                     }
                 }
             // } else if($role == 'kepalabadan'){
@@ -590,7 +616,6 @@
         public function loadPegawaiKomponenKinerja($data){
             $result = null;
             $list_id_pegawai = $this->getListIdPegawaiForVerif($data);
-            // dd($list_id_pegawai);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user')
                                 ->from('m_user a')

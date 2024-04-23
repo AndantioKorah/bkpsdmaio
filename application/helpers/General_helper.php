@@ -1268,7 +1268,7 @@ function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $typ
         ->setMargin(0)
         ->setValidateResult(false)
         ->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]);
-    dd($qr);
+    // dd($qr);
     return $qr->writeDataUri();
 }
 

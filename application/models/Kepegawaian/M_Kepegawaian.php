@@ -3615,14 +3615,15 @@ public function submitEditJabatan(){
         //     'docfile'  => $base64
         // ]);
        
-            // $str = $this->input->post('edit_jabatan_nama');
-            // $newStr = explode(",", $str);
-            // $id_jabatan = $newStr[0];
-            // $nama_jabatan = $newStr[1]; 
+            $str = $this->input->post('jabatan_nama');
+            $newStr = explode(",", $str);
+            $id_jabatan = $newStr[0];
+            $nama_jabatan = $newStr[1]; 
 
             $id = $datapost['id'];
-            $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
-            // $data['id_jabatan']      = $id_jabatan;
+            // $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
+            $data['nm_jabatan']      = $nama_jabatan;
+            $data['id_jabatan']      = $id_jabatan;
             $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
             $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
             $data['statusjabatan']      = $this->input->post('edit_jabatan_status');
@@ -3642,19 +3643,17 @@ public function submitEditJabatan(){
 
     }
     } else {
-
-        // $str = $this->input->post('edit_jabatan_nama');
-        // if($str){
-        //     $newStr = explode(",", $str);
-        //     $id_jabatan = $newStr[0];
-        //     $nama_jabatan = $newStr[1];
-           
-        //     $data['id_jabatan']      = $id_jabatan; 
-        // }
+        $str = $this->input->post('jabatan_nama');
+        if($str){
+            $newStr = explode(",", $str);
+            $id_jabatan = $newStr[0];
+            $nama_jabatan = $newStr[1];
+            $data['id_jabatan']      = $id_jabatan; 
+        }
        
         
         $id = $datapost['id'];
-        $data['nm_jabatan']      =  $this->input->post('edit_jabatan_nama');
+        $data['nm_jabatan']      =  $nama_jabatan;
         $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
         $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
         $data['statusjabatan']      = $this->input->post('edit_jabatan_status');

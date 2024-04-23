@@ -142,6 +142,12 @@
             <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
         <?php } ?>
+        <div class="form-check ml-2 mt-2">
+        <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
+        <label class="form-check-label" for="flexCheckChecked">
+         <h4> Lakukan Penilaian </h4>
+        </label>
+      </div>
         </ul>
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
@@ -211,11 +217,18 @@ $(function(){
   }
 
   function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian){
-  //  var id = $('#unit_kerja').val()
+  //  var penilaian = $('#flexCheckChecked').prop('checked');
+   if($('#flexCheckChecked').prop('checked')){
+    var penilaian = 1;
+   } else {
+    var penilaian = 0;
+   }
+
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian, function(){
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian, function(){
      $('#loader').hide()
+     $('#flexCheckChecked').prop('checked', false); // Unchecks it
    })
   }
 

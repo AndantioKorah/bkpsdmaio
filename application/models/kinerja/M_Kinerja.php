@@ -18,7 +18,7 @@
             return $this->db->affected_rows();
         }
 
-        public function insertKomponenKinerja($dataPost){
+        public function insertKomponenKinerja($data_komponen){
             $res['code'] = 0;
             $res['message'] = 'ok';
             $res['data'] = null;
@@ -26,9 +26,9 @@
 
             $cek = $this->db->select('a.*')
                             ->from('t_komponen_kinerja a')
-                            ->where('a.id_m_user', $dataPost['id_m_user'])
-                            ->where('a.tahun', $dataPost['tahun'])
-                            ->where('a.bulan', $dataPost['bulan'])
+                            ->where('a.id_m_user', $data_komponen['id_m_user'])
+                            ->where('a.tahun', $data_komponen['tahun'])
+                            ->where('a.bulan', $data_komponen['bulan'])
                             ->where('a.flag_active', 1)
                             ->get()->result_array();
             
@@ -40,9 +40,10 @@
                 'loyal' => 97,
                 'adaptif' => 97,
                 'kolaboratif' => 97,
-                'id_m_user' => $dataPost['id_m_user'],
-                'bulan' => $dataPost['bulan'],
-                'tahun' => $dataPost['tahun']
+                'id_m_user' => $data_komponen['id_m_user'],
+                'bulan' => $data_komponen['bulan'],
+                'tahun' => $data_komponen['tahun'],
+                'created_by' => $data_komponen['id_m_user']
                 );
                 $result = $this->db->insert('t_komponen_kinerja', $data);
             }
@@ -68,11 +69,16 @@
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         $ress = 1;
         // dd($this->input->post());
-        // dd(date("Y", $this->input->post()));
-
+        $month = date('m', strtotime($this->input->post('tanggal_kegiatan')));
+        $year = date('Y', strtotime($this->input->post('tanggal_kegiatan')));
+        $id_peg = $this->general_library->getId();
+        $data_komponen['bulan'] = $month;
+        $data_komponen['tahun'] = $year;
+        $data_komponen['id_m_user'] = $id_peg;
+        $this->insertKomponenKinerja($data_komponen);
         
         // dd($countfiles);
-
+        // dd($this->input->post());
         $this->db->trans_begin();
        
         if(implode($_FILES['files']['name']) == ""){

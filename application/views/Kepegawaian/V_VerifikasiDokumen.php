@@ -15,19 +15,31 @@
             <label>NIP</label>
             <input class="form-control form-custom-input" autocomplete="off" id="nip" name="nip"/>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-6">
             <label>Unit Kerja</label>
             <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
                 id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja">
                 <?php if($this->general_library->isProgrammer()){ ?>
                   <option selected value="0">Semua</option>
                 <?php } ?>
+                <option selected value="0">Semua</option>
                 <?php foreach($list_skpd as $skpd){ ?>
+                 
                     <option value="<?=$skpd['id_unitkerja']?>"><?=$skpd['nm_unitkerja']?></option>
                 <?php } ?>
             </select>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-6" >
+            <label>Eselon</label>
+            <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
+                id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
+                <option selected value="0">Semua</option>
+                <?php foreach($list_eselon as $skpd){ ?>
+                    <option value="<?=$skpd['nm_eselon']?>"><?=$skpd['nm_eselon']?></option>
+                <?php } ?>
+            </select>
+          </div>
+          <div class="col-lg-6">
             <label>Jenis Dokumen</label>
             <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
                 id="jenisdokumen" data-dropdown-css-class="select2-navy" name="jenisdokumen">
@@ -36,7 +48,7 @@
                 <?php } ?>
             </select>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-6">
             <label>Status</label>
             <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
                 id="status" data-dropdown-css-class="select2-navy" name="status">
@@ -64,14 +76,30 @@
 </div>
 <script>
   $(function(){
-    $('#form_search_dokumen_verif').submit()
+    // $('#form_search_dokumen_verif').submit()
   })
 
   $('#form_search_dokumen_verif').on('submit', function(e){
+
+    var unikerja = $('#unitkerja').val();
+    var eselon = $('#eselon').val();
+
+    if(unikerja == 0){
+      if(eselon == 0){
+        errortoast('Harus Pilih Salah Satu Eselon')
+        return false;
+      }
+    }
+
+    
     $('#wrapper_result').show()
     $('#result').html('')
     $('#result').append(divLoaderNavy)
     e.preventDefault()
+
+
+    
+
     $.ajax({
       url: '<?=base_url('kepegawaian/C_Kepegawaian/searchDokumenUsul')?>',
       method: 'post',

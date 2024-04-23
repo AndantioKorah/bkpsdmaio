@@ -478,6 +478,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function verifikasiDokumen(){
 		$data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+		$data['list_eselon'] = $this->general->getAll('db_pegawai.eselon', 0);
 		$data['list_dokumen']['pegpangkat']['db'] = 'pegpangkat';
 		$data['list_dokumen']['pegpangkat']['nama'] = 'Pangkat';
 		$data['list_dokumen']['pegpangkat']['value'] = 'pangkat';

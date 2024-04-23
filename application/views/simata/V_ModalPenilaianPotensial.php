@@ -424,7 +424,7 @@
                         <label for="exampleInputEmail1" class="form-label">Nilai Assesment</label>
 
 				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai">
-				<button class="btn btn-primary float-right mt-3 mb-3">Simpan</button>
+				<!-- <button class="btn btn-primary float-right mt-3 mb-3">Simpan</button> -->
 			   </form>
 					</div>
 
@@ -507,7 +507,7 @@
                     </div>
                     
 
-                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
                     </form>
 					</div>
 
@@ -548,7 +548,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
                     </form>
 					</div>
 

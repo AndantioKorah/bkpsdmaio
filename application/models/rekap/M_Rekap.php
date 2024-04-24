@@ -957,7 +957,8 @@
                 $i = 0;
                 foreach($list_hari as $lhr){
                     $i++;
-                    if($lhr == $tjke['berlaku_dari'] || $lhr == $tjke['berlaku_sampai']){ //cek jika tanggal masuk dalam range tanggal jam kerja event
+                    // if($lhr == $tjke['berlaku_dari'] || $lhr == $tjke['berlaku_sampai']){ //cek jika tanggal masuk dalam range tanggal jam kerja event
+                    if($lhr >= $tjke['berlaku_dari'] && $lhr <= $tjke['berlaku_sampai']){ //cek jika tanggal masuk dalam range tanggal jam kerja event
                         $jam_kerja_event[] = $tjke;
                         break;
                     }
@@ -1643,12 +1644,19 @@
         // }
         $temp_disiplin_kerja = $data_disiplin_kerja;
         $data_disiplin_kerja = null;
+        $list_akumulasi_disiplin_kerja = ['S', 'I', 'TK', 'DISP', 'C'];
         foreach($temp_disiplin_kerja['result'] as $tdk){
             if(isset($tdk['nip'])){
+                $tdk['rekap']['presentasi_kehadiran'] = 0;
+                foreach($tdk['rekap'] as $tdkr){
+                    if(in_array($tdkr, $list_akumulasi_disiplin_kerja)){
+                        $tdk['rekap']['hadir']--;
+                    }
+                }
+                $tdk['rekap']['presentasi_kehadiran'] = (floatval($tdk['rekap']['hadir']) / floatval($tdk['rekap']['jhk'])) * 100;
                 $data_disiplin_kerja[$tdk['nip']] = $tdk;
             }
         }
-
         $data_kinerja = null;
         // if(isset($data_rekap['produktivitas_kerja'])){
         //     $data_kinerja = null;
@@ -1688,6 +1696,8 @@
                 
                 $result[$p['nipbaru_ws']]['bobot_produktivitas_kerja'] = $data_kinerja[$p['nipbaru_ws']]['bobot_capaian_produktivitas_kerja'];
                 $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'] = $data_disiplin_kerja[$p['nipbaru_ws']]['rekap']['capaian_bobot_disiplin_kerja'];
+                
+                $result[$p['nipbaru_ws']]['presentasi_kehadiran'] = $data_disiplin_kerja[$p['nipbaru_ws']]['rekap']['presentasi_kehadiran'];
 
                 // if($p['nipbaru_ws'] == '199502182020121013'){
                 //     dd($result[$p['nipbaru_ws']]);
@@ -1696,9 +1706,17 @@
                 if(PERHITUNGAN_TPP_TESTING == 1){
                     $result[$p['nipbaru_ws']]['bobot_produktivitas_kerja'] = 60;
                     $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'] = 40;
+                    // $result[$p['nipbaru_ws']]['presentasi_kehadiran'] = 100;
                 }
 
                 $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
+
+                if($result[$p['nipbaru_ws']]['presentasi_kehadiran'] < 25){
+                    $result[$p['nipbaru_ws']]['presentase_tpp'] = 0;
+                } else if($result[$p['nipbaru_ws']]['presentasi_kehadiran'] >= 25 && $result[$p['nipbaru_ws']]['presentasi_kehadiran'] < 50){
+                    $result[$p['nipbaru_ws']]['presentase_tpp'] *= 0.5;
+                }
+
                 $result[$p['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$p['nipbaru_ws']]['presentase_tpp']) * floatval($p['pagu_tpp'])) / 100;
                 // $result[$p['nipbaru_ws']]['besaran_tpp'] = roundDown($result[$p['nipbaru_ws']]['besaran_tpp'], 3);
                 $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
@@ -1706,7 +1724,7 @@
                 $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
             }
         }
-
+        
         return $result;
     }
 

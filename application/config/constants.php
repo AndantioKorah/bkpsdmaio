@@ -176,3 +176,4 @@ define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = producti
 define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production
 
 define('PERHITUNGAN_TPP_TESTING', 1); //1 = testing, 0 = realtime
+define('REASON_TTE', 'Dokumen ini telah ditandatangani secara elektronik oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado (Donald Franky Supit, SH, MH - NIP. 197402061998031008)'); 

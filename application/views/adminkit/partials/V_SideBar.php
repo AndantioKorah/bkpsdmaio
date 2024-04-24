@@ -342,13 +342,15 @@
 				<?php } ?>
 			</ul>
 		</li>
-		<li class="sidebar-item">
-			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/digital-signature">
-			<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
-				<i class="align-middle me-2 fa fa-signature"></i> 
-				<span class="align-middle">Digital Sign (DS)</span>
-			</a>
-		</li>
+		<?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isProgrammer()){ ?>
+			<li class="sidebar-item">
+				<a class="sidebar-link" href="<?=base_url();?>kepegawaian/digital-signature">
+				<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
+					<i class="align-middle me-2 fa fa-signature"></i> 
+					<span class="align-middle">Digital Sign (DS)</span>
+				</a>
+			</li>
+		<?php } ?>
 	<?php } ?>
 	
 
@@ -440,6 +442,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
 					</a>
 				</li>
+				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>TPP

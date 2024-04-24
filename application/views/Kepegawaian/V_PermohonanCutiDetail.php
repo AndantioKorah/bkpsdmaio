@@ -102,7 +102,7 @@
           </a>
         </div>
       <?php } ?>
-      <?php if($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk']){ ?>
+      <?php if($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk'] && (!isset($flag_only_see) && $flag_only_see == 0)){ ?>
       <?php //if($result['id_m_status_pengajuan_cuti'] == 6){ ?>
         <hr>
         <div class="col-lg-12 text-center">

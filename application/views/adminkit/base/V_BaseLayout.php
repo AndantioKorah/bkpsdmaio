@@ -532,7 +532,8 @@
            
 		</div>
 	</div>
-  <div class="modal fade" id="auth_modal_tte" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal fade" id="auth_modal_tte" tabindex="-1" data-backdrop="static" role="dialog" data-keyboard="false"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div id="modal-dialog" class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -694,6 +695,25 @@ $('.datepicker').datepicker({
       icon: 'error',
       title: message
     })
+  }
+
+  function questiontoast(title = 'Apakah anda yakin?', text = '', icon = 'question', confirmbuttontext = 'Ya', cancelbuttontext = 'Tidak'){
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: "#222e3c",
+        cancelButtonColor: "grey",
+        cancelButtonText: cancelbuttontext,
+        confirmButtonText: confirmbuttontext,
+    }).then((result) => {
+        if (result.value == true) {
+            return 1;
+        } else {
+          return 0;
+        }
+    });
   }
 
   $("#daterangepickerthis").daterangepicker({

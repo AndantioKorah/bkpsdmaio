@@ -4852,6 +4852,15 @@ public function submitEditJabatan(){
         if($riwayat){
             foreach($riwayat as $rw){
                 $list_id[] = $rw['id'];
+                if($rw['id_m_status_pengajuan_cuti'] == 4 && $rw['url_sk'] == null){
+                    $rw['nama_status'] .= ', menuggu DS SK';
+                }
+
+                if($rw['url_sk'] != null){
+                    $rw['id_m_status_pengajuan_cuti'] = 6;
+                    $rw['nama_status'] = 'Selesai';
+                }
+
                 $result[$rw['id']] = $rw;
                 $result[$rw['id']]['detail'] = null;
                 $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
@@ -4891,6 +4900,21 @@ public function submitEditJabatan(){
                     $progress[2]['icon'] = "fa fa-times";
                     $progress[2]['color'] = "red";
                     $progress[2]['font-color'] = "white";
+                } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 6){
+                    $progress[1]['icon'] = "fa fa-check";
+                    $progress[1]['color'] = "green";
+                    $progress[1]['font-color'] = "white";
+                    $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi BKPSDM";
+        
+                    $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
+                    $progress[2]['icon'] = "fa fa-check";
+                    $progress[2]['color'] = "green";
+                    $progress[2]['font-color'] = "white";
+        
+                    $progress[3]['keterangan'] = "SK SUDAH SELESAI DS PADA ".formatDateNamaBulanWT($result[$rw['id']]['updated_date']);
+                    $progress[3]['icon'] = "fa fa-check";
+                    $progress[3]['color'] = "green";
+                    $progress[3]['font-color'] = "white";
                 }
 
                 if($result[$rw['id']]['id_m_status_pengajuan_cuti'] != 1){
@@ -4918,6 +4942,7 @@ public function submitEditJabatan(){
                 }
             }
         }
+
         return $result;
     }
 
@@ -5072,6 +5097,21 @@ public function submitEditJabatan(){
                 $progress[2]['icon'] = "fa fa-times";
                 $progress[2]['color'] = "red";
                 $progress[2]['font-color'] = "white";
+            } else if($result['id_m_status_pengajuan_cuti'] == 6){
+                $progress[1]['icon'] = "fa fa-check";
+                $progress[1]['color'] = "green";
+                $progress[1]['font-color'] = "white";
+                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi BKPSDM";
+    
+                $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
+                $progress[2]['icon'] = "fa fa-check";
+                $progress[2]['color'] = "green";
+                $progress[2]['font-color'] = "white";
+    
+                $progress[3]['keterangan'] = "SK SUDAH SELESAI DS PADA ".formatDateNamaBulanWT($result['updated_date']);
+                $progress[3]['icon'] = "fa fa-check";
+                $progress[3]['color'] = "green";
+                $progress[3]['font-color'] = "white";
             }
 
             if($result['id_m_status_pengajuan_cuti'] != 1){
@@ -5330,6 +5370,119 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function dsBulk($params){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $this->db->trans_begin();
+
+        $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
+                g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone')
+                ->from('t_pengajuan_cuti a')
+                ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
+                ->join('m_user c', 'c.id = a.id_m_user')
+                ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
+                ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
+                ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
+                ->where_in('a.id', $params['list_checked'])
+                ->where('a.flag_active', 1)
+                ->order_by('a.id')
+                ->get()->result_array(); 
+
+        if(!$list_data){
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            return $res;
+        } else {
+            $fileBase64 = null;
+
+            $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                    ->join('m_user d', 'a.nipbaru_ws = d.username')
+                                    ->where('c.kepalaskpd', 1)
+                                    ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                                    ->get()->row_array();
+
+            foreach($list_data as $ld){
+                $i = 0;
+                $explode = explode("-", $ld['created_date']);
+                $tahun = $explode[0];
+                $counter = 1;
+                $master = $this->db->select('*')
+                                ->from('m_jenis_layanan')
+                                ->where('integrated_id', $ld['id_cuti'])
+                                ->get()->row_array();
+
+                $last_data = $this->db->select('*')
+                                ->from('t_nomor_surat')
+                                ->where('YEAR(tanggal_surat)', $tahun)
+                                ->order_by('created_date', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
+
+                if($last_data){
+                    $counter = floatval($last_data['counter'])+1;
+                }
+                $counter = $counter.'.'.$master['id'];
+
+                $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
+
+                $res['data'][$i] = $ld;
+                $res['data'][$i]['ds'] = 1;
+                $res['data'][$i]['nomor_surat'] = $nomor_surat;
+
+                $filename = 'CUTI_'.$res['data'][$i]['nipbaru_ws'].'_'.date("Y", strtotime($res['data'][$i]['created_date']))."_".date("m", strtotime($res['data'][$i]['created_date'])).'_'.date("d", strtotime($res['data'][$i]['created_date'])).'_signed.pdf';
+                $path_file = 'arsipcuti/'.$filename;
+                
+                // $encUrl = simpleEncrypt($path_file);
+                $randomString = generateRandomString(30, 1, 't_file_ds'); 
+                $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+                // dd($contentQr);
+                $res['qr'] = generateQr($contentQr);
+
+                // dd($path_file);
+                $mpdf = new \Mpdf\Mpdf([
+                    'format' => 'Legal-P',
+                    // 'debug' => true
+                ]);
+                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $res, true);
+                $mpdf->WriteHTML($html);
+                $mpdf->showImageErrors = true;
+                $mpdf->Output($path_file, 'F');
+
+                $this->db->insert('t_nomor_surat', [
+                    'perihal' => 'SURAT IZIN '.strtoupper($ld['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($ld),
+                    'counter' => $counter,
+                    'nomor_surat' => $nomor_surat,
+                    'created_by' => $kepala_bkpsdm['id_m_user'],
+                    'tanggal_surat' => $ld['created_date'],
+                    'id_m_jenis_layanan' => $master['id']
+                ]);
+
+                $fileBase64 = convertToBase64($path_file);
+                $i++;
+            }
+            $signatureProperties = array();
+            $signatureProperties = [
+                'tampilan' => 'INVISIBLE',
+                'reason' => REASON_TTE
+            ];
+
+            $request_tte = [
+                'id_ref' => $params['list_checked'],
+                'table_ref' => $params['table_ref'],
+                'nik' => $params['nik'],
+                'passphrase' => $params['passphrase'],
+                'signatureProperties' => [$signatureProperties],
+                'file' => ($fileBase64)
+            ];
+            $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
+        }
+    }
+
     public function dsCuti($id){
         $res['code'] = 0;
         $res['message'] = 'ok';
@@ -5398,7 +5551,7 @@ public function submitEditJabatan(){
             $signatureProperties = array();
             $signatureProperties = [
                 'tampilan' => 'INVISIBLE',
-                'reason' => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado (Donald Franky Supit, SH, MH - NIP. 197402061998031008)"
+                'reason' => REASON_TTE
             ];
 
             $request_tte = [
@@ -5535,6 +5688,28 @@ public function submitEditJabatan(){
         }
 
         return $res;
+    }
+
+    public function loadDataDsPengajuanCuti(){
+        return $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, c.nipbaru_ws, a.created_date as tanggal_pengajuan, c.nipbaru_ws as nip, d.nm_unitkerja')
+                    ->from('t_pengajuan_cuti a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                    ->join('db_pegawai.unitkerja d', 'd.id_unitkerja = c.skpd')
+                    ->where('a.id_m_status_pengajuan_cuti', 4)
+                    ->where('a.url_sk', null)
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.created_date', 'asc')
+                    ->get()->result_array();
+    }
+
+    public function loadDataForDs($data){
+        $result = null;
+        if($data['jenis_layanan'] == 'permohonan_cuti'){
+            $result = $this->loadDataDsPengajuanCuti();
+        }
+
+        return $result;
     }
 
     public function saveNomorSurat(){

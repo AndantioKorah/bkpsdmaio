@@ -64,7 +64,7 @@ class TteLib{
         $hash = $this->hash();
         $curl = curl_init();
         $url = $url;
-
+        dd(json_encode($data));
         curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_SSL_VERIFYHOST => false,

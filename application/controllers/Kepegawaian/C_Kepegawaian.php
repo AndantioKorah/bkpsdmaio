@@ -41,6 +41,18 @@ class C_Kepegawaian extends CI_Controller
 		render('kepegawaian/V_DigitalSignature', null, null, null);
 	}
 
+	public function loadDataForDs(){
+		$data['jenis_layanan'] = $this->input->post('jenis_layanan');
+		$data['result'] = $this->kepegawaian->loadDataForDs($this->input->post());
+		$this->load->view('kepegawaian/V_DigitalSignatureData', $data);
+	}
+
+	public function loadDetailCutiForDs($id){
+		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+		$data['flag_only_see'] = 1;
+		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
+	}
+
 	public function fetchDokumenWs(){
 		$res = $this->dokumenlib->getDokumenWs('POST', $this->input->post());
 		$response = json_decode($res['response'], true);
@@ -1480,8 +1492,18 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ModalAuthTte', $data);
 	}
 
+	public function loadAuthModalTteBulk(){
+		$data['user'] = $this->general->getDataPegawai($this->general_library->getUserName());
+		$this->load->view('kepegawaian/V_ModalAuthTteBulk', $data);
+	}
+
 	public function dsCuti($id){
 		echo json_encode($this->kepegawaian->dsCuti($id));
+	}
+
+	public function dsBulk(){
+		echo json_encode($this->kepegawaian->dsBulk($this->input->post()));
+		// dd($this->input->post());
 	}
 
 	public function batalVerifikasiPermohonanCuti($id){

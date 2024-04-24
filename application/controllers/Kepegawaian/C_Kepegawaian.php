@@ -12,6 +12,7 @@ class C_Kepegawaian extends CI_Controller
 		parent::__construct();
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
+		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
 		};
@@ -1045,10 +1046,10 @@ class C_Kepegawaian extends CI_Controller
 
 		if($id == 3){
 		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
-		$this->load->view('kepegawaian/form_layanan/V_FormCuti', $data);
+		$this->load->view('kepegawaian/layanan/V_FormCuti', $data);
 		} else {
 			$data['jenis_layanan'] = $id;
-			$this->load->view('kepegawaian/form_layanan/V_FormUsulLayanan', $data);
+			$this->load->view('kepegawaian/layanan/V_FormUsulLayanan', $data);
 		}
     }
 
@@ -1590,6 +1591,28 @@ class C_Kepegawaian extends CI_Controller
 		}
 
     }
+
+	public function LayananKarisKarsu(){
+		$data['daftar_keluarga'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','27','0');
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','54','0');
+		$data['laporan_perkawinan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','52','0');
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		// $data['total_upload'] = $data['sk_cpns'] + $data['sk_pns'] + $data['daftar_keluarga'] + $data['akte_nikah'] + $data['pas_foto'];
+		// dd($data);
+		render('kepegawaian/layanan/V_LayananKarisKarsu', '', '', $data);
+	}
+
+	public function lakukan_download(){                                                          
+		$this->load->helper(array('url','download'));
+		force_download('./dokumen_layanan/Lap Perkawinan I Daftar Keluarga Mengetahui Atasan Langsung - Karis Karsu.docx',NULL);
+	}  
+	
+	public function insertUsulLayananKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu());
+	}
 	
 
 

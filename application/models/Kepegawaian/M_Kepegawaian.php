@@ -1770,7 +1770,8 @@ class M_Kepegawaian extends CI_Model
 	{
 
         $this->db->trans_begin();
-            
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = $this->general_library->getId().$random_number.$_FILES['file']['name'];
         $target_dir						= './arsiplain/';
         		
 		$config['upload_path']          = $target_dir;
@@ -1778,7 +1779,7 @@ class M_Kepegawaian extends CI_Model
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
-
+        $config['file_name']            = $filename;
 		$this->load->library('upload', $config);
 
 		
@@ -1792,8 +1793,7 @@ class M_Kepegawaian extends CI_Model
 		} else {
 			$dataFile 			= $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $this->general_library->getId().$random_number.$dataFile['file_name'];
+            
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
@@ -1811,6 +1811,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
+            $dataInsert['status']      = 2;
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -1997,12 +1998,12 @@ class M_Kepegawaian extends CI_Model
         if($_FILES){
         if($this->input->post('jenis_layanan') == 3){
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            // $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
-            $target_dir						= './siladen/dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            $target_dir						= './dokumen_layanan/cuti/' . $this->general_library->getUserName();
+            // $target_dir						= './siladen/dokumen_layanan/cuti/' . $this->general_library->getUserName();
         } else {
             $nama_file = "pengantar_$nip"."_$tanggal_usul";
-            // $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
-            $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
+            $target_dir						= './dokumen_layanan/' . $this->general_library->getUserName();
+            // $target_dir						= '../siladen/dokumen_layanan/' . $this->general_library->getUserName();
         } 
 
         $config['upload_path']          = $target_dir;
@@ -2476,9 +2477,9 @@ class M_Kepegawaian extends CI_Model
                         ->where('c.flag_active', 1)
                         ->order_by('c.id_usul', 'desc');
 
-        if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
-            $this->db->where_in('e.kode', $this->general_library->listHakAkses());
-        }
+        // if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
+        //     $this->db->where_in('e.kode', $this->general_library->listHakAkses());
+        // }
 
         return $this->db->get()->result_array();
     }
@@ -5666,6 +5667,51 @@ public function submitEditJabatan(){
             ->group_end()
             ->or_where('a.jenis_jabatan', 'JFT');
         return $this->db->get()->result_array();
+    }
+
+    public function getDokumenForKarisKarsu($table,$id_dokumen,$jenissk)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        
+        ->from($table);
+
+        if($table == "db_pegawai.pegarsip"){
+            $this->db->where('id_dokumen', $id_dokumen);
+        }
+
+        if($table == "db_pegawai.pegberkaspns"){
+            $this->db->where('jenissk', $jenissk);
+        }
+    
+    
+        $query = $this->db->get()->row_array();
+    
+        return $query;  
+
+    }
+
+    public function insertUsulLayananKarisKarsu(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        $this->db->trans_begin();
+            $dataUsul['id_m_user']      = $this->general_library->getId();
+            $dataUsul['created_by']      = $this->general_library->getId();
+            $this->db->insert('db_efort.t_karis_karsu', $dataUsul);
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+        }
+        return $res;
+
+       
     }
 
 }

@@ -108,5 +108,12 @@ $route['mt/penilaian-kompetensi'] = 'simata/C_Simata/penilaianKompetensi';
 $route['mt/jabatan-kosong'] = 'simata/C_Simata/jabatanKosong';
 // $route['mt/penilaian-kinerja-pegawai/(:any)'] = 'simata/C_Simata/penilaianKinerjaPegawai/$1';
 
+ 
+// layanan
+$route['kepegawaian/layanan-karis-karsu'] = 'kepegawaian/C_Kepegawaian/LayananKarisKarsu';
+$route['kepegawaian/download'] = 'kepegawaian/C_Kepegawaian/lakukan_download';
+
+
+
 
 

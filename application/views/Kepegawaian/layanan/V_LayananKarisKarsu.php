@@ -58,47 +58,60 @@
       <div class="card-body">
        
         <form id="form_karis_karsu" method="post" enctype="multipart/form-data" id="form_cuti" style="margin-top: -45px;">
-       <!-- <input type="hidden" id="total_upload" value="<?=$total_upload;?>"> -->
        
+        <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+        <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+        <input type="hidden" id="data_keluarga" value="<?php if($daftar_keluarga) echo $daftar_keluarga['id']; else echo "";?>">
+        <input type="hidden" id="laporan_perkawinan" value="<?php if($laporan_perkawinan) echo $laporan_perkawinan['id']; else echo "";?>">
+        <input type="hidden" id="pas_foto" value="<?php if($pas_foto) echo $pas_foto['id']; else echo "";?>">
+        <input type="hidden" id="akte_nikah" value="<?php if($akte_nikah) echo $akte_nikah['id']; else echo "";?>">
+       
+        
         <span>Berkas Persyaratan :</span>
         <div class="col-lg-12 mt-2">
         <div class="filter-option col-lg-12">
-        <span style="width:95%" id="btn_filter_eselon" 
-        class="filter-btn filter-<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>">SK CPNS <i class="fas fa-<?php if($sk_cpns) echo 'check'; else echo 'times';?>"></i> </span> <a onclick="filterClicked('<?=$laporan_perkawinan['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
+        <span style="width:95%"  onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')" 
+        class="filter-btn filter-<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>">SK CPNS <i class="fas fa-<?php if($sk_cpns) echo 'check'; else echo 'times';?>"></i> </span> <a onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
         </div>
     </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:95%" id="btn_filter_eselon" onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($sk_pns) echo 'select'; else echo 'unselect';?>">SK PNS <i class="fas fa-<?php if($sk_pns) echo 'check'; else echo 'times';?>"></i></span> <button class="btn btn-primary"> <i class="fa fa-file"></i> </button>
+     <span style="width:95%"  onclick="filterClicked()" 
+      class="filter-btn filter-<?php if($sk_pns) echo 'select'; else echo 'unselect';?>">SK PNS <i class="fas fa-<?php if($sk_pns) echo 'check'; else echo 'times';?>"></i></span> <a onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
      </div>
   </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:99%" id="btn_filter_eselon" onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($laporan_perkawinan) echo 'select'; else echo 'unselect';?>">LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN <i class="fas fa-<?php if($laporan_perkawinan) echo 'check'; else echo 'times';?>"></i></span> 
+     <span style="width:95%"  onclick="filterClicked()" 
+      class="filter-btn filter-<?php if($laporan_perkawinan) echo 'select'; else echo 'unselect';?>">LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN <i class="fas fa-<?php if($laporan_perkawinan) echo 'check'; else echo 'times';?>"></i></span> <a onclick="filterClicked2('<?=$laporan_perkawinan['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
      </div>
   </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:99%" id="btn_filter_eselon" onclick="filterClicked()" 
+     <span style="width:95%"  onclick="filterClicked()" 
       class="filter-btn filter-<?php if($daftar_keluarga) echo 'select'; else echo 'unselect';?> ">DAFTAR KELUARGA MENGETAHUI ATASAN <i class="fas fa-<?php if($daftar_keluarga) echo 'check'; else echo 'times';?>"></i></span> 
-     </div>
+      <?php if($daftar_keluarga) { ?>
+      <a onclick="filterClicked2('<?=$daftar_keluarga['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
+      <?php } ?>
+    </div>
   </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:99%" id="btn_filter_eselon" onclick="filterClicked()" 
+     <span style="width:95%"  onclick="filterClicked()" 
       class="filter-btn filter-<?php if($akte_nikah) echo 'select'; else echo 'unselect';?> ">BUKU NIKAH / AKTA PERKAWINAN DILEGALISIR <i class="fas fa-<?php if($akte_nikah) echo 'check'; else echo 'times';?>"></i></span> 
-     </div>
+      <?php if($akte_nikah) { ?>
+      <a onclick="filterClicked2('<?=$akte_nikah['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
+      <?php } ?>
+    </div>
   </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:99%" id="btn_filter_eselon" onclick="filterClicked()" 
+     <span style="width:95%"  onclick="filterClicked()" 
       class="filter-btn filter-<?php if($pas_foto) echo 'select'; else echo 'unselect';?> ">PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS PEREMPUAN) <i class="fas fa-<?php if($pas_foto) echo 'check'; else echo 'times';?>"></i></span> 
      </div>
   </div>
@@ -151,10 +164,7 @@
       <h5 id="iframe_loader_gaji_berkala" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
       <iframe id="iframe_view_file_berkas_pns" style="width: 100%; height: 80vh;" src=""></iframe>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+     
     </div>
   </div>
 </div>
@@ -166,11 +176,43 @@
         e.preventDefault();
         var formvalue = $('#form_karis_karsu');
         var form_data = new FormData(formvalue[0]);
-        var total_upload = $('#total_upload').val()
-        // if(total_upload < 5){
-        //     errortoast(' Berkas Belum Lengkap')
-        //     return false;
-        // }
+        var sk_cpns = $('#sk_cpns').val()
+        var sk_pns = $('#sk_pns').val()
+        var daftar_keluarga = $('#daftar_keluarga').val()
+        var laporan_perkawinan = $('#laporan_perkawinan').val()
+        var pas_foto = $('#pas_foto').val()
+        var akte_nikah = $('#akte_nikah').val()
+
+
+        if(sk_cpns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        
+        if(sk_pns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(daftar_keluarga == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(laporan_perkawinan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(pas_foto == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(akte_nikah == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
 
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu")?>",
@@ -197,7 +239,23 @@
         });
 
 
-    async function filterClicked(filename){
+    async function filterClicked1(filename){
+    $('#iframe_view_file_berkas_pns').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    
+    var number = Math.floor(Math.random() * 1000);
+    $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
+   
+    $('#iframe_view_file_berkas_pns').attr('src', $link)
+        $('#iframe_view_file_berkas_pns').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+    })
+
+  }
+
+  async function filterClicked2(filename){
     $('#iframe_view_file_berkas_pns').hide()
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')

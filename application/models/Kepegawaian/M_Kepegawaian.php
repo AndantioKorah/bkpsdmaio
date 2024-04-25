@@ -5838,7 +5838,7 @@ public function submitEditJabatan(){
             ->group_start()
             // ->where('a.jenis_jabatan', 'JFU')
             ->where("FIND_IN_SET(a.jenis_jabatan,'JFU,Struktural')!=",0)
-            ->where('a.id_unitkerja', '4018000')
+            // ->where('a.id_unitkerja', '4018000')
             ->group_end()
             ->or_where('a.jenis_jabatan', 'JFT');
         return $this->db->get()->result_array();
@@ -5876,6 +5876,7 @@ public function submitEditJabatan(){
             $dataUsul['id_m_user']      = $this->general_library->getId();
             $dataUsul['created_by']      = $this->general_library->getId();
             $this->db->insert('db_efort.t_karis_karsu', $dataUsul);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         if ($this->db->trans_status() === FALSE)
         {
                 $this->db->trans_rollback();

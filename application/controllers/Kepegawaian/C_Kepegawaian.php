@@ -1621,7 +1621,6 @@ class C_Kepegawaian extends CI_Controller
 		$data['laporan_perkawinan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','52','0');
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
-		// $data['total_upload'] = $data['sk_cpns'] + $data['sk_pns'] + $data['daftar_keluarga'] + $data['akte_nikah'] + $data['pas_foto'];
 		// dd($data);
 		render('kepegawaian/layanan/V_LayananKarisKarsu', '', '', $data);
 	}

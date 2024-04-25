@@ -70,23 +70,32 @@
         <span>Berkas Persyaratan :</span>
         <div class="col-lg-12 mt-2">
         <div class="filter-option col-lg-12">
-        <span style="width:95%"  onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')" 
-        class="filter-btn filter-<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>">SK CPNS <i class="fas fa-<?php if($sk_cpns) echo 'check'; else echo 'times';?>"></i> </span> <a onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
-        </div>
+        <span style="width:95%"  
+        class="filter-btn filter-<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>">SK CPNS <i class="fas fa-<?php if($sk_cpns) echo 'check'; else echo 'times';?>"></i> </span> 
+        <?php if($sk_cpns) { ?> 
+        <a onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
+        <?php } ?>
+      </div>
     </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
      <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($sk_pns) echo 'select'; else echo 'unselect';?>">SK PNS <i class="fas fa-<?php if($sk_pns) echo 'check'; else echo 'times';?>"></i></span> <a onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
+      class="filter-btn filter-<?php if($sk_pns) echo 'select'; else echo 'unselect';?>">SK PNS <i class="fas fa-<?php if($sk_pns) echo 'check'; else echo 'times';?>"></i></span> 
+      <?php if($sk_pns) { ?> 
+      <a onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
      </div>
+     <?php } ?>
   </div>
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
      <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($laporan_perkawinan) echo 'select'; else echo 'unselect';?>">LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN <i class="fas fa-<?php if($laporan_perkawinan) echo 'check'; else echo 'times';?>"></i></span> <a onclick="filterClicked2('<?=$laporan_perkawinan['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
+      class="filter-btn filter-<?php if($laporan_perkawinan) echo 'select'; else echo 'unselect';?>">LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN <i class="fas fa-<?php if($laporan_perkawinan) echo 'check'; else echo 'times';?>"></i></span>
+      <?php if($laporan_perkawinan) { ?> 
+      <a onclick="filterClicked2('<?=$laporan_perkawinan['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
      </div>
+     <?php } ?>
   </div>
 
   <div class="col-lg-12 mt-2">
@@ -121,7 +130,7 @@
         Keterangan :<br>
         <button class="btn btn-sm filter-btn filter-select" > <i class="fas fa-check"></i> </button> Berkas Sudah diupload<br>
         <button class="btn btn-sm filter-btn filter-unselect mt-2" > <i class="fas fa-times"></i> </button> Berkas belum diupload<br>
-        Berkas di Upload Pada Menu Profil <br>
+        Berkas diupload Pada Menu Profil <br>
         Untuk Berkas : <br>
         <i class="fa fa-file"></i> LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN ;<br>
         <i class="fa fa-file"></i> DAFTAR KELUARGA MENGETAHUI ATASAN ;<br>
@@ -143,7 +152,7 @@
       </div>
       <div class="card-body">
         <div class="row" style="margin-top: -40px;">
-          <div class="col-lg-12 table-responsive" id="riwayat_cuti"></div>
+          <div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
         </div>
       </div>
     </div>
@@ -170,6 +179,15 @@
 </div>
 
 <script>
+
+$(function(){
+  $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
+  loadListRiwayatKarisKarsu()
+    })
     $('#form_karis_karsu').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
@@ -227,7 +245,7 @@
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListUsulLayanan(3)
+                loadListRiwayatKarisKarsu()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -271,4 +289,13 @@
     })
 
   }
+
+  function loadListRiwayatKarisKarsu(){
+    $('#list_riwayat_karsu').html('')
+    $('#list_riwayat_karsu').append(divLoaderNavy)
+    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatKarisKarsu/")?>', function(){
+      $('#loader').hide()
+    })
+    }
+
 </script>

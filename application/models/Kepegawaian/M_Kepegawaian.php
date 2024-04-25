@@ -5890,4 +5890,32 @@ public function submitEditJabatan(){
        
     }
 
+    function getRiwayatKarisKarsu(){
+        $this->db->select('*')
+                       ->from('t_karis_karsu a')
+                       ->where('a.id_m_user', $this->general_library->getId())
+                       ->where('a.flag_active', 1);
+                       // ->order_by('c.tglsk','desc')
+    
+                       $query = $this->db->get()->result_array();
+                       return $query;
+   }
+
+   public function searchPengajuanKarisKarsu(){
+    $data = $this->input->post();
+    $this->db->select('*, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+            ->from('t_karis_karsu a')
+            ->join('m_user d', 'a.id_m_user = d.id')
+            ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'asc');
+
+    if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+        $this->db->where('e.skpd', $data['id_unitkerja']);
+    }
+
+    return $this->db->get()->result_array();
+}
+
 }

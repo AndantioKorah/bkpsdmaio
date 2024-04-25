@@ -112,6 +112,8 @@ $route['mt/jabatan-kosong'] = 'simata/C_Simata/jabatanKosong';
 // layanan
 $route['kepegawaian/layanan-karis-karsu'] = 'kepegawaian/C_Kepegawaian/LayananKarisKarsu';
 $route['kepegawaian/download'] = 'kepegawaian/C_Kepegawaian/lakukan_download';
+$route['kepegawaian/verifikasi-karis-karsu'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsu';
+
 
 
 

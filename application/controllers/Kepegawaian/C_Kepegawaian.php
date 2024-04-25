@@ -1076,6 +1076,11 @@ class C_Kepegawaian extends CI_Controller
         $this->general->delete('id_usul', $id, 'db_siladen.usul_layanan');
     }
 
+	public function deletePengajuanKarisKarsu($id){
+        $this->general->delete('id', $id, 't_karis_karsu');
+    }
+
+
 
 	public function getAllUsulLayananAdmin($id){
 		$data['result'] = $this->kepegawaian->getAllUsulLayananAdmin($id);
@@ -1622,7 +1627,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		// dd($data);
-		render('kepegawaian/layanan/V_LayananKarisKarsu', '', '', $data);
+		render('kepegawaian/layanan/V_KarisKarsu', '', '', $data);
 	}
 
 	public function lakukan_download(){                                                          
@@ -1633,6 +1638,23 @@ class C_Kepegawaian extends CI_Controller
 	public function insertUsulLayananKarisKarsu()
 	{ 
 		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu());
+	}
+
+	public function loadListRiwayatKarisKarsu(){
+		$data['result'] = $this->kepegawaian->getRiwayatKarisKarsu();
+		// dd($data);
+		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
+	}
+
+	public function verifikasiKarisKarsu(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		render('kepegawaian/layanan/V_VerfikasiKarisKarsu', '', '', $data);
+	}
+
+	public function searchPengajuanKarisKarsu(){
+		$data['result'] = $this->kepegawaian->searchPengajuanKarisKarsu();
+		$data['param'] = $this->input->post();
+		$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
 	}
 	
 

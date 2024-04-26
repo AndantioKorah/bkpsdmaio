@@ -12,6 +12,7 @@ class C_Kepegawaian extends CI_Controller
 		parent::__construct();
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
+		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
 		};
@@ -1057,10 +1058,10 @@ class C_Kepegawaian extends CI_Controller
 
 		if($id == 3){
 		$data['jenis_cuti'] = $this->kepegawaian->getAllWithOrder('db_siladen.m_cuti', 'id_cuti', 'asc');
-		$this->load->view('kepegawaian/form_layanan/V_FormCuti', $data);
+		$this->load->view('kepegawaian/layanan/V_FormCuti', $data);
 		} else {
 			$data['jenis_layanan'] = $id;
-			$this->load->view('kepegawaian/form_layanan/V_FormUsulLayanan', $data);
+			$this->load->view('kepegawaian/layanan/V_FormUsulLayanan', $data);
 		}
     }
 
@@ -1074,6 +1075,11 @@ class C_Kepegawaian extends CI_Controller
 	public function deleteUsulLayanan($id){
         $this->general->delete('id_usul', $id, 'db_siladen.usul_layanan');
     }
+
+	public function deletePengajuanKarisKarsu($id){
+        $this->general->delete('id', $id, 't_karis_karsu');
+    }
+
 
 
 	public function getAllUsulLayananAdmin($id){
@@ -1612,6 +1618,44 @@ class C_Kepegawaian extends CI_Controller
 		}
 
     }
+
+	public function LayananKarisKarsu(){
+		$data['daftar_keluarga'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','27','0');
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','54','0');
+		$data['laporan_perkawinan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','52','0');
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		// dd($data);
+		render('kepegawaian/layanan/V_KarisKarsu', '', '', $data);
+	}
+
+	public function lakukan_download(){                                                          
+		$this->load->helper(array('url','download'));
+		force_download('./dokumen_layanan/Lap Perkawinan I Daftar Keluarga Mengetahui Atasan Langsung - Karis Karsu.docx',NULL);
+	}  
+	
+	public function insertUsulLayananKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu());
+	}
+
+	public function loadListRiwayatKarisKarsu(){
+		$data['result'] = $this->kepegawaian->getRiwayatKarisKarsu();
+		// dd($data);
+		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
+	}
+
+	public function verifikasiKarisKarsu(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		render('kepegawaian/layanan/V_VerfikasiKarisKarsu', '', '', $data);
+	}
+
+	public function searchPengajuanKarisKarsu(){
+		$data['result'] = $this->kepegawaian->searchPengajuanKarisKarsu();
+		$data['param'] = $this->input->post();
+		$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
+	}
 	
 
 

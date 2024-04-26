@@ -175,7 +175,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 
 
-    <div class="form-check">
+    <div class="form-check" style="display:none">
       <input class="form-check-input" type="checkbox" value="1" name="myCheck" id="myCheck" onclick="myFunction()">
       <label class="form-check-label" for="myCheck">
         Jabatan Lama

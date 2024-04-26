@@ -286,6 +286,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
+					</a>
+				</li>
 			</ul>
 		<?php } ?>
 	</li>
@@ -342,6 +347,11 @@
 						</a>
 					</li>
 				<?php } ?>
+				<li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
+						</a>
+					</li>
 			</ul>
 		</li>
 		<?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isProgrammer()){ ?>

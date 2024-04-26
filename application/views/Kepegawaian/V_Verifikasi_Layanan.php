@@ -80,46 +80,8 @@
 
 
 <div class="row">
-	<div class="col-md-6" style="border-right: 5px solid black; ">
-					<!-- <span class="headerSection">Surat Pengantar</span> -->
-  <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
-  <li class="nav-item nav-item-layanan " role="presentation">
-    <button class="nav-link nav-link-layanan active"  data-bs-toggle="pill" data-bs-target="#pills-supen" type="button" role="tab" aria-controls="pills-supen" aria-selected="false">Surat Pengantar</button>
-  </li>
-  <?php if($result[0]['jenis_layanan'] == 3) { ?>
-    <!-- <?php if($result['0']['surat_keterangan']) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button class="nav-link nav-link-layanan " id="pills-profil-tab"
-    data-bs-toggle="pill" data-bs-target="#pills-suket" type="button" role="tab" aria-controls="pills-suket" aria-selected="false">Surat Keterangan</button>
-  </li>
-  <?php } ?> -->
-  <?php } ?>
-  </ul>
-      <hr style="margin-top: 10px;">
-					
-   
-  <div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade show active" id="pills-supen" role="tabpanel" aria-labelledby="pills-supen-tab">
- 
-  <?php if($result[0]['jenis_layanan'] == 3) { ?>
-  <iframe id="" style="width: 100%; height: 100vh;"
-						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
-  <?php } else { ?>
-              <iframe id="" style="width: 100%; height: 100vh;"
-						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nip'];?>/<?= $result['0']['file_pengantar'];?>"></iframe>
- <?php } ?>
- </div>
-
-  <div class="tab-pane fade show " id="pills-suket" role="tabpanel" aria-labelledby="pills-suket-tab">
-  <iframe id="" style="width: 100%; height: 100vh;"
-						src="<?=base_url();?>dokumen_layanan/<?= $result['0']['nama_layanan'];?>/<?= $result['0']['nip'];?>/<?= $result['0']['surat_keterangan'];?>"></iframe>
-  </div>
-
-
- 
-  </div>    
-          </div>
-				<div class="col-md-6" style="height:100px;">
+	
+				<div class="col-md-12">
 
 
 
@@ -278,6 +240,17 @@
   </li>
   <?php } ?>
   
+  <li>
+  <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+Verifikasi
+</button>
+<form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
+<input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_usul'];?>">
+<button  id="btn_tolak_verifikasi"  class="btn btn-danger" style="display:none;">
+Batal Verif
+</button>
+</form>
+  </li>
 
 
 </ul>
@@ -496,13 +469,12 @@
 <!-- <iframe id="view_file_verif" style="width: 100%; height: 100vh;"></iframe> -->
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 100vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
-
 				</div>
 			</div>
       
 	
 
-<button id="btn_verifikasi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelVerif">
+<!-- <button id="btn_verifikasi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelVerif">
 Verifikasi
 </button>
 <form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
@@ -510,11 +482,11 @@ Verifikasi
 <button  id="btn_tolak_verifikasi"  class="btn btn-danger" >
 Batal Verif
 </button>
-</form>
+</form> -->
 <style>
 </style>
 
-    
+
 
 <!-- Modal -->
 <div class="modal fade" id="modelVerif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -559,6 +531,13 @@ Batal Verif
 		</div>
 	</div>
 </div>
+
+    
+
+
+		</div>
+	</div>
+</div>
 <script>
 
 var jenis_user = 2; 
@@ -567,7 +546,7 @@ var status = "<?= $result[0]['status'];?>";
 
 $(function(){
 
-  $( "#sidebar_toggle" ).trigger( "click" );
+  // $( "#sidebar_toggle" ).trigger( "click" );
 
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()
@@ -594,64 +573,7 @@ function openPresensiTab(){
   })
 }
 
-  // function getFileOld(file) {
-  //       $('#view_file_verif').show()
-  //       $('#divloader').append(divLoaderNavy)
-  //       $('#view_file_verif').attr('src','');
-  //       var jenis_layanan = "<?=$result[0]['jenis_layanan'];?>";
-  //       var id_peg = "<?=$result[0]['id_peg'];?>";
-  //       var base_url = "<?= base_url();?>";
-
-  //       if(file == "pangkat"){
-  //         dir = "arsipelektronik/";
-  //       } else if(file == "jabatan"){
-  //         dir = "arsipjabatan/";
-  //       } else if(file == "pendidikan"){
-  //         dir = "arsippendidikan/";
-  //       } else if(file == "skcpns"){
-  //         dir = "arsipberkaspns/";
-  //       } else if(file == "skpns"){
-  //         dir = "arsipberkaspns/";
-  //       } else if(file == "gajiberkala"){
-  //         dir = "arsipgjberkala/";
-  //       } else if(file == "skp"){
-  //         dir = "arsipskp/";
-  //       } else if(file == "diklat"){
-  //         dir = "arsipdiklat/";
-  //       } else if(file == "drp" || file == "honor" || file == "suket_lain" || file == "ibel" || file == "forlap" || file == "karya_tulis" || file == "tubel" || file == "mutasi" || file == "serkom" || file == "pak"){
-  //         dir = "arsiplain/";
-  //       }    else {
-  //         dir = "uploads/";
-  //       }
-
-        
-  //       $.ajax({
-  //       type : "POST",
-  //       url  : base_url + '/kepegawaian/C_Kepegawaian/getFile',
-  //       dataType : "JSON",
-  //       data : {id_peg:id_peg,jenis_layanan:jenis_layanan,file:file},
-  //       success: function(data){
-  //       $('#divloader').html('')
-  //       console.log(data)
-  //       if(data != ""){
-  //         if(data[0].gambarsk != ""){
-  //           $('#view_file_verif').attr('src', base_url+dir+data[0].gambarsk)
-  //         // $('#tes').val(base_url+'uploads/'+nip+'/'+data[0].gambarsk)
-  //         $('#ket').html('');
-  //         } else {
-  //           $('#view_file_verif').attr('src', '')
-  //           $('#ket').html('Tidak ada data');
-  //         }
-  //       } else {
-  //       // errortoast('tidak ada data')
-  //       $('#view_file_verif').attr('src', '')
-  //       $('#ket').html('Tidak ada data');
-  //       }
-  //       }
-  //       });
-  //       }
-
-
+  
   async function getFile(file){
     $('#view_file_verif').hide()
     $('.iframe_loader').show()  
@@ -690,10 +612,16 @@ function openPresensiTab(){
         data : {id_peg:id_peg,jenis_layanan:jenis_layanan,file:file},
         success: function(data){
         $('#divloader').html('')
-        console.log(data)
+        var number = Math.floor(Math.random() * 1000);
+        var link = "<?=base_url();?>/arsipberkaspns/11250SK_PNS_199401042020121011.pdf?v="+number;
         if(data != ""){
           if(data[0].gambarsk != ""){
-            tes(data[0].gambarsk,dir)
+            $('#view_file_verif').attr('src', link)
+           $('#view_file_verif').on('load', function(){
+         $('.iframe_loader').hide()
+         $(this).show()
+       })
+           
           } else {
             $('#view_file_verif').attr('src', '')
             $('#ket').html('Tidak ada data');

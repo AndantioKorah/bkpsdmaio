@@ -7,6 +7,7 @@ class C_Master extends CI_Controller
         parent::__construct();
         $this->load->model('general/M_General', 'general');
         $this->load->model('master/M_Master', 'master');
+        $this->load->model('kinerja/M_Kinerja', 'kinerja');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
@@ -279,6 +280,16 @@ class C_Master extends CI_Controller
 
     public function hapusMasterPresentaseTpp($id){
         $this->general->delete('id', $id, 'm_presentase_tpp');
+    }
+
+    public function listTpp(){
+		$data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('master/V_ListTpp', '', '', $data);
+	}
+
+    public function loadListTpp(){
+        $data['result'] = $this->kinerja->countPaguTpp($this->input->post());
+        $this->load->view('master/V_ListTppData', $data);
     }
 
     public function inputMasterJenisLayanan(){

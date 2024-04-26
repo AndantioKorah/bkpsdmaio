@@ -1857,25 +1857,29 @@
 
         $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                             
-        $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
+        $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
                     c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
-                    a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster')
+                    a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
+                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan,
+                    g.kondisi_kerja AS kondisi_kerja_tambahan,
+                    g.nama_jabatan AS nama_jabatan_tambahan')
                     ->from('db_pegawai.pegawai a')
                     ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                     ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
                     ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
-                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                    ->join('m_user f', 'a.nipbaru_ws = f.username')
+                    ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
                     ->where('a.skpd', $data['id_unitkerja'])
                     ->order_by('c.eselon, a.nama')
-                    ->where('e.flag_active', 1);
-                    // ->where('id_m_status_pegawai', 1)
+                    ->where('f.flag_active', 1)
+                    ->where('id_m_status_pegawai', 1);
                     // ->get()->result_array();
         if($flag_profil == 1){
             $this->db->where('id_m_status_pegawai', 1);
         }
         if($id_pegawai != null){
-            $this->db->where('e.id', $id_pegawai);
+            $this->db->where('f.id', $id_pegawai);
         }
         $pegawai = $this->db->get()->result_array();
 
@@ -1951,6 +1955,20 @@
                     }
                     // else if($p['id_unitkerjamaster'] == 5011001){ // if kecamatan bunaken kepulauan
 
+                    // }
+
+                    if($p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
+                        if(stringStartWith("Kepala Puskesmas", $p['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
+                            $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_tambahan'];
+                            $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja_tambahan'];
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja_tambahan'];
+                            $result[$p['id_m_user']]['kondisi_kerja'] = $p['kondisi_kerja_tambahan'];
+                        }
+                    }
+
+                    // $substr = substr($p['nipbaru_ws'], 8, 6);
+                    // if($substr == '202203'){ // JFT PNS baru kelas jabatan di revert karena belum ada anggaran TPP naik  
+                    //     $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                     // }
 
                     if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){

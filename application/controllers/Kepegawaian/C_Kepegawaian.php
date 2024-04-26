@@ -1656,6 +1656,32 @@ class C_Kepegawaian extends CI_Controller
 		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
 	}
+
+	public function verifikasiKarisKarsuDetail($id){
+		$data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
+		// dd($data);
+		// $this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', $data);
+		render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
+	}
+
+	public function getFileForKarisKarsu()
+    {
+        $data = $this->kepegawaian->getFileForKarisKarsu();
+		// dd($data);
+        echo json_encode($data);
+    }
+
+	public function submitVerifikasiPengajuanKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanKarisKarsu());
+	}
+
+	public function batalVerifikasiPengajuanKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanKarisKarsu());
+	}
+
+
 	
 
 

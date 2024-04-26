@@ -120,9 +120,12 @@
 
   <div class="col-lg-12 mt-2">
      <div class="filter-option col-lg-12">
-     <span style="width:95%"  onclick="filterClicked()" 
+     <span style="width:95%" 
       class="filter-btn filter-<?php if($pas_foto) echo 'select'; else echo 'unselect';?> ">PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS PEREMPUAN) <i class="fas fa-<?php if($pas_foto) echo 'check'; else echo 'times';?>"></i></span> 
-     </div>
+      <?php if($pas_foto) { ?>
+      <a onclick="filterClicked2('<?=$pas_foto['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
+      <?php } ?>
+    </div>
   </div>
   <button type="submit" class="btn btn-primary float-right mt-2">Ajukan</button>
         </form>

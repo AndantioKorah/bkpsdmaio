@@ -2,6 +2,8 @@
 <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
+          <th class="text-left">Nama</th>
+          <th class="text-left">Unit Kerja</th>
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th></th>
@@ -9,13 +11,21 @@
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
-            <tr  style="background-color:<?php if($rs['status_pengajuan'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
-
+            <tr class="text-left">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['tanggal_pengajuan']?></td>
-              <td class="text-left"><?=($rs['status_pengajuan'] == '1' ? 'Sudah diverifikasi BKPSDM' : 'Menunggu Verifikasi BKPSDM');?></td>
+              <td class="text-left"><?=$rs['gelar1']?> <?=$rs['nama']?> <?=$rs['gelar2']?><br>
+               <span>NIP. <?=$rs['nipbaru']?></span> </td>
+              <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+              <td class="text-left"><?=$rs['status_pengajuan']?></td>
+              <td class="text-left">
+              <span class="badge badge-<?php if($rs['status_pengajuan'] == '1') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>
+              </span>
+            </td>
              <td>
-              <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+             <a href="<?= base_url();?>kepegawaian/verifikasi-detail/<?=$rs['id_pengajuan']?>">
+                <button  class="btn btn-sm btn-primary">
+                Verifikasi</button>
+                </a>
              </td>
               
             </tr>

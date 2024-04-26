@@ -1,4 +1,4 @@
-
+ 
   <?php if($result){ ?>
    <div class="table-responsive">
   <table class="table table-striped datatable" id="" border="0">

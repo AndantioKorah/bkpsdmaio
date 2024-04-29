@@ -36,7 +36,7 @@
         <form id="form_search">
           <div class="row" style="margin-top: -40px;">
             <?php if($this->general_library->isAdminAplikasi() 
-            || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+            || $this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') 
             || $this->general_library->isProgrammer()){?>
               <div class="col">
                 <label>Unit Kerja</label>
@@ -56,8 +56,11 @@
             <div class="col">
               <label>Status Pengajuan</label>
               <select class="form-control select2-navy" style="width: 100%"
-              id="id_m_status_pengajuan_cuti" data-dropdown-css-class="select2-navy" name="id_m_status_pengajuan_cuti">
-                  <option value="0" selected>Semua</option>
+              id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
+                  <option value="" selected>Semua</option>
+                  <option value="0" >Pengajuan</option>
+                  <option value="1" >Diterima</option>
+                  <option value="2" >Ditolak</option>
                   
               </select>
             </div>

@@ -1622,7 +1622,7 @@ class C_Kepegawaian extends CI_Controller
 	public function LayananKarisKarsu(){
 		$data['daftar_keluarga'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','27','0');
 		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
-		$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','54','0');
+		$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','53','0');
 		$data['laporan_perkawinan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','52','0');
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
@@ -1656,6 +1656,32 @@ class C_Kepegawaian extends CI_Controller
 		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
 	}
+
+	public function verifikasiKarisKarsuDetail($id){
+		$data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
+		// dd($data);
+		// $this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', $data);
+		render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
+	}
+
+	public function getFileForKarisKarsu()
+    {
+        $data = $this->kepegawaian->getFileForKarisKarsu();
+		// dd($data);
+        echo json_encode($data);
+    }
+
+	public function submitVerifikasiPengajuanKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanKarisKarsu());
+	}
+
+	public function batalVerifikasiPengajuanKarisKarsu()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanKarisKarsu());
+	}
+
+
 	
 
 

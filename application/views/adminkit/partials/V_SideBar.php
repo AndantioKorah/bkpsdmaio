@@ -128,7 +128,7 @@
 		</a>
 	</li>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
-	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || !$this->general_library->isWalikota()){ ?>
+	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
 			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
@@ -279,20 +279,23 @@
 					margin-top: .35rem;"></i>
 			</span>
 		</a>
-		<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				<li class="sidebar-item ">
+		<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
+				
+			<li class="sidebar-item ">
 					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 					</a>
 				</li>
-				<li class="sidebar-item ">
+			<li class="sidebar-item ">
 					<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 					</a>
-				</li>
-			</ul>
+		    </li>
 		<?php } ?>
+
+		
+		</ul>
 	</li>
 	<?php } ?>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
@@ -347,11 +350,13 @@
 						</a>
 					</li>
 				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
-						</a>
-					</li>
+				</a>
+				</li>
+				<?php } ?>
 			</ul>
 		</li>
 		<?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isProgrammer()){ ?>

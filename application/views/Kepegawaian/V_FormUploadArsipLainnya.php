@@ -285,7 +285,7 @@ $(function(){
       
         var fileSize = this.files[0].size/1024;
        
-        if(jenis_arsip != 54){
+        if(jenis_arsip != 53){
           if (extension != "pdf"){
           errortoast("Harus File PDF")
           $(this).val('');

@@ -45,6 +45,15 @@
   .div_label{
     margin-bottom: -5px;
   }
+
+  #profile_pegawai{
+      width: 150px;
+      height: calc(150px * 1.25);
+      background-size: cover;
+      object-fit: cover;
+      box-shadow: 5px 5px 10px #888888;
+      border-radius: 10%;
+  }
 </style>
 
 
@@ -198,9 +207,25 @@
             </div>
           <?php } ?>
           <div class="col-lg-12 text-center">
-            <img style="width: 120px; height: 120px" class="img-fluid rounded-circle mb-2 b-lazy"
-              src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 
-              data-src="<?=$this->general_library->getFotoPegawai($result[0]['fotopeg'])?>" />
+    
+          <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
+                            data-src="<?php
+                                $path = './assets/fotopeg/'. $result[0]['fotopeg'];
+                                // $path = '../siladen/assets/fotopeg/'. $result[0]['fotopeg'];
+                                if( $result[0]['fotopeg']){
+                                if (file_exists($path)) {
+                                   $src = './assets/fotopeg/'. $result[0]['fotopeg'];
+                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                } else {
+                                  $src = './assets/img/user.png';
+                                  // $src = '../siladen/assets/img/user.png';
+                                }
+                                } else {
+                                  $src = './assets/img/user.png';
+                                }
+                                echo base_url().$src;?>" /> 
+
+           
           </div>
           <div class="col-lg-12 text-center">
             <span class="sp_profil">
@@ -415,9 +440,7 @@ Batal Verif
     
 
 
-		</div>
-	</div>
-</div>
+		
 <script>
 
 var nip = "<?= $result[0]['nip'];?>"; 

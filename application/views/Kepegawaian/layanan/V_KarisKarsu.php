@@ -242,7 +242,7 @@ ol {
 						<ol class="rectangle-list">
 							<li>
 								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
-									onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')" data-toggle="modal" data-target="#exampleModal"
+									onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -351,10 +351,10 @@ ol {
 					</button> Berkas belum diupload<br>
 					Berkas diupload Pada Menu Profil <br>
 					Untuk Berkas : <br>
-					<i class="fa fa-file"></i> LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN ;<br>
-					<i class="fa fa-file"></i> DAFTAR KELUARGA MENGETAHUI ATASAN ;<br>
-					<i class="fa fa-file"></i> BUKU NIKAH / AKTA PERKAWINAN DILEGALISIR;<br>
-					<i class="fa fa-file"></i> PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS
+					<i class="fa fa-file-pdf"></i> LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN ;<br>
+					<i class="fa fa-file-pdf"></i> DAFTAR KELUARGA MENGETAHUI ATASAN ;<br>
+					<i class="fa fa-file-pdf"></i> BUKU NIKAH / AKTA PERKAWINAN DILEGALISIR;<br>
+					<i class="fa fa-file-image"></i> PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS
 					PEREMPUAN)
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
@@ -471,6 +471,7 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 loadListRiwayatKarisKarsu()
+                window.scrollTo(0, document.body.scrollHeight);
               } else {
                 errortoast(result.msg)
                 return false;

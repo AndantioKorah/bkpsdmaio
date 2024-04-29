@@ -190,10 +190,10 @@
                   <!-- <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
                   src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" />  -->
 
-                  <div class="foto_container">
+                  <div class="foto_containerx">
                             <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
                             class="img-circle elevation-2 image-settings" alt="User Image"> -->
-                            <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
+                            <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
                             data-src="<?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];

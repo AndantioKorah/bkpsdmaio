@@ -68,9 +68,9 @@
                 $nama = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id')
-                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja','left')
+                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id','left')
+                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg','left')
                                 ->like('a.nama', $data['search_param'])
                                 ->where('a.flag_active', 1)
                                 ->order_by('b.id_m_status_pegawai')
@@ -81,9 +81,9 @@
                 $nip = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id')
-                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja','left')
+                                ->join('m_status_pegawai d', 'b.id_m_status_pegawai = d.id','left')
+                                ->join('db_pegawai.statuspeg e', 'b.statuspeg = e.id_statuspeg','left')
                                 ->like('a.username', $data['search_param'])
                                 ->where('a.flag_active', 1)
                                 ->order_by('b.id_m_status_pegawai')
@@ -1033,7 +1033,7 @@
             `c`.`nm_unitkerja` 
             FROM
             `db_pegawai`.`pegawai` `a`
-            JOIN `db_pegawai`.`unitkerja` `c` ON `a`.`skpd` = `c`.`id_unitkerja` 
+            LEFT JOIN `db_pegawai`.`unitkerja` `c` ON `a`.`skpd` = `c`.`id_unitkerja` 
             WHERE a.nipbaru_ws NOT IN (SELECT aa.username FROM m_user aa WHERE aa.flag_active = 1)
             GROUP BY a.id_peg")->result_array();
         }

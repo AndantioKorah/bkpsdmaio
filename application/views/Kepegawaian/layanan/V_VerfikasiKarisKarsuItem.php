@@ -6,6 +6,7 @@
           <th class="text-left">Unit Kerja</th>
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
+          <th class="text-left">Keterangan</th>
           <th></th>
           
         </thead>
@@ -16,11 +17,12 @@
               <td class="text-left"><?=$rs['gelar1']?> <?=$rs['nama']?> <?=$rs['gelar2']?><br>
                <span>NIP. <?=$rs['nipbaru']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-              <td class="text-left"><?=$rs['created_date']?></td>
+              <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_pengajuan'])?></td>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '1') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>
               </span>
             </td>
+            <td class="text-left"><?=$rs['keterangan']?></td>
              <td>
              <a href="<?= base_url();?>kepegawaian/verifikasi-detail/<?=$rs['id_pengajuan']?>">
                 <button  class="btn btn-sm btn-primary">

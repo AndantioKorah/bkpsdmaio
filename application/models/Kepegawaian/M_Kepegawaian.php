@@ -305,11 +305,11 @@ class M_Kepegawaian extends CI_Model
         function getProfilPegawaiByAdmin($username){
             $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
                 ->from('db_pegawai.pegawai a')
-                ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
+                ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
-                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat','left')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
-                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja','left')
                 ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
@@ -334,24 +334,24 @@ class M_Kepegawaian extends CI_Model
             (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat')
                 ->from('db_pegawai.pegawai a')
-                ->join('db_pegawai.agama b', 'a.agama = b.id_agama')
+                ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
-                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
-                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja', 'left')
                 ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk', 'left')
-                ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg')
+                ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg', 'left')
                 ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
                 ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
                 ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
-                ->join('m_user l', 'a.nipbaru_ws = l.username')
+                ->join('m_user l', 'a.nipbaru_ws = l.username', 'left')
                 ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
                 ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
                 ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->where('a.nipbaru_ws', $username)
-                ->where('l.flag_active', 1)
+                // ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -5895,8 +5895,8 @@ public function submitEditJabatan(){
         $this->db->select('*')
                        ->from('t_karis_karsu a')
                        ->where('a.id_m_user', $this->general_library->getId())
-                       ->where('a.flag_active', 1);
-                       // ->order_by('c.tglsk','desc')
+                       ->where('a.flag_active', 1)
+                       ->order_by('a.id','desc');
     
                        $query = $this->db->get()->result_array();
                        return $query;
@@ -5904,16 +5904,20 @@ public function submitEditJabatan(){
 
    public function searchPengajuanKarisKarsu(){
     $data = $this->input->post();
-    $this->db->select('*, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+    $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_karis_karsu a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
             ->where('a.flag_active', 1)
-            ->order_by('a.created_date', 'asc');
+            ->order_by('a.created_date', 'desc');
 
     if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
         $this->db->where('e.skpd', $data['id_unitkerja']);
+    }
+
+    if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+        $this->db->where('a.status', $data['status_pengajuan']);
     }
 
     return $this->db->get()->result_array();
@@ -6002,7 +6006,7 @@ public function getFileForKarisKarsu()
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->where('a.id_dokumen', 54)
+                ->where('a.id_dokumen', 53)
                 ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);

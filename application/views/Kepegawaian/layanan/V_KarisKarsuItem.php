@@ -6,7 +6,7 @@
           <th class="text-left">No</th>
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
-          <th class="text-left">Ketarangan</th>
+          <th class="text-left">Keterangan</th>
 
           <th></th>
         </thead>
@@ -14,7 +14,7 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['created_date']?></td>
+              <td class="text-left"><?= formatDateNamaBulan($rs['created_date'])?></td>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status'] == '1') echo "success"; else if($rs['status'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>
 

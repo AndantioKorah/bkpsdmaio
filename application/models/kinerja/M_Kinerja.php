@@ -1544,7 +1544,8 @@
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                     $namaunitkerja = explode(" ", $unitkerja['nm_unitkerja']);
                     if($namaunitkerja[0] == 'Puskesmas'){
-                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
+                        // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                     }
                     // if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
                     //     $result[$p['id_m_user']]['kelas_jabatan'] = 11;

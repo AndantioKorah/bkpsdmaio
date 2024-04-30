@@ -657,6 +657,20 @@
                             ->get()->result_array();
         }
 
+        public function getListPegawaiByUnitKerjaNew($id_unitkerja){
+            return $this->db->select('a.*, b.nama_jabatan, c.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('m_user c', 'a.nipbaru_ws = c.username')
+                            ->where('a.skpd', $id_unitkerja)
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->where('c.flag_active', 1)
+                            ->order_by('b.eselon', 'asc')
+                            ->order_by('a.nama', 'asc')
+                            ->group_by('a.nipbaru_ws')
+                            ->get()->result_array();
+        }
+
         public function importPegawaiNewUser(){
             $data = $this->input->post();
             if(!$data['search_value']){

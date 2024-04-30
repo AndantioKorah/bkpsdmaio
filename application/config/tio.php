@@ -26,6 +26,7 @@ $route['pelanggaran'] = 'kinerja/C_Kinerja/pelanggaran';
 $route['kinerja/verifikasi'] = 'kinerja/C_VerifKinerja/verifKinerjaNew';
 $route['kinerja/rekapitulasi-realisasi'] = 'kinerja/C_VerifKinerja/rekapRealisasi';
 $route['kinerja/skp-bulanan'] = 'kinerja/C_Kinerja/skpBulanan';
+$route['kinerja/skbp-perangkatdaerah'] = 'kinerja/C_Kinerja/skbpPd';
 // $route['kinerja/skbp'] = 'kinerja/C_Kinerja/skbp';
 $route['kinerja/skbp'] = 'kinerja/C_Kinerja/skpBulanan';
 $route['kinerja/komponen'] = 'kinerja/C_Kinerja/komponenKinerja';

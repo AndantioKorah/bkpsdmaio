@@ -532,7 +532,15 @@
 					</a>
 				</li>
 				<?php } ?>
-				
+				<?php if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skbp-perangkatdaerah')?>">
+						<i class="align-middle me-2 far fa-circle"></i>SKBP Perangkat Daerah
+					</a>
+				</li>
+				<?php } ?>
 			</ul>
 		</li>
 

@@ -634,10 +634,14 @@
                 // $gol2 = [21, 22, 23, 24];
                 // $gol3 = [31, 32, 33, 34];
                 // $gol4 = [41, 42, 43, 44, 45];
-                if(!$peg['eselon']){
+                if($peg['eselon'] == 'Non Eselon'){
                     $result['eselon']['Non Eselon']['jumlah']++;
                 } else {
-                    $result['eselon'][$peg['eselon']]['jumlah']++;
+                    if(isset($result['eselon'][$peg['eselon']])){
+                        $result['eselon'][$peg['eselon']]['jumlah']++;
+                    } else {
+                        $result['eselon']['Non Eselon']['jumlah']++;
+                    }
                 }
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;

@@ -381,6 +381,17 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->verifkinerja->deleteNilaiKomponen($id));
     }
 
+    public function skbpPd(){
+        $data['skpd'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_SkbpPd', '', '', $data);
+    }
+
+    public function searchSkbpPd(){
+        $data['param'] = $this->input->post();
+        $data['result'] = $this->user->getListPegawaiByUnitKerjaNew($data['param']['id_unitkerja']);
+        $this->load->view('kinerja/V_SkbpPdListPegawai', $data);
+    }
+
     public function loadPegawaiKomponenKinerja()
     {
         $data['periode'] = $this->input->post();

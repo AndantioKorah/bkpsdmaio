@@ -665,6 +665,24 @@
                     ]);
         }
 
+        public function loadInputGajiData($data){
+            return $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                            ->where('a.skpd', $data['id_unitkerja'])
+                            ->order_by('b.eselon', 'a.nama')
+                            ->get()->result_array();
+        }
+
+        public function saveInputGaji($data){
+            $this->db->where('nipbaru_ws', $data['nip'])
+                    ->update('db_pegawai.pegawai', [
+                        'besaran_gaji' => $data['gaji']
+                    ]);
+        }
+
         public function loadUserHakAkses($id){
             return $this->db->select('a.*, c.*, d.nm_unitkerja, f.nama_hak_akses, e.nama_jabatan')
                             ->from('t_hak_akses a')

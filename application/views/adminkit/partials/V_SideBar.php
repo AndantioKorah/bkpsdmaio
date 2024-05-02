@@ -127,6 +127,19 @@
 			<span class="align-middle">List Pemberian TPP</span>
 		</a>
 	</li>
+	<?php if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
+			<i class="align-middle me-2 fa fa-money-bill"></i> 
+			<span class="align-middle">Input Gaji Pegawai</span>
+		</a>
+	</li>
+	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
 	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">

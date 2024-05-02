@@ -1638,6 +1638,10 @@
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.01";
                         }
                     }
+                    
+                    if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                    }
 
                     if($p['skpd'] == 6170000){ // if puskes bunaken
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
@@ -1672,6 +1676,10 @@
                         $result[$p['id_m_user']]['kondisi_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
                     } else {
                         $result[$p['id_m_user']]['beban_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
+                    }
+
+                    if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
                 }
                 

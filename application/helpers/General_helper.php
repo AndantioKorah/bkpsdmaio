@@ -226,11 +226,14 @@ function countNilaiSkp($data)
                     $nilai_capaian = 0;
                 } else {
                     $nilai_capaian = (floatval($d['realisasi']) / floatval($d['target_kuantitas'])) * 100;
+                    if($nilai_capaian > 100){
+                        $nilai_capaian = 100;
+                    }
                 }
             }
             $akumulasi_nilai_capaian += $nilai_capaian;
         }
-
+        
         if (count($data) != 0) {
             $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
         }

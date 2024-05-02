@@ -1731,7 +1731,7 @@
     public function readAbsensiAars($param, $flag_alpha = 0){
         $result = null;
         $skpd = explode(";", $param['skpd']);
-
+        // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
         return $this->buildDataAbsensi($param, 1, $flag_alpha);

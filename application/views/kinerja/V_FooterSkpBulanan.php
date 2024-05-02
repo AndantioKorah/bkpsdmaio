@@ -27,7 +27,25 @@
             <tr>
                 <td style="width: 100%; text-align: center;">Menyetujui,</td>
             </tr>
+           
+            <?php  if($atasan_pegawai['id_unitkerja'] == "3017000") { ?>
             <tr>
+                <!-- <td style="width: 100%; text-align: center;">Kepala Perangkat Daerah</td> -->
+                <td style="width: 100%; text-align: center;">Plt. Kepala Dinas Komunikasi dan Informatika</td>
+            </tr>
+            <tr>
+                <td><br><br><br></td>
+            </tr>
+            <?php // if($atasan_pegawai['nipbaru_ws'] != $kepala_pd['nipbaru_ws']){ ?>
+                <tr>
+                    <td style="width: 100%; text-align: center;">
+                        <u>Reintje Abraham Heydemans, SE, M.Si</u><br>
+                        NIP. 19660619 199003 1 009
+                    </td>
+                </tr>
+            <?php // } ?>
+            <?php } else { ?>
+                <tr>
                 <!-- <td style="width: 100%; text-align: center;">Kepala Perangkat Daerah</td> -->
                 <td style="width: 100%; text-align: center;"><?=$kepala_pd['nama_jabatan']?></td>
             </tr>
@@ -42,6 +60,8 @@
                     </td>
                 </tr>
             <?php // } ?>
+            <?php  } ?>
+
         </table>
     </center>
 <?php } else { ?>

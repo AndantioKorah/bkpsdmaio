@@ -1586,6 +1586,11 @@
                     if($namaunitkerja[0] == 'Puskesmas'){
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                        $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
+                        $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
+                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                            $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                        }
                     }
                     // if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
                     //     $result[$p['id_m_user']]['kelas_jabatan'] = 11;

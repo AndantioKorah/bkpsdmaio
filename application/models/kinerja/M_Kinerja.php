@@ -471,9 +471,10 @@
         // dd($pegawai);
 
         if($pegawai['kepalaskpd'] != 1){ //bukan kepala skpd
-            if($pegawai['id_unitkerjamaster'] == 4000000 || 
+            if($pegawai['id_unitkerjamaster'] == 4000000 || // 
             $pegawai['id_unitkerjamaster'] == 3000000 || 
             stringStartWith('Bagian', $pegawai['nm_unitkerja'])){ // dinas, badan & bagian
+                // dd('asd');
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -508,17 +509,21 @@
                     }
                 } else if ($pegawai['jenis_jabatan'] == "Struktural"){ // kasub atau kabid
                     if($pegawai['id_eselon'] == 8 || $pegawai['id_eselon'] == 9){ // ESELON IV, cari kabid
-                        $atasan = $this->baseQueryAtasan()
+                        if($pegawai['flag_uptd'] == 1 && $pegawai['id_eselon'] == 8){ // jika uptd dan kepala UPTD, cari kaban
+                            $atasan = $kepala;
+                        } else {
+                            $atasan = $this->baseQueryAtasan()
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
                                         ->get()->row_array();
-                        if(!$atasan){ //cari sek
-                            $atasan = $this->baseQueryAtasan()
-                                        ->where('b.skpd', $pegawai['id_unitkerja'])
-                                        ->where('f.id_eselon', 6)
-                                        ->get()->row_array();
-                            if(!$atasan){ //cari kepala
-                                $atasan = $kepala;
+                            if(!$atasan){ //cari sek
+                                $atasan = $this->baseQueryAtasan()
+                                            ->where('b.skpd', $pegawai['id_unitkerja'])
+                                            ->where('f.id_eselon', 6)
+                                            ->get()->row_array();
+                                if(!$atasan){ //cari kepala
+                                    $atasan = $kepala;
+                                }
                             }
                         }
                     } else if($pegawai['id_eselon'] == 6 || $pegawai['id_eselon'] == 7){ // ESELON III, kabid atau sek
@@ -560,7 +565,7 @@
                 if(!stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || !stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //bukan kepsek
                     $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    ->like('nama_jabatan', 'Kepala%')
+                                    ->where('nama_jabatan LIKE', 'Kepala%')
                                     ->get()->row_array();
                     if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
                         $kepala = $this->baseQueryAtasan()
@@ -651,7 +656,7 @@
                         }
                     }
                 }
-            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){
+            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // kelurahan
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -683,6 +688,44 @@
                         $atasan = $kepala;
                     }
                 }
+            } else if($pegawai['id_unitkerja'] == 7005020 || $pegawai['id_unitkerja'] == 7005010){ // rumah sakit
+                $kepala = $this->baseQueryAtasan()
+                                ->where('b.skpd', $pegawai['id_unitkerja'])
+                                ->where('d.kepalaskpd', 1)
+                                ->get()->row_array();
+                if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
+                    $atasan = $this->baseQueryAtasan()
+                                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                                    ->where('nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
+                                    ->get()->row_array();
+                    if(!$atasan){ //cari sek
+                        $atasan = $this->baseQueryAtasan()
+                                        ->where('b.skpd', $pegawai['id_unitkerja'])
+                                        ->where('f.id_eselon', 8)
+                                        ->get()->row_array();
+                        if(!$atasan){ //cari lurah
+                            $atasan = $kepala;
+                        }
+                    }
+                } else if ($pegawai['jenis_jabatan'] == "Struktural"){ // kabid
+                    if($pegawai['id_eselon'] == 7){ // ESELON III B, cari direktur
+                        $atasan = $this->baseQueryAtasan()
+                                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                                    ->where('f.id_eselon', 6)
+                                    ->get()->row_array();
+                        if(!$atasan){ //cari kepala
+                            $atasan = $kepala;
+                        }
+                    } else if($pegawai['id_eselon'] == 9){ // kasub, cari kabid
+                        $atasan = $this->baseQueryAtasan()
+                                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                                    ->where('nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
+                                    ->get()->row_array();
+                        if(!$atasan){ //cari kepala
+                            $atasan = $kepala;
+                        }
+                    }
+                }
             }
         } else if($pegawai['kepalaskpd'] == 1){
             if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika lurah
@@ -691,7 +734,9 @@
                                 ->where('f.id_eselon', 6)
                                 ->get()->row_array(); //cari camat
                 $kepala = $atasan;
-            } else if(stringStartWith('Puskesmas', $pegawai['nm_unitkerja'])) {// jika kapus
+            } else if(stringStartWith('Puskesmas', $pegawai['nm_unitkerja'])
+            || $pegawai['id_unitkerja'] == 7005020 
+            || $pegawai['id_unitkerja'] == 7005010){// jika kapus, atau direktur rumah sakit
                 $atasan = $this->baseQueryAtasan()
                                 ->where('c.id_unitkerja', 3012000)
                                 ->where('d.kepalaskpd', 1)
@@ -728,7 +773,7 @@
         //                     ->where('a.id',$this->general_library->getId())
         //                     ->get()->row_array();
 
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan,
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
         a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -774,7 +819,7 @@
     }
 
     public function createSkpBulananVerif($data){
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan,
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
         a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -823,7 +868,7 @@
                                 ->where('a.flag_active', 1)
                                 ->order_by('a.created_date')
                                 ->get()->result_array();
-        
+                                
         $komponen_kinerja = $this->db->select('*')
                                     ->from('t_komponen_kinerja a')
                                     ->where('a.id_m_user', $pegawai['id'])
@@ -990,8 +1035,8 @@
     }
 
     public function insertDisiplinKerja($data, $filename){
-        $rs['code'] = 0;
-        $rs['message'] = '';
+        $res['code'] = 0;
+        $res['message'] = '';
 
         $this->db->trans_begin();
 
@@ -1000,6 +1045,40 @@
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
         
+        $explode_tanggal_awal = explode('-', $tanggal[0]);
+        $explode_tanggal_akhir = explode('-', $tanggal[1]);
+
+        $list_pegawai = null;
+        foreach($data['pegawai'] as $dp){
+            $list_pegawai[] = $dp;
+        }
+
+        $list_nama_pegawai = $this->db->select('*')
+                                    ->from('m_user')
+                                    ->where_in('id', $list_pegawai)
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+
+        $data['pegawai'] = $list_nama_pegawai;
+
+        $list_exist = null;
+        $exist = $this->db->select('*')
+                        ->from('t_dokumen_pendukung')
+                        ->where_in('id_m_user', $list_pegawai)
+                        ->where('tahun >=', $explode_tanggal_awal[0])
+                        ->where('tahun <=', $explode_tanggal_akhir[0])
+                        ->where('bulan >=', $explode_tanggal_awal[1])
+                        ->where('bulan <=', $explode_tanggal_akhir[1])
+                        ->where('flag_active', 1)
+                        ->get()->result_array();
+        if($exist){
+            foreach($exist as $e){
+                $tanggal = $e['tanggal'] > 10 ? $e['tanggal'] : '0'.$e['tanggal'];
+                $bulan = $e['bulan'] > 10 ? $e['bulan'] : '0'.$e['bulan'];
+                $list_exist[$e['id_m_user'].$tanggal.$bulan.$e['tahun']] = $e;
+            }
+        }
+        // dd($list_exist);
         $insert_data = null;
         $i = 0;
         foreach($data['pegawai'] as $d){
@@ -1007,7 +1086,15 @@
             foreach($list_tanggal as $l){
                 // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
-                    $insert_data[$i]['id_m_user'] = $d;
+                    // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
+                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]])){ // jika ada dokumen pendukung pada tanggal tersebut
+                        $this->db->trans_rollback();
+                        $res['code'] = 1;
+                        $res['message'] = 'Gagal mengisi dokumen pendukung. Pegawai atas nama '.$d['nama'].' memiliki dokumen pendukung pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
+                        $res['data'] = null;
+                        return $res;                        
+                    }
+                    $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
@@ -1042,7 +1129,7 @@
             $this->db->trans_commit();
         }
 
-        return $rs;
+        return $res;
     }
 
     public function countTotalDataPendukung($id, $bulan, $tahun, $flag_verif = 0){
@@ -1546,6 +1633,11 @@
                     if($namaunitkerja[0] == 'Puskesmas'){
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                        $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
+                        $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
+                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                            $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                        }
                     }
                     // if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
                     //     $result[$p['id_m_user']]['kelas_jabatan'] = 11;
@@ -1593,6 +1685,10 @@
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.01";
                         }
                     }
+                    
+                    if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                    }
 
                     if($p['skpd'] == 6170000){ // if puskes bunaken
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
@@ -1627,6 +1723,10 @@
                         $result[$p['id_m_user']]['kondisi_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
                     } else {
                         $result[$p['id_m_user']]['beban_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
+                    }
+
+                    if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
                 }
                 

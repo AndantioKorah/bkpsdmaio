@@ -56,6 +56,7 @@ $route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
 $route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';
 $route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';
 $route['master/list-tpp'] = 'master/C_Master/listTpp';
+$route['master/input-gaji'] = 'master/C_Master/inputGaji';
 
 //maxchat
 $route['api/maxchat/webhook'] = 'maxchat/C_Maxchat/webhook';

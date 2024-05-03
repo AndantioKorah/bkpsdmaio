@@ -63,10 +63,16 @@
 
 <script>
     $(function(){
+        var firstDay = getFirstDayOfMonth(
+            date.getFullYear(),
+            date.getMonth(),
+        );
+
         $('#pegawai').select2()
         $('#jenis_disiplin').select2()
         $("#range_periode").daterangepicker({
-            showDropdowns: true
+            showDropdowns: true,
+            // minDate: firstDay
         });
 
     })

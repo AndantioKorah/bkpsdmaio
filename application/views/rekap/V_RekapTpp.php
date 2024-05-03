@@ -9,11 +9,23 @@
                 <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih SKPD</label>
-                        <select class="form-control select2-navy" style="width: 100%"
+                        <select class="form-control select2-navy" style="width: 100%;"
                             id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
-                            <?php foreach($list_skpd as $s){ ?>
-                                <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
-                            <?php } ?>
+                            <?php if($list_skpd){
+                                foreach($list_skpd as $uk){ if($uk['id_unitkerja'] != 0 && $uk['id_unitkerja'] != 5){
+                                ?>
+                                <?php if($this->general_library->isProgrammer() 
+                                || $this->general_library->isAdminAplikasi() 
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+                                <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                    <?=$uk['nm_unitkerja']?>
+                                </option>
+                                <?php } else { if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){ ?>
+                                <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                    <?=$uk['nm_unitkerja']?>
+                                </option>
+                                <?php } } ?>
+                            <?php } } } ?>
                         </select>
                     </div>
                 </div>

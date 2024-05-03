@@ -127,6 +127,19 @@
 			<span class="align-middle">List Pemberian TPP</span>
 		</a>
 	</li>
+	<?php if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
+			<i class="align-middle me-2 fa fa-money-bill"></i> 
+			<span class="align-middle">Input Gaji Pegawai</span>
+		</a>
+	</li>
+	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
 	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
@@ -490,7 +503,14 @@
 						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
 					</a>
 				</li>
-				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+				|| $this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
+				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>TPP
@@ -556,7 +576,8 @@
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
 				|| $this->general_library->isKepalaPd()
-				|| $this->general_library->isWalikota()){ ?>
+				|| $this->general_library->isWalikota()
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai

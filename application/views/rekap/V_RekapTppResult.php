@@ -30,12 +30,14 @@
                         <td>
                             <select class="form-control select2-navy" style="width: 100%"
                                 id="jenis_file" data-dropdown-css-class="select2-navy" name="jenis_file">
-                                <option selected value="absen">Rekap Absensi</option>
-                                <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
+                                <option value="absen">Rekap Absensi</option> 
+                                <option selected value="kehadiran">Rekap Kehadiran</option> <!-- belum  -->
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
+                                <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
+                                <option value="penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
-                                <option value="daftar_permintaan">Daftar Permintaan</option>
-                                <option value="daftar_pembayaran">Daftar Pembayaran</option>
+                                <!-- <option value="daftar_permintaan">Daftar Permintaan</option> -->
+                                <!-- <option value="daftar_pembayaran">Daftar Pembayaran</option> -->
                             </select>    
                         </td>
                     </tr>

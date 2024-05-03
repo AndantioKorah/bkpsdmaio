@@ -2,7 +2,7 @@
   <div class="col-lg-12 p-3">
     <div class="card card-default">
       <div class="modal-header">
-        <h5 clsas="modal-title">LIST PEMBERIAN TPP</h5>
+        <h5 clsas="modal-title">INPUT GAJI PEGAWAI</h5>
       </div>
       <div class="modal-body">
         <form id="form_list_tpp">
@@ -12,9 +12,9 @@
                 <?php if($unit_kerja){
                     foreach($unit_kerja as $uk){ if($uk['id_unitkerja'] != 0 && $uk['id_unitkerja'] != 5){
                     ?>
-                    <?php if($this->general_library->isProgrammer() 
-                    || $this->general_library->isAdminAplikasi()
-                    || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+                    <?php if($this->general_library->isProgrammer() ||
+                    $this->general_library->isAdminAplikasi() ||
+                    $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
                       <option value="<?=$uk['id_unitkerja']?>">
                           <?=$uk['nm_unitkerja']?>
                       </option>
@@ -56,7 +56,7 @@
     $('#result').html('')
     $('#result').append(divLoaderNavy)
     $.ajax({
-        url: '<?=base_url("master/C_Master/loadListTpp")?>',
+        url: '<?=base_url("master/C_Master/loadInputGaji")?>',
         method: 'post',
         data: $(this).serialize(),
         success: function(data){

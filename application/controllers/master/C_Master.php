@@ -292,6 +292,20 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_ListTppData', $data);
     }
 
+    public function inputGaji(){
+        $data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('master/V_InputGaji', '', '', $data);
+    }
+
+    public function loadInputGaji(){
+        $data['result'] = $this->master->loadInputGajiData($this->input->post());
+        $this->load->view('master/V_InputGajiData', $data);
+    }
+
+    public function saveInputGaji(){
+        return $this->master->saveInputGaji($this->input->post());
+    }
+
     public function inputMasterJenisLayanan(){
         $data = $this->input->post();
         $input['nama'] = $data['nama'];

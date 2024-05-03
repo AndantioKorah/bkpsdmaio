@@ -1005,7 +1005,8 @@
         $data['disiplin_kerja'] = $this->db->select('keterangan')
                 ->from('m_jenis_disiplin_kerja')
                 ->where('flag_active', 1)
-                ->where_not_in('id', [7, 8, 9, 10, 11, 12])
+                // ->where_not_in('id', [7, 8, 9, 10, 11, 12])
+                ->where_not_in('id', [11, 12])
                 ->get()->result_array();
 
         $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan, a.keterangan as keterngn')
@@ -1232,7 +1233,7 @@
         }
         if($flag_alpha == 1){
             return $list_alpha;
-        }        
+        }
         return $data;
     }
 

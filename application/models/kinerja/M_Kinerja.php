@@ -474,6 +474,7 @@
             if($pegawai['id_unitkerjamaster'] == 4000000 || // 
             $pegawai['id_unitkerjamaster'] == 3000000 || 
             stringStartWith('Bagian', $pegawai['nm_unitkerja'])){ // dinas, badan & bagian
+                // dd('asd');
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -508,17 +509,21 @@
                     }
                 } else if ($pegawai['jenis_jabatan'] == "Struktural"){ // kasub atau kabid
                     if($pegawai['id_eselon'] == 8 || $pegawai['id_eselon'] == 9){ // ESELON IV, cari kabid
-                        $atasan = $this->baseQueryAtasan()
+                        if($pegawai['flag_uptd'] == 1 && $pegawai['id_eselon'] == 8){ // jika uptd dan kepala UPTD, cari kaban
+                            $atasan = $kepala;
+                        } else {
+                            $atasan = $this->baseQueryAtasan()
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
                                         ->get()->row_array();
-                        if(!$atasan){ //cari sek
-                            $atasan = $this->baseQueryAtasan()
-                                        ->where('b.skpd', $pegawai['id_unitkerja'])
-                                        ->where('f.id_eselon', 6)
-                                        ->get()->row_array();
-                            if(!$atasan){ //cari kepala
-                                $atasan = $kepala;
+                            if(!$atasan){ //cari sek
+                                $atasan = $this->baseQueryAtasan()
+                                            ->where('b.skpd', $pegawai['id_unitkerja'])
+                                            ->where('f.id_eselon', 6)
+                                            ->get()->row_array();
+                                if(!$atasan){ //cari kepala
+                                    $atasan = $kepala;
+                                }
                             }
                         }
                     } else if($pegawai['id_eselon'] == 6 || $pegawai['id_eselon'] == 7){ // ESELON III, kabid atau sek
@@ -768,7 +773,7 @@
         //                     ->where('a.id',$this->general_library->getId())
         //                     ->get()->row_array();
 
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan,
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
         a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -814,7 +819,7 @@
     }
 
     public function createSkpBulananVerif($data){
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan,
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
         a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -1030,8 +1035,8 @@
     }
 
     public function insertDisiplinKerja($data, $filename){
-        $rs['code'] = 0;
-        $rs['message'] = '';
+        $res['code'] = 0;
+        $res['message'] = '';
 
         $this->db->trans_begin();
 
@@ -1040,6 +1045,40 @@
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
         
+        $explode_tanggal_awal = explode('-', $tanggal[0]);
+        $explode_tanggal_akhir = explode('-', $tanggal[1]);
+
+        $list_pegawai = null;
+        foreach($data['pegawai'] as $dp){
+            $list_pegawai[] = $dp;
+        }
+
+        $list_nama_pegawai = $this->db->select('*')
+                                    ->from('m_user')
+                                    ->where_in('id', $list_pegawai)
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+
+        $data['pegawai'] = $list_nama_pegawai;
+
+        $list_exist = null;
+        $exist = $this->db->select('*')
+                        ->from('t_dokumen_pendukung')
+                        ->where_in('id_m_user', $list_pegawai)
+                        ->where('tahun >=', $explode_tanggal_awal[0])
+                        ->where('tahun <=', $explode_tanggal_akhir[0])
+                        ->where('bulan >=', $explode_tanggal_awal[1])
+                        ->where('bulan <=', $explode_tanggal_akhir[1])
+                        ->where('flag_active', 1)
+                        ->get()->result_array();
+        if($exist){
+            foreach($exist as $e){
+                $tanggal = $e['tanggal'] > 10 ? $e['tanggal'] : '0'.$e['tanggal'];
+                $bulan = $e['bulan'] > 10 ? $e['bulan'] : '0'.$e['bulan'];
+                $list_exist[$e['id_m_user'].$tanggal.$bulan.$e['tahun']] = $e;
+            }
+        }
+        // dd($list_exist);
         $insert_data = null;
         $i = 0;
         foreach($data['pegawai'] as $d){
@@ -1047,7 +1086,15 @@
             foreach($list_tanggal as $l){
                 // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
-                    $insert_data[$i]['id_m_user'] = $d;
+                    // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
+                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]])){ // jika ada dokumen pendukung pada tanggal tersebut
+                        $this->db->trans_rollback();
+                        $res['code'] = 1;
+                        $res['message'] = 'Gagal mengisi dokumen pendukung. Pegawai atas nama '.$d['nama'].' memiliki dokumen pendukung pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
+                        $res['data'] = null;
+                        return $res;                        
+                    }
+                    $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
@@ -1082,7 +1129,7 @@
             $this->db->trans_commit();
         }
 
-        return $rs;
+        return $res;
     }
 
     public function countTotalDataPendukung($id, $bulan, $tahun, $flag_verif = 0){

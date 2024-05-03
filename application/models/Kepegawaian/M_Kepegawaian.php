@@ -2988,7 +2988,7 @@ public function getJenisArsip()
     // ->where('flag_active', 1)
     ->order_by('id_dokumen', 'asc')
     ->where_not_in('id_dokumen', $ignore)
-    ->from('db_siladen.dokumen');
+    ->from('m_dokumen');
     return $this->db->get()->result_array(); 
 }
 
@@ -6075,7 +6075,11 @@ public function getFileForKarisKarsu()
 
     public function getDokumenLayanan($jenis_layanan)
     {
-        $this->db->select('*,CONCAT(b.nama_dokumen," / ", b.keterangan) AS dokumen')
+        $this->db->select('*,CONCAT(b.nama_dokumen," / ", b.keterangan) AS dokumen,
+        (SELECT count(b.id) 
+        FROM db_pegawai.pegberkaspns b
+        WHERE b.id_pegawai = "'.$this->general_library->getIdPegSimpeg().'"
+        AND b.flag_active = 1 and b.status = 2 AND jenissk = 1) as skcpns')
         ->where('a.jenis_layanan', $jenis_layanan)
         ->where('a.flag_active', 1)
         // ->where('b.flag_active', 1)
@@ -6091,25 +6095,44 @@ public function getFileForKarisKarsu()
 
     public function getFileLayanan()
     {      
-        $id_peg = $this->input->post('id_peg');
-        if($this->input->post('id_dokumen') == "2"){
+        $id_peg = $this->general_library->getIdPegSimpeg();
+        $id_dokumen = $this->input->post('id_dokumen');
+        if($id_dokumen == "2"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegberkaspns as a')
-                ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+                ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 1)
                 ->where('a.status', 2)
                 ->order_by('a.id', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('id_dokumen') == "3"){
+        } else if($id_dokumen == "3"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegberkaspns as a')
-                ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+                ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 2)
                 ->where('a.status', 2)
                 ->order_by('a.id', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($id_dokumen == "4"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpangkat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->order_by('a.tmtpangkat', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($id_dokumen == "18"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.id_dokumen', $id_dokumen)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else {
@@ -6117,6 +6140,32 @@ public function getFileForKarisKarsu()
         }
         
         
+    }
+
+    public function getDokumenPangkatForPensiun()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->order_by('tmtpangkat', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegpangkat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getDokumenJabatanForPensiun()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->order_by('tmtjabatan', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegjabatan');
+        $query = $this->db->get()->row_array();
+        return $query;  
     }
 
 

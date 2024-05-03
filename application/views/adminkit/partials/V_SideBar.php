@@ -321,19 +321,19 @@
 					margin-top: .35rem;"></i></a>
 								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
 									<li class="sidebar-item">
-										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/6')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
+										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/7')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
 									</li>
 									<li class="sidebar-item">
-									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/26')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/8')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
 									</li>
 									<li class="sidebar-item">
-									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/23')?>"><i class="fa fa-minus"></i>Pensiun Atas Permintaan Sendiri</a>
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/9')?>"><i class="fa fa-minus"></i>Pensiun Atas Permintaan Sendiri</a>
 									</li>
 									<li class="sidebar-item">
-									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/24')?>"><i class="fa fa-minus"></i>Pensiun Sakit/Uzur</a>
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/10')?>"><i class="fa fa-minus"></i>Pensiun Sakit/Uzur</a>
 									</li>
 									<li class="sidebar-item">
-									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/25')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
 							</li>

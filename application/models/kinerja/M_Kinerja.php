@@ -912,8 +912,9 @@
         ->where('a.flag_active', 1)
         ->where('id_m_status_pegawai', 1)
         ->order_by('a.created_date', 'desc');
-        
-        if($this->general_library->isAdministrator() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        // dd($this->general_library->getNamaJabatan());
+        if(isKasubKepegawaian($this->general_library->getNamaJabatan())
+        || $this->general_library->isProgrammer()){
            $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
         } 
         // else if($this->general_library->isProgrammer ) {
@@ -926,7 +927,7 @@
         $result = $this->db->get()->result_array();
 
         $id_count = $this->general_library->getId();
-        if($this->general_library->isAdministrator() || $this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        if($this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         } 
 
@@ -972,7 +973,7 @@
         $result = null;
 
         if(!isset($data['id_unitkerja'])){
-            if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()) {
+            if($this->general_library->isProgrammer()) {
                 $data['id_unitkerja'] = $this->general_library->getUnitKerjaPegawai();
             }
         }
@@ -1149,7 +1150,7 @@
                 ->where('id_m_status_pegawai', 1)
                 ->group_by('a.status, a.dokumen_pendukung, a.id_m_jenis_disiplin_kerja, a.id_m_user');
 
-        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() ||
+        if($this->general_library->isProgrammer() ||
         ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1) ||
         isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $this->db->where('d.skpd', $id);
@@ -1208,7 +1209,7 @@
                         ->get()->row_array();
 
         $id_count = $tmp['id_m_user'];
-        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()){
+        if($this->general_library->isProgrammer()){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         }
         $res['data'] = $this->countTotalDataPendukung($id_count, $tmp['bulan'], $tmp['tahun']);

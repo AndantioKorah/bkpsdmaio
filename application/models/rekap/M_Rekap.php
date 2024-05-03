@@ -1657,6 +1657,7 @@
                 $data_disiplin_kerja[$tdk['nip']] = $tdk;
             }
         }
+        dd($data_disiplin_kerja);
         $data_kinerja = null;
         // if(isset($data_rekap['produktivitas_kerja'])){
         //     $data_kinerja = null;
@@ -1710,6 +1711,7 @@
                 }
 
                 $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
+              
 
                 if($result[$p['nipbaru_ws']]['presentasi_kehadiran'] < 25){
                     $result[$p['nipbaru_ws']]['presentase_tpp'] = 0;
@@ -1722,6 +1724,11 @@
                 $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
                 $result[$p['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$p['nipbaru_ws']]['pph']) / 100) * $result[$p['nipbaru_ws']]['besaran_tpp']);
                 $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
+            
+                if($result[$p['nipbaru_ws']]['nip'] == "199510092019031001") {
+                    dd($result[$p['nipbaru_ws']]);
+                 }
+            
             }
         }
         

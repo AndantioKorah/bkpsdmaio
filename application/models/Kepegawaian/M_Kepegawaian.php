@@ -880,6 +880,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
             $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
             $dataInsert['angkakredit']      = $this->input->post('jabatan_angka_kredit');
+            $dataInsert['ket']      = $this->input->post('jabatan_keterangan');
             $dataInsert['tglsk']      = $tgl_sk;
             $dataInsert['skpd']      = $nama_skpd;
             $dataInsert['id_unitkerja']      = $id_skpd;
@@ -6070,6 +6071,52 @@ public function getFileForKarisKarsu()
         }
 
         return $res;
+    }
+
+    public function getDokumenLayanan($jenis_layanan)
+    {
+        $this->db->select('*,CONCAT(b.nama_dokumen," / ", b.keterangan) AS dokumen')
+        ->where('a.jenis_layanan', $jenis_layanan)
+        ->where('a.flag_active', 1)
+        // ->where('b.flag_active', 1)
+        // ->where('b.id_pegawai', $this->general_library->getIdPegSimpeg())   
+        // ->join('db_pegawai.pegarsip b', 'a.dokumen_persyaratan = b.id_dokumen','left')  
+        ->join('m_dokumen b', 'a.dokumen_persyaratan = b.id_dokumen')     
+
+        ->from('m_syarat_layanan as a');
+        $query = $this->db->get()->result_array();
+        return $query;  
+
+    }
+
+    public function getFileLayanan()
+    {      
+        $id_peg = $this->input->post('id_peg');
+        if($this->input->post('id_dokumen') == "2"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 1)
+                ->where('a.status', 2)
+                ->order_by('a.id', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('id_dokumen') == "3"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 2)
+                ->where('a.status', 2)
+                ->order_by('a.id', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else {
+         return [''];
+        }
+        
+        
     }
 
 

@@ -1681,6 +1681,28 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanKarisKarsu());
 	}
 
+	public function LayananPensiun($jenis_layanan){
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['jenis_layanan'] = $jenis_layanan;
+
+		$data['skcpns'] = array(6,7,10,12,13,14,15,16);
+		$data['skpns'] = array(6,7,10,12,13,14,15,16);
+		$data['aktenikah'] = array(6);
+		$data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
+        // dd($data['dokumen_layanan']);
+
+		render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);
+	}
+
+	public function getFileLayanan()
+    {
+        $data = $this->kepegawaian->getFileLayanan();
+		// dd($data);
+        echo json_encode($data);
+    }
+
 
 	
 

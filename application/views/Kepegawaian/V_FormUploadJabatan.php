@@ -357,7 +357,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Keterangan</label>
-    <input class="form-control customInput" type="text" id="jataban_keterangan" name="jataban_keterangan"  />
+    <input class="form-control customInput" type="text" id="jabatan_keterangan" name="jabatan_keterangan"  />
   </div>
 
 

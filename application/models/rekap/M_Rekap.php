@@ -16,6 +16,7 @@
         {
             parent::__construct();
             $this->db = $this->load->database('main', true);
+            $this->load->model('kinerja/M_Kinerja', 'm_kinerja');
         }
 
         public function insert($tablename, $data){
@@ -770,6 +771,102 @@
         return $data;
     }
 
+    public function getKelasJabatanPegawai($data){
+        $i = 0;
+        $result = null;
+        foreach($data as $d){
+            $result[$i] = $d;
+            $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
+            if($d['jenis_jabatan'] == 'JFT'){ // jika JFT
+                $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
+                if(stringStartWith('Puskesmas', $d['nm_unitkerja'])){
+                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
+                    $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                    $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
+                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                    }
+                } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                }
+    
+                if($d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
+                    if(stringStartWith("Kepala Puskesmas", $d['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
+                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_tambahan'];
+                    }
+                }
+    
+                if($d['kelas_jabatan_hardcode'] != null || $d['kelas_jabatan_hardcode'] != 0){
+                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
+                }
+            } else if($d['jenis_jabatan'] == 'Struktural'){
+                $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
+            } else if($d['jenis_jabatan'] == 'Struktural'){
+                $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
+            }
+
+            $i++;
+        }
+
+        return $data;
+    }
+
+    public function getDaftarPenilaianTpp($data_disiplin, $param){
+        $result = null;
+        $skpd = explode(";", $param['skpd']);
+        $list_komponen_kinerja = $this->db->select('a.*, c.nipbaru_ws')
+                                ->from('t_komponen_kinerja as a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->where('c.skpd', $skpd[0])
+                                ->where('a.bulan', $param['bulan'])
+                                ->where('a.tahun', $param['tahun'])
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+        $komponen_kinerja = null;
+        if($list_komponen_kinerja){
+            foreach($list_komponen_kinerja as $lkk){
+                $data_disiplin['result'][$lkk['nipbaru_ws']]['komponen_kinerja'] = countNilaiKomponen($lkk);
+                // $komponen_kinerja[$lkk['nipbaru_ws']] = countNilaiKomponen($lkk);
+            }
+        }
+        // $result['komponen_kinerja'] = $komponen_kinerja;
+        // $list_kinerja = $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id as id_m_user, a.total_realisasi, a.id, a.target_kuantitas')
+        $list_kinerja = $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id, a.*, sum(d.realisasi_target_kuantitas) as total_realisasi_kinerja')
+                        ->from('t_rencana_kinerja a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('t_kegiatan d', 'd.id_t_rencana_kinerja = a.id')
+                        ->where('a.bulan', $param['bulan'])
+                        ->where('a.tahun', $param['tahun'])
+                        ->where('c.skpd', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->where('d.flag_active', 1)
+                        ->where('d.status_verif', 1)
+                        ->group_by('a.id')
+                        ->get()->result_array();
+        $kinerja = null;
+        if($list_kinerja){
+            foreach($list_kinerja as $lk){
+                if(!isset($kinerja[$lk['nipbaru_ws']])){
+                    $kinerja[$lk['nipbaru_ws']] = $lk;
+                }
+
+                if(!isset($kinerja[$lk['nipbaru_ws']]['kinerja'][$lk['id']])){
+                    $kinerja[$lk['nipbaru_ws']]['kinerja'][$lk['id']] = $lk;
+
+                    $kinerja[$lk['nipbaru_ws']]['kinerja'][$lk['id']]['target_kuantitas'] = $lk['target_kuantitas'];
+                    $kinerja[$lk['nipbaru_ws']]['kinerja'][$lk['id']]['realisasi'] = $lk['total_realisasi_kinerja'];
+                }
+
+                $kinerja[$lk['nipbaru_ws']]['rekap_kinerja'] = countNilaiSkp($kinerja[$lk['nipbaru_ws']]['kinerja']);
+
+                $data_disiplin['result'][$lk['nipbaru_ws']]['kinerja'] = $kinerja[$lk['nipbaru_ws']];
+            }
+        }
+        return $data_disiplin;
+    }
+
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0){
         // dd($flag_alpha);
         $rs = null;
@@ -778,12 +875,16 @@
         $raw_data_excel = json_encode($data);
         
         if($flag_absen_aars == 1){
-            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja')
+            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
+            b.kelas_jabatan, b.jenis_jabatan, b.nama_jabatan, b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
+            a.pangkat')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('m_pangkat d', 'a.pangkat = d.id_pangkat')
+                            ->join('db_pegawai.jabatan e', 'a.id_jabatan_tambahan = e.id_jabatanpeg', 'left')
                             ->where('id_m_status_pegawai', 1)
-                            ->order_by('b.eselon', 'desc')
+                            ->order_by('b.eselon')
                             ->order_by('a.nama')
                             ->group_by('a.nipbaru_ws');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
@@ -821,9 +922,15 @@
             $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
 
             $tlp = null;
+            //ambil kelas jabatan tiap pegawai
+            $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
             foreach($list_pegawai as $lpw){
                 $tlp[$lpw['nip']]['nama_pegawai'] = getNamaPegawaiFull($lpw);
                 $tlp[$lpw['nip']]['nip'] = ($lpw['nip']);
+                $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
+                $tlp[$lpw['nip']]['eselon'] = ($lpw['eselon']);
+                $tlp[$lpw['nip']]['kelas_jabatan'] = ($lpw['kelas_jabatan']);
+                $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
                 $tlp[$lpw['nip']]['absen'] = null;
                 $tlp[$lpw['nip']]['jumlah_anulir'] = null;
                 foreach($list_hari as $lh){
@@ -1406,6 +1513,10 @@
                 if(isset($tr['nama_pegawai'])){
                     $result['result'][$tr['nip']]['nama_pegawai'] = $tr['nama_pegawai'];
                     $result['result'][$tr['nip']]['nip'] = $tr['nip'];
+                    $result['result'][$tr['nip']]['eselon'] = $tr['eselon'];
+                    $result['result'][$tr['nip']]['kelas_jabatan'] = $tr['kelas_jabatan'];
+                    $result['result'][$tr['nip']]['nama_jabatan'] = $tr['nama_jabatan'];
+                    $result['result'][$tr['nip']]['golongan'] = $tr['golongan'];
                     $result['result'][$tr['nip']]['rekap']['jhk'] = $tr['rekap']['jhk'];
                     $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['hadir'];
                     

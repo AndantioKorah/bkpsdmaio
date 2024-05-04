@@ -269,6 +269,18 @@ class C_Rekap extends CI_Controller
        
 
         switch ($jenis_file) {
+            case "kehadiran" :
+                $data['skpd'] = $skpd;
+                $data = $this->rekap->rekapPenilaianDisiplinSearch($param);
+                // $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                $this->load->view('rekap/V_RekapKehadiranResult', $data);
+                break;
+            case "daftar_penilaian_tpp":
+                $data['skpd'] = $skpd;
+                $data_disiplin = $this->rekap->rekapPenilaianDisiplinSearch($param);
+                $data['result'] = $this->rekap->getDaftarPenilaianTpp($data_disiplin, $param);
+                $this->load->view('rekap/V_RekapPenilaianTppResult', $data);
+                break;
             case "absen":
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);

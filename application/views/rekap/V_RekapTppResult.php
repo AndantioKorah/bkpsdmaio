@@ -34,7 +34,7 @@
                                 <option selected value="kehadiran">Rekap Kehadiran</option> <!-- belum  -->
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
                                 <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
-                                <option value="penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
+                                <option value="daftar_penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
                                 <!-- <option value="daftar_permintaan">Daftar Permintaan</option> -->
                                 <!-- <option value="daftar_pembayaran">Daftar Pembayaran</option> -->

@@ -305,7 +305,9 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['produktivitas_kerja'])){
                 //     $data['result'] = $data_rekap['produktivitas_kerja'];
                 // } else {
-                $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                // dd(json_encode($data['result']));
+                $data['result'] = $this->rekap->rekapProduktivitasKerja($param);
                 $data['parameter'] = $param;
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;
@@ -336,13 +338,17 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
                 //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 // } else {
-                $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
-                // dd($param);
+
                 $explode_param = explode(";", $param['skpd']);
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
-                $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
-                $temp['daftar_perhitungan_tpp'] = $data['result'];
-                $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
+                $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param);
+
+                // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                // // dd($param);
+                // $explode_param = explode(";", $param['skpd']);
+                // $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                // $temp['daftar_perhitungan_tpp'] = $data['result'];
+                // $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
                 // }
 
                 $this->load->view('rekap/V_RekapPerhitunganTpp', $data);

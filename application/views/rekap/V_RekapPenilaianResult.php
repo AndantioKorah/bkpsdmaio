@@ -40,8 +40,8 @@
                 <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
                 <thead>
                     <tr>
-                        <th style="text-align: center; width: 10px;" rowspan="2">No</th>
-                        <th style="text-align: center;z-index: 400;" rowspan="2">Nama Pegawai</th>
+                        <th style="text-align: center; width: 5px;" rowspan="2">No</th>
+                        <th style="text-align: center;z-index: 400; width: 10px;" rowspan="2">Nama Pegawai</th>
                         <th style="text-align: center;" rowspan="2">Target Bobot Produktivitas Kerja</th>
                         <th style="text-align: center;" rowspan="1" colspan="2">Penilaian Sasaran Kerja Bulanan Pegawai</th>
                         <th style="text-align: center;" rowspan="1" colspan="9">Penilaian Komponen Kinerja</th>
@@ -62,26 +62,31 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1; foreach($result as $rs){ ?>
+                        <?php $no = 1; foreach($result as $rs){
+                            $bobot_capaian_produktivitas = $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
+                            if(isset($rs['komponen_kinerja'])){
+                                $bobot_capaian_produktivitas += $rs['komponen_kinerja'][1];
+                            }
+                        ?>
                             <tr >
                                 <td  style="text-align: center;"><?=$no++;?></td>
                                 <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
-                                    <?=$rs['nama_pegawai']?><br>
+                                    <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama']?></span><br>
                                     NIP. <?=$rs['nip']?>
                                 </td>
                                 <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['berorientasi_pelayanan'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['akuntabel'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['kompeten'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['harmonis'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['loyal'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['adaptif'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? $rs['komponen_kinerja']['kolaboratif'] : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? ($rs['komponen_kinerja']['capaian']) : 0;?></td>
-                                <td style="width: 6%; text-align: center;"><?=$rs['komponen_kinerja'] ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0;?>%</td>
-                                <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($rs['bobot_capaian_produktivitas_kerja'])?>%</td>
+                                <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td>
+                                <td style="width: 6%; text-align: center;"><?=$rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']) : 0;?>%</td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['berorientasi_pelayanan'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['akuntabel'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kompeten'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['harmonis'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['loyal'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['adaptif'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kolaboratif'] : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? ($rs['komponen_kinerja'][0]) : 0;?></td>
+                                <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja'][1]) : 0;?>%</td>
+                                <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($bobot_capaian_produktivitas)?>%</td>
                             </tr>
                         <?php } ?>
                     </tbody>

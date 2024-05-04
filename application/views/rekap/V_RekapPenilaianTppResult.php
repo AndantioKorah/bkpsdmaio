@@ -32,16 +32,16 @@
                 <div>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
                 <div class="div_maintb">
-                <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                <table class="cd-table rekap-table table" style="width: 100%; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                         <thead>
                             <tr >
-                                <th style="text-align: center; " rowspan="1">No</th>
-                                <th style="text-align: center;  z-index: 400;" rowspan="1">Nama Pegawai</td>
-                                <th style="text-align: center;"  rowspan="1">% PENILAIAN SASARAN KERJA BULANAN PEGAWAI</td>
-                                <th style="text-align: center;"  rowspan="1">% PENILAIAN KOMPONEN KINERJA</td>
-                                <th style="text-align: center;"  rowspan="1">% CAPAIAN PRODUKTIFITAS KERJA</td>
-                                <th style="text-align: center;"  rowspan="1">% CAPAIAN PENILAIAN DISIPLIN KERJA</td>
-                                <th style="text-align: center; " rowspan="1">% TOTAL PENILAIAN TPP</td>
+                                <th style="text-align: center; width: 5%" rowspan="1">No</th>
+                                <th style="text-align: center; width: 10%; z-index: 400;" rowspan="1">Nama Pegawai</td>
+                                <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN SASARAN KERJA BULANAN PEGAWAI</td>
+                                <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN KOMPONEN KINERJA</td>
+                                <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PRODUKTIFITAS KERJA</td>
+                                <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PENILAIAN DISIPLIN KERJA</td>
+                                <th style="text-align: center; width: 17%; " rowspan="1">% TOTAL PENILAIAN TPP</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,8 +52,8 @@
                             ?>
                                 <tr>
                                     <td style="text-align: center;"><?=$no++;?></td>
-                                    <td style="width: 15%; padding-top: 5px; padding: 5px;">
-                                        <span style=""><?=$rs['nama_pegawai']?></span><br>
+                                    <td style="padding-top: 15px; padding: 15px;">
+                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
                                         <span style="">NIP. <?=$rs['nip']?></span>
                                     </td>
                                     <td style="text-align: center;"><?=formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']).'%'?></td>

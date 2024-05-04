@@ -56,8 +56,8 @@
                             ?>
                                 <tr>
                                     <td style="text-align: center;"><?=$no++;?></td>
-                                    <td style="padding-top: 5px; padding: 5px;">
-                                        <span style=""><?=$rs['nama_pegawai']?></span><br>
+                                    <td style="padding-top: 15px; padding: 5px;">
+                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
                                         <span style="">NIP. <?=$rs['nip']?></span>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=$rs['rekap']['jhk']?></td>

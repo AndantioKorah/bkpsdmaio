@@ -193,6 +193,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
+					</a>
+				</li>
 				<?php } ?>
 			</ul>
 		</li>
@@ -306,7 +311,32 @@
 					<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 					</a>
-		    </li>
+		</li>
+
+		<li class="sidebar-item">
+								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
+								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
+				style="position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i></a>
+								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
+									<li class="sidebar-item">
+										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/7')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
+									</li>
+									<li class="sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/8')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
+									</li>
+									<li class="sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/9')?>"><i class="fa fa-minus"></i>Pensiun Atas Permintaan Sendiri</a>
+									</li>
+									<li class="sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/10')?>"><i class="fa fa-minus"></i>Pensiun Sakit/Uzur</a>
+									</li>
+									<li class="sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
+									</li>
+								</ul>
+							</li>
 		
 		</ul>
 	</li>
@@ -382,6 +412,7 @@
 			</li>
 		<?php } ?>
 	<?php } ?>
+
 	
 
 	<li class="sidebar-header">

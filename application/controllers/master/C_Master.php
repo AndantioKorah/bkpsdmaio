@@ -401,4 +401,28 @@ class C_Master extends CI_Controller
         $data_input['id_m_pelanggaran'] = $id;
         $this->general->insert('m_pelanggaran_detail', $data_input);
     }
+
+    public function masterSyaratLayanan(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+        $data['dokumen'] = $this->master->getAllMasterDokumen();
+        // dd($data['dokumen']);
+        render('master/V_MasterSyaratLayanan', '', '', $data);
+    }
+
+    public function loadMasterSyaratLayanan(){  
+        $data['result'] = $this->master->getAllSyaratLayananItem();
+        $this->load->view('master/V_MasterSyaratLayananItem', $data);
+    }
+
+    public function inputMasterSyaratLayanan(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->general->insert('m_syarat_layanan', $data);
+    }
+
+    public function deleteMasterSyaratLayanan($id){
+        $this->general->delete('id', $id, 'm_syarat_layanan');
+    }
+
+
 }

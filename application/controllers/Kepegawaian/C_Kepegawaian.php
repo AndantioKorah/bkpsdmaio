@@ -1681,6 +1681,34 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanKarisKarsu());
 	}
 
+	public function LayananPensiun($jenis_layanan){
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['jenis_layanan'] = $jenis_layanan;
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();   
+		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','18','0');
+
+		
+		$data['list_layanan_skcpns'] = array(6,7,10,12,13,14,15,16);
+		$data['list_layanan_skpns'] = array(6,7,10,12,13,14,15,16);
+		$data['list_layanan_skpangakt'] = array(6,7,10,12,13,14,15,16);
+		$data['list_layanan_skjabatan'] = array(6,7,10,12,13,14,15,16);
+		$data['list_layanan_aktenikah'] = array(7);
+		$data['list_layanan_hd'] = array(7);
+		// $data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
+
+		render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);
+	}
+
+	public function getFileLayanan()
+    {
+        $data = $this->kepegawaian->getFileLayanan();
+		// dd($data);
+        echo json_encode($data);
+    }
+
 
 	
 

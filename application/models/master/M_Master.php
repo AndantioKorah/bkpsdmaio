@@ -968,5 +968,31 @@
             return $result;
         }
 
+        public function getAllMasterLayanan(){
+            return $this->db->select('*')
+                            ->from('m_jenis_layanan')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        }
+
+        public function getAllMasterDokumen(){
+            return $this->db->select('*, CONCAT(a.nama_dokumen," / ", a.keterangan) AS dokumen')
+                            ->from('m_dokumen as a')
+                            ->where('aktif', 1)
+                            ->get()->result_array();
+        }
+
+        
+        public function getAllSyaratLayananItem(){
+            return $this->db->select('*, CONCAT(c.nama_dokumen," / ", c.keterangan) AS dokumen')
+                            ->from('m_syarat_layanan as a')
+                            ->join('m_jenis_layanan b', 'a.jenis_layanan = b.id')
+                            ->join('m_dokumen c', 'a.dokumen_persyaratan = c.id_dokumen')
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->get()->result_array();
+        }
+
+
 	}
 ?>

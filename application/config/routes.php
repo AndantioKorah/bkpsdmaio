@@ -114,7 +114,11 @@ $route['kepegawaian/layanan-karis-karsu'] = 'kepegawaian/C_Kepegawaian/LayananKa
 $route['kepegawaian/download'] = 'kepegawaian/C_Kepegawaian/lakukan_download';
 $route['kepegawaian/verifikasi-karis-karsu'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsu';
 $route['kepegawaian/verifikasi-detail/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsuDetail/$1';
+$route['kepegawaian/layanan-pensiun/(:any)'] = 'kepegawaian/C_Kepegawaian/LayananPensiun/$1';
 
+
+// master
+$route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';
 
 
 

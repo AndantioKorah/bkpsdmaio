@@ -860,6 +860,7 @@
                                 (SELECT SUM(b.realisasi_target_kuantitas)
                                 FROM t_kegiatan b
                                 WHERE b.id_t_rencana_kinerja = a.id
+                                AND b.status_verif = 1
                                 AND b.flag_active = 1) as realisasi')
                                 ->from('t_rencana_kinerja a')
                                 ->where('a.id_m_user', $pegawai['id'])
@@ -868,7 +869,7 @@
                                 ->where('a.flag_active', 1)
                                 ->order_by('a.created_date')
                                 ->get()->result_array();
-                                
+
         $komponen_kinerja = $this->db->select('*')
                                     ->from('t_komponen_kinerja a')
                                     ->where('a.id_m_user', $pegawai['id'])
@@ -1070,6 +1071,7 @@
                         ->where('tahun <=', $explode_tanggal_akhir[0])
                         ->where('bulan >=', $explode_tanggal_awal[1])
                         ->where('bulan <=', $explode_tanggal_akhir[1])
+                        ->where('status', 2)
                         ->where('flag_active', 1)
                         ->get()->result_array();
         if($exist){

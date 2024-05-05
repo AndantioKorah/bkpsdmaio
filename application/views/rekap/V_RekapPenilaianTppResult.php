@@ -30,42 +30,43 @@
                     </table>
                 <?php } ?>
                 <div>
-                <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
-                <div class="div_maintb">
-                <table class="cd-table rekap-table table" style="width: 100%; margin-top : -10px" border="1" id="table_rekap_penilaianx">
-                        <thead>
-                            <tr >
-                                <th style="text-align: center; width: 5%" rowspan="1">No</th>
-                                <th style="text-align: center; width: 10%; z-index: 400;" rowspan="1">Nama Pegawai</td>
-                                <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN SASARAN KERJA BULANAN PEGAWAI</td>
-                                <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN KOMPONEN KINERJA</td>
-                                <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PRODUKTIFITAS KERJA</td>
-                                <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PENILAIAN DISIPLIN KERJA</td>
-                                <th style="text-align: center; width: 17%; " rowspan="1">% TOTAL PENILAIAN TPP</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $no = 1; foreach($result['result'] as $rs){
-                                $nilai_komponen_kinerja = isset($rs['komponen_kinerja'][1]) ? $rs['komponen_kinerja'][1] : 0;
-                                $capaian_produktivitas_kerja = floatval($rs['kinerja']['rekap_kinerja']['bobot']) + floatval($nilai_komponen_kinerja);
-                                $total_penilaian_tpp = $capaian_produktivitas_kerja + floatval($rs['rekap']['capaian_bobot_disiplin_kerja']);
-                            ?>
-                                <tr>
-                                    <td style="text-align: center;"><?=$no++;?></td>
-                                    <td style="padding-top: 15px; padding: 15px;">
-                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
-                                        <span style="">NIP. <?=$rs['nip']?></span>
-                                    </td>
-                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']).'%'?></td>
-                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($nilai_komponen_kinerja).'%'?></td>
-                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($capaian_produktivitas_kerja).'%'?></td>
-                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($rs['rekap']['capaian_bobot_disiplin_kerja']).'%'?></td>
-                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($total_penilaian_tpp).'%'?></td>
+                    <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+                    <div class="div_maintb">
+                        <table class="cd-table rekap-table table" style="width: 100%; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                            <thead>
+                                <tr >
+                                    <th style="text-align: center; width: 5%" rowspan="1">No</th>
+                                    <th style="text-align: center; width: 10%; z-index: 400;" rowspan="1">Nama Pegawai</td>
+                                    <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN SASARAN KERJA BULANAN PEGAWAI</td>
+                                    <th style="text-align: center; width: 17%;"  rowspan="1">% PENILAIAN KOMPONEN KINERJA</td>
+                                    <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PRODUKTIFITAS KERJA</td>
+                                    <th style="text-align: center; width: 17%;"  rowspan="1">% CAPAIAN PENILAIAN DISIPLIN KERJA</td>
+                                    <th style="text-align: center; width: 17%; " rowspan="1">% TOTAL PENILAIAN TPP</td>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                                    </div>
+                            </thead>
+                            <tbody>
+                                <?php $no = 1; foreach($result['result'] as $rs){
+                                    $nilai_komponen_kinerja = isset($rs['komponen_kinerja'][1]) ? $rs['komponen_kinerja'][1] : 0;
+                                    $bobot_rekap_kinerja = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0; 
+                                    $capaian_produktivitas_kerja = floatval($bobot_rekap_kinerja) + floatval($nilai_komponen_kinerja);
+                                    $total_penilaian_tpp = $capaian_produktivitas_kerja + floatval($rs['rekap']['capaian_bobot_disiplin_kerja']);
+                                ?>
+                                    <tr>
+                                        <td style="text-align: center;"><?=$no++;?></td>
+                                        <td style="padding-top: 15px; padding: 15px;">
+                                            <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
+                                            <span style="">NIP. <?=$rs['nip']?></span>
+                                        </td>
+                                        <td style="text-align: center;"><?=formatTwoMaxDecimal($bobot_rekap_kinerja).'%'?></td>
+                                        <td style="text-align: center;"><?=formatTwoMaxDecimal($nilai_komponen_kinerja).'%'?></td>
+                                        <td style="text-align: center;"><?=formatTwoMaxDecimal($capaian_produktivitas_kerja).'%'?></td>
+                                        <td style="text-align: center;"><?=formatTwoMaxDecimal($rs['rekap']['capaian_bobot_disiplin_kerja']).'%'?></td>
+                                        <td style="text-align: center;"><?=formatTwoMaxDecimal($total_penilaian_tpp).'%'?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </form>
         </div>

@@ -53,9 +53,18 @@
             return $result;
         }
 
-        public function rekapProduktivitasKerja($data){
+        public function rekapProduktivitasKerja($data, $flag_rekap_tpp = 0){
             $skpd = explode(";", $data['skpd']);
-            $list_pegawai = $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
+
+            $uksearch = null;
+            if($flag_rekap_tpp == 1){
+                $uksearch = $this->db->select('*')
+                                        ->from('db_pegawai.unitkerja')
+                                        ->where('id_unitkerja', $skpd[0])
+                                        ->get()->row_array();
+            }
+
+            $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
             b.kelas_jabatan, b.jenis_jabatan, b.nama_jabatan, b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
             a.pangkat')
                             ->from('db_pegawai.pegawai a')
@@ -64,18 +73,24 @@
                             ->join('m_pangkat d', 'a.pangkat = d.id_pangkat')
                             ->join('db_pegawai.jabatan e', 'a.id_jabatan_tambahan = e.id_jabatanpeg', 'left')
                             ->where('id_m_status_pegawai', 1)
-                            ->where('a.skpd', $skpd[0])
+                            // ->where('a.skpd', $skpd[0])
                             ->order_by('b.eselon')
                             ->order_by('a.nama')
-                            ->group_by('a.nipbaru_ws')
-                            ->get()->result_array();
+                            ->group_by('a.nipbaru_ws');
+            if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $skpd[0]);
+            }
+
+            $list_pegawai = $this->db->get()->result_array();
             $pegawai = null;
             if($list_pegawai){
                 $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
                 foreach($list_pegawai as $lp){
                     $pegawai['result'][$lp['nip']] = $lp;
                 }
-                $pegawai = $this->getDaftarPenilaianTpp($pegawai, $data);
+                $pegawai = $this->getDaftarPenilaianTpp($pegawai, $data, $flag_rekap_tpp);
             }
             return $pegawai['result'];
         }
@@ -838,18 +853,30 @@
         return $data;
     }
 
-    public function getDaftarPenilaianTpp($data_disiplin, $param){
+    public function getDaftarPenilaianTpp($data_disiplin, $param, $flag_rekap_tpp = 0){
         $result = null;
         $skpd = explode(";", $param['skpd']);
-        $list_komponen_kinerja = $this->db->select('a.*, c.nipbaru_ws')
-                                ->from('t_komponen_kinerja as a')
-                                ->join('m_user b', 'a.id_m_user = b.id')
-                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                                ->where('c.skpd', $skpd[0])
-                                ->where('a.bulan', $param['bulan'])
-                                ->where('a.tahun', $param['tahun'])
-                                ->where('a.flag_active', 1)
-                                ->get()->result_array();
+        $uksearch = null;
+        if($flag_rekap_tpp == 1){
+            $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $skpd[0])
+                                    ->get()->row_array();
+        }
+        $this->db->select('a.*, c.nipbaru_ws')
+                ->from('t_komponen_kinerja as a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.bulan', $param['bulan'])
+                ->where('a.tahun', $param['tahun'])
+                ->where('a.flag_active', 1);
+        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } else {
+            $this->db->where('c.skpd', $skpd[0]);
+        }         
+        $list_komponen_kinerja = $this->db->get()->result_array();
         $komponen_kinerja = null;
         if($list_komponen_kinerja){
             foreach($list_komponen_kinerja as $lkk){
@@ -895,12 +922,20 @@
         return $data_disiplin;
     }
 
-    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0){
+    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){
         // dd($flag_alpha);
         $rs = null;
         $periode = null;
         $list_hari = null;
         $raw_data_excel = json_encode($data);
+
+        $uksearch = null;
+        if($flag_rekap_tpp == 1){
+            $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $data['id_unitkerja'])
+                                    ->get()->row_array();
+        }
         
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
@@ -916,7 +951,11 @@
                             ->order_by('a.nama')
                             ->group_by('a.nipbaru_ws');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
-                $this->db->where('a.skpd', $data['id_unitkerja']);
+                if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                    $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+                } else {
+                    $this->db->where('a.skpd', $data['id_unitkerja']);
+                }
             } else if($flag_alpha == 1){
                 $this->db->where('c.id_unitkerjamaster', 8010000);
             }
@@ -1346,6 +1385,15 @@
                                 }
                             }
                             
+                            if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "Invalid"){
+                                // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                $lp[$tr['nip']]['rekap']['tmk3']++;
+                            }
+                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == "Invalid"){
+                                // $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                $lp[$tr['nip']]['rekap']['pksw3']++;
+                            }
+                            
                             if(isset($dokpen[$tr['nip']][$l])){
                                 if($dokpen[$tr['nip']][$l] == "TLS"){
 
@@ -1476,7 +1524,7 @@
         return $data_rekap;
     }
 
-    public function rekapPenilaianDisiplinSearch($data){
+    public function rekapPenilaianDisiplinSearch($data, $flag_rekap_tpp = 0){
         $result = null;
 
         $disiplin_kerja = $this->db->select('*')
@@ -1522,7 +1570,7 @@
         $param['skpd'] = $skpd[0];
         // dd($data);
         // $temp = $this->readAbsensiFromDb($param);
-        $temp = $this->readAbsensiAars($data, $flag_alpha = 0);
+        $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
         
         // $data_absen = $this->db->select('*')
         //             ->from('t_rekap_absen')
@@ -1786,15 +1834,15 @@
         dd($list_pegawai);
     }
 
-    public function getDaftarPerhitunganTppNew($pagu_tpp, $param){
+    public function getDaftarPerhitunganTppNew($pagu_tpp, $param, $flag_rekap_tpp = 0){
         $list_pegawai = null;
         foreach($pagu_tpp as $pt){
             $list_pegawai['result'][$pt['nipbaru_ws']] = $pt;
         }
 
-        $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param);
+        $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
 
-        $data_rekap = $this->rekapPenilaianDisiplinSearch($param);
+        $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
         foreach($data_rekap['result'] as $dr){
             $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
         }
@@ -1850,13 +1898,13 @@
         return $result;
     }
 
-    public function getDaftarPerhitunganTpp($pagu_tpp, $rekap, $param){
+    public function getDaftarPerhitunganTpp($pagu_tpp, $rekap, $param, $flag_rekap_tpp = 0){
         $data_disiplin_kerja = null;
         // if(isset($data_rekap['penilaian_disiplin_kerja'])){
         //     $data_disiplin_kerja = null;
         //     $data_disiplin_kerja = $data_rekap['penilaian_disiplin_kerja'];
         // } else {
-            $data_disiplin_kerja = $this->rekapPenilaianDisiplinSearch($param);
+            $data_disiplin_kerja = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
             $data_disiplin_kerja['flag_print'] = 0;
             $data_disiplin_kerja['use_header'] = 0;
             $temp['penilaian_disiplin_kerja'] = $data_disiplin_kerja;
@@ -1955,13 +2003,13 @@
         return $result;
     }
 
-    public function readAbsensiAars($param, $flag_alpha = 0){
+    public function readAbsensiAars($param, $flag_alpha = 0, $flag_rekap_tpp = 0){
         $result = null;
         $skpd = explode(";", $param['skpd']);
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
-        return $this->buildDataAbsensi($param, 1, $flag_alpha);
+        return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')
         //                 ->from('db_sip.absen a')

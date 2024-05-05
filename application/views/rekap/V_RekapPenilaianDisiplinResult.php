@@ -32,7 +32,7 @@
                 <div>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
                 <div class="div_maintb">
-                <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                    <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                         <thead>
                             <tr >
                                 <th style="text-align: center;  width: 3%;" rowspan="2">No</th>
@@ -76,7 +76,7 @@
                             <?php } ?>
                         </tbody>
                     </table>
-                                    </div>
+                </div>
                 </div>
             </form>
         </div>

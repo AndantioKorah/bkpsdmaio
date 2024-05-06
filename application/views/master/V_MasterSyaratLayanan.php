@@ -19,8 +19,8 @@
                                 <?php if($layanan){
                                     foreach($layanan as $lay){
                                     ?>
-                                    <option value="<?=$lay['kode']?>">
-                                        <?=$lay['nama']?>
+                                    <option value="<?=$lay['id']?>">
+                                        <?=$lay['nama_layanan']?>
                                     </option>
                                 <?php } } ?>
                             </select>

@@ -250,8 +250,58 @@ class C_Rekap extends CI_Controller
         $this->session->set_userdata('params_rekap_tpp', $this->input->post());
         $data = $this->rekap->rekapTppSearch($this->input->post());
         // dd($data);
-        $data['data_serach'] = $this->input->post();
+        $data['data_search'] = $this->input->post();
         $this->load->view('rekap/V_RekapTppResult', $data);
+    }
+
+    public function downloadBerkasTpp(){
+        $param = $this->input->post();
+        // dd($param);
+        $skpd = explode(";", $param['skpd']);
+        $data['param']['id_unitkerja'] = $skpd[0];
+        $data['param']['nm_unitkerja'] = $skpd[1];
+        $data['param']['bulan'] = $param['bulan'];
+        $data['param']['tahun'] = $param['tahun'];
+
+        $data['pegawai']['kepalaskpd'] = null;
+        $data['pegawai']['kasubag'] = null;
+
+        $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $data['param']['id_unitkerja']], null, 0, 1);
+        $list_pagu_tpp = null;
+        if($pagu_tpp){
+            foreach($pagu_tpp as $pt){
+                if($pt['kepalaskpd'] == 1){
+                    $data['pegawai']['kepalaskpd'] = $pt;
+                } else if(isKasubKepegawaian($pt['nama_jabatan'])){
+                    $data['pegawai']['kasubag'] = $pt;
+                }
+                $list_pagu_tpp[$pt['nipbaru_ws']] = $pt;
+            }
+        }
+        $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+        $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
+        $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
+
+        $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        ); // margin footer
+        // $this->mpdf->setFooter('{PAGENO}');
+        $this->mpdf->WriteHTML($html);
+        $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf', 'D'); // download force
+
+        // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }
 
     public function loadViewByJenisFile($jenis_file)
@@ -269,9 +319,21 @@ class C_Rekap extends CI_Controller
        
 
         switch ($jenis_file) {
+            case "kehadiran" :
+                $data['skpd'] = $skpd;
+                $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+                // $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                $this->load->view('rekap/V_RekapKehadiranResult', $data);
+                break;
+            case "daftar_penilaian_tpp":
+                $data['skpd'] = $skpd;
+                $data_disiplin = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+                $data['result'] = $this->rekap->getDaftarPenilaianTpp($data_disiplin, $param, 1);
+                $this->load->view('rekap/V_RekapPenilaianTppResult', $data);
+                break;
             case "absen":
                 $data = null;
-                $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
                 $data['flag_print'] = 0;
                 if($data['result']){
                     $data['skpd'] = $data['result']['skpd'];
@@ -293,7 +355,9 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['produktivitas_kerja'])){
                 //     $data['result'] = $data_rekap['produktivitas_kerja'];
                 // } else {
-                $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                // dd(json_encode($data['result']));
+                $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
                 $data['parameter'] = $param;
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;
@@ -309,7 +373,7 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['penilaian_disiplin_kerja'])){
                 //     $data = $data_rekap['penilaian_disiplin_kerja'];
                 // } else {
-                $data = $this->rekap->rekapPenilaianDisiplinSearch($param);
+                $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;
                 // }
@@ -324,13 +388,17 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
                 //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 // } else {
-                $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
-                // dd($param);
+
                 $explode_param = explode(";", $param['skpd']);
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]]);
-                $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
-                $temp['daftar_perhitungan_tpp'] = $data['result'];
-                $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
+                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
+
+                // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                // // dd($param);
+                // $explode_param = explode(";", $param['skpd']);
+                // $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                // $temp['daftar_perhitungan_tpp'] = $data['result'];
+                // $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
                 // }
 
                 $this->load->view('rekap/V_RekapPerhitunganTpp', $data);

@@ -72,7 +72,7 @@
         $('#jenis_disiplin').select2()
         $("#range_periode").daterangepicker({
             showDropdowns: true,
-            // minDate: firstDay
+            minDate: firstDay
         });
 
     })

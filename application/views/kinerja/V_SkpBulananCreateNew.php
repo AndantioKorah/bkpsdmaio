@@ -72,8 +72,8 @@
             </tr>
             <?php $no=1; $akumulasi_nilai_capaian = 0; if($rencana_kinerja){ foreach($rencana_kinerja as $rk){
                 $nilai_capaian = 0;    
-                if(floatval($rk['total_realisasi']) > 0){
-                    $nilai_capaian = (floatval($rk['total_realisasi']) / floatval($rk['target_kuantitas'])) * 100;
+                if(floatval($rk['realisasi']) > 0){
+                    $nilai_capaian = (floatval($rk['realisasi']) / floatval($rk['target_kuantitas'])) * 100;
                 }
                 if($nilai_capaian > 100){
                     $nilai_capaian = 100;
@@ -87,7 +87,7 @@
                     <td style="padding: 5px;"><?=$rk['sasaran_kerja']?></td>
                     <td style="padding: 5px;" class="text-center"><?=$rk['target_kuantitas']?></td>
                     <td style="padding: 5px;" class="text-center"><?=$rk['satuan']?></td>
-                    <td style="padding: 5px;" class="text-center"><?=$rk['total_realisasi'] ? $rk['total_realisasi'] : 0; ?></td>
+                    <td style="padding: 5px;" class="text-center"><?=$rk['realisasi'] ? $rk['realisasi'] : 0; ?></td>
                     <td style="padding: 5px;" class="text-center"><?=$rk['satuan']?></td>
                     <td style="padding: 5px;" class="text-center"><?=formatTwoMaxDecimal($nilai_capaian)?>%</td>
                 </tr>

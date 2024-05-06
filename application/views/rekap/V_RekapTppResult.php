@@ -2,18 +2,34 @@
 <?php if(isset($skpd)) { ?>
     <?php if(isset($json_result)) { ?>
 <form target="blank" action="<?=base_url('rekap/C_Rekap/downloadPdf')?>" enctype="multipart/form-data" method="post">
-<input type="hidden" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_serach['skpd']; ?>" />
-<input type="hidden" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_serach['tahun']; ?>" />
-<input type="hidden" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_serach['bulan']; ?>" />
+<input type="hidden" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
+<input type="hidden" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
+<input type="hidden" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
 <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-download"></i> Download as PDF</button>
                     </form>
 <?php } ?>
-        <div class="col-lg-12" style="width: 100%;">
-            <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank">
+        <div class="col-lg-12" style="width: 100%; margin-top: -35px;">
+            <!-- <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank"> -->
                 <!-- <center><h5><strong>REKAPITULASI PENILAIAN DISIPLIN KERJA</strong></h5></center> -->
                 <br>
                 
                 <table style="width: 100%; position: relative;">
+                    <tr>
+                        <td style="text-align: right;" colspan=3>
+                            <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp')?>" target="_blank" method="post">
+                            <!-- <form class="form_download_berkas_tpp" method="post"> -->
+                                <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
+                                <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
+                                <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
+                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
+                                    <i class="fa fa-download"></i> Download Berkas TPP
+                                </button>
+                                <!-- <button id="btn_download_berkas_loading" style="display: none;" type="button" disabled class="btn btn-block btn-danger">
+                                    <i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...
+                                </button> -->
+                            </form>
+                        </td>
+                    </tr>
                     <tr>
                         <td>SKPD</td>
                         <td>:</td>
@@ -34,7 +50,7 @@
                                 <option selected value="kehadiran">Rekap Kehadiran</option> <!-- belum  -->
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
                                 <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
-                                <option value="penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
+                                <option value="daftar_penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
                                 <!-- <option value="daftar_permintaan">Daftar Permintaan</option> -->
                                 <!-- <option value="daftar_pembayaran">Daftar Pembayaran</option> -->
@@ -42,7 +58,7 @@
                         </td>
                     </tr>
                 </table>
-            </form>
+            <!-- </form> -->
         </div>
         <div class="col-lg-12 table-responsive mt-3" style="width: 100%; height: 70vh; overflow: auto;" id="result_rekap_div">
         
@@ -56,6 +72,25 @@
             $('#jenis_file').on('change', function(){
                 loadViewByJenisFile()
             })
+
+            // $('.form_download_berkas_tpp').on('submit', function(e){
+            //     e.preventDefault()
+            //     $('#btn_download_berkas').hide()
+            //     $('#btn_download_berkas_loading').show()
+            //     $.ajax({
+            //         url: '<?=base_url("rekap/C_Rekap/downloadBerkasTpp")?>',
+            //         method: 'post',
+            //         data: $(this).serialize(),
+            //         success: function(data){
+            //             $('#btn_download_berkas').show()
+            //             $('#btn_download_berkas_loading').hide()
+            //         }, error: function(e){
+            //             errortoast('Terjadi Kesalahan')
+            //             $('#btn_download_berkas').show()
+            //             $('#btn_download_berkas_loading').hide()
+            //         }
+            //     })
+            // })
 
             function loadViewByJenisFile(){
                 $('#result_rekap_div').html('')

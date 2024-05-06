@@ -148,6 +148,8 @@ define('LIST_UNIT_KERJA_MASTER_SEKOLAH', [8000000, 8010000, 8020000, 8030000]);
 define('LIST_UNIT_KERJA_MASTER_KECAMATAN', [5001000, 5002000, 5003000, 5004000, 5005000, 5006000, 5007000, 5008000, 5009000, 5010001, 5011001]);
 define('LIST_UNIT_KERJA_MASTER_EXCLUDE', [0000000, 7000000, 9000000, 9050000]);
 define('LIST_UNIT_KERJA_KECAMATAN', [50010001, 50020001, 50030001, 50040001, 50050001, 50060001, 50070001, 50080001, 50090001, 50100011, 50110011]);
+
+define('LIST_UNIT_KERJA_KECAMATAN_NEW', [5001001, 5002001, 5003001, 5004001, 5005001, 5006001, 5007001, 5008001, 5009001, 5010001, 5011001]);
 define('LIST_ROLE_KHUSUS', ['lurah', 'camat']);
 define('ID_BIDANG_PEKIN', 166);
 define('URL_MENU_PEKIN', ['rekapitulasi/absensi', 'dokumen-pendukung-absensi/verifikasi']);
@@ -175,5 +177,5 @@ define('TTE_STATE', 'DEV'); //DEV = development, PROD = production
 define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = production
 define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production
 
-define('PERHITUNGAN_TPP_TESTING', 1); //1 = testing, 0 = realtime
+define('PERHITUNGAN_TPP_TESTING', 0); //1 = testing, 0 = realtime
 define('REASON_TTE', 'Dokumen ini telah ditandatangani secara elektronik oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado (Donald Franky Supit, SH, MH - NIP. 197402061998031008)'); 

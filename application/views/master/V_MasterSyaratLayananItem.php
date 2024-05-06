@@ -10,7 +10,7 @@
             <?php $no = 1; foreach($result as $rs){ ?>
                 <tr>
                     <td style="width: 10%;" class="text-left"><?=$no++;?></td>
-                    <td style="width: 30%;" class="text-left"><?=$rs['nama']?></td>
+                    <td style="width: 30%;" class="text-left"><?=$rs['nama_layanan']?></td>
                     <td style="width: 30%;" class="text-left"><?=$rs['dokumen']?></td>
                     <td style="width: 30%;" class="text-left">
                         <button onclick="deleteMasterHakAkses('<?=$rs['id']?>')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>

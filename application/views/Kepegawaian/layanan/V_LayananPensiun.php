@@ -235,39 +235,59 @@ ol {
 					<div class="list-type1x">
 						<ol class="rectangle-list">
 
-            <?php $no = 1; foreach($dokumen_layanan as $rs){ ?>
+            <!-- <?php $no = 1; foreach($dokumen_layanan as $rs){ ?>
               <li>
 								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
 									onclick="filterClicked1('<?=$rs['dokumen_persyaratan'];?>')" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> <?=$rs['dokumen'];?></a>
 							</li>
-              <?php } ?>
+              <?php } ?> -->
 
-<!--    
-            <?php if (in_array($jenis_layanan, $skcpns)) { ?>
+   
+            <?php if (in_array($jenis_layanan, $list_layanan_skcpns)) { ?>
 							<li>
 								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
-									onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')" data-toggle="modal" data-target="#exampleModal"
+									onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
-              <?php if (in_array($jenis_layanan, $skpns)) { ?>
+              <?php if (in_array($jenis_layanan, $list_layanan_skpns)) { ?>
 							<li>
 								<a class="<?php if($sk_pns) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
-									onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')" data-toggle="modal" data-target="#exampleModal"
+									onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> SK PNS <i
 											class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
-              <?php if (in_array($jenis_layanan, $aktenikah)) { ?>
+              <?php if (in_array($jenis_layanan, $list_layanan_skpangakt)) { ?>
+							<li>
+								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
+									onclick="filterClicked1('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK PANGKAT </a>
+							</li>
+              <?php } ?>
+              <?php if (in_array($jenis_layanan, $list_layanan_skjabatan)) { ?>
+							<li>
+								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
+									onclick="filterClicked1('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN </a>
+							</li>
+              <?php } ?>
+              <?php if (in_array($jenis_layanan, $list_layanan_hd)) { ?>
+                  <li><a class="<?php if($hd) echo 'select'; else echo 'unselect';?>" <?php if($hd) { ?>
+									onclick="filterClicked1('<?=$hd['gambarsk'];?>',4)" data-toggle="modal"
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> <?php echo strtoupper('Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin Tingkat Sedang/Berat'); ?> </a></li>
+							<li>
+						  <?php } ?>
+              <?php if (in_array($jenis_layanan, $list_layanan_aktenikah)) { ?>
                   <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked2('<?=$akte_nikah['gambarsk'];?>')" data-toggle="modal"
+									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> BUKU NIKAH / AKTA PERKAWINAN
 									DILEGALISIR <i
 										class="fas fa-<?php if($akte_nikah) echo ''; else echo '';?>"></i></a></li>
 							<li>
-						  <?php } ?> -->
+						  <?php } ?>
 						</ol>
 					</div>
 
@@ -412,51 +432,69 @@ $(function(){
         });
 
 
-    async function filterClicked1(id_dokumen){
+    async function filterClicked1(filename,kode){
     $('#iframe_view_file_berkas_pns').hide()
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     var base_url = "<?=base_url();?>";
     var jenis_layanan = "<?=$jenis_layanan;?>";
 
-    $.ajax({
-        type : "POST",
-        url  : base_url + '/kepegawaian/C_Kepegawaian/getFileLayanan',
-        dataType : "JSON",
-        data : {id_dokumen:id_dokumen},
-        success: function(data){
-        $('#divloader').html('')
-        var number = Math.floor(Math.random() * 1000);
-        var link = "<?=base_url();?>/arsipberkaspns/"+data[0].gambarsk+"?v="+number;
-        if(data != ""){
-          if(data[0].gambarsk != ""){
-            $('#iframe_view_file_berkas_pns').attr('src', link)
-           $('#iframe_view_file_berkas_pns').on('load', function(){
-         $('.iframe_loader').hide()
-         $(this).show()
-       })
+    // if(id_dokumen == 2 || id_dokumen == 3){
+    //       dir = "arsipberkaspns/";
+    //     } else if(id_dokumen == 4){
+    //       dir = "arsipelektronik/";
+    //     } else if(id_dokumen == 18){
+    //       dir = "arsiplain/";
+    //     }  
+
+    // $.ajax({
+    //     type : "POST",
+    //     url  : base_url + '/kepegawaian/C_Kepegawaian/getFileLayanan',
+    //     dataType : "JSON",
+    //     data : {id_dokumen:id_dokumen},
+    //     success: function(data){
+    //     $('#divloader').html('')
+    //     var number = Math.floor(Math.random() * 1000);
+    //     var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
+    //     if(data != ""){
+    //       if(data[0].gambarsk != ""){
+    //         $('#iframe_view_file_berkas_pns').attr('src', link)
+    //        $('#iframe_view_file_berkas_pns').on('load', function(){
+    //      $('.iframe_loader').hide()
+    //      $(this).show()
+    //    })
            
-          } else {
-            $('#view_file_verif').attr('src', '')
-            $('#ket').html('Tidak ada data');
-          }
-        } else {
-        // errortoast('tidak ada data')
-        $('.iframe_loader').hide()  
-        $('#view_file_verif').attr('src', '')
-        $('#ket').html('Tidak ada data');
+    //       } else {
+    //         $('#view_file_verif').attr('src', '')
+    //         $('#ket').html('Tidak ada data');
+    //       }
+    //     } else {
+    //     // errortoast('tidak ada data')
+    //     $('.iframe_loader').hide()  
+    //     $('#view_file_verif').attr('src', '')
+    //     $('#ket').html('Tidak ada data');
+    //     }
+    //     }
+    //     });
+
+        if(kode == 1){
+          dir = "arsipberkaspns/";
+        } else if(kode == 2){
+          dir = "arsipelektronik/";
+        } else if(kode == 3){
+          dir = "arsipjabatan/";
+        } else if(kode == 4){
+          dir = "arsiplain/";
         }
-        }
-        });
     
-    // var number = Math.floor(Math.random() * 1000);
-    // $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
+    var number = Math.floor(Math.random() * 1000);
+    $link = "<?=base_url();?>/"+dir+"/"+filename+"?v="+number;
    
-    // $('#iframe_view_file_berkas_pns').attr('src', $link)
-    //     $('#iframe_view_file_berkas_pns').on('load', function(){
-    //       $('.iframe_loader').hide()
-    //       $(this).show()
-    // })
+    $('#iframe_view_file_berkas_pns').attr('src', $link)
+        $('#iframe_view_file_berkas_pns').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+    })
 
   }
 

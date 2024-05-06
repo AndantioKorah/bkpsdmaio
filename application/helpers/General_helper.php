@@ -486,9 +486,16 @@ function formatTwoMaxDecimal($data)
 
 function formatDateNamaBulan($data)
 {
+   
     $date_only = formatDateOnly($data);
     $explode = explode('/', $date_only);
-    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
+    if($data == "0000-00-00" || $data == ""){
+    return "-";
+    } else {
+    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+    }
+    // return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+
 }
 
 function formatDateNamaBulanWT($data)

@@ -242,7 +242,7 @@
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
                 
              
                 <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
@@ -358,7 +358,9 @@
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm sp_profil_alamat">
-                  <?=($profil_pegawai['alamat'])?>
+                <?php if($profil_pegawai['nama_kelurahan']) { ?>
+                  Sulawesi Utara, <?=$profil_pegawai['nama_kabupaten_kota']?>, Kec. <?=$profil_pegawai['nama_kecamatan']?>, Kel. <?=$profil_pegawai['nama_kelurahan']?></td>
+                  <?php } ?>
                 </span>
               </div>
 

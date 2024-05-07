@@ -84,6 +84,8 @@ $route['kepegawaian/dokumen/verifikasi'] = 'kepegawaian/C_Kepegawaian/verifikasi
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
 $route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1'; 
 $route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai';
+$route['kepegawaian/pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawaiForKasub/$1';
+
 
 
 //api
@@ -119,6 +121,8 @@ $route['kepegawaian/layanan-pensiun/(:any)'] = 'kepegawaian/C_Kepegawaian/Layana
 
 // master
 $route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';
+$route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
+
 
 
 

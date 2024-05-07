@@ -303,7 +303,8 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
+            h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
@@ -311,6 +312,9 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja','left')
                 ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
+                ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
+                ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
+                ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -321,12 +325,46 @@ class M_Kepegawaian extends CI_Model
             if($this->general_library->isProgrammer() 
             || $this->general_library->isAdminAplikasi()
             || $this->general_library->isManajemenTalenta()
-            || $this->general_library->isHakAkses('akses_profil_pegawai')){
+            || $this->general_library->isHakAkses('akses_profil_pegawai')
+            ||  isKasubKepegawaian($this->general_library->getNamaJabatan())){
                 $username = $nip;
                 if(!$username){
                     $username = $this->general_library->getUserName();
                 }
             }
+            $this->db->select('q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
+            (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
+            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status) from db_pegawai.pegpangkat as bb
+            join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
+            r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
+                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
+                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja', 'left')
+                ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk', 'left')
+                ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg', 'left')
+                ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
+                ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
+                ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
+                ->join('m_user l', 'a.nipbaru_ws = l.username', 'left')
+                ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
+                ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
+                ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
+                ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
+                ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
+                ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
+                ->where('a.nipbaru_ws', $username)
+                // ->where('l.flag_active', 1)
+                ->limit(1);
+            return $this->db->get()->row_array();
+        }
+
+        function getProfilPegawaiForKasub($nip){
+          
             $this->db->select('q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
@@ -350,7 +388,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
-                ->where('a.nipbaru_ws', $username)
+                ->where('a.nipbaru_ws', $nip)
                 // ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -3023,7 +3061,7 @@ public function submitEditProfil(){
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
-    // $data["pangkat"] = $datapost["edit_pangkat"];
+    $data["pangkat"] = $datapost["edit_pangkat"];
     // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
     // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];

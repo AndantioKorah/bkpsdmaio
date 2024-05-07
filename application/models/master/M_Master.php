@@ -993,6 +993,61 @@
                             ->get()->result_array();
         }
 
+        public function loadListNominatifPegawai($data, $id_pegawai = null, $flag_profil = 0){
+            $result = null;
+    
+            $unitkerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $data['id_unitkerja'])
+                                ->get()->row_array();
+    
+           
+           
+            $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
+                                
+            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user, a.id_peg,
+                        b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg, c.nama_jabatan, f.nm_unitkerja,
+                        a.handphone,h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
+                        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                        ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                        ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                        ->join('db_pegawai.unitkerjamaster g', 'f.id_unitkerjamaster = g.id_unitkerjamaster')
+                        ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
+                        ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
+                        ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
+                        ->order_by('c.eselon, a.nama')
+                        ->where('id_m_status_pegawai', 1)
+                        ->where('e.flag_active', 1);
+                        // ->where('id_m_status_pegawai', 1)
+                        // ->get()->result_array();
+     
+            if($unitkerja['id_unitkerjamaster'] == "5001000" || $unitkerja['id_unitkerjamaster'] == "5002000" ||
+            $unitkerja['id_unitkerjamaster'] == "5003000" || $unitkerja['id_unitkerjamaster'] == "5004000" ||
+            $unitkerja['id_unitkerjamaster'] == "5005000" || $unitkerja['id_unitkerjamaster'] == "5006000" ||
+            $unitkerja['id_unitkerjamaster'] == "5007000" || $unitkerja['id_unitkerjamaster'] == "5008000" ||
+            $unitkerja['id_unitkerjamaster'] == "5009000" || $unitkerja['id_unitkerjamaster'] == "5010001" || 
+            $unitkerja['id_unitkerjamaster'] == "5011001"){
+                $this->db->where('g.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+            } else {
+                if($data['id_unitkerja'] == "3010000") {
+                    // $this->db->where_in('g.id_unitkerjamaster', ["8000000","8010000","8020000"]);
+                    $this->db->where('a.skpd', $data['id_unitkerja']);
+                } else {
+                    $this->db->where('a.skpd', $data['id_unitkerja']);
+                }
+            }
+
+           
+            $pegawai = $this->db->get()->result_array();
+            // dd($pegawai);
+           
+
+            return $pegawai;
+        }
+
 
 	}
 ?>

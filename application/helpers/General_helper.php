@@ -486,9 +486,16 @@ function formatTwoMaxDecimal($data)
 
 function formatDateNamaBulan($data)
 {
+   
     $date_only = formatDateOnly($data);
     $explode = explode('/', $date_only);
-    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
+    if($data == "0000-00-00" || $data == ""){
+    return "-";
+    } else {
+    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+    }
+    // return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+
 }
 
 function formatDateNamaBulanWT($data)
@@ -1026,12 +1033,14 @@ function convertPhoneNumber($nohp){
 }
 
 function isKasubKepegawaian($nama_jabatan){
-    return (stringStartWith('Kepala Sub', $nama_jabatan) || 
-    stringStartWith('Kepala Seksi', $nama_jabatan) ||
-    stringStartWith('Kasubag', $nama_jabatan) ||
-    stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
-    stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
-    stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
+    return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
+    stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
+    stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan)
+    // stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
+    // stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
+    // stringStartWith('Kepala UPTD', $nama_jabatan)
+    ) 
+    ? true : false;
 }
 
 function countTmtPensiun($nip, $umur = 0){

@@ -860,6 +860,7 @@
                                 (SELECT SUM(b.realisasi_target_kuantitas)
                                 FROM t_kegiatan b
                                 WHERE b.id_t_rencana_kinerja = a.id
+                                AND b.status_verif = 1
                                 AND b.flag_active = 1) as realisasi')
                                 ->from('t_rencana_kinerja a')
                                 ->where('a.id_m_user', $pegawai['id'])
@@ -868,7 +869,7 @@
                                 ->where('a.flag_active', 1)
                                 ->order_by('a.created_date')
                                 ->get()->result_array();
-                                
+
         $komponen_kinerja = $this->db->select('*')
                                     ->from('t_komponen_kinerja a')
                                     ->where('a.id_m_user', $pegawai['id'])
@@ -912,8 +913,9 @@
         ->where('a.flag_active', 1)
         ->where('id_m_status_pegawai', 1)
         ->order_by('a.created_date', 'desc');
-        
-        if($this->general_library->isAdministrator() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        // dd($this->general_library->getNamaJabatan());
+        if(isKasubKepegawaian($this->general_library->getNamaJabatan())
+        || $this->general_library->isProgrammer()){
            $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
         } 
         // else if($this->general_library->isProgrammer ) {
@@ -926,7 +928,7 @@
         $result = $this->db->get()->result_array();
 
         $id_count = $this->general_library->getId();
-        if($this->general_library->isAdministrator() || $this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        if($this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         } 
 
@@ -972,7 +974,7 @@
         $result = null;
 
         if(!isset($data['id_unitkerja'])){
-            if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()) {
+            if($this->general_library->isProgrammer()) {
                 $data['id_unitkerja'] = $this->general_library->getUnitKerjaPegawai();
             }
         }
@@ -1069,6 +1071,7 @@
                         ->where('tahun <=', $explode_tanggal_akhir[0])
                         ->where('bulan >=', $explode_tanggal_awal[1])
                         ->where('bulan <=', $explode_tanggal_akhir[1])
+                        ->where('status', 2)
                         ->where('flag_active', 1)
                         ->get()->result_array();
         if($exist){
@@ -1149,7 +1152,7 @@
                 ->where('id_m_status_pegawai', 1)
                 ->group_by('a.status, a.dokumen_pendukung, a.id_m_jenis_disiplin_kerja, a.id_m_user');
 
-        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator() ||
+        if($this->general_library->isProgrammer() ||
         ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN && $flag_verif == 1) ||
         isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $this->db->where('d.skpd', $id);
@@ -1208,7 +1211,7 @@
                         ->get()->row_array();
 
         $id_count = $tmp['id_m_user'];
-        if($this->general_library->isProgrammer() || $this->general_library->isAdministrator()){
+        if($this->general_library->isProgrammer()){
             $id_count = $this->general_library->getUnitKerjaPegawai();
         }
         $res['data'] = $this->countTotalDataPendukung($id_count, $tmp['bulan'], $tmp['tahun']);
@@ -1576,7 +1579,7 @@
         return $beban_kerja;
     }
 
-    public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0){
+    public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
 
         // $data['id_unitkerja'] = 7005020;
@@ -1602,7 +1605,7 @@
                     ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
                     ->join('m_user f', 'a.nipbaru_ws = f.username')
                     ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
-                    ->where('a.skpd', $data['id_unitkerja'])
+                    // ->where('a.skpd', $data['id_unitkerja'])
                     ->order_by('c.eselon, a.nama')
                     ->where('f.flag_active', 1)
                     ->where('id_m_status_pegawai', 1);
@@ -1610,11 +1613,17 @@
         if($flag_profil == 1){
             $this->db->where('id_m_status_pegawai', 1);
         }
+        if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
+                    ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+        } else {
+            $this->db->where('a.skpd', $data['id_unitkerja']);
+        }
         if($id_pegawai != null){
             $this->db->where('f.id', $id_pegawai);
         }
         $pegawai = $this->db->get()->result_array();
-
+        
         if($pegawai){
             $i = 0;
             foreach($pegawai as $p){
@@ -1778,7 +1787,7 @@
         return $result;
     }
 
-    public function countPaguTppBu($data, $id_pegawai = null, $flag_profil = 0){
+    public function countPaguTppBu($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
 
         $unitkerja = $this->db->select('*')
@@ -1810,13 +1819,18 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                     ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
                     ->join('m_user e', 'a.nipbaru_ws = e.username')
-                    ->where('a.skpd', $data['id_unitkerja'])
+                    
+                    // ->where('a.skpd', $data['id_unitkerja'])
                     ->order_by('c.eselon, a.nama')
                     ->where('e.flag_active', 1);
                     // ->where('id_m_status_pegawai', 1)
                     // ->get()->result_array();
         if($flag_profil == 1){
             $this->db->where('id_m_status_pegawai', 1);
+        }
+        if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN)){
+            $this->db->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                    ->where('f.id_unitkerjamaster', substr($data['id_unitkerja'], 0, 7));
         }
         $pegawai = $this->db->get()->result_array();
         // dd($pegawai);

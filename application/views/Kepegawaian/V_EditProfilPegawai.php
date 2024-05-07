@@ -144,10 +144,10 @@
       </div>
       </div>
 
-      <div class="col-lg-2" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
+      <div class="col-lg-2" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "style='display:none;'"; else echo "style='display:none;'" ?>>
         <label for="inputPassword6" class="col-form-label"> Alamat </label>
       </div>
-      <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
+      <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "style='display:none;'"; else echo "style='display:none;'" ?>>
         <input type="text" id="edit_alamat" name="edit_alamat" class="form-control" value="<?= $profil_pegawai['alamat']?>">
       </div>
 

@@ -5,6 +5,8 @@
     <th>Pangkat/Gol.Ruang</th>
     <th>Jabatan</th>
     <th>Unit Kerja</th>
+    <th>No HP</th>
+    <th>Alamat</th>
     
   </thead>
   <tbody>
@@ -21,7 +23,11 @@
         <td class="text-left"><?=$rs['nm_pangkat']?></td>
         <td class="text-left"><?=$rs['nama_jabatan']?></td>
         <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-       
+        <td class="text-left"><?=$rs['handphone']?></td>
+        <td class="text-left">
+        <?php if($rs['nama_kelurahan']) { ?>
+        Sulawesi Utara, <?=$rs['nama_kabupaten_kota']?>, Kec. <?=$rs['nama_kecamatan']?>, Kel. <?=$rs['nama_kelurahan']?></td>
+        <?php } ?>
       </tr>
     <?php } } ?>
   </tbody>

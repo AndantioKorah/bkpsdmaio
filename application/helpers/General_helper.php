@@ -1035,7 +1035,9 @@ function convertPhoneNumber($nohp){
 function isKasubKepegawaian($nama_jabatan){
     return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
     stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
-    stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan)
+    stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||
+    stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan)
+    
     // stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
     // stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
     // stringStartWith('Kepala UPTD', $nama_jabatan)

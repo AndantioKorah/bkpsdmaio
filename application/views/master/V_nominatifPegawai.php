@@ -2,7 +2,7 @@
   <div class="col-lg-12 p-3">
     <div class="card card-default">
       <div class="modal-header">
-        <h5 clsas="modal-title">LIST PEMBERIAN TPP</h5>
+        <h5 clsas="modal-title">NOMINATIF PEGAWAI</h5>
       </div>
       <div class="modal-body">
         <form id="form_list_tpp">

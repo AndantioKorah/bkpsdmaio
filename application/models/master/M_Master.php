@@ -1006,20 +1006,7 @@
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                                 
             $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user, a.id_peg,
-                        b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg, c.nama_jabatan, f.nm_unitkerja,
-                        (SELECT CONCAT(
-                            IF( c.nama_jabatan IS NULL, "", c.nama_jabatan ),
-                                ";",
-                            IF( c.kepalaskpd IS NULL, "", c.kepalaskpd ),
-                                ";",
-                            IF( aa.jenisjabatan IS NULL, "", aa.jenisjabatan ),
-                                ";",
-                            IF( d.id_eselon IS NULL, "", d.id_eselon ) 
-                            ) 
-                        FROM db_pegawai.pegjabatan aa
-                        WHERE aa.id_pegawai = a.id_peg
-                        ORDER BY tmtjabatan DESC
-                        LIMIT 1) as jabatan')
+                        b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg, c.nama_jabatan, f.nm_unitkerja')
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')

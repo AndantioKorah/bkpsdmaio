@@ -1710,6 +1710,33 @@ class C_Kepegawaian extends CI_Controller
     }
 
 
+	public function profilPegawaiForKasub($id_peg){
+
+			$getNip = $this->general_library->getIdPegawai($id_peg);
+			// dd($getNip['nipbaru_ws']);
+		    $nip = $getNip[0]['nipbaru_ws'];
+		
+		    $data['bidang'] = null;
+			$data['page'] = null;
+		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
+			$data['nip'] = $nip;
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
+			$data['status_kawin'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statuskawin', 'id_sk', 'asc');
+			$data['status_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statuspeg', 'id_statuspeg', 'asc');
+			$data['jenis_pegawai'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispeg', 'id_jenispeg', 'asc');
+			$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+			$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
+			$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
+			$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
+			$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($nip);
+			// dd($data['profil_pegawai']);
+			render('kepegawaian/V_ProfilPegawai', '', '', $data);
+		
+	}
+
+
 	
 
 

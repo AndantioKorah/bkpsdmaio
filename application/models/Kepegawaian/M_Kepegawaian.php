@@ -3023,7 +3023,7 @@ public function submitEditProfil(){
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
-    // $data["pangkat"] = $datapost["edit_pangkat"];
+    $data["pangkat"] = $datapost["edit_pangkat"];
     // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
     // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];

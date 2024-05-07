@@ -5376,8 +5376,11 @@ public function submitEditJabatan(){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
-
+        
+        // $params['list_checked'] = [10, 13];
+        // dd('asd');
         $this->db->trans_begin();
+        $list_checked_data = null;
 
         $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
                 g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone')
@@ -5394,6 +5397,7 @@ public function submitEditJabatan(){
                 ->get()->result_array(); 
 
         if(!$list_data){
+            $this->db->trans_rollback();
             $res['code'] = 1;
             $res['message'] = 'Terjadi Kesalahan';
             return $res;
@@ -5408,8 +5412,9 @@ public function submitEditJabatan(){
                                     ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                                     ->get()->row_array();
 
+            $i = 0;
             foreach($list_data as $ld){
-                $i = 0;
+                $list_checked_data[$i] = $ld;
                 $explode = explode("-", $ld['created_date']);
                 $tahun = $explode[0];
                 $counter = 1;
@@ -5438,19 +5443,23 @@ public function submitEditJabatan(){
 
                 $filename = 'CUTI_'.$res['data'][$i]['nipbaru_ws'].'_'.date("Y", strtotime($res['data'][$i]['created_date']))."_".date("m", strtotime($res['data'][$i]['created_date'])).'_'.date("d", strtotime($res['data'][$i]['created_date'])).'_signed.pdf';
                 $path_file = 'arsipcuti/'.$filename;
-                
+                $list_checked_data[$i]['path_file'] = $path_file;
+
+                // dd($path_file);
                 // $encUrl = simpleEncrypt($path_file);
                 $randomString = generateRandomString(30, 1, 't_file_ds'); 
                 $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+                $list_checked_data[$i]['randomString'] = $randomString;
                 // dd($contentQr);
-                $res['qr'] = generateQr($contentQr);
-
+                $res['data'][$i]['qr'] = generateQr($contentQr);
                 // dd($path_file);
                 $mpdf = new \Mpdf\Mpdf([
                     'format' => 'Legal-P',
                     // 'debug' => true
                 ]);
-                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $res, true);
+                $passing_data['data'] = $res['data'][$i];
+                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $passing_data, true);
+                // dd($res);
                 $mpdf->WriteHTML($html);
                 $mpdf->showImageErrors = true;
                 $mpdf->Output($path_file, 'F');
@@ -5464,7 +5473,7 @@ public function submitEditJabatan(){
                     'id_m_jenis_layanan' => $master['id']
                 ]);
 
-                $fileBase64 = convertToBase64($path_file);
+                $fileBase64[] = convertToBase64($path_file);
                 $i++;
             }
             $signatureProperties = array();
@@ -5482,7 +5491,59 @@ public function submitEditJabatan(){
                 'file' => ($fileBase64)
             ];
             $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
+            if(!isset($request_sign['file'])){
+                $this->db->trans_rollback();
+                $res['data'] = $request_sign;
+                $res['code'] = 1;
+                $res['message'] = 'Terjadi Kesalahan';
+                return $res;
+            } else {
+                $j = 0;
+                foreach($request_sign['file'] as $result_file){
+                    // dd($result_file);
+                    base64ToFile($result_file, $list_checked_data[$j]['path_file']);
+                    $this->db->where('id', $list_checked_data[$j]['id'])
+                            ->update('t_pengajuan_cuti',
+                            [
+                                'url_sk' => $list_checked_data[$j]['path_file']
+                            ]);
+
+                    $this->db->insert('t_file_ds', [
+                        'url' => $list_checked_data[$j]['path_file'],
+                        'random_string' => $list_checked_data[$j]['randomString'],
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    if(!file_exists($list_checked_data[$j]['path_file'])){
+                        $res['code'] = 1;
+                        $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
+                        $res['data'] = null;
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
+                    $j++;
+                }
+            }
         }
+        
+        // cek jika sudah masuk dokumen pendukung, dan masuk di riwayat cuti, dan lihat contoh di ds cuti single file
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            if($res['code'] == 0){
+                $this->db->trans_commit();
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Terjadi Kesalahan';
+                $res['data'] = null;
+            }
+        }
+
+        return $res;
     }
 
     public function dsCuti($id){

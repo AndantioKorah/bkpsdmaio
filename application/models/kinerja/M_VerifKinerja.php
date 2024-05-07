@@ -45,15 +45,19 @@
             // if($role == 'subkoordinator'){
             if($eselon == 8){
                 //pegawai yang diverif adalah staf pelaksana di sub bidang yang sama
-                $list_pegawai = $this->db->select('*, id as id_m_user')
-                                        ->from('m_user a')
-                                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                                        ->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang'])
-                                        ->where('id_m_bidang', $this_user['id_m_bidang'])
-                                        ->where('b.skpd = ', $this_user['skpd'])
-                                        ->where('a.id !=', $this->general_library->getId())
-                                        ->where('a.flag_active', 1)
-                                        ->get()->result_array();
+                $this->db->select('*, id as id_m_user')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang'])
+                            // ->where('id_m_bidang', $this_user['id_m_bidang'])
+                            ->where('b.skpd = ', $this_user['skpd'])
+                            ->where('a.id !=', $this->general_library->getId())
+                            ->where('a.flag_active', 1);
+                            // ->get()->result_array();
+                if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ //jika lurah
+                    $this->db->where('id_m_bidang', $this_user['id_m_bidang']);
+                }
+                $list_pegawai = $this->db->get()->result_array();
             // } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
             } else if($eselon == 6 || $eselon == 7){
                 //pegawai yang diverif adalah subkoordinator di bidang yang sama

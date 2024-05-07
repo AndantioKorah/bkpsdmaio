@@ -1606,7 +1606,7 @@
                     ->join('m_user f', 'a.nipbaru_ws = f.username')
                     ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
                     // ->where('a.skpd', $data['id_unitkerja'])
-                    ->order_by('c.eselon, a.nama')
+                    ->order_by('c.eselon')
                     ->where('f.flag_active', 1)
                     ->where('id_m_status_pegawai', 1);
                     // ->get()->result_array();
@@ -1644,7 +1644,7 @@
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
-                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) && $p['kepalaskpd'] != 1){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                         }
                     }
@@ -1777,11 +1777,11 @@
             }
         }
 
-        function comparator($object1, $object2) {
+        function comparator1($object1, $object2) {
             return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
         }
 
-        usort($result, 'comparator');
+        usort($result, 'comparator1');
 
         // dd(($result));
         return $result;

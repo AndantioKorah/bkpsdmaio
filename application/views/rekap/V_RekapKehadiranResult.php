@@ -54,10 +54,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach($result as $rs){
+                            <?php
+                                $no = 1;
+                                $total_presentase_kehadiran = 0;
+                                foreach($result as $rs){
                                 $capaian = 0;
                                 $capaian_bobot = 0;
                                 $presentase_hadir = (floatval($rs['rekap']['hadir']) / floatval($rs['rekap']['jhk'])) * 100;
+                                $total_presentase_kehadiran += $presentase_hadir;
                             ?>
                                 <tr>
                                     <td style="text-align: center;"><?=$no++;?></td>
@@ -81,7 +85,13 @@
                                     <?php } ?>
                                     <td style="text-align: center;"><?=$presentase_hadir.'%'?></td>
                                 </tr>
-                            <?php } ?>
+                            <?php }
+                                $total_presentase_kehadiran = $total_presentase_kehadiran / count($result);
+                            ?>
+                            <tr>
+                                <td style="text-align: left;" colspan="26"><strong>RATA-RATA PRESENTASE KEHADIRAN</strong></td>
+                                <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($total_presentase_kehadiran).' %'?></strong></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

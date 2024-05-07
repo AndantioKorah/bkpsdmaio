@@ -312,25 +312,83 @@ class C_Rekap extends CI_Controller
         $skpd = explode(";", $param['skpd']);
         $data_absen['unitkerja'] = $skpd[0];
         $data_absen['bulan'] = $param['bulan'];
-        $data_absen['tahun'] = $param['tahun'];
+        $data_absen['tahun'] = $param['tahun']; 
         // dd($this->session->userdata(''));
         // dd($data_absen['raw_data_excel']);
         // $data_rekap = $this->session->userdata('rekap_' . $param['bulan'] . '_' . $param['tahun']);
-       
 
         switch ($jenis_file) {
             case "kehadiran" :
                 $data['skpd'] = $skpd;
                 $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+                $data['result'] = $this->fixOrder($data['result']);
                 // $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
                 $this->load->view('rekap/V_RekapKehadiranResult', $data);
                 break;
+
+            case "penilaian_disiplin_kerja":
+                // if($data_rekap && isset($data_rekap['penilaian_disiplin_kerja'])){
+                //     $data = $data_rekap['penilaian_disiplin_kerja'];
+                // } else {
+                $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+                $data['result'] = $this->fixOrder($data['result']);
+                $data['flag_print'] = 0;
+                $data['use_header'] = 0;
+                // }
+
+                $temp['penilaian_disiplin_kerja'] = $data;
+                // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
+
+                $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
+                break;
+
+            case "produktivitas_kerja":
+                // if($data_rekap && isset($data_rekap['produktivitas_kerja'])){
+                //     $data['result'] = $data_rekap['produktivitas_kerja'];
+                // } else {
+                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                // dd(json_encode($data['result']));
+                $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
+                $data['result'] = $this->fixOrder($data['result']);
+                $data['parameter'] = $param;
+                $data['flag_print'] = 0;
+                $data['use_header'] = 0;
+                // }
+
+                $temp['produktivitas_kerja'] = $data;
+                // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
+
+                $this->load->view('rekap/V_RekapPenilaianResult', $data);
+                break;
+
             case "daftar_penilaian_tpp":
                 $data['skpd'] = $skpd;
                 $data_disiplin = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
                 $data['result'] = $this->rekap->getDaftarPenilaianTpp($data_disiplin, $param, 1);
+                $data['result']['result'] = $this->fixOrder($data['result']['result']);
                 $this->load->view('rekap/V_RekapPenilaianTppResult', $data);
                 break;
+
+            case "daftar_perhitungan_tpp":
+                // if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
+                //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
+                // } else {
+
+                $explode_param = explode(";", $param['skpd']);
+                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
+                $data['result'] = $this->fixOrder($data['result']);
+                // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
+                // // dd($param);
+                // $explode_param = explode(";", $param['skpd']);
+                // $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
+                // $temp['daftar_perhitungan_tpp'] = $data['result'];
+                // $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
+                // }
+
+                $this->load->view('rekap/V_RekapPerhitunganTpp', $data);
+                break;
+
             case "absen":
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
@@ -349,59 +407,6 @@ class C_Rekap extends CI_Controller
                     // $this->session->set_userdata('rekap_absen_aars', $data);
                 }
                 $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
-                break;
-
-            case "produktivitas_kerja":
-                // if($data_rekap && isset($data_rekap['produktivitas_kerja'])){
-                //     $data['result'] = $data_rekap['produktivitas_kerja'];
-                // } else {
-                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
-                // dd(json_encode($data['result']));
-                $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
-                $data['parameter'] = $param;
-                $data['flag_print'] = 0;
-                $data['use_header'] = 0;
-                // }
-
-                $temp['produktivitas_kerja'] = $data;
-                // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
-
-                $this->load->view('rekap/V_RekapPenilaianResult', $data);
-                break;
-
-            case "penilaian_disiplin_kerja":
-                // if($data_rekap && isset($data_rekap['penilaian_disiplin_kerja'])){
-                //     $data = $data_rekap['penilaian_disiplin_kerja'];
-                // } else {
-                $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
-                $data['flag_print'] = 0;
-                $data['use_header'] = 0;
-                // }
-
-                $temp['penilaian_disiplin_kerja'] = $data;
-                // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
-
-                $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
-                break;
-
-            case "daftar_perhitungan_tpp":
-                // if($data_rekap && isset($data_rekap['daftar_perhitungan_tpp'])){
-                //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
-                // } else {
-
-                $explode_param = explode(";", $param['skpd']);
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
-                $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
-
-                // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
-                // // dd($param);
-                // $explode_param = explode(";", $param['skpd']);
-                // $data['result'] = $this->rekap->getDaftarPerhitunganTpp($pagu_tpp, $data_rekap, $param);
-                // $temp['daftar_perhitungan_tpp'] = $data['result'];
-                // $this->session->set_userdata('rekap_' . $param['bulan'] . '_' . $param['tahun'], $temp);
-                // }
-
-                $this->load->view('rekap/V_RekapPerhitunganTpp', $data);
                 break;
 
             case "daftar_permintaan":
@@ -432,6 +437,28 @@ class C_Rekap extends CI_Controller
                 $this->load->view('rekap/V_DaftarPembayaranTpp', $data);
                 break;
         }
+    }
+
+    public function fixOrder($data){
+        // $result = null;
+        // function fixOrde1($object1, $object2) {
+        //     if(isset($object1['nama'])){
+        //         return $object1['nama'] < $object2['nama'];
+        //     } else {
+        //         return $object1['nama_pegawai'] < $object2['nama_pegawai'];
+        //     }
+        // }
+        // usort($data, 'fixOrde1');
+        // $result = $data;
+        
+        // function fixOrder2($object1, $object2) {
+        //     return floatval($object1['kelas_jabatan']) < floatval($object2['kelas_jabatan']);
+        // }
+        // usort($data, 'fixOrder2');
+        // $result = $data;
+
+        // return $result;
+        return $data;
     }
 
 

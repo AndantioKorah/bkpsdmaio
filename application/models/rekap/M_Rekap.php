@@ -843,14 +843,13 @@
                 }
             } else if($d['jenis_jabatan'] == 'Struktural'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
-            } else if($d['jenis_jabatan'] == 'Struktural'){
+            } else if($d['jenis_jabatan'] == 'JFU'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
             }
 
             $i++;
         }
-
-        return $data;
+        return $result;
     }
 
     public function getDaftarPenilaianTpp($data_disiplin, $param, $flag_rekap_tpp = 0){
@@ -887,19 +886,26 @@
         }
         // $result['komponen_kinerja'] = $komponen_kinerja;
         // $list_kinerja = $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id as id_m_user, a.total_realisasi, a.id, a.target_kuantitas')
-        $list_kinerja = $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id, a.*, sum(d.realisasi_target_kuantitas) as total_realisasi_kinerja')
+        $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id, a.*, sum(d.realisasi_target_kuantitas) as total_realisasi_kinerja')
                         ->from('t_rencana_kinerja a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->join('t_kegiatan d', 'd.id_t_rencana_kinerja = a.id')
                         ->where('a.bulan', $param['bulan'])
                         ->where('a.tahun', $param['tahun'])
-                        ->where('c.skpd', $skpd[0])
+                        // ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where('d.flag_active', 1)
                         ->where('d.status_verif', 1)
-                        ->group_by('a.id')
-                        ->get()->result_array();
+                        ->group_by('a.id');
+
+        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } else {
+            $this->db->where('c.skpd', $skpd[0]);
+        } 
+        $list_kinerja = $this->db->get()->result_array();
         $kinerja = null;
         if($list_kinerja){
             foreach($list_kinerja as $lk){
@@ -1024,6 +1030,9 @@
 
             if($flag_rekap_personal == 1){
                 $this->db->where('b.id', $data['id_m_user']); 
+            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
             } else {
                 $this->db->where('c.skpd', $data['id_unitkerja']); 
             }
@@ -1571,7 +1580,7 @@
         // dd($data);
         // $temp = $this->readAbsensiFromDb($param);
         $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
-        
+
         // $data_absen = $this->db->select('*')
         //             ->from('t_rekap_absen')
         //             ->where('bulan', $param['bulan'])
@@ -1622,6 +1631,12 @@
                 }
             }
         }
+
+        // function comparator($object1, $object2) {
+        //     return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
+        // }
+
+        // usort($result['result'], 'comparator');
 
         // $this->db->where('id', $data_absen['id'])
         //         ->update('t_rekap_absen', [
@@ -1844,6 +1859,9 @@
 
         $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
         foreach($data_rekap['result'] as $dr){
+            // if($dr['nip'] == '197910182009021001'){
+            //     dd(json_encode($dr));
+            // }
             $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
         }
         
@@ -1895,6 +1913,13 @@
 
             // dd($result);
         }
+        // dd($result);
+        // function comparator1($object1, $object2) {
+        //     return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
+        // }
+
+        // usort($result, 'comparator1');
+
         return $result;
     }
 

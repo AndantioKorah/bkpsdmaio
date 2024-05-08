@@ -71,7 +71,7 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')

@@ -263,33 +263,30 @@ class C_Rekap extends CI_Controller
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
 
-        $data['pegawai']['kepalaskpd'] = null;
-        $data['pegawai']['kasubag'] = null;
-        $data['pegawai']['bendahara'] = null;
-
+        $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
         $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $data['param']['id_unitkerja']], null, 0, 1);
-        $list_pagu_tpp = null;
-        if($pagu_tpp){
-            foreach($pagu_tpp as $pt){
-                if($pt['kepalaskpd'] == 1){
-                    if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){ // jika kecamatan, cari camat
-                        if($skpd[0] == $pt['skpd']){
-                            $data['pegawai']['kepalaskpd'] = $pt;
-                        }
-                    } else { // jika bukan kecamatan, cari kepalaskpd
-                        $data['pegawai']['kepalaskpd'] = $pt;
-                    }
-                } else if(isKasubKepegawaian($pt['nama_jabatan'])){
-                    $data['pegawai']['kasubag'] = $pt;
-                } else if($pt['flag_bendahara'] == 1){
-                    $data['pegawai']['bendahara'] = $pt;
-                }
-                $list_pagu_tpp[$pt['nipbaru_ws']] = $pt;
-            }
-            // if($data['pegawai']['bendahara'] == null){
-            //     $data['pegawai']['bendahara'] = $data['pegawai']['kasubag'];
-            // }
-        }
+        // $list_pagu_tpp = null;
+        // if($pagu_tpp){
+        //     foreach($pagu_tpp as $pt){
+        //         if($pt['kepalaskpd'] == 1){
+        //             if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){ // jika kecamatan, cari camat
+        //                 if($skpd[0] == $pt['skpd']){
+        //                     $data['pegawai']['kepalaskpd'] = $pt;
+        //                 }
+        //             } else { // jika bukan kecamatan, cari kepalaskpd
+        //                 $data['pegawai']['kepalaskpd'] = $pt;
+        //             }
+        //         } else if(isKasubKepegawaian($pt['nama_jabatan'])){
+        //             $data['pegawai']['kasubag'] = $pt;
+        //         } else if($pt['flag_bendahara'] == 1){
+        //             $data['pegawai']['bendahara'] = $pt;
+        //         }
+        //         $list_pagu_tpp[$pt['nipbaru_ws']] = $pt;
+        //     }
+        //     // if($data['pegawai']['bendahara'] == null){
+        //     //     $data['pegawai']['bendahara'] = $data['pegawai']['kasubag'];
+        //     // }
+        // }
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);

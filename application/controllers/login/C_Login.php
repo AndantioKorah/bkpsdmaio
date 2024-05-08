@@ -134,6 +134,7 @@ class C_Login extends CI_Controller
             } else {
                 $landing_page = 'welcome';
             }
+            // dd($result);
             $this->session->set_userdata([
                 'user_logged_in' => $result,
                 'params' => $params,

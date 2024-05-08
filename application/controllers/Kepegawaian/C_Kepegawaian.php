@@ -1682,21 +1682,64 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function LayananPensiun($jenis_layanan){
-		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		$data['jenis_layanan'] = $jenis_layanan;
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
-		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();   
+		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
 		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','18','0');
+		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','19','0');
+		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','30','0');
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
+		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
+		$data['surat_ket_kematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','56','0');
+		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
+		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');
+		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','26','0');
+		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
+		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
 
 		
-		$data['list_layanan_skcpns'] = array(6,7,10,12,13,14,15,16);
-		$data['list_layanan_skpns'] = array(6,7,10,12,13,14,15,16);
-		$data['list_layanan_skpangakt'] = array(6,7,10,12,13,14,15,16);
-		$data['list_layanan_skjabatan'] = array(6,7,10,12,13,14,15,16);
-		$data['list_layanan_aktenikah'] = array(7);
-		$data['list_layanan_hd'] = array(7);
+		$data['list_layanan_skcpns'] = array(7,8,9,10,11);
+		$data['list_layanan_skpns'] = array(7,8,9,10,11);
+		$data['list_layanan_skpangak'] = array(7,8,9,10,11);
+		$data['list_layanan_skjabatan'] = array(7,8,9,10);
+		$data['list_layanan_aktenikah'] = array(7,8,9,10,11);
+		$data['list_layanan_hd'] = array(7,8,9,10,11);
+		$data['list_layanan_pidana'] = array(7,8,9,10,11);
+		$data['list_layanan_dpcp'] = array(7,8,9,10,11);
+		$data['list_layanan_pmk'] = array(7,8,9,10);
+		$data['list_layanan_skp'] = array(7,8,9,10);
+		$data['list_layanan_surat_ket_kematian'] = array(11);
+		$data['list_layanan_surat_laporan_kronologis'] = array(11);
+		$data['list_layanan_aktercerai'] = array(7,8,9,10,11);
+		$data['list_layanan_aktekematian'] = array(7,8,9,10,11);
+		$data['list_layanan_akteanak'] = array(7,8,9,10,11);
+		$data['list_layanan_kk'] = array(7,8,9,10,11);
+		$data['list_layanan_ket_janda_duda'] = array(8,11);
+		$data['list_layanan_spt'] = array(11);
+		$data['list_layanan_visum'] = array(11);
+		$data['list_layanan_berita_acara'] = array(11);
+		$data['list_layanan_ktp'] = array(7,8,9,10,11);
+		$data['list_layanan_npwp'] = array(7,8,9,10,11);
+		$data['list_layanan_buku_rek'] = array(7,8,9,10,11);
+		$data['list_layanan_surat_rekom_sakit'] = array(10);
+		$data['list_layanan_surat_berhenti'] = array(9,10);
+		
+
+
+
+
+
+
+
+
+
+
+
+
 		// $data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
 
 		render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);

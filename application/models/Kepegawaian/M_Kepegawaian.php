@@ -303,7 +303,8 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja')
+            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
+            h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
@@ -311,6 +312,9 @@ class M_Kepegawaian extends CI_Model
                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                 ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja','left')
                 ->join('db_pegawai.statusjabatan g', 'a.statusjabatan = g.id_statusjabatan','left')
+                ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
+                ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
+                ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
                 ->where('a.nipbaru_ws', $username)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -321,12 +325,46 @@ class M_Kepegawaian extends CI_Model
             if($this->general_library->isProgrammer() 
             || $this->general_library->isAdminAplikasi()
             || $this->general_library->isManajemenTalenta()
-            || $this->general_library->isHakAkses('akses_profil_pegawai')){
+            || $this->general_library->isHakAkses('akses_profil_pegawai')
+            ||  isKasubKepegawaian($this->general_library->getNamaJabatan())){
                 $username = $nip;
                 if(!$username){
                     $username = $this->general_library->getUserName();
                 }
             }
+            $this->db->select('q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
+            (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
+            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status) from db_pegawai.pegpangkat as bb
+            join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
+            r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
+                ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
+                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja', 'left')
+                ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk', 'left')
+                ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg', 'left')
+                ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
+                ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
+                ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
+                ->join('m_user l', 'a.nipbaru_ws = l.username', 'left')
+                ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
+                ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
+                ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
+                ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
+                ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
+                ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
+                ->where('a.nipbaru_ws', $username)
+                // ->where('l.flag_active', 1)
+                ->limit(1);
+            return $this->db->get()->row_array();
+        }
+
+        function getProfilPegawaiForKasub($nip){
+          
             $this->db->select('q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
@@ -350,7 +388,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_bidang o', 'l.id_m_bidang = o.id','left')
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
-                ->where('a.nipbaru_ws', $username)
+                ->where('a.nipbaru_ws', $nip)
                 // ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
@@ -3023,7 +3061,7 @@ public function submitEditProfil(){
     // $data["tmtjabatan"] = $datapost["edit_gelar1"];
     $data["statusjabatan"] = $datapost["edit_status_jabatan"];
     $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
-    // $data["pangkat"] = $datapost["edit_pangkat"];
+    $data["pangkat"] = $datapost["edit_pangkat"];
     // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
     // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
@@ -5376,8 +5414,11 @@ public function submitEditJabatan(){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
-
+        
+        // $params['list_checked'] = [10, 13];
+        // dd('asd');
         $this->db->trans_begin();
+        $list_checked_data = null;
 
         $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
                 g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone')
@@ -5394,6 +5435,7 @@ public function submitEditJabatan(){
                 ->get()->result_array(); 
 
         if(!$list_data){
+            $this->db->trans_rollback();
             $res['code'] = 1;
             $res['message'] = 'Terjadi Kesalahan';
             return $res;
@@ -5408,8 +5450,9 @@ public function submitEditJabatan(){
                                     ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                                     ->get()->row_array();
 
+            $i = 0;
             foreach($list_data as $ld){
-                $i = 0;
+                $list_checked_data[$i] = $ld;
                 $explode = explode("-", $ld['created_date']);
                 $tahun = $explode[0];
                 $counter = 1;
@@ -5438,19 +5481,23 @@ public function submitEditJabatan(){
 
                 $filename = 'CUTI_'.$res['data'][$i]['nipbaru_ws'].'_'.date("Y", strtotime($res['data'][$i]['created_date']))."_".date("m", strtotime($res['data'][$i]['created_date'])).'_'.date("d", strtotime($res['data'][$i]['created_date'])).'_signed.pdf';
                 $path_file = 'arsipcuti/'.$filename;
-                
+                $list_checked_data[$i]['path_file'] = $path_file;
+
+                // dd($path_file);
                 // $encUrl = simpleEncrypt($path_file);
                 $randomString = generateRandomString(30, 1, 't_file_ds'); 
                 $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+                $list_checked_data[$i]['randomString'] = $randomString;
                 // dd($contentQr);
-                $res['qr'] = generateQr($contentQr);
-
+                $res['data'][$i]['qr'] = generateQr($contentQr);
                 // dd($path_file);
                 $mpdf = new \Mpdf\Mpdf([
                     'format' => 'Legal-P',
                     // 'debug' => true
                 ]);
-                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $res, true);
+                $passing_data['data'] = $res['data'][$i];
+                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $passing_data, true);
+                // dd($res);
                 $mpdf->WriteHTML($html);
                 $mpdf->showImageErrors = true;
                 $mpdf->Output($path_file, 'F');
@@ -5464,7 +5511,7 @@ public function submitEditJabatan(){
                     'id_m_jenis_layanan' => $master['id']
                 ]);
 
-                $fileBase64 = convertToBase64($path_file);
+                $fileBase64[] = convertToBase64($path_file);
                 $i++;
             }
             $signatureProperties = array();
@@ -5482,7 +5529,59 @@ public function submitEditJabatan(){
                 'file' => ($fileBase64)
             ];
             $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
+            if(!isset($request_sign['file'])){
+                $this->db->trans_rollback();
+                $res['data'] = $request_sign;
+                $res['code'] = 1;
+                $res['message'] = 'Terjadi Kesalahan';
+                return $res;
+            } else {
+                $j = 0;
+                foreach($request_sign['file'] as $result_file){
+                    // dd($result_file);
+                    base64ToFile($result_file, $list_checked_data[$j]['path_file']);
+                    $this->db->where('id', $list_checked_data[$j]['id'])
+                            ->update('t_pengajuan_cuti',
+                            [
+                                'url_sk' => $list_checked_data[$j]['path_file']
+                            ]);
+
+                    $this->db->insert('t_file_ds', [
+                        'url' => $list_checked_data[$j]['path_file'],
+                        'random_string' => $list_checked_data[$j]['randomString'],
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    if(!file_exists($list_checked_data[$j]['path_file'])){
+                        $res['code'] = 1;
+                        $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
+                        $res['data'] = null;
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
+                    $j++;
+                }
+            }
         }
+        
+        // cek jika sudah masuk dokumen pendukung, dan masuk di riwayat cuti, dan lihat contoh di ds cuti single file
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            if($res['code'] == 0){
+                $this->db->trans_commit();
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Terjadi Kesalahan';
+                $res['data'] = null;
+            }
+        }
+
+        return $res;
     }
 
     public function dsCuti($id){

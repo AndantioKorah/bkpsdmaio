@@ -1595,7 +1595,7 @@
         $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
                     c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
                     a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
-                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan,
+                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
                     g.kondisi_kerja AS kondisi_kerja_tambahan,
                     g.nama_jabatan AS nama_jabatan_tambahan')
                     ->from('db_pegawai.pegawai a')
@@ -1606,7 +1606,7 @@
                     ->join('m_user f', 'a.nipbaru_ws = f.username')
                     ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
                     // ->where('a.skpd', $data['id_unitkerja'])
-                    ->order_by('c.eselon, a.nama')
+                    ->order_by('c.eselon')
                     ->where('f.flag_active', 1)
                     ->where('id_m_status_pegawai', 1);
                     // ->get()->result_array();
@@ -1644,7 +1644,7 @@
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
-                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) && $p['kepalaskpd'] != 1){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                         }
                     }
@@ -1777,11 +1777,11 @@
             }
         }
 
-        function comparator($object1, $object2) {
+        function comparator1($object1, $object2) {
             return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
         }
 
-        usort($result, 'comparator');
+        usort($result, 'comparator1');
 
         // dd(($result));
         return $result;

@@ -1381,6 +1381,15 @@
 
         }
 
+        public function getNipPegawai($id_pegawai){
+            $this->db->select('a.nipbaru_ws')
+            ->from('db_pegawai.pegawai a')
+            ->where('a.id_peg', $id_pegawai);
+            return $this->db->get()->result_array();
+           
+
+        }
+
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){
             $explode_awal = explode("-", $tanggal_awal);
             $explode_akhir = explode("-", $tanggal_akhir);

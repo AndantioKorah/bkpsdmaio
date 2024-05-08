@@ -287,6 +287,16 @@ class C_Master extends CI_Controller
         render('master/V_ListTpp', '', '', $data);
 	}
 
+    public function nominatifPegawai(){
+		$data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('master/V_nominatifPegawai', '', '', $data);
+	}
+
+    public function loadListNominatifPegawai(){
+        $data['result'] = $this->master->loadListNominatifPegawai($this->input->post());
+        $this->load->view('master/V_nominatifPegawaiList', $data);
+    }
+
     public function loadListTpp(){
         $data['result'] = $this->kinerja->countPaguTpp($this->input->post());
         $this->load->view('master/V_ListTppData', $data);

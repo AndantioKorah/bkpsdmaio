@@ -45,10 +45,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach($rekap_penilaian_tpp['result'] as $rs){
+                    <?php $no = 1;
+                    $total_presentase_kehadiran = 0;
+                    foreach($rekap_penilaian_tpp['result'] as $rs){
                         $capaian = 0;
                         $capaian_bobot = 0;
                         // $presentase_hadir_rekap = (floatval($rs['rekap']['hadir']) / floatval($rs['rekap']['jhk'])) * 100;
+                        $total_presentase_kehadiran += $rs['rekap']['presentase_kehadiran'];
                     ?>
                         <tr>
                             <td style="text-align: center;"><?=$no++;?></td>
@@ -72,7 +75,13 @@
                             <?php } ?>
                             <td style="text-align: center;"><?=$rs['rekap']['presentase_kehadiran'].'%'?></td>
                         </tr>
-                    <?php } ?>
+                    <?php }
+                        $total_presentase_kehadiran = $total_presentase_kehadiran / count($result);
+                    ?>
+                    <tr>
+                        <td style="text-align: left;" colspan="26"><strong>RATA-RATA PRESENTASE KEHADIRAN</strong></td>
+                        <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($total_presentase_kehadiran).' %'?></strong></td>
+                    </tr>
                 </tbody>
             </table>
             <?php
@@ -268,6 +277,7 @@
                     <tr>
                         <th rowspan=2 class="text-center">No</th>
                         <th rowspan=2 class="text-center">Pegawai</th>
+                        <th rowspan=2 class="text-center">Gol</th>
                         <th rowspan=2 class="text-center">Kelas Jabatan</th>
                         <th rowspan=2 class="text-center">Besaran Pagu TPP (Rp)</th>
                         <th rowspan=2 class="text-center">% Capaian Produktivitas Kerja</th>
@@ -283,13 +293,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach($result as $r){ ?>
+                    <?php
+                    $no = 1;
+                    $pagu_keseluruhan = 0;
+                    $jumlah_capaian_keseluruhan = 0;
+                    $potongan_pajak_keseluruhan = 0;
+                    $jumlah_setelah_pajak_keseluruhan = 0;
+
+                    $jumlah_bobot_produktivitas_kerja = 0;
+                    $jumlah_bobot_disiplin_kerja = 0;
+                    
+                    foreach($result as $r){
+                        $pagu_keseluruhan += $r['pagu_tpp'];
+                        $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
+                        $potongan_pajak_keseluruhan += $r['nominal_pph'];
+                        $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
+
+                        $jumlah_bobot_produktivitas_kerja += $r['bobot_produktivitas_kerja'];
+                        $jumlah_bobot_disiplin_kerja += $r['bobot_disiplin_kerja'];
+                    ?>
                         <tr>
                             <td style="text-align: center;"><?=$no++;?></td>
                             <td style="text-align: left;">
                                 <span class="berkas_tpp_download_nama_pegawai"><?=$r['nama_pegawai']?></span><br>
                                 <span>NIP. <?=($r['nip'])?></span><br>
                             </td>
+                            <td style="text-align: center;"><?=$r['nomor_golongan']?></td>
                             <td style="text-align: center;"><?=$r['kelas_jabatan']?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['pagu_tpp'], 0)?></td>
                             <td style="text-align: center;"><?=formatTwoMaxDecimal($r['bobot_produktivitas_kerja'])?> %</td>
@@ -302,12 +331,29 @@
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
                         </tr>
-                    <?php } ?>
+                    <?php }
+                    $rata_rata_bobot_produktivitas = $jumlah_bobot_produktivitas_kerja / count($result);
+                    $rata_rata_bobot_disiplin = $jumlah_bobot_disiplin_kerja / count($result);
+                    ?>
+                    <tr>
+                        <td style="text-align: center;" colspan=2><strong>JUMLAH</strong></td>
+                        <td style="text-align: center;"></td>
+                        <td style="text-align: center;"></td>
+                        <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($pagu_keseluruhan, 0)?></strong></td>
+                        <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($rata_rata_bobot_produktivitas, 0).' %'?></strong></td>
+                        <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($rata_rata_bobot_disiplin, 0).' %'?></strong></td>
+                        <td style="text-align: center;"></td>
+                        <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($jumlah_capaian_keseluruhan, 0)?></strong></td>
+                        <td style="text-align: center;"></td>
+                        <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($potongan_pajak_keseluruhan, 0)?></strong></td>
+                        <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($jumlah_setelah_pajak_keseluruhan, 0)?></strong></td>
+                    </tr>
                 </tbody>
             </table>
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
-                $data_header['kasubag'] = $pegawai['kasubag'];
+                $data_header['kasubag'] = $pegawai['bendahara'];
+                $data_header['flag_bendahara'] = 1;
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>

@@ -1595,7 +1595,7 @@
         $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
                     c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
                     a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
-                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan,
+                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
                     g.kondisi_kerja AS kondisi_kerja_tambahan,
                     g.nama_jabatan AS nama_jabatan_tambahan')
                     ->from('db_pegawai.pegawai a')

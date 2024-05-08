@@ -352,7 +352,8 @@
             </table>
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
-                $data_header['kasubag'] = $pegawai['kasubag'];
+                $data_header['kasubag'] = $pegawai['bendahara'];
+                $data_header['flag_bendahara'] = 1;
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>

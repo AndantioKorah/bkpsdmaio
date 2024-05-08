@@ -265,18 +265,30 @@ class C_Rekap extends CI_Controller
 
         $data['pegawai']['kepalaskpd'] = null;
         $data['pegawai']['kasubag'] = null;
+        $data['pegawai']['bendahara'] = null;
 
         $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $data['param']['id_unitkerja']], null, 0, 1);
         $list_pagu_tpp = null;
         if($pagu_tpp){
             foreach($pagu_tpp as $pt){
                 if($pt['kepalaskpd'] == 1){
-                    $data['pegawai']['kepalaskpd'] = $pt;
+                    if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){ // jika kecamatan, cari camat
+                        if($skpd[0] == $pt['skpd']){
+                            $data['pegawai']['kepalaskpd'] = $pt;
+                        }
+                    } else { // jika bukan kecamatan, cari kepalaskpd
+                        $data['pegawai']['kepalaskpd'] = $pt;
+                    }
                 } else if(isKasubKepegawaian($pt['nama_jabatan'])){
                     $data['pegawai']['kasubag'] = $pt;
+                } else if($pt['flag_bendahara'] == 1){
+                    $data['pegawai']['bendahara'] = $pt;
                 }
                 $list_pagu_tpp[$pt['nipbaru_ws']] = $pt;
             }
+            // if($data['pegawai']['bendahara'] == null){
+            //     $data['pegawai']['bendahara'] = $data['pegawai']['kasubag'];
+            // }
         }
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
@@ -454,8 +466,8 @@ class C_Rekap extends CI_Controller
         // function fixOrder2($object1, $object2) {
         //     return floatval($object1['kelas_jabatan']) < floatval($object2['kelas_jabatan']);
         // }
-        // usort($data, 'fixOrder2');
-        // $result = $data;
+        // usort($result, 'fixOrder2');
+        // // $result = $data;
 
         // return $result;
         return $data;

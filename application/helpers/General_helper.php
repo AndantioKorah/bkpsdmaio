@@ -374,8 +374,8 @@ function greeting(){
     if(intval($time) >= 11 && intval($time) < 15){
         $greeting = "Siang";
     } else if(intval($time) >= 15 && intval($time) < 18){
-        $greeting = "Siang";
-    } else if(intval($time) >= 18 && intval($time) < 24 && intval($time) >= 0 && intval($time) < 2){
+        $greeting = "Sore";
+    } else if((intval($time) >= 18 && intval($time) < 24) || (intval($time) >= 0 && intval($time) < 2)){
         $greeting = "Malam";
     }
 

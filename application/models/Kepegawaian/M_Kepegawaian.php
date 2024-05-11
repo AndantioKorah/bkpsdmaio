@@ -5502,6 +5502,28 @@ public function submitEditJabatan(){
                 $mpdf->showImageErrors = true;
                 $mpdf->Output($path_file, 'F');
 
+                $fileBase64[] = convertToBase64($path_file);
+
+                // save untuk cron WA
+                $caption = "*[SK PENGAJUAN ".strtoupper($ld["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($ld).",\nBerikut kami lampirkan SK ".$ld["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+                // $this->maxchatlibrary->sendDocument(convertPhoneNumber($ld['handphone']), @$path_file, $filename, $caption);
+                $cronWa = [
+                    'sendTo' => convertPhoneNumber($ld['handphone']),
+                    'message' => $caption,
+                    'filename' => $filename,
+                    'fileurl' => $path_file,
+                    'type' => 'document'
+                ];
+                $this->general->saveToCronWa($cronWa);
+
+                // save untuk t_file_ds agar bisa terbaca saat QR Code
+                $this->db->insert('t_file_ds', [
+                    'url' => $path_file,
+                    'random_string' => $randomString,
+                    'created_by' => $this->general_library->getId()
+                ]);
+
+                // save nomor surat
                 $this->db->insert('t_nomor_surat', [
                     'perihal' => 'SURAT IZIN '.strtoupper($ld['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($ld),
                     'counter' => $counter,
@@ -5511,7 +5533,57 @@ public function submitEditJabatan(){
                     'id_m_jenis_layanan' => $master['id']
                 ]);
 
-                $fileBase64[] = convertToBase64($path_file);
+            $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('m_user d', 'a.nipbaru_ws = d.username')
+                                ->where('c.kepalaskpd', 1)
+                                ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                                ->get()->row_array();
+
+            //simpan di dokumen pendukung agar tersinkron dengan rekap absen
+            $dokumen_pendukung = null;
+            $hariKerja = countHariKerjaDateToDate($ld['tanggal_mulai'], $ld['tanggal_akhir']);
+            if($hariKerja){
+                $j = 0;
+                foreach($hariKerja[2] as $h){
+                    $explode = explode("-", $h);
+                    $dokumen_pendukung[$j] = [
+                        'id_m_user' => $ld['id_m_user'],
+                        'id_m_jenis_disiplin_kerja' => 17,
+                        'tanggal' => $explode[2],
+                        'bulan' => $explode[1],
+                        'tahun' => $explode[0],
+                        'keterangan' => 'Cuti',
+                        'pengurangan' => 0,
+                        'status' => 2,
+                        'keterangan_verif' => $ld['keterangan_verifikasi_kepala_bkpsdm'],
+                        'tanggal_verif' => $ld['tanggal_verifikasi_kepala_bkpsdm'],
+                        'id_m_user_verif' => $kepala_bkpsdm['id_m_user'],
+                        'flag_outside' => 1,
+                        'url_outside' => json_encode([$path_file]),
+                        'created_by' => $kepala_bkpsdm['id_m_user']
+                    ];
+                    $j++;
+                }
+            }
+            if($dokumen_pendukung){
+                $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+            }
+
+            // save di pegcuti agar muncul di profil cuti
+            $this->db->insert('db_pegawai.pegcuti', [
+                'id_pegawai' => $ld['id_peg'],
+                'jeniscuti' => $ld['id_cuti'],
+                'lamacuti' => $ld['lama_cuti'],
+                'tglmulai' => $ld['tanggal_mulai'],
+                'tglselesai' => $ld['tanggal_akhir'],
+                'nosttpp' => $nomor_surat,
+                'tglsttpp' => date('Y-m-d'),
+                'gambarsk' => $filename,
+                'status' => 2
+            ]);
+
                 $i++;
             }
             $signatureProperties = array();
@@ -5528,16 +5600,17 @@ public function submitEditJabatan(){
                 'signatureProperties' => [$signatureProperties],
                 'file' => ($fileBase64)
             ];
-            $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
-            if(!isset($request_sign['file'])){
+            $request_sign = $this->ttelib->signPdfNikPass($request_tte);
+            $dec_resp = json_decode($request_sign, true);
+            if(!isset($dec_resp['file'])){
                 $this->db->trans_rollback();
-                $res['data'] = $request_sign;
-                $res['code'] = 1;
-                $res['message'] = 'Terjadi Kesalahan';
+                $res['data'] = null;
+                $res['code'] = 2;
+                $res['message'] = isset($dec_resp['error']) ? $dec_resp['error'] : $request_sign;
                 return $res;
             } else {
                 $j = 0;
-                foreach($request_sign['file'] as $result_file){
+                foreach($dec_resp['file'] as $result_file){
                     // dd($result_file);
                     base64ToFile($result_file, $list_checked_data[$j]['path_file']);
                     $this->db->where('id', $list_checked_data[$j]['id'])
@@ -5553,7 +5626,7 @@ public function submitEditJabatan(){
                     ]);
 
                     if(!file_exists($list_checked_data[$j]['path_file'])){
-                        $res['code'] = 1;
+                        $res['code'] = 3;
                         $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
                         $res['data'] = null;
                         $this->db->trans_rollback();
@@ -5564,18 +5637,16 @@ public function submitEditJabatan(){
             }
         }
         
-        // cek jika sudah masuk dokumen pendukung, dan masuk di riwayat cuti, dan lihat contoh di ds cuti single file
-
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
-            $res['code'] = 1;
+            $res['code'] = 4;
             $res['message'] = 'Terjadi Kesalahan';
             $res['data'] = null;
         } else {
             if($res['code'] == 0){
                 $this->db->trans_commit();
             } else {
-                $res['code'] = 1;
+                $res['code'] = 5;
                 $res['message'] = 'Terjadi Kesalahan';
                 $res['data'] = null;
             }

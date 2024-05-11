@@ -319,6 +319,9 @@
 					<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 					<div class="dropdown-divider"></div> -->
 					<a class="dropdown-item" href="<?=base_url('logout')?>">
+						<i class="align-middle me-2 fa fa-sign-out-alt"></i> <span class="align-middle"><?=greeting()?></span>
+					</a>
+					<a class="dropdown-item" href="<?=base_url('logout')?>">
 						<i class="align-middle me-2 fa fa-sign-out-alt"></i> <span class="align-middle">Log Out</span>
 					</a>
 				</div>

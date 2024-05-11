@@ -92,7 +92,7 @@
                     $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                     $data_header['kasubag'] = $pegawai['kepsek'];
                 } else if($pegawai['flag_puskesmas'] == 1){
-                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
                     $data_header['kasubag'] = $pegawai['kapus'];
                 }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -157,7 +157,7 @@
                     $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                     $data_header['kasubag'] = $pegawai['kepsek'];
                 } else if($pegawai['flag_puskesmas'] == 1){
-                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
                     $data_header['kasubag'] = $pegawai['kapus'];
                 }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -232,7 +232,7 @@
                     $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                     $data_header['kasubag'] = $pegawai['kepsek'];
                 } else if($pegawai['flag_puskesmas'] == 1){
-                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
                     $data_header['kasubag'] = $pegawai['kapus'];
                 }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -287,7 +287,7 @@
                     $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                     $data_header['kasubag'] = $pegawai['kepsek'];
                 } else if($pegawai['flag_puskesmas'] == 1){
-                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
                     $data_header['kasubag'] = $pegawai['kapus'];
                 }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);

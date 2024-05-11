@@ -14,7 +14,12 @@
             <th class="text-center">Pilihan</th>
         </thead>
         <tbody>
-            <?php $no = 1; foreach($result as $r){ ?>
+            <?php $no = 1; foreach($result as $r){
+            $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']);
+            if($r['sampai_tanggal']){
+                $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']);
+            }
+            ?>
                 <tr>
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left"><?=getNamaPegawaiFull($r)?></td>
@@ -24,7 +29,7 @@
                         // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
                     ?>
                     <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
-                    <td class="text-center"><?= formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']) ?></td>
+                    <td class="text-center"><?= $tanggal_dokumen ?></td>
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
                     <td class="text-center"><?= ($r['keterangan']) ?></td>
                     <td class="text-center">

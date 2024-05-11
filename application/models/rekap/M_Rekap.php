@@ -868,6 +868,20 @@
                             ->where('id_unitkerja', $id_unitkerja)
                             ->get()->row_array();
 
+        if($unitkerja['nip_kepalaskpd_hardcode']){
+            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                ->where('a.nipbaru_ws', $unitkerja['nip_kepalaskpd_hardcode'])
+                                ->get()->row_array();
+
+            $result['kepalaskpd']['nama_jabatan'] = $unitkerja['nama_jabatan_kepalaskpd_hardcode'];
+        }
+
         $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
         e.id as id_m_user, a.flag_bendahara,
         TRIM(
@@ -898,7 +912,8 @@
                 $result['kepsek'] = $lp;
                 $result['flag_sekolah'] = 1;
             }
-            if($lp['kepalaskpd'] == 1){
+
+            if($lp['kepalaskpd'] == 1 && $result['kepalaskpd'] == null){
                 if(stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // jika puskes
                     $result['kapus'] = $lp;
                     $result['flag_puskesmas'] = 1;
@@ -1005,7 +1020,6 @@
                 }
             }
         }
-
         return $result;
     }
 
@@ -1428,6 +1442,12 @@
         }
 
         $list_alpha = [];
+        // function comparatorTempResult($object1, $object2) {
+        //     return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
+        // }
+        // usort($tempresult, 'comparatorTempResult');
+        // dd($tempresult);
+
         foreach($tempresult as $tr){
             // if(!isset($tr['nip'])){
             //     dd($tr);
@@ -1614,7 +1634,6 @@
                 } 
             }
         }
-      
         $data['result'] = $lp;
         // dd(json_encode($lp));
         $rs['json_result'] = json_encode($lp);

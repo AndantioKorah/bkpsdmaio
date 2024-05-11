@@ -292,8 +292,20 @@ class C_Rekap extends CI_Controller
         //     // }
         // }
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+        
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
+        foreach ($data['rekap_penilaian_tpp']['result'] as $key => $row) {
+            $nama_pegawai[$key]  = $row['nama_pegawai'];
+            $kelas_jabatan[$key] = $row['kelas_jabatan'];
+        }
+        array_multisort($kelas_jabatan, SORT_DESC, $nama_pegawai, SORT_ASC, $data['rekap_penilaian_tpp']['result']);
+        
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
+        foreach ($data['result'] as $key => $row) {
+            $nama_pegawai_result[$key]  = $row['nama_pegawai'];
+            $kelas_jabatan_result[$key] = $row['kelas_jabatan'];
+        }
+        array_multisort($kelas_jabatan_result, SORT_DESC, $nama_pegawai_result, SORT_ASC, $data['result']);
 
         $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
@@ -453,27 +465,14 @@ class C_Rekap extends CI_Controller
     }
 
     public function fixOrder($data){
-        // $result = null;
-        // function fixOrde1($object1, $object2) {
-        //     if(isset($object1['nama'])){
-        //         return $object1['nama'] < $object2['nama'];
-        //     } else {
-        //         return $object1['nama_pegawai'] < $object2['nama_pegawai'];
-        //     }
-        // }
-        // usort($data, 'fixOrde1');
-        // $result = $data;
-        
-        // function fixOrder2($object1, $object2) {
-        //     return floatval($object1['kelas_jabatan']) < floatval($object2['kelas_jabatan']);
-        // }
-        // usort($result, 'fixOrder2');
-        // // $result = $data;
-
-        // return $result;
+        $result = null;
+        foreach ($data as $key => $row) {
+            $nama_pegawai[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
+            $kelas_jabatan[$key] = $row['kelas_jabatan'];
+        }
+        array_multisort($kelas_jabatan, SORT_DESC, $nama_pegawai, SORT_ASC, $data);
         return $data;
     }
-
 
     public function downloadPdf()
     {

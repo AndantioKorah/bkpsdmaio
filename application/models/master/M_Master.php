@@ -776,6 +776,16 @@
                     ->get()->result_array();
         }
 
+        public function getAllOnlyPegawai(){
+            return $this->db->select('a.*')
+                    ->from('db_pegawai.pegawai a')
+                    // ->join('m_user b', 'a.nipbaru_ws = b.username')
+                    // ->where('b.flag_active', 1)
+                    ->order_by('a.nama')
+                    ->where('id_m_status_pegawai', 1)
+                    ->get()->result_array();
+        }
+
         public function tambahHakAksesUser($id_m_user, $id_hak_akses){
             $rs['code'] = 0;
             $rs['message'] = "";

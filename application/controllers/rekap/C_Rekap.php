@@ -269,44 +269,32 @@ class C_Rekap extends CI_Controller
             'bulan' => $data['param']['bulan'],
             'tahun' => $data['param']['tahun']
         ], null, 0, 1);
-        // $list_pagu_tpp = null;
-        // if($pagu_tpp){
-        //     foreach($pagu_tpp as $pt){
-        //         if($pt['kepalaskpd'] == 1){
-        //             if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){ // jika kecamatan, cari camat
-        //                 if($skpd[0] == $pt['skpd']){
-        //                     $data['pegawai']['kepalaskpd'] = $pt;
-        //                 }
-        //             } else { // jika bukan kecamatan, cari kepalaskpd
-        //                 $data['pegawai']['kepalaskpd'] = $pt;
-        //             }
-        //         } else if(isKasubKepegawaian($pt['nama_jabatan'])){
-        //             $data['pegawai']['kasubag'] = $pt;
-        //         } else if($pt['flag_bendahara'] == 1){
-        //             $data['pegawai']['bendahara'] = $pt;
-        //         }
-        //         $list_pagu_tpp[$pt['nipbaru_ws']] = $pt;
-        //     }
-        //     // if($data['pegawai']['bendahara'] == null){
-        //     //     $data['pegawai']['bendahara'] = $data['pegawai']['kasubag'];
-        //     // }
-        // }
+        
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
         
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
+        // if($skpd[0] == 3020000){
+        //     dd($data['rekap_penilaian_tpp']);
+        // }
         foreach ($data['rekap_penilaian_tpp']['result'] as $key => $row) {
-            $nama_pegawai[$key]  = $row['nama_pegawai'];
-            $kelas_jabatan[$key] = $row['kelas_jabatan'];
+            if(isset($row['nama']) || isset($row['nama_pegawai'])){
+                $nama_pegawai[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
+                $kelas_jabatan[$key] = $row['kelas_jabatan'];
+            }
         }
         array_multisort($kelas_jabatan, SORT_DESC, $nama_pegawai, SORT_ASC, $data['rekap_penilaian_tpp']['result']);
         
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
         foreach ($data['result'] as $key => $row) {
-            $nama_pegawai_result[$key]  = $row['nama_pegawai'];
-            $kelas_jabatan_result[$key] = $row['kelas_jabatan'];
+            if(isset($row['nama']) || isset($row['nama_pegawai'])){
+                $nama_pegawai_result[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
+                $kelas_jabatan_result[$key] = $row['kelas_jabatan'];
+            }
         }
         array_multisort($kelas_jabatan_result, SORT_DESC, $nama_pegawai_result, SORT_ASC, $data['result']);
-
+        // if($skpd[0] == 3020000){
+        //     dd($data);
+        // }
         $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(

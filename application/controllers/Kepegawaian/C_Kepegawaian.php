@@ -1559,6 +1559,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->submitEditDiklat());
 	}
 
+	public function submitEditDisiplin()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditDisiplin());
+	}
+
 	public function submitEditOrganisasi()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditOrganisasi());

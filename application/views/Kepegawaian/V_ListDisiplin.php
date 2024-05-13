@@ -14,7 +14,6 @@
           <th></th>
           <th></th>
           <?php if($kode == 2) { ?>
-            <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
           <?php } ?>
@@ -59,7 +58,7 @@
                <?php } ?>
                <?php } ?>
               <?php if($kode == 2) { ?>
-                <td><?=formatDateNamaBulan($rs['created_date'])?></td>
+                
                 <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
@@ -83,6 +82,15 @@
 <script>
   $(function(){
     $('.datatable').dataTable()
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+});
+
+
   })
 
   // function openFilePangkat(filename){

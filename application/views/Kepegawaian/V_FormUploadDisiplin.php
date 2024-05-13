@@ -8,16 +8,17 @@
 </style>
 
 <!-- Button trigger modal -->
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDisiplin">
   Tambah Data Disiplin
 </button>
-
-
-
+<!-- 
 <button onclick="loadRiwayatUsulDisiplin()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalDiklat">
   Riwayat Usul Disiplin
-</button>
-
+</button> -->
+<?php } ?> 
 
 <!-- 
 
@@ -102,7 +103,7 @@
     <input class="form-control customInput" type="text" id="disiplin_jp" name="disiplin_jp"  required/>
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Tanggal Mulai Berlaku</label>
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglmulai" name="disiplin_tglmulai" readonly required/>
   </div>
@@ -110,7 +111,7 @@
   <div class="form-group">
     <label>Tanggal Selesai Berlaku</label>
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglselesai" name="disiplin_tglselesai" readonly  required/>
-  </div>
+  </div> -->
 
   <div class="form-group">
     <label>No Surat</label>

@@ -975,8 +975,9 @@
                                 ->get()->result_array();
         } else if($unitkerja['id_unitkerjamaster'] == 2000000 || $unitkerja['id_unitkerjamaster'] == 1000000){ // jika bagian, flag_bagian = 1
             $result['flag_bagian'] = 1;
-            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli atau setda, bendaharanya Marie Marce Kolopita 
-            || $unitkerja['id_unitkerja'] == 2000100){
+            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Marie Marce Kolopita 
+            || $unitkerja['id_unitkerja'] == 2000100
+            || $unitkerja['id_unitkerja'] == 1010500){
                 $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')

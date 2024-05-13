@@ -374,8 +374,8 @@ function greeting(){
     if(intval($time) >= 11 && intval($time) < 15){
         $greeting = "Siang";
     } else if(intval($time) >= 15 && intval($time) < 18){
-        $greeting = "Siang";
-    } else if(intval($time) >= 18 && intval($time) < 24 && intval($time) >= 0 && intval($time) < 2){
+        $greeting = "Sore";
+    } else if((intval($time) >= 18 && intval($time) < 24) || (intval($time) >= 0 && intval($time) < 2)){
         $greeting = "Malam";
     }
 
@@ -1036,7 +1036,8 @@ function isKasubKepegawaian($nama_jabatan){
     return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
     stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
     stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||
-    stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan)
+    stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan) ||
+    (stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan) && $this->CI->general_library->getEselon() == 'IV A')
     
     // stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
     // stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||

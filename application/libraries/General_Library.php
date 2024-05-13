@@ -441,6 +441,10 @@ class General_library
         return $this->getIdJabatan() == "4018000JS01";
     }
 
+    public function getEselon(){
+        return $this->userLoggedIn['eselon'];
+    }
+
     public function getIdEselon(){
         return $this->userLoggedIn['id_eselon'];
     }

@@ -96,17 +96,77 @@
                             ->get()->result_array();
         }
 
-        public function getPegawaiBySkpd($data){
-            return $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
+        public function getRekonHariKerja($param){
+            $result['jumlah_hari'] = getJumlahHariDalamBulan($param['bulan'], $param['tahun']);
+
+            $bulan_periode_awal = $param['bulan'] < 10 ? "0".$param['bulan'] : $param['bulan'];
+            $periode_awal = $param['tahun'].'-'.$bulan_periode_awal.'-01';
+
+            $bulan_periode_akhir = $param['bulan'] < 10 ? "0".$param['bulan'] : $param['bulan'];
+            $tanggal_periode_akhir = $result['jumlah_hari'] < 10 ? "0".$result['jumlah_hari'] : $result['jumlah_hari'];
+            $periode_akhir = $param['tahun'].'-'.$bulan_periode_akhir.'-'.$tanggal_periode_akhir;
+
+            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hk']) = countHariKerjaDateToDate($periode_awal, $periode_akhir);
+            $pointer = 1;
+            foreach($result['list_hari_kerja'] as $lhk){
+                if($pointer == intval($result['jhk'] / 2) + 1){
+                    $result['tanggal_masuk_nominatif'] = $lhk; // tmt minimal untuk terhitung di PD tersebut
+                    break;
+                }
+                $pointer++;
+            }
+            return $result;
+        }
+
+        public function getNomitaifPegawaiBySkpd($param){
+            $uksearch = null;
+            if(in_array($param['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $param['id_unitkerja'])
+                                    ->get()->row_array();
+            }
+
+            $param['bulan'] = $param['bulan'] == '' ? date('m') : $param['bulan'];
+            $param['tahun'] = $param['tahun'] == '' ? date('Y') : $param['tahun'];
+            $hari = $this->getRekonHariKerja($param);
+
+            $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('e.flag_active', 1)
-                            ->where('a.skpd', $data)
                             ->order_by('a.nama', 'asc')
-                            ->where('id_m_status_pegawai', 1)
-                            ->get()->result_array();
+                            ->where('id_m_status_pegawai', 1);
+            if(in_array($param['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW) && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+                $this->db->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $param['id_unitkerja']);
+            }
+            $list_pegawai = $this->db->get()->result_array();
+        }
+
+        public function getPegawaiBySkpd($data){
+            $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $data)
+                                    ->get()->row_array();
+
+            $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                            ->join('m_user e', 'a.nipbaru_ws = e.username')
+                            ->where('e.flag_active', 1)
+                            ->order_by('a.nama', 'asc')
+                            ->where('id_m_status_pegawai', 1);
+            if(in_array($data, LIST_UNIT_KERJA_KECAMATAN_NEW) && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+                $this->db->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $data);
+            }
+            return $this->db->get()->result_array();
         }
 
         public function getSubBidangByBidang($id){
@@ -711,6 +771,16 @@
                     ->from('db_pegawai.pegawai a')
                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                     ->where('b.flag_active', 1)
+                    ->order_by('a.nama')
+                    ->where('id_m_status_pegawai', 1)
+                    ->get()->result_array();
+        }
+
+        public function getAllOnlyPegawai(){
+            return $this->db->select('a.*')
+                    ->from('db_pegawai.pegawai a')
+                    // ->join('m_user b', 'a.nipbaru_ws = b.username')
+                    // ->where('b.flag_active', 1)
                     ->order_by('a.nama')
                     ->where('id_m_status_pegawai', 1)
                     ->get()->result_array();

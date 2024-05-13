@@ -442,6 +442,13 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->verifkinerja->createNilaiKomponenKinerja());
     }
 
+    public function hukdis(){
+        $data['pegawai'] = $this->master->getAllOnlyPegawai();
+        $data['hukdis'] = $this->general->getAllWithOrder('m_disiplin_kerja', 'id', 'asc');
+        // dd($data);
+        render('kinerja/V_Hukdis', '', '', $data);
+    }
+
     public function disiplinKerja()
     {
         $data['skpd'] = $this->master->getAllUnitKerja();

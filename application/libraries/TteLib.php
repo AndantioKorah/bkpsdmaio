@@ -40,7 +40,8 @@ class TteLib{
             $data['nik'] = trim(TTE_NIK_DEV);
             $data['passphrase'] = trim(TTE_PASS_DEV);
         }
-        return $this->postCurl($url, $data, 'POST');
+        $resp = $this->postCurl($url, $data, 'POST');
+        return $resp;
     }
 
     public function verifPdf($data){
@@ -100,14 +101,6 @@ class TteLib{
         ]);
 
         return $response;
-
-        // if ($err) {
-        //     echo "cURL Error #:" . $err;
-        // return $err;
-        // } else {
-        //     echo $response;
-        // return $response;
-        // }
     }
 
 }

@@ -5,6 +5,7 @@
         {
             parent::__construct();
             $this->db = $this->load->database('main', true);
+            $this->load->model('master/M_Master', 'master');
         }
 
         public function insert($tablename, $data){
@@ -901,6 +902,15 @@
     }
 
     public function loadDataPendukungByStatus($status, $bulan, $tahun, $id_unitkerja = 0){
+        $uksearch = null;
+        if(in_array($this->general_library->getUnitKerjaPegawai(), LIST_UNIT_KERJA_KECAMATAN_NEW) 
+        && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+            $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $this->general_library->getUnitKerjaPegawai())
+                                    ->get()->row_array();
+        }
+
         $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
@@ -916,7 +926,13 @@
         // dd($this->general_library->getNamaJabatan());
         if(isKasubKepegawaian($this->general_library->getNamaJabatan())
         || $this->general_library->isProgrammer()){
-           $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
+            if(in_array($this->general_library->getUnitKerjaPegawai(), LIST_UNIT_KERJA_KECAMATAN_NEW) 
+            && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+                $this->db->join('db_pegawai.unitkerja f', 'f.id_unitkerja = c.skpd')
+                        ->where('f.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
+            }
         } 
         // else if($this->general_library->isProgrammer ) {
         //     $this->db->where('a.id_m_user', $this->general_library->getId());
@@ -926,7 +942,6 @@
         }
 
         $result = $this->db->get()->result_array();
-
         $id_count = $this->general_library->getId();
         if($this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $id_count = $this->general_library->getUnitKerjaPegawai();
@@ -936,27 +951,54 @@
             $temp = $result;
             $result = null;
             foreach($temp as $t){
-                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                // if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                //     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
+                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
+                //         $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     }
+
+                //     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
+                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
+                //         $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     }
+
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                // } else {
+                //     $result[$t['nip'].$t['dokumen_pendukung']] = $t;
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                // }
+
+                // if($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] == $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal']){
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = null;
+                // }
+
+                if(isset($result[$t['nip'].$t['id']])){
                     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['id']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
                     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['id']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
                 } else {
-                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
-                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['id']] = $t;
+                    $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                }
+
+                if($result[$t['nip'].$t['id']]['dari_tanggal'] == $result[$t['nip'].$t['id']]['sampai_tanggal']){
+                    $result[$t['nip'].$t['id']]['sampai_tanggal'] = null;
                 }
             }
         }
-
+        
         $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun);
         // if($status == 1){
         //     $count['pengajuan'] = count($result);
@@ -1568,61 +1610,70 @@
         } else if($id_unitkerja == '4026000'){ // jika BKAD
             $beban_kerja = "23.94";
         } else if($id_unitkerja == '4018000' || $id_unitkerja == '3030000' || $id_unitkerja == '4012000' ){ // jika BKPSDM atau PTSP atau bapelitbang
-            $beban_kerja = "19.01";
+            $beban_kerja = "19.014023292059";
         } else if($id_unitkerja == '3015000'){ //jika DISDUKCAPIL
             $beban_kerja = "23.94";
         } else if($id_unitkerja == '1010400' || $id_unitkerja == '1030750' || $id_unitkerja == '1020500'){ // jika BAGIAN HUKUM / BPK / BARJAS
             $beban_kerja = "23.94";
         } else if($id_unitkerja == '7005010' || $id_unitkerja == '7005020'){ // jika RSUD atau RSKDGM
-            $beban_kerja = "19.01";
+            $beban_kerja = "19.014023292059";
         }
         return $beban_kerja;
     }
 
     public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
-
-        // $data['id_unitkerja'] = 7005020;
-        $unitkerja = $this->db->select('*')
+        $data['bulan'] = '3';
+        $data['tahun'] = '2024';
+        // if(isset($data['bulan']) && isset($data['tahun'])){
+        //     $pegawai = $this->master->getNomitaifPegawaiBySkpd($data);
+        // } else {
+            $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $data['id_unitkerja'])
                             ->get()->row_array();
 
-        $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
+            $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
 
-        $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
-                            
-        $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
-                    c.nama_jabatan, c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
-                    a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
-                    g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
-                    g.kondisi_kerja AS kondisi_kerja_tambahan,
-                    g.nama_jabatan AS nama_jabatan_tambahan')
-                    ->from('db_pegawai.pegawai a')
-                    ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                    ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
-                    ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
-                    ->join('m_user f', 'a.nipbaru_ws = f.username')
-                    ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
-                    // ->where('a.skpd', $data['id_unitkerja'])
-                    ->order_by('c.eselon')
-                    ->where('f.flag_active', 1)
-                    ->where('id_m_status_pegawai', 1);
-                    // ->get()->result_array();
-        if($flag_profil == 1){
-            $this->db->where('id_m_status_pegawai', 1);
-        }
-        if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-            $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
-                    ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
-        } else {
-            $this->db->where('a.skpd', $data['id_unitkerja']);
-        }
-        if($id_pegawai != null){
-            $this->db->where('f.id', $id_pegawai);
-        }
-        $pegawai = $this->db->get()->result_array();
+            $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
+                                
+            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,
+                        TRIM(
+                            CONCAT(
+                            IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
+                            ," ", c.nama_jabatan)
+                        ) AS nama_jabatan,
+                        c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
+                        a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
+                        g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
+                        g.kondisi_kerja AS kondisi_kerja_tambahan,
+                        g.nama_jabatan AS nama_jabatan_tambahan')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
+                        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                        ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                        ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+                        ->join('m_user f', 'a.nipbaru_ws = f.username')
+                        ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')
+                        // ->where('a.skpd', $data['id_unitkerja'])
+                        ->order_by('c.eselon')
+                        ->where('f.flag_active', 1)
+                        ->where('id_m_status_pegawai', 1);
+                        // ->get()->result_array();
+            if($flag_profil == 1){
+                $this->db->where('id_m_status_pegawai', 1);
+            }
+            if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
+                        ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $data['id_unitkerja']);
+            }
+            if($id_pegawai != null){
+                $this->db->where('f.id', $id_pegawai);
+            }
+            $pegawai = $this->db->get()->result_array();
+        // }
         
         if($pegawai){
             $i = 0;
@@ -1643,7 +1694,7 @@
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
-                        $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan'];
+                        $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) && $p['kepalaskpd'] != 1){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                         }
@@ -1679,7 +1730,7 @@
                         }
                     } else if($data['id_unitkerja'] == '4018000' || $data['id_unitkerja'] == '3030000' || $data['id_unitkerja'] == '4012000'){ // jika BKPSDM atau PTSP atau bapelitbang
                         if($result[$p['id_m_user']]['beban_kerja'] == "0" || $result[$p['id_m_user']]['beban_kerja'] == 0){
-                            $result[$p['id_m_user']]['beban_kerja'] = "19.01";
+                            $result[$p['id_m_user']]['beban_kerja'] = "19.014023292059";
                         }
                     } else if($data['id_unitkerja'] == '3015000'){ //jika DISDUKCAPIL
                         if($result[$p['id_m_user']]['beban_kerja'] == "0" || $result[$p['id_m_user']]['beban_kerja'] == 0){
@@ -1691,7 +1742,7 @@
                         }
                     } else if($data['id_unitkerja'] == '7005010' || $data['id_unitkerja'] == '7005020'){ // jika RSUD atau RSKDGM
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
-                            $result[$p['id_m_user']]['kondisi_kerja'] = "19.01";
+                            $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
                     }
                     

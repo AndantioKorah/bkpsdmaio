@@ -21,6 +21,7 @@
                 $data_header['skpd'] = $param['nm_unitkerja'];
                 $data_header['bulan'] = $param['bulan'];
                 $data_header['tahun'] = $param['tahun'];
+                $data_header['flag_bagian'] = $pegawai['flag_bagian'];
                 $this->load->view('rekap/V_BerkasTppDownloadHeader', $data_header);
             ?>
             <table border="1" style="border-collapse: collapse;">
@@ -87,6 +88,13 @@
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                 $data_header['kasubag'] = $pegawai['kasubag'];
+                if($pegawai['flag_sekolah'] == 1){ // jika sekolah, yang TTD 
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['kepsek'];
+                } else if($pegawai['flag_puskesmas'] == 1){
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
+                    $data_header['kasubag'] = $pegawai['kapus'];
+                }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
@@ -145,6 +153,13 @@
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                 $data_header['kasubag'] = $pegawai['kasubag'];
+                if($pegawai['flag_sekolah'] == 1){ // jika sekolah, yang TTD 
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['kepsek'];
+                } else if($pegawai['flag_puskesmas'] == 1){
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
+                    $data_header['kasubag'] = $pegawai['kapus'];
+                }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
@@ -213,6 +228,13 @@
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                 $data_header['kasubag'] = $pegawai['kasubag'];
+                if($pegawai['flag_sekolah'] == 1){ // jika sekolah, yang TTD 
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['kepsek'];
+                } else if($pegawai['flag_puskesmas'] == 1){
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
+                    $data_header['kasubag'] = $pegawai['kapus'];
+                }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
@@ -261,6 +283,13 @@
             <?php
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                 $data_header['kasubag'] = $pegawai['kasubag'];
+                if($pegawai['flag_sekolah'] == 1){ // jika sekolah, yang TTD 
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['kepsek'];
+                } else if($pegawai['flag_puskesmas'] == 1){
+                    $data_header['kepalaskpd'] = $pegawai['kasubag'];
+                    $data_header['kasubag'] = $pegawai['kapus'];
+                }
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
@@ -354,6 +383,14 @@
                 $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                 $data_header['kasubag'] = $pegawai['bendahara'];
                 $data_header['flag_bendahara'] = 1;
+                if($pegawai['flag_sekolah'] == 1){ // jika sekolah, yang TTD 
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['bendahara'];
+                } else if($pegawai['flag_puskesmas'] == 1){
+                    $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
+                    $data_header['kasubag'] = $pegawai['bendahara'];
+                }
+                // dd($data_header);
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>

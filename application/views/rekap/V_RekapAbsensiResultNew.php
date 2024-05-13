@@ -153,8 +153,12 @@ $list_disker = ['S', 'I', 'TK'];
             <tr style="vertical-align: middle;"> 
                     <?php $i=0; 
                         $list_dk = null;
+                        $list_exclude_dk = null;
                         if($disiplin_kerja){
                             foreach($disiplin_kerja as $dk){
+                                if($dk['keterangan'] && $dk['keterangan'] == 'MTTI'){
+                                    $list_exclude_dk[] = $dk['keterangan'];
+                                }
                                 // if($dk['keterangan'] && $dk['keterangan'] == 'TK'){
                                     $list_dk[] = $dk['keterangan'];
                                 // }
@@ -260,7 +264,7 @@ $list_disker = ['S', 'I', 'TK'];
                                         <span style="color: black;">-</span>
                                       <?php } else if($a['ket'] == "TK"){ ?>
                                           <span style="color: <?=$textcolor?>;"><?=$a['ket']?></span>
-                                      <?php } else if(in_array($a['ket'], $list_dk)){ ?>
+                                      <?php } else if(in_array($a['ket'], $list_dk) && !in_array($a['ket'], $list_exclude_dk)){ ?>
                                           <span style="color: <?=$txtcolordisker?>;"><?=$a['ket']?></span>
                                       <?php } else { ?>
                                           <span style="color: <?=$txtcolormasuk?>"><?=$a['jam_masuk']?></span>

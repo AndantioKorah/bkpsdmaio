@@ -20,8 +20,10 @@
 <script>
   $('.form_auth_tte_bulk').on('submit', function(e){
     e.preventDefault()
-    // $('#btn_submit_auth').hide()
-    // $('#btn_submit_auth_loader').show()
+    $('#btn_submit_auth').hide()
+    $('#btn_submit_auth_loader').show()
+    // $('#auth_modal_tte').modal('hide')
+    // return false
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/dsBulk")?>',
       method:"POST",
@@ -33,19 +35,20 @@
       },
       success: function(res){
         let rs = JSON.parse(res)
-        if(rs.code == 1){
+        if(rs.code != 0){
           errortoast(rs.message)
+          $('#btn_submit_auth').show()
+          $('#btn_submit_auth_loader').hide()
         } else {
+          $('#form_load_ds').submit()
           successtoast('DS Berhasil')
-          // $("#auth_modal_tte .close").click()
+          $("#auth_modal_tte .close").click()
+          $('#auth_modal_tte').modal('hide')
         }
-        // $('#btn_submit_auth').show()
-        // $('#btn_submit_auth_loader').hide()
-        // $("#auth_modal_tte .close").click()
       }, error: function(err){
         errortoast('Terjadi Kesalahan')
-        // $('#btn_submit_auth').show()
-        // $('#btn_submit_auth_loader').hide()
+        $('#btn_submit_auth').show()
+        $('#btn_submit_auth_loader').hide()
       }
     })
   })

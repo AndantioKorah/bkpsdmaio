@@ -33,6 +33,7 @@
     let terpilih
 
     $(function(){
+        $('#jenis_layanan').select2()
         $('#form_load_ds').submit()
     })
 

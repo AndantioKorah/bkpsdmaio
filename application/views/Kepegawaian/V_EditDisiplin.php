@@ -48,12 +48,12 @@
 
   <div class="form-group">
     <label>No Surat</label>
-    <input class="form-control customInput" type="text" id="edit_disiplin_penyelenggara" name="edit_disiplin_penyelenggara" value="<?= $disiplin[0]['nosurat'];?>"  required/>
+    <input class="form-control customInput" type="text" id="edit_disiplin_nosurat" name="edit_disiplin_nosurat" value="<?= $disiplin[0]['nosurat'];?>"  required/>
   </div>
 
   <div class="form-group">
     <label>Tanggal Surat</label>
-    <input class="form-control customInput" type="text" id="edit_disiplin_angkatan" name="edit_disiplin_angkatan" value="<?= $disiplin[0]['tglsurat'];?>"  required/>
+    <input class="form-control customInput datepicker" type="text" id="edit_disiplin_tglsurat" name="edit_disiplin_tglsurat" value="<?= $disiplin[0]['tglsurat'];?>"  required/>
   </div>
 
   <div class="form-group">
@@ -100,7 +100,7 @@ $('#form_edit_disiplin').on('submit', function(e){
      $('#btn_edit_disiplin').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
    
      $.ajax({  
-     url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditDiklat")?>",
+     url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditDisiplin")?>",
      method:"POST",  
      data:form_data,  
      contentType: false,  
@@ -117,7 +117,7 @@ $('#form_edit_disiplin').on('submit', function(e){
              document.getElementById('btn_edit_disiplin').disabled = false;
             $('#btn_edit_disiplin').html('Simpan')
              setTimeout(function() {$("#modal_edit_disiplin").trigger( "click" );}, 1000);
-             const myTimeout = setTimeout(loadListDiklat, 2000);
+             const myTimeout = setTimeout(loadListDisiplin, 2000);
            } else {
              errortoast(result.msg)
              return false;

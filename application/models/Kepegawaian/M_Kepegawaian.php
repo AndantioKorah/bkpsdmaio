@@ -1080,11 +1080,11 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['tglsurat']         = $this->input->post('disiplin_tglsurat');
             $dataInsert['gambarsk']            = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
-            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+            // if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
-            }
+            // }
             // dd($dataInsert);
             $result = $this->db->insert('db_pegawai.pegdisiplin', $dataInsert);
         } else if($this->input->post('jenis_organisasi')){ 
@@ -4169,6 +4169,88 @@ public function submitEditJabatan(){
             $data["tglsttpp"] = $datapost["edit_diklat_tanggal_sttpp"];
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegdiklat', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+       public function submitEditDisiplin(){
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $target_dir = './arsipdisiplin/';
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+       
+        if($_FILES['file']['name'] != ""){
+       
+            if($filename == ""){
+                $filename = $_FILES['file']['name'];
+            } 
+           
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+           
+           
+            $id = $datapost['id'];
+
+            $data['hd']         = $this->input->post('edit_disiplin_jenis');
+            $data['jhd']         = $this->input->post('edit_disiplin_jenjang');
+            $data['jp']         = $this->input->post('edit_disiplin_nama');
+            $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
+            $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data["gambarsk"]     = $filename;
+            $data['created_by']      = $this->general_library->getId();
+            $data['status']      = 2;
+            $data['tanggal_verif']      = date('Y-m-d H:i:s');
+            $data['id_m_user_verif']      = $this->general_library->getId();
+            
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegdisiplin', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        } else {
+            $id = $datapost['id'];
+            $data['hd']         = $this->input->post('edit_disiplin_jenis');
+            $data['jhd']         = $this->input->post('edit_disiplin_jenjang');
+            $data['jp']         = $this->input->post('edit_disiplin_nama');
+            $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
+            $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data['created_by']      = $this->general_library->getId();
+            $data['status']      = 2;
+            $data['tanggal_verif']      = date('Y-m-d H:i:s');
+            $data['id_m_user_verif']      = $this->general_library->getId();
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegdisiplin', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
         }

@@ -1673,6 +1673,9 @@
                 $this->db->where('f.id', $id_pegawai);
             }
             $pegawai = $this->db->get()->result_array();
+            // if($data['id_unitkerja'] == 3021000){
+            //     dd($pegawai);
+            // }
         // }
         
         if($pegawai){

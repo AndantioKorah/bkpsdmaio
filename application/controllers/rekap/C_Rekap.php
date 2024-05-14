@@ -273,9 +273,7 @@ class C_Rekap extends CI_Controller
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
         
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
-        // if($skpd[0] == 3020000){
-        //     dd($data['rekap_penilaian_tpp']);
-        // }
+        
         foreach ($data['rekap_penilaian_tpp']['result'] as $key => $row) {
             if(isset($row['nama']) || isset($row['nama_pegawai'])){
                 $nama_pegawai[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
@@ -284,6 +282,10 @@ class C_Rekap extends CI_Controller
         }
         array_multisort($kelas_jabatan, SORT_DESC, $nama_pegawai, SORT_ASC, $data['rekap_penilaian_tpp']['result']);
         
+        // if($skpd[0] == 3021000){
+        //     dd($pagu_tpp);
+        // }
+
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
         foreach ($data['result'] as $key => $row) {
             if(isset($row['nama']) || isset($row['nama_pegawai'])){

@@ -825,7 +825,8 @@
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
-                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
+                    && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
                         $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                     }
                 } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
@@ -838,7 +839,7 @@
                     }
                 }
     
-                if($d['kelas_jabatan_hardcode'] != null || $d['kelas_jabatan_hardcode'] != 0){
+                if($d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
                 }
             } else if($d['jenis_jabatan'] == 'Struktural'){
@@ -846,7 +847,7 @@
             } else if($d['jenis_jabatan'] == 'JFU'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
             }
-
+            
             $i++;
         }
         return $result;
@@ -2157,6 +2158,13 @@
                 $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($l['pagu_tpp'])) / 100;
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
+                $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);
+                $whole = $result[$l['nipbaru_ws']]['nominal_pph'] - $rounded;
+                if($whole != 0){
+                    // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+                    $result[$l['nipbaru_ws']]['nominal_pph'] = $whole >= 0.5 ? $rounded + 1 : $rounded;
+                } 
+
                 $result[$l['nipbaru_ws']]['tpp_diterima'] = $result[$l['nipbaru_ws']]['besaran_tpp'] - $result[$l['nipbaru_ws']]['nominal_pph'];
             }
 

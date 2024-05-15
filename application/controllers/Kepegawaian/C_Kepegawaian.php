@@ -1229,6 +1229,13 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($response);
     }
 
+	public function getJenisHd()
+    {
+        $id = $this->input->post('id');
+        $response   = $this->kepegawaian->getJenisHd($id);
+        echo json_encode($response);
+    }
+
 
 	public function getdatakec()
     {
@@ -1625,7 +1632,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LayananKarisKarsu(){
-		$data['daftar_keluarga'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','27','0');
+		$data['daftar_keluarga'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
 		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
 		$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','53','0');
 		$data['laporan_perkawinan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','52','0');
@@ -1687,9 +1694,10 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function LayananPensiun($jenis_layanan){
+		$data['jenis_layanan'] = $jenis_layanan;
+
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
-		$data['jenis_layanan'] = $jenis_layanan;
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
 		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
@@ -1705,6 +1713,15 @@ class C_Kepegawaian extends CI_Controller
 		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
 		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
 		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
+		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','59','0');
+		$data['spt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','60','0');
+		$data['surat_berhenti'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','61','0');
+		$data['surat_rekom_sakit'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','62','0');
+		$data['visum'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','63','0');
+		$data['berita_acara'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','64','0');
+		$data['npwp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','38','0');
+		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','39','0');
+
 
 		
 		$data['list_layanan_skcpns'] = array(7,8,9,10,11);
@@ -1733,18 +1750,17 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_layanan_surat_rekom_sakit'] = array(10);
 		$data['list_layanan_surat_berhenti'] = array(9,10);
 		
-
-
-
-
-
-
-
-
-
-
-
-
+		if($jenis_layanan == 7){
+		$data['nama_layanan'] = "BUP";
+		} else if($jenis_layanan == 8){
+		$data['nama_layanan'] = "JANDA/DUDA";
+		} else if($jenis_layanan == 9){
+		$data['nama_layanan'] = "ATAS PERMINTAAN SENDIRI";
+		} else if($jenis_layanan == 10){
+		$data['nama_layanan'] = "SAKIT/UZUR";
+		} else if($jenis_layanan == 11){
+		$data['nama_layanan'] = "TEWAS	";
+		}
 		// $data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
 
 		render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);

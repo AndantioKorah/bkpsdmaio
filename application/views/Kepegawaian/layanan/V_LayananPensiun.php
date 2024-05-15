@@ -217,7 +217,8 @@ ol {
 		<div class="card card-default">
 			<div class="card-header">
 				<div class="card-title">
-					<h5>FORM LAYANAN PENSIUN</h5>
+					<h5>FORM LAYANAN PENSIUN <?=$nama_layanan;?>
+          </h5>
 				</div>
 				<hr>
 			</div>
@@ -229,6 +230,8 @@ ol {
 					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
 					<input type="hidden" id="akte_nikah" value="<?php if($akte_nikah) echo $akte_nikah['id']; else echo "";?>">
+					<input type="hidden" id="dpcp" value="<?php if($dpcp) echo $dpcp['id']; else echo "";?>">
+					<input type="hidden" id="jandaduda" value="<?php if($dpcp) echo $dpcp['id']; else echo "";?>">
 
 
 					<span>Berkas Persyaratan :</span>
@@ -434,16 +437,11 @@ ol {
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
 					Berkas diupload Pada Menu Profil <br>
-					Untuk Berkas : <br>
-					<i class="fa fa-file-pdf"></i> LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN ;<br>
-					<i class="fa fa-file-pdf"></i> DAFTAR KELUARGA MENGETAHUI ATASAN ;<br>
-					<i class="fa fa-file-pdf"></i> BUKU NIKAH / AKTA PERKAWINAN DILEGALISIR;<br>
-					<i class="fa fa-file-image"></i> PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS
-					PEREMPUAN)
-					<br>di upload pada pilihan Arsip Lainnya.
+					Untuk Berkas Selain SK CPNS, SK PNS, SK Jabatan, SK Pangkat<br>
+					di upload pada pilihan Arsip Lainnya.
 				</p>
-				<a href="<?=base_url('kepegawaian/download');?>"> <i class="fa fa-download"> <i> Download Format Laporan
-							Perkawinanan pertama & Daftar keluarga </i></i></a>
+				<!-- <a href="<?=base_url('kepegawaian/download');?>"> <i class="fa fa-download"> <i> Download Format Laporan
+							Perkawinanan pertama & Daftar keluarga </i></i></a> -->
 			</div>
 		</div>
 	</div>
@@ -452,7 +450,7 @@ ol {
 			<div class="card-header">
 				<div class="card-title">
 					<div class="card-title">
-						<h5>RIWAYAT LAYANAN KARIS/KARSU</h5>
+						<h5>RIWAYAT LAYANAN PENSIUN <?=$nama_layanan;?></h5>
 					</div>
 					<hr>
 				</div>
@@ -503,11 +501,17 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#form_pensiun');
         var form_data = new FormData(formvalue[0]);
-        var sk_cpns = $('#sk_cpns').val()
-        var sk_pns = $('#sk_pns').val()
-        var akte_nikah = $('#akte_nikah').val()
+        var sk_cpns = $('#sk_cpns').val();
+        var sk_pns = $('#sk_pns').val();
+        var akte_nikah = $('#akte_nikah').val();
+        var dpcp = $('#dpcp').val();
+        var jandaduda = $('#jandaduda').val();
+        
 
 
+        var jenis_layanan = "<?=$jenis_layanan;?>"
+
+        if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -518,25 +522,23 @@ $(function(){
             return false;
         }
 
-        if(daftar_keluarga == ""){
+        if(dpcp == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
+        }
         }
 
-        if(laporan_perkawinan == ""){
+        if(jenis_layanan == 8){
+          if(jandaduda == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
+        }
         }
 
-        if(pas_foto == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        errortoast(' tes')
+        return false;
 
-        if(akte_nikah == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+   
 
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu")?>",

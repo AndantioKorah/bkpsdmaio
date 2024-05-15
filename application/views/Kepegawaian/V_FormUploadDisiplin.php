@@ -92,9 +92,7 @@
       <label>Jenjang Hukuman Disiplin </label>
       <select class="form-control select2" data-dropdown-parent="#modalDisiplin" data-dropdown-css-class="select2-navy" name="disiplin_jhd" id="disiplin_jhd" required>
                     <option value="" disabled selected>Pilih Item</option>
-                    <?php if($jhd){ foreach($jhd as $r){ ?>
-                        <option value="<?=$r['id_jhd']?>"><?=$r['nama_jhd']?></option>
-                    <?php } } ?>
+                    
     </select>
       </div>
 
@@ -298,18 +296,11 @@ $(function(){
 
   
 
-  $("#disiplin_jenis").change(function() {
-      var id = $("#disiplin_jenis").val();
-      $('#inputjd').show('fast')
-      if(id == "00"){
-      $('#inputjd').show('fast')
-      } else if(id == "10") {
-        $('#inputjd').show('fast')
-      } else {
-        $('#inputjd').hide('fast')
-      }
+  $("#disiplin_hd").change(function() {
+      var id = $("#disiplin_hd").val();
+     
       $.ajax({
-              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getJenjangDiklat",
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getJenisHd",
               method : "POST",
               data : {id: id},
               async : false,
@@ -318,9 +309,9 @@ $(function(){
               var html = '';
                       var i;
                       for(i=0; i<data.length; i++){
-                          html += '<option value='+data[i].id+'>'+data[i].jenjang_disiplin+'</option>';
+                          html += '<option value='+data[i].id+'>'+data[i].nama_jhd+'</option>';
                       }
-                      $('.jdisiplin').html(html);
+                      $('#disiplin_jhd').html(html);
                           }
                   });
   });

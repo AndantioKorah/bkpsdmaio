@@ -205,7 +205,7 @@ class M_Kepegawaian extends CI_Model
                                         CONCAT(c.nama_dokumen, '.' , " / ", c.keterangan) AS name')
                                 ->from('db_pegawai.pegarsip a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                ->join('db_siladen.dokumen c', 'a.id_dokumen = c.id_dokumen')
+                                ->join('m_dokumen c', 'a.id_dokumen = c.id_dokumen')
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'berkaspns'){
@@ -713,7 +713,7 @@ class M_Kepegawaian extends CI_Model
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
-                            ->join('db_siladen.dokumen d', 'c.id_dokumen = d.id_dokumen', 'left')
+                            ->join('m_dokumen d', 'c.id_dokumen = d.id_dokumen', 'left')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
                             ->where('a.flag_active', 1)
@@ -3311,6 +3311,21 @@ function getJenjangDiklat($id)
     $data = array();
     foreach ($datajd as $jd) {
         $data[] = array("id" => $jd['id'], "jenjang_diklat" => $jd['jenjang_diklat']);
+    }
+    return $data;
+}
+
+function getJenisHd($id)
+{        
+    $this->db->select('*');
+    $this->db->where('id_hd', $id);
+    // $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('db_pegawai.jhd');
+    $datajd = $fetched_records->result_array();
+
+    $data = array();
+    foreach ($datajd as $jd) {
+        $data[] = array("id" => $jd['id_jhd'], "nama_jhd" => $jd['nama_jhd']);
     }
     return $data;
 }
@@ -6183,7 +6198,7 @@ function getPengajuanLayananKarisKarsu($id){
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
     return $this->db->select('c.*, c.id as id_pengajuan,
-    b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama,
+    b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
     h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
     a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
     a.id as id_m_user, b.jk, b.alamat, j.id_unitkerjamaster,j.nm_unitkerjamaster')
@@ -6239,7 +6254,7 @@ public function getFileForKarisKarsu()
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->where('a.id_dokumen', 27)
+                ->where('a.id_dokumen', 58)
                 ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);

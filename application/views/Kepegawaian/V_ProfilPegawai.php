@@ -489,7 +489,7 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                <?php
+                <!-- <?php
                   $data = explode("|", $profil_pegawai['data_jabatan']);
                   if(isset($data[2])) { 
                     if($data[2] == 1) {
@@ -502,7 +502,8 @@
                     echo $profil_pegawai['nm_statusjabatan'];
                   }
                   }  
-                  ?>
+                  ?> -->
+                  <?= $profil_pegawai['nm_statusjabatan'];?>
                  
                 </span>
               </div>

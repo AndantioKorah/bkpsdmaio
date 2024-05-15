@@ -2,6 +2,7 @@
     <input type="hidden" id="id" name="id" value="<?= $jabatan[0]['id'];?>">
     <input type="hidden" id="id_peg" name="id_peg" value="<?= $jabatan[0]['id_pegawai'];?>">
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $jabatan[0]['gambarsk'];?>">
+    <!-- <input type="text" id="edit_jabatan_unit_kerja" name="edit_jabatan_unit_kerja" value="<?= $jabatan[0]['id_unitkerja'];?>/<?= $jabatan[0]['skpd'];?>"> -->
 
 
     <?php if($jabatan[0]['status']==2){ ?>       
@@ -13,6 +14,14 @@
   <?php } ?>
   <?php }?>
 
+  <div class="form-group" style="margin-bottom:10px !important;">
+    <label for="jabatan_unitkerja">Unit Kerja </label>
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan"  name="edit_jabatan_unit_kerja" id="edit_jabatan_unit_kerja" required>
+                    <option value="" disabled selected>Pilih Unit Kerja</option>
+                    <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                        <option <?php if($jabatan[0]['id_unitkerja'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>/<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                    <?php } } ?>
+    </select>
 
 
     <div class="form-group" style="margin-bottom:10px !important;">
@@ -22,6 +31,16 @@
                     <?php if($jenis_jabatan){ foreach($jenis_jabatan as $r){ ?>
                         <option <?php if($jabatan[0]['jenisjabatan'] == $r['id_jenisjab']) echo "selected"; else echo ""; ?> value="<?=$r['id_jenisjab']?>"><?=$r['nm_jenisjab']?></option>
                     <?php } } ?>
+    </select>
+    </div>
+
+
+    <div class="form-group" style="margin-bottom:10px !important; display:none" id="edit_div_jf">
+    <label for="jabatan_jenis">Jenis Fungsional </label>
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="edit_jenis_fungsional" id="edit_jenis_fungsional" required>
+                    <option value="1" selected>JFT</option>
+                    <option value="2" >JFU</option>
+                  
     </select>
     </div>
 
@@ -65,9 +84,13 @@
     <input class="form-control customInput" type="text" id="edit_jabatan_nama" name="edit_jabatan_nama"  value="<?=$jabatan[0]['nama_jabatan']?>"/> -->
     </div>
 
+
+
+    </div>
+
     <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
     <label for="jabatan_jenis">Nama Jabatan </label>
-    <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
+    <select class="form-control select2 edit_nama_jab" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" >
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
                         <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
@@ -204,4 +227,56 @@ $('#form_edit_jabatann').on('submit', function(e){
         }
 
         });
+
+
+        $("#edit_jabatan_jenis").change(function() {
+                var id = $("#edit_jabatan_jenis").val();
+                var skpd = $("#edit_jabatan_unit_kerja").val();
+                var jnsfung = $("#edit_jenis_fungsional").val();
+
+                if(id == "00"){
+                  $("#edit_div_jf").hide('fast');
+                } else {
+                  $("#edit_div_jf").show('fast');
+                }
+
+                $.ajax({
+                        url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getdatajab",
+                        method : "POST",
+                        data : {id: id, skpd: skpd, jnsfung: jnsfung},
+                        async : false,
+                        dataType : 'json',
+                        success: function(data){
+                        var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                }
+                                $('.edit_nama_jab').html(html);
+                                    }
+                            });
+            });
+
+            $("#edit_jenis_fungsional").change(function() {
+              var id = $("#edit_jabatan_jenis").val();
+                var skpd = $("#edit_jabatan_unit_kerja").val();
+                var jnsfung = $("#edit_jenis_fungsional").val();
+     
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getdatajab",
+              method : "POST",
+              data : {id: id, skpd: skpd, jnsfung: jnsfung},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                        html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                      }
+                      $('.edit_nama_jab').html(html);
+                          }
+                  });
+            });
+
 </script>

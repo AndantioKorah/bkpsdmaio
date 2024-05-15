@@ -3463,11 +3463,11 @@ public function getAllPelanggaranByNip($nip){
         }
 
         function getJabatanPegawaiEdit($id){
-            $this->db->select('b.skpd,c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
+            $this->db->select('c.skpd,d.jenis_jabatan,c.id_unitkerja,b.skpd,c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
-                          // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                          ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg','left')
                           ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                           ->where('a.flag_active', 1)
                           ->where('c.id', $id);
@@ -3678,6 +3678,7 @@ public function submitEditJabatan(){
 
             $id = $datapost['id'];
             // $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
+            $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
             $data['nm_jabatan']      = $nama_jabatan;
             $data['id_jabatan']      = $id_jabatan;
             $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
@@ -3709,6 +3710,7 @@ public function submitEditJabatan(){
        
         
         $id = $datapost['id'];
+        $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
         $data['nm_jabatan']      =  $nama_jabatan;
         $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
         $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');
@@ -6110,6 +6112,30 @@ public function submitEditJabatan(){
             // ->where('a.id_unitkerja', '4018000')
             ->group_end()
             ->or_where('a.jenis_jabatan', 'JFT');
+        return $this->db->get()->result_array();
+    }
+
+    function getSelectJabatanEditJFT(){
+        $this->db->select('*')
+            ->from('db_pegawai.jabatan a')
+            ->where('a.jenis_jabatan', 'JFT');
+        return $this->db->get()->result_array();
+    }
+
+    function getSelectJabatanEditStruktural(){
+        $this->db->select('*')
+            ->from('db_pegawai.jabatan a')
+            ->where('a.jenis_jabatan', 'Struktural')
+            ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
+        return $this->db->get()->result_array();
+    }
+    
+    
+    function getSelectJabatanEditPelaksana(){
+        $this->db->select('*')
+            ->from('db_pegawai.jabatan a')
+            ->where('a.jenis_jabatan', 'JFU')
+            ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
         return $this->db->get()->result_array();
     }
 

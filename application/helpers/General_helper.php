@@ -1033,8 +1033,9 @@ function convertPhoneNumber($nohp){
 }
 
 function isKasubKepegawaian($nama_jabatan, $eselon = null){
-    if($eselon == null){
-        $eselon = $this->CI->general_library->getEselon();
+    $CI = &get_instance();
+    if($eselon != null){
+        $eselon = $CI->general_library->getEselon();
     } 
     return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
     stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||

@@ -586,11 +586,13 @@
             $temp_pendidikan = $this->db->select('*')
                                 ->from('db_pegawai.tktpendidikan')
                                 ->get()->result_array();
+                                
             foreach($temp_pendidikan as $pend){
                 $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
                 $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
                 $result['pendidikan'][$pend['id_tktpendidikan']]['jumlah'] = 0;
             }
+            // dd($result['pendidikan']);
 
             $temp_statuspeg = $this->db->select('*')
                                 ->from('db_pegawai.statuspeg')
@@ -670,6 +672,7 @@
                 } 
                
             }
+            // dd($result);
             return $result;
         }
 

@@ -176,8 +176,11 @@
        
         //cek 
         $id =  $this->general_library->getId();
-        $bulan = date('n');
-        $tahun = date('Y');
+        $bulan = date("n",strtotime($dataPost['tanggal_kegiatan']));
+        $tahun = date("Y",strtotime($dataPost['tanggal_kegiatan']));
+        // $bulan = date('n');
+        // $tahun = date('Y');
+        // dd($year);
 
         $cek = $this->db->select('a.id,
         (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
@@ -189,13 +192,16 @@
                         ->where('a.id', $dataPost['tugas_jabatan'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
+        
        
-
+       
+        if($cek){
            $this->db->where('id',  $cek[0]['id'])
                      ->update('t_rencana_kinerja', [
                     //  'updated_by' => $this->general_library->getId(),
                      'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
             ]);
+        }
 
 
 

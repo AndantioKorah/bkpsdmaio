@@ -53,6 +53,10 @@
 		border: 1px solid;
 		padding: 3px;
 	}
+
+	.sub-sidebar-item {
+				margin-left:15px;
+	}
 </style>
 
 <?php
@@ -320,6 +324,7 @@
 					</a>
 		</li>
 
+
 		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
@@ -327,19 +332,19 @@
 					right: 0;
 					margin-top: .35rem;"></i></a>
 								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
-									<li class="sidebar-item">
+									<li class="sidebar-item sub-sidebar-item" style="margin-left">
 										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/7')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
 									</li>
-									<li class="sidebar-item">
+									<li class="sidebar-item sub-sidebar-item">
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/8')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
 									</li>
-									<li class="sidebar-item">
+									<li class="sidebar-item sub-sidebar-item">
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/9')?>"><i class="fa fa-minus"></i>Pensiun Atas Permintaan Sendiri</a>
 									</li>
-									<li class="sidebar-item">
+									<li class="sidebar-item sub-sidebar-item">
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/10')?>"><i class="fa fa-minus"></i>Pensiun Sakit/Uzur</a>
 									</li>
-									<li class="sidebar-item">
+									<li class="sidebar-item sub-sidebar-item">
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
@@ -363,6 +368,7 @@
 	$this->general_library->isHakAksesVerifLayanan() ||
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -583,11 +589,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
 					</a>
-				</li>
+				</li> -->
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 

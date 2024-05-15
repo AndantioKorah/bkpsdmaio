@@ -1679,6 +1679,9 @@
                 $this->db->where('f.id', $id_pegawai);
             }
             $pegawai = $this->db->get()->result_array();
+            // if($data['id_unitkerja'] == 3021000){
+            //     dd($pegawai);
+            // }
         // }
         
         if($pegawai){
@@ -1758,7 +1761,7 @@
 
                     if($p['skpd'] == 6170000){ // if puskes bunaken
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
-                            $result[$p['id_m_user']]['kondisi_kerja'] = "19";
+                            $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
                     }
                     // else if($p['id_unitkerjamaster'] == 5011001){ // if kecamatan bunaken kepulauan

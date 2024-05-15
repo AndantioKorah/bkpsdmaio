@@ -825,7 +825,8 @@
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
-                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf)){
+                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
+                    && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
                         $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                     }
                 } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
@@ -838,7 +839,7 @@
                     }
                 }
     
-                if($d['kelas_jabatan_hardcode'] != null || $d['kelas_jabatan_hardcode'] != 0){
+                if($d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
                 }
             } else if($d['jenis_jabatan'] == 'Struktural'){
@@ -846,7 +847,7 @@
             } else if($d['jenis_jabatan'] == 'JFU'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
             }
-
+            
             $i++;
         }
         return $result;
@@ -975,8 +976,9 @@
                                 ->get()->result_array();
         } else if($unitkerja['id_unitkerjamaster'] == 2000000 || $unitkerja['id_unitkerjamaster'] == 1000000){ // jika bagian, flag_bagian = 1
             $result['flag_bagian'] = 1;
-            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli atau setda, bendaharanya Marie Marce Kolopita 
-            || $unitkerja['id_unitkerja'] == 2000100){
+            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Marie Marce Kolopita 
+            || $unitkerja['id_unitkerja'] == 2000100
+            || $unitkerja['id_unitkerja'] == 1010500){
                 $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
@@ -1005,6 +1007,19 @@
             if(!$result['kasubag']){ // jika kasubag kosong, pakai sek
                 $result['kasubag'] = $result['sek'];
             }
+        }
+
+        if($id_unitkerja == 3012000 || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // jika dinkes, ambil bendahara hardocde yang ada
+            $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '198811072010012001')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
         }
 
         if($list_pegawai_unor_induk){
@@ -1039,6 +1054,7 @@
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                 ->where('a.bulan', $param['bulan'])
                 ->where('a.tahun', $param['tahun'])
+                ->where('c.id_m_status_pegawai', '1')
                 ->where('a.flag_active', 1);
         if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
             $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
@@ -1050,8 +1066,10 @@
         $komponen_kinerja = null;
         if($list_komponen_kinerja){
             foreach($list_komponen_kinerja as $lkk){
-                $data_disiplin['result'][$lkk['nipbaru_ws']]['komponen_kinerja'] = countNilaiKomponen($lkk);
-                $data_disiplin['result'][$lkk['nipbaru_ws']]['komponen_kinerja']['list'] = $lkk;
+                if(isset($data_disiplin['result'][$lkk['nipbaru_ws']])){
+                    $data_disiplin['result'][$lkk['nipbaru_ws']]['komponen_kinerja'] = countNilaiKomponen($lkk);
+                    $data_disiplin['result'][$lkk['nipbaru_ws']]['komponen_kinerja']['list'] = $lkk;
+                }
                 // $komponen_kinerja[$lkk['nipbaru_ws']] = countNilaiKomponen($lkk);
             }
         }
@@ -1068,6 +1086,7 @@
                         ->where('a.flag_active', 1)
                         ->where('d.flag_active', 1)
                         ->where('d.status_verif', 1)
+                        ->where('c.id_m_status_pegawai', '1')
                         ->group_by('a.id');
 
         if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
@@ -1096,6 +1115,9 @@
                 $data_disiplin['result'][$lk['nipbaru_ws']]['kinerja'] = $kinerja[$lk['nipbaru_ws']];
             }
         }
+        // if($skpd[0] == 5011001){
+        //     dd($data_disiplin);
+        // }
         return $data_disiplin;
     }
 
@@ -1377,9 +1399,16 @@
                 ->where('a.bulan', floatval($data['bulan']))
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
-                ->where('c.skpd', $uker['id_unitkerja'])
+                // ->where('c.skpd', $uker['id_unitkerja'])
                 ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
+
+        if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->join('db_pegawai.unitkerja e', 'c.skpd = e.id_unitkerja')
+                    ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } else {
+            $this->db->where('c.skpd', $uker['id_unitkerja']);
+        }
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
         if($tmp_dokpen){
@@ -1475,7 +1504,6 @@
                     if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
                         
                         $lp[$tr['nip']]['rekap']['jhk']++;
-                    
                 // Surat Tugas
                         if(isset($dokpen[$tr['nip']][$l])){  
                             if($dokpen[$tr['nip']][$l] == "TLS"){
@@ -1635,6 +1663,9 @@
             }
         }
         $data['result'] = $lp;
+        // if($tr['nip'] == 197612142009022002){
+        //     dd($tr);
+        // }
         // dd(json_encode($lp));
         $rs['json_result'] = json_encode($lp);
         if($flag_absen_aars == 0){
@@ -2127,6 +2158,13 @@
                 $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($l['pagu_tpp'])) / 100;
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
+                $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);
+                $whole = $result[$l['nipbaru_ws']]['nominal_pph'] - $rounded;
+                if($whole != 0){
+                    // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+                    $result[$l['nipbaru_ws']]['nominal_pph'] = $whole >= 0.5 ? $rounded + 1 : $rounded;
+                } 
+
                 $result[$l['nipbaru_ws']]['tpp_diterima'] = $result[$l['nipbaru_ws']]['besaran_tpp'] - $result[$l['nipbaru_ws']]['nominal_pph'];
             }
 

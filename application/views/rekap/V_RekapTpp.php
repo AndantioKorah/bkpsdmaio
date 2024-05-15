@@ -20,7 +20,14 @@
                                 <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                     <?=$uk['nm_unitkerja']?>
                                 </option>
-                                <?php } else { if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){ ?>
+                                <?php } else if($this->general_library->getIdUnitKerjaPegawai() == 1030525){
+                                    $list_uk_bagian_umum = [1030525, 1000001, 2000100]; //jika Bagian UMUM, buka akses untuk bagian umum, setda, staf ahli
+                                    if(in_array($uk['id_unitkerja'], $list_uk_bagian_umum)){
+                                ?> 
+                                    <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                        <?=$uk['nm_unitkerja']?>
+                                    </option>
+                                <?php } } else { if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){ ?>
                                 <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                     <?=$uk['nm_unitkerja']?>
                                 </option>

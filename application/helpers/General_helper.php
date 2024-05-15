@@ -1032,18 +1032,16 @@ function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
 }
 
-function isKasubKepegawaian($nama_jabatan){ 
+function isKasubKepegawaian($nama_jabatan, $eselon = null){
+    if($eselon == null){
+        $eselon = $this->CI->general_library->getEselon();
+    } 
     return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
     stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
     stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||
     stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan) ||
     stringStartWith('Kepala Sub Bagian Umum, Hukum dan Kepegawaian', $nama_jabatan) ||
-    (stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan) && $this->CI->general_library->getEselon() == 'IV A')
-    
-    // stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
-    // stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
-    // stringStartWith('Kepala UPTD', $nama_jabatan)
-    ) 
+    (stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan) && $eselon == 'IV A')) 
     ? true : false;
 }
 

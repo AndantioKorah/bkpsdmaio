@@ -20,7 +20,7 @@
   Riwayat Usul Assesment
 </button>
 
-
+<?php }  ?>
 <!-- status pdm -->
 <?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
 
@@ -41,7 +41,7 @@ if($pdm[0]['flag_active'] == 1) {?>
 data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah Lengkap </button>
 <?php }  ?>
 <?php }  ?>
-<?php }  ?>
+
 
 <script>
     function openModalStatusPmd(jenisberkas){

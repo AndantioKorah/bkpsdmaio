@@ -3463,7 +3463,7 @@ public function getAllPelanggaranByNip($nip){
         }
 
         function getJabatanPegawaiEdit($id){
-            $this->db->select('c.skpd,d.jenis_jabatan,c.id_unitkerja,b.skpd,c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
+            $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -3618,7 +3618,7 @@ function getSumpahJanjiEdit($id){
 
 
 public function submitEditJabatan(){
-
+    $nama_jabatan = null;
     $datapost = $this->input->post();
     $this->db->trans_begin();
     $target_dir = './arsipjabatan/';
@@ -3672,9 +3672,16 @@ public function submitEditJabatan(){
         // ]);
        
             $str = $this->input->post('jabatan_nama');
-            $newStr = explode(",", $str);
-            $id_jabatan = $newStr[0];
-            $nama_jabatan = $newStr[1]; 
+            if($str){
+                $newStr = explode(",", $str);
+                $id_jabatan = $newStr[0];
+                $nama_jabatan = $newStr[1];
+                $data['id_jabatan']      = $id_jabatan; 
+            }
+           
+            if($nama_jabatan == null){
+                $nama_jabatan = $this->input->post('teks_jabatan');
+            } 
 
             $id = $datapost['id'];
             // $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
@@ -3707,8 +3714,11 @@ public function submitEditJabatan(){
             $nama_jabatan = $newStr[1];
             $data['id_jabatan']      = $id_jabatan; 
         }
-       
-        
+        if($nama_jabatan == null){
+            $nama_jabatan = $this->input->post('teks_jabatan');
+        } 
+
+
         $id = $datapost['id'];
         $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
         $data['nm_jabatan']      =  $nama_jabatan;
@@ -6122,20 +6132,20 @@ public function submitEditJabatan(){
         return $this->db->get()->result_array();
     }
 
-    function getSelectJabatanEditStruktural(){
+    function getSelectJabatanEditStruktural($id_unitkerja){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
             ->where('a.jenis_jabatan', 'Struktural')
-            ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
+            ->where('a.id_unitkerja', $id_unitkerja);
         return $this->db->get()->result_array();
     }
     
     
-    function getSelectJabatanEditPelaksana(){
+    function getSelectJabatanEditPelaksana($id_unitkerja){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
             ->where('a.jenis_jabatan', 'JFU')
-            ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
+            ->where('a.id_unitkerja', $id_unitkerja);
         return $this->db->get()->result_array();
     }
 

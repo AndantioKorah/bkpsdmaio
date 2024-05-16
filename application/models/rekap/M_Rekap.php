@@ -884,7 +884,7 @@
         }
 
         $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-        e.id as id_m_user, a.flag_bendahara,
+        e.id as id_m_user, a.flag_bendahara, e.flag_uptd,
         TRIM(
             CONCAT(
             IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
@@ -938,7 +938,7 @@
                 $result['bendahara'] = $lp;
             }
 
-            if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon'])){
+            if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
                 $result['kasubag'] = $lp;
             }
 

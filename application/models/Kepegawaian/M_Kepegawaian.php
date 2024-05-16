@@ -4994,7 +4994,7 @@ public function submitEditJabatan(){
                 }
 
                 if($rw['url_sk'] != null){
-                    $rw['id_m_status_pengajuan_cuti'] = 6;
+                    // $rw['id_m_status_pengajuan_cuti'] = 6;
                     $rw['nama_status'] = 'Selesai';
                 }
 
@@ -5611,7 +5611,8 @@ public function submitEditJabatan(){
                     'fileurl' => $path_file,
                     'type' => 'document'
                 ];
-                $this->general->saveToCronWa($cronWa);
+                $this->db->insert('t_cron_wa', $cronWa);
+                // $this->general->saveToCronWa($cronWa);
 
                 // save untuk t_file_ds agar bisa terbaca saat QR Code
                 $this->db->insert('t_file_ds', [
@@ -5630,56 +5631,56 @@ public function submitEditJabatan(){
                     'id_m_jenis_layanan' => $master['id']
                 ]);
 
-            $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
-                                ->from('db_pegawai.pegawai a')
-                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                ->join('m_user d', 'a.nipbaru_ws = d.username')
-                                ->where('c.kepalaskpd', 1)
-                                ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-                                ->get()->row_array();
+                $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                    ->join('m_user d', 'a.nipbaru_ws = d.username')
+                                    ->where('c.kepalaskpd', 1)
+                                    ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                                    ->get()->row_array();
 
-            //simpan di dokumen pendukung agar tersinkron dengan rekap absen
-            $dokumen_pendukung = null;
-            $hariKerja = countHariKerjaDateToDate($ld['tanggal_mulai'], $ld['tanggal_akhir']);
-            if($hariKerja){
-                $j = 0;
-                foreach($hariKerja[2] as $h){
-                    $explode = explode("-", $h);
-                    $dokumen_pendukung[$j] = [
-                        'id_m_user' => $ld['id_m_user'],
-                        'id_m_jenis_disiplin_kerja' => 17,
-                        'tanggal' => $explode[2],
-                        'bulan' => $explode[1],
-                        'tahun' => $explode[0],
-                        'keterangan' => 'Cuti',
-                        'pengurangan' => 0,
-                        'status' => 2,
-                        'keterangan_verif' => $ld['keterangan_verifikasi_kepala_bkpsdm'],
-                        'tanggal_verif' => $ld['tanggal_verifikasi_kepala_bkpsdm'],
-                        'id_m_user_verif' => $kepala_bkpsdm['id_m_user'],
-                        'flag_outside' => 1,
-                        'url_outside' => json_encode([$path_file]),
-                        'created_by' => $kepala_bkpsdm['id_m_user']
-                    ];
-                    $j++;
-                }
-            }
-            if($dokumen_pendukung){
-                $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
-            }
+                //simpan di dokumen pendukung agar tersinkron dengan rekap absen
+                // $dokumen_pendukung = null;
+                // $hariKerja = countHariKerjaDateToDate($ld['tanggal_mulai'], $ld['tanggal_akhir']);
+                // if($hariKerja){
+                //     $j = 0;
+                //     foreach($hariKerja[2] as $h){
+                //         $explode = explode("-", $h);
+                //         $dokumen_pendukung[$j] = [
+                //             'id_m_user' => $ld['id_m_user'],
+                //             'id_m_jenis_disiplin_kerja' => 17,
+                //             'tanggal' => $explode[2],
+                //             'bulan' => $explode[1],
+                //             'tahun' => $explode[0],
+                //             'keterangan' => 'Cuti',
+                //             'pengurangan' => 0,
+                //             'status' => 2,
+                //             'keterangan_verif' => $ld['keterangan_verifikasi_kepala_bkpsdm'],
+                //             'tanggal_verif' => $ld['tanggal_verifikasi_kepala_bkpsdm'],
+                //             'id_m_user_verif' => $kepala_bkpsdm['id_m_user'],
+                //             'flag_outside' => 1,
+                //             'url_outside' => json_encode([$path_file]),
+                //             'created_by' => $kepala_bkpsdm['id_m_user']
+                //         ];
+                //         $j++;
+                //     }
+                // }
+                // if($dokumen_pendukung){
+                //     $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                // }
 
-            // save di pegcuti agar muncul di profil cuti
-            $this->db->insert('db_pegawai.pegcuti', [
-                'id_pegawai' => $ld['id_peg'],
-                'jeniscuti' => $ld['id_cuti'],
-                'lamacuti' => $ld['lama_cuti'],
-                'tglmulai' => $ld['tanggal_mulai'],
-                'tglselesai' => $ld['tanggal_akhir'],
-                'nosttpp' => $nomor_surat,
-                'tglsttpp' => date('Y-m-d'),
-                'gambarsk' => $filename,
-                'status' => 2
-            ]);
+                // save di pegcuti agar muncul di profil cuti
+                $this->db->insert('db_pegawai.pegcuti', [
+                    'id_pegawai' => $ld['id_peg'],
+                    'jeniscuti' => $ld['id_cuti'],
+                    'lamacuti' => $ld['lama_cuti'],
+                    'tglmulai' => $ld['tanggal_mulai'],
+                    'tglselesai' => $ld['tanggal_akhir'],
+                    'nosttpp' => $nomor_surat,
+                    'tglsttpp' => date('Y-m-d'),
+                    'gambarsk' => $filename,
+                    'status' => 2
+                ]);
 
                 $i++;
             }

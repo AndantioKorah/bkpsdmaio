@@ -1418,6 +1418,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCuti($id){
 		$data['result'] = $this->session->userdata('riwayat_cuti')[$id];
+		$data['flag_only_see'] = 0;
 		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
 	}
 

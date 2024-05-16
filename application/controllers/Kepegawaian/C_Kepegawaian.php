@@ -1291,14 +1291,27 @@ class C_Kepegawaian extends CI_Controller
 	
 	public function loadEditJabatanPegawai($id)
     {
-		$data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+		// $data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
+		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
-		// dd($data['jabatan']);
+		// dd($data['jabatan'][0]['unitkerja_id']);
+		if($data['jabatan']) {
+		if($data['jabatan'][0]['jenis_jabatan'] == "JFT") {
+		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditJFT();
+		} else if($data['jabatan'][0]['jenis_jabatan'] == "Struktural") {
+		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditStruktural($data['jabatan'][0]['unitkerja_id']);
+		} else {
+		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
+		}
+	    } else {
+		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
+		}
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
+		
 		// dd($data['nama_jabatan']);
         $this->load->view('kepegawaian/V_EditJabatan', $data);
     }

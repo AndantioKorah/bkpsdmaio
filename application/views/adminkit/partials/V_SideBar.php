@@ -589,11 +589,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
 					</a>
-				</li> -->
+				</li>
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 

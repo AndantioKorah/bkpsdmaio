@@ -827,10 +827,15 @@
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
                     && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
-                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                        $result[$i]['kelas_jabatan'] = 7;
                     }
                 } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
-                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
+                    $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                    $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
+                    if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
+                        $result[$i]['kelas_jabatan'] = 7;
+                    }
                 }
     
                 if($d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
@@ -841,6 +846,10 @@
     
                 if($d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
+                }
+
+                if(isset($d['statuspeg']) && $d['statuspeg'] == 1){ // jika CPNS
+                    $result[$i]['kelas_jabatan'] = 7;
                 }
             } else if($d['jenis_jabatan'] == 'Struktural'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
@@ -1011,8 +1020,8 @@
         }
 
         if($id_unitkerja == 3012000 
-        || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja']
-        || $id_unitkerja == 6160000)){ 
+        || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
+        || $id_unitkerja == 6160000){ 
             // jika dinkes, puskes dan instalasi farmasi, ambil bendahara hardocde yang ada
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1169,7 +1178,7 @@
         
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
-            b.kelas_jabatan, b.jenis_jabatan,
+            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg,
             TRIM(
                 CONCAT(
                 IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 

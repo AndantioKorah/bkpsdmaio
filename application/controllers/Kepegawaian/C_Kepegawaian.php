@@ -1814,6 +1814,13 @@ class C_Kepegawaian extends CI_Controller
 		
 	}
 
+	public function getSearchPegawai()
+    {
+        $id = $this->input->post('id');
+        $response   = $this->kepegawaian->getSearchPegawai($id);
+        echo json_encode($response);
+    }
+
 
 	
 

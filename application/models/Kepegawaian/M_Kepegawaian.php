@@ -3330,6 +3330,7 @@ function getJenisHd($id)
     return $data;
 }
 
+
 public function getKabKota($tableName, $orderBy = 'created_date', $whatType = 'desc')
 {
     $this->db->select('*')
@@ -6471,6 +6472,24 @@ public function getFileForKarisKarsu()
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    function getSearchPegawai($id)
+{        
+    $this->db->select('a.*,b.id as id_m_user');
+    $this->db->where('a.skpd', $id);
+    $this->db->join('m_user b', 'a.nipbaru_ws = b.username');
+    $this->db->where('b.flag_active', 1);
+
+    // $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('db_pegawai.pegawai as a');
+    $datajd = $fetched_records->result_array();
+    //  dd($datajd)
+    $data = array();
+    foreach ($datajd as $jd) {
+        $data[] = array("id" => $jd['id_m_user'], "nama" => getNamaPegawaiFull($jd));
+    }
+    return $data;
+}
 
 
 

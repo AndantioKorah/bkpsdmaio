@@ -1164,6 +1164,11 @@
                     $insert_data[$i]['pengurangan'] = $disiplin[2];
                     $insert_data[$i]['dokumen_pendukung'] = $filename;
                     $insert_data[$i]['created_by'] = $this->general_library->getId();
+                    if($this->general_library->isProgrammer() 
+                    || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) {
+                        $insert_data[$i]['status'] = 2;
+                    }
+
 
                     $i++;
                 // }

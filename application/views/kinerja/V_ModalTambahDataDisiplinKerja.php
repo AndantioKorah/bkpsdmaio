@@ -1,12 +1,24 @@
 <div class="modal-body">
     <form id="form_input">
         <div class="row">
+        <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN)  { ?>
+                <div class="col-lg-12 col-md-12 mt-2">
+                    <label>Pilih Unit Kerja</label>
+                    <select class="form-control select2-navy select2 " style="width: 100%"
+                            id="cariunitkerja" data-dropdown-css-class="select2-navy" >
+                            <?php foreach($skpd as $s){ ?>
+                                <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                            <?php } ?>
+                        </select>
+                </div>
+            <?php } ?>
+
             <?php if($this->general_library->isProgrammer() || 
             $this->general_library->isAdminAplikasi() || 
             isKasubKepegawaian($this->general_library->getNamaJabatan()) || 
             $this->general_library->isHakAkses('verifikasi_keterangan_presensi')) {
             ?>
-                <div class="col-lg-12 col-md-12">
+                 <div class="col-lg-12 col-md-12 mt-2">
                     <label>Pilih Pegawai</label>
                     <select required multiple="multiple" class="form-control select2-navy" style="width: 100%"
                         id="pegawai" data-dropdown-css-class="select2-navy" name="pegawai[]">
@@ -15,9 +27,11 @@
                         <?php } ?>
                     </select>
                 </div>
-            <?php } else { ?>
+            <?php } else {  ?>
                 <input style="display: none;" class="form-control form-control-sm" readonly name="pegawai[]" value="<?=$this->general_library->getId()?>" />
             <?php } ?>
+           
+
             <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Periode</label>  
                 <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
@@ -70,10 +84,12 @@
 
         $('#pegawai').select2()
         $('#jenis_disiplin').select2()
+        $('#cariunitkerja').select2()
         $("#range_periode").daterangepicker({
             showDropdowns: true,
             // minDate: firstDay
         });
+      
 
     })
 
@@ -124,5 +140,25 @@
                     }
                 }
        
+
+    $("#cariunitkerja").change(function() {
+      var id = $("#cariunitkerja").val();
+     
+      $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getSearchPegawai",
+              method : "POST",
+              data : {id: id},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+              var html = '';
+                      var i;
+                      for(i=0; i<data.length; i++){
+                          html += '<option value='+data[i].id+'>'+data[i].nama+'</option>';
+                      }
+                      $('#pegawai').html(html);
+                        }
+                  });
+  });
 
 </script>

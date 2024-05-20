@@ -474,11 +474,11 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                <!-- <?=($profil_pegawai['nama_jabatan'])?> -->
-                  <?php
+                <?=($profil_pegawai['nama_jabatan'])?>
+                  <!-- <?php
                   $data = explode("|", $profil_pegawai['data_jabatan']);
                   echo $data[0];
-                  ?>
+                  ?> -->
                 </span>
               </div>
 

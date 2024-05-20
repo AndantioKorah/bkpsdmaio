@@ -548,7 +548,9 @@ class C_Kinerja extends CI_Controller
 
     public function modalTambahDataDisiplinKerja($id_unitkerja)
     {
+        // $id_unitkerja = "4018000";
         $data['pegawai'] = $this->master->getPegawaiBySkpd($id_unitkerja);
+        $data['skpd'] = $this->master->getAllUnitKerja();
         $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
     }

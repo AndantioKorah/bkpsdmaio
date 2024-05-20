@@ -29,7 +29,6 @@
 
 <!-- status pdm -->
 <?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>
-  
 <?php if($pdm_pangkat) {?>
 <?php
 if($pdm_pangkat[0]['flag_active'] == 1) {?>
@@ -53,9 +52,13 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <script>
     function openModalStatusPmd(jenisberkas){
       var jumlah = $('#jumlahdokpangkat').val()
-      if(jumlah == 0){
+      var status = "<?=$profil_pegawai['id_statuspeg']; ?>"
+      if(status != 3){
+        if(jumlah == 0){
         jenisberkas = null 
       }
+      }
+      
         $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>

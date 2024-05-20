@@ -13,19 +13,19 @@
         <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" onclick="openListData(1)" id="custom-content-below-pengajuan-tab" data-toggle="pill" 
-                href="#custom-content-below-pengajuan" role="tab" aria-controls="custom-content-below-pengajuan" aria-selected="true">Pengajuan (<span id="count_pengajuan"></span>)</a>
+                href="#custom-content-below-pengajuan" role="tab" aria-controls="custom-content-below-pengajuan" aria-selected="true">Pengajuan </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="openListData(2)" id="custom-content-below-diterima-tab" data-toggle="pill" 
-                href="#custom-content-below-diterima" role="tab" aria-controls="custom-content-below-diterima" aria-selected="false">Diterima (<span id="count_diterima"></span>)</a>
+                href="#custom-content-below-diterima" role="tab" aria-controls="custom-content-below-diterima" aria-selected="false">Diterima </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="openListData(3)" id="custom-content-below-ditolak-tab" data-toggle="pill" 
-                href="#custom-content-below-ditolak" role="tab" aria-controls="custom-content-below-ditolak" aria-selected="false">Ditolak (<span id="count_ditolak"></span>)</a>
+                href="#custom-content-below-ditolak" role="tab" aria-controls="custom-content-below-ditolak" aria-selected="false">Ditolak </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="openListData(4)" id="custom-content-below-batal-tab" data-toggle="pill" 
-                href="#custom-content-below-batal" role="tab" aria-controls="custom-content-below-batal" aria-selected="false">Dibatalkan (<span id="count_batal"></span>)</a>
+                href="#custom-content-below-batal" role="tab" aria-controls="custom-content-below-batal" aria-selected="false">Dibatalkan </a>
             </li>
         </ul>
         <div class="tab-content" id="custom-content-below-tabContent">
@@ -66,7 +66,7 @@
         active_status = status
         $('#result_data').html('')
         $('#result_data').append(divLoaderNavy)
-        $('#result_data').load('<?=base_url('kinerja/C_Kinerja/loadDataPendukungByStatus')?>'+'/'+status+'/'+$('#bulan').val()+'/'+$('#tahun').val(), function(){
+        $('#result_data').load('<?=base_url('kinerja/C_Kinerja/loadDataPendukungByStatus')?>'+'/'+status+'/'+$('#bulan').val()+'/'+$('#tahun').val()+'/'+skpd, function(){
             $('#loader').hide()
         })
     }

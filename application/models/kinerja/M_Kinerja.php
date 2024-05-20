@@ -936,8 +936,10 @@
             && isKasubKepegawaian($this->general_library->getNamaJabatan())){
                 $this->db->join('db_pegawai.unitkerja f', 'f.id_unitkerja = c.skpd')
                         ->where('f.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-            } else {
+            } else if(isKasubKepegawaian($this->general_library->getNamaJabatan())) {
                 $this->db->where('c.skpd', $this->general_library->getUnitKerjaPegawai()); 
+            } else {
+                $this->db->where('c.skpd', $id_unitkerja); 
             }
         } 
         // else if($this->general_library->isProgrammer ) {
@@ -1064,7 +1066,7 @@
                     }
                 }
             }
-            // dd($result);
+            
             return $result;
         // }
 

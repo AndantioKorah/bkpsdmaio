@@ -1666,8 +1666,19 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu());
 	}
 
+	public function insertUsulLayananPensiun()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananPensiun());
+	}
+
 	public function loadListRiwayatKarisKarsu(){
 		$data['result'] = $this->kepegawaian->getRiwayatKarisKarsu();
+		// dd($data);
+		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
+	}
+
+	public function loadListRiwayatPensiun(){
+		$data['result'] = $this->kepegawaian->loadListRiwayatPensiun();
 		// dd($data);
 		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
 	}
@@ -1677,10 +1688,23 @@ class C_Kepegawaian extends CI_Controller
 		render('kepegawaian/layanan/V_VerfikasiKarisKarsu', '', '', $data);
 	}
 
+	public function verifikasiPensiun(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		render('kepegawaian/layanan/V_VerfikasiPensiun', '', '', $data);
+	}
+
+
 	public function searchPengajuanKarisKarsu(){
 		$data['result'] = $this->kepegawaian->searchPengajuanKarisKarsu();
 		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
+	}
+
+
+	public function searchPengajuanPensiun(){
+		$data['result'] = $this->kepegawaian->searchPengajuanPensiun();
+		$data['param'] = $this->input->post();
+		$this->load->view('kepegawaian/layanan/V_VerfikasiPensiunItem', $data);
 	}
 
 	public function verifikasiKarisKarsuDetail($id){
@@ -1688,6 +1712,79 @@ class C_Kepegawaian extends CI_Controller
 		// dd($data);
 		// $this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', $data);
 		render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
+	}
+
+	public function verifikasiPenisunDetail($id,$jenis_pensiun){
+		$data['result'] = $this->kepegawaian->getPengajuanLayananPensiun($id);
+		$data['jenis_layanan'] = $jenis_pensiun;
+
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','18','0');
+		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','19','0');
+		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','30','0');
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
+		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
+		$data['surat_ket_kematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','56','0');
+		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
+		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');
+		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','26','0');
+		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
+		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
+		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','59','0');
+		$data['spt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','60','0');
+		$data['surat_berhenti'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','61','0');
+		$data['surat_rekom_sakit'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','62','0');
+		$data['visum'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','63','0');
+		$data['berita_acara'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','64','0');
+		$data['npwp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','38','0');
+		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','39','0');
+
+
+		$data['list_layanan_skcpns'] = array(7,8,9,10,11);
+		$data['list_layanan_skpns'] = array(7,8,9,10,11);
+		$data['list_layanan_skpangak'] = array(7,8,9,10,11);
+		$data['list_layanan_skjabatan'] = array(7,8,9,10);
+		$data['list_layanan_aktenikah'] = array(7,8,9,10,11);
+		$data['list_layanan_hd'] = array(7,8,9,10,11);
+		$data['list_layanan_pidana'] = array(7,8,9,10,11);
+		$data['list_layanan_dpcp'] = array(7,8,9,10,11);
+		$data['list_layanan_pmk'] = array(7,8,9,10);
+		$data['list_layanan_skp'] = array(7,8,9,10);
+		$data['list_layanan_surat_ket_kematian'] = array(11);
+		$data['list_layanan_surat_laporan_kronologis'] = array(11);
+		$data['list_layanan_aktercerai'] = array(7,8,9,10,11);
+		$data['list_layanan_aktekematian'] = array(7,8,9,10,11);
+		$data['list_layanan_akteanak'] = array(7,8,9,10,11);
+		$data['list_layanan_kk'] = array(7,8,9,10,11);
+		$data['list_layanan_ket_janda_duda'] = array(8,11);
+		$data['list_layanan_spt'] = array(11);
+		$data['list_layanan_visum'] = array(11);
+		$data['list_layanan_berita_acara'] = array(11);
+		$data['list_layanan_ktp'] = array(7,8,9,10,11);
+		$data['list_layanan_npwp'] = array(7,8,9,10,11);
+		$data['list_layanan_buku_rek'] = array(7,8,9,10,11);
+		$data['list_layanan_surat_rekom_sakit'] = array(10);
+		$data['list_layanan_surat_berhenti'] = array(9,10);
+		
+		if($jenis_pensiun == 7){
+		$data['nama_layanan'] = "BUP";
+		} else if($jenis_pensiun == 8){
+		$data['nama_layanan'] = "JANDA/DUDA";
+		} else if($jenis_pensiun == 9){
+		$data['nama_layanan'] = "ATAS PERMINTAAN SENDIRI";
+		} else if($jenis_pensiun == 10){
+		$data['nama_layanan'] = "SAKIT/UZUR";
+		} else if($jenis_pensiun == 11){
+		$data['nama_layanan'] = "TEWAS	";
+		}
+
+		// $this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', $data);
+		render('kepegawaian/layanan/V_VerfikasiPensiunDetail', '', '', $data);
 	}
 
 	public function getFileForKarisKarsu()

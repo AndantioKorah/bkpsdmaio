@@ -452,7 +452,7 @@ public function getPegawaiPenilaianPotensialAdministrator(){
 //                     ->get()->result_array();
 // }
 
-public function getPegawaiPenilaianKinerjaJpt($id){
+public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
      $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
@@ -478,8 +478,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
              
              
                     $query = $this->db->get()->result_array();
-                    // dd($query);
-
+                    if($penilaian == 1){
 
                     $currentYear = date('Y'); 
                     $previous1Year = $currentYear - 1;   
@@ -605,11 +604,11 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                     }
              
              
-                    $query2 = $this->db->get()->result_array();
+                    $query = $this->db->get()->result_array();
 
+                }
 
-
-            return $query2;
+            return $query;
             }
 
 
@@ -643,7 +642,7 @@ public function getPegawaiPenilaianKinerjaJpt($id){
                                 // dd(1);
                                foreach ($query as $rs) {
                                 // $id_peg = "IDPeg97";
-                                // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                                $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
                                 $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 
                                 

@@ -62,6 +62,7 @@
     })
 
     function openListData(status){
+        skpd = "<?= $skpd;?>"
         active_status = status
         $('#result_data').html('')
         $('#result_data').append(divLoaderNavy)

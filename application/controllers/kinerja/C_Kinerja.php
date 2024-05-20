@@ -458,6 +458,10 @@ class C_Kinerja extends CI_Controller
     public function searchDisiplinKerja()
     {
         $data['result'] = $this->kinerja->searchDisiplinKerja($this->input->post());
+        $data['skpd'] = null;
+        if(($this->input->post('id_unitkerja'))){
+        $data['skpd'] = $this->input->post('id_unitkerja');
+        }
         $this->load->view('kinerja/V_DisiplinKerjaResult', $data);
     }
 

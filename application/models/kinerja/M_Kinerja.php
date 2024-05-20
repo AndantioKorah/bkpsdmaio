@@ -1027,6 +1027,7 @@
             }
         }
 
+
         $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
             ->from('t_dokumen_pendukung a')
             ->join('m_user b', 'a.id_m_user = b.id')
@@ -1044,6 +1045,7 @@
             $this->db->where('a.id_m_user', $this->general_library->getId());
         }
         $disiplin_kerja = $this->db->get()->result_array();
+      
         // if(!isset($data['id_unitkerja'])){
             $result['pengajuan'] = [];
             $result['diterima'] = [];
@@ -1062,6 +1064,7 @@
                     }
                 }
             }
+            // dd($result);
             return $result;
         // }
 

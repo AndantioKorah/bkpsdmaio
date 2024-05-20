@@ -1657,7 +1657,7 @@
                         c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
                         a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
                         g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
-                        g.kondisi_kerja AS kondisi_kerja_tambahan,
+                        g.kondisi_kerja AS kondisi_kerja_tambahan, a.statuspeg,
                         g.nama_jabatan AS nama_jabatan_tambahan')
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
@@ -1761,7 +1761,14 @@
                     }
                     
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
-                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                        $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
+                        $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
+                        if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
+                            $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                        }
+                        
+                        // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
                     if($p['skpd'] == 6170000){ // if puskes bunaken
@@ -1786,6 +1793,10 @@
                     // if($substr == '202203'){ // JFT PNS baru kelas jabatan di revert karena belum ada anggaran TPP naik  
                     //     $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                     // }
+
+                    if(isset($p['statuspeg']) && $p['statuspeg'] == 1){ // jika CPNS
+                        $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                    }
 
                     if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
@@ -1829,6 +1840,12 @@
                 //     echo "<br>";
                 //     dd($result[$p['id_m_user']]);
                 // }
+
+                if($result[$p['id_m_user']]['statuspeg'] == 1){ //pegawai CPNS
+                    $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * 0.8;
+                } else if($result[$p['id_m_user']]['statuspeg'] == 3 && $p['flag_terima_tpp'] == 0){ //PPPK dan tidak trima TPP
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                }
 
                 if($p['flag_terima_tpp'] == 0){
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;

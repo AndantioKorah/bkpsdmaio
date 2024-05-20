@@ -358,10 +358,29 @@ function generateRandomNumber($length = 10)
 
 function getPphByIdPangkat($id_pangkat)
 {
-    if (in_array($id_pangkat, [31, 32, 33, 34])) {
+    if (in_array($id_pangkat, [31, 32, 33, 34, 59, 60])) {
         return 5;
     } else if (in_array($id_pangkat, [41, 42, 43, 44, 45])) {
         return 15;
+    }
+    return 0;
+}
+
+function getGolonganByIdPangkat($id_pangkat){
+    if (in_array($id_pangkat, [31, 32, 33, 34])) {
+        return 'III';
+    } else if (in_array($id_pangkat, [41, 42, 43, 44, 45])) {
+        return 'IV';
+    }  else if (in_array($id_pangkat, [51])) {
+        return 'I';
+    } else if (in_array($id_pangkat, [59])) {
+        return 'IX';
+    } else if (in_array($id_pangkat, [55])) {
+        return 'V';
+    } else if (in_array($id_pangkat, [57])) {
+        return 'VII';
+    }  else if (in_array($id_pangkat, [60])) {
+        return 'X';
     }
     return 0;
 }

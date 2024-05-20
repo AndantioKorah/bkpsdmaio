@@ -1756,8 +1756,8 @@
                     }
                     
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
-                        $result[$p['id_m_user']]['kelas_jabatan'] = $d['kelas_jabatan'];
-                        $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                        $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
+                        $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
                             $result[$p['id_m_user']]['kelas_jabatan'] = 7;
@@ -1838,7 +1838,7 @@
 
                 if($result[$p['id_m_user']]['statuspeg'] == 1){ //pegawai CPNS
                     $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * 0.8;
-                } else if($result[$p['id_m_user']]['statuspeg'] == 3){ //PPPK
+                } else if($result[$p['id_m_user']]['statuspeg'] == 3 && $p['flag_terima_tpp'] == 0){ //PPPK dan tidak trima TPP
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
 

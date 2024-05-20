@@ -930,17 +930,6 @@
                 } else {
                     $result['kepalaskpd'] = $lp;
                 }
-                // else if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_KECAMATAN_NEW)){ // jika kecamatan
-                //     $result['camat'] = $lp;
-                // }
-
-                // if($id_unitkerja == '3012000' || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // khusus dinkes, kepalaskpd ada 2, jadi hardcode ke nip yang tertera
-                //     if($lp['nipbaru'] == '198505302005011001'){ 
-                //         $result['kepalaskpd'] = $lp;
-                //     }
-                // } else {
-                    // $result['kepalaskpd'] = $lp;
-                // }
             }
 
             if($lp['flag_bendahara'] == 1){
@@ -1178,7 +1167,7 @@
         
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
-            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg,
+            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat,
             TRIM(
                 CONCAT(
                 IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
@@ -1242,7 +1231,8 @@
                 $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
                 $tlp[$lpw['nip']]['eselon'] = ($lpw['eselon']);
                 $tlp[$lpw['nip']]['kelas_jabatan'] = ($lpw['kelas_jabatan']);
-                $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
+                // $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
+                $tlp[$lpw['nip']]['golongan'] = getGolonganByIdPangkat($lpw['id_pangkat']);
                 $tlp[$lpw['nip']]['absen'] = null;
                 $tlp[$lpw['nip']]['jumlah_anulir'] = null;
                 foreach($list_hari as $lh){
@@ -1617,6 +1607,8 @@
                                 $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
                                 if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == ''){
                                     $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = '00:00';
+                                    $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                    $lp[$tr['nip']]['rekap']['tmk3']++;
                                 }
                                 if($diff_masuk > 0){
                                     $ket_masuk = floatval($diff_masuk) / 1800;
@@ -2167,7 +2159,9 @@
                 $result[$l['nipbaru_ws']]['id_pangkat'] = $l['id_pangkat'];
                 $result[$l['nipbaru_ws']]['nama_jabatan'] = $l['nama_jabatan'];
                 $result[$l['nipbaru_ws']]['kelas_jabatan'] = $l['kelas_jabatan'];
-                $result[$l['nipbaru_ws']]['nomor_golongan'] = $l['rekap_kehadiran']['golongan'];
+
+                // $result[$l['nipbaru_ws']]['nomor_golongan'] = $l['rekap_kehadiran']['golongan'];
+                $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = $l['rekap_kehadiran']['eselon'];
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
 
@@ -2284,7 +2278,8 @@
                 $result[$p['nipbaru_ws']]['id_pangkat'] = $p['id_pangkat'];
                 $result[$p['nipbaru_ws']]['nama_jabatan'] = $p['nama_jabatan'];
                 $result[$p['nipbaru_ws']]['kelas_jabatan'] = $p['kelas_jabatan'];
-                $result[$p['nipbaru_ws']]['nomor_golongan'] = !isset($explode_golongan_all[1]) ? 0 : $explode_golongan_number[0];
+                // $result[$p['nipbaru_ws']]['nomor_golongan'] = !isset($explode_golongan_all[1]) ? 0 : $explode_golongan_number[0];
+                $result[$p['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($p['id_pangkat']);
                 $result[$p['nipbaru_ws']]['eselon'] = $data_kinerja[$p['nipbaru_ws']]['eselon'];
                 $result[$p['nipbaru_ws']]['pagu_tpp'] = $p['pagu_tpp'];
                 

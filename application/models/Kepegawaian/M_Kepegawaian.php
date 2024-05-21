@@ -6333,9 +6333,44 @@ public function submitEditJabatan(){
        
     }
 
+    public function insertUsulLayananPensiun(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        $this->db->trans_begin();
+   
+            $dataUsul['id_m_user']      = $this->general_library->getId();
+            $dataUsul['created_by']      = $this->general_library->getId();
+            $dataUsul['jenis_pensiun']      = $this->input->post('jenis_pensiun');
+            $this->db->insert('db_efort.t_pensiun', $dataUsul);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+        }
+        return $res;
+
+       
+    }
+
     function getRiwayatKarisKarsu(){
         $this->db->select('*')
                        ->from('t_karis_karsu a')
+                       ->where('a.id_m_user', $this->general_library->getId())
+                       ->where('a.flag_active', 1)
+                       ->order_by('a.id','desc');
+    
+                       $query = $this->db->get()->result_array();
+                       return $query;
+   }
+
+       function loadListRiwayatPensiun(){
+        $this->db->select('*')
+                       ->from('t_pensiun a')
                        ->where('a.id_m_user', $this->general_library->getId())
                        ->where('a.flag_active', 1)
                        ->order_by('a.id','desc');
@@ -6348,6 +6383,27 @@ public function submitEditJabatan(){
     $data = $this->input->post();
     $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_karis_karsu a')
+            ->join('m_user d', 'a.id_m_user = d.id')
+            ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+
+    if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+        $this->db->where('e.skpd', $data['id_unitkerja']);
+    }
+
+    if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+        $this->db->where('a.status', $data['status_pengajuan']);
+    }
+
+    return $this->db->get()->result_array();
+}
+
+public function searchPengajuanPensiun(){
+    $data = $this->input->post();
+    $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+            ->from('t_pensiun a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
@@ -6379,6 +6435,31 @@ function getPengajuanLayananKarisKarsu($id){
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_karis_karsu c', 'a.id = c.id_m_user')
+    // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
+   
+    ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+    ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+    ->join('db_pegawai.agama i', 'b.agama = id_agama')
+    ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+    ->where('c.id', $id)
+    ->get()->result_array();
+}
+
+function getPengajuanLayananPensiun($id){
+    // $this->db->select('*')
+    //                 ->from('t_karis_karsu a')
+    //                 ->where('a.id', $id)
+    //                 ->where('a.flag_active', 1);
+    // return $this->db->get()->result_array();
+    return $this->db->select('c.*, c.id as id_pengajuan,
+    b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
+    h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
+    a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
+    a.id as id_m_user, b.jk, b.alamat, j.id_unitkerjamaster,j.nm_unitkerjamaster')
+    ->from('m_user a')
+    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    ->join('t_pensiun c', 'a.id = c.id_m_user')
     // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
    
     ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')

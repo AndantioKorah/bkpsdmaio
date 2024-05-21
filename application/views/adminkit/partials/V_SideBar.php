@@ -412,6 +412,12 @@
 							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 				</a>
 				</li>
+
+				<li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pensiun
+				</a>
+				</li>
 				<?php } ?>
 			</ul>
 		</li>

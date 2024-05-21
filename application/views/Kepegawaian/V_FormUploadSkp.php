@@ -19,9 +19,9 @@
 
 
 
-<button onclick="loadRiwayatUsulSkp()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalSkp">
+<!-- <button onclick="loadRiwayatUsulSkp()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalSkp">
   Riwayat Usul SKP
-</button>
+</button> -->
 
 <!-- status pdm -->
 <?php  if($this->general_library->isProgrammer() != true  && $this->general_library->isAdminAplikasi() != true){ ?>

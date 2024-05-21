@@ -118,6 +118,11 @@ $route['kepegawaian/verifikasi-karis-karsu'] = 'kepegawaian/C_Kepegawaian/verifi
 $route['kepegawaian/verifikasi-detail/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsuDetail/$1';
 $route['kepegawaian/layanan-pensiun/(:any)'] = 'kepegawaian/C_Kepegawaian/LayananPensiun/$1';
 
+$route['kepegawaian/verifikasi-pensiun'] = 'kepegawaian/C_Kepegawaian/verifikasiPensiun';
+$route['kepegawaian/verifikasi-pensiun-detail/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiPenisunDetail/$1/$2';
+
+
+
 
 // master
 $route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';

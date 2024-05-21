@@ -1,4 +1,5 @@
-<style>.label-filter {
+<style>
+.label-filter {
 	color: #434242;
 	font-weight: bold;
 	font-size: 15px;
@@ -226,6 +227,8 @@ ol {
 			<div class="card-body">
 
 				<form id="form_pensiun" method="post" enctype="multipart/form-data" id="" style="margin-top: -45px;">
+
+        <input type="hidden" name="jenis_pensiun" id="jenis_pensiun" value="<?=$jenis_layanan;?>">
 
 					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
@@ -493,7 +496,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  // loadListRiwayatKarisKarsu()
+  loadListRiwayatPensiun()
     })
     $('#form_pensiun').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -509,39 +512,35 @@ $(function(){
         
 
 
-        var jenis_layanan = "<?=$jenis_layanan;?>"
+        // var jenis_layanan = "<?=$jenis_layanan;?>"
 
-        if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
-        if(sk_cpns == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
+        // if(sk_cpns == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
         
-        if(sk_pns == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_pns == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
 
-        if(dpcp == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        }
+        // if(dpcp == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        // }
 
-        if(jenis_layanan == 8){
-          if(jandaduda == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        }
+        // if(jenis_layanan == 8){
+        //   if(jandaduda == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        // }
 
-        errortoast(' tes')
-        return false;
-
-   
 
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananPensiun")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -649,10 +648,10 @@ $(function(){
 
   }
 
-  function loadListRiwayatKarisKarsu(){
+  function loadListRiwayatPensiun(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
-    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatKarisKarsu/")?>', function(){
+    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPensiun/")?>', function(){
       $('#loader').hide()
     })
     }

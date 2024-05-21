@@ -1678,9 +1678,56 @@
                                     }
                                     $keterangan[] = "TK";
                                 } else {
-                                    $result['pengurangan_dk'] += 3;
-                                    $result['rincian_pengurangan_dk']['tmk3']++;
-                                    $keterangan[] = "tmk3";
+                                    if(isset($result['dokpen'][$tga])){ // cek jika ada dokpen
+                                        if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == '19'){ // jika TLP
+                                            if($data_absen[$tga]['pulang'] == '00:00:00' || $data_absen[$tga]['pulang'] == null){ //jika tidak ada absen pulang
+                                                $result['pengurangan_dk'] += 3;
+                                                $result['rincian_pengurangan_dk']['pksw3']++;
+                                                $keterangan[] = "pksw3";
+                                            } else { // kalo ada, cek keterlambatan
+                                                $diff_pulang = strtotime($jam_pulang) - strtotime($data_absen[$tga]['pulang']);
+                                                $ket_pulang = floatval($diff_pulang / 1800);
+                                                if($ket_pulang <= 1 && $ket_pulang > 0){
+                                                    $result['pengurangan_dk'] += 1;
+                                                    $result['rincian_pengurangan_dk']['pksw1']++;
+                                                    $keterangan[] = "pksw1";
+                                                } else if($ket_pulang > 1 && $ket_pulang <= 2){
+                                                    $result['pengurangan_dk'] += 2;
+                                                    $result['rincian_pengurangan_dk']['pksw2']++;
+                                                    $keterangan[] = "pksw2";
+                                                } else if($ket_pulang > 2) {
+                                                    $result['pengurangan_dk'] += 3;
+                                                    $result['rincian_pengurangan_dk']['pksw3']++;
+                                                    $keterangan[] = "pksw3";
+                                                }
+                                            }
+                                        } if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == '20'){ // jika TLS
+                                            if($data_absen[$tga]['masuk'] == '00:00:00' || $data_absen[$tga]['masuk'] == null){ //jika tidak ada absen masuk
+                                                $result['pengurangan_dk'] += 3;
+                                                $result['rincian_pengurangan_dk']['pksw3']++;
+                                                $keterangan[] = "pksw3";
+                                            } else { // kalo ada, cek keterlambatan
+                                                $diff_masuk = strtotime($jam_masuk) - strtotime($data_absen[$tga]['masuk']);
+                                                $ket_masuk = floatval($diff_masuk / 1800);
+                                                if($ket_masuk <= 1 && $ket_masuk > 0){
+                                                    $result['pengurangan_dk'] += 1;
+                                                    $result['rincian_pengurangan_dk']['tmk1']++;
+                                                    $keterangan[] = "tmk1";
+                                                } else if($ket_masuk > 1 && $ket_masuk <= 2){
+                                                    $result['pengurangan_dk'] += 2;
+                                                    $result['rincian_pengurangan_dk']['tmk2']++;
+                                                    $keterangan[] = "tmk2";
+                                                } else if($ket_masuk > 2) {
+                                                    $result['pengurangan_dk'] += 3;
+                                                    $result['rincian_pengurangan_dk']['tmk3']++;
+                                                    $keterangan[] = "tmk3";
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // $result['pengurangan_dk'] += 3;
+                                    // $result['rincian_pengurangan_dk']['tmk3']++;
+                                    // $keterangan[] = "tmk3";
                                 }
                             } else { //kalau ada, cek keterlambatan
                                 $result['hadir']++;
@@ -1792,6 +1839,9 @@
                 //     // dd($result['']);
                 // }
                 $result['data_absen']['keterangan'][$tga] = $keterangan;
+                // if($tga == '2024-05-10'){
+                //     dd($result['data_absen']['keterangan']);
+                // }
 
                 // echo $data_absen[$tga]['masuk'].'<br>';
                 // dd($result['pengurangan_dk']);

@@ -358,7 +358,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
                 ->where('a.nipbaru_ws', $username)
-                // ->where('l.flag_active', 1)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -389,7 +389,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->where('a.nipbaru_ws', $nip)
-                // ->where('l.flag_active', 1)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }

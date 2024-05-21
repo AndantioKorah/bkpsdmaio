@@ -1532,6 +1532,15 @@ class C_Kepegawaian extends CI_Controller
 		// dd($this->input->post());
 	}
 
+	public function cronDsBulkTteCuti(){
+		$this->kepegawaian->cronDsBulkTteCuti();
+	}
+
+	public function loadBatchDs(){
+		$data['result'] = $this->kepegawaian->loadBatchDs();
+		$this->load->view('kepegawaian/V_DataProgressBatch', $data);
+	}
+
 	public function batalVerifikasiPermohonanCuti($id){
 		echo json_encode($this->kepegawaian->batalVerifikasiPermohonanCuti($id));
 	}

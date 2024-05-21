@@ -1055,7 +1055,12 @@ function isKasubKepegawaian($nama_jabatan, $eselon = null){
     $CI = &get_instance();
     if($eselon != null){
         $eselon = $CI->general_library->getEselon();
-    } 
+    }
+
+    if($CI->general_library->isHakAkses('role_kasubag_kepegawaian')){
+        return true;
+    }
+    
     return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
     stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
     stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||

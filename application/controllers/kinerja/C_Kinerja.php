@@ -168,6 +168,11 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->insertLaporanKegiatan());
     }
 
+    public function insertPeninjauanAbsensi()
+    {
+        echo json_encode($this->kinerja->insertPeninjauanAbsensi());
+    }
+
 
     public function createLaporanKegiatan()
     {
@@ -208,6 +213,13 @@ class C_Kinerja extends CI_Controller
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         $this->load->view('kinerja/V_RealisasiKinerjaItem', $data);
+    }
+
+    public function loadPeninjauanAbsensi()
+    {
+
+        $data['list_peninjauan'] = $this->kinerja->loadPeninjauanAbsensi();
+        $this->load->view('kinerja/V_PeninjauanAbsensiItem', $data);
     }
 
     public function deleteKegiatan($id)
@@ -453,6 +465,12 @@ class C_Kinerja extends CI_Controller
     {
         $data['skpd'] = $this->master->getAllUnitKerja();
         render('kinerja/V_DisiplinKerja', '', '', $data);
+    }
+
+    public function tinjauABsensi()
+    {
+        $data['skpd'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_PeninjauanAbsensi', '', '', $data);
     }
 
     public function searchDisiplinKerja()

@@ -129,6 +129,9 @@ $route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';
 $route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
 
 
+$route['dokumen-pendukung-absensi/tinjau'] = 'kinerja/C_Kinerja/tinjauAbsensi';
+
+
 
 
 

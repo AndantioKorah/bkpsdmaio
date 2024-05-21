@@ -1070,6 +1070,14 @@ class M_Kepegawaian extends CI_Model
             // dd($dataInsert);
             $result = $this->db->insert('db_pegawai.pegsumpah', $dataInsert);
         } else if($id_dok == 18){
+
+            $getJhd = $this->db->select('*')
+            ->from('db_pegawai.jhd a')
+            ->where('a.id_jhd',$this->input->post('disiplin_jhd'))
+            ->limit(1)
+            ->get()->row_array();
+            
+
             $dataInsert['id_pegawai']      = $id_peg;
             $dataInsert['hd']         = $this->input->post('disiplin_hd');
             $dataInsert['jhd']         = $this->input->post('disiplin_jhd');
@@ -1080,6 +1088,8 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['tglsurat']         = $this->input->post('disiplin_tglsurat');
             $dataInsert['gambarsk']            = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['besar_potongan']      =$getJhd['besar_potongan'];
+            $dataInsert['lama_potongan']      = $getJhd['lama_potongan'];
             // if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');

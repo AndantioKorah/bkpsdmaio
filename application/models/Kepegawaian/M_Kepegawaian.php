@@ -5845,7 +5845,7 @@ public function submitEditJabatan(){
                         ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                         ->where('a.flag_active', 1)
                         ->where('a.flag_sent', 0)
-                        ->where('a.flag_send', 0)
+                        // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
                         ->limit(3)
                         ->get()->result_array();
@@ -5869,8 +5869,8 @@ public function submitEditJabatan(){
                     $this->db->where('id', $d['id'])
                             ->update('t_cron_tte_bulk_ds',
                             [
-                                'request' => $send['data']['request'], 
-                                // 'response' => $send['data']['response'],
+                                // 'request' => $send? $send['data']['request'] : null, 
+                                'response' => json_encode($send),
                                 'flag_send' => 1,
                                 'date_send' => date('Y-m-d H:i:s') 
                             ]);

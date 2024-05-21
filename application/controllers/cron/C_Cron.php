@@ -17,6 +17,7 @@ class C_Cron extends CI_Controller
         parent::__construct();
         $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('general/M_General', 'general');
+		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
         $this->load->helper('url_helper');
         $this->load->helper('form');
     }
@@ -35,4 +36,8 @@ class C_Cron extends CI_Controller
         // dd('asdd');
         // echo date('d-m-Y H:i:s')." asd \n";
     }
+
+    public function cronDsBulkTte(){
+		$this->kepegawaian->cronDsBulkTte();
+	}
 }

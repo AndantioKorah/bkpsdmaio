@@ -358,7 +358,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
                 ->where('a.nipbaru_ws', $username)
-                // ->where('l.flag_active', 1)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -389,7 +389,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->where('a.nipbaru_ws', $nip)
-                // ->where('l.flag_active', 1)
+                ->where('l.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -5855,7 +5855,7 @@ public function submitEditJabatan(){
                         ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                         ->where('a.flag_active', 1)
                         ->where('a.flag_sent', 0)
-                        ->where('a.flag_send', 0)
+                        // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
                         ->limit(3)
                         ->get()->result_array();
@@ -5879,8 +5879,8 @@ public function submitEditJabatan(){
                     $this->db->where('id', $d['id'])
                             ->update('t_cron_tte_bulk_ds',
                             [
-                                'request' => $send['data']['request'], 
-                                // 'response' => $send['data']['response'],
+                                // 'request' => $send? $send['data']['request'] : null, 
+                                'response' => json_encode($send),
                                 'flag_send' => 1,
                                 'date_send' => date('Y-m-d H:i:s') 
                             ]);

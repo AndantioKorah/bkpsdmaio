@@ -41,7 +41,7 @@
           $('#btn_submit_auth_loader').hide()
         } else {
           $('#form_load_ds').submit()
-          successtoast('DS Berhasil')
+          successtoast('File sudah berhasil ditambahkan ke dalam antrian untuk dilakukan Digital Signature secara otomatis.')
           $("#auth_modal_tte .close").click()
           $('#auth_modal_tte').modal('hide')
         }

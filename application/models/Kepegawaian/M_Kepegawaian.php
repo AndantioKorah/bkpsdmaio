@@ -5537,11 +5537,14 @@ public function submitEditJabatan(){
         
         // $params['list_checked'] = [10, 13];
         // dd('asd');
-        $this->db->trans_begin();
+        
         $list_checked_data = null;
 
+        $batchId = generateRandomString(10, 1, 't_cron_tte_bulk_ds'); 
+        // $hash_tte = $this->ttelib->hash();
+        
         $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
-                g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone')
+                g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, a.id as id_t_pengajuan_cuti')
                 ->from('t_pengajuan_cuti a')
                 ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
                 ->join('m_user c', 'c.id = a.id_m_user')
@@ -5555,114 +5558,154 @@ public function submitEditJabatan(){
                 ->get()->result_array(); 
 
         if(!$list_data){
-            $this->db->trans_rollback();
             $res['code'] = 1;
             $res['message'] = 'Terjadi Kesalahan';
             return $res;
         } else {
             $fileBase64 = null;
 
-            $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                    ->join('m_user d', 'a.nipbaru_ws = d.username')
-                                    ->where('c.kepalaskpd', 1)
-                                    ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-                                    ->get()->row_array();
+            // $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+            //                         ->from('db_pegawai.pegawai a')
+            //                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            //                         ->join('m_user d', 'a.nipbaru_ws = d.username')
+            //                         ->where('c.kepalaskpd', 1)
+            //                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+            //                         ->get()->row_array();
 
+            //langkah ini untuk tes jika nik dan passphrase benar
+            $one_file = $this->dsCuti($list_data[0]['id_t_pengajuan_cuti']);
+            if($one_file['code'] == 1){
+                $res = $one_file;   
+                return $res;
+            } else {
+                // unset($list_data[0]);
+            }
+            // dd($one_file);
+
+            $this->db->trans_begin();
             $i = 0;
+            $cron_tte = null;
             foreach($list_data as $ld){
-                $list_checked_data[$i] = $ld;
-                $explode = explode("-", $ld['created_date']);
-                $tahun = $explode[0];
-                $counter = 1;
-                $master = $this->db->select('*')
-                                ->from('m_jenis_layanan')
-                                ->where('integrated_id', $ld['id_cuti'])
-                                ->get()->row_array();
+                // $list_checked_data[$i] = $ld;
+                // $explode = explode("-", $ld['created_date']);
+                // $tahun = $explode[0];
+                // $counter = 1;
+                // $master = $this->db->select('*')
+                //                 ->from('m_jenis_layanan')
+                //                 ->where('integrated_id', $ld['id_cuti'])
+                //                 ->get()->row_array();
 
-                $last_data = $this->db->select('*')
-                                ->from('t_nomor_surat')
-                                ->where('YEAR(tanggal_surat)', $tahun)
-                                ->order_by('created_date', 'desc')
-                                ->limit(1)
-                                ->get()->row_array();
+                // $last_data = $this->db->select('*')
+                //                 ->from('t_nomor_surat')
+                //                 ->where('YEAR(tanggal_surat)', $tahun)
+                //                 ->order_by('created_date', 'desc')
+                //                 ->limit(1)
+                //                 ->get()->row_array();
 
-                if($last_data){
-                    $counter = floatval($last_data['counter'])+1;
-                }
-                $counter = $counter.'.'.$master['id'];
+                // if($last_data){
+                //     $counter = floatval($last_data['counter'])+1;
+                // }
+                // $counter = $counter.'.'.$master['id'];
 
-                $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
+                // $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
 
-                $res['data'][$i] = $ld;
-                $res['data'][$i]['ds'] = 1;
-                $res['data'][$i]['nomor_surat'] = $nomor_surat;
+                // $res['data'][$i] = $ld;
+                // $res['data'][$i]['ds'] = 1;
+                // $res['data'][$i]['nomor_surat'] = $nomor_surat;
 
-                $filename = 'CUTI_'.$res['data'][$i]['nipbaru_ws'].'_'.date("Y", strtotime($res['data'][$i]['created_date']))."_".date("m", strtotime($res['data'][$i]['created_date'])).'_'.date("d", strtotime($res['data'][$i]['created_date'])).'_signed.pdf';
-                $path_file = 'arsipcuti/'.$filename;
-                $list_checked_data[$i]['path_file'] = $path_file;
+                // $filename = 'CUTI_'.$res['data'][$i]['nipbaru_ws'].'_'.date("Y", strtotime($res['data'][$i]['created_date']))."_".date("m", strtotime($res['data'][$i]['created_date'])).'_'.date("d", strtotime($res['data'][$i]['created_date'])).'_signed.pdf';
+                // $path_file = 'arsipcuti/'.$filename;
+                // $list_checked_data[$i]['path_file'] = $path_file;
 
-                // dd($path_file);
-                // $encUrl = simpleEncrypt($path_file);
-                $randomString = generateRandomString(30, 1, 't_file_ds'); 
-                $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-                $list_checked_data[$i]['randomString'] = $randomString;
-                // dd($contentQr);
-                $res['data'][$i]['qr'] = generateQr($contentQr);
-                // dd($path_file);
-                $mpdf = new \Mpdf\Mpdf([
-                    'format' => 'Legal-P',
-                    // 'debug' => true
-                ]);
-                $passing_data['data'] = $res['data'][$i];
-                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $passing_data, true);
-                // dd($res);
-                $mpdf->WriteHTML($html);
-                $mpdf->showImageErrors = true;
-                $mpdf->Output($path_file, 'F');
+                // // dd($path_file);
+                // // $encUrl = simpleEncrypt($path_file);
+                // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+                // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+                // $list_checked_data[$i]['randomString'] = $randomString;
+                // // dd($contentQr);
+                // $res['data'][$i]['qr'] = generateQr($contentQr);
+                // // dd($path_file);
+                // $mpdf = new \Mpdf\Mpdf([
+                //     'format' => 'Legal-P',
+                //     // 'debug' => true
+                // ]);
+                // $passing_data['data'] = $res['data'][$i];
+                // $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $passing_data, true);
+                // // dd($res);
+                // $mpdf->WriteHTML($html);
+                // $mpdf->showImageErrors = true;
+                // $mpdf->Output($path_file, 'F');
 
-                $fileBase64[] = convertToBase64($path_file);
+                // // $fileBase64 = convertToBase64($path_file);
+
+                // $caption = "*[SK PENGAJUAN ".strtoupper($ld["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($ld).",\nBerikut kami lampirkan SK ".$ld["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
 
                 // save untuk cron WA
-                $caption = "*[SK PENGAJUAN ".strtoupper($ld["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($ld).",\nBerikut kami lampirkan SK ".$ld["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
-                // $this->maxchatlibrary->sendDocument(convertPhoneNumber($ld['handphone']), @$path_file, $filename, $caption);
-                $cronWa = [
-                    'sendTo' => convertPhoneNumber($ld['handphone']),
-                    'message' => $caption,
-                    'filename' => $filename,
-                    'fileurl' => $path_file,
-                    'type' => 'document'
-                ];
-                $this->db->insert('t_cron_wa', $cronWa);
-                // $this->general->saveToCronWa($cronWa);
+                // $cronWa = [
+                //     'sendTo' => convertPhoneNumber($ld['handphone']),
+                //     'message' => $caption,
+                //     'filename' => $filename,
+                //     'fileurl' => $path_file,
+                //     'type' => 'document'
+                // ];
+                // $this->db->insert('t_cron_wa', $cronWa);
 
                 // save untuk t_file_ds agar bisa terbaca saat QR Code
-                $this->db->insert('t_file_ds', [
-                    'url' => $path_file,
-                    'random_string' => $randomString,
-                    'created_by' => $this->general_library->getId()
-                ]);
+                // $this->db->insert('t_file_ds', [
+                //     'url' => $path_file,
+                //     'random_string' => $randomString,
+                //     'created_by' => $this->general_library->getId()
+                // ]);
 
                 // save nomor surat
-                $this->db->insert('t_nomor_surat', [
-                    'perihal' => 'SURAT IZIN '.strtoupper($ld['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($ld),
-                    'counter' => $counter,
-                    'nomor_surat' => $nomor_surat,
-                    'created_by' => $kepala_bkpsdm['id_m_user'],
-                    'tanggal_surat' => $ld['created_date'],
-                    'id_m_jenis_layanan' => $master['id']
-                ]);
+                // $this->db->insert('t_nomor_surat', [
+                //     'perihal' => 'SURAT IZIN '.strtoupper($ld['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($ld),
+                //     'counter' => $counter,
+                //     'nomor_surat' => $nomor_surat,
+                //     'created_by' => $kepala_bkpsdm['id_m_user'],
+                //     'tanggal_surat' => $ld['created_date'],
+                //     'id_m_jenis_layanan' => $master['id']
+                // ]);
 
-                $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                    ->join('m_user d', 'a.nipbaru_ws = d.username')
-                                    ->where('c.kepalaskpd', 1)
-                                    ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-                                    ->get()->row_array();
+                // $signatureProperties = array();
+                // $signatureProperties = [
+                //     'tampilan' => 'INVISIBLE',
+                //     'reason' => REASON_TTE
+                // ];
 
-                //simpan di dokumen pendukung agar tersinkron dengan rekap absen
+                // $request_tte = [
+                //     'id_ref' => $params['list_checked'],
+                //     'table_ref' => $params['table_ref'],
+                //     'nik' => $params['nik'],
+                //     'passphrase' => $params['passphrase'],
+                //     'signatureProperties' => [$signatureProperties]
+                //     // 'file' => [$fileBase64]
+                // ];
+
+                $this->db->where('id', $ld['id_t_pengajuan_cuti'])
+                        ->update('t_pengajuan_cuti', [
+                            'batchId' => $batchId
+                        ]);
+                
+                // if($list_data[0]['id_t_pengajuan_cuti'] != $ld['id_t_pengajuan_cuti']){
+                    $credential['nik'] = $params['nik'];
+                    $credential['passphrase'] = $params['passphrase'];
+
+                    $cron_tte[$i]['id_t_pengajuan_cuti'] = $ld['id_t_pengajuan_cuti'];
+                    $cron_tte[$i]['random_string'] = $batchId;
+                    $cron_tte[$i]['credential'] = json_encode($credential);
+                    $cron_tte[$i]['created_by'] = $this->general_library->getId();
+                // }
+                
+                // $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                //                     ->from('db_pegawai.pegawai a')
+                //                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                //                     ->join('m_user d', 'a.nipbaru_ws = d.username')
+                //                     ->where('c.kepalaskpd', 1)
+                //                     ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                //                     ->get()->row_array();
+
+                // //simpan di dokumen pendukung agar tersinkron dengan rekap absen
                 // $dokumen_pendukung = null;
                 // $hariKerja = countHariKerjaDateToDate($ld['tanggal_mulai'], $ld['tanggal_akhir']);
                 // if($hariKerja){
@@ -5693,69 +5736,60 @@ public function submitEditJabatan(){
                 // }
 
                 // save di pegcuti agar muncul di profil cuti
-                $this->db->insert('db_pegawai.pegcuti', [
-                    'id_pegawai' => $ld['id_peg'],
-                    'jeniscuti' => $ld['id_cuti'],
-                    'lamacuti' => $ld['lama_cuti'],
-                    'tglmulai' => $ld['tanggal_mulai'],
-                    'tglselesai' => $ld['tanggal_akhir'],
-                    'nosttpp' => $nomor_surat,
-                    'tglsttpp' => date('Y-m-d'),
-                    'gambarsk' => $filename,
-                    'status' => 2
-                ]);
+                // $this->db->insert('db_pegawai.pegcuti', [
+                //     'id_pegawai' => $ld['id_peg'],
+                //     'jeniscuti' => $ld['id_cuti'],
+                //     'lamacuti' => $ld['lama_cuti'],
+                //     'tglmulai' => $ld['tanggal_mulai'],
+                //     'tglselesai' => $ld['tanggal_akhir'],
+                //     'nosttpp' => $nomor_surat,
+                //     'tglsttpp' => date('Y-m-d'),
+                //     'gambarsk' => $filename,
+                //     'status' => 2
+                // ]);
 
                 $i++;
             }
-            $signatureProperties = array();
-            $signatureProperties = [
-                'tampilan' => 'INVISIBLE',
-                'reason' => REASON_TTE
-            ];
-
-            $request_tte = [
-                'id_ref' => $params['list_checked'],
-                'table_ref' => $params['table_ref'],
-                'nik' => $params['nik'],
-                'passphrase' => $params['passphrase'],
-                'signatureProperties' => [$signatureProperties],
-                'file' => ($fileBase64)
-            ];
-            $request_sign = $this->ttelib->signPdfNikPass($request_tte);
-            $dec_resp = json_decode($request_sign, true);
-            if(!isset($dec_resp['file'])){
-                $this->db->trans_rollback();
-                $res['data'] = null;
-                $res['code'] = 2;
-                $res['message'] = isset($dec_resp['error']) ? $dec_resp['error'] : $request_sign;
-                return $res;
-            } else {
-                $j = 0;
-                foreach($dec_resp['file'] as $result_file){
-                    // dd($result_file);
-                    base64ToFile($result_file, $list_checked_data[$j]['path_file']);
-                    $this->db->where('id', $list_checked_data[$j]['id'])
-                            ->update('t_pengajuan_cuti',
-                            [
-                                'url_sk' => $list_checked_data[$j]['path_file']
-                            ]);
-
-                    $this->db->insert('t_file_ds', [
-                        'url' => $list_checked_data[$j]['path_file'],
-                        'random_string' => $list_checked_data[$j]['randomString'],
-                        'created_by' => $this->general_library->getId()
-                    ]);
-
-                    if(!file_exists($list_checked_data[$j]['path_file'])){
-                        $res['code'] = 3;
-                        $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
-                        $res['data'] = null;
-                        $this->db->trans_rollback();
-                        return $res;
-                    }
-                    $j++;
-                }
+            
+            if($cron_tte){
+                //insert ke dalam cron tte ds bulk
+                $this->db->insert_batch('t_cron_tte_bulk_ds', $cron_tte);
             }
+
+            // $dec_resp = json_decode($request_sign, true);
+            // if(!isset($dec_resp['file'])){
+            //     $this->db->trans_rollback();
+            //     $res['data'] = null;
+            //     $res['code'] = 2;
+            //     $res['message'] = isset($dec_resp['error']) ? $dec_resp['error'] : $request_sign;
+            //     return $res;
+            // } else {
+            //     $j = 0;
+            //     foreach($dec_resp['file'] as $result_file){
+            //         // dd($result_file);
+            //         base64ToFile($result_file, $list_checked_data[$j]['path_file']);
+            //         $this->db->where('id', $list_checked_data[$j]['id'])
+            //                 ->update('t_pengajuan_cuti',
+            //                 [
+            //                     'url_sk' => $list_checked_data[$j]['path_file']
+            //                 ]);
+
+            //         $this->db->insert('t_file_ds', [
+            //             'url' => $list_checked_data[$j]['path_file'],
+            //             'random_string' => $list_checked_data[$j]['randomString'],
+            //             'created_by' => $this->general_library->getId()
+            //         ]);
+
+            //         if(!file_exists($list_checked_data[$j]['path_file'])){
+            //             $res['code'] = 3;
+            //             $res['message'] = "Terjadi Kesalahan saat menyimpan PDF.";
+            //             $res['data'] = null;
+            //             $this->db->trans_rollback();
+            //             return $res;
+            //         }
+            //         $j++;
+            //     }
+            // }
         }
         
         if($this->db->trans_status() == FALSE){
@@ -5776,11 +5810,95 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function dsCuti($id){
+    public function loadBatchDs(){
+        $res = null;
+
+        $data = $this->db->select('id, id_t_pengajuan_cuti, flag_send, flag_sent, date_send, date_sent, random_string')
+                        ->from('t_cron_tte_bulk_ds')
+                        ->where('flag_active', 1)
+                        ->order_by('created_date', 'asc')
+                        ->get()->result_array();
+
+        if($data){
+            foreach($data as $d){
+                $res[$d['random_string']][] = $d;
+                $res[$d['random_string']]['random_string'] = $d['random_string'];
+                
+                //hitung total
+                if(isset($res[$d['random_string']]['total'])){
+                    $res[$d['random_string']]['total']++;
+                } else {
+                    $res[$d['random_string']]['total'] = 1;
+                }
+
+                //hitung berapa yang selesai
+                if($d['flag_sent'] == 1){
+                    if(isset($res[$d['random_string']]['done'])){
+                        $res[$d['random_string']]['done']++;
+                    } else {
+                        $res[$d['random_string']]['done'] = 1;
+                    }
+                } else {
+                    if(!isset($res[$d['random_string']]['done'])){
+                        $res[$d['random_string']]['done'] = 0;
+                    }
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    public function cronDsBulkTte(){
+        $data = $this->db->select('a.*, b.url_sk')
+                        ->from('t_cron_tte_bulk_ds a')
+                        ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        ->where('a.flag_active', 1)
+                        ->where('a.flag_sent', 0)
+                        ->where('a.flag_send', 0)
+                        // ->where('b.url_sk IS NULL')
+                        ->limit(3)
+                        ->get()->result_array();
+                        // dd($data);
+        if($data){
+            foreach($data as $d){
+                if($d['url_sk'] != null){
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_tte_bulk_ds', [
+                                'flag_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s'),
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s')
+                            ]);
+                } else {
+                    $credential = json_decode($d['credential'], true);
+                    $data_input['nik'] = $credential['nik'];
+                    $data_input['passphrase'] = $credential['passphrase'];
+                    
+                    $send = $this->dsCuti($d['id_t_pengajuan_cuti'], 1, $data_input);
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_tte_bulk_ds',
+                            [
+                                'request' => $send['data']['request'], 
+                                // 'response' => $send['data']['response'],
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s') 
+                            ]);
+                }
+            }
+        }
+    }
+
+    public function dsCuti($id, $flag_from_bulk = 0, $data_input = null){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
         $input_post = $this->input->post();
+        if($flag_from_bulk == 1){
+            $input_post = $data_input;
+        }
+
+        $request = null;
 
         $this->db->trans_begin();
 
@@ -5859,6 +5977,10 @@ public function submitEditJabatan(){
             ];
 
             $request_sign = json_decode($this->ttelib->signPdfNikPass($request_tte), true);
+
+            $request = json_encode($request_tte);
+            $response = json_encode($request_sign);
+
             if(isset($request_sign['file'])){
                 unlink($path_file);
                 base64ToFile($request_sign['file'][0], $path_file);
@@ -5868,6 +5990,14 @@ public function submitEditJabatan(){
                     $res['data'] = null;
                     $this->db->trans_rollback();
                     return $res;
+                } else {
+                    if($flag_from_bulk == 1){
+                        $this->db->where('id_t_pengajuan_cuti', $data['id'])
+                                ->update('t_cron_tte_bulk_ds', [
+                                    'flag_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ]);
+                    }
                 }
                 // readfile($path_file);
                 // dd($request_sign['file'][0]);
@@ -5891,12 +6021,13 @@ public function submitEditJabatan(){
                 'fileurl' => $path_file,
                 'type' => 'document'
             ];
-            $this->general->saveToCronWa($cronWa);
+            // $this->general->saveToCronWa($cronWa);
+            $this->db->insert('t_cron_wa', $cronWa);
 
             $this->db->insert('t_file_ds', [
                 'url' => $path_file,
                 'random_string' => $randomString,
-                'created_by' => $this->general_library->getId()
+                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
             ]);
 
             $this->db->where('id', $id)
@@ -5980,6 +6111,11 @@ public function submitEditJabatan(){
             }
         }
 
+        if($flag_from_bulk == 1){
+            $res['data']['request'] = $request;
+            $res['data']['response'] = $response;
+        }
+
         return $res;
     }
 
@@ -5992,6 +6128,7 @@ public function submitEditJabatan(){
                     ->where('a.id_m_status_pengajuan_cuti', 4)
                     ->where('a.url_sk', null)
                     ->where('a.flag_active', 1)
+                    ->where('a.batchId IS NULL')
                     ->order_by('a.created_date', 'asc')
                     ->get()->result_array();
     }

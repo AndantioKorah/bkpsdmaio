@@ -11,7 +11,7 @@ class TteLib{
 
     public function __construct()
     {
-        $this->STATE = 'DEV'; //DEV = development, PROD = production
+        $this->STATE = 'PROD'; //DEV = development, PROD = production
         $this->URL = "103.186.201.237/";
         $this->USERNAME = "esign";
         $this->PASSWORD = "qwerty";

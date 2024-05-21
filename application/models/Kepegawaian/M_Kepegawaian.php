@@ -5849,6 +5849,7 @@ public function submitEditJabatan(){
                         // ->where('b.url_sk IS NULL')
                         ->limit(3)
                         ->get()->result_array();
+                        // dd($data);
         if($data){
             foreach($data as $d){
                 if($d['url_sk'] != null){
@@ -5869,7 +5870,7 @@ public function submitEditJabatan(){
                             ->update('t_cron_tte_bulk_ds',
                             [
                                 'request' => $send['data']['request'], 
-                                'response' => $send['data']['response'],
+                                // 'response' => $send['data']['response'],
                                 'flag_send' => 1,
                                 'date_send' => date('Y-m-d H:i:s') 
                             ]);

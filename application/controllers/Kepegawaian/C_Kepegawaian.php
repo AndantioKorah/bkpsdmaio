@@ -1532,8 +1532,8 @@ class C_Kepegawaian extends CI_Controller
 		// dd($this->input->post());
 	}
 
-	public function cronDsBulkTteCuti(){
-		$this->kepegawaian->cronDsBulkTteCuti();
+	public function cronDsBulkTte(){
+		$this->kepegawaian->cronDsBulkTte();
 	}
 
 	public function loadBatchDs(){

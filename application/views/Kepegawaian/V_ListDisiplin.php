@@ -11,6 +11,8 @@
           <th class="text-left">Tanggal Selesai Berlaku</th> -->
           <th class="text-left">No Surat</th>
           <th class="text-left">Tanggal Surat</th>
+          <th class="text-left">TMT</th>
+
           <th></th>
           <th></th>
           <?php if($kode == 2) { ?>
@@ -31,6 +33,8 @@
               <td class="text-left"></td> -->
               <td class="text-left"><?=$rs['nosurat']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsurat'])?></td>
+              <td class="text-left"><?=formatDateNamaBulan($rs['tmt'])?></td>
+
               <td class="text-left">
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_disiplin" onclick="openFileDisiplin('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

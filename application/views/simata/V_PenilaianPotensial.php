@@ -146,16 +146,17 @@
 
         <div class="form-check ml-2 mt-2">
 
-      <div class="form-check form-check-inline">
+      <!-- <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
       <label class="form-check-label" for="inlineRadio1"> <i class="fa fa-sync"></i> Nilai Assesment </label>
-      </div>
+      </div> -->
+
       <!-- <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
         <label class="form-check-label" for="inlineRadio2"><i class="fa fa-sync"></i> Rekam Jejak</label>
       </div> -->
 
-          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button style="margin-top:-5px;" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-sync"></i> Rekam Jejak
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

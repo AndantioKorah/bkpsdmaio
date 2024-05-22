@@ -501,7 +501,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getDisiplin($nip,$kode){
-            $this->db->select('c.id,d.nama,e.nama_jhd,c.jp,c.status,c.nosurat,c.tglsurat,c.gambarsk')
+            $this->db->select('c.tmt,c.id,d.nama,e.nama_jhd,c.jp,c.status,c.nosurat,c.tglsurat,c.gambarsk')
                            ->from('m_user a')
                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                            ->join('db_pegawai.pegdisiplin c', 'b.id_peg = c.id_pegawai')
@@ -1086,6 +1086,7 @@ class M_Kepegawaian extends CI_Model
             // $dataInsert['tgl_selesai']         = $this->input->post('disiplin_tglselesai');
             $dataInsert['nosurat']         = $this->input->post('disiplin_nosurat');
             $dataInsert['tglsurat']         = $this->input->post('disiplin_tglsurat');
+            $dataInsert['tmt']         = $this->input->post('disiplin_tmt');
             $dataInsert['gambarsk']            = $data['nama_file'];
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['besar_potongan']      =$getJhd['besar_potongan'];

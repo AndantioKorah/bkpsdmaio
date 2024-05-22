@@ -121,6 +121,12 @@
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglsurat" name="disiplin_tglsurat" readonly  required/>
   </div>
 
+  <div class="form-group">
+    <label>TMT</label>
+    <input class="form-control customInput datepicker" type="text" id="disiplin_tmt" name="disiplin_tmt" readonly  required/>
+  </div>
+
+
   
   <div class="form-group">
     <label>File SK</label>
@@ -182,6 +188,15 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
+
+  $('.datepicker2').datepicker({
+    format: 'yyyy-mm-dd',
+    // startDate: '-0d',
+    // todayBtn: true,
+    todayHighlight: true,
+    autoclose: true,
+});
+
         loadListDisiplin()
     })
 

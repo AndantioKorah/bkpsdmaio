@@ -227,6 +227,11 @@ class C_Kinerja extends CI_Controller
         $this->general->delete('id', $id, 't_kegiatan');
     }
 
+    public function deletePeninjauanAbsensi($id)
+    {
+        $this->general->delete('id', $id, 't_peninjauan_absensi');
+    }
+
     public function deleteRencanaKinerja($id)
     {
         $this->general->delete('id', $id, 't_rencana_kinerja');

@@ -89,7 +89,7 @@
 <span>
     <br>
     Keterangan : <br> 
-    - Pada bagian keterangan jika bukti foto berupa foto gandeng, tuliskan nama pegawai yang digandeng jika bukan cukup ketik - saja.<br>
+    - Pada bagian keterangan jika bukti foto berupa foto bersama teman, tuliskan nama pegawai yang tersebut jika bukan cukup ketik - saja.<br>
     - Jika menggunakan foto bersama stiker, upload foto tersebut ke grup kepegawaian setelah itu discreenshot dan di upload sebagai bukti.<br>
     - Maksimal Peninjauan Absensi hanya 2 kali dalam sebulan.
 </span>

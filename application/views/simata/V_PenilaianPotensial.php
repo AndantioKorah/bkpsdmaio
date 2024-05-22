@@ -156,7 +156,7 @@
         <label class="form-check-label" for="inlineRadio2"><i class="fa fa-sync"></i> Rekam Jejak</label>
       </div> -->
 
-          <button style="margin-top:-5px;" class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button style="margin-top:-5px;" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-sync"></i> Rekam Jejak
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

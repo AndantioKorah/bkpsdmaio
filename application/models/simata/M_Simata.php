@@ -3048,7 +3048,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                            // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                            // ->where_in('c.eselon',["II A", "II B"])
                            ->where('a.id_m_status_pegawai', 1)
-                           ->where('b.jenjang_jabatan', $jenis_pengisian)
+                        //    ->where('b.jenjang_jabatan', $jenis_pengisian)
                            // ->where('a.flag_active', 1)
                            ->order_by('c.eselon', 'asc')
                            ->group_by('a.id_peg');
@@ -3498,7 +3498,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->where('a.flag_active', 1)
                             ->where('a.nilai_assesment is not null')
                             ->where('a.jenjang_jabatan', $jenis_pengisian)
-                            ->where('b.jenjang_jabatan', $jenis_pengisian)
                             ->get()->result_array();
 
                             if($cekkrj){
@@ -3565,7 +3564,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->where('a.flag_active', 1)
                             ->where('a.nilai_assesment is not null')
                             ->where('a.jenjang_jabatan', $jenis_pengisian)
-                            ->where('b.jenjang_jabatan', $jenis_pengisian)
                             ->get()->result_array();
 
                             if($cekkrj){

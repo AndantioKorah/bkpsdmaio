@@ -331,7 +331,7 @@ class C_Simata extends CI_Controller
        
         $data['id_t_penilaian'] = $id;
         $data['jabatan_target'] = null;
-        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip);
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jenis_pengisian);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
         // $data['pendidikan_formal'] = $this->simata->getPendidikanFormal($id_peg);
         // $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
@@ -342,7 +342,7 @@ class C_Simata extends CI_Controller
         // $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
         // $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
         $data['kode'] = $kode;  
-       
+    //    dd( $data['nilai_potensial']);
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
 

@@ -34,9 +34,9 @@
                 $jumlah_capaian_keseluruhan = 0;
                 $potongan_pajak_keseluruhan = 0;
                 $jumlah_setelah_pajak_keseluruhan = 0;
-
                 $jumlah_bobot_produktivitas_kerja = 0;
                 $jumlah_bobot_disiplin_kerja = 0;
+                
                 foreach($result as $r){
                     $pagu_keseluruhan += $r['pagu_tpp'];
                     $jumlah_capaian_keseluruhan += $r['besaran_tpp'];

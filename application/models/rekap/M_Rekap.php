@@ -2168,8 +2168,10 @@
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                 $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;
                 $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'] = $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] + $result[$l['nipbaru_ws']]['bobot_skp'];
+                $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['bobot_produktivitas_kerja']);
 
                 $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['rekap']['capaian_bobot_disiplin_kerja'] : 0;
+                $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['bobot_disiplin_kerja']);
 
                 $result[$l['nipbaru_ws']]['presentase_kehadiran'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['presentase_kehadiran']) : 0;
                 $result[$l['nipbaru_ws']]['jhk'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['jhk']) : 0;
@@ -2182,7 +2184,13 @@
                     // $result[$p['nipbaru_ws']]['presentase_kehadiran'] = 100;
                 }
 
-                $result[$l['nipbaru_ws']]['presentase_tpp'] = floatval($result[$l['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
+                $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal(
+                    floatval($result[$l['nipbaru_ws']]['bobot_produktivitas_kerja']) + 
+                    floatval($result[$l['nipbaru_ws']]['bobot_disiplin_kerja']));
+                // if($l['nipbaru_ws'] == '197906192005012017'){
+                //     dd($result[$l['nipbaru_ws']]);
+                // }
+                // dd($result[$l['nipbaru_ws']]['presentase_tpp']);
                 if($result[$l['nipbaru_ws']]['presentase_kehadiran'] < 25){
                     $result[$l['nipbaru_ws']]['presentase_tpp'] = 0;
                 } else if($result[$l['nipbaru_ws']]['presentase_kehadiran'] >= 25 && $result[$l['nipbaru_ws']]['presentase_kehadiran'] < 50){

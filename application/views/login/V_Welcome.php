@@ -127,8 +127,9 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
         <?php if($this->general_library->getRole() == 'programmer' || 
         $this->general_library->isAdminAplikasi() || 
         $this->general_library->isWalikota() ||
-        $this->general_library->isGuest() ||
-        $this->general_library->isPegawaiBkpsdm())
+        $this->general_library->isGuest()
+        // || $this->general_library->isPegawaiBkpsdm()
+        )
         { ?>
           <div class="row">
             <div class="col-lg-12">
@@ -141,20 +142,25 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
             </div>
           </div>
         <?php } else { ?>
-          <h4><?="Selamat ".greeting().","?></h4>
-          <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
-          <?php $this->load->view('user/V_Pdm', null); ?>
-          <!-- <center>
-            <h3>Welcome to</h3>
-              <div style="z-index:0;">
-                <img style="height : auto;
-                          width: 300px; 
-                            margin-bottom:20px;"  class="" src="assets/adminkit/img/logo-siladen-new-with-text.png" />
-              </div>
-          
-            <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
-            <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
-          </center> -->
+          <div class="p-3">
+            <h4><?="Selamat ".greeting().","?></h4>
+            <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
+            <?php
+              $this->load->view('user/V_QuickMenuPegawai', null); 
+              // $this->load->view('user/V_Pdm', null);
+            ?>
+            <!-- <center>
+              <h3>Welcome to</h3>
+                <div style="z-index:0;">
+                  <img style="height : auto;
+                            width: 300px; 
+                              margin-bottom:20px;"  class="" src="assets/adminkit/img/logo-siladen-new-with-text.png" />
+                </div>
+            
+              <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
+              <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
+            </center> -->
+        </div>
         <?php } ?>
       </div>
       <!-- <div class="col-12 text-center">

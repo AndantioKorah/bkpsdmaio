@@ -142,11 +142,64 @@
             <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
         <?php } ?>
+        
+
         <div class="form-check ml-2 mt-2">
-        <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
+
+      <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
+      <label class="form-check-label" for="inlineRadio1"> <i class="fa fa-sync"></i> Nilai Assesment </label>
+      </div>
+      <!-- <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+        <label class="form-check-label" for="inlineRadio2"><i class="fa fa-sync"></i> Rekam Jejak</label>
+      </div> -->
+
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-sync"></i> Rekam Jejak
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+            <label class="form-check-label ml-1" for="inlineRadio2"> Pendidikan Formal</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
+            <label class="form-check-label ml-1" for="inlineRadio3"> Pangkat/Golongan Ruang</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4">
+            <label class="form-check-label ml-1" for="inlineRadio4"> Masa Kerja Jabatan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5">
+            <label class="form-check-label ml-1" for="inlineRadio5"> Pendidikan dan Pelatihan Kepemimpinan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="6">
+            <label class="form-check-label ml-1" for="inlineRadio6"> Pengembangan Kompetensi 20 JP</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio7" value="7">
+            <label class="form-check-label ml-1" for="inlineRadio7"> Penghargaan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="8">
+            <label class="form-check-label ml-1" for="inlineRadio8"> Riwayat Hukuman Disiplin </label>
+            </a>
+          </div>
+
+      <!-- <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
+        <label class="form-check-label" for="inlineRadio3">3 (disabled)</label>
+      </div> -->
+
+
+<!--   <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
         <label class="form-check-label" for="flexCheckChecked">
-         <h4> Lakukan Penilaian </h4>
-        </label>
+         <h4>  <i class="fa fa-sync"></i> Lakukan Penilaian </h4>
+        </label> -->
       </div>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -217,18 +270,42 @@ $(function(){
   }
 
   function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian){
-  //  var penilaian = $('#flexCheckChecked').prop('checked');
-   if($('#flexCheckChecked').prop('checked')){
-    var penilaian = 1;
-   } else {
+    var radios = document.getElementsByName('inlineRadioOptions');
     var penilaian = 0;
-   }
+    for (var i = 0, length = radios.length; i < length; i++) {
+      if (radios[i].checked) {
+        // do whatever you want with the checked radio
+        var penilaian = radios[i].value;
+
+        // only one radio can be logically checked, don't check the rest
+        break;
+      }
+    }
+
+  // alert(penilaian)
+  //  return false;
+
+  //  if($('#flexCheckChecked').prop('checked')){
+  //   var penilaian = 1;
+  //  } else {
+  //   var penilaian = 0;
+  //  }
 
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
    $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian, function(){
      $('#loader').hide()
-     $('#flexCheckChecked').prop('checked', false); // Unchecks it
+     radios.checked = false;
+     $("#inlineRadio1").prop('checked', false); 
+     $("#inlineRadio2").prop('checked', false);
+     $("#inlineRadio3").prop('checked', false);
+     $("#inlineRadio4").prop('checked', false);
+     $("#inlineRadio5").prop('checked', false);
+     $("#inlineRadio6").prop('checked', false);
+     $("#inlineRadio7").prop('checked', false);
+     $("#inlineRadio8").prop('checked', false);
+     
+    //  $('.inlineRadioOptions').prop('checked', false); // Unchecks it
    })
   }
 

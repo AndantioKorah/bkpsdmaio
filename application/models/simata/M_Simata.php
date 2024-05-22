@@ -612,7 +612,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
             }
 
 
-            public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian){
+            public function getPegawaiPenilaianPotensialJptBU($id,$jenis_pengisian,$penilaian){
                 $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                ->from('db_pegawai.pegawai a')
                                ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
@@ -638,15 +638,14 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
                         
                         
                                $query = $this->db->get()->result_array();
-                               if($penilaian == 1){
+                              if($penilaian != 0){
                                 // dd(1);
                                foreach ($query as $rs) {
                                 // $id_peg = "IDPeg97";
-                                $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
-                                $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
-                                
-                                
+                               
+                            if($penilaian == 1){
                             //    assesment
+                                $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
                                 if($nilaiassesment){
                                 $nilaiass = $nilaiassesment['nilai_assesment'];
                                 } else {
@@ -662,112 +661,108 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
                                     ->get()->result_array();
            
 
-                                // if($cekceass){
-                                //     $this->db->where('id_peg', $rs['id_pegawai'])
-                                //     ->update('db_simata.t_penilaian_potensial', 
-                                //     ['nilai_assesment' => $nilaiass
-                                //         ]);
-                                //         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-                                // } else {
+                                if($cekceass){
+                                    $this->db->where('id_peg', $rs['id_pegawai'])
+                                    ->update('db_simata.t_penilaian_potensial', 
+                                    ['nilai_assesment' => $nilaiass
+                                        ]);
+                                        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                                } else {
 
-                                //     $dataInsert['id_peg']      = $rs['id_pegawai'];
-                                //     $dataInsert['nilai_assesment']      = $nilaiass;
-                                //     $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
-                                //     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-                                // }
+                                    $dataInsert['id_peg']      = $rs['id_pegawai'];
+                                    $dataInsert['nilai_assesment']      = $nilaiass;
+                                    $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                                }
 
 
-                                // $getAllNilaiPotensial =  $this->db->select('*')
-                                //             ->from('db_simata.t_penilaian a')
-                                //             ->where('a.id_peg', $rs['id_pegawai'])
-                                //             ->where('a.flag_active', 1)
-                                //             ->get()->result_array();
+                                $getAllNilaiPotensial =  $this->db->select('*')
+                                            ->from('db_simata.t_penilaian a')
+                                            ->where('a.id_peg', $rs['id_pegawai'])
+                                            ->where('a.flag_active', 1)
+                                            ->get()->result_array();
 
-                                // if($getAllNilaiPotensial){
-                                //     foreach ($getAllNilaiPotensial as $rs2) {
+                                if($getAllNilaiPotensial){
+                                    foreach ($getAllNilaiPotensial as $rs2) {
                                 
-                                //         $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                                        $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
                                     
-                                //         $this->db->where('id_peg', $rs['id_pegawai'])
-                                //         ->update('db_simata.t_penilaian', 
-                                //         ['res_potensial_total' => $total_potensial,
-                                //         'res_potensial_cerdas' => $total_nilai
-                                //         ]);
+                                        $this->db->where('id_peg', $rs['id_pegawai'])
+                                        ->update('db_simata.t_penilaian', 
+                                        ['res_potensial_total' => $total_potensial,
+                                        'res_potensial_cerdas' => $total_nilai
+                                        ]);
                                                 
-                                //     }
-                                // } else {
-                                //     $dataInsert2['id_peg']      = $rs['id_pegawai'];
-                                //     $dataInsert2['res_potensial_cerdas']      = $total_nilai;
-                                //     $dataInsert2['res_potensial_total']      = $total_nilai;
-                                //     $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
-                                // }
+                                    }
+                                } else {
+                                    $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                                    $dataInsert2['res_potensial_cerdas']      = $total_nilai;
+                                    $dataInsert2['res_potensial_total']      = $total_nilai;
+                                    $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                                }
                                 
                                 //   tutup assesment
-
+                            }
+                            if($penilaian == 2){
                                 // rekam jejak
+                                    // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                                    $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 
+                                    $id_rekamjjk2 = $this->getPangkatGolPengawai($rs['id_pegawai'],$id,$jenis_pengisian);
+                                    $id_rekamjjk3 = $this->getMasaKerjaJabatan($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
+                                    $id_rekamjjk4 = $this->getDiklatPengawai($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
+                                    $id_rekamjjk5 = $this->getJPKompetensi($rs['id_pegawai']); 
+                                    $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
+                                    $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
+                                        
+                                    $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
 
-                       $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 
-                       $id_rekamjjk2 = $this->getPangkatGolPengawai($rs['id_pegawai'],$id,$jenis_pengisian);
-                       $id_rekamjjk3 = $this->getMasaKerjaJabatan($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
-                       $id_rekamjjk4 = $this->getDiklatPengawai($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
-                       $id_rekamjjk5 = $this->getJPKompetensi($rs['id_pegawai']); 
-                       $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
-                       $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
-                        
-                       $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
 
-
-                    //    if($rs['id_pegawai'] == 'PEG0000000eh005'){
-                    //     dd($kriteria4);
-                    //    }
-
-                    //   dd($id_pertimbangan1);
          
-                       $skor1 =  $this->getSkor($id_rekamjjk1); 
-                       $bobot1 = $this->getBobot($id_rekamjjk1); 
-                       $total_rj1 = $skor1  * $bobot1 / 100;   
-                          
-                       $skor2 =  $this->getSkor($id_rekamjjk2); 
-                       $bobot2 = $this->getBobot($id_rekamjjk2); 
-                       $total_rj2 = $skor2  * $bobot2 / 100; 
+                                $skor1 =  $this->getSkor($id_rekamjjk1); 
+                                $bobot1 = $this->getBobot($id_rekamjjk1); 
+                                $total_rj1 = $skor1  * $bobot1 / 100;   
+                                    
+                                $skor2 =  $this->getSkor($id_rekamjjk2); 
+                                $bobot2 = $this->getBobot($id_rekamjjk2); 
+                                $total_rj2 = $skor2  * $bobot2 / 100; 
 
-                       $skor3 =  $this->getSkor($id_rekamjjk3); 
-                       $bobot3 = $this->getBobot($id_rekamjjk3); 
-                       $total_rj3 = $skor3  * $bobot3 / 100;   
-                          
-                       $skor4 =  $this->getSkor($id_rekamjjk4); 
-                       $bobot4 = $this->getBobot($id_rekamjjk4); 
-                       $total_rj4 = $skor4  * $bobot4 / 100; 
+                                $skor3 =  $this->getSkor($id_rekamjjk3); 
+                                $bobot3 = $this->getBobot($id_rekamjjk3); 
+                                $total_rj3 = $skor3  * $bobot3 / 100;   
+                                    
+                                $skor4 =  $this->getSkor($id_rekamjjk4); 
+                                $bobot4 = $this->getBobot($id_rekamjjk4); 
+                                $total_rj4 = $skor4  * $bobot4 / 100; 
 
-                       $skor5 =  $this->getSkor($id_rekamjjk5); 
-                       $bobot5 = $this->getBobot($id_rekamjjk5); 
-                       $total_rj5 = $skor5  * $bobot5 / 100;
+                                $skor5 =  $this->getSkor($id_rekamjjk5); 
+                                $bobot5 = $this->getBobot($id_rekamjjk5); 
+                                $total_rj5 = $skor5  * $bobot5 / 100;
 
-                       $skor6 =  $this->getSkor($id_rekamjjk6); 
-                       $bobot6 = $this->getBobot($id_rekamjjk6); 
-                       $total_rj6 = $skor6  * $bobot6 / 100;
+                                $skor6 =  $this->getSkor($id_rekamjjk6); 
+                                $bobot6 = $this->getBobot($id_rekamjjk6); 
+                                $total_rj6 = $skor6  * $bobot6 / 100;
 
-                       $skor7 =  $this->getSkor($id_rekamjjk7); 
-                       $bobot7 = $this->getBobot($id_rekamjjk7); 
-                       $total_rj7 = $skor7  * $bobot7 / 100;
+                                $skor7 =  $this->getSkor($id_rekamjjk7); 
+                                $bobot7 = $this->getBobot($id_rekamjjk7); 
+                                $total_rj7 = $skor7  * $bobot7 / 100;
 
-                       $skor8 =  $this->getSkor($id_pertimbangan1); 
-                       $bobot8 = $this->getBobot($id_pertimbangan1); 
-                       $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
-                       
-                       $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
-                       $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
-        
-                        $data["id_peg"] = $rs['id_pegawai'];
-                        $data["pendidikan_formal"] = $id_rekamjjk1;
-                        $data["pangkat_gol"] = $id_rekamjjk2;
-                        $data["masa_kerja_jabatan"] = $id_rekamjjk3;
-                        $data["diklat"] = $id_rekamjjk4;
-                        $data["kompetensi20_jp"] = $id_rekamjjk5;
-                        $data["penghargaan"] = $id_rekamjjk6;
-                        $data["riwayat_hukdis"] = $id_rekamjjk7;
-                        $data['nilai_assesment'] = $nilaiass;
-                        $data["pengalaman_organisasi"] = $id_pertimbangan1;
+                                $skor8 =  $this->getSkor($id_pertimbangan1); 
+                                $bobot8 = $this->getBobot($id_pertimbangan1); 
+                                $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
+                                
+                                $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
+                                $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
+                    
+                                    $data["id_peg"] = $rs['id_pegawai'];
+                                    $data["pendidikan_formal"] = $id_rekamjjk1;
+                                    $data["pangkat_gol"] = $id_rekamjjk2;
+                                    $data["masa_kerja_jabatan"] = $id_rekamjjk3;
+                                    $data["diklat"] = $id_rekamjjk4;
+                                    $data["kompetensi20_jp"] = $id_rekamjjk5;
+                                    $data["penghargaan"] = $id_rekamjjk6;
+                                    $data["riwayat_hukdis"] = $id_rekamjjk7;
+                                    // $data['nilai_assesment'] = $nilaiass;
+                                    $data["pengalaman_organisasi"] = $id_pertimbangan1;
                         // $data["jabatan_target"] = $this->input->post('rj_jabatan_target');
 
                         $cekkrj =  $this->db->select('*')
@@ -787,7 +782,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
                             'kompetensi20_jp' => $id_rekamjjk5,
                             'penghargaan' => $id_rekamjjk6,
                             'riwayat_hukdis' => $id_rekamjjk7,
-                            'nilai_assesment' => $nilaiass,
+                            // 'nilai_assesment' => $nilaiass,
                             'pengalaman_organisasi' => $id_pertimbangan1,
                                 ]);
                                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -813,26 +808,27 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
                                     // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
 
                                         foreach ($getAllNilaiPotensial as $rs2) {
-                                        $total_potensial = $total_nilai + $total_rj + $total_pertimbangan_lainnya;
+                                        $total_potensial = $rs['res_potensial_cerdas'] + $total_rj + $total_pertimbangan_lainnya;
                                         $this->db->where('id_peg', $rs['id_pegawai'])
                                         // ->where('id_jabatan_target', $rs2['id_jabatan_target'])
                                         ->update('db_simata.t_penilaian', 
                                         ['res_potensial_total' => $total_potensial,
                                         'res_potensial_rj' => $total_rj,
-                                        'res_potensial_cerdas' => $total_nilai,
+                                        // 'res_potensial_cerdas' => $total_nilai,
                                         'res_potensial_lainnya' => $total_pertimbangan_lainnya]);
                                                     
                                         }
                                     } else {
                                         $dataInsert2['id_peg']      = $rs['id_pegawai'];
                                         $dataInsert2['res_potensial_rj']      = $total_rj;
-                                        $dataInsert2['res_potensial_cerdas']      = $total_nilai;
+                                        // $dataInsert2['res_potensial_cerdas']      = $total_nilai;
                                         $dataInsert2['res_potensial_total']      = $total_rj;
                                         $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
                                         $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
                                     }
     
                                 // tutup rekam jejak
+                               }
                                }
                                $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                ->from('db_pegawai.pegawai a')
@@ -1838,8 +1834,8 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
             // ->where('b.eselon', $eselon)
             // ->where('a.statusjabatan', 2)
              ->group_start()
-             ->where('a.statusjabatan', 2)
-             ->or_where_in('a.ket',["PLT", "Plt", "plt"])
+             ->where_in('a.statusjabatan', [2,3])
+             ->or_where_in('a.ket',["PLT", "Plt", "plt", "Plh", "PLH"])
              ->group_end()
             ->where('a.status', 2)
             ->where('a.flag_active', 1);
@@ -3043,6 +3039,431 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
          return $jabatan;
 
         }
+
+        public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian){
+            $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
+                           ->from('db_pegawai.pegawai a')
+                           ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
+                           ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                           // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
+                           // ->where_in('c.eselon',["II A", "II B"])
+                           ->where('a.id_m_status_pegawai', 1)
+                           ->where('b.jenjang_jabatan', $jenis_pengisian)
+                           // ->where('a.flag_active', 1)
+                           ->order_by('c.eselon', 'asc')
+                           ->group_by('a.id_peg');
+       
+                           if($id == 1){
+                               $this->db->where_in('c.eselon', ["III B", "III A"]);
+                           }
+       
+                           if($id == 2){
+                               $this->db->where_in('c.eselon', ["II B", "II A"]);
+                           }
+       
+                           if($id == 3){
+                               $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                           }
+                    
+                    
+                           $query = $this->db->get()->result_array();
+                          if($penilaian != 0){
+                            // dd(1);
+                           foreach ($query as $rs) {
+                            // $id_peg = "IDPeg97";
+                           
+                        if($penilaian == 1){
+                        //    assesment
+                            $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
+                            if($nilaiassesment){
+                            $nilaiass = $nilaiassesment['nilai_assesment'];
+                            } else {
+                            $nilaiass = 0;
+                            }
+                            $total_nilai =  $nilaiass * 50 / 100;
+
+                            $cekceass =  $this->db->select('*')
+                                ->from('db_simata.t_penilaian_potensial a')
+                                ->where('a.id_peg', $rs['id_pegawai'])
+                                ->where('a.nilai_assesment is not null')
+                                ->where('a.flag_active', 1)
+                                ->where('a.jenjang_jabatan', $jenis_pengisian)
+                                ->get()->result_array();
+       
+
+                            if($cekceass){
+                                $this->db->where('id_peg', $rs['id_pegawai'])
+                                ->update('db_simata.t_penilaian_potensial', 
+                                ['nilai_assesment' => $nilaiass,
+                                'jenjang_jabatan' => $jenis_pengisian
+                                    ]);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                            } else {
+
+                                $dataInsert['id_peg']      = $rs['id_pegawai'];
+                                $dataInsert['nilai_assesment']      = $nilaiass;
+                                $dataInsert['jenjang_jabatan']      = $jenis_pengisian;
+                                $this->db->insert('db_simata.t_penilaian_potensial', $dataInsert);
+                                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                            }
+
+
+                            $getAllNilaiPotensial =  $this->db->select('*')
+                                        ->from('db_simata.t_penilaian a')
+                                        ->where('a.id_peg', $rs['id_pegawai'])
+                                        ->where('a.flag_active', 1)
+                                        ->where('a.jenjang_jabatan', $jenis_pengisian)
+                                        ->get()->result_array();
+
+                            if($getAllNilaiPotensial){
+                                foreach ($getAllNilaiPotensial as $rs2) {
+                            
+                                    $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                                
+                                    $this->db->where('id_peg', $rs['id_pegawai'])
+                                    ->update('db_simata.t_penilaian', 
+                                    ['res_potensial_total' => $total_potensial,
+                                    'res_potensial_cerdas' => $total_nilai,
+                                    'jenjang_jabatan' => $jenis_pengisian
+                                    ]);
+                                            
+                                }
+                            } else {
+                                $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                                $dataInsert2['res_potensial_cerdas']      = $total_nilai;
+                                $dataInsert2['res_potensial_total']      = $total_nilai;
+                                $dataInsert2['jenjang_jabatan']      = $jenis_pengisian;
+                                $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                            }
+                            
+                            //   tutup assesment
+                        }
+                        if($penilaian == 2){
+                            $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 
+                            
+                            $skor1 =  $this->getSkor($id_rekamjjk1); 
+                            $bobot1 = $this->getBobot($id_rekamjjk1); 
+                            $total_rj1 = $skor1  * $bobot1 / 100; 
+                            
+                            $data["id_peg"] = $rs['id_pegawai'];
+                            $data["pendidikan_formal"] = $id_rekamjjk1;
+                            $data["nilai_pendidikan_formal"] = $total_rj1;
+
+                            $cekkrj =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian_potensial a')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->where('a.nilai_assesment is not null')
+                            ->get()->result_array();
+
+                            if($cekkrj){
+                                $this->db->where('id_peg', $rs['id_pegawai'])
+                                ->update('db_simata.t_penilaian_potensial', 
+                                ['pendidikan_formal' => $id_rekamjjk1,
+                                 'nilai_pendidikan_formal' => $total_rj1,
+                                    ]);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                             } else {
+                                    $this->db->insert('db_simata.t_penilaian_potensial', $data);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+                            }
+
+                           
+
+                            $getAllNilaiPotensial =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian a')
+                            ->join('db_simata.t_penilaian_potensial b', 'a.id_peg = b.id_peg', 'left')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+
+                            if($getAllNilaiPotensial){
+                            
+                                    foreach ($getAllNilaiPotensial as $rs2) {
+                                    $total_rj = $rs2['nilai_pendidikan_formal'] + $rs2['nilai_pangkat_gol'] +  $rs2['nilai_masa_kerja_jabatan'];
+                                    $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                                    $this->db->where('id_peg', $rs['id_pegawai'])
+                                    ->update('db_simata.t_penilaian', 
+                                    ['res_potensial_total' => $total_potensial,
+                                    'res_potensial_rj' => $total_rj,
+                                    'res_potensial_lainnya' => $rs['res_potensial_lainnya']]);          
+                                    }
+                                } else {
+                                    $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                                    $dataInsert2['res_potensial_rj']      = $total_rj1;
+                                    $dataInsert2['res_potensial_total']      = $total_rj1;
+                                    $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                                }
+
+                        } else if($penilaian == 3){
+                            $id_rekamjjk2 = $this->getPangkatGolPengawai($rs['id_pegawai'],$id,$jenis_pengisian);
+                            $skor2 =  $this->getSkor($id_rekamjjk2); 
+                            $bobot2 = $this->getBobot($id_rekamjjk2); 
+                            $total_rj2 = $skor2  * $bobot2 / 100; 
+                            $data["id_peg"] = $rs['id_pegawai'];
+                            $data["pangkat_gol"] = $id_rekamjjk2;
+                            $data["nilai_pangkat_gol"] = $total_rj2;
+
+                            $cekkrj =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian_potensial a')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->where('a.nilai_assesment is not null')
+                            ->get()->result_array();
+
+                            if($cekkrj){
+                                $this->db->where('id_peg', $rs['id_pegawai'])
+                                ->update('db_simata.t_penilaian_potensial', 
+                                ['pangkat_gol' => $id_rekamjjk2, 
+                                  'nilai_pangkat_gol' => $total_rj2,                             
+                                    ]);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                             } else {
+                                    $this->db->insert('db_simata.t_penilaian_potensial', $data);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+                            }
+
+
+                            $getAllNilaiPotensial =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian a')
+                            ->join('db_simata.t_penilaian_potensial b', 'a.id_peg = b.id_peg', 'left')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+
+                            if($getAllNilaiPotensial){
+                                    foreach ($getAllNilaiPotensial as $rs2) {
+                                    $total_rj = $rs2['nilai_pendidikan_formal'] + $rs2['nilai_pangkat_gol'] +  $rs2['nilai_masa_kerja_jabatan'];
+                                    $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                                    $this->db->where('id_peg', $rs['id_pegawai'])
+                                    ->update('db_simata.t_penilaian', 
+                                    ['res_potensial_total' => $total_potensial,
+                                    'res_potensial_rj' => $total_rj,
+                                    'res_potensial_lainnya' => $rs['res_potensial_lainnya']]);
+                                                
+                                    }
+                                } else {
+                                    $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                                    $dataInsert2['res_potensial_rj']      = $total_rj2;
+                                    $dataInsert2['res_potensial_total']      = $total_rj2;
+                                    $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                                }
+
+                        } else if($penilaian == 4){
+                            // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                            $id_rekamjjk3 = $this->getMasaKerjaJabatan($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
+                            $skor3 =  $this->getSkor($id_rekamjjk3); 
+                            $bobot3 = $this->getBobot($id_rekamjjk3); 
+                            $total_rj3 = $skor3  * $bobot3 / 100; 
+                            $data["id_peg"] = $rs['id_pegawai'];
+                            $data["masa_kerja_jabatan"] = $id_rekamjjk3;
+                            $data["nilai_masa_kerja_jabatan"] = $id_rekamjjk3;
+
+                            $cekkrj =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian_potensial a')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->where('a.nilai_assesment is not null')
+                            ->get()->result_array();
+
+                            if($cekkrj){
+                                $this->db->where('id_peg', $rs['id_pegawai'])
+                                ->update('db_simata.t_penilaian_potensial', 
+                                ['masa_kerja_jabatan' => $id_rekamjjk3,
+                                'nilai_masa_kerja_jabatan' => $total_rj3,                              
+                                    ]);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                             } else {
+                                    $this->db->insert('db_simata.t_penilaian_potensial', $data);
+                                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+                            }
+
+                         
+
+                            $getAllNilaiPotensial =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian a')
+                            ->join('db_simata.t_penilaian_potensial b', 'a.id_peg = b.id_peg', 'left')
+                            ->where('a.id_peg', $rs['id_pegawai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+
+                            if($getAllNilaiPotensial){
+                                    foreach ($getAllNilaiPotensial as $rs2) {
+                                        $total_rj = $rs2['nilai_pendidikan_formal'] + $rs2['nilai_pangkat_gol'] +  $rs2['nilai_masa_kerja_jabatan'];
+                                        $total_potensial = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];
+                                    $this->db->where('id_peg', $rs['id_pegawai'])
+                                    ->update('db_simata.t_penilaian', 
+                                    ['res_potensial_total' => $total_potensial,
+                                    'res_potensial_rj' => $total_rj,
+                                    'res_potensial_lainnya' => $rs['res_potensial_lainnya']]);
+                                                
+                                    }
+                                } else {
+                                    $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                                    $dataInsert2['res_potensial_rj']      = $total_rj3;
+                                    $dataInsert2['res_potensial_total']      = $total_rj3;
+                                    $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                                }
+
+                        }
+
+                            
+                    //         // rekam jejak
+                    //             // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                    //             $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 
+                    //             $id_rekamjjk2 = $this->getPangkatGolPengawai($rs['id_pegawai'],$id,$jenis_pengisian);
+                    //             $id_rekamjjk3 = $this->getMasaKerjaJabatan($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
+                    //             $id_rekamjjk4 = $this->getDiklatPengawai($rs['id_pegawai'],$id,$rs['eselon'],$jenis_pengisian); 
+                    //             $id_rekamjjk5 = $this->getJPKompetensi($rs['id_pegawai']); 
+                    //             $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
+                    //             $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
+                                    
+                    //             $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
+
+
+     
+                    //         $skor1 =  $this->getSkor($id_rekamjjk1); 
+                    //         $bobot1 = $this->getBobot($id_rekamjjk1); 
+                    //         $total_rj1 = $skor1  * $bobot1 / 100;   
+                                
+                    //         $skor2 =  $this->getSkor($id_rekamjjk2); 
+                    //         $bobot2 = $this->getBobot($id_rekamjjk2); 
+                    //         $total_rj2 = $skor2  * $bobot2 / 100; 
+
+                    //         $skor3 =  $this->getSkor($id_rekamjjk3); 
+                    //         $bobot3 = $this->getBobot($id_rekamjjk3); 
+                    //         $total_rj3 = $skor3  * $bobot3 / 100;   
+                                
+                    //         $skor4 =  $this->getSkor($id_rekamjjk4); 
+                    //         $bobot4 = $this->getBobot($id_rekamjjk4); 
+                    //         $total_rj4 = $skor4  * $bobot4 / 100; 
+
+                    //         $skor5 =  $this->getSkor($id_rekamjjk5); 
+                    //         $bobot5 = $this->getBobot($id_rekamjjk5); 
+                    //         $total_rj5 = $skor5  * $bobot5 / 100;
+
+                    //         $skor6 =  $this->getSkor($id_rekamjjk6); 
+                    //         $bobot6 = $this->getBobot($id_rekamjjk6); 
+                    //         $total_rj6 = $skor6  * $bobot6 / 100;
+
+                    //         $skor7 =  $this->getSkor($id_rekamjjk7); 
+                    //         $bobot7 = $this->getBobot($id_rekamjjk7); 
+                    //         $total_rj7 = $skor7  * $bobot7 / 100;
+
+                    //         $skor8 =  $this->getSkor($id_pertimbangan1); 
+                    //         $bobot8 = $this->getBobot($id_pertimbangan1); 
+                    //         $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
+                            
+                    //         $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
+                    //         $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
+                
+                    //             $data["id_peg"] = $rs['id_pegawai'];
+                    //             $data["pendidikan_formal"] = $id_rekamjjk1;
+                    //             $data["pangkat_gol"] = $id_rekamjjk2;
+                    //             $data["masa_kerja_jabatan"] = $id_rekamjjk3;
+                    //             $data["diklat"] = $id_rekamjjk4;
+                    //             $data["kompetensi20_jp"] = $id_rekamjjk5;
+                    //             $data["penghargaan"] = $id_rekamjjk6;
+                    //             $data["riwayat_hukdis"] = $id_rekamjjk7;
+                    //             // $data['nilai_assesment'] = $nilaiass;
+                    //             $data["pengalaman_organisasi"] = $id_pertimbangan1;
+                    // // $data["jabatan_target"] = $this->input->post('rj_jabatan_target');
+
+                    // $cekkrj =  $this->db->select('*')
+                    //                         ->from('db_simata.t_penilaian_potensial a')
+                    //                         ->where('a.id_peg', $rs['id_pegawai'])
+                    //                         ->where('a.flag_active', 1)
+                    //                         ->where('a.nilai_assesment is not null')
+                    //                         ->get()->result_array();
+
+                    // if($cekkrj){
+                    //     $this->db->where('id_peg', $rs['id_pegawai'])
+                    //     ->update('db_simata.t_penilaian_potensial', 
+                    //     ['pendidikan_formal' => $id_rekamjjk1,
+                    //     'pangkat_gol' => $id_rekamjjk2,
+                    //     'masa_kerja_jabatan' => $id_rekamjjk3,
+                    //     'diklat' => $id_rekamjjk4,
+                    //     'kompetensi20_jp' => $id_rekamjjk5,
+                    //     'penghargaan' => $id_rekamjjk6,
+                    //     'riwayat_hukdis' => $id_rekamjjk7,
+                    //     // 'nilai_assesment' => $nilaiass,
+                    //     'pengalaman_organisasi' => $id_pertimbangan1,
+                    //         ]);
+                    //         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                    //         } else {
+                    //             $this->db->insert('db_simata.t_penilaian_potensial', $data);
+                    //             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+                    //         }
+
+                    //              $this->db->where('id_peg', $rs['id_pegawai'])
+                    //             //  ->where('id_jabatan_target', $datapost['rj_jabatan_target']) 
+                    //             ->update('db_simata.t_penilaian', 
+                    //             ['res_potensial_rj' => $total_rj]);
+
+                    //              $getAllNilaiPotensial =  $this->db->select('*')
+                    //             ->from('db_simata.t_penilaian a')
+                    //             ->where('a.id_peg', $rs['id_pegawai'])
+                    //             // ->where('a.id_jabatan_target', $datapost['rj_jabatan_target'])
+                    //             ->where('a.flag_active', 1)
+                    //             ->get()->result_array();
+                    
+                    //             if($getAllNilaiPotensial){
+                    //             // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
+
+                    //                 foreach ($getAllNilaiPotensial as $rs2) {
+                    //                 $total_potensial = $rs['res_potensial_cerdas'] + $total_rj + $total_pertimbangan_lainnya;
+                    //                 $this->db->where('id_peg', $rs['id_pegawai'])
+                    //                 // ->where('id_jabatan_target', $rs2['id_jabatan_target'])
+                    //                 ->update('db_simata.t_penilaian', 
+                    //                 ['res_potensial_total' => $total_potensial,
+                    //                 'res_potensial_rj' => $total_rj,
+                    //                 // 'res_potensial_cerdas' => $total_nilai,
+                    //                 'res_potensial_lainnya' => $total_pertimbangan_lainnya]);
+                                                
+                    //                 }
+                    //             } else {
+                    //                 $dataInsert2['id_peg']      = $rs['id_pegawai'];
+                    //                 $dataInsert2['res_potensial_rj']      = $total_rj;
+                    //                 // $dataInsert2['res_potensial_cerdas']      = $total_nilai;
+                    //                 $dataInsert2['res_potensial_total']      = $total_rj;
+                    //                 $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
+                    //                 $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
+                    //             }
+
+                    //         // tutup rekam jejak
+                           
+                           }
+                           $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
+                           ->from('db_pegawai.pegawai a')
+                           ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
+                           ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                           ->where('a.id_m_status_pegawai', 1)
+                           ->order_by('c.eselon', 'asc')
+                           ->group_by('a.id_peg');
+       
+                           if($id == 1){
+                               $this->db->where_in('c.eselon', ["III B", "III A"]);
+                           }
+       
+                           if($id == 2){
+                               $this->db->where_in('c.eselon', ["II B", "II A"]);
+                           }
+       
+                           if($id == 3){
+                               $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                           }
+                
+                           $query = $this->db->get()->result_array();
+
+                        }
+
+                   return $query;
+                   }
+                   
 
           
       

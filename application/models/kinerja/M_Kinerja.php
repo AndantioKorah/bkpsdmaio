@@ -158,6 +158,98 @@
         return $res;
         }
 
+        public function insertPeninjauanAbsensi(){
+           
+            $countfiles = count($_FILES['files']['name']);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            $ress = 1;
+            // dd($this->input->post());
+            $month = date('m', strtotime($this->input->post('tanggal_kegiatan')));
+            $year = date('Y', strtotime($this->input->post('tanggal_kegiatan')));
+            $id_peg = $this->general_library->getId();
+            $data_komponen['bulan'] = $month;
+            $data_komponen['tahun'] = $year;
+            $data_komponen['id_m_user'] = $id_peg;
+            
+          
+            $this->db->trans_begin();
+           
+            if(implode($_FILES['files']['name']) == ""){
+                
+                $nama_file = '[""]';
+                $image = $nama_file;
+                $dataPost = $this->input->post();
+                $this->createLaporanKegiatan($dataPost,$image);
+            } else {
+    
+            for($i=0;$i<$countfiles;$i++){
+             
+                if(!empty($_FILES['files']['name'][$i])){
+          
+                  // Define new $_FILES array - $_FILES['file']
+                  $_FILES['file']['name'] = $this->general_library->getUserName().'_'.$_FILES['files']['name'][$i];
+                  $_FILES['file']['type'] = $_FILES['files']['type'][$i];
+                  $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
+                  $_FILES['file']['error'] = $_FILES['files']['error'][$i];
+                  $_FILES['file']['size'] = $_FILES['files']['size'][$i];
+                  
+    
+                  if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
+                    $ress = 0;
+                    $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+                    break;
+                  }
+                   
+                //   if($_FILES['file']['size'] > 1048576){
+                //     $ress = 0;
+                //     $res = array('msg' => 'File tidak boleh lebih dari 1 MB', 'success' => false);
+                //     break;
+                //   }
+    
+                $tanggal = new DateTime($this->input->post('tanggal_kegiatan'));
+                $tahun = $tanggal->format("Y");
+                $bulan = $tanggal->format("m");
+                if (!is_dir('./assets/peninjauan_absen/'.$tahun.'/'.$bulan)) {
+                    mkdir('./assets/peninjauan_absen/'.$tahun.'/'.$bulan, 0777, TRUE);
+                }
+                
+                  // Set preference
+                $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+                $config['upload_path'] = './assets/peninjauan_absen/'.$tahun.'/'.$bulan; 
+                $config['allowed_types'] = '*';
+             
+                  //Load upload library
+                  $this->load->library('upload',$config); 
+    
+                  if ( ! $this->upload->do_upload('file'))
+                  {
+                          $error = array('error' => $this->upload->display_errors());
+                          $res = array('msg' => $error, 'success' => false);
+                          return $res;
+                  }
+                $data = $this->upload->data(); 
+                 
+                }
+                $nama_file[] = $data['file_name'];
+               }
+               if($ress == 1){
+                $image = json_encode($nama_file); 
+                $dataPost = $this->input->post();
+                $this->createPeninjauanAbsensi($dataPost,$image);
+               }   
+            }
+    
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+    
+            return $res;
+            }
+
         public function createLaporanKegiatan($dataPost,$image){
   
         $this->db->trans_begin();
@@ -226,6 +318,28 @@
 
         }
 
+
+        public function createPeninjauanAbsensi($dataPost,$image){
+            $this->db->trans_begin();
+            $data = array('tanggal_absensi' => $dataPost['tanggal_absensi'], 
+                          'keterangan' => $dataPost['keterangan'],
+                          'jenis_absensi' => $dataPost['jenis_absensi'],
+                          'bukti_kegiatan' => $image,
+                          'id_m_user' => $this->general_library->getId()
+            );
+            $result = $this->db->insert('t_peninjauan_absensi', $data);
+           
+           
+             if ($this->db->trans_status() === FALSE)
+                {
+                        $this->db->trans_rollback();
+                }
+                else
+                {
+                        $this->db->trans_commit();
+                }
+            }
+
         public function loadKegiatan($tahun,$bulan){
             $id =  $this->general_library->getId();
             return $this->db->select('a.*, b.tugas_jabatan,c.status_verif, a.status_verif as id_status_verif')
@@ -240,6 +354,18 @@
                 ->get()->result_array();
            
         }
+
+        public function loadPeninjauanAbsensi(){
+            $id =  $this->general_library->getId();
+            return $this->db->select('a.*')
+                ->from('t_peninjauan_absensi a')
+                ->where('a.id_m_user', $id)
+                ->where('a.flag_active', 1)
+                ->order_by('a.id', 'desc')
+                ->get()->result_array();
+           
+        }
+
 
 
         public function loadRencanaKinerja($bulan, $tahun, $id = null){

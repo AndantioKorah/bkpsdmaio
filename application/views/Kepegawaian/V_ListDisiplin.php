@@ -54,7 +54,9 @@
                 <?php } ?>
                 <?php } ?>
 
-                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+                || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
                 <?php if($kode == 1) { ?>
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>

@@ -1847,6 +1847,10 @@
         $mdisker['pksw3']['keterangan'] = 'pksw3';
         $mdisker['pksw3']['pengurangan'] = 3;
 
+        $mdisker['hukdis']['nama'] = "Hukuman Disiplin";
+        $mdisker['hukdis']['keterangan'] = 'hukdis';
+        $mdisker['hukdis']['pengurangan'] = 0;
+
         foreach($disiplin_kerja as $dk){
             $mdisker[$dk['keterangan']]['nama'] = $dk['nama_jenis_disiplin_kerja'];
             $mdisker[$dk['keterangan']]['keterangan'] = $dk['keterangan'];
@@ -1861,13 +1865,6 @@
         // $temp = $this->readAbsensiFromDb($param);
         $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
 
-        // $data_absen = $this->db->select('*')
-        //             ->from('t_rekap_absen')
-        //             ->where('bulan', $param['bulan'])
-        //             ->where('tahun', $param['tahun'])
-        //             ->where('id_unitkerja', $param['skpd'])
-        //             ->where('flag_active', 1)
-        //             ->get()->row_array();
         if($temp){
             $result['skpd'] = $temp['skpd'];
             $result['periode'] = $temp['periode'];
@@ -1875,6 +1872,40 @@
             $result['tahun'] = $temp['tahun'];
             $result['mdisker'] = $mdisker;
             $list_akumulasi_tidak_berkinerja = ['S', 'I', 'TK', 'DISP', 'C'];
+            
+            //cek jika ada hukdis
+            $uksearch = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $skpd[0])
+                            ->get()->row_array();
+
+            $this->db->select('a.*, c.nama, d.nama_jhd, b.nipbaru_ws')
+                    ->from('db_pegawai.pegdisiplin a')
+                    ->join('db_pegawai.pegawai b', 'a.id_pegawai = b. id_peg')
+                    ->join('db_pegawai.hd c', 'a.hd = c.idk')
+                    ->join('db_pegawai.jhd d', 'a.jhd = d.id_jhd')
+                    ->where('a.flag_active', 1);
+
+            if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $this->db->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+                        ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('b.skpd', $skpd[0]); 
+            }
+            $list_hukdis = $this->db->get()->result_array();
+            $hukdis = null;
+            if($list_hukdis){
+                foreach($list_hukdis as $l){
+                    $valid_date = date('Y-m-d', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
+
+                    $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
+                    $last_date = $list_date[count($list_date)-1];
+
+                    if($last_date <= $valid_date){
+                        $hukdis[$l['nipbaru_ws']] = $l;
+                    }
+                }
+            }
 
             foreach($temp['result'] as $tr){
                 if(isset($tr['nama_pegawai'])){
@@ -1893,20 +1924,37 @@
                     $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = 0;
                     $total_pengurangan = 0;
                     foreach($mdisker as $m){
-                        $total = $tr['rekap'][$m['keterangan']];
-                        if(in_array($m['keterangan'], $list_akumulasi_tidak_berkinerja) && $total > 0){
-                            $result['result'][$tr['nip']]['rekap']['tidak_hadir'] += $total;
-                        }
-                        $pengurangan = floatval($total) * floatval($m['pengurangan']);
-                        $total_pengurangan += $pengurangan;
+                        if(isset($tr['rekap'][$m['keterangan']])){
+                            $total = $tr['rekap'][$m['keterangan']];
+                            if(in_array($m['keterangan'], $list_akumulasi_tidak_berkinerja) && $total > 0){
+                                $result['result'][$tr['nip']]['rekap']['tidak_hadir'] += $total;
+                            }
+                            $pengurangan = floatval($total) * floatval($m['pengurangan']);
+                            $total_pengurangan += $pengurangan;
 
-                        $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['total'] = $total;
-                        $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['pengurangan'] = $pengurangan;
+                            $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['total'] = $total;
+                            $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['pengurangan'] = $pengurangan;
+                        } else {
+                            $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['total'] = 0;
+                            $result['result'][$tr['nip']]['rekap'][$m['keterangan']]['pengurangan'] = 0;
+                        }
+                    }
+                    
+                    if(isset($hukdis[$tr['nip']])){
+                        $mdisker['hukdis']['nama'] = 'Hukuman Disiplin '.$hukdis[$tr['nip']]['nama'].', '.$hukdis[$tr['nip']]['nama_jhd'];
+                        $mdisker['hukdis']['keterangan'] = 'hukdis';
+                        $mdisker['hukdis']['pengurangan'] = $hukdis[$tr['nip']]['besar_potongan'];
+
+                        $result['result'][$tr['nip']]['rekap']['hukdis']['total'] = 1;
+                        $result['result'][$tr['nip']]['rekap']['hukdis']['pengurangan'] = $hukdis[$tr['nip']]['besar_potongan'];
+
+                        $total_pengurangan += $hukdis[$tr['nip']]['besar_potongan'];
                     }
 
                     if($total_pengurangan <= 100){
                         $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] = 100 - $total_pengurangan;
                         $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] * floatval(TARGET_BOBOT_DISIPLIN_KERJA/100);
+                        $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = formatTwoMaxDecimal($result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja']);
                     }
                 }
             }

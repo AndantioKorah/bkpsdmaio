@@ -133,16 +133,16 @@
 	</li>
 	<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi()
-				|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
-	<li class="sidebar-item">
+	<!-- <li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
 			<i class="align-middle me-2 fa fa-money-bill"></i> 
 			<span class="align-middle">Input Gaji Pegawai</span>
 		</a>
-	</li>
+	</li> -->
 
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>master/nominatif-pegawai">
@@ -284,7 +284,7 @@
 		|| $this->general_library->isAdminAplikasi() 
 		|| $this->general_library->isWalikota() 
 		// || $this->general_library->isWakilWalikota()
-		|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+		|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 		){ 
 	?>
 		<li class="sidebar-item">
@@ -541,7 +541,7 @@
 				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
 				|| $this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi()
-				|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
@@ -607,7 +607,8 @@
 					</a>
 				</li> -->
 				<?php } ?>
-				<?php if($this->general_library->isProgrammer() 
+				<?php
+				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
 				|| $this->general_library->isKepalaPd()

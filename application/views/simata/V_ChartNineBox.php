@@ -1991,7 +1991,8 @@ $(function(){
         //   let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
         //   let nilaix = parseFloat(dx.result[i].res_kinerja)
           let nilaix = dx.result[i].res_potensial_total;
-          let nilaiy = dx.result[i].res_kinerja
+          let nilaiy = dx.result[i].res_kinerja;
+          console.log(dx.result);
          
           if(nilaix == null){
             nilaix = 0;
@@ -2083,9 +2084,11 @@ const nineGridLabels = {
 
 
 const tooltipchart = {
+       
         callbacks:{
+            
           label: (context) => {
-            console.log(context)
+            // console.log(context)
             // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
             // return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
             return ["Kinerja: "+context.raw.y, "Potensial: "+context.raw.x];

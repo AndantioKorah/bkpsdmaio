@@ -1134,7 +1134,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian){
 
         public function getPenilaianPegawaiJpt(){
             // $this->db->select('a.*,c.res_kinerja,c.res_potensial_cerdas,c.res_potensial_rj,c.res_potensial_lainnya')
-            $this->db->select('a.id_peg as id_pegawai,c.*')
+            $this->db->select('a.nama,a.id_peg as id_pegawai,c.*')
                           
             ->from('db_pegawai.pegawai a')
                         //    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
@@ -3690,6 +3690,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                    ->from('db_pegawai.pegawai a')
                                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                   
                                    // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                                    // ->where_in('c.eselon',["II A", "II B"])
                                    ->where('a.id_m_status_pegawai', 1)

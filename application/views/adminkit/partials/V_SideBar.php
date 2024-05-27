@@ -725,6 +725,14 @@
 			</ul>
 		</li>
 
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kinerja" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
+				<span class="align-middle">
+				Penilaian Kinerja
+				</span>
+			</a>	
+		</li>
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datapkinerja" data-bs-toggle="collapse" class="sidebar-link">
@@ -745,11 +753,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
@@ -780,19 +788,17 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>
-			
-	
-				
+		
 			</ul>
 		</li>
 
@@ -845,11 +851,11 @@
 			</a>
 			<ul id="jatar" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator

@@ -3686,9 +3686,12 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
                    public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian){
-                    $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
+                    $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang,
+                    (select d.res_potensial_cerdas from db_simata.t_penilaian as d where a.id_peg = d.id_peg and d.flag_active = 1 and d.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_cerdas,
+                    (select e.res_potensial_rj from db_simata.t_penilaian as e where a.id_peg = e.id_peg and e.flag_active = 1 and e.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_rj,
+                    (select f.res_potensial_lainnya from db_simata.t_penilaian as f where a.id_peg = f.id_peg and f.flag_active = 1 and f.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_lainnya')
                                    ->from('db_pegawai.pegawai a')
-                                   ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
+                                //    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                    
                                    // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
@@ -3714,6 +3717,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             
                                    $query = $this->db->get()->result_array();
                                   
+                                  
+                                 
                                    foreach ($query as $rs) {
                                     // $id_peg = "IDPeg97";
                                    
@@ -3735,7 +3740,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         ->where('a.flag_active', 1)
                                         ->get()->result_array();
                
-    
+                                    
                                     if($cekceass){
                                         $this->db->where('id_peg', $rs['id_pegawai'])
                                         ->where('jenjang_jabatan', $jenis_pengisian)
@@ -3910,6 +3915,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                     // tutup rekam jejak
                                    }
                                    }
+                                
+                                
                                    $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                    ->from('db_pegawai.pegawai a')
                                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')

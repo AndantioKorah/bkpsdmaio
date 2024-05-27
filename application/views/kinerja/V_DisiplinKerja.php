@@ -11,7 +11,7 @@
         </div>
         <form id="form_search_disiplin_kerja">
             <div class="row mt-3">
-                <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN){ ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
                     <div class="col-lg-12"><hr></div>
                     <div class="col-lg col-md-12">
                         <label>Pilih Unit Kerja</label>
@@ -85,7 +85,7 @@
 
     function tambahData(){
         var id_unitkerja = '<?=$this->general_library->getUnitKerjaPegawai()?>'
-        <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN){ ?>
+        <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
             id_unitkerja = $('#id_unitkerja').val()
         <?php } ?>
         $('#tambah_data_disiplin_kerja_content').html('')

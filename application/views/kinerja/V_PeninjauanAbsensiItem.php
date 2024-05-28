@@ -124,12 +124,9 @@
                         <td class="text-left"><?=$lp['jenis_absensi']?></td>
                         <td class="text-left"><?=$lp['keterangan']?></td>
                         <td class="text-left"> 
-                        <button class="btn btn-<?php if($lp['status'] == 0) echo  "warning";
-                                                    else if($lp['status'] == 1) echo "success";
-                                                    else if($lp['status'] == 2) echo "danger";
-                                                    else if($lp['status'] == 3) echo "warning";   ?> btn-sm" type="button" >
-                        <?= $lp['status'];?>
-                            </button></td>
+                        <?php if($lp['status'] == 0) echo  "Menunggu Verifikasi BKPSDM";
+                                                    else if($lp['status'] == 1) echo "diterima";
+                                                    else if($lp['status'] == 2) echo "ditolak";  ?></td>
                         <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-file"></i> Lihat File
@@ -378,12 +375,12 @@ var span = document.getElementsByClassName("close")[0];
             if(confirm('Apakah Anda yakin ingin menghapus data?')){
    
                 $.ajax({
-                    url: '<?=base_url("kinerja/C_Kinerja/deleteKegiatan/")?>'+id,
+                    url: '<?=base_url("kinerja/C_Kinerja/deletePeninjauanAbsensi/")?>'+id,
                     method: 'post',
                     data: null,
                     success: function(){
                         successtoast('Data sudah terhapus')
-                        loadListKegiatan(tahun,bulan)
+                        loadListPeninjauan()
                         $('[data-toggle="tooltip"]').tooltip({
                 trigger : 'hover'
             })

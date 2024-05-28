@@ -468,11 +468,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
-				</li>
+				</li> -->
 
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('menu_bidang_pekin') 

@@ -636,7 +636,7 @@
         </div>
         <div class="modal-footer" style="margin-bottom:5px;">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <!-- <button class="btn btn-primary float-right">Simpan</button> -->
+      <button class="btn btn-primary float-right">Simpan</button>
       </div>
       
     </form>

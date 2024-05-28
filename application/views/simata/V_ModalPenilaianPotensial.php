@@ -409,6 +409,7 @@
 				<!-- <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 				<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 				<!-- <input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>"> -->
+				<input type="hidden" name="jenis_pengisian" id="jenis_jab" value="<?=$jenis_pengisian?>">
 
                 <?php
                 if($nilai_assesment){
@@ -434,6 +435,7 @@
 					<!-- <input type="hidden" name="rj_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="rj_jenis_jab" id="rj_jenis_jab" value="<?=$kode?>">
 					<!-- <input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>"> -->
+					<input type="hidden" name="rj_jenis_pengisian" id="rj_jenis_pengisian" value="<?=$jenis_pengisian?>">
 
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan Formal  </label>
@@ -517,6 +519,8 @@
 					<!-- <input type="hidden" name="lainnya_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="lainnya_jenis_jab" id="lainnya_jenis_jab" value="<?=$kode?>">
 					<!-- <input type="hidden" name="lainnya_jabatan_target" value="<?=$jabatan_target?>"> -->
+					<input type="hidden" name="lainnya_jenis_pengisian" id="lainnya_jenis_pengisian" value="<?=$jenis_pengisian?>">
+
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengalaman dalam Kepemimpinan Organisasi</label>
 						<select class="form-select select2" name="lainnya1" >
@@ -621,6 +625,7 @@
 			$('#form_penilaian_potensial_rj').on('submit', function (e) {
 			
 				var kode = $('#rj_jenis_jab').val()
+				var jenis_pengisian = $('#rj_jenis_pengisian').val()
 				e.preventDefault();
 				var formvalue = $('#form_penilaian_potensial_rj');
 				var form_data = new FormData(formvalue[0]);
@@ -641,10 +646,10 @@
 						if (result.success == true) {
 							successtoast(result.msg)
 							if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							}
 						
@@ -662,6 +667,8 @@
 			$('#form_penilaian_potensial_lainnya').on('submit', function (e) {
 			
 			var kode = $('#lainnya_jenis_jab').val()
+			var jenis_pengisian = $('#lainnya_jenis_pengisian').val()
+
 			e.preventDefault();
 			var formvalue = $('#form_penilaian_potensial_lainnya');
 			var form_data = new FormData(formvalue[0]);
@@ -682,10 +689,10 @@
 					if (result.success == true) {
 						successtoast(result.msg)
 						if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							}
 						

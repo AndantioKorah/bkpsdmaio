@@ -333,15 +333,16 @@ class C_Simata extends CI_Controller
         $data['jabatan_target'] = null;
         $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPegawai($nip,$jenis_pengisian);
         $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
-        // $data['pendidikan_formal'] = $this->simata->getPendidikanFormal($id_peg);
-        // $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
-        // $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
-        // $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode,$jenis_pengisian);
-        // $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
-        // $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
-        // $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
-        // $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
+        $data['pendidikan_formal'] = $this->simata->getPendidikanFormal($id_peg);
+        $data['id_penghargaan'] = $this->simata->getPenghargaan($id_peg);
+        $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
+        $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode,$jenis_pengisian);
+        $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
+        $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
+        $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
+        $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
         $data['kode'] = $kode;  
+        $data['jenis_pengisian'] = $jenis_pengisian;
     //    dd( $data['nilai_potensial']);
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }

@@ -142,12 +142,12 @@
             <button onclick="loadListPegawaiPenilaianKinerja(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="jpt-tab" data-bs-toggle="tab" data-bs-target="#jpt" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
        <?php } ?>
-       <div class="form-check ml-2 mt-2">
+       <!-- <div class="form-check ml-2 mt-2">
         <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
         <label class="form-check-label" for="flexCheckChecked">
          <h4> Lakukan Penilaian </h4>
         </label>
-      </div>
+      </div> -->
         </ul>
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">

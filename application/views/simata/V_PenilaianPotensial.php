@@ -182,6 +182,7 @@
           </div>
         </div>
       <!-- </form> -->
+
       <div id="tabs">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
         <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
@@ -201,7 +202,7 @@
         <?php } ?>
         
 
-        <div class="form-check ml-2 mt-2">
+        <!-- <div class="form-check ml-2 mt-2"> -->
 
       <!-- <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
@@ -215,7 +216,7 @@
 
           <!-- <button style="margin-top:-5px;" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-sync"></i> Rekam Jejak
-          </button> -->
+          </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             
             <a class="dropdown-item" href="#">
@@ -246,7 +247,7 @@
             <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="8">
             <label class="form-check-label ml-1" for="inlineRadio8"> Riwayat Hukuman Disiplin </label>
             </a>
-          </div>
+          </div> -->
 
       <!-- <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
@@ -279,8 +280,7 @@
        
         </div>
     </div>
-    </div>
-
+  
 
     
 <!-- modal detail indikator -->

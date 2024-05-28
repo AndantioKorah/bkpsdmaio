@@ -1847,8 +1847,8 @@
 
     public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
-        $data['bulan'] = '3';
-        $data['tahun'] = '2024';
+        // $data['bulan'] = '3';
+        // $data['tahun'] = '2024';
         // if(isset($data['bulan']) && isset($data['tahun'])){
         //     $pegawai = $this->master->getNomitaifPegawaiBySkpd($data);
         // } else {
@@ -1871,7 +1871,7 @@
                         a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
                         g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
                         g.kondisi_kerja AS kondisi_kerja_tambahan, a.statuspeg,
-                        g.nama_jabatan AS nama_jabatan_tambahan')
+                        g.nama_jabatan AS nama_jabatan_tambahan, a.besaran_gaji')
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')

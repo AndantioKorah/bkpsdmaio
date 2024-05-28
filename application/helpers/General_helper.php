@@ -369,9 +369,13 @@ function getPphByIdPangkat($id_pangkat)
 function getGolonganByIdPangkat($id_pangkat){
     if (in_array($id_pangkat, [31, 32, 33, 34])) {
         return 'III';
+    } else if (in_array($id_pangkat, [11, 12, 13, 14, 15])) {
+        return 'I';
+    } else if (in_array($id_pangkat, [21, 22, 23, 24, 25])) {
+        return 'II';
     } else if (in_array($id_pangkat, [41, 42, 43, 44, 45])) {
         return 'IV';
-    }  else if (in_array($id_pangkat, [51])) {
+    } else if (in_array($id_pangkat, [51])) {
         return 'I';
     } else if (in_array($id_pangkat, [59])) {
         return 'IX';
@@ -412,6 +416,12 @@ function formatCurrency($data)
 }
 
 function formatCurrencyWithoutRp($data, $decimal = 2)
+{
+    $explode = explode(".", $data);
+    return number_format(floatval($explode[0]), $decimal, ",", ".");
+}
+
+function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
 {
     return number_format($data, $decimal, ",", ".");
 }
@@ -1083,6 +1093,47 @@ function countTmtPensiun($nip, $umur = 0){
         $bulan += 1;
         return $tahun.'-'.$bulan.'-01';
     }
+}
+
+function pembulatan($number){
+    $rounded = floor($number);
+    $whole = $number - $rounded;
+    if($whole != 0){
+        // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+        $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+    }
+    return $number; 
+}
+
+function pembulatanDecimal($number, $length = 1){
+    $add = 0;
+    $strnum = strval($number);
+    $strlen = strlen($strnum);
+
+    if($strlen < $length + 3 || $length == 0){
+        return $number;
+    }
+    
+    $substr = substr($strnum, 0, $length+2);
+    $last_substr = substr($substr, strlen($substr)-1);
+    
+    $substr_po = substr($strnum, 0, $length+3); //substring plus one
+    $last_substr_po = substr($substr_po, strlen($substr_po)-1);
+
+    if(floatval($last_substr_po) >= 5){
+        $awal_add = "0.";
+        if($length == 1){
+            $add = $awal_add."1";
+        } else {
+            $add = "";
+            for($i = 1; $i <= $length-1; $i++){
+                $add .= "0";
+            }
+            $add = $awal_add.$add."1";
+        }
+    }
+
+    return floatval($substr) + $add;
 }
 
 function emojiToString($text) {

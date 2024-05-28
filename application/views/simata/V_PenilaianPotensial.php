@@ -1,4 +1,4 @@
-   <style>
+<style>
     
     .sp_profil{
       font-size: .9rem;
@@ -128,20 +128,18 @@
 
         <script>
     $(function() {
-      $("#tabsx").tabs({ active: 1 });
+      // activaTab('ccc');
     });
-</script>
 
-<div id="tabsx" >
-    <ul class="nav nav-tabs">
-        <li class=""><a href="#tabs-a">Resize Image</a></li>
-        <li class="1"><a href="#tabs-b">Rotation Image</a></li>
-        <li class=""><a href="#tabs-c">Crop Image</a></li>
+    function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+    };
+    </script>
 
-    </ul>
-    <div id="tabs-a">1</div>
-    <div id="tabs-b">2</div>
-    <div id="tabs-c">3</div>
+<div class="tab-content" id="tabs">
+    <div class="tab-pane" id="aaa">...a...</div>
+    <div class="tab-pane" id="bbb">...b...</div>
+    <div class="tab-pane" id="ccc">...c...</div>
 </div>
 
 
@@ -165,10 +163,11 @@
             <label>Eselon</label>
             <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
                 id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
-                <option selected value="0">Semua</option>
-                <?php foreach($list_eselon as $skpd){ ?>
-                    <option value="<?=$skpd['nm_eselon']?>"><?=$skpd['nm_eselon']?></option>
-                <?php } ?>
+                <!-- <option selected value="0">Semua</option> -->
+                    <option value="4">II A</option>
+                    <option value="5">II B</option>
+                    <option value="6">III A</option>
+                    <option value="7">III B</option>
             </select>
           </div>
           
@@ -182,23 +181,30 @@
           </div>
         </div>
       <!-- </form> -->
-      <div id="tabs">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
+
+   
+      
+<ul class="nav nav-tabs">
+<?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
         </li>
         <?php } ?>
         <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
-        <li class="nav-item" role="presentation">
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata"  id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#adm">Administrator</a></li>
+
+        <!-- <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
-        </li>
+        </li> -->
         <?php } ?>
         <?php if($jenis_pengisian == 3) { ?>
-        <li class="nav-item" role="presentation">
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata"  id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#jpt">JPT Pratama</a></li>
+
+        <!-- <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
-        </li>
+        </li> -->
         <?php } ?>
+      </ul>
         
 
         <div class="form-check ml-2 mt-2">
@@ -260,7 +266,7 @@
         </label>
       </div> -->
 
-        </ul>
+        
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
          <br> <div id="list_pegawai_penilaian_kinerja_jptx" class="list_pegawai_penilaian_kinerja_jpt"></div>
@@ -279,7 +285,7 @@
        
         </div>
     </div>
-    </div>
+    
 
 
     
@@ -322,10 +328,21 @@ $(function(){
     })
 
     $("#btn_nilai").click(function(){
-      loadListPegawaiPenilaianPotensialJpt(2,3,1);
-      $("#tabs").tabs({ active: 1 });
-      // $('#profile-tab').click()
+      var eselon = $('#eselon').val()
+      if(eselon == 4 || eselon == 5){
+        var id = 2;
+        activaTab('jpt');
+      } else {
+        var id = 1;
+        activaTab('adm');
+      }
+    
+     
+      loadListPegawaiPenilaianPotensialJpt(id,3,1,eselon);
+         
     });
+
+    
 
 
 
@@ -338,7 +355,7 @@ $(function(){
    })
   }
 
-  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,penilaian){
+  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,penilaian,eselon){
     var radios = document.getElementsByName('inlineRadioOptions');
     // var penilaian = 0;
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -362,21 +379,8 @@ $(function(){
 
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian, function(){
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon, function(){
      $('#loader').hide()
-    //  radios.checked = false;
-    //  $("#inlineRadio1").prop('checked', false); 
-    //  $("#inlineRadio2").prop('checked', false);
-    //  $("#inlineRadio3").prop('checked', false);
-    //  $("#inlineRadio4").prop('checked', false);
-    //  $("#inlineRadio5").prop('checked', false);
-    //  $("#inlineRadio6").prop('checked', false);
-    //  $("#inlineRadio7").prop('checked', false);
-    //  $("#inlineRadio8").prop('checked', false);
-
-    $('#flexCheckChecked').prop('checked', false); // Unchecks it
-     
-     $('.inlineRadioOptions').prop('checked', false); // Unchecks it
    })
   }
 

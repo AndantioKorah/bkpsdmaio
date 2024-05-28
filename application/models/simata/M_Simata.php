@@ -684,7 +684,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             }
 
 
-            public function getPegawaiPenilaianPotensialJptBU($id,$jenis_pengisian,$penilaian){
+            public function getPegawaiPenilaianPotensialJptBU($id,$jenis_pengisian,$penilaian,$eselon){
                 $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
                                ->from('db_pegawai.pegawai a')
                                ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
@@ -3760,34 +3760,34 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
 
-                   public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian){
+                   public function getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian,$eselon){
                     $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang,
-                    (select d.res_potensial_cerdas from db_simata.t_penilaian as d where a.id_peg = d.id_peg and d.flag_active = 1 and d.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_cerdas,
-                    (select e.res_potensial_rj from db_simata.t_penilaian as e where a.id_peg = e.id_peg and e.flag_active = 1 and e.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_rj,
-                    (select f.res_potensial_lainnya from db_simata.t_penilaian as f where a.id_peg = f.id_peg and f.flag_active = 1 and f.jenjang_jabatan = '.$jenis_pengisian.') as res_potensial_lainnya')
+                    (select d.res_potensial_cerdas from db_simata.t_penilaian as d where a.id_peg = d.id_peg and d.flag_active = 1 and d.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_cerdas,
+                    (select e.res_potensial_rj from db_simata.t_penilaian as e where a.id_peg = e.id_peg and e.flag_active = 1 and e.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_rj,
+                    (select f.res_potensial_lainnya from db_simata.t_penilaian as f where a.id_peg = f.id_peg and f.flag_active = 1 and f.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_lainnya')
                                    ->from('db_pegawai.pegawai a')
                                 //    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                   
-                                   // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
-                                   // ->where_in('c.eselon',["II A", "II B"])
+                                   ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                                   ->where('d.id_eselon',$eselon)
+                                 
                                    ->where('a.id_m_status_pegawai', 1)
                                 //    ->where('b.jenjang_jabatan', $jenis_pengisian)
                                    // ->where('a.flag_active', 1)
                                    ->order_by('c.eselon', 'asc')
                                    ->group_by('a.id_peg');
                
-                                   if($id == 1){
-                                       $this->db->where_in('c.eselon', ["III B"]);
-                                   }
+                                //    if($id == 1){
+                                //        $this->db->where_in('c.eselon', ["III A","III B"]);
+                                //    }
                
-                                   if($id == 2){
-                                       $this->db->where_in('c.eselon', ["II B", "II A"]);
-                                   }
+                                //    if($id == 2){
+                                //        $this->db->where_in('c.eselon', ["II B", "II A"]);
+                                //    }
                
-                                   if($id == 3){
-                                       $this->db->where_in('c.eselon', ["IV A", "IV B"]);
-                                   }
+                                //    if($id == 3){
+                                //        $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                                //    }
                             
                             
                                    $query = $this->db->get()->result_array();

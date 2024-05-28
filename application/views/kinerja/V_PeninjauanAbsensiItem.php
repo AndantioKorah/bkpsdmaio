@@ -1,98 +1,4 @@
-<style>
-    
-/* .modal-fullscreen */
-#myModalLabel {
-  text-align: center;
-  padding-top: 50px;
-  margin-bottom: 50px;
-}
 
-.center-content {
-				text-align:center;
-				margin-top: 50px;
-			}
-
-			.content-wrapper {
-				height: 100%;
-				
-				.content {
-					line-height: 1.5em;
-					
-					font-weight: 300;
-					color: $gray;
-				}
-				.l-content-help{
-					margin: 50px 50px;
-				}
-				.l-text-indent {
-					text-indent: -1.1em;
-				}
-				.large-text{
-					font-size: 1.5em;
-					// margin-top: -20px;
-					
-				}
-				.btn-large {
-					font-size: 1.3em;
-					font-weight: 300;
-					letter-spacing: 1px;
-					// border-color: #624E7A;
-				}
-
-				
-				.fa {
-					color: $purple-dark;
-					// border-color: #624E7A;
-					border-color: $purple-dark;
-				}
-				i.fa.fa-lg.fa-download {
-					color: $gray !important;
-				}
-			}
-		}
-.modal-fullscreen {
-  /*background: transparent;*/
-}
-.modal-fullscreen .modal-content {
-  background: transparent;
-  border: 0;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.modal-backdrop.modal-backdrop-fullscreen {
-  background: #ffffff;
-}
-.modal-backdrop.modal-backdrop-fullscreen.in {
-  /*opacity: .97;
-  filter: alpha(opacity=97);*/
-}
-
-/* .modal-fullscreen size: we use Bootstrap media query breakpoints */
-
-.modal-fullscreen .modal-dialog {
-  margin: 0;
-  margin-right: auto;
-  margin-left: auto;
-  width: 100%;
-}
-@media (min-width: 768px) {
-  .modal-fullscreen .modal-dialog {
-    width: 100%;
-  }
-}
-@media (min-width: 992px) {
-  .modal-fullscreen .modal-dialog {
-    width: 100%;
-  }
-}
-@media (min-width: 1200px) {
-  .modal-fullscreen .modal-dialog {
-    width: 100%;
-  }
-}
-
-
-</style>
 
     <!-- <div class="card-header">
         <h3 class="card-title">List Realisasi Kerja</h3>
@@ -105,15 +11,15 @@
         <div id="" class="row">
           
         <?php if($list_peninjauan){ ?>
-        <div class="col-12 tableFixHead">
-        <table  class="table table-striped table-bordered" id="table_realisasi_kinerja" width="100%">
+        <div class="col-12">
+        <table  class="table table-striped table-bordered" id="table_data" width="100%">
             <thead>
-                <th class="text-center table-success">No</th>
-                <th class="text-left table-success">Tanggal Absensi</th>
-                <th class="text-left table-success">Jenis Absensi</th>
-                <th class="text-left table-success">Keterangan</th>
-                <th class="text-left table-success">Status</th>
-                <th class="text-left table-success">Bukti Dokumen</th>               
+                <th class="text-center ">No</th>
+                <th class="text-left ">Tanggal Absensi</th>
+                <th class="text-left ">Jenis Absensi</th>
+                <th class="text-left ">Keterangan</th>
+                <th class="text-left ">Status</th>
+                <th class="text-left ">Bukti Dokumen</th>               
                 <th></th>
             </thead>
             <tbody>
@@ -284,6 +190,10 @@
 
 
 <script>
+
+$(function(){
+       $('#table_data').dataTable()
+   })
 
 
 // Get the modal

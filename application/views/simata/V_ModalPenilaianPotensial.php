@@ -424,7 +424,7 @@
                 ?>
                         <label for="exampleInputEmail1" class="form-label">Nilai Assesment</label>
 
-				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai">
+				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai" readonly>
 				<!-- <button class="btn btn-primary float-right mt-3 mb-3">Simpan</button> -->
 			   </form>
 					</div>
@@ -567,6 +567,17 @@
 				</div> -->
 
 	<script>
+		// blok enter 
+		$(document).ready(function() {
+		$(window).keydown(function(event){
+			if(event.keyCode == 13) {
+			event.preventDefault();
+			return false;
+			}
+		});
+		});
+		// blok enter 
+
 		$(function () {
 
 

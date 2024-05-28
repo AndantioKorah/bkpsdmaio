@@ -1631,7 +1631,7 @@ animation06
       <div class="row" >
       <div class="col-lg-3" >
       <div class="card-body">
-      <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
+      <form  action="<?=base_url('simata/C_Simata/nineBox/'.$jenis_pengisian.'')?>" method="POST">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
@@ -1945,10 +1945,11 @@ $(function(){
     var jt = $('#jt').val()
     var box = $(this).data('box');
     var jumlah = $(this).data('jumlah');
+    var jenis_pengisian = "<?=$jenis_pengisian;?>"
 
         $('#detail_nine_box').html('')
         $('#detail_nine_box').append(divLoaderNavy)
-        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah, function(){
+        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah+'/'+jenis_pengisian, function(){
         $('#loader').hide()
         })
 

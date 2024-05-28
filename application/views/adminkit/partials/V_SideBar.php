@@ -468,12 +468,16 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
-				</li> -->
-
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
+					</a>
+				</li>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
@@ -725,14 +729,7 @@
 			</ul>
 		</li>
 
-		<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kinerja" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
-				<span class="align-middle">
-				Penilaian Kinerja
-				</span>
-			</a>	
-		</li>
+	
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datapkinerja" data-bs-toggle="collapse" class="sidebar-link">
@@ -819,13 +816,47 @@
 				</span>
 			</a>	
 		</li> -->
-		<li class="sidebar-item ">
+
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
 				Talent Pool
 				</span>
 			</a>	
+		</li> -->
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#talentpool" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+				<span class="align-middle">
+				Talent Pool
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="talentpool" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/1')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
+					</a>
+				</li> -->
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
+					</a>
+				</li> -->
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/3')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
+					</a>
+				</li>
+		
+			</ul>
 		</li>
 
 		<!-- <li class="sidebar-item ">
@@ -856,29 +887,58 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>
-			
-	
-				
 			</ul>
 		</li>
 
-		<li class="sidebar-item ">
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/profil-talenta" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 				<span class="align-middle">
 				Profil Talenta
 				</span>
 			</a>	
+		</li> -->
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#ptalenta" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+				<span class="align-middle">
+				Profil Talenta
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="ptalenta" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/1')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
+					</a>
+				</li> -->
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
+					</a>
+				</li> -->
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
+					</a>
+				</li>
+			</ul>
 		</li>
 
 		<li class="sidebar-item ">

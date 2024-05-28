@@ -100,7 +100,7 @@ $route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanKosong/$1';
 $route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
 $route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
 $route['mt/penilaian-kinerja/(:any)'] = 'simata/C_Simata/penilaianKinerja/$1';
-$route['mt/ninebox'] = 'simata/C_Simata/nineBox';
+$route['mt/ninebox/(:any)'] = 'simata/C_Simata/nineBox/$1';
 $route['mt/penilaian-potensial/(:any)'] = 'simata/C_Simata/penilaianPotensial/$1';
 $route['mt/profil-talenta'] = 'simata/C_Simata/profilTalenta';
 $route['mt/data-master-jabatan'] = 'simata/C_Simata/masterJabatan';
@@ -130,6 +130,7 @@ $route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
 
 
 $route['dokumen-pendukung-absensi/tinjau'] = 'kinerja/C_Kinerja/tinjauAbsensi';
+$route['dokumen-pendukung-absensi/verifikasi-tinjau'] = 'kinerja/C_Kinerja/verifikasiTinjauAbsensi';
 
 
 

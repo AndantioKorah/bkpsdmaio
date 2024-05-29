@@ -36,9 +36,6 @@
         </tr>
     </table>
     <br>
-    <br>
-    <br>
-    <br>
     <span>B.  Penjatuhan Hukuman Disiplin :</span>
     <table style="width: 100%; border: 1px solid black;" border=1 style="border-collapse: collapse;">
         <tr>
@@ -60,9 +57,6 @@
             </tr>
         <?php } } ?>
     </table>
-    <br>
-    <br>
-    <br>
     <table style="width: 100%;">
         <tr>
             <td style="width: 50%;">

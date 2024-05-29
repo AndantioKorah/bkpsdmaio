@@ -57,9 +57,6 @@
         Bersama ini kami sampaikan Permintaan Pembayaran TPP dengan mencantumkan hasil evaluasi penilaian pemberian TPP pada Perangkat Daerah <strong><?=$param['nm_unitkerja']?></strong> bulan <?=getNamaBulan($param['bulan'])?> tahun <?=$param['tahun']?>, sebagai berikut :									
     </span>
     <br>
-    <br>
-    <br>
-    <br>
     <span>A. Hasil Evaluasi Penilaian Pemberian TPP serta capaian pembayaran TPP :</span>
     <table style="width: 100%; border: 1px solid black;" border=1 style="border-collapse: collapse;">
         <tr>
@@ -88,9 +85,6 @@
         </tr>
     </table>
     <br>
-    <br>
-    <br>
-    <br>
     <span>B.  Penjatuhan Hukuman Disiplin :</span>
     <table style="width: 100%; border: 1px solid black;" border=1 style="border-collapse: collapse;">
         <tr>
@@ -112,10 +106,6 @@
             </tr>
         <?php } } ?>
     </table>
-    <br>
-    <br>
-    <br>
-    <br>
     <!-- <span>C. Pemberhentian TPP</span>
     <table style="width: 100%;" border=1 style="border-collapse: collapse;">
         <tr>
@@ -127,15 +117,10 @@
             <td style="text-align: center;">Keterangan</td>
         </tr>
     </table> -->
-    <!-- <br>
     <br>
-    <br> -->
     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         Demikian dapat kami sampaikan, sambil menunggu petunjuk lebih lanjut atasnya diucapkan terima kasih.
     </span>
-    <br>
-    <br>
-    <br>
     <table style="width: 100%;">
         <tr>
             <td style="width: 50%"></td>

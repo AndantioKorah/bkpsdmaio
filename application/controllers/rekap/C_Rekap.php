@@ -305,26 +305,26 @@ class C_Rekap extends CI_Controller
         // if($skpd[0] == 3020000){
         //     dd($data);
         // }
-        // $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
-        // $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
-        // $this->mpdf->AddPage(
-        //     'L', // L - landscape, P - portrait
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     10, // margin_left
-        //     10, // margin right
-        //     5, // margin top
-        //     10, // margin bottom
-        //     18, // margin header
-        //     12
-        // ); // margin footer
-        // // $this->mpdf->setFooter('{PAGENO}');
-        // $this->mpdf->WriteHTML($html);
-        // $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf', 'D'); // download force
+        $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        ); // margin footer
+        // $this->mpdf->setFooter('{PAGENO}');
+        $this->mpdf->WriteHTML($html);
+        $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf', 'D'); // download force
 
-        $this->load->view('rekap/V_BerkasTppDownload', $data);
+        // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }
 
     public function loadViewByJenisFile($jenis_file)

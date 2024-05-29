@@ -1636,8 +1636,22 @@ animation06
         <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+        <?php if($jenis_pengisian == 1) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 3) echo "selected"; else echo "";}?> value="3">Pengawas</option>
+        <?php } ?>
+        <?php if($jenis_pengisian == 2) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 3) echo "selected"; else echo "";}?> value="3">Pengawas</option>
+
+        <?php } ?>
+        <?php if($jenis_pengisian == 3) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+
+        <?php } ?>
+
+        
+
       </select>
       </div>
       <!-- <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">

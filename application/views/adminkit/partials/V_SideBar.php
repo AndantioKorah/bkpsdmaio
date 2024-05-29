@@ -468,7 +468,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
@@ -477,7 +477,7 @@
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
 					</a>
-				</li>
+				</li> -->
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
@@ -750,11 +750,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
@@ -785,11 +785,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
@@ -845,11 +845,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
 				</li> -->
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT

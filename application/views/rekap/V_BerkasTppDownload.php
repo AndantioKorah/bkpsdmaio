@@ -502,13 +502,13 @@
             </div>
             <div style="page-break-after: always;" class="div_daftar_permintaan_bkad">
                 <?php 
-                    $data_header['filename'] = 'DAFTAR PERMINTAAN TPP';
+                    $data_header['filename'] = 'DAFTAR PERMINTAAN TPP (BKAD)';
                     $data_header['skpd'] = $param['nm_unitkerja'];
                     $data_header['bulan'] = $param['bulan'];
                     $data_header['tahun'] = $param['tahun'];
                     $this->load->view('rekap/V_BerkasTppDownloadHeader', $data_header);
                 ?>
-                <table border=1 class="table table-hover table-striped">
+                <table border=1 style="border-collapse: collapse;" class="table table-hover table-striped">
                     <thead>
                         <tr>
                             <th rowspan=2 style="text: align: center;">No</th>
@@ -578,14 +578,14 @@
                             $total_jumlah_setelah_pph_prestasi_kerja += $r['jumlah_setelah_pph_prestasi_kerja'];
                             $total_jumlah_setelah_pph_beban_kerja += $r['jumlah_setelah_pph_beban_kerja'];
                             $total_jumlah_setelah_pph_kondisi_kerja += $r['jumlah_setelah_pph_kondisi_kerja'];
-                            $bpjs_prestasi_kerja += $r['bpjs_prestasi_kerja'];
-                            $bpjs_beban_kerja += $r['bpjs_beban_kerja'];
-                            $bpjs_kondisi_kerja += $r['bpjs_kondisi_kerja'];
+                            $bpjs_prestasi_kerja += excelRoundDown($r['bpjs_prestasi_kerja'], 1);
+                            $bpjs_beban_kerja += excelRoundDown($r['bpjs_beban_kerja'], 1);
+                            $bpjs_kondisi_kerja += excelRoundDown($r['bpjs_kondisi_kerja'], 1);
                             $tpp_final_prestasi_kerja += $r['tpp_final_prestasi_kerja'];
                             $tpp_final_beban_kerja += $r['tpp_final_beban_kerja'];
                             $tpp_final_kondisi_kerja += $r['tpp_final_kondisi_kerja'];
                             $tpp_final_permintaan_bkad += $r['tpp_final'];
-                            $total_besaran_gaji += floatval($r['besaran_gaji']);
+                            $total_besaran_gaji += ($r['besaran_gaji']);
                         ?>
                             <tr>
                                 <td style="text: align: center;"><?=$no++;?></td>
@@ -611,9 +611,9 @@
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_beban_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_kondisi_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'], 0)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_prestasi_kerja'], 2)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_beban_kerja'], 2)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_kondisi_kerja'], 2)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_prestasi_kerja']), 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_beban_kerja']), 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_kondisi_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_prestasi_kerja'], 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_beban_kerja'], 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_kondisi_kerja'], 0)?></td>
@@ -645,6 +645,23 @@
                             <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_kondisi_kerja), 0)?></td>
                             <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_permintaan_bkad), 0)?></td>
                         </tr>
+                        <?php if($this->general_library->isProgrammer()){ ?>
+                            <tr>
+                                <td colspan=7 style="text-align: center; font-weight: bold;">TOTAL</td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=$total_capaian_tpp_beban_kerja + $total_capaian_tpp_kondisi_kerja + $total_capaian_tpp_prestasi_kerja?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_beban_kerja + $total_capaian_tpp_kondisi_kerja + $total_capaian_tpp_prestasi_kerja), 0)?></td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=$total_pph_beban_kerja + $total_pph_kondisi_kerja + $total_pph_prestasi_kerja?></td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_pph_beban_kerja + $total_pph_kondisi_kerja + $total_pph_prestasi_kerja), 0)?></td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=$total_jumlah_setelah_pph_beban_kerja + $total_jumlah_setelah_pph_kondisi_kerja + $total_jumlah_setelah_pph_prestasi_kerja?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_jumlah_setelah_pph_beban_kerja + $total_jumlah_setelah_pph_kondisi_kerja + $total_jumlah_setelah_pph_prestasi_kerja), 0)?></td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=$bpjs_beban_kerja + $bpjs_kondisi_kerja + $bpjs_prestasi_kerja?></td>
+                                <td colspan=2 style="text-align: center; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($bpjs_beban_kerja + $bpjs_kondisi_kerja + $bpjs_prestasi_kerja), 0)?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=$tpp_final_prestasi_kerja?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=$tpp_final_beban_kerja?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=$tpp_final_kondisi_kerja?></td>
+                                <td colspan=1 style="text-align: center; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_beban_kerja + $tpp_final_kondisi_kerja + $tpp_final_prestasi_kerja), 0)?></td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
                 <?php
@@ -670,7 +687,7 @@
                     $data_header['tahun'] = $param['tahun'];
                     $this->load->view('rekap/V_BerkasTppDownloadHeader', $data_header);
                 ?>
-                    <table border=1 class="table table-hover table-striped">
+                    <table border=1 style="border-collapse: collapse;" class="table table-hover table-striped">
                         <thead>
                             <tr>
                                 <th rowspan=2 style="text: align: center;">No</th>

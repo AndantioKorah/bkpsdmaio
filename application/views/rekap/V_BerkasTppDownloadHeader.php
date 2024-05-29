@@ -6,14 +6,14 @@
             </td>
         </tr>
         <tr>
-            <td>SKPD</td>
-            <td>:</td>
-            <td><?=$skpd?></td>
+            <td style="width: 10%;">SKPD</td>
+            <td style="width: 5%;">:</td>
+            <td style="width: 85%;"><?=$skpd?></td>
         </tr>
         <tr>
-            <td>Periode</td>
-            <td>:</td>
-            <td><?=getNamaBulan($bulan).' '.$tahun?></td>
+            <td style="width: 10%;">Periode</td>
+            <td style="width: 5%;">:</td>
+            <td style="width: 85%;"><?=getNamaBulan($bulan).' '.$tahun?></td>
         </tr>
     </table>
 </div>

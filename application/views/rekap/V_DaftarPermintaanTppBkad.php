@@ -109,9 +109,9 @@
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_beban_kerja']), 0)?></td>
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_kondisi_kerja']), 0)?></td>
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'], 0)?></td>
-                        <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_prestasi_kerja'], 2)?></td>
-                        <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_beban_kerja'], 2)?></td>
-                        <td style="text-align: right;"><?=formatCurrencyWithoutRpWithDecimal($r['bpjs_kondisi_kerja'], 2)?></td>
+                        <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_prestasi_kerja']), 0)?></td>
+                        <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_beban_kerja']), 0)?></td>
+                        <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_kondisi_kerja']), 0)?></td>
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_prestasi_kerja'], 0)?></td>
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_beban_kerja'], 0)?></td>
                         <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_final_kondisi_kerja'], 0)?></td>

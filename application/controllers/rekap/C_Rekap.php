@@ -510,6 +510,10 @@ class C_Rekap extends CI_Controller
         if(isset($data['kepalabkpsdm'])){
             unset($data['kepalabkpsdm']);
         }
+        
+        if($data == null){
+            return $data;
+        }
 
         $result = null;
         foreach ($data as $key => $row) {

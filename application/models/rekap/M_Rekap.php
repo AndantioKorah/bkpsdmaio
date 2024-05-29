@@ -2222,7 +2222,7 @@
 
         $result = null;
 
-        $result['hukdis'] = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : null;
+        $result['hukdis'] = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : [];
 
         foreach($list_pegawai['result'] as $l){
             if(isset($l['nipbaru_ws'])){
@@ -2363,10 +2363,10 @@
                 // $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_beban_kerja'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'], 2);
 
-                $result[$l['nipbaru_ws']]['tpp_final'] = 
-                    ($result[$l['nipbaru_ws']]['tpp_diterima'] - 
-                    $result[$l['nipbaru_ws']]['bpjs']);
                 //TPP Final
+                // $result[$l['nipbaru_ws']]['tpp_final'] = 
+                //     ($result[$l['nipbaru_ws']]['tpp_diterima'] - 
+                //     $result[$l['nipbaru_ws']]['bpjs']);
                 $result[$l['nipbaru_ws']]['tpp_final_prestasi_kerja'] = 
                     ($result[$l['nipbaru_ws']]['capaian_tpp_prestasi_kerja'] -
                     $result[$l['nipbaru_ws']]['pph_prestasi_kerja'] -
@@ -2384,9 +2384,29 @@
                     ($result[$l['nipbaru_ws']]['tpp_final_prestasi_kerja']) +
                     ($result[$l['nipbaru_ws']]['tpp_final_beban_kerja']) +
                     ($result[$l['nipbaru_ws']]['tpp_final_kondisi_kerja']);
+
+                $result[$l['nipbaru_ws']]['tpp_final'] = 
+                    ($result[$l['nipbaru_ws']]['tpp_final_prestasi_kerja']) +
+                    ($result[$l['nipbaru_ws']]['tpp_final_beban_kerja']) +
+                    ($result[$l['nipbaru_ws']]['tpp_final_kondisi_kerja']);
                 
                 $result[$l['nipbaru_ws']]['formatted_tpp_final_permintaan_bkad'] = formatCurrencyWithoutRp($result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'], 0);
                 $result[$l['nipbaru_ws']]['formatted_tpp_final'] = formatCurrencyWithoutRp($result[$l['nipbaru_ws']]['tpp_final'], 0);
+
+                $result[$l['nipbaru_ws']]['nominal_pph'] = 
+                    $result[$l['nipbaru_ws']]['pph_prestasi_kerja'] +
+                    $result[$l['nipbaru_ws']]['pph_beban_kerja'] +
+                    $result[$l['nipbaru_ws']]['pph_kondisi_kerja'];
+                    
+                $result[$l['nipbaru_ws']]['tpp_diterima'] =
+                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_prestasi_kerja'] +
+                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_beban_kerja'] +
+                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'];
+
+                $result[$l['nipbaru_ws']]['bpjs'] =
+                    $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] +
+                    $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] +
+                    $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'];
 
                 $rekap['jumlah_pegawai']++;
                 $rekap['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];

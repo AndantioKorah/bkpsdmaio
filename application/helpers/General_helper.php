@@ -1105,6 +1105,11 @@ function pembulatan($number){
     return $number; 
 }
 
+function excelRoundDown($number, $length){
+    $number = floor($number * pow(10, $length)) / pow(10, $length);
+    return $number;
+}
+
 function pembulatanDecimal($number, $length = 1){
     $add = 0;
     $strnum = strval($number);

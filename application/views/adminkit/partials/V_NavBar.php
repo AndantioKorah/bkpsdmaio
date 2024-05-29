@@ -143,6 +143,10 @@
 	</a>
 	<?php if(!$this->general_library->isGuest()) { ?>
 	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi' || $this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->getRole() == 'walikota') { ?>
+		<?php
+			// $number = excelRoundDown(30665.78, 5);
+			// echo $number;
+		?>
 		<form id="form_search_navbar" class="form-inline mr-3">
 			<div class="row">
 				<div class="div_search_bar">

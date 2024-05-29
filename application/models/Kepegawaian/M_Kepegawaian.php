@@ -2824,6 +2824,9 @@ public function submitVerifikasiDokumen(){
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
     $data["tmtjabatan"] = $datapost["edit_tmt_jabatan_verif"];
     }
+    if(trim($datapost["jenis_dokumen"]) == "skp"){
+        $data["predikat"] = $datapost["edit_predikat"];
+    }
 
  
     

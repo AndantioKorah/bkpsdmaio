@@ -294,24 +294,25 @@ class C_Simata extends CI_Controller
     public function penilaianPotensial($id=''){
         $data['jenis_pengisian'] = $id;
         $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        $data['list_skpd_master'] = $this->simata->getMasterUnitkKerja();
 		$data['list_eselon'] = $this->general->getAll('db_pegawai.eselon', 0);
         render('simata/V_PenilaianPotensial', '', '', $data);
     }
 
 
     public function loadListPegawaiPenilainPotensialAdm(){
-        
+       
         $data['result'] = $this->simata->getPegawaiPenilaianPotensialAdministrator();  
         $this->load->view('simata/V_PenilaianPotensialItem', $data);
     }
 
-    public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian=null,$penilaian){
-       
-        $data['result'] = $this->simata->getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian);  
+    public function loadListPegawaiPenilainPotensialJpt($id,$jenis_pengisian=null,$penilaian,$eselon,$skpd){
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialJpt($id,$jenis_pengisian,$penilaian,$eselon,$skpd);  
         $data['kode'] = $id;  
         $data['jenis_pengisian'] = $jenis_pengisian;  
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
+
 
     public function loadModalPenilaianPotensial($id,$nip,$kode,$jenis_pengisian)
     {

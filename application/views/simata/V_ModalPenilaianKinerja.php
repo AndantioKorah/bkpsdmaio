@@ -652,7 +652,7 @@
         // dropdownAutoWidth: true,
         allowClear: true,
     });
-
+  })
 
     $('#form_penilaian_kinerja').on('submit', function(e){
       var kode = $('#jenis_jab').val()
@@ -695,7 +695,7 @@
              
     }); 
    
-    })
+    
 </script>
 <?php } else { ?>
   <div class="row">

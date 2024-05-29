@@ -478,6 +478,19 @@ class C_Kinerja extends CI_Controller
         render('kinerja/V_PeninjauanAbsensi', '', '', $data);
     }
 
+    public function verifikasiTinjauAbsensi()
+    {
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_VerifPeninjauanAbsensi', '', '', $data);
+    }
+
+    public function searchVerifTinjauAbsensi()
+    {
+        $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
+        // dd($data['result']);
+        $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', $data);
+    }
+
     public function searchDisiplinKerja()
     {
         $data['result'] = $this->kinerja->searchDisiplinKerja($this->input->post());
@@ -614,13 +627,28 @@ class C_Kinerja extends CI_Controller
     {
         list($data['result'], $data['count']) = $this->kinerja->loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja);
         $data['status'] = $status;
+        // dd($data);
         $this->load->view('kinerja/V_VerifDokumenData', $data);
+    }
+
+    public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja)
+    {
+        $data['result'] = $this->kinerja->loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja);
+        $data['status'] = $status;
+    //    dd($data);    
+        $this->load->view('kinerja/V_VerifPeninjauanAbsensiData', $data);
     }
 
     public function verifDokumen($id, $status)
     {
         echo json_encode($this->kinerja->verifDokumen($id, $status));
     }
+
+    public function verifPeninjauanAbsensi($id, $status)
+    {
+        echo json_encode($this->kinerja->verifPeninjauanAbsensi($id, $status));
+    }
+
 
     public function paguTpp()
     {

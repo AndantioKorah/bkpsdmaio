@@ -1511,6 +1511,22 @@
             return $result;
     }
 
+    public function searchVerifTinjauAbsensi($data){
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user')
+            ->from('t_peninjauan_absensi a')
+            ->join('m_user b', 'a.id_m_user = b.id')
+            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+            ->where('a.flag_active', 1)
+            ->where('id_m_status_pegawai', 1)
+            ->order_by('a.created_date', 'desc');
+            if($data['id_unitkerja'] != "0"){
+                $this->db->where('c.skpd', $data['id_unitkerja']);
+            }
+
+        $result = $this->db->get()->result_array();
+        return $result;
+    }
+
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
         $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
         d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
@@ -1564,6 +1580,33 @@
         $count = $this->countTotalDataPendukung($id_count, $bulan, $tahun, 1);
         return [$result, $count];
     }
+
+    public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
+        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
+        ->from('t_peninjauan_absensi a')
+        ->join('m_user b', 'a.id_m_user = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+        // ->where('a.bulan', floatval($bulan))
+        // ->where('a.tahun', floatval($tahun))
+        ->where('a.status', floatval($status))
+        ->where('id_m_status_pegawai', 1)
+        ->where('a.flag_active', 1);
+
+        if($id_unitkerja != 0){
+            $this->db->where('c.skpd', $id_unitkerja);
+        }
+
+        if($status == 1){
+            $this->db->order_by('created_date', 'asc');
+        } else {
+            $this->db->order_by('a.updated_date', 'desc');
+        }
+
+        $result = $this->db->get()->result_array();
+        return $result;
+    }
     
     public function verifDokumen($id, $status){
         $rs['code'] = 0;        
@@ -1590,6 +1633,45 @@
                         ->get()->row_array();
 
         $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;        
+            $rs['message'] = 'Terjadi Kesalahan';
+        }else{
+            $this->db->trans_commit();
+        }
+        
+        return $rs;
+    }
+
+    public function verifPeninjauanAbsensi($id, $status){
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';        
+        $this->db->trans_begin();
+
+        $data_verif['status'] = $status;
+        $data_verif['id_m_user_verif'] = $this->general_library->getId();
+        $data_verif['updated_by'] = $this->general_library->getId();
+        $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+        if($status == 1 || $status == 2){
+            $data_verif['keterangan_verif'] = $this->input->post('keterangan');
+        }
+        
+        // dd($this->input->post('list_id'));
+
+        $this->db->where_in('id', $id)
+                ->update('t_peninjauan_absensi', $data_verif);
+
+        // $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
+        //                 ->from('t_peninjauan_absensi a')
+        //                 ->join('m_user b', 'a.id_m_user = b.id')
+        //                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        //                 ->where('a.id', $id)
+        //                 ->where('id_m_status_pegawai', 1)
+        //                 ->get()->row_array();
+
+        // $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

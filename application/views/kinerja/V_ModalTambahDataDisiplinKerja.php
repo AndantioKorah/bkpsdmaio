@@ -1,7 +1,7 @@
 <div class="modal-body">
     <form id="form_input">
         <div class="row">
-        <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN)  { ?>
+        <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN)  { ?>
                 <div class="col-lg-12 col-md-12 mt-2">
                     <label>Pilih Unit Kerja</label>
                     <select class="form-control select2-navy select2 " style="width: 100%"
@@ -16,7 +16,8 @@
             <?php if($this->general_library->isProgrammer() || 
             $this->general_library->isAdminAplikasi() || 
             isKasubKepegawaian($this->general_library->getNamaJabatan()) || 
-            $this->general_library->isHakAkses('verifikasi_keterangan_presensi')) {
+            $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
+            $this->general_library->getBidangUser() == ID_BIDANG_PEKIN) {
             ?>
                  <div class="col-lg-12 col-md-12 mt-2">
                     <label>Pilih Pegawai</label>

@@ -1,29 +1,21 @@
-<h1 class="h3 mb-3">Upload Dokumen Pendukung Absensi</h1>  
 <div class="card card-default">
-    <!-- <div class="card-header">
-        <h4>Upload Dokumen Pendukung Absensi</h4>
-    </div> -->
+    <div class="card-header">
+        <h4>Verifikasi Peninjauan Absensi</h4>
+    </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-lg-2 col-md-12">
-                <button  data-toggle="modal" onclick="tambahData()" href="#tambah_data_disiplin_kerja" class="btn btn-primary "><i class="align-middle me-2 fas fa-fw fa-plus-circle"></i> Tambah</button>           
-            </div>
-        </div>
-        <form id="form_search_disiplin_kerja">
-            <div class="row mt-3">
-                <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
-                    <div class="col-lg-12"><hr></div>
-                    <div class="col-lg col-md-12">
-                        <label>Pilih Unit Kerja</label>
-                        <select class="form-control select2-navy" style="width: 100%"
-                            id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
-                            <?php foreach($skpd as $s){ ?>
-                                <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                <?php } ?>
+        <form id="form_search_verif_dokumen">
+            <div class="row">
                 <div class="col-lg col-md-12">
+                    <label>Pilih Unit Kerja</label>
+                    <select class="form-control select2-navy" style="width: 100%"
+                        id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
+                        <option selected value="0">Semua</option>
+                        <?php foreach($unitkerja as $s){ ?>
+                            <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <!-- <div class="col-lg col-md-12">
                     <label>Pilih Bulan</label>  
                     <select class="form-control select2-navy" style="width: 100%"
                         id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
@@ -43,9 +35,9 @@
                 </div>
                 <div class="col-lg col-md-12">
                     <label>Pilih Tahun</label>  
-                    <input readonly autocomplete="off" class="form-control datepicker customInput"  id="tahun" name="tahun" value="<?=date('Y')?>" />
-                </div>
-                <div class="col-lg col-md-12" style="margin-top: 23px;">
+                    <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                </div> -->
+                <div class="col-lg col-md-12" style="margin-top: 28px;">
                     <button type="submit" class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
                 </div>
             </div>
@@ -61,15 +53,12 @@
               <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          
           <div id="tambah_data_disiplin_kerja_content">
           </div>
       </div>
   </div>
 </div>
 <div class="row">
-<h1 class="h3 mb-3">Data Dokumen Pendukung</h1>  
-
     <div class="col-12" id="result">
     </div>
 </div>
@@ -80,28 +69,16 @@
     $(function(){
         $('#bulan').select2()
         $('#id_unitkerja').select2()
-        $('#form_search_disiplin_kerja').submit()
+        $('#form_search_verif_dokumen').submit()
     })
 
-    function tambahData(){
-        var id_unitkerja = '<?=$this->general_library->getUnitKerjaPegawai()?>'
-        <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
-            id_unitkerja = $('#id_unitkerja').val()
-        <?php } ?>
-        $('#tambah_data_disiplin_kerja_content').html('')
-        $('#tambah_data_disiplin_kerja_content').append(divLoaderNavy)
-        $('#tambah_data_disiplin_kerja_content').load('<?=base_url("kinerja/C_Kinerja/modalTambahDataDisiplinKerja")?>'+'/'+id_unitkerja, function(){
-            $('#loader').hide()
-        })
-    }
-
-    $('#form_search_disiplin_kerja').submit(function(e){
+    $('#form_search_verif_dokumen').submit(function(e){
         $('#result').show()
         $('#result').html('')
         $('#result').append(divLoaderNavy)
         e.preventDefault()
         $.ajax({
-            url: '<?=base_url("kinerja/C_Kinerja/searchDisiplinKerja")?>',
+            url: '<?=base_url("kinerja/C_Kinerja/searchVerifTinjauAbsensi")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){

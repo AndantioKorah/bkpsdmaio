@@ -246,6 +246,7 @@ class C_Simata extends CI_Controller
         $data['timkerja'] = $this->simata->getPengalamanTimPegawai($id_peg);
         $eselonpegawai = $data['profil_pegawai']['eselon']; 
         $data['penugasan'] = $this->simata->getPenugasanPengawai($id_peg,$eselonpegawai);
+        // dd($data['kriteria_kinerja_1']);
 
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
@@ -274,9 +275,14 @@ class C_Simata extends CI_Controller
             $data['result'] = $this->simata->getPenilaianPegawaiJpt($jenis_pengisian);
             $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
-        } else {
+        } else if($_POST['jenis_jabatan'] == 1) {
             $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['result'] = $this->simata->getPenilaianPegawaiAdm($jenis_pengisian);
+            // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
+            $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
+        } else {
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            $data['result'] = $this->simata->getPenilaianPegawaiPengawas($jenis_pengisian);
             // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
         }
@@ -375,6 +381,7 @@ class C_Simata extends CI_Controller
 
     public function loadDetailNineBox($jenis_jab,$jt,$box,$jumlah,$jenis_pengisian)
     {
+       
         $data['result'] = null;
         $data['kotak']=null;
         if($jumlah > 0){

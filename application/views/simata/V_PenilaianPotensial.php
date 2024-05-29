@@ -161,11 +161,24 @@
             <label>Eselon</label>
             <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
                 id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
-                <!-- <option selected value="0">Semua</option> -->
-                    <option value="4">II A</option>
-                    <option value="5">II B</option>
-                    <option value="6">III A</option>
-                    <option value="7">III B</option>
+                
+                <?php if($jenis_pengisian == 1) { ?>
+        
+        <?php } ?>
+        <?php if($jenis_pengisian == 2) { ?>
+          <option value="6">III A</option>
+          <option value="7">III B</option>
+          <option value="8">IV A</option>
+          <option value="9">IV B</option>
+        <?php } ?>
+        <?php if($jenis_pengisian == 3) { ?>
+          <option value="4">II A</option>
+          <option value="5">II B</option>
+          <option value="6">III A</option>
+          <option value="7">III B</option>
+        <?php } ?>
+
+                   
             </select>
           </div>
           
@@ -185,7 +198,7 @@
 <ul class="nav nav-tabs">
 <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true" href="#pngws">Pengawas</button>
         </li>
         <?php } ?>
         <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
@@ -381,9 +394,12 @@ $(function(){
       if(eselon == 4 || eselon == 5){
         var id = 2;
         activaTab('jpt');
-      } else {
+      } else if(eselon == 6 || eselon == 7) {
         var id = 1;
         activaTab('adm');
+      } else {
+        var id = 3;
+        activaTab('pngws');
       }
     
      

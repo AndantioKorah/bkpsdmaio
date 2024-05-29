@@ -137,12 +137,12 @@
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
-	<!-- <li class="sidebar-item">
+	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
 			<i class="align-middle me-2 fa fa-money-bill"></i> 
 			<span class="align-middle">Input Gaji Pegawai</span>
 		</a>
-	</li> -->
+	</li>
 
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>master/nominatif-pegawai">

@@ -136,32 +136,30 @@
     };
     </script>
 
-<div class="tab-content" id="tabs">
-    <div class="tab-pane" id="aaa">...a...</div>
-    <div class="tab-pane" id="bbb">...b...</div>
-    <div class="tab-pane" id="ccc">...c...</div>
-</div>
 
 
-        <!-- <form class="form-custom" id="form_search_dokumen_verif"> -->
+        <!-- <form class="form-custom" id="form_penilaian_talenta" method="post"> -->
+          <input type="hidden" id="jenis_pengisian"  name="jenis_pengisian" value="<?=$jenis_pengisian;?>">
         <div class="row">
           <div class="col-lg-6">
             <label>Unit Kerja</label>
-            <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
-                id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja">
+            <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
+                id="unitkerjamaster" data-dropdown-css-class="select2-navy" name="unitkerjamaster">
                 <?php if($this->general_library->isProgrammer()){ ?>
                   <option selected value="0">Semua</option>
                 <?php } ?>
                 <option selected value="0">Semua</option>
-                <?php foreach($list_skpd as $skpd){ ?>
-                 
-                    <option value="<?=$skpd['id_unitkerja']?>"><?=$skpd['nm_unitkerja']?></option>
+                <?php foreach($list_skpd_master as $skpd){ ?>
+                    <option value="<?=$skpd['id_unitkerjamaster']?>"><?=$skpd['nm_unitkerjamaster']?></option>
                 <?php } ?>
+                <option value="5000000">Kecamatan</option>
+                <option value="8000000">Sekolah</option>
+
             </select>
           </div>
           <div class="col-lg-6" >
             <label>Eselon</label>
-            <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
+            <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
                 id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
                 <!-- <option selected value="0">Semua</option> -->
                     <option value="4">II A</option>
@@ -187,18 +185,18 @@
 <ul class="nav nav-tabs">
 <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
         </li>
         <?php } ?>
         <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
-          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata"  id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#adm">Administrator</a></li>
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#adm">Administrator</a></li>
 
         <!-- <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
         </li> -->
         <?php } ?>
         <?php if($jenis_pengisian == 3) { ?>
-          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata"  id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#jpt">JPT Pratama</a></li>
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#jpt">JPT Pratama</a></li>
 
         <!-- <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
@@ -207,7 +205,7 @@
       </ul>
         
 
-        <div class="form-check ml-2 mt-2">
+        <!-- <div class="form-check ml-2 mt-2"> -->
 
       <!-- <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
@@ -221,7 +219,7 @@
 
           <!-- <button style="margin-top:-5px;" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-sync"></i> Rekam Jejak
-          </button> -->
+          </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             
             <a class="dropdown-item" href="#">
@@ -252,7 +250,7 @@
             <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="8">
             <label class="form-check-label ml-1" for="inlineRadio8"> Riwayat Hukuman Disiplin </label>
             </a>
-          </div>
+          </div> -->
 
       <!-- <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
@@ -327,8 +325,59 @@ $(function(){
     // loadListPegawaiPenilaianPotensialJpt(1)
     })
 
+    $('#form_penilaian_talentax').on('submit', function(e){
+ 
+              
+      $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
+      
+                e.preventDefault();
+                var formvalue = $('#form_penilaian_talenta');
+                var form_data = new FormData(formvalue[0]);
+
+                var eselon = $('#eselon').val()
+                if(eselon == 4 || eselon == 5){
+                  var id = 2;
+                  activaTab('jpt');
+                } else {
+                  var id = 1;
+                  activaTab('adm');
+                }
+              
+               
+                $.ajax({  
+                url:"<?=base_url("simata/C_Simata/submitloadListPegawaiPenilainPotensialJpt")?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    console.log(res)
+                    loadListPegawaiPenilaianPotensialJpt(id,3,1,eselon);
+                  
+
+                        // successtoast(result.msg)
+                        // setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
+                        // if(kode == 1){
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
+                        // } else {
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
+
+                        // }
+            
+                    
+                     
+                    
+                }  
+        }); 
+             
+    }); 
+
     $("#btn_nilai").click(function(){
       var eselon = $('#eselon').val()
+      var jenis_pengisian = $('#jenis_pengisian').val()
+      var skpd = $('#unitkerjamaster').val()
       if(eselon == 4 || eselon == 5){
         var id = 2;
         activaTab('jpt');
@@ -338,7 +387,7 @@ $(function(){
       }
     
      
-      loadListPegawaiPenilaianPotensialJpt(id,3,1,eselon);
+      loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,1,eselon,skpd);
          
     });
 
@@ -355,7 +404,7 @@ $(function(){
    })
   }
 
-  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,penilaian,eselon){
+  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,penilaian,eselon,skpd){
     var radios = document.getElementsByName('inlineRadioOptions');
     // var penilaian = 0;
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -379,7 +428,7 @@ $(function(){
 
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon, function(){
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon+'/'+skpd, function(){
      $('#loader').hide()
    })
   }

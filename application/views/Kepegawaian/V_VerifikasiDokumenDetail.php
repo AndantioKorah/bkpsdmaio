@@ -549,7 +549,18 @@
           <tr>
             <td class="td-lab-dd">Predikat</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['predikat']?></td>
+            <td class="td-val-dd">
+            <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
+                id="input_predikat" data-dropdown-css-class="select2-navy" name="input_predikat">
+                <option <?php if($result['predikat'] == "Sangat Baik") echo "selected";?> value="Sangat Baik">Sangat Baik</option>
+                <option <?php if($result['predikat'] == "Baik") echo "selected";?> value="Baik">Baik</option>
+                <option <?php if($result['predikat'] == "Butuh Perbaikan") echo "selected";?> value="Butuh Perbaikan">Butuh Perbaikan</option>
+                <option <?php if($result['predikat'] == "Kurang") echo "selected";?> value="Kurang">Kurang</option>
+                <option <?php if($result['predikat'] == "Sangat Kurang") echo "selected";?> value="Sangat Kurang">Sangat Kurang</option>
+
+
+            </select>
+           </td>
           </tr>
   
         </table>
@@ -825,6 +836,8 @@
   </div>
 
   <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif" value="<?php if(isset($result['tmt_jabatan'])) echo $result['tmt_jabatan']; else echo "";?>">
+  <input type="hidden" name="edit_predikat" id="edit_predikat" value="<?php if(isset($result['predikat'])) echo $result['predikat']; else echo "";?>">
+  
   <div class="form-group" style="display:none" id="field_ket">
     <label for="exampleFormControlTextarea1">Keterangan</label>
     <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
@@ -938,7 +951,11 @@
 
       var tmt = $("#jabatan_tmt_verif").val()
       $("#edit_tmt_jabatan_verif").val(tmt);
-      // return false;
+
+      var predikat = $("#input_predikat").val()
+      $("#edit_predikat").val(predikat);
+
+      
     
 
       document.getElementById('btn_verif_dok').disabled = true;
@@ -1014,6 +1031,11 @@
       $('#field_ket').hide('fast') 
     }
    }
+
+   $("#input_predikat").on( "change", function() {
+    $("#edit_predikat").val(this.value);
+    } );
+
   </script>
 <?php } else { ?>
   <div class="col-lg-12 text-center">

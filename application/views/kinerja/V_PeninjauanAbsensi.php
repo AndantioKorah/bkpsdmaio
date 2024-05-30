@@ -59,21 +59,41 @@
 
     <div class="form-group mt-2">
          <label class="bmd-label-floating">Jenis Absensi </label>
-         <select class="form-control select2-navy customInput" name="jenis_absensi" id="jenis_absensi"  required>
+         <select class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
          <option value="" selected disabled>- Pilih Jenis Absen -</option>
          <option value="1" >Absen Pagi </option>
          <option value="2" >Absen Sore </option>
          </select>
     </div>
 
-  <div class="form-group mt-2">
+    <div class="form-group mt-2">
+         <label class="bmd-label-floating">Jenis Bukti Absensi </label>
+         <select class="form-control select2-navy select2" name="jenis_bukti" id="jenis_bukti"  required>
+         <option value="" selected disabled>- Pilih Jenis Bukti Absen -</option>
+         <option value="1" >Foto Bersama Teman </option>
+         <option value="2" >Screenshot Whatsapp </option>
+         </select>
+    </div>
+
+    <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
+         <label class="bmd-label-floating">Nama Teman Pegawai </label>
+         <select class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
+         <option value="" selected>- Pilih Pegawai -</option>
+         <?php if($pegawai){ foreach($pegawai as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['gelar1']?><?=$r['nama']?><?=$r['gelar2']?></option>
+                    <?php } } ?>
+         </select>
+    </div>
+
+
+  <!-- <div class="form-group mt-2">
     <label for="exampleFormControlTextarea1">Keterangan</label>
     <textarea class="form-control" style="margin-bottom:10px;" id="keterangan" name="keterangan" rows="3" required></textarea>
-  </div>
+  </div> -->
 
    
 
-  <div class="form-group ">
+  <div class="form-group mt-2">
     <label>Dokumen Bukti  (Format PNG/JPG)</label>
     <!-- <input onclick="getDok()" class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
     <!-- <input  class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
@@ -89,7 +109,7 @@
 <span>
     <br>
     Keterangan : <br> 
-    - Pada bagian keterangan jika bukti foto berupa foto bersama teman, tuliskan nama pegawai yang tersebut jika bukan cukup ketik - saja.<br>
+    <!-- - Pada bagian keterangan jika bukti foto berupa foto bersama teman, tuliskan nama pegawai yang tersebut jika bukan cukup ketik - saja.<br> -->
     - Jika menggunakan foto bersama stiker, upload foto tersebut ke grup kepegawaian setelah itu discreenshot dan di upload sebagai bukti.<br>
     - Maksimal Peninjauan Absensi hanya 2 kali dalam sebulan.
 </span>
@@ -105,14 +125,22 @@
 
 <script>
 
+
+
 $(function(){
+
+  $(".select2").select2({   
+		width: '100%',
+		dropdownAutoWidth: true,
+		allowClear: true,
+	});
 
         loadListPeninjauan()
     })
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    startDate: '-0d',
+    // startDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,
     autoclose: true,
@@ -129,8 +157,7 @@ function loadListPeninjauan(){
    }
 
 $('#form_tinjau_absen').on('submit', function(e){  
-        document.getElementById('btn_upload').disabled = true;
-        $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+       
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()
        
@@ -138,7 +165,16 @@ $('#form_tinjau_absen').on('submit', function(e){
         var formvalue = $('#form_tinjau_absen');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('image_file').files.length;
-        
+        var jenis_bukti = $('#jenis_bukti').val()
+        var teman_absensi = $('#teman_absensi').val()
+
+        if(jenis_bukti == 1) {
+          if(teman_absensi == ""){
+            errortoast('Pegawai belum diisi')
+            return false;
+          }
+        }
+
         if(ins == 0){
         errortoast("Silahkan upload bukti kegiatan terlebih dahulu");
         document.getElementById('btn_upload').disabled = false;
@@ -146,7 +182,8 @@ $('#form_tinjau_absen').on('submit', function(e){
         return false;
         }
        
-      
+        document.getElementById('btn_upload').disabled = true;
+        $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         $.ajax({  
         url:"<?=base_url("kinerja/C_Kinerja/insertPeninjauanAbsensi")?>",
         method:"POST",  
@@ -277,4 +314,12 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
       e.target.files = dataTransfer.files;
   });
 
+  $('#jenis_bukti').on('change', function() {
+        if(this.value == 1){
+        $('#teman_pegawai').show('fast')
+        } else {
+          $('#teman_pegawai').hide('fast')
+        }
+              
+          });
 </script>

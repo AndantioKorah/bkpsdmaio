@@ -475,6 +475,7 @@ class C_Kinerja extends CI_Controller
     public function tinjauABsensi()
     {
         $data['skpd'] = $this->master->getAllUnitKerja();
+        $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();
         render('kinerja/V_PeninjauanAbsensi', '', '', $data);
     }
 

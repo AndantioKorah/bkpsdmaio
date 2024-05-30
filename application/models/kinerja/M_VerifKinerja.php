@@ -239,6 +239,16 @@
                                                 ->order_by('e.eselon', 'asc')
                                                 ->group_by('a.id')
                                                 ->get()->result_array();
+                    } else if($data['filter_walikota'] == 'skpd') {
+                                             $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                                            ->from('m_user a')
+                                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                                            ->where('d.skpd', $data['filter_skpd'])
+                                            ->where('a.flag_active', 1)
+                                            ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
+                                            ->group_by('a.id')
+                                            ->get()->result_array();
                     } else {
                         $list_eselon = ['II B', 'II A'];
                         $list_pegawai = $this->db->select('*, a.id as id_m_user')

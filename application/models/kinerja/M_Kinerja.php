@@ -372,11 +372,11 @@
             $id =  $this->general_library->getId();
             return $this->db->select('a.*,c.gelar1,c.nama,c.gelar2')
                 ->from('t_peninjauan_absensi a')
-                ->join('m_user b', 'a.teman_absensi = b.id')
-                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('m_user b', 'a.teman_absensi = b.id', 'left')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws','left')
                 ->where('a.id_m_user', $id)
                 ->where('a.flag_active', 1)
-                ->where('b.flag_active', 1)
+                // ->where('b.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();
            
@@ -3067,14 +3067,18 @@
     }
 
     function getPegawaiPeninjauanAbsensi(){
+        $id_peg = $this->general_library->getIdPegSimpeg();
         $this->db->select('a.*, b.id')
         ->where('a.id_m_status_pegawai', 1)
         ->where('b.flag_active', 1)
         ->where('a.skpd', $this->general_library->getUnitKerjaPegawai())
+        ->where_not_in('a.id_peg', [$id_peg])
         ->join('m_user b', 'b.username = a.nipbaru_ws')
         ->from('db_pegawai.pegawai a');
         return $this->db->get()->result_array(); 
     }
+
+    
 
     
 }

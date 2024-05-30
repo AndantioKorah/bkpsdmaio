@@ -288,17 +288,25 @@ class C_Rekap extends CI_Controller
 
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
         $data['rekap'] = $data['result']['rekap'];
+        $data['rekap_pppk'] = $data['result']['rekap_pppk'];
         $data['hukdis'] = $data['result']['hukdis'];
         $data['kepalabkpsdm'] = $data['result']['kepalabkpsdm'];
+        $data['pppk'] = $data['result']['pppk'];
         
+        unset($data['result']['rekap_pppk']);
+        unset($data['result']['pppk']);
         unset($data['result']['rekap']);
         unset($data['result']['hukdis']);
         unset($data['result']['kepalabkpsdm']);
         
         foreach ($data['result'] as $key => $row) {
-            if(isset($row['nama']) || isset($row['nama_pegawai'])){
-                $nama_pegawai_result[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
-                $kelas_jabatan_result[$key] = $row['kelas_jabatan'];
+            if($row['flag_terima_tpp'] == 0){
+                unset($data['result'][$key]);
+            } else {
+                if(isset($row['nama']) || isset($row['nama_pegawai'])){
+                    $nama_pegawai_result[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
+                    $kelas_jabatan_result[$key] = $row['kelas_jabatan'];
+                }
             }
         }
         array_multisort($kelas_jabatan_result, SORT_DESC, $nama_pegawai_result, SORT_ASC, $data['result']);

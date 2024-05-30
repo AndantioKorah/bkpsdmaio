@@ -10,7 +10,7 @@
     <table style="width: 100%; border: 1px solid black;" border=1 style="border-collapse: collapse;">
         <tr>
             <td style="border: 1px solid black; text-align: center;">No</td>
-            <td style="border: 1px solid black; text-align: center;">Jumlah ASN</td>
+            <td style="border: 1px solid black; text-align: center;">Jumlah <?=isset($flag_pppk) ? 'PPPK' : 'ASN'?></td>
             <td style="border: 1px solid black; text-align: center;">JHK</td>
             <td style="border: 1px solid black; text-align: center;">% Rata-rata Kehadiran</td>
             <td style="border: 1px solid black; text-align: center;">Nilai Rata-Rata Capaian Bobot Disiplin Kerja (40%)</td>

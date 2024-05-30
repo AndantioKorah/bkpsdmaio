@@ -1184,7 +1184,7 @@
                 ," ", b.nama_jabatan)
             ) AS nama_jabatan,
             b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
-            a.pangkat')
+            a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
@@ -2221,20 +2221,35 @@
         $rekap['jumlah_yang_diterima'] = 0;
         $rekap['tpp_final'] = 0;
 
+        $rekap_pppk['jumlah_pegawai'] = 0;
+        $rekap_pppk['rata_rata_presentase_kehadiran'] = 0;
+        $rekap_pppk['total_presentase_kehadiran'] = 0;
+        $rekap_pppk['rata_rata_bobot_disiplin_kerja'] = 0;
+        $rekap_pppk['total_bobot_disiplin_kerja'] = 0;
+        $rekap_pppk['rata_rata_bobot_produktivitas_kerja'] = 0;
+        $rekap_pppk['total_bobot_produktivitas_kerja'] = 0;
+        $rekap_pppk['pagu_tpp'] = 0;
+        $rekap_pppk['selisih_capaian_pagu'] = 0;
+        $rekap_pppk['jumlah_pajak_pph'] = 0;
+        $rekap_pppk['bpjs'] = 0;
+        $rekap_pppk['jumlah_yang_diterima'] = 0;
+        $rekap_pppk['tpp_final'] = 0;
+
         $result = null;
 
         $result['hukdis'] = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : [];
 
         foreach($list_pegawai['result'] as $l){
             if(isset($l['nipbaru_ws'])){
-
                 $result[$l['nipbaru_ws']]['nama_pegawai'] = getNamaPegawaiFull($l);
                 $result[$l['nipbaru_ws']]['nip'] = $l['nipbaru_ws'];
                 $result[$l['nipbaru_ws']]['pangkat'] = $l['nm_pangkat'];
                 $result[$l['nipbaru_ws']]['id_pangkat'] = $l['id_pangkat'];
                 $result[$l['nipbaru_ws']]['nama_jabatan'] = $l['nama_jabatan'];
                 $result[$l['nipbaru_ws']]['kelas_jabatan'] = $l['kelas_jabatan'];
-
+                $result[$l['nipbaru_ws']]['flag_terima_tpp'] = $l['flag_terima_tpp'];
+                $result[$l['nipbaru_ws']]['statuspeg'] = $l['statuspeg'];
+                
                 // $result[$l['nipbaru_ws']]['nomor_golongan'] = $l['rekap_kehadiran']['golongan'];
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = $l['rekap_kehadiran']['eselon'];
@@ -2251,6 +2266,7 @@
                 $result[$l['nipbaru_ws']]['presentase_kehadiran'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['presentase_kehadiran']) : 0;
                 $result[$l['nipbaru_ws']]['jhk'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['jhk']) : 0;
                 $rekap['jhk'] = $result[$l['nipbaru_ws']]['jhk'];
+                $rekap_pppk['jhk'] = $result[$l['nipbaru_ws']]['jhk'];
                 $result[$l['nipbaru_ws']]['hadir'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['hadir']) : 0;
                 $result[$l['nipbaru_ws']]['tidak_hadir'] = isset($l['rekap_kehadiran']) ? ($l['rekap_kehadiran']['rekap']['tidak_hadir']) : 0;
 
@@ -2409,15 +2425,32 @@
                     $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] +
                     $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'];
 
-                $rekap['jumlah_pegawai']++;
-                $rekap['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];
-                $rekap['total_bobot_disiplin_kerja'] += $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
-                $rekap['total_bobot_produktivitas_kerja'] += $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'];
-                $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
-                $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['besaran_tpp'];
-                $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
-                $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
+                if($result[$l['nipbaru_ws']]['statuspeg'] == 3){ //jika PPPK
+                    if($result[$l['nipbaru_ws']]['flag_terima_tpp'] == 1){ //jika terima TPP
+                        $rekap_pppk['jumlah_pegawai']++;
+                        $rekap_pppk['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];
+                        $rekap_pppk['total_bobot_disiplin_kerja'] += $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
+                        $rekap_pppk['total_bobot_produktivitas_kerja'] += $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'];
+                        $rekap_pppk['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
+                        $rekap_pppk['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
+                        $rekap_pppk['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
+                        $rekap_pppk['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap_pppk['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
+
+                        $result['pppk'][$l['nipbaru_ws']] = $result[$l['nipbaru_ws']];
+                        unset($result[$l['nipbaru_ws']]);
+                    }
+                } else {
+                    $rekap['jumlah_pegawai']++;
+                    $rekap['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];
+                    $rekap['total_bobot_disiplin_kerja'] += $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
+                    $rekap['total_bobot_produktivitas_kerja'] += $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'];
+                    $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
+                    $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
+                    $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
+                    $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                    $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
+                }
             }
         }
 
@@ -2427,6 +2460,14 @@
         $rekap['selisih_capaian_pagu'] = ($rekap['pagu_tpp'] - $rekap['jumlah_yang_diterima']);
         $result['rekap'] = $rekap;
         
+        if($rekap_pppk['jumlah_pegawai'] > 0){
+            $rekap_pppk['rata_rata_presentase_kehadiran'] = ($rekap_pppk['total_presentase_kehadiran'] / $rekap_pppk['jumlah_pegawai']);
+            $rekap_pppk['rata_rata_bobot_disiplin_kerja'] = ($rekap_pppk['total_bobot_disiplin_kerja'] / $rekap_pppk['jumlah_pegawai']);
+            $rekap_pppk['rata_rata_bobot_produktivitas_kerja'] = ($rekap_pppk['total_bobot_produktivitas_kerja'] / $rekap_pppk['jumlah_pegawai']);
+            $rekap_pppk['selisih_capaian_pagu'] = ($rekap_pppk['pagu_tpp'] - $rekap_pppk['jumlah_yang_diterima']);
+        }
+        $result['rekap_pppk'] = $rekap_pppk;
+
         $result['kepalabkpsdm'] = $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat')
                                         ->from('db_pegawai.pegawai a')
                                         ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
@@ -2434,7 +2475,7 @@
                                         ->where('b.kepalaskpd', 1)
                                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                                         ->get()->row_array();
-        // dd($rekap);
+        // dd($result);
         return $result;
     }
 

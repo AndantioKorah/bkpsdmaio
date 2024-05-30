@@ -3796,11 +3796,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                    ->join('db_pegawai.eselon h', 'c.eselon = h.nm_eselon')
-                                //    ->join('db_pegawai.unitkerja i', 'a.skpd = i.id_unitkerja')
-                                //    ->join('db_pegawai.unitkerjamaster j', 'i.id_unitkerjamaster = j.id_unitkerjamaster')
                                    ->where('a.id_m_status_pegawai', 1)
                                    ->where('b.jenjang_jabatan', $jenis_pengisian)
-                                   // ->where('a.flag_active', 1)
                                    ->order_by('c.eselon', 'asc')
                                    ->group_by('a.id_peg');
                
@@ -3902,7 +3899,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
                                         $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                                             
-                                        $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
+                                        // $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
     
     
              
@@ -3934,12 +3931,12 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                     $bobot7 = $this->getBobot($id_rekamjjk7); 
                                     $total_rj7 = $skor7  * $bobot7 / 100;
     
-                                    $skor8 =  $this->getSkor($id_pertimbangan1); 
-                                    $bobot8 = $this->getBobot($id_pertimbangan1); 
-                                    $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
+                                    // $skor8 =  $this->getSkor($id_pertimbangan1); 
+                                    // $bobot8 = $this->getBobot($id_pertimbangan1); 
+                                    // $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
                                     
                                     $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
-                                    $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
+                                    // $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
                         
                                         $data["id_peg"] = $rs['id_pegawai'];
                                         $data["pendidikan_formal"] = $id_rekamjjk1;
@@ -3950,7 +3947,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $data["penghargaan"] = $id_rekamjjk6;
                                         $data["riwayat_hukdis"] = $id_rekamjjk7;
                                         // $data['nilai_assesment'] = $nilaiass;
-                                        $data["pengalaman_organisasi"] = $id_pertimbangan1;
+                                        // $data["pengalaman_organisasi"] = $id_pertimbangan1;
                                         $data["jenjang_jabatan"] = $jenis_pengisian;
 
                                         
@@ -3974,9 +3971,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 'penghargaan' => $id_rekamjjk6,
                                 'riwayat_hukdis' => $id_rekamjjk7,
                                 // 'nilai_assesment' => $nilaiass,
-                                'pengalaman_organisasi' => $id_pertimbangan1,
-                                'jenjang_jabatan' => $jenis_pengisian,
-                                    ]);
+                                // 'pengalaman_organisasi' => $id_pertimbangan1,
+                                'jenjang_jabatan' => $jenis_pengisian]);
                                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                                     } else {
                                         $this->db->insert('db_simata.t_penilaian_potensial', $data);
@@ -3984,10 +3980,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     
                                     }
     
-                                         $this->db->where('id_peg', $rs['id_pegawai'])
-                                         ->where('jenjang_jabatan', $jenis_pengisian) 
-                                        ->update('db_simata.t_penilaian', 
-                                        ['res_potensial_rj' => $total_rj]);
+                                        //  $this->db->where('id_peg', $rs['id_pegawai'])
+                                        //  ->where('jenjang_jabatan', $jenis_pengisian) 
+                                        // ->update('db_simata.t_penilaian', 
+                                        // ['res_potensial_rj' => $total_rj]);
     
                                          $getAllNilaiPotensial =  $this->db->select('*')
                                         ->from('db_simata.t_penilaian a')
@@ -4015,7 +4011,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             $dataInsert2['res_potensial_rj']      = $total_rj;
                                             $dataInsert2['jenjang_jabatan']      = $jenis_pengisian;
                                             $dataInsert2['res_potensial_total']      = $total_rj;
-                                            $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
+                                            // $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
                                             $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
                                         }
         

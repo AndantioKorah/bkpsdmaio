@@ -1391,8 +1391,11 @@
         }
 
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){
-            $explode_awal = explode("-", $tanggal_awal);
-            $explode_akhir = explode("-", $tanggal_akhir);
+            $new_tanggal_awal = date('Y-m-d', strtotime($tanggal_awal));
+            $new_tanggal_akhir = date('Y-m-d', strtotime($tanggal_awal));
+
+            $explode_awal = explode("-", $new_tanggal_awal);
+            $explode_akhir = explode("-", $new_tanggal_akhir);
             
             return $this->db->select('*')
                         ->from('t_hari_libur')

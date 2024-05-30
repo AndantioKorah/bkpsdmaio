@@ -591,7 +591,7 @@
     }
 
     public function baseQueryAtasan(){
-        return $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan,
+        return $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, b.handphone,
             a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, g.nama_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -608,7 +608,22 @@
         
     }
 
-    public function getAtasanPegawai($pegawai){
+    public function getAtasanPegawai($pegawai, $id_m_user = null){
+        if($id_m_user != null){
+            $pegawai = $this->db->select('b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
+                        d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
+                                ->join('m_bidang e', 'a.id_m_bidang = e.id', 'left')
+                                ->join('m_sub_bidang f', 'e.id = a.id_m_sub_bidang', 'left')
+                                ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
+                                ->where('a.id', $id_m_user)
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+        }
+
         $atasan = null;
         $kepala = null;
         $jenis_skpd = 0;
@@ -617,13 +632,12 @@
         // jenis_skpd 2 kecamatan
         // jenis_skpd 3 sekolah
         // jenis_skpd 4 puskes
-        // dd($pegawai);
+        // dd($pegawai['id_unitkerja']);
 
         if($pegawai['kepalaskpd'] != 1){ //bukan kepala skpd
             if($pegawai['id_unitkerjamaster'] == 4000000 || // 
-            $pegawai['id_unitkerjamaster'] == 3000000 || 
+            $pegawai['id_unitkerjamaster'] == 3000000 || $pegawai['id_unitkerjamaster'] == 1000000 || 
             stringStartWith('Bagian', $pegawai['nm_unitkerja'])){ // dinas, badan & bagian
-                // dd('asd');
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -677,6 +691,10 @@
                         }
                     } else if($pegawai['id_eselon'] == 6 || $pegawai['id_eselon'] == 7){ // ESELON III, kabid atau sek
                         $atasan = $kepala;
+                    } else {
+                        if($atasan == null){
+                            $atasan = $kepala;
+                        }
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
                     // $atasan = $kepala;
@@ -904,6 +922,7 @@
                 $kepala = $atasan;
             }
         }
+
         return ['atasan' => $atasan, 'kepala' => $kepala];
     }
 

@@ -441,7 +441,7 @@
                             $potongan_pajak_keseluruhan += $r['nominal_pph'];
                             $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
                             $jumlah_gaji += $r['besaran_gaji'];
-                            $jumlah_bpjs += $r['bpjs'];
+                            $jumlah_bpjs += excelRoundDown($r['bpjs'], 1);
                             $jumlah_tpp_diterima += $r['tpp_final'];
 
                         ?>
@@ -716,7 +716,7 @@
                             foreach($result as $r){
                                 $total_jumlah_yang_dicapai += $r['besaran_tpp'];
                                 $total_potongan_pph += $r['nominal_pph'];
-                                $total_bpjs += $r['bpjs'];
+                                $total_bpjs += excelRoundDown($r['bpjs'], 1);
                                 $total_jumlah_yang_diterima += $r['tpp_final'];
                             ?>
                                 <tr>

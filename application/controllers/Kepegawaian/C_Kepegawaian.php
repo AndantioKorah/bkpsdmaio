@@ -12,6 +12,7 @@ class C_Kepegawaian extends CI_Controller
 		parent::__construct();
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
+		$this->load->model('kinerja/M_Kinerja', 'kinerja');
 		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -1407,6 +1408,10 @@ class C_Kepegawaian extends CI_Controller
 
 	public function permohonanCuti(){
 		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		
+		$id_m_user = $this->general_library->getId();
+		$data['atasan'] = $this->kinerja->getAtasanPegawai(null, $id_m_user);
+		
 		$data['master_jenis_cuti'] = $this->general->getAllWithOrderGeneral('db_pegawai.cuti', 'id_cuti', 'asc');
         render('kepegawaian/V_PermohonanCuti', '', '', $data);
 	}

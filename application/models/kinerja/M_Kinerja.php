@@ -179,7 +179,7 @@
                 $nama_file = '[""]';
                 $image = $nama_file;
                 $dataPost = $this->input->post();
-                $this->createLaporanKegiatan($dataPost,$image);
+                $this->createPeninjauanAbsensi($dataPost,$image);
             } else {
     
             for($i=0;$i<$countfiles;$i++){
@@ -321,13 +321,26 @@
 
         public function createPeninjauanAbsensi($dataPost,$image){
             $this->db->trans_begin();
-            $data = array('tanggal_absensi' => $dataPost['tanggal_absensi'], 
-                          'keterangan' => $dataPost['keterangan'],
-                          'jenis_absensi' => $dataPost['jenis_absensi'],
-                          'bukti_kegiatan' => $image,
-                          'id_m_user' => $this->general_library->getId()
-            );
-            $result = $this->db->insert('t_peninjauan_absensi', $data);
+            // $data = array('tanggal_absensi' => $dataPost['tanggal_absensi'], 
+            //             //   'keterangan' => $dataPost['keterangan'],
+            //               'jenis_absensi' => $dataPost['jenis_absensi'],
+            //               'jenis_bukti' => $dataPost['jenis_bukti'],
+            //               'bukti_kegiatan' => $image,
+            //               'id_m_user' => $this->general_library->getId(),
+            //               if($dataPost['jenis_bukti'] == 1){
+            //                 'teman_absensi' => $dataPost['teman_absensi'],
+            //               }
+            // );
+            $dataInsert['tanggal_absensi']      = $dataPost['tanggal_absensi'];
+            $dataInsert['jenis_absensi']      = $dataPost['jenis_absensi'];
+            $dataInsert['jenis_bukti']      = $dataPost['jenis_bukti'];
+            $dataInsert['bukti_kegiatan']      = $image;
+            $dataInsert['id_m_user']      = $this->general_library->getId();
+            if($dataPost['jenis_bukti'] == 1){
+            $dataInsert['teman_absensi']      = $dataPost['teman_absensi'];
+              }
+           
+            $result = $this->db->insert('t_peninjauan_absensi', $dataInsert);
            
            
              if ($this->db->trans_status() === FALSE)
@@ -357,10 +370,13 @@
 
         public function loadPeninjauanAbsensi(){
             $id =  $this->general_library->getId();
-            return $this->db->select('a.*')
+            return $this->db->select('a.*,c.gelar1,c.nama,c.gelar2')
                 ->from('t_peninjauan_absensi a')
+                ->join('m_user b', 'a.teman_absensi = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                 ->where('a.id_m_user', $id)
                 ->where('a.flag_active', 1)
+                ->where('b.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();
            
@@ -1601,16 +1617,15 @@
     }
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
+        $this->db->select('g.nama as teman_nama, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
         ->from('t_peninjauan_absensi a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-        ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->join('m_user e', 'a.teman_absensi = e.id', 'left')
         ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
-        // ->where('a.bulan', floatval($bulan))
-        // ->where('a.tahun', floatval($tahun))
+        ->join('db_pegawai.pegawai g', 'e.username = g.nipbaru_ws','left')
         ->where('a.status', floatval($status))
-        ->where('id_m_status_pegawai', 1)
+        ->where('c.id_m_status_pegawai', 1)
         ->where('a.flag_active', 1);
 
         if($id_unitkerja != 0){
@@ -1677,7 +1692,29 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
         
-        // dd($this->input->post('list_id'));
+        // dd($this->input->post());
+
+
+        if($this->input->post('jenis_bukti') == 1){
+           $absen = $this->db->select('*')
+                        ->from('db_sip.absen a')
+                        ->where('a.user_id', $this->input->post('teman_absensi'))
+                        ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                        ->get()->row_array();
+                       
+                    
+            if($this->input->post('jenis_absensi') == 1){
+                $dataUpdate['masuk'] = $absen['masuk'];
+                $this->db->where('user_id', $this->input->post('id_user'))
+                ->where('tgl', $this->input->post('tanggal_absensi'))
+                ->update('db_sip.absen', $dataUpdate);
+            } else {
+                $dataUpdate['pulang'] = $absen['pulang'];
+                $this->db->where('user_id', $this->input->post('id_user'))
+                ->where('tgl', $this->input->post('tanggal_absensi'))
+                ->update('db_sip.absen', $dataUpdate);
+            }
+        }
 
         $this->db->where_in('id', $id)
                 ->update('t_peninjauan_absensi', $data_verif);
@@ -3028,4 +3065,16 @@
                     'updated_by' => $this->general_library->getId()
                 ]);
     }
+
+    function getPegawaiPeninjauanAbsensi(){
+        $this->db->select('a.*, b.id')
+        ->where('a.id_m_status_pegawai', 1)
+        ->where('b.flag_active', 1)
+        ->where('a.skpd', $this->general_library->getUnitKerjaPegawai())
+        ->join('m_user b', 'b.username = a.nipbaru_ws')
+        ->from('db_pegawai.pegawai a');
+        return $this->db->get()->result_array(); 
+    }
+
+    
 }

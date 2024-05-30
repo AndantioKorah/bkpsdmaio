@@ -17,7 +17,8 @@
                 <th class="text-center ">No</th>
                 <th class="text-left ">Tanggal Absensi</th>
                 <th class="text-left ">Jenis Absensi</th>
-                <th class="text-left ">Keterangan</th>
+                <th class="text-left ">Jenis Bukti Absensi</th>
+                <th class="text-left ">Teman Absensi</th>
                 <th class="text-left ">Status</th>
                 <th class="text-left ">Bukti Dokumen</th>               
                 <th></th>
@@ -27,8 +28,14 @@
                     <tr>
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=$lp['tanggal_absensi']?></td>
-                        <td class="text-left"><?=$lp['jenis_absensi']?></td>
-                        <td class="text-left"><?=$lp['keterangan']?></td>
+                        <td class="text-left">
+                          <?php if($lp['jenis_absensi'] == 1) echo "Absen Pagi"; else echo "Absen Sore";?>
+                        </td>
+                        <td class="text-left">
+                          <?php if($lp['jenis_bukti'] == 1) echo "Foto Bersama Teman"; else echo "Screenshot Whatsapp";?>
+                        </td>
+                        <td class="text-left"><?=$lp['gelar1']?><?=$lp['nama']?><?=$lp['gelar2']?></td>
+
                         <td class="text-left"> 
                         <?php if($lp['status'] == 0) echo  "Menunggu Verifikasi BKPSDM";
                                                     else if($lp['status'] == 1) echo "diterima";

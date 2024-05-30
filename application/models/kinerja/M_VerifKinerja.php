@@ -220,21 +220,53 @@
                 //                             ->get()->result_array();
                 // } else if($data['filter_walikota'] == 'eselon_dua'){
                     // $list_role = ['kepalabadan', 'setda', 'camat', 'asisten'];
-                    $list_eselon = ['II B', 'II A'];
-                    $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                    if($data['filter_walikota'] == 'eselon_tiga'){
+                        $list_eselon = ['III A'];
+                        $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                                                ->from('m_user a')
+                                                // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                                // ->join('m_role c', 'c.id = b.id_m_role')
+                                                ->join('db_pegawai.pegawai d', 'd.nipbaru_ws= a.username')
+                                                ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
+                                                ->join('db_pegawai.unitkerja f', 'f.id_unitkerja = d.skpd')
+                                                ->join('db_pegawai.unitkerjamaster g', 'g.id_unitkerjamaster = f.id_unitkerjamaster')
+                                                // ->where_in('c.role_name', $list_role)
+                                                ->where_in('e.eselon', $list_eselon)
+                                                ->where_in('g.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                                ->where('a.flag_active', 1)
+                                                // ->where('b.flag_active', 1)
+                                                ->where('a.flag_active', 1)
+                                                ->order_by('e.eselon', 'asc')
+                                                ->group_by('a.id')
+                                                ->get()->result_array();
+                    } else if($data['filter_walikota'] == 'skpd') {
+                                             $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
-                                            // ->join('m_user_role b', 'a.id = b.id_m_user')
-                                            // ->join('m_role c', 'c.id = b.id_m_role')
-                                            ->join('db_pegawai.pegawai d', 'd.nipbaru_ws= a.username')
-                                            ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
-                                            // ->where_in('c.role_name', $list_role)
-                                            ->where_in('e.eselon', $list_eselon)
+                                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                                            ->where('d.skpd', $data['filter_skpd'])
                                             ->where('a.flag_active', 1)
-                                            // ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
-                                            ->order_by('e.eselon', 'asc')
+                                            ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
+                    } else {
+                        $list_eselon = ['II B', 'II A'];
+                        $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                                                ->from('m_user a')
+                                                // ->join('m_user_role b', 'a.id = b.id_m_user')
+                                                // ->join('m_role c', 'c.id = b.id_m_role')
+                                                ->join('db_pegawai.pegawai d', 'd.nipbaru_ws= a.username')
+                                                ->join('db_pegawai.jabatan e', 'e.id_jabatanpeg = d.jabatan')
+                                                // ->where_in('c.role_name', $list_role)
+                                                ->where_in('e.eselon', $list_eselon)
+                                                ->where('a.flag_active', 1)
+                                                // ->where('b.flag_active', 1)
+                                                ->where('a.flag_active', 1)
+                                                ->order_by('e.eselon', 'asc')
+                                                ->group_by('a.id')
+                                                ->get()->result_array();
+                    }
+                   
                 // } else if($data['filter_walikota'] == 'eselon_tiga'){
                 //     $list_eselon = ['III B', 'III A'];
                 //     $list_pegawai = $this->db->select('*, a.id as id_m_user')
@@ -620,6 +652,7 @@
         public function loadPegawaiKomponenKinerja($data){
             $result = null;
             $list_id_pegawai = $this->getListIdPegawaiForVerif($data);
+            // dd($data);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user')
                                 ->from('m_user a')

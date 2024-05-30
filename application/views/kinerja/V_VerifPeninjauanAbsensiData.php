@@ -1,11 +1,14 @@
 <?php if($result){ ?>
+    <div class="table-responsive">
     <table border=1 class="table table-hover" id="table_disiplin_kerja_result_data">
         <thead>
             <th class="text-center">No</th>
             <th class="text-left">Nama Pegawai</th>
             <th class="text-left">Unit Kerja</th>
             <th class="text-center">Tanggal Absensi</th>
-            <th class="text-center">Keterangan</th>
+            <th class="text-center">Jenis Absensi</th>
+            <th class="text-center">Jenis Bukti Absensi</th>
+            <th class="text-center">Teman Absensi</th>
             <th class="text-center">Dokumen</th>
             <th class="text-center">Keterangan Verif</th>
             <th></th>
@@ -20,9 +23,16 @@
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
                         // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
                     ?>
-                    <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
+                  
                     <td class="text-center"><?= formatDateNamaBulan($r['tanggal_absensi'])?></td>
-                    <td class="text-center"><?= ($r['keterangan']) ?></td>
+                    <td class="text-left">
+                          <?php if($r['jenis_absensi'] == 1) echo "Absen Pagi"; else echo "Absen Sore";?>
+                        </td>
+                        <td class="text-left">
+                          <?php if($r['jenis_bukti'] == 1) echo "Foto Bersama Teman"; else echo "Screenshot Whatsapp";?>
+                        </td>
+                        <td class="text-left"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></td>
+
                     <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-file"></i> Dokumen
@@ -51,7 +61,7 @@
 
                                       } else {
                                         echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
-                                        // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$lp['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
+                                        // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$r['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
                                       }
                                     }
                                    $nodok++;
@@ -71,8 +81,21 @@
                             <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         <?php } else if($status == 0) { ?> 
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
-                        <?php } else if($status == 3){ ?>
+                            <input type="hidden" class="form-control" id="jenis_bukti_<?=$r['id']?>" value="<?=$r['jenis_bukti']?>"/>
+                            <input type="hidden" class="form-control" id="teman_absensi_<?=$r['id']?>" value="<?=$r['teman_absensi']?>"/>
+                            <input type="hidden" class="form-control" id="tanggal_absensi_<?=$r['id']?>" value="<?=$r['tanggal_absensi']?>"/>
+                            <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
+                            <input type="hidden" class="form-control" id="jenis_absensi_<?=$r['id']?>" value="<?=$r['jenis_absensi']?>"/>
+                       
+                            <?php } else if($status == 3){ ?>
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
+                            <input type="hidden" class="form-control" id="jenis_bukti_<?=$r['id']?>" value="<?=$r['jenis_bukti']?>"/>
+                            <input type="hidden" class="form-control" id="teman_absensi_<?=$r['id']?>" value="<?=$r['teman_absensi']?>"/>
+                            <input type="hidden" class="form-control" id="tanggal_absensi_<?=$r['id']?>" value="<?=$r['tanggal_absensi']?>"/>
+                            <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
+                            <input type="hidden" class="form-control" id="jenis_absensi_<?=$r['id']?>" value="<?=$r['jenis_absensi']?>"/>
+                            
+
                             <span style="font-size: 14px;"><?='(DIBATALKAN pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         <?php } ?>
                     </td>
@@ -88,6 +111,7 @@
             <?php $no++; } ?>
         </tbody>
     </table>
+    </div>
 <?php } else { ?>
     <div class="col-12 text-center">
         <h6>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h6>
@@ -108,7 +132,12 @@
             method: 'post',
             data: {
                 list_id : $('.btn_verif_'+id).data('list_id'),
-                keterangan: $('#ket_verif_'+id).val()
+                keterangan: $('#ket_verif_'+id).val(),
+                jenis_bukti: $('#jenis_bukti_'+id).val(),
+                teman_absensi: $('#teman_absensi_'+id).val(),
+                tanggal_absensi: $('#tanggal_absensi_'+id).val(),
+                jenis_absensi: $('#jenis_absensi_'+id).val(),
+                id_user: $('#id_user_'+id).val()
             },
             success: function(data){
                 let rs = JSON.parse(data)

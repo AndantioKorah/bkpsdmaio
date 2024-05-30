@@ -5,6 +5,7 @@ class M_Kepegawaian extends CI_Model
     {
         parent::__construct();
 		$this->load->model('general/M_General', 'general');
+		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         // $this->db = $this->load->database('main', true);
     }
 
@@ -4906,12 +4907,16 @@ public function submitEditJabatan(){
                     );
                 }
 
-                $atasan = $this->db->select('a.*')
-                                ->from('db_pegawai.pegawai a')
-                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                ->where('c.kepalaskpd', 1)
-                                ->where('a.skpd', $this->general_library->getIdUnitKerjaPegawai())
-                                ->get()->row_array();
+                // $atasan = $this->db->select('a.*')
+                //                 ->from('db_pegawai.pegawai a')
+                //                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                //                 ->where('c.kepalaskpd', 1)
+                //                 ->where('a.skpd', $this->general_library->getIdUnitKerjaPegawai())
+                //                 ->get()->row_array();
+
+                $id_m_user = $this->general_library->getId();
+                $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user);
+                $atasan = $pegawai['kepala'];
 
                 if($atasan){
                     $master = $this->db->select('*')
@@ -4932,7 +4937,7 @@ public function submitEditJabatan(){
                     $this->general->saveToCronWa($cronWa);
                 } else {
                     $res['code'] = 1;
-                    $res['message'] = "Terjadi Kesalahan";
+                    $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
                 }
             }
         }

@@ -9,9 +9,8 @@
      <br>
     </div>
         <div id="" class="row">
-          
         <?php if($list_peninjauan){ ?>
-        <div class="col-12">
+        <div class="col-12 table-responsive">
         <table  class="table table-striped table-bordered" id="table_data" width="100%">
             <thead>
                 <th class="text-center ">No</th>

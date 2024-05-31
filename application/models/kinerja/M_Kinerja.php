@@ -194,11 +194,11 @@
                   $_FILES['file']['size'] = $_FILES['files']['size'][$i];
                   
     
-                  if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
-                    $ress = 0;
-                    $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
-                    break;
-                  }
+                //   if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
+                //     $ress = 0;
+                //     $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+                //     break;
+                //   }
                    
                 //   if($_FILES['file']['size'] > 1048576){
                 //     $ress = 0;

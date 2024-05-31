@@ -71,9 +71,13 @@
                 <td style="padding: 5px; font-weight: bold; width: 5%" class="text-center" rowspan=1>Output</td>
             </tr>
             <?php $no=1; $akumulasi_nilai_capaian = 0; if($rencana_kinerja){ foreach($rencana_kinerja as $rk){
-                $nilai_capaian = 0;    
+                $nilai_capaian = 0;
+                $target = $rk['target_kuantitas'];
                 if(floatval($rk['realisasi']) > 0){
-                    $nilai_capaian = (floatval($rk['realisasi']) / floatval($rk['target_kuantitas'])) * 100;
+                    if($target == 0){
+                        $target = $rk['realisasi'];
+                    }
+                    $nilai_capaian = (floatval($rk['realisasi']) / floatval($target)) * 100;
                 }
                 if($nilai_capaian > 100){
                     $nilai_capaian = 100;

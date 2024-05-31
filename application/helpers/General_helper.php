@@ -223,13 +223,15 @@ function countNilaiSkp($data)
             $nilai_capaian = 0;
             if (floatval($d['realisasi']) > 0) {
                 if(floatval($d['target_kuantitas']) == 0){
-                    $nilai_capaian = 0;
-                } else {
+                    $d['target_kuantitas'] = $d['realisasi'];
+                    // $nilai_capaian = 0;
+                } 
+                // else {
                     $nilai_capaian = (floatval($d['realisasi']) / floatval($d['target_kuantitas'])) * 100;
                     if($nilai_capaian > 100){
                         $nilai_capaian = 100;
                     }
-                }
+                // }
             }
             $akumulasi_nilai_capaian += $nilai_capaian;
         }

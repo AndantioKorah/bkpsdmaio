@@ -140,7 +140,7 @@ $(function(){
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    // startDate: '-0d',
+    startDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,
     autoclose: true,
@@ -201,7 +201,7 @@ $('#form_tinjau_absen').on('submit', function(e){
               if(result.success == true){
                 document.getElementById('btn_upload').disabled = true;
                 successtoast(result.msg)
-                // loadListKegiatan(tahun,bulan)
+                loadListPeninjauan()
               } else {
                 errortoast(result.msg)
                 document.getElementById('btn_upload').disabled = false;

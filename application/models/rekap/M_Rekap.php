@@ -1114,17 +1114,14 @@
         }
         // $result['komponen_kinerja'] = $komponen_kinerja;
         // $list_kinerja = $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id as id_m_user, a.total_realisasi, a.id, a.target_kuantitas')
-        $this->db->select('c.nipbaru_ws, d.realisasi_target_kuantitas, b.id, a.*, sum(d.realisasi_target_kuantitas) as total_realisasi_kinerja')
+        $this->db->select('c.nipbaru_ws, b.id, a.*, a.id as id_t_rencana_kinerja')
                         ->from('t_rencana_kinerja a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                        ->join('t_kegiatan d', 'd.id_t_rencana_kinerja = a.id')
                         ->where('a.bulan', $param['bulan'])
                         ->where('a.tahun', $param['tahun'])
                         // ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
-                        ->where('d.flag_active', 1)
-                        ->where('d.status_verif', 1)
                         ->where('c.id_m_status_pegawai', '1')
                         ->group_by('a.id');
 
@@ -1134,7 +1131,43 @@
         } else {
             $this->db->where('c.skpd', $skpd[0]);
         } 
-        $list_kinerja = $this->db->get()->result_array();
+        
+        $list_rencana_kinerja = $this->db->get()->result_array();
+        $list_kinerja = null;
+        if($list_rencana_kinerja){
+            foreach($list_rencana_kinerja as $lrk){
+                $list_kinerja[$lrk['id_t_rencana_kinerja']] = $lrk;
+                $list_kinerja[$lrk['id_t_rencana_kinerja']]['total_realisasi_kinerja'] = 0;
+            }
+        }
+
+        $this->db->select('a.*')
+                        ->from('t_kegiatan a')
+                        ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
+                        ->join('m_user c', 'a.id_m_user = c.id')
+                        ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                        ->where('b.bulan', $param['bulan'])
+                        ->where('b.tahun', $param['tahun'])
+                        ->where('b.flag_active', 1)
+                        ->where('d.id_m_status_pegawai', '1')
+                        // ->where('b.id', 37851)
+                        ->where('a.status_verif', 1)
+                        ->where('b.flag_active', 1)
+                        ->group_by('a.id');
+        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                        ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } else {
+            $this->db->where('d.skpd', $skpd[0]);
+        }
+        $list_realisasi = $this->db->get()->result_array();        
+        if($list_realisasi){
+            foreach($list_realisasi as $lr){
+                // $list_kinerja[$lr['id_t_rencana_kinerja']]['kinerja'][] = $lr;
+                $list_kinerja[$lr['id_t_rencana_kinerja']]['total_realisasi_kinerja'] += $lr['realisasi_target_kuantitas'];
+            }
+        }
+
         $kinerja = null;
         if($list_kinerja){
             foreach($list_kinerja as $lk){

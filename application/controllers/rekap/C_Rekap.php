@@ -518,6 +518,14 @@ class C_Rekap extends CI_Controller
         if(isset($data['kepalabkpsdm'])){
             unset($data['kepalabkpsdm']);
         }
+
+        if(isset($data['pppk'])){
+            unset($data['pppk']);
+        }
+
+        if(isset($data['rekap_pppk'])){
+            unset($data['rekap_pppk']);
+        }
         
         if($data == null){
             return $data;

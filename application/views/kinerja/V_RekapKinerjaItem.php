@@ -126,13 +126,29 @@
             
                 <?php
                 
+             
+             
+                   
+                if($lp['target_kuantitas'] == 0){
+                    $target_kuantitas = $lp['realisasi'];
+                } else {
+                    $target_kuantitas = $lp['target_kuantitas'];
+                }
+
+                if($target_kuantitas == null){
+                    $progress = 0;
+                } else {
+                    $progress = (floatval($lp['realisasi'])/floatval($target_kuantitas)) * 100;
+                }
                 
                 // $realisasi_kualitas = $lp['realisasi']/$lp['target_kuantitas'] * 100;
-                $progress = (floatval($lp['realisasi'])/floatval($lp['target_kuantitas'])) * 100;
+                // $progress = (floatval($lp['realisasi'])/floatval($target_kuantitas)) * 100;
                 // $progress = (floatval($lp['total_realisasi'])/floatval($lp['target_kuantitas'])) * 100;
                 if($progress > 100){
                     $progress = 100;
                 }
+            
+
                 $progress = formatTwoMaxDecimal($progress);
                 ?>
                     <tr onclick="openListKegiatan('<?=$lp['id']?>')">

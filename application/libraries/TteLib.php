@@ -11,7 +11,7 @@ class TteLib{
 
     public function __construct()
     {
-        $this->STATE = 'DEV'; //DEV = development, PROD = production
+        $this->STATE = 'PROD'; //DEV = development, PROD = production
         $this->URL = "103.186.201.237/";
         $this->USERNAME = "esign";
         $this->PASSWORD = "qwerty";
@@ -40,7 +40,8 @@ class TteLib{
             $data['nik'] = trim(TTE_NIK_DEV);
             $data['passphrase'] = trim(TTE_PASS_DEV);
         }
-        return $this->postCurl($url, $data, 'POST');
+        $resp = $this->postCurl($url, $data, 'POST');
+        return $resp;
     }
 
     public function verifPdf($data){
@@ -64,7 +65,7 @@ class TteLib{
         $hash = $this->hash();
         $curl = curl_init();
         $url = $url;
-        dd(json_encode($data));
+        // dd(json_encode($data));
         curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_SSL_VERIFYHOST => false,
@@ -100,14 +101,6 @@ class TteLib{
         ]);
 
         return $response;
-
-        // if ($err) {
-        //     echo "cURL Error #:" . $err;
-        // return $err;
-        // } else {
-        //     echo $response;
-        // return $response;
-        // }
     }
 
 }

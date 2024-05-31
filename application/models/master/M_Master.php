@@ -96,17 +96,77 @@
                             ->get()->result_array();
         }
 
-        public function getPegawaiBySkpd($data){
-            return $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
+        public function getRekonHariKerja($param){
+            $result['jumlah_hari'] = getJumlahHariDalamBulan($param['bulan'], $param['tahun']);
+
+            $bulan_periode_awal = $param['bulan'] < 10 ? "0".$param['bulan'] : $param['bulan'];
+            $periode_awal = $param['tahun'].'-'.$bulan_periode_awal.'-01';
+
+            $bulan_periode_akhir = $param['bulan'] < 10 ? "0".$param['bulan'] : $param['bulan'];
+            $tanggal_periode_akhir = $result['jumlah_hari'] < 10 ? "0".$result['jumlah_hari'] : $result['jumlah_hari'];
+            $periode_akhir = $param['tahun'].'-'.$bulan_periode_akhir.'-'.$tanggal_periode_akhir;
+
+            list($result['jhk'], $result['hari_libur'], $result['list_hari'], $result['list_hari_kerja'], $result['hk']) = countHariKerjaDateToDate($periode_awal, $periode_akhir);
+            $pointer = 1;
+            foreach($result['list_hari_kerja'] as $lhk){
+                if($pointer == intval($result['jhk'] / 2) + 1){
+                    $result['tanggal_masuk_nominatif'] = $lhk; // tmt minimal untuk terhitung di PD tersebut
+                    break;
+                }
+                $pointer++;
+            }
+            return $result;
+        }
+
+        public function getNomitaifPegawaiBySkpd($param){
+            $uksearch = null;
+            if(in_array($param['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $param['id_unitkerja'])
+                                    ->get()->row_array();
+            }
+
+            $param['bulan'] = $param['bulan'] == '' ? date('m') : $param['bulan'];
+            $param['tahun'] = $param['tahun'] == '' ? date('Y') : $param['tahun'];
+            $hari = $this->getRekonHariKerja($param);
+
+            $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('e.flag_active', 1)
-                            ->where('a.skpd', $data)
                             ->order_by('a.nama', 'asc')
-                            ->where('id_m_status_pegawai', 1)
-                            ->get()->result_array();
+                            ->where('id_m_status_pegawai', 1);
+            if(in_array($param['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW) && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+                $this->db->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $param['id_unitkerja']);
+            }
+            $list_pegawai = $this->db->get()->result_array();
+        }
+
+        public function getPegawaiBySkpd($data){
+            $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $data)
+                                    ->get()->row_array();
+
+            $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                            ->join('m_user e', 'a.nipbaru_ws = e.username')
+                            ->where('e.flag_active', 1)
+                            ->order_by('a.nama', 'asc')
+                            ->where('id_m_status_pegawai', 1);
+            if(in_array($data, LIST_UNIT_KERJA_KECAMATAN_NEW) && isKasubKepegawaian($this->general_library->getNamaJabatan())){
+                $this->db->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $data);
+            }
+            return $this->db->get()->result_array();
         }
 
         public function getSubBidangByBidang($id){
@@ -665,6 +725,24 @@
                     ]);
         }
 
+        public function loadInputGajiData($data){
+            return $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                            ->where('a.skpd', $data['id_unitkerja'])
+                            ->order_by('b.eselon', 'a.nama')
+                            ->get()->result_array();
+        }
+
+        public function saveInputGaji($data){
+            $this->db->where('nipbaru_ws', $data['nip'])
+                    ->update('db_pegawai.pegawai', [
+                        'besaran_gaji' => $data['gaji']
+                    ]);
+        }
+
         public function loadUserHakAkses($id){
             return $this->db->select('a.*, c.*, d.nm_unitkerja, f.nama_hak_akses, e.nama_jabatan')
                             ->from('t_hak_akses a')
@@ -693,6 +771,16 @@
                     ->from('db_pegawai.pegawai a')
                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                     ->where('b.flag_active', 1)
+                    ->order_by('a.nama')
+                    ->where('id_m_status_pegawai', 1)
+                    ->get()->result_array();
+        }
+
+        public function getAllOnlyPegawai(){
+            return $this->db->select('a.*')
+                    ->from('db_pegawai.pegawai a')
+                    // ->join('m_user b', 'a.nipbaru_ws = b.username')
+                    // ->where('b.flag_active', 1)
                     ->order_by('a.nama')
                     ->where('id_m_status_pegawai', 1)
                     ->get()->result_array();
@@ -949,6 +1037,87 @@
 
             return $result;
         }
+
+        public function getAllMasterLayanan(){
+            return $this->db->select('*')
+                            ->from('m_jenis_layanan')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        }
+
+        public function getAllMasterDokumen(){
+            return $this->db->select('*, CONCAT(a.nama_dokumen," / ", a.keterangan) AS dokumen')
+                            ->from('m_dokumen as a')
+                            ->where('aktif', 1)
+                            ->get()->result_array();
+        }
+
+        
+        public function getAllSyaratLayananItem(){
+            return $this->db->select('*, CONCAT(c.nama_dokumen," / ", c.keterangan) AS dokumen')
+                            ->from('m_syarat_layanan as a')
+                            ->join('m_jenis_layanan b', 'a.jenis_layanan = b.id')
+                            ->join('m_dokumen c', 'a.dokumen_persyaratan = c.id_dokumen')
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->get()->result_array();
+        }
+
+        public function loadListNominatifPegawai($data, $id_pegawai = null, $flag_profil = 0){
+            $result = null;
+    
+            $unitkerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $data['id_unitkerja'])
+                                ->get()->row_array();
+    
+           
+           
+            $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
+                                
+            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, e.id as id_m_user, a.id_peg,
+                        b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat, a.statuspeg, c.nama_jabatan, f.nm_unitkerja,
+                        a.handphone,h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
+                        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                        ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                        ->join('db_pegawai.unitkerja f', 'a.skpd = f.id_unitkerja')
+                        ->join('db_pegawai.unitkerjamaster g', 'f.id_unitkerjamaster = g.id_unitkerjamaster')
+                        ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
+                        ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
+                        ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
+                        ->order_by('c.eselon, a.nama')
+                        ->where('id_m_status_pegawai', 1)
+                        ->where('e.flag_active', 1);
+                        // ->where('id_m_status_pegawai', 1)
+                        // ->get()->result_array();
+     
+            if($unitkerja['id_unitkerjamaster'] == "5001000" || $unitkerja['id_unitkerjamaster'] == "5002000" ||
+            $unitkerja['id_unitkerjamaster'] == "5003000" || $unitkerja['id_unitkerjamaster'] == "5004000" ||
+            $unitkerja['id_unitkerjamaster'] == "5005000" || $unitkerja['id_unitkerjamaster'] == "5006000" ||
+            $unitkerja['id_unitkerjamaster'] == "5007000" || $unitkerja['id_unitkerjamaster'] == "5008000" ||
+            $unitkerja['id_unitkerjamaster'] == "5009000" || $unitkerja['id_unitkerjamaster'] == "5010001" || 
+            $unitkerja['id_unitkerjamaster'] == "5011001"){
+                $this->db->where('g.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+            } else {
+                if($data['id_unitkerja'] == "3010000") {
+                    // $this->db->where_in('g.id_unitkerjamaster', ["8000000","8010000","8020000"]);
+                    $this->db->where('a.skpd', $data['id_unitkerja']);
+                } else {
+                    $this->db->where('a.skpd', $data['id_unitkerja']);
+                }
+            }
+
+           
+            $pegawai = $this->db->get()->result_array();
+            // dd($pegawai);
+           
+
+            return $pegawai;
+        }
+
 
 	}
 ?>

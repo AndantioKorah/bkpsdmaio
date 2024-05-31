@@ -82,11 +82,13 @@
             var targetAwal = parseInt($('#edit_target_kuantitas_awal').val());
             var targetBaru = parseInt($('#edit_target_kuantitas').val());
 
+            <?php if(!$this->general_library->isProgrammer()) { ?>
             if(targetBaru < targetAwal){
             errortoast('Tidak bisa kurang dari target sebelumnya');
             $('#edit_target_kuantitas').val(targetAwal);
             return false;
             } 
+            <?php } ?>
             
             e.preventDefault()
             $.ajax({

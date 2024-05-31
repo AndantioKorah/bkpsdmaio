@@ -82,7 +82,7 @@
 
    <div class="form-group">
     <label>Realisasi Target (Kuantitas)</label>
-    <input  class="form-control customInput" type="number" autocomplete="off" id="target_kuantitas" name="target_kuantitas" required/>
+    <input  class="form-control customInput" type="number" autocomplete="off" id="target_kuantitas" name="target_kuantitas" onkeyup="cekJumlahTarget()" required/>
   </div>
   
   <div class="form-group">
@@ -531,4 +531,6 @@
         // Set value of the file input to our new files list
         e.target.files = dataTransfer.files;
     });
+
+    
 </script>

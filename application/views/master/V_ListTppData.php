@@ -3,10 +3,12 @@
     <th class="text-center">No</th>
     <th class="text-left">Pegawai</th>
     <th class="text-center">Kelas Jabatan</th>
-    <th class="text-center">Prestasi Kerja</th>
-    <th class="text-center">Beban Kerja</th>
-    <th class="text-center">Kondisi Kerja</th>
-    <th class="text-center">Besaran Presentasi</th>
+    <?php if($this->general_library->isProgrammer()){ ?>
+      <th class="text-center">Prestasi Kerja</th>
+      <th class="text-center">Beban Kerja</th>
+      <th class="text-center">Kondisi Kerja</th>
+      <th class="text-center">Besaran Presentasi</th>
+    <?php } ?>
     <th class="text-left">Besaran TPP</th>
   </thead>
   <tbody>
@@ -20,10 +22,12 @@
           <span style="font-size: 12px; color: black;"><?=$rs['nm_pangkat']?></span>
         </td>
         <td class="text-center"><?=$rs['kelas_jabatan']?></td>
-        <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['prestasi_kerja'])).'%'?></td>
-        <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['beban_kerja'])).'%'?></td>
-        <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['kondisi_kerja'])).'%'?></td>
-        <td class="text-center"><?=floatval($rs['prestasi_kerja']) + floatval($rs['beban_kerja']) + floatval($rs['kondisi_kerja']).'%'?></td>
+        <?php if($this->general_library->isProgrammer()){ ?>
+          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['prestasi_kerja'])).'%'?></td>
+          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['beban_kerja'])).'%'?></td>
+          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['kondisi_kerja'])).'%'?></td>
+          <td class="text-center"><?=floatval($rs['prestasi_kerja']) + floatval($rs['beban_kerja']) + floatval($rs['kondisi_kerja']).'%'?></td>
+        <?php } ?>
         <td class="text-left" style="font-weight: bold;"><?='Rp '.formatCurrencyWithoutRp($rs['pagu_tpp'], 0)?></td>
       </tr>
     <?php } } ?>

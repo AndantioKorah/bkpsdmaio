@@ -441,6 +441,10 @@ class General_library
         return $this->getIdJabatan() == "4018000JS01";
     }
 
+    public function getEselon(){
+        return $this->userLoggedIn['eselon'];
+    }
+
     public function getIdEselon(){
         return $this->userLoggedIn['id_eselon'];
     }
@@ -480,6 +484,12 @@ class General_library
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();
         return $this->userLoggedIn['id_peg'];
+    }
+
+    public function getIdPegawai($id_peg){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->nikita->m_user->getNipPegawai($id_peg);
     }
 
     public function getAbsensiPegawai($id_pegawai, $bulan, $tahun){

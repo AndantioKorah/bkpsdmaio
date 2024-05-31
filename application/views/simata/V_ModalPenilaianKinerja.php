@@ -572,7 +572,7 @@
                 <select class="form-select select2" name="kriteria1" required>
                 <option value="0,0,0"  selected>-</option>
                     <?php if($kriteria_kinerja_1){ foreach($kriteria_kinerja_1 as $r){ ?>
-                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else echo "";} else { if($kinerja_n_1 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                     <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria1'] == $r['id']) echo "selected"; else if($kinerja_n_1 == $r['id']) echo "selected";} else { if($kinerja_n_1 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
@@ -584,7 +584,7 @@
                 <select class="form-select select2" name="kriteria2" required>
                 <option value="0,0,0"  selected>-</option>
                     <?php if($kriteria_kinerja_2){ foreach($kriteria_kinerja_2 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else echo "";}  else { if($kinerja_n_2 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria2'] == $r['id']) echo "selected"; else if($kinerja_n_2 == $r['id']) echo "selected";}  else { if($kinerja_n_2 == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
                </td>
@@ -600,7 +600,7 @@
                 <select class="form-select select2" name="kriteria3" required>
                 <option value="0,0,0"  selected>-</option>
                     <?php if($kriteria_kinerja_3){ foreach($kriteria_kinerja_3 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else echo "";} else { if($inovasi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria3'] == $r['id']) echo "selected"; else if($inovasi == $r['id']) echo "selected";} else { if($inovasi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -613,7 +613,7 @@
                 <select class="form-select select2" name="kriteria4" required>
                 <option value="0,0,0"  selected>-</option>
                     <?php if($kriteria_kinerja_4){ foreach($kriteria_kinerja_4 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria4'] == $r['id']) echo "selected"; else echo "";} else { if($timkerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria4'] == $r['id']) echo "selected"; else if($timkerja == $r['id']) echo "selected";} else { if($timkerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -626,7 +626,7 @@
                 <select class="form-select select2" name="kriteria5">
                 <option value="0,0,0"  selected>-</option>
                     <?php if($kriteria_kinerja_5){ foreach($kriteria_kinerja_5 as $r){ ?>
-                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else echo "";} else { if($penugasan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                      <option  <?php if($nilai_kinerja) { if($nilai_kinerja['kriteria5'] == $r['id']) echo "selected"; else if($penugasan == $r['id']) echo "selected";} else { if($penugasan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                     <?php } } ?>
                 </select>
             </td>
@@ -636,7 +636,7 @@
         </div>
         <div class="modal-footer" style="margin-bottom:5px;">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <!-- <button class="btn btn-primary float-right">Simpan</button> -->
+      <button class="btn btn-primary float-right">Simpan</button>
       </div>
       
     </form>
@@ -652,7 +652,7 @@
         // dropdownAutoWidth: true,
         allowClear: true,
     });
-
+  })
 
     $('#form_penilaian_kinerja').on('submit', function(e){
       var kode = $('#jenis_jab').val()
@@ -695,7 +695,7 @@
              
     }); 
    
-    })
+    
 </script>
 <?php } else { ?>
   <div class="row">

@@ -8,16 +8,18 @@
 </style>
 
 <!-- Button trigger modal -->
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+  || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDisiplin">
   Tambah Data Disiplin
 </button>
-
-
-
+<!-- 
 <button onclick="loadRiwayatUsulDisiplin()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalDiklat">
   Riwayat Usul Disiplin
-</button>
-
+</button> -->
+<?php } ?> 
 
 <!-- 
 
@@ -66,7 +68,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Data Diklat</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Data Disiplin</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -91,9 +93,7 @@
       <label>Jenjang Hukuman Disiplin </label>
       <select class="form-control select2" data-dropdown-parent="#modalDisiplin" data-dropdown-css-class="select2-navy" name="disiplin_jhd" id="disiplin_jhd" required>
                     <option value="" disabled selected>Pilih Item</option>
-                    <?php if($jhd){ foreach($jhd as $r){ ?>
-                        <option value="<?=$r['id_jhd']?>"><?=$r['nama_jhd']?></option>
-                    <?php } } ?>
+                    
     </select>
       </div>
 
@@ -102,7 +102,7 @@
     <input class="form-control customInput" type="text" id="disiplin_jp" name="disiplin_jp"  required/>
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Tanggal Mulai Berlaku</label>
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglmulai" name="disiplin_tglmulai" readonly required/>
   </div>
@@ -110,7 +110,7 @@
   <div class="form-group">
     <label>Tanggal Selesai Berlaku</label>
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglselesai" name="disiplin_tglselesai" readonly  required/>
-  </div>
+  </div> -->
 
   <div class="form-group">
     <label>No Surat</label>
@@ -121,6 +121,12 @@
     <label>Tanggal Surat</label>
     <input class="form-control customInput datepicker" type="text" id="disiplin_tglsurat" name="disiplin_tglsurat" readonly  required/>
   </div>
+
+  <div class="form-group">
+    <label>TMT</label>
+    <input class="form-control customInput datepicker" type="text" id="disiplin_tmt" name="disiplin_tmt" readonly  required/>
+  </div>
+
 
   
   <div class="form-group">
@@ -183,6 +189,15 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
+
+  $('.datepicker2').datepicker({
+    format: 'yyyy-mm-dd',
+    // startDate: '-0d',
+    // todayBtn: true,
+    todayHighlight: true,
+    autoclose: true,
+});
+
         loadListDisiplin()
     })
 
@@ -207,8 +222,8 @@ $(function(){
         return false;
         }
        
-        // document.getElementById('btn_upload_disiplin').disabled = true;
-        // $('#btn_upload_disiplin').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_upload_disiplin').disabled = true;
+        $('#btn_upload_disiplin').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -297,18 +312,11 @@ $(function(){
 
   
 
-  $("#disiplin_jenis").change(function() {
-      var id = $("#disiplin_jenis").val();
-      $('#inputjd').show('fast')
-      if(id == "00"){
-      $('#inputjd').show('fast')
-      } else if(id == "10") {
-        $('#inputjd').show('fast')
-      } else {
-        $('#inputjd').hide('fast')
-      }
+  $("#disiplin_hd").change(function() {
+      var id = $("#disiplin_hd").val();
+     
       $.ajax({
-              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getJenjangDiklat",
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getJenisHd",
               method : "POST",
               data : {id: id},
               async : false,
@@ -317,9 +325,9 @@ $(function(){
               var html = '';
                       var i;
                       for(i=0; i<data.length; i++){
-                          html += '<option value='+data[i].id+'>'+data[i].jenjang_disiplin+'</option>';
+                          html += '<option value='+data[i].id+'>'+data[i].nama_jhd+'</option>';
                       }
-                      $('.jdisiplin').html(html);
+                      $('#disiplin_jhd').html(html);
                           }
                   });
   });

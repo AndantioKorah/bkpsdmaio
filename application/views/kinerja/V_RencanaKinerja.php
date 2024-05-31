@@ -66,7 +66,7 @@
     <div class="row">
     <div class="col">
     <label >Target Kuantitas</label>
-      <input required type="text" class="form-control customInput" name="target_kuantitas" id="target_kuantitas" autocomplete="off">
+      <input required type="number" min=0 class="form-control customInput" name="target_kuantitas" id="target_kuantitas"   onkeyup="cekJumlahTarget()" autocomplete="off">
     </div>
     <!-- <div class="col">
     <label >Capaian Kuantitas</label>
@@ -173,6 +173,15 @@
             $('#loader').hide()
            
         })
+    }
+
+    function cekJumlahTarget(){
+
+      var target_kuantitas = $('#target_kuantitas').val(); 
+      if(target_kuantitas == "0" || target_kuantitas < 0) {
+          errortoast("Target Kuantitas tidak boleh 0")
+          $('#target_kuantitas').val(null); 
+      }
     }
 
 

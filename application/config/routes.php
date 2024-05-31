@@ -84,6 +84,8 @@ $route['kepegawaian/dokumen/verifikasi'] = 'kepegawaian/C_Kepegawaian/verifikasi
 $route['kepegawaian/profil-pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawai/$1';
 $route['kepegawaian/profil/(:any)'] = 'kepegawaian/C_Kepegawaian/uploadDokumen/$1'; 
 $route['kepegawaian/tambah'] = 'kepegawaian/C_Kepegawaian/LoadFormTambahPegawai';
+$route['kepegawaian/pegawai/(:any)'] = 'kepegawaian/C_Kepegawaian/profilPegawaiForKasub/$1';
+
 
 
 //api
@@ -98,7 +100,7 @@ $route['mt/jabatan-target/(:any)'] = 'simata/C_Simata/jabatanKosong/$1';
 $route['mt/submit-jabatan-target'] = 'simata/C_Simata/submitJabatanTarget';
 $route['mt/list-jabatan-target'] = 'simata/C_Simata/loadListPegawaiDinilai';
 $route['mt/penilaian-kinerja/(:any)'] = 'simata/C_Simata/penilaianKinerja/$1';
-$route['mt/ninebox'] = 'simata/C_Simata/nineBox';
+$route['mt/ninebox/(:any)'] = 'simata/C_Simata/nineBox/$1';
 $route['mt/penilaian-potensial/(:any)'] = 'simata/C_Simata/penilaianPotensial/$1';
 $route['mt/profil-talenta'] = 'simata/C_Simata/profilTalenta';
 $route['mt/data-master-jabatan'] = 'simata/C_Simata/masterJabatan';
@@ -114,6 +116,21 @@ $route['kepegawaian/layanan-karis-karsu'] = 'kepegawaian/C_Kepegawaian/LayananKa
 $route['kepegawaian/download'] = 'kepegawaian/C_Kepegawaian/lakukan_download';
 $route['kepegawaian/verifikasi-karis-karsu'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsu';
 $route['kepegawaian/verifikasi-detail/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiKarisKarsuDetail/$1';
+$route['kepegawaian/layanan-pensiun/(:any)'] = 'kepegawaian/C_Kepegawaian/LayananPensiun/$1';
+
+$route['kepegawaian/verifikasi-pensiun'] = 'kepegawaian/C_Kepegawaian/verifikasiPensiun';
+$route['kepegawaian/verifikasi-pensiun-detail/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiPenisunDetail/$1/$2';
+
+
+
+
+// master
+$route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';
+$route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
+
+
+$route['dokumen-pendukung-absensi/tinjau'] = 'kinerja/C_Kinerja/tinjauAbsensi';
+$route['dokumen-pendukung-absensi/verifikasi-tinjau'] = 'kinerja/C_Kinerja/verifikasiTinjauAbsensi';
 
 
 

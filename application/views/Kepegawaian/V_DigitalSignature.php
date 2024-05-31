@@ -5,23 +5,34 @@
             <hr>
         </div>
         <div class="card-body" style="margin-top: -30px;">
-            <form id="form_load_ds">
-                <div class="row">
-                    <div class="col-lg-12 form-group">
-                        <label>Jenis Layanan</label>
-                        <select class="form-control select2-navy" style="width: 100%;"
-                            id="jenis_layanan" data-dropdown-css-class="select2-navy" name="jenis_layanan">
-                                <option value="permohonan_cuti">Permohonan Cuti</option>
-                        </select>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-form-cari-tab" data-toggle="tab" href="#nav-form-cari" role="tab" aria-controls="nav-form-cari" aria-selected="true">Cari Data</a>
+                <a class="nav-item nav-link" id="nav-batch-tab" data-toggle="tab" href="#nav-batch" role="tab" aria-controls="nav-batch" aria-selected="false">Batch</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-form-cari" role="tabpanel" aria-labelledby="nav-form-cari-tab">
+                <form id="form_load_ds">
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                            <label>Jenis Layanan</label>
+                            <select class="form-control select2-navy" style="width: 100%;"
+                                id="jenis_layanan" data-dropdown-css-class="select2-navy" name="jenis_layanan">
+                                    <option value="permohonan_cuti">Permohonan Cuti</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-lg-12 form-group">
+                            <label>Tanggal Usul</label>
+                        </div> -->
+                        <div class="col-lg-12 text-right mt-3">
+                            <button class="btn btn-navy btn-block">Cari</button>
+                        </div>
                     </div>
-                    <!-- <div class="col-lg-12 form-group">
-                        <label>Tanggal Usul</label>
-                    </div> -->
-                    <div class="col-lg-12 text-right mt-3">
-                        <button class="btn btn-navy btn-block">Cari</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="nav-batch" role="tabpanel" aria-labelledby="nav-batch-tab"></div>
+        </div>
         </div>
     </div>
     <div class="col-lg-12 mt-3" id="result">
@@ -33,7 +44,16 @@
     let terpilih
 
     $(function(){
+        $('#jenis_layanan').select2()
         $('#form_load_ds').submit()
+    })
+
+    $('#nav-batch-tab').on('click', function(){
+        $('#nav-batch').html('')
+        $('#nav-batch').append(divLoaderNavy)
+        $('#nav-batch').load('<?=base_url('kepegawaian/C_Kepegawaian/loadBatchDs')?>', function(){
+            $('#loader').hide()
+        })
     })
 
     $('#form_load_ds').on('submit', function(e){

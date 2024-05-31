@@ -53,6 +53,10 @@
 		border: 1px solid;
 		padding: 3px;
 	}
+
+	.sub-sidebar-item {
+				margin-left:15px;
+	}
 </style>
 
 <?php
@@ -127,6 +131,26 @@
 			<span class="align-middle">List Pemberian TPP</span>
 		</a>
 	</li>
+	<?php if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
+			<i class="align-middle me-2 fa fa-money-bill"></i> 
+			<span class="align-middle">Input Gaji Pegawai</span>
+		</a>
+	</li>
+
+	<li class="sidebar-item">
+		<a class="sidebar-link" href="<?=base_url();?>master/nominatif-pegawai">
+			<i class="align-middle me-2 fa fa-users"></i> 
+			<span class="align-middle">Nominatif Pegawai</span>
+		</a>
+	</li>
+	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
 	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
@@ -178,6 +202,11 @@
 				<li class="sidebar-item ">
 					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hukuman-dinas')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
 				<?php } ?>
@@ -255,7 +284,7 @@
 		|| $this->general_library->isAdminAplikasi() 
 		|| $this->general_library->isWalikota() 
 		// || $this->general_library->isWakilWalikota()
-		|| isKasubKepegawaian($this->general_library->getNamaJabatan())
+		|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 		){ 
 	?>
 		<li class="sidebar-item">
@@ -293,7 +322,33 @@
 					<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 					</a>
-		    </li>
+		</li>
+
+
+		<!-- <li class="sidebar-item">
+								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
+								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
+				style="position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i></a>
+								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
+									<li class="sidebar-item sub-sidebar-item" style="margin-left">
+										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/7')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
+									</li>
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/8')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
+									</li>
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/9')?>"><i class="fa fa-minus"></i>Pensiun Atas Permintaan Sendiri</a>
+									</li>
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/10')?>"><i class="fa fa-minus"></i>Pensiun Sakit/Uzur</a>
+									</li>
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
+									</li>
+								</ul>
+							</li> -->
 		
 		</ul>
 	</li>
@@ -313,6 +368,7 @@
 	$this->general_library->isHakAksesVerifLayanan() ||
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
+	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -356,6 +412,12 @@
 							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 				</a>
 				</li>
+
+				<!-- <li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pensiun
+				</a>
+				</li> -->
 				<?php } ?>
 			</ul>
 		</li>
@@ -369,6 +431,7 @@
 			</li>
 		<?php } ?>
 	<?php } ?>
+
 	
 
 	<li class="sidebar-header">
@@ -405,6 +468,19 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
+					</a>
+				</li>
+				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
@@ -412,6 +488,16 @@
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/hukdis/input')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
 					</a>
 				</li>
 				<?php } ?>
@@ -459,7 +545,14 @@
 						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
 					</a>
 				</li>
-				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+				|| $this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi()
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
+				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>TPP
@@ -515,17 +608,19 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
 					</a>
-				</li>
+				</li> -->
 				<?php } ?>
-				<?php if($this->general_library->isProgrammer() 
+				<?php
+				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
 				|| $this->general_library->isKepalaPd()
-				|| $this->general_library->isWalikota()){ ?>
+				|| $this->general_library->isWalikota()
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai
@@ -637,6 +732,7 @@
 			</ul>
 		</li>
 
+	
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datapkinerja" data-bs-toggle="collapse" class="sidebar-link">
@@ -652,11 +748,11 @@
 			</a>
 			<ul id="datapkinerja" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
@@ -687,11 +783,11 @@
 			</a>
 			<ul id="datappotensial" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
@@ -702,9 +798,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>
-			
-	
-				
+		
 			</ul>
 		</li>
 
@@ -725,13 +819,47 @@
 				</span>
 			</a>	
 		</li> -->
-		<li class="sidebar-item ">
+
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/ninebox" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-th"></i> 
 				<span class="align-middle">
 				Talent Pool
 				</span>
 			</a>	
+		</li> -->
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#talentpool" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+				<span class="align-middle">
+				Talent Pool
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="talentpool" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/1')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
+					</a>
+				</li> -->
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/3')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
+					</a>
+				</li>
+		
+			</ul>
 		</li>
 
 		<!-- <li class="sidebar-item ">
@@ -757,34 +885,63 @@
 			</a>
 			<ul id="jatar" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li>
-				<li class="sidebar-item ">
+				</li> -->
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>
-			
-	
-				
 			</ul>
 		</li>
 
-		<li class="sidebar-item ">
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/profil-talenta" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 				<span class="align-middle">
 				Profil Talenta
 				</span>
 			</a>	
+		</li> -->
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#ptalenta" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+				<span class="align-middle">
+				Profil Talenta
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="ptalenta" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/1')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
+					</a>
+				</li> -->
+				<!-- <li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/jabatan-target/2')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
+					</a>
+				</li> -->
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
+					</a>
+				</li>
+			</ul>
 		</li>
 
 		<li class="sidebar-item ">

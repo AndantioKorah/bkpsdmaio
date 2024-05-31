@@ -1,4 +1,4 @@
-   <style>
+<style>
     
     .sp_profil{
       font-size: .9rem;
@@ -115,7 +115,7 @@
 
  
 
-   
+
 
 
     <div class="card card-default">
@@ -126,29 +126,158 @@
         </div>
         <div class="card-body" style="margin-top:-20px;">
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
+        <script>
+    $(function() {
+      // activaTab('ccc');
+    });
+
+    function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+    };
+    </script>
+
+
+
+        <!-- <form class="form-custom" id="form_penilaian_talenta" method="post"> -->
+          <input type="hidden" id="jenis_pengisian"  name="jenis_pengisian" value="<?=$jenis_pengisian;?>">
+        <div class="row">
+          <div class="col-lg-6">
+            <label>Unit Kerja</label>
+            <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
+                id="unitkerjamaster" data-dropdown-css-class="select2-navy" name="unitkerjamaster">
+                <?php if($this->general_library->isProgrammer()){ ?>
+                  <option selected value="0">Semua</option>
+                <?php } ?>
+                <option selected value="0">Semua</option>
+                <?php foreach($list_skpd_master as $skpd){ ?>
+                    <option value="<?=$skpd['id_unitkerjamaster']?>"><?=$skpd['nm_unitkerjamaster']?></option>
+                <?php } ?>
+                <option value="5000000">Kecamatan</option>
+                <option value="8000000">Sekolah</option>
+
+            </select>
+          </div>
+          <div class="col-lg-6" >
+            <label>Eselon</label>
+            <select class="form-control form-custom-input select2-navy select2" style="width: 100%"
+                id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
+                
+                <?php if($jenis_pengisian == 1) { ?>
+        
+        <?php } ?>
+        <?php if($jenis_pengisian == 2) { ?>
+          <option value="6">III A</option>
+          <option value="7">III B</option>
+          <option value="8">IV A</option>
+          <option value="9">IV B</option>
+        <?php } ?>
+        <?php if($jenis_pengisian == 3) { ?>
+          <option value="4">II A</option>
+          <option value="5">II B</option>
+          <option value="6">III A</option>
+          <option value="7">III B</option>
+        <?php } ?>
+
+                   
+            </select>
+          </div>
+          
+          <div class="col-lg-12 mt-3 text-right">
+            <button id="btn_nilai" type="button" style="width: 25% !important; height: 35px !important; font-size: .8rem;"
+            class="btn btn-navy btn-sm"> 
+            <label class="form-check-label" for="flexCheckChecked">
+          <i class="fa fa-sync"></i> Penilaian 
+        </label>
+          </button>
+          </div>
+        </div>
+      <!-- </form> -->
+
+   
+      
+<ul class="nav nav-tabs">
+<?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true" href="#pngws">Pengawas</button>
         </li>
         <?php } ?>
         <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
-        <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
-        </li>
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#adm">Administrator</a></li>
+
+        <!-- <li class="nav-item" role="presentation">
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(1,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Administrator</button>
+        </li> -->
         <?php } ?>
         <?php if($jenis_pengisian == 3) { ?>
-        <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
-        </li>
+          <li class="nav-item"><a onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" href="#jpt">JPT Pratama</a></li>
+
+        <!-- <li class="nav-item" role="presentation">
+            <button onclick="loadListPegawaiPenilaianPotensialJpt(2,<?=$jenis_pengisian;?>,0)" class="nav-link nav-link-simata" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
+        </li> -->
         <?php } ?>
-        <div class="form-check ml-2 mt-2">
-        <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
+      </ul>
+        
+
+        <!-- <div class="form-check ml-2 mt-2"> -->
+
+      <!-- <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
+      <label class="form-check-label" for="inlineRadio1"> <i class="fa fa-sync"></i> Nilai Assesment </label>
+      </div> -->
+
+      <!-- <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+        <label class="form-check-label" for="inlineRadio2"><i class="fa fa-sync"></i> Rekam Jejak</label>
+      </div> -->
+
+          <!-- <button style="margin-top:-5px;" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-sync"></i> Rekam Jejak
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+            <label class="form-check-label ml-1" for="inlineRadio2"> Pendidikan Formal</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
+            <label class="form-check-label ml-1" for="inlineRadio3"> Pangkat/Golongan Ruang</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4">
+            <label class="form-check-label ml-1" for="inlineRadio4"> Masa Kerja Jabatan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5">
+            <label class="form-check-label ml-1" for="inlineRadio5"> Pendidikan dan Pelatihan Kepemimpinan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="6">
+            <label class="form-check-label ml-1" for="inlineRadio6"> Pengembangan Kompetensi 20 JP</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio7" value="7">
+            <label class="form-check-label ml-1" for="inlineRadio7"> Penghargaan</label>
+            </a>
+            <a class="dropdown-item" href="#">
+            <input class="form-check-input ml-1" type="radio" name="inlineRadioOptions" id="inlineRadio8" value="8">
+            <label class="form-check-label ml-1" for="inlineRadio8"> Riwayat Hukuman Disiplin </label>
+            </a>
+          </div> -->
+
+      <!-- <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
+        <label class="form-check-label" for="inlineRadio3">3 (disabled)</label>
+      </div> -->
+
+
+  <!-- <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
         <label class="form-check-label" for="flexCheckChecked">
-         <h4> Lakukan Penilaian </h4>
+         <h4>  <i class="fa fa-sync"></i> Penilaian </h4>
         </label>
-      </div>
-        </ul>
+      </div> -->
+
+        
         <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show " id="pengawas" role="tabpanel" aria-labelledby="pengawas-tab">
          <br> <div id="list_pegawai_penilaian_kinerja_jptx" class="list_pegawai_penilaian_kinerja_jpt"></div>
@@ -167,6 +296,8 @@
        
         </div>
     </div>
+    
+
 
     
 <!-- modal detail indikator -->
@@ -207,6 +338,79 @@ $(function(){
     // loadListPegawaiPenilaianPotensialJpt(1)
     })
 
+    $('#form_penilaian_talentax').on('submit', function(e){
+ 
+              
+      $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
+      
+                e.preventDefault();
+                var formvalue = $('#form_penilaian_talenta');
+                var form_data = new FormData(formvalue[0]);
+
+                var eselon = $('#eselon').val()
+                if(eselon == 4 || eselon == 5){
+                  var id = 2;
+                  activaTab('jpt');
+                } else {
+                  var id = 1;
+                  activaTab('adm');
+                }
+              
+               
+                $.ajax({  
+                url:"<?=base_url("simata/C_Simata/submitloadListPegawaiPenilainPotensialJpt")?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    console.log(res)
+                    loadListPegawaiPenilaianPotensialJpt(id,3,1,eselon);
+                  
+
+                        // successtoast(result.msg)
+                        // setTimeout(function() {$("#modal_penilaian_kinerja").trigger( "click" );}, 500);
+                        // if(kode == 1){
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
+                        // } else {
+                        //   const myTimeout = setTimeout(loadListPegawaiPenilaianKinerja(kode), 1000);
+
+                        // }
+            
+                    
+                     
+                    
+                }  
+        }); 
+             
+    }); 
+
+    $("#btn_nilai").click(function(){
+      var eselon = $('#eselon').val()
+      var jenis_pengisian = $('#jenis_pengisian').val()
+      var skpd = $('#unitkerjamaster').val()
+      if(eselon == 4 || eselon == 5){
+        var id = 2;
+        activaTab('jpt');
+      } else if(eselon == 6 || eselon == 7) {
+        var id = 1;
+        activaTab('adm');
+      } else {
+        var id = 3;
+        activaTab('pngws');
+      }
+    
+     
+      loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,1,eselon,skpd);
+         
+    });
+
+    
+
+
+
     function loadListPegawaiPenilaianPotensialAdm(){
    var id = $('#unit_kerja').val()
    $('.list_pegawai_penilaian_kinerja').html('')
@@ -216,19 +420,32 @@ $(function(){
    })
   }
 
-  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian){
-  //  var penilaian = $('#flexCheckChecked').prop('checked');
-   if($('#flexCheckChecked').prop('checked')){
-    var penilaian = 1;
-   } else {
-    var penilaian = 0;
-   }
+  function loadListPegawaiPenilaianPotensialJpt(id,jenis_pengisian,penilaian,eselon,skpd){
+    var radios = document.getElementsByName('inlineRadioOptions');
+    // var penilaian = 0;
+    for (var i = 0, length = radios.length; i < length; i++) {
+      if (radios[i].checked) {
+        // do whatever you want with the checked radio
+        var penilaian = radios[i].value;
+
+        // only one radio can be logically checked, don't check the rest
+        break;
+      }
+    }
+
+  
+  //  return false;
+
+  //  if($('#flexCheckChecked').prop('checked')){
+  //   var penilaian = 1;
+  //  } else {
+  //   var penilaian = 0;
+  //  }
 
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian, function(){
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon+'/'+skpd, function(){
      $('#loader').hide()
-     $('#flexCheckChecked').prop('checked', false); // Unchecks it
    })
   }
 

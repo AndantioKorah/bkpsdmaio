@@ -6,10 +6,16 @@
 		margin-bottom:10px !important;
     }
 </style>
-<?php  if($this->general_library->isProgrammer() == false AND $this->general_library->isHakAkses('akses_profil_pegawai') AND $this->general_library->getUserName() != $nip AND $this->general_library->isAdminAplikasi() == false){ ?>
-  <button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
+
+<button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
   Riwayat Usul Jabatan
-  </button>
+</button>
+
+
+<?php  if($this->general_library->isProgrammer() == false AND $this->general_library->isHakAkses('akses_profil_pegawai') AND $this->general_library->getUserName() != $nip AND $this->general_library->isAdminAplikasi() == false){ ?>
+  <!-- <button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
+  Riwayat Usul Jabatan
+  </button> -->
 <?php }  ?>
 
 <!-- Button trigger modal -->
@@ -20,9 +26,9 @@
 </button>
 
 
-<button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
+<!-- <button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
   Riwayat Usul Jabatan
-</button>
+</button> -->
 
 
 <!-- status pdm -->
@@ -357,7 +363,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
   <div class="form-group">
     <label>Keterangan</label>
-    <input class="form-control customInput" type="text" id="jataban_keterangan" name="jataban_keterangan"  />
+    <input class="form-control customInput" type="text" id="jabatan_keterangan" name="jabatan_keterangan"  />
   </div>
 
 

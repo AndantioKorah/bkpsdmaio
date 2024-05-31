@@ -409,6 +409,7 @@
 				<!-- <input type="hidden" name="id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 				<input type="hidden" name="jenis_jab" id="jenis_jab" value="<?=$kode?>">
 				<!-- <input type="hidden" name="jabatan_target" value="<?=$jabatan_target?>"> -->
+				<input type="hidden" name="jenis_pengisian" id="jenis_jab" value="<?=$jenis_pengisian?>">
 
                 <?php
                 if($nilai_assesment){
@@ -423,7 +424,7 @@
                 ?>
                         <label for="exampleInputEmail1" class="form-label">Nilai Assesment</label>
 
-				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai">
+				<input class="form form-control"  type="text" name="nilai_assesment" id="nilai_assesment" value="<?=$nilai;?>" placeholder="Masukkan Nilai" readonly>
 				<!-- <button class="btn btn-primary float-right mt-3 mb-3">Simpan</button> -->
 			   </form>
 					</div>
@@ -434,13 +435,14 @@
 					<!-- <input type="hidden" name="rj_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="rj_jenis_jab" id="rj_jenis_jab" value="<?=$kode?>">
 					<!-- <input type="hidden" name="rj_jabatan_target" value="<?=$jabatan_target?>"> -->
+					<input type="hidden" name="rj_jenis_pengisian" id="rj_jenis_pengisian" value="<?=$jenis_pengisian?>">
 
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pendidikan Formal  </label>
                         <select class="form-select select2" name="rekamjjk1" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($list_pendidikan_formal){ foreach($list_pendidikan_formal as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pendidikan_formal'] == $r['id']) echo "selected"; else if($pendidikan_formal == $r['id'])  echo "selected"; else echo "";} else { if($pendidikan_formal == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if(isset($nilai_potensial['pendidikan_formal'])) { if($nilai_potensial['pendidikan_formal'] == $r['id']) echo "selected"; else if($pendidikan_formal == $r['id'])  echo "selected"; else echo "";} else { if($pendidikan_formal == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -450,7 +452,7 @@
                         <select class="form-select select2" name="rekamjjk2" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($pangkat_gol){ foreach($pangkat_gol as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['pangkat_gol'] == $r['id']) echo "selected"; else if($pangkatgol == $r['id'])  echo "selected"; else echo "";}  else { if($pangkatgol == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if(isset($nilai_potensial['pangkat_gol'])) { if($nilai_potensial['pangkat_gol'] == $r['id']) echo "selected"; else if($pangkatgol == $r['id'])  echo "selected"; else echo "";}  else { if($pangkatgol == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -460,7 +462,7 @@
                         <select class="form-select select2" name="rekamjjk3" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($masa_kerja_jabatan){ foreach($masa_kerja_jabatan as $r){ ?>
-							<option  <?php if($nilai_potensial) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else if($masa_kerja == $r['id'])  echo "selected"; else echo "";}  else { if($masa_kerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+							<option  <?php if(isset($nilai_potensial['masa_kerja_jabatan'])) { if($nilai_potensial['masa_kerja_jabatan'] == $r['id']) echo "selected"; else if($masa_kerja == $r['id'])  echo "selected"; else echo "";}  else { if($masa_kerja == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -470,7 +472,7 @@
                         <select class="form-select select2" name="rekamjjk4" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($diklat){ foreach($diklat as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else if($dklt == $r['id'])  echo "selected"; else echo "";}  else { if($dklt == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+							<option  <?php if(isset($nilai_potensial['diklat'])) { if($nilai_potensial['diklat'] == $r['id']) echo "selected"; else if($dklt == $r['id'])  echo "selected"; else echo "";}  else { if($dklt == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -480,7 +482,7 @@
                         <select class="form-select select2" name="rekamjjk5" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($kompetensi20_jp){ foreach($kompetensi20_jp as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['kompetensi20_jp'] == $r['id']) echo "selected"; else if($jp_kompetensi == $r['id'])  echo "selected"; else echo "";} else { if($jp_kompetensi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        	<option <?php if(isset($nilai_potensial['kompetensi20_jp'])) { if($nilai_potensial['kompetensi20_jp'] == $r['id']) echo "selected"; else echo "";} else { if($jp_kompetensi == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -490,7 +492,7 @@
                         <select class="form-select select2" name="rekamjjk6" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
 						<?php if($penghargaan){ foreach($penghargaan as $r){ ?>
-                        <option  <?php if($nilai_potensial) { if($nilai_potensial['penghargaan'] == $r['id']) echo "selected"; else if($id_penghargaan == $r['id'])  echo "selected"; else echo "";} else { if($id_penghargaan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+                        <option  <?php if(isset($nilai_potensial['penghargaan'])) { if($nilai_potensial['penghargaan'] == $r['id']) echo "selected"; else if($id_penghargaan == $r['id'])  echo "selected"; else echo "";} else { if($id_penghargaan == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                         <?php } } ?>
                         </select>
                     </div>
@@ -500,14 +502,14 @@
                         <select class="form-select select2" name="rekamjjk7" required>
                         <option value="0,0,0"  selected>Pilih Item</option>
                         <?php if($riwayat_hukdis){ foreach($riwayat_hukdis as $r){ ?>
-							<option  <?php if($nilai_potensial) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else if($hukdis == $r['id'])  echo "selected"; else echo "";} else { if($hukdis == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
+							<option  <?php if(isset($nilai_potensial['riwayat_hukdis'])) { if($nilai_potensial['riwayat_hukdis'] == $r['id']) echo "selected"; else if($hukdis == $r['id'])  echo "selected"; else echo "";} else { if($hukdis == $r['id'])  echo "selected"; else echo ""; }?> value="<?=$r['id']?>,<?=$r['skor']?>,<?=$r['bobot']?>">[<?=$r['skor']?> Poin] <?=$r['nm_kriteria']?></option>
                       
                         <?php } } ?>
                         </select>
                     </div>
                     
 
-                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
+                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
                     </form>
 					</div>
 
@@ -517,6 +519,8 @@
 					<!-- <input type="hidden" name="lainnya_id_t_penilaian" value="<?=$id_t_penilaian?>"> -->
 					<input type="hidden" name="lainnya_jenis_jab" id="lainnya_jenis_jab" value="<?=$kode?>">
 					<!-- <input type="hidden" name="lainnya_jabatan_target" value="<?=$jabatan_target?>"> -->
+					<input type="hidden" name="lainnya_jenis_pengisian" id="lainnya_jenis_pengisian" value="<?=$jenis_pengisian?>">
+
 					<div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Pengalaman dalam Kepemimpinan Organisasi</label>
 						<select class="form-select select2" name="lainnya1" >
@@ -548,7 +552,7 @@
                     </div>
 
 
-                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
+                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
                     </form>
 					</div>
 
@@ -563,6 +567,17 @@
 				</div> -->
 
 	<script>
+		// // blok enter 
+		// $(document).ready(function() {
+		// $(window).keydown(function(event){
+		// 	if(event.keyCode == 13) {
+		// 	event.preventDefault();
+		// 	return false;
+		// 	}
+		// });
+		// });
+		// // blok enter 
+
 		$(function () {
 
 
@@ -621,6 +636,7 @@
 			$('#form_penilaian_potensial_rj').on('submit', function (e) {
 			
 				var kode = $('#rj_jenis_jab').val()
+				var jenis_pengisian = $('#rj_jenis_pengisian').val()
 				e.preventDefault();
 				var formvalue = $('#form_penilaian_potensial_rj');
 				var form_data = new FormData(formvalue[0]);
@@ -641,10 +657,10 @@
 						if (result.success == true) {
 							successtoast(result.msg)
 							if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							}
 						
@@ -662,6 +678,8 @@
 			$('#form_penilaian_potensial_lainnya').on('submit', function (e) {
 			
 			var kode = $('#lainnya_jenis_jab').val()
+			var jenis_pengisian = $('#lainnya_jenis_pengisian').val()
+
 			e.preventDefault();
 			var formvalue = $('#form_penilaian_potensial_lainnya');
 			var form_data = new FormData(formvalue[0]);
@@ -682,10 +700,10 @@
 					if (result.success == true) {
 						successtoast(result.msg)
 						if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
 									1000);
 							}
 						

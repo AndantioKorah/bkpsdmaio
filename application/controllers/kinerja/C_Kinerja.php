@@ -168,6 +168,11 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->insertLaporanKegiatan());
     }
 
+    public function insertPeninjauanAbsensi()
+    {
+        echo json_encode($this->kinerja->insertPeninjauanAbsensi());
+    }
+
 
     public function createLaporanKegiatan()
     {
@@ -210,9 +215,21 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_RealisasiKinerjaItem', $data);
     }
 
+    public function loadPeninjauanAbsensi()
+    {
+
+        $data['list_peninjauan'] = $this->kinerja->loadPeninjauanAbsensi();
+        $this->load->view('kinerja/V_PeninjauanAbsensiItem', $data);
+    }
+
     public function deleteKegiatan($id)
     {
         $this->general->delete('id', $id, 't_kegiatan');
+    }
+
+    public function deletePeninjauanAbsensi($id)
+    {
+        $this->general->delete('id', $id, 't_peninjauan_absensi');
     }
 
     public function deleteRencanaKinerja($id)
@@ -442,21 +459,52 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->verifkinerja->createNilaiKomponenKinerja());
     }
 
+    public function hukdis(){
+        $data['pegawai'] = $this->master->getAllOnlyPegawai();
+        $data['hukdis'] = $this->general->getAllWithOrder('m_disiplin_kerja', 'id', 'asc');
+        // dd($data);
+        render('kinerja/V_Hukdis', '', '', $data);
+    }
+
     public function disiplinKerja()
     {
         $data['skpd'] = $this->master->getAllUnitKerja();
         render('kinerja/V_DisiplinKerja', '', '', $data);
     }
 
+    public function tinjauABsensi()
+    {
+        $data['skpd'] = $this->master->getAllUnitKerja();
+        $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();
+        render('kinerja/V_PeninjauanAbsensi', '', '', $data);
+    }
+
+    public function verifikasiTinjauAbsensi()
+    {
+        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        render('kinerja/V_VerifPeninjauanAbsensi', '', '', $data);
+    }
+
+    public function searchVerifTinjauAbsensi()
+    {
+        $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
+        // dd($data['result']);
+        $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', $data);
+    }
+
     public function searchDisiplinKerja()
     {
         $data['result'] = $this->kinerja->searchDisiplinKerja($this->input->post());
+        $data['skpd'] = 0;
+        if(($this->input->post('id_unitkerja'))){
+        $data['skpd'] = $this->input->post('id_unitkerja');
+        }
         $this->load->view('kinerja/V_DisiplinKerjaResult', $data);
     }
 
-    public function loadDataPendukungByStatus($status, $bulan, $tahun)
+    public function loadDataPendukungByStatus($status, $bulan, $tahun, $id_unitkerja)
     {
-        list($data['result'], $data['count']) = $this->kinerja->loadDataPendukungByStatus($status, $bulan, $tahun);
+        list($data['result'], $data['count']) = $this->kinerja->loadDataPendukungByStatus($status, $bulan, $tahun, $id_unitkerja);
         $data['status'] = $status;
         $this->load->view('kinerja/V_DisiplinKerjaResultData', $data);
     }
@@ -541,7 +589,9 @@ class C_Kinerja extends CI_Controller
 
     public function modalTambahDataDisiplinKerja($id_unitkerja)
     {
+        // $id_unitkerja = "4018000";
         $data['pegawai'] = $this->master->getPegawaiBySkpd($id_unitkerja);
+        $data['skpd'] = $this->master->getAllUnitKerja();
         $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
     }
@@ -578,13 +628,28 @@ class C_Kinerja extends CI_Controller
     {
         list($data['result'], $data['count']) = $this->kinerja->loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja);
         $data['status'] = $status;
+        // dd($data);
         $this->load->view('kinerja/V_VerifDokumenData', $data);
+    }
+
+    public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja)
+    {
+        $data['result'] = $this->kinerja->loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja);
+        $data['status'] = $status;
+    //    dd($data);    
+        $this->load->view('kinerja/V_VerifPeninjauanAbsensiData', $data);
     }
 
     public function verifDokumen($id, $status)
     {
         echo json_encode($this->kinerja->verifDokumen($id, $status));
     }
+
+    public function verifPeninjauanAbsensi($id, $status)
+    {
+        echo json_encode($this->kinerja->verifPeninjauanAbsensi($id, $status));
+    }
+
 
     public function paguTpp()
     {

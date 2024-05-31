@@ -12,7 +12,9 @@
                 <?php if($unit_kerja){
                     foreach($unit_kerja as $uk){ if($uk['id_unitkerja'] != 0 && $uk['id_unitkerja'] != 5){
                     ?>
-                    <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                    <?php if($this->general_library->isProgrammer() 
+                    || $this->general_library->isAdminAplikasi()
+                    || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
                       <option value="<?=$uk['id_unitkerja']?>">
                           <?=$uk['nm_unitkerja']?>
                       </option>

@@ -71,7 +71,7 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -586,11 +586,13 @@
             $temp_pendidikan = $this->db->select('*')
                                 ->from('db_pegawai.tktpendidikan')
                                 ->get()->result_array();
+                                
             foreach($temp_pendidikan as $pend){
                 $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
                 $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
                 $result['pendidikan'][$pend['id_tktpendidikan']]['jumlah'] = 0;
             }
+            // dd($result['pendidikan']);
 
             $temp_statuspeg = $this->db->select('*')
                                 ->from('db_pegawai.statuspeg')
@@ -670,6 +672,7 @@
                 } 
                
             }
+            // dd($result);
             return $result;
         }
 

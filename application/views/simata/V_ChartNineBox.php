@@ -1631,13 +1631,27 @@ animation06
       <div class="row" >
       <div class="col-lg-3" >
       <div class="card-body">
-      <form  action="<?=base_url('simata/C_Simata/nineBox')?>" method="POST">
+      <form  action="<?=base_url('simata/C_Simata/nineBox/'.$jenis_pengisian.'')?>" method="POST">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Jenis Penjenjangan Jabatan</label>
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
-        <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+        <?php if($jenis_pengisian == 1) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 3) echo "selected"; else echo "";}?> value="3">Pengawas</option>
+        <?php } ?>
+        <?php if($jenis_pengisian == 2) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 3) echo "selected"; else echo "";}?> value="3">Pengawas</option>
+
+        <?php } ?>
+        <?php if($jenis_pengisian == 3) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 2) echo "selected"; else echo "";}?> value="2">JPT</option>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 1) echo "selected"; else echo "";}?> value="1">Administrator</option>
+
+        <?php } ?>
+
+        
+
       </select>
       </div>
       <!-- <div class="mb-3" style='<?php if($post) { if($post['jenis_jabatan'] == 1) echo ""; else echo "display:none";} else echo "display:none";?>' id="adm">
@@ -1945,10 +1959,11 @@ $(function(){
     var jt = $('#jt').val()
     var box = $(this).data('box');
     var jumlah = $(this).data('jumlah');
+    var jenis_pengisian = "<?=$jenis_pengisian;?>"
 
         $('#detail_nine_box').html('')
         $('#detail_nine_box').append(divLoaderNavy)
-        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah, function(){
+        $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah+'/'+jenis_pengisian, function(){
         $('#loader').hide()
         })
 
@@ -1991,7 +2006,8 @@ $(function(){
         //   let nilaiy = parseFloat(dx.result[i].res_potensial_cerdas) + parseFloat(dx.result[i].res_potensial_rj) + parseFloat(dx.result[i].res_potensial_lainnya);
         //   let nilaix = parseFloat(dx.result[i].res_kinerja)
           let nilaix = dx.result[i].res_potensial_total;
-          let nilaiy = dx.result[i].res_kinerja
+          let nilaiy = dx.result[i].res_kinerja;
+          console.log(dx.result);
          
           if(nilaix == null){
             nilaix = 0;
@@ -2083,9 +2099,11 @@ const nineGridLabels = {
 
 
 const tooltipchart = {
+       
         callbacks:{
+            
           label: (context) => {
-            console.log(context)
+            // console.log(context)
             // return `Nama new line Pegawai - x: ${context.raw.x} and y: ${context.raw.y}`;
             // return ["Kinerja: "+context.raw.x, "Potensial: "+context.raw.y, context.raw.nama];
             return ["Kinerja: "+context.raw.y, "Potensial: "+context.raw.x];

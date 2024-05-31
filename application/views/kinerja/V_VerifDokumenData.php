@@ -26,7 +26,16 @@
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
                     <td class="text-center"><?= ($r['keterangan']) ?></td>
                     <td class="text-center">
-                        <?php if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if($dokpen[0] != "") { $nodok = 1; ?>
+                        <?php if($r['url_outside']){ ?>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-navy btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" target="_blank" href="<?=base_url($r['url_outside'])?>">Dokumen</a>
+                                </div>
+                            </div>
+                        <?php } else if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if($dokpen[0] != "") { $nodok = 1; ?>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-navy btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-eye"></i>

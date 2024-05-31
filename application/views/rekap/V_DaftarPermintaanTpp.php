@@ -18,6 +18,9 @@
                 <th rowspan=2 class="text-center">Jumlah Capaian TPP (Rp)</th>
                 <th rowspan=1 colspan=2 class="text-center">Potongan PPh</th>
                 <th rowspan=2 class="text-center">Jumlah Setelah Dipotong PPh (Rp)</th>
+                <th rowspan=2 class="text-center">Gaji (Rp)</th>
+                <th rowspan=2 class="text-center">BPJS (1%) (Rp)</th>
+                <th rowspan=2 class="text-center">Jumlah TPP yg Diterima (Rp)</th>
             </tr>
             <tr>
                 <th rowspan=1 colspan=1 class="text-center">%</th>
@@ -30,9 +33,7 @@
                     <td class="text-center"><?=$no++;?></td>
                     <td class="text-left">
                         <span style="font-size: 14px; font-weight: bold"><?=$r['nama_pegawai']?></span><br>
-                        <span class="text-data-pegawai"><?=formatNip($r['nip'])?></span><br>
-                        <!-- <span class="text-data-pegawai"><?=$r['pangkat']?></span><br>
-                        <span class="font-weight-bold text-data-pegawai"><?=$r['nama_jabatan']?></span> -->
+                        <span class="text-data-pegawai"><?=($r['nip'])?></span><br>
                     </td>
                     <td class="align-middle text-center"><?=$r['nomor_golongan']?></td>
                     <td class="align-middle text-center"><?=$r['nama_jabatan']?></td>
@@ -44,6 +45,9 @@
                     </td>
                     <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
                     <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['besaran_gaji'], 0)?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['bpjs'], 0)?></td>
+                    <td class="align-middle text-right"><?=formatCurrencyWithoutRp($r['tpp_final'], 0)?></td>
                 </tr>
             <?php } ?>
         </tbody>

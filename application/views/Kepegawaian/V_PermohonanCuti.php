@@ -39,17 +39,21 @@
       <div class="card-body">
         <form method="post" enctype="multipart/form-data" id="form_cuti" style="margin-top: -45px;">
           <div class="row">
+            <div class="col-lg-12">
+              
+            </div>
             <div class="col">
               <label class="lbl_input">Jenis Cuti</label>
               <select class="form-control select2-navy" style="width: 100%"
               id="id_cuti" data-dropdown-css-class="select2-navy" name="id_cuti">
                   <?php if($master_jenis_cuti){
                       foreach($master_jenis_cuti as $mc){ if($mc['id_cuti'] != 50){
+                        if($mc['id_cuti'] == 00){
                       ?>
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>
                       </option>
-                  <?php } } } ?>
+                  <?php } } } } ?>
               </select>
             </div>
             <div class="col" id="div_surat_pendukung" style="display: none;">
@@ -113,8 +117,12 @@
             <div class="col-lg-6"></div>
             <div class="col-lg-6 text-right">
               <!-- <button id="btn_submit" type="submit" class="btn btn-block btn-navy">Ajukan Cuti</button> -->
-              <button id="btn_submit" class="btn btn-block btn-navy">Ajukan Cuti</button>
-              <button style="display: none;" disabled id="btn_loading_submit" type="btn" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
+              <?php if($atasan['kepala']){ ?>
+                <button id="btn_submit" class="btn btn-block btn-navy">Ajukan Cuti</button>
+                <button style="display: none;" disabled id="btn_loading_submit" type="btn" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
+              <?php } else { ?>
+                  <h5 style="color: red;">*Data atasan tidak ditemukan, silahkan menghubungi Admin Siladen</h5>
+              <?php } ?>
             </div>
           </div>
         </form>
@@ -254,5 +262,7 @@
         errortoast('Terjadi Kesalahan')
       }
     })
+    $('#btn_submit').show()
+    $('#btn_loading_submit').hide()
   })
 </script>

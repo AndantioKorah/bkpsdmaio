@@ -223,14 +223,19 @@ function countNilaiSkp($data)
             $nilai_capaian = 0;
             if (floatval($d['realisasi']) > 0) {
                 if(floatval($d['target_kuantitas']) == 0){
-                    $nilai_capaian = 0;
-                } else {
+                    $d['target_kuantitas'] = $d['realisasi'];
+                    // $nilai_capaian = 0;
+                } 
+                // else {
                     $nilai_capaian = (floatval($d['realisasi']) / floatval($d['target_kuantitas'])) * 100;
-                }
+                    if($nilai_capaian > 100){
+                        $nilai_capaian = 100;
+                    }
+                // }
             }
             $akumulasi_nilai_capaian += $nilai_capaian;
         }
-
+        
         if (count($data) != 0) {
             $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
         }
@@ -355,10 +360,33 @@ function generateRandomNumber($length = 10)
 
 function getPphByIdPangkat($id_pangkat)
 {
-    if (in_array($id_pangkat, [31, 32, 33, 34])) {
+    if (in_array($id_pangkat, [31, 32, 33, 34, 59, 60])) {
         return 5;
     } else if (in_array($id_pangkat, [41, 42, 43, 44, 45])) {
         return 15;
+    }
+    return 0;
+}
+
+function getGolonganByIdPangkat($id_pangkat){
+    if (in_array($id_pangkat, [31, 32, 33, 34])) {
+        return 'III';
+    } else if (in_array($id_pangkat, [11, 12, 13, 14, 15])) {
+        return 'I';
+    } else if (in_array($id_pangkat, [21, 22, 23, 24, 25])) {
+        return 'II';
+    } else if (in_array($id_pangkat, [41, 42, 43, 44, 45])) {
+        return 'IV';
+    } else if (in_array($id_pangkat, [51])) {
+        return 'I';
+    } else if (in_array($id_pangkat, [59])) {
+        return 'IX';
+    } else if (in_array($id_pangkat, [55])) {
+        return 'V';
+    } else if (in_array($id_pangkat, [57])) {
+        return 'VII';
+    }  else if (in_array($id_pangkat, [60])) {
+        return 'X';
     }
     return 0;
 }
@@ -371,8 +399,8 @@ function greeting(){
     if(intval($time) >= 11 && intval($time) < 15){
         $greeting = "Siang";
     } else if(intval($time) >= 15 && intval($time) < 18){
-        $greeting = "Siang";
-    } else if(intval($time) >= 18 && intval($time) < 24 && intval($time) >= 0 && intval($time) < 2){
+        $greeting = "Sore";
+    } else if((intval($time) >= 18 && intval($time) < 24) || (intval($time) >= 0 && intval($time) < 2)){
         $greeting = "Malam";
     }
 
@@ -390,6 +418,12 @@ function formatCurrency($data)
 }
 
 function formatCurrencyWithoutRp($data, $decimal = 2)
+{
+    $explode = explode(".", $data);
+    return number_format(floatval($explode[0]), $decimal, ",", ".");
+}
+
+function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
 {
     return number_format($data, $decimal, ",", ".");
 }
@@ -483,9 +517,16 @@ function formatTwoMaxDecimal($data)
 
 function formatDateNamaBulan($data)
 {
+   
     $date_only = formatDateOnly($data);
     $explode = explode('/', $date_only);
-    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
+    if($data == "0000-00-00" || $data == ""){
+    return "-";
+    } else {
+    return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+    }
+    // return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];   
+
 }
 
 function formatDateNamaBulanWT($data)
@@ -1022,13 +1063,23 @@ function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
 }
 
-function isKasubKepegawaian($nama_jabatan){
-    return (stringStartWith('Kepala Sub', $nama_jabatan) || 
-    stringStartWith('Kepala Seksi', $nama_jabatan) ||
-    stringStartWith('Kasubag', $nama_jabatan) ||
-    stringStartWith('Kepala Tata Usaha', $nama_jabatan) ||
-    stringStartWith('Kepala Unit Pelaksana', $nama_jabatan) ||
-    stringStartWith('Kepala UPTD', $nama_jabatan)) ? true : false;
+function isKasubKepegawaian($nama_jabatan, $eselon = null){
+    $CI = &get_instance();
+    if($eselon != null){
+        $eselon = $CI->general_library->getEselon();
+    }
+
+    if($CI->general_library->isHakAkses('role_kasubag_kepegawaian')){
+        return true;
+    }
+    
+    return (stringStartWith('Kepala Sub Bagian Umum dan Kepegawaian', $nama_jabatan) || 
+    stringStartWith('Kepala Sub Bagian Kepegawaian', $nama_jabatan) ||
+    stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||
+    stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan) ||
+    stringStartWith('Kepala Sub Bagian Umum, Hukum dan Kepegawaian', $nama_jabatan) ||
+    (stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan) && $eselon == 'IV A')) 
+    ? true : false;
 }
 
 function countTmtPensiun($nip, $umur = 0){
@@ -1044,6 +1095,52 @@ function countTmtPensiun($nip, $umur = 0){
         $bulan += 1;
         return $tahun.'-'.$bulan.'-01';
     }
+}
+
+function pembulatan($number){
+    $rounded = floor($number);
+    $whole = $number - $rounded;
+    if($whole != 0){
+        // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+        $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+    }
+    return $number; 
+}
+
+function excelRoundDown($number, $length){
+    $number = floor($number * pow(10, $length)) / pow(10, $length);
+    return $number;
+}
+
+function pembulatanDecimal($number, $length = 1){
+    $add = 0;
+    $strnum = strval($number);
+    $strlen = strlen($strnum);
+
+    if($strlen < $length + 3 || $length == 0){
+        return $number;
+    }
+    
+    $substr = substr($strnum, 0, $length+2);
+    $last_substr = substr($substr, strlen($substr)-1);
+    
+    $substr_po = substr($strnum, 0, $length+3); //substring plus one
+    $last_substr_po = substr($substr_po, strlen($substr_po)-1);
+
+    if(floatval($last_substr_po) >= 5){
+        $awal_add = "0.";
+        if($length == 1){
+            $add = $awal_add."1";
+        } else {
+            $add = "";
+            for($i = 1; $i <= $length-1; $i++){
+                $add .= "0";
+            }
+            $add = $awal_add.$add."1";
+        }
+    }
+
+    return floatval($substr) + $add;
 }
 
 function emojiToString($text) {

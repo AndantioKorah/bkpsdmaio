@@ -11,10 +11,11 @@
           <th class="text-left">Tanggal Selesai Berlaku</th> -->
           <th class="text-left">No Surat</th>
           <th class="text-left">Tanggal Surat</th>
+          <th class="text-left">TMT</th>
+
           <th></th>
           <th></th>
           <?php if($kode == 2) { ?>
-            <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">  </th>
           <?php } ?>
@@ -32,6 +33,8 @@
               <td class="text-left"></td> -->
               <td class="text-left"><?=$rs['nosurat']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsurat'])?></td>
+              <td class="text-left"><?=formatDateNamaBulan($rs['tmt'])?></td>
+
               <td class="text-left">
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_disiplin" onclick="openFileDisiplin('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
@@ -51,7 +54,9 @@
                 <?php } ?>
                 <?php } ?>
 
-                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+                || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
                 <?php if($kode == 1) { ?>
                 <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>
@@ -59,7 +64,7 @@
                <?php } ?>
                <?php } ?>
               <?php if($kode == 2) { ?>
-                <td><?=formatDateNamaBulan($rs['created_date'])?></td>
+                
                 <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
@@ -83,6 +88,15 @@
 <script>
   $(function(){
     $('.datatable').dataTable()
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+});
+
+
   })
 
   // function openFilePangkat(filename){

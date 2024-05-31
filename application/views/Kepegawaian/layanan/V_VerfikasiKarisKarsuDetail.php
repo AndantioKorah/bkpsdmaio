@@ -351,16 +351,32 @@
                 </span>
               </div>
             </div>
-          </div>
-          <div class="col-lg-12 div_label text-left">
-            <span class="sp_label">
-              Alamat
-            </span>
-          </div>
-          <div class="col-lg-12 text-left">
-            <span class="sp_profil_sm sp_profil_alamat">
-              <?=($result[0]['alamat'])?>
-            </span>
+
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Alamat
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                <?=($result[0]['alamat'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  No Handphone/WA
+                </span>
+              </div>
+              <div class="col-lg-12 text-right">
+                <span class="sp_profil_sm">
+                <?=($result[0]['handphone'])?>
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

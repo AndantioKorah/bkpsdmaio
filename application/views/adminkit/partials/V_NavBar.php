@@ -143,6 +143,10 @@
 	</a>
 	<?php if(!$this->general_library->isGuest()) { ?>
 	<?php if($this->general_library->getRole() == 'programmer' || $this->general_library->getRole() == 'admin_aplikasi' || $this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->getRole() == 'walikota') { ?>
+		<?php
+			// $number = excelRoundDown(30665.78, 5);
+			// echo $number;
+		?>
 		<form id="form_search_navbar" class="form-inline mr-3">
 			<div class="row">
 				<div class="div_search_bar">
@@ -318,6 +322,9 @@
 					<a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
 					<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 					<div class="dropdown-divider"></div> -->
+					<!-- <a class="dropdown-item" href="<?=base_url('logout')?>">
+						<i class="align-middle me-2 fa fa-sign-out-alt"></i> <span class="align-middle"><?=greeting()?></span>
+					</a> -->
 					<a class="dropdown-item" href="<?=base_url('logout')?>">
 						<i class="align-middle me-2 fa fa-sign-out-alt"></i> <span class="align-middle">Log Out</span>
 					</a>

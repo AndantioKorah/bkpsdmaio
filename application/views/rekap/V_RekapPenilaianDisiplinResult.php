@@ -32,7 +32,7 @@
                 <div>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
                 <div class="div_maintb">
-                <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
+                    <table class="cd-table rekap-table table" style="width: 2000px; margin-top : -10px" border="1" id="table_rekap_penilaianx">
                         <thead>
                             <tr >
                                 <th style="text-align: center;  width: 3%;" rowspan="2">No</th>
@@ -56,8 +56,8 @@
                             ?>
                                 <tr>
                                     <td style="text-align: center;"><?=$no++;?></td>
-                                    <td style="padding-top: 5px; padding: 5px;">
-                                        <span style=""><?=$rs['nama_pegawai']?></span><br>
+                                    <td style="padding-top: 15px; padding: 5px;">
+                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
                                         <span style="">NIP. <?=$rs['nip']?></span>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=$rs['rekap']['jhk']?></td>
@@ -76,7 +76,7 @@
                             <?php } ?>
                         </tbody>
                     </table>
-                                    </div>
+                </div>
                 </div>
             </form>
         </div>

@@ -14,7 +14,12 @@
             <th class="text-center">Pilihan</th>
         </thead>
         <tbody>
-            <?php $no = 1; foreach($result as $r){ ?>
+            <?php $no = 1; foreach($result as $r){
+            $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']);
+            if($r['sampai_tanggal']){
+                $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']);
+            }
+            ?>
                 <tr>
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left"><?=getNamaPegawaiFull($r)?></td>
@@ -24,7 +29,7 @@
                         // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
                     ?>
                     <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
-                    <td class="text-center"><?= formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']) ?></td>
+                    <td class="text-center"><?= $tanggal_dokumen ?></td>
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
                     <td class="text-center"><?= ($r['keterangan']) ?></td>
                     <td class="text-center">
@@ -53,8 +58,13 @@
                             <!-- <button data-toggle="modal" onclick="openDetailModalDataDisiplinKerja('<?=$r['id_m_user']?>')" href="#detailModalDataDisiplinKerja" type="button" class="btn btn-navy btn-sm"><i class="fa fa-list"></i> Detail</button>
                             <button onclick="deleteDisiplinKerjaByIdUser('<?=$r['id_m_user']?>')" type="button" id="btn_delete_<?=$r['id_m_user']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                             <button type="button" disabled style="display: none;" id="btn_loading_<?=$r['id_m_user']?>" class="btn btn-danger btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading....</button> -->
-
+                            <?php if($r['id_m_jenis_disiplin_kerja'] == 4 || $r['id_m_jenis_disiplin_kerja'] == 5 ) { ?>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) { ?>
+                                <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                <?php } ?>
+                                <?php } else { ?>
                             <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php } ?>
                             <button type="button" disabled style="display: none;" id="btn_loading_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
                     </td>
                 </tr>

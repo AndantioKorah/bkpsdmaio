@@ -655,7 +655,7 @@ var firstDay = getFirstDayOfMonth(
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    startDate: firstDay,
+    // startDate: firstDay,
     endDate: new Date()
   })
 

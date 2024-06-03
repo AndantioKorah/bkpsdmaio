@@ -468,13 +468,14 @@
 						<i class="align-middle me-2 far fa-circle"></i>Upload
 					</a>
 				</li>
-				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
+				
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
 				</li>
-				
+				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
+
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>

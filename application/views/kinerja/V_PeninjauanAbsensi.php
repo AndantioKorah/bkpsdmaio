@@ -99,6 +99,7 @@
     <!-- <input  class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
     <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  multiple="multiple" />
 
+    <div id="uploadPreview"></div>
 
   </div>
   <div class="form-group col-lg-12 mt-2">
@@ -110,8 +111,9 @@
     <br>
     Keterangan : <br> 
     <!-- - Pada bagian keterangan jika bukti foto berupa foto bersama teman, tuliskan nama pegawai yang tersebut jika bukan cukup ketik - saja.<br> -->
-    - Jika menggunakan foto bersama stiker, upload foto tersebut ke grup kepegawaian setelah itu discreenshot dan di upload sebagai bukti.<br>
-    - Maksimal Peninjauan Absensi hanya 2 kali dalam sebulan.
+    - Jika menggunakan foto berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
+- Upload bukti pada hari yang sama. <br>
+- Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
 </span>
 
     </div>
@@ -322,4 +324,45 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         }
               
           });
+
+          function readImage(file) {
+        document.getElementById('btn_upload').disabled = true;
+        $('#btn_upload').html('<i class="fas fa-spinner fa-spin"></i>')
+        $('#uploadPreview').html('');
+        var reader = new FileReader();
+        var image  = new Image();
+        reader.readAsDataURL(file);  
+        reader.onload = function(_file) {
+        image.src = _file.target.result; // url.createObjectURL(file);
+        image.onload = function() {
+        var w = this.width,
+        h = this.height,
+        t = file.type, // ext only: // file.type.split('/')[1],
+        n = file.name,
+        s = ~~(file.size/1024) +'KB';
+        $('#uploadPreview').append('<img src="' + this.src + '" class="thumb">');
+        document.getElementById('btn_upload').disabled = false;
+        $('#btn_upload').html('<i class="fa fa-save"></i>  SIMPAN')
+        };
+        document.getElementById('btn_upload').disabled = false;
+        $('#btn_upload').html('<i class="fa fa-save"></i>  SIMPAN')
+        // image.onerror= function() {
+        // alert('Invalid file type: '+ file.type);
+        // };      
+        };
+        }
+        
+        
+        $("#image_file").change(function (e) {
+        if(this.disabled) {
+        return alert('File upload not supported!');
+        }
+        // var F = this.files;
+        // if (F && F[0]) {
+        // for (var i = 0; i < F.length; i++) {
+          
+        // readImage(F[i]);
+        // }
+        // }
+        });
 </script>

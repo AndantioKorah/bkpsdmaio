@@ -194,11 +194,11 @@
                   $_FILES['file']['size'] = $_FILES['files']['size'][$i];
                   
     
-                  if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
-                    $ress = 0;
-                    $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
-                    break;
-                  }
+                //   if($_FILES['file']['type'] != "image/png"  AND $_FILES['file']['type'] != "image/jpeg") {
+                //     $ress = 0;
+                //     $res = array('msg' => 'Hanya bisa upload file gambar', 'success' => false);
+                //     break;
+                //   }
                    
                 //   if($_FILES['file']['size'] > 1048576){
                 //     $ress = 0;
@@ -1547,16 +1547,27 @@
     }
 
     public function searchVerifTinjauAbsensi($data){
+        // dd($data);
         $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user')
             ->from('t_peninjauan_absensi a')
             ->join('m_user b', 'a.id_m_user = b.id')
             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
             ->where('a.flag_active', 1)
-            ->where('id_m_status_pegawai', 1)
+            ->where('c.id_m_status_pegawai', 4)
+            ->where('year(a.tanggal_absensi)', 06)
             ->order_by('a.created_date', 'desc');
             if($data['id_unitkerja'] != "0"){
-                $this->db->where('c.skpd', $data['id_unitkerja']);
+                $this->db->where('c.skpdx', $data['id_unitkerja']);
             }
+
+            // if($data['bulan'] != "0"){
+            //     $this->db->where('month(a.tanggal_absensi)', 6);
+            // }
+
+            // if($data['tahun'] != "0"){
+            //     $this->db->where('year(a.tanggal_absensi)', $data['tahun']);
+            // }
+
 
         $result = $this->db->get()->result_array();
         return $result;
@@ -1631,6 +1642,16 @@
         if($id_unitkerja != 0){
             $this->db->where('c.skpd', $id_unitkerja);
         }
+
+        
+        if($bulan != 0){
+            $this->db->where('month(a.tanggal_absensi)', $bulan);
+        }
+
+        if($tahun != 0){
+            $this->db->where('year(a.tanggal_absensi)', $tahun);
+        }
+
 
         if($status == 1){
             $this->db->order_by('created_date', 'asc');

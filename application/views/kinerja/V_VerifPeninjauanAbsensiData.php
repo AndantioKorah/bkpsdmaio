@@ -17,7 +17,8 @@
             <?php $no = 1; foreach($result as $r){ ?>
                 <tr id="tr_<?=$r['id']?>">
                     <td class="text-center"><?=$no?></td>
-                    <td class="text-left"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></td>
+                    <td class="text-left">
+                    <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
                     <td class="text-left"><?=($r['nm_unitkerja'])?></td>
                     <?php
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];

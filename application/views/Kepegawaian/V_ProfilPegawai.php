@@ -508,6 +508,17 @@
                 </span>
               </div>
 
+              <!-- <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Tunjangan Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+              Dalam Pengembangan
+              </span>
+              </div> -->
+
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
@@ -599,16 +610,27 @@
                 </span>
               </div>
 
-              <div class="col-lg-12 div_label text-left">
+              <!-- <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  Keterangan
+                  Masa Kerja Pegawai
                 </span>
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  
+                <?= countDiffDateLengkap(date('Y-m-d'), $profil_pegawai['tmtcpns'], ['tahun', 'bulan'])?>
               </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Gaji Pokok
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+              Dalam Pengembangan
+              </span>
+              </div> -->
 
                  <!-- end data kepegawaian  -->
 

@@ -1932,7 +1932,7 @@
                     ->where('a.flag_active', 1);
 
             if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-                $this->db->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+                $this->db->join('db_pegawai.unitkerja e', 'b.skpd = e.id_unitkerja')
                         ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
             } else {
                 $this->db->where('b.skpd', $skpd[0]); 

@@ -726,14 +726,27 @@
         }
 
         public function loadInputGajiData($data){
-            return $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji')
+            $uksearch = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $data['id_unitkerja'])
+                            ->get()->row_array();
+
+            $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
-                            ->where('a.skpd', $data['id_unitkerja'])
-                            ->order_by('b.eselon', 'a.nama')
-                            ->get()->result_array();
+                            // ->where('a.skpd', $data['id_unitkerja'])
+                            ->order_by('b.eselon', 'a.nama');
+            
+            if(in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $this->db->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
+                        ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else {
+                $this->db->where('a.skpd', $data['id_unitkerja']); 
+            }
+
+            return $this->db->get()->result_array();
         }
 
         public function saveInputGaji($data){

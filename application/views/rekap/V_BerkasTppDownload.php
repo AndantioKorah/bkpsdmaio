@@ -74,7 +74,7 @@
                             ?>
                                 <td style="text-align: center; color: <?=$color?>" rowspan="1" colspan="1"><?=$rs['rekap'][$md['keterangan']]['total']?></td>
                             <?php } ?>
-                            <td style="text-align: center;"><?=$rs['rekap']['presentase_kehadiran'].'%'?></td>
+                            <td style="text-align: center;"><?=formatTwoMaxDecimal($rs['rekap']['presentase_kehadiran']).'%'?></td>
                         </tr>
                     <?php }
                         $total_presentase_kehadiran = $total_presentase_kehadiran / (count($rekap_penilaian_tpp['result']));
@@ -394,7 +394,7 @@
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
-        <?php if($this->general_library->isProgrammer()){ ?>
+        <?php if($this->general_library->isProgrammer() || $param['nm_unitkerja'] == 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia'){ ?>
             <div style="page-break-after: always;" class="div_daftar_permintaan">
                 <?php 
                     $data_header['filename'] = 'DAFTAR PERMINTAAN TPP';
@@ -882,7 +882,7 @@
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
-            <?php if($this->general_library->isProgrammer()){ ?>
+            <?php if($this->general_library->isProgrammer() || $param['nm_unitkerja'] == 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia'){ ?>
                 <div style="page-break-after: always;" class="div_daftar_permintaan">
                     <?php 
                         $data_header['filename'] = 'DAFTAR PERMINTAAN TPP';

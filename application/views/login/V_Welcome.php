@@ -129,6 +129,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
         $this->general_library->isWalikota() ||
         $this->general_library->isGuest()
         // || $this->general_library->isPegawaiBkpsdm()
+        || $this->general_library->isKepalaBkpsdm()
         )
         { ?>
           <div class="row">

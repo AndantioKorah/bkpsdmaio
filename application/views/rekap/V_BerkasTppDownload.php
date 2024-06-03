@@ -394,7 +394,6 @@
                 $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
             ?>
         </div>
-        <?php if($this->general_library->isProgrammer() || $param['nm_unitkerja'] == 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia'){ ?>
             <div style="page-break-after: always;" class="div_daftar_permintaan">
                 <?php 
                     $data_header['filename'] = 'DAFTAR PERMINTAAN TPP';
@@ -768,6 +767,7 @@
                     $data_rekap['result'] = $result;
                     $data_rekap['rekap'] = $rekap;
                     $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                     $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                 ?>
             </div>
@@ -776,10 +776,10 @@
                     $data_rekap['result'] = $result;
                     $data_rekap['rekap'] = $rekap;
                     $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                     $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                 ?>
             </div>
-        <?php } ?>
         <?php if($pppk){ ?>
             <div style="page-break-after: always;" class="div_rekap_perhitungan_tpp">
                 <?php 
@@ -882,7 +882,6 @@
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
-            <?php if($this->general_library->isProgrammer() || $param['nm_unitkerja'] == 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia'){ ?>
                 <div style="page-break-after: always;" class="div_daftar_permintaan">
                     <?php 
                         $data_header['filename'] = 'DAFTAR PERMINTAAN TPP';
@@ -1257,6 +1256,7 @@
                         $data_rekap['rekap'] = $rekap_pppk;
                         $data_rekap['hukdis'] = $hukdis;
                         $data_rekap['flag_pppk'] = 1;
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                         $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                     ?>
                 </div>
@@ -1266,10 +1266,10 @@
                         $data_rekap['rekap'] = $rekap_pppk;
                         $data_rekap['hukdis'] = $hukdis;
                         $data_rekap['flag_pppk'] = 1;
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                         $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                     ?>
                 </div>
-            <?php } ?>
         <?php } ?>
     </div>
 </html>

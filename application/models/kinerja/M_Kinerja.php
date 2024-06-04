@@ -1722,23 +1722,50 @@
                         ->where('a.user_id', $this->input->post('teman_absensi'))
                         ->where('a.tgl', $this->input->post('tanggal_absensi'))
                         ->get()->row_array();
-                       
-                    
-            if($this->input->post('jenis_absensi') == 1){
-                $dataUpdate['masuk'] = $absen['masuk'];
-                $this->db->where('user_id', $this->input->post('id_user'))
-                ->where('tgl', $this->input->post('tanggal_absensi'))
-                ->update('db_sip.absen', $dataUpdate);
-            } else {
-                $dataUpdate['pulang'] = $absen['pulang'];
-                $this->db->where('user_id', $this->input->post('id_user'))
-                ->where('tgl', $this->input->post('tanggal_absensi'))
-                ->update('db_sip.absen', $dataUpdate);
-            }
+                         
+            if($absen){
+
+                $absenUser = $this->db->select('*')
+                ->from('db_sip.absen a')
+                ->where('a.user_id', $this->input->post('id_user'))
+                ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                ->get()->row_array();
+               
+                if($absenUser) {
+                    if($this->input->post('jenis_absensi') == 1){
+                        $dataUpdate['masuk'] = $absen['masuk'];
+                        $this->db->where('user_id', $this->input->post('id_user'))
+                        ->where('tgl', $this->input->post('tanggal_absensi'))
+                        ->update('db_sip.absen', $dataUpdate);
+                    } else {
+                        $dataUpdate['pulang'] = $absen['pulang'];
+                        $this->db->where('user_id', $this->input->post('id_user'))
+                        ->where('tgl', $this->input->post('tanggal_absensi'))
+                        ->update('db_sip.absen', $dataUpdate);
+                    }
+                } else {
+                $this->db->insert('db_sip.absen', [
+                                    'user_id' => $this->input->post('id_user'),
+                                    'masuk' => $absen['masuk'],
+                                    'pulang' => $absen['pulang'],
+                                    'lat' => $absen['lat'],
+                                    'lang' => $absen['lang'],
+                                    'tgl' => $absen['tgl'],
+                                    'status' => $absen['status'],
+                                    'aktivitas' => $absen['aktivitas']
+                                ]);
+                }
+  
+
+                $this->db->where_in('id', $id)
+                ->update('t_peninjauan_absensi', $data_verif);
+            } 
+        } else {
+            $this->db->where_in('id', $id)
+            ->update('t_peninjauan_absensi', $data_verif);
         }
 
-        $this->db->where_in('id', $id)
-                ->update('t_peninjauan_absensi', $data_verif);
+        
 
         // $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
         //                 ->from('t_peninjauan_absensi a')

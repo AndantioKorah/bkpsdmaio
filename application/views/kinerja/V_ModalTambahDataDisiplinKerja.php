@@ -16,7 +16,7 @@
             <?php if($this->general_library->isProgrammer() || 
             $this->general_library->isAdminAplikasi() || 
             isKasubKepegawaian($this->general_library->getNamaJabatan()) || 
-            $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
+            // $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
             $this->general_library->getBidangUser() == ID_BIDANG_PEKIN) {
             ?>
                  <div class="col-lg-12 col-md-12 mt-2">

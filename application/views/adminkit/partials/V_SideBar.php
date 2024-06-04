@@ -136,7 +136,8 @@
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
-				|| $this->general_library->isHakAkses('input_gaji_pegawai')){ ?>
+				|| $this->general_library->isHakAkses('input_gaji_pegawai')
+				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')){ ?>
 	<li class="sidebar-item">
 		<a class="sidebar-link" href="<?=base_url();?>master/input-gaji">
 			<i class="align-middle me-2 fa fa-money-bill"></i> 

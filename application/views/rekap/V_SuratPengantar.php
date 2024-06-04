@@ -1,4 +1,7 @@
-<?php $this->load->view('adminkit/partials/V_HeaderSuratGeneral', null); ?>
+<?php
+    $data['skpd'] = $rekap['unitkerja'][0];
+    $this->load->view('adminkit/partials/V_HeaderSuratGeneralDynamic', $data);
+?>
 <table style="width: 100%;">
     <tr valign=top>
         <td style="width: 70%;">
@@ -6,7 +9,7 @@
                 <tr valign=top>
                     <td style="width: 15%;">Nomor</td>
                     <td style="width: 5%;">:</td>
-                    <td style="width: 80%;">800/B.04/BKPSDM/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/2024</td>
+                    <td style="width: 80%;"></td>
                 </tr>
                 <tr valign=top>
                     <td style="width: 15%;">Sifat</td>

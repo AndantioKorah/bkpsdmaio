@@ -72,7 +72,7 @@
     <div onclick="href('kinerja/verifikasi')" class="col">
         <div class="card menu-container">
             <div class="bg-primary-color card-header">
-                <i class="fa fa-file-alt fa-8x"></i>
+                <i class="fa fa-check-circle fa-8x"></i>
             </div>
             <div class="card-body">
                 <h4 style="font-weight: bold;">Verifikasi SKP Pegawai</h4>

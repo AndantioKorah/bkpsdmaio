@@ -4934,7 +4934,7 @@ public function submitEditJabatan(){
                         'message' => $message.FOOTER_MESSAGE_CUTI,
                         'type' => 'text'
                     ];
-                    $this->general->saveToCronWa($cronWa);
+                    $this->db->insert('t_cron_wa', $cronWa);
                 } else {
                     $res['code'] = 1;
                     $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
@@ -4947,6 +4947,10 @@ public function submitEditJabatan(){
             $this->db->trans_rollback();
         }
         return $res;
+    }
+
+    public function getHirarkiAtasan($nip){
+        
     }
 
     public function deletePermohonanCuti($id, $flag_delete_record = 1){

@@ -1025,7 +1025,9 @@
 
         if($id_unitkerja == 3012000 
         || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
-        || $id_unitkerja == 6160000){ 
+        || $id_unitkerja == 6160000
+        || $id_unitkerja == 7005020
+        || $id_unitkerja == 7005010){ 
             // jika dinkes, puskes dan instalasi farmasi, ambil bendahara hardocde yang ada
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')

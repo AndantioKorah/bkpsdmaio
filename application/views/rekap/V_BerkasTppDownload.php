@@ -623,26 +623,52 @@
                             <!-- <td style="text-align: right;"><?=$r['tpp_final_permintaan_bkad'] != $r['tpp_final'] ? 'ini' : formatCurrencyWithoutRp($r['tpp_final_permintaan_bkad'], 0)?></td> -->
 
                         </tr>
-                    <?php } ?>
+                    <?php }
+                    
+                    $total_pph_prestasi_kerja = 
+                        pembulatan($potongan_pajak_keseluruhan) -
+                        (pembulatan($total_pph_kondisi_kerja) +
+                        pembulatan($total_pph_beban_kerja));
+
+                    $total_jumlah_setelah_pph_prestasi_kerja = 
+                        pembulatan($jumlah_setelah_pajak_keseluruhan) -
+                        (pembulatan($total_jumlah_setelah_pph_beban_kerja) +
+                        pembulatan($total_jumlah_setelah_pph_kondisi_kerja));
+
+                    $bpjs_prestasi_kerja = 
+                        pembulatan($jumlah_bpjs) -
+                        (pembulatan($bpjs_beban_kerja) +
+                        pembulatan($bpjs_kondisi_kerja));
+
+                    $tpp_final_prestasi_kerja = 
+                        pembulatan($tpp_final_permintaan_bkad) -
+                        (pembulatan($tpp_final_beban_kerja) +
+                        pembulatan($tpp_final_kondisi_kerja));
+
+                    $total_capaian_tpp_prestasi_kerja = 
+                        pembulatan($total_capaian_tpp) -
+                        (pembulatan($total_capaian_tpp_beban_kerja) +
+                        pembulatan($total_capaian_tpp_kondisi_kerja));
+                    
+                    ?>
                     <tr>
                         <td colspan=6 style="text-align: center; font-weight: bold;">JUMLAH</td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp($total_capaian_tpp, 0)?></td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_prestasi_kerja), 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($total_capaian_tpp_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_kondisi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"></td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_pph_prestasi_kerja), 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($total_pph_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_pph_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_pph_kondisi_kerja), 0)?></td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_jumlah_setelah_pph_prestasi_kerja), 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($total_jumlah_setelah_pph_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_jumlah_setelah_pph_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_jumlah_setelah_pph_kondisi_kerja), 0)?></td>
-                        <!-- <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($total_jumlah_setelah_pph_beban_kerja + $total_jumlah_setelah_pph_prestasi_kerja + $total_jumlah_setelah_pph_kondisi_kerja), 0)?></td> -->
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp($total_besaran_gaji, 0)?></td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($bpjs_prestasi_kerja), 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($bpjs_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($bpjs_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($bpjs_kondisi_kerja), 0)?></td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_prestasi_kerja), 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($tpp_final_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_kondisi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($tpp_final_permintaan_bkad), 0)?></td>

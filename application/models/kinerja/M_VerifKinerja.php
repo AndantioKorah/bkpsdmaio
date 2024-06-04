@@ -15,6 +15,8 @@
             $role = $this->general_library->getRole();
             $eselon = $this->general_library->getIdEselon();
             
+           
+
             $vt = $this->db->select('*')
                         ->from('t_verif_tambahan')
                         ->where('id_m_user', $this->general_library->getId())
@@ -48,7 +50,7 @@
                 $this->db->select('*, id as id_m_user')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                            ->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang'])
+                            // ->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang'])
                             // ->where('id_m_bidang', $this_user['id_m_bidang'])
                             ->where('b.skpd = ', $this_user['skpd'])
                             ->where('a.id !=', $this->general_library->getId())
@@ -56,6 +58,7 @@
                             // ->get()->result_array();
                 if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ //jika lurah
                     $this->db->where('id_m_bidang', $this_user['id_m_bidang']);
+                    $this->db->where('a.id_m_sub_bidang', $this_user['id_m_sub_bidang']);
                 }
                 $list_pegawai = $this->db->get()->result_array();
             // } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){

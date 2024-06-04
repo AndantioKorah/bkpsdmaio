@@ -38,7 +38,8 @@
                         <td class="text-left"> 
                         <?php if($lp['status'] == 0) echo  "Menunggu Verifikasi BKPSDM";
                                                     else if($lp['status'] == 1) echo "diterima";
-                                                    else if($lp['status'] == 2) echo "ditolak";  ?></td>
+                                                    else if($lp['status'] == 2) echo "ditolak";
+                                                    else if($lp['status'] == 3) echo "Menunggu Verifikasi BKPSDM"; ?></td>
                         <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-file"></i> Lihat File
@@ -88,13 +89,9 @@
                         <td class="customWidthTD" >
                        
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <?php if($lp['status'] == 2){ ?>
-                          <?php } ?>
-                            <span href="#edit_realisasi_kinerja" data-toggle="modal" style="display: inline;">
-                            <!-- <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
-                             onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button> -->
-                            </span>  
-                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_absensi']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
+                        <?php if($lp['status'] != 1){ ?>
+                          <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_absensi']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
+                          <?php } ?> 
                            
                       </div>
 

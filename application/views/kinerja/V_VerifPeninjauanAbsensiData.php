@@ -15,11 +15,11 @@
         </thead>
         <tbody>
             <?php $no = 1; foreach($result as $r){ ?>
-                <tr id="tr_<?=$r['id']?>">
+                <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] == 2) echo 'background-color:#f0a095'; }?>">
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
                     <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
-                    <td class="text-left"><?=($r['nm_unitkerja'])?></td>
+                    <td class="text-left"><?=($r['nm_unitkerja'])?> </td>
                     <?php
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
                         // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
@@ -32,7 +32,8 @@
                         <td class="text-left">
                           <?php if($r['jenis_bukti'] == 1) echo "Foto Bersama Teman"; else echo "Screenshot Whatsapp";?>
                         </td>
-                        <td class="text-left"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></td>
+                        <td class="text-left">
+                        <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['teman_nip'];?>" style="color:#495057"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></a></td>
 
                     <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,9 +103,12 @@
                     </td>
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(3, '<?=$r['id']?>')" style="display: <?=$status == 0 || $status == 3 ? 'none' : 'block'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
+                            <?php if($r['total_diverif'] < 2) { ?>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
+                            <?php } ?>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(3, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'none' : 'block'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
+
                             <button disabled style="display: none;" id="btn_loading_<?=$r['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                         </div>
                     </td>
@@ -125,7 +129,7 @@
         $('#table_disiplin_kerja_result_data').dataTable()
     })
 
-    function verifDokumen(status, id){
+    function verifDokumen(status, id, tab){
         $('.btn_verif_'+id).hide()
         $('#btn_loading_'+id).show()
         $.ajax({
@@ -149,7 +153,17 @@
                     // $('#count_diterima').html(rs.data.diterima)
                     // $('#count_ditolak').html(rs.data.ditolak)
                     // $('#count_batal').html(rs.data.batal)
-                    $('#tr_'+id).hide();
+                    // $('#tr_'+id).hide();
+                    console.log(tab)
+                    if(tab == 0){
+                        openListData(0)
+                    } else if(tab == 3) {
+                        openListData(3)
+                    } else {
+                        $('#tr_'+id).hide();
+                    }
+             
+                    // 
                 } else {
                     errortoast(rs.message)
                 }

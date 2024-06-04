@@ -1,3 +1,5 @@
+<script src="//cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
+<link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet"/>
 <style type="text/css">
 .thumb{
   margin: 24px 5px 20px 0;
@@ -85,12 +87,6 @@
          </select>
     </div>
 
-
-  <!-- <div class="form-group mt-2">
-    <label for="exampleFormControlTextarea1">Keterangan</label>
-    <textarea class="form-control" style="margin-bottom:10px;" id="keterangan" name="keterangan" rows="3" required></textarea>
-  </div> -->
-
    
 
   <div class="form-group mt-2">
@@ -117,6 +113,20 @@
 </span>
 
     </div>
+
+<div class="row ml-2">
+<div class="col-lg-3">
+  contoh Foto Bersama Teman<br>
+  <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
+</div>
+<div class="col-lg-6">
+contoh Screenshot Whatsapp<br>
+<img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
+
+</div>
+</div>
+
+
 </div>
 
 <h1 class="h3 mb-3">List Peninjauan Absensi</h1>

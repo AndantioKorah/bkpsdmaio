@@ -1553,11 +1553,10 @@
             ->join('m_user b', 'a.id_m_user = b.id')
             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
             ->where('a.flag_active', 1)
-            ->where('c.id_m_status_pegawai', 4)
-            ->where('year(a.tanggal_absensi)', 06)
+            ->where('c.id_m_status_pegawai', 1)
             ->order_by('a.created_date', 'desc');
             if($data['id_unitkerja'] != "0"){
-                $this->db->where('c.skpdx', $data['id_unitkerja']);
+                $this->db->where('c.skpd', $data['id_unitkerja']);
             }
 
             // if($data['bulan'] != "0"){
@@ -1628,7 +1627,8 @@
     }
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('g.nama as teman_nama, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
+        $this->db->select('g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 limit 1) as total_diverif')
         ->from('t_peninjauan_absensi a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')

@@ -262,6 +262,7 @@ class C_Rekap extends CI_Controller
         $data['param']['nm_unitkerja'] = $skpd[1];
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
+        $param['id_unitkerja'] = $skpd[0];
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
         $pagu_tpp = $this->kinerja->countPaguTpp([
@@ -291,7 +292,7 @@ class C_Rekap extends CI_Controller
         $data['rekap_pppk'] = $data['result']['rekap_pppk'];
         $data['hukdis'] = $data['result']['hukdis'];
         $data['kepalabkpsdm'] = $data['result']['kepalabkpsdm'];
-        $data['pppk'] = $data['result']['pppk'];
+        $data['pppk'] = isset($data['result']['pppk']) ? $data['result']['pppk'] : null ;
         
         unset($data['result']['rekap_pppk']);
         unset($data['result']['pppk']);
@@ -445,6 +446,7 @@ class C_Rekap extends CI_Controller
                 //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
+                $param['id_unitkerja'] = $explode_param[0];
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
@@ -457,6 +459,7 @@ class C_Rekap extends CI_Controller
                 //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
+                $param['id_unitkerja'] = $explode_param[0];
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
@@ -469,6 +472,7 @@ class C_Rekap extends CI_Controller
                 //     $data['result'] = $data_rekap['daftar_perhitungan_tpp'];
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
+                $param['id_unitkerja'] = $explode_param[0];
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
@@ -478,13 +482,18 @@ class C_Rekap extends CI_Controller
 
             case "surat_pengantar":
                 $explode_param = explode(";", $param['skpd']);
+                $param['id_unitkerja'] = $explode_param[0];
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['param'] = $param;
                 $data['param']['nm_unitkerja'] = $explode_param[1];
                 $data['rekap'] = $data['result']['rekap'];
                 $data['hukdis'] = $data['result']['hukdis'];
+                $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
                 $data['kepalabkpsdm'] = $data['result']['kepalabkpsdm'];
+                if(stringStartWith('Puskesmas', $explode_param[1])){
+                    $data['kepalabkpsdm'] = $data['pegawai']['kapus'];
+                }
                 $data['result'] = $this->fixOrder($data['result']);
                 // }
                 $this->load->view('rekap/V_SuratPengantar', $data);
@@ -492,6 +501,7 @@ class C_Rekap extends CI_Controller
 
             case "salinan_surat_pengantar":
                 $explode_param = explode(";", $param['skpd']);
+                $param['id_unitkerja'] = $explode_param[0];
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['param'] = $param;

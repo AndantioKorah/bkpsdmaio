@@ -878,6 +878,8 @@
         $result['flag_sekolah'] = 0;
         $result['flag_puskesmas'] = 0;
         $result['flag_bagian'] = 0;
+        $result['setda'] = 0;
+        $result['bendahara_setda'] = 0;
 
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
@@ -985,10 +987,18 @@
                                 ->get()->result_array();
         } else if($unitkerja['id_unitkerjamaster'] == 2000000 || $unitkerja['id_unitkerjamaster'] == 1000000){ // jika bagian, flag_bagian = 1
             $result['flag_bagian'] = 1;
-            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Marie Marce Kolopita 
-            || $unitkerja['id_unitkerja'] == 2000100
-            || $unitkerja['id_unitkerja'] == 1010500){
-                $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                        ->from('db_pegawai.pegawai a')
+                                        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                        ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                        ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                        ->where('e.nama_jabatan', 'Sekretaris Daerah')
+                                        ->where('id_m_status_pegawai', 1)
+                                        ->get()->row_array();
+
+                $result['bendahara_setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
@@ -999,17 +1009,12 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 
+            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Marie Marce Kolopita 
+            || $unitkerja['id_unitkerja'] == 2000100
+            || $unitkerja['id_unitkerja'] == 1010500){
+                $result['bendahara'] = $result['bendahara_setda'];
                 if($unitkerja['id_unitkerja'] == 2000100){ //jika staf ahli, cari setda
-                    $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
-                                        ->from('db_pegawai.pegawai a')
-                                        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                        ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                        ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                        ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                        ->where('e.nama_jabatan', 'Sekretaris Daerah')
-                                        ->where('id_m_status_pegawai', 1)
-                                        ->get()->row_array();
+                    $result['kepalaskpd'] = $result['setda'];
                 }
             }
         } else { //jika dinas atau badan
@@ -2254,6 +2259,11 @@
         $rekap['jumlah_yang_diterima'] = 0;
         $rekap['tpp_final'] = 0;
 
+        $rekap['unitkerja'] = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $param['id_unitkerja'])
+                                    ->get()->result_array();
+
         $rekap_pppk['jumlah_pegawai'] = 0;
         $rekap_pppk['rata_rata_presentase_kehadiran'] = 0;
         $rekap_pppk['total_presentase_kehadiran'] = 0;
@@ -2393,13 +2403,16 @@
                 $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'] = 
                     ($result[$l['nipbaru_ws']]['capaian_tpp_kondisi_kerja'] - ($result[$l['nipbaru_ws']]['pph_kondisi_kerja']));
 
-                if(floatval($result[$l['nipbaru_ws']]['tpp_diterima']) + floatval($result[$l['nipbaru_ws']]['besaran_gaji']) >= 12000000){
+                if($l['nipbaru_ws'] == '198005051999121001'){
+                    // dd($result[$l['nipbaru_ws']]['besaran_tpp']);
+                }
+
+                if(floatval($result[$l['nipbaru_ws']]['besaran_tpp']) + floatval($result[$l['nipbaru_ws']]['besaran_gaji']) >= 12000000){
                     $bpjs_gaji = (0.01 * $result[$l['nipbaru_ws']]['besaran_gaji']);
                     $bpjs_12 = (0.01 * 12000000);
                     $result[$l['nipbaru_ws']]['bpjs_gaji'] = $bpjs_gaji;
                     $result[$l['nipbaru_ws']]['bpjs_12'] = $bpjs_12;
                     $result[$l['nipbaru_ws']]['bpjs'] = ($bpjs_12 - $bpjs_gaji);
-
                     $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = 
                         ($result[$l['nipbaru_ws']]['bpjs'] * $result[$l['nipbaru_ws']]['presentasi_prestasi_kerja']);
                     $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = 

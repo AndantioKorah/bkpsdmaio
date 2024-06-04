@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             <?php $no = 1; foreach($result as $r){ ?>
-                <tr id="tr_<?=$r['id']?>">
+                <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] == 2) echo 'background-color:#f0a095'; }?>">
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
                     <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
@@ -32,7 +32,8 @@
                         <td class="text-left">
                           <?php if($r['jenis_bukti'] == 1) echo "Foto Bersama Teman"; else echo "Screenshot Whatsapp";?>
                         </td>
-                        <td class="text-left"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></td>
+                        <td class="text-left">
+                        <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['teman_nip'];?>" style="color:#495057"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></a></td>
 
                     <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -153,7 +154,7 @@
                     // $('#count_ditolak').html(rs.data.ditolak)
                     // $('#count_batal').html(rs.data.batal)
                     // $('#tr_'+id).hide();
-                    // alert(tab)
+                    console.log(tab)
                     if(tab == 0){
                         openListData(0)
                     } else if(tab == 3) {

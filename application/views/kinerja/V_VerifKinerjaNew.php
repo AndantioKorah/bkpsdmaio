@@ -23,7 +23,7 @@
                         </select>
                     </div>
                     </div>
-                    <?php } else if($this->general_library->getIdEselon() == 4) { ?>
+                    <?php } else if($this->general_library->getIdEselon() == 4 || $this->general_library->isWalikota()) { ?>
                     <div class="col">
                         <label class="bmd-label-floating">Filter Berdasarkan</label>
                         <select class="form-control select2-navy" style="width: 100%"

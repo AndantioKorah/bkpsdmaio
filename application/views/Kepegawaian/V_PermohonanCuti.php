@@ -117,12 +117,12 @@
             <div class="col-lg-6"></div>
             <div class="col-lg-6 text-right">
               <!-- <button id="btn_submit" type="submit" class="btn btn-block btn-navy">Ajukan Cuti</button> -->
-              <?php if($atasan['kepala']){ ?>
+              <?php //if($atasan['kepala']){ ?>
                 <button id="btn_submit" class="btn btn-block btn-navy">Ajukan Cuti</button>
                 <button style="display: none;" disabled id="btn_loading_submit" type="btn" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
-              <?php } else { ?>
-                  <h5 style="color: red;">*Data atasan tidak ditemukan, silahkan menghubungi Admin Siladen</h5>
-              <?php } ?>
+              <?php // } else { ?>
+                  <!-- <h5 style="color: red;">*Data atasan tidak ditemukan, silahkan menghubungi Admin Siladen</h5> -->
+              <?php //} ?>
             </div>
           </div>
         </form>

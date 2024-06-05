@@ -132,6 +132,12 @@ function getFileTypeFromWaBot($string){
     return null;
 }
 
+function getHariKerjaByBulanTahun($bulan, $tahun){
+    $tanggal_awal = date("Y-m-01", strtotime($tahun.'-'.$bulan.'-01'));
+    $tanggal_akhir = date("Y-m-t", strtotime($tahun.'-'.$bulan.'-01'));
+    return countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');

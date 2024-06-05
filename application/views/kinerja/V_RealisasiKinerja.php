@@ -102,9 +102,9 @@
     <br>
       <div id="uploadPreview"></div>
   </div>
-  <div class="form-group col-lg-12">
-      <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
-      <button style="display: none;" id="btn_simpan" class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+  <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
+  <div class="form-group col-lg-12 class_form" style="display: none;" >
+      <button id="btn_simpan" class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
 
@@ -146,7 +146,7 @@
     })
     
     function checkLockTpp(){
-        $('#btn_simpan').hide()
+        $('.class_form').hide()
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/checkLockTpp")?>',
             method: 'post',
@@ -156,16 +156,15 @@
             success: function(data){
                 let rs = JSON.parse(data)
                 if(rs.code == 0){
-                    $('#btn_simpan').show()
+                    $('.class_form').show()
                     $('#error_label').hide()
                 } else {
-                    $('#btn_simpan').hide()
+                    $('.class_form').hide()
                     $('#error_label').show()
                     $('#error_label').html(rs.message)
                 }
             }, error: function(e){
-                $('#btn_simpan').show()
-                $('#btn_loading').hide()
+                $('.class_form').show()
                 errortoast('Terjadi Kesalahan')
             }
         })

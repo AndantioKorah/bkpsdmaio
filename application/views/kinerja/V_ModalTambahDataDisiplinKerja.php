@@ -69,6 +69,7 @@
                 <input class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
             </div>
             <div class="col-lg-12 col-md-12 mt-3" style="margin-top: 28px;">
+                <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
                 <button id="btn_tambah" type="submit" class="btn btn-block btn-navy"><i class="fa fa-input"></i> Tambah</button>
                 <button style="display: none;" id="btn_loading" disabled type="button" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
             </div>
@@ -87,12 +88,45 @@
         $('#jenis_disiplin').select2()
         $('#cariunitkerja').select2()
         $("#range_periode").daterangepicker({
+            format: 'DD/MM/YYYY',
             showDropdowns: true,
             // minDate: firstDay
         });
-      
-
+        checkLockTpp()
     })
+
+    $("#range_periode").on('change', function(){
+        checkLockTpp()
+    })
+
+    function checkLockTpp(){
+        $('#btn_tambah').hide()
+        $('#btn_loading').show()
+        $.ajax({
+            url: '<?=base_url("kinerja/C_Kinerja/checkLockTpp")?>',
+            method: 'post',
+            data: {
+                periode: $("#range_periode").val()
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    $('#btn_tambah').show()
+                    $('#btn_loading').hide()
+                    $('#error_label').hide()
+                } else {
+                    $('#btn_tambah').hide()
+                    $('#btn_loading').hide()
+                    $('#error_label').show()
+                    $('#error_label').html(rs.message)
+                }
+            }, error: function(e){
+                $('#btn_tambah').show()
+                $('#btn_loading').hide()
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
 
     // function tambahData(){
     //     $('#tambah_data_disiplin_kerja_content').html('')

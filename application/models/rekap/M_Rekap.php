@@ -868,6 +868,28 @@
         return $result;
     }
 
+    public function lockTpp($param){
+        unset($param['nm_unitkerja']);
+        $param['created_by'] = $this->general_library->getId();
+        $exists = $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('id_unitkerja', $param['id_unitkerja'])
+                        ->where('bulan', $param['bulan'])
+                        ->where('tahun', $param['tahun'])
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        if($exists){
+            // ganti created_by jadi updated_by supaya dapa tau sapa yang tarek dan yg tarek pertama tetap dapa tau
+            $param['updated_by'] = $param['created_by'];
+            unset($param['created_by']);
+            $this->db->where('id', $exists['id'])
+                    ->update('t_lock_tpp', $param);
+        } else {
+            $this->db->insert('t_lock_tpp', $param);
+        }
+    }
+
     public function getDataPenandatangananBerkasTpp($id_unitkerja){
         $result['kepalaskpd'] = null;
         $result['kasubag'] = null;
@@ -1230,12 +1252,12 @@
                                 ->where('a.flag_active', 1)
                                 ->get()->result_array();
 
-        $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
+        // $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
         // cari tanggal kerja dari tanggal awal s/d tanggal akhir PLT dan cocokkan dengan hari kerja di bulan yang dicari.
         // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
-        if($pegawai){
-            foreach($pegawai as $p);
-        }
+        // if($pegawai){
+        //     foreach($pegawai as $p);
+        // }
     }
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){

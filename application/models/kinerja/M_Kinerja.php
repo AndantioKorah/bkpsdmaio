@@ -1982,6 +1982,63 @@
         return $beban_kerja;
     }
 
+    public function checkLockTpp(){
+        $result['code'] = 0;
+        $result['message'] = '';
+        $result['data'] = '';
+
+        $param = $this->input->post();
+        $id_unitkerja = $this->general_library->getUnitKerjaPegawai();
+        $bulan = date('m');
+        $tahun = date('Y');
+        if(isset($param['periode'])){
+            $periode = explodeRangeDate($param['periode']);
+            $periode_awal = explode("-", $periode[0]);
+            $bulan = $periode_awal[2];
+            $tahun = $periode_awal[0];
+        } else if(isset($param['tanggal'])){
+            $explode = explode('-', $param['tanggal']);
+            $bulan = $explode[1];
+            $tahun = $explode[0];
+        } else if(isset($param['bulan']) && isset($param['tahun'])){
+            $bulan = $param['bulan'];
+            $tahun = $param['tahun'];
+        }
+        
+        $uk = $this->db->select('*')
+                    ->from('db_pegawai.unitkerja')
+                    ->where('id_unitkerja', $this->general_library->getUnitKerjaPegawai())
+                    ->get()->row_array();
+        if($uk){
+            if(in_array($uk['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){ // kelurahan, ambil kecamatan pe id_unitkerja
+                $uk_kec = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster', $uk['id_unitkerjamaster'])
+                            ->like('nm_unitkerja', 'Kecamatan%')
+                            ->get()->row_array();
+                if($uk_kec){
+                    $uk = $uk_kec;
+                    $id_unitkerja = $uk_kec['id_unitkerja'];
+                }
+            }
+        }
+
+        $exist = $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('id_unitkerja', $id_unitkerja)
+                        ->where('bulan', floatval($bulan)) 
+                        ->where('tahun', floatval($tahun))
+                        ->where('flag_active', 1)
+                        ->get()->row_array(); 
+        if($exist){
+            $result['code'] = 1;
+            $result['message'] = 'Berkas TPP '.$uk['nm_unitkerja'].' untuk periode '.getNamaBulan($bulan).' tahun '.$tahun.' sudah dilakukan rekapitulasi. Proses ini tidak dapat dilanjutkan.';
+            $result['data'] = $uk;
+        }
+
+        return $result;
+    }
+
     public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
         // $data['bulan'] = '3';

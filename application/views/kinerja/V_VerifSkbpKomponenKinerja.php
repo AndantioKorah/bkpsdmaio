@@ -55,7 +55,7 @@
             </td>
         </tr>
     </table>
-    <div class="col-lg-12 text-right">
+    <div class="col-lg-12 text-right class_button_verif" style="display: none;">
         <?php if($komponen_kinerja) { ?>
             <button onclick="hapusKomponenKinerja('<?=$komponen_kinerja['id']?>')" id="btn_delete_komponen_kinerja" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
             <button style="display:none;" disabled id="btn_delete_loading_komponen_kinerja" class="btn btn-danger btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading</button>
@@ -64,9 +64,42 @@
         <button style="display:none;" disabled id="btn_loading_komponen_kinerja" class="btn btn-success btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading</button>
     </div>
 </form>
+<div class="col-lg-12">
+    <h5 id="error_labels" style="color: red; font-weight: bold; display: none;"></h5>
+</div>
 
 <script>
     var id_komponen = '<?=$komponen_kinerja ? $komponen_kinerja['id'] : '0'?>';
+    
+    $(function(){
+        checkLockTpp() 
+    })
+
+    function checkLockTpp(){
+        $('.class_button_verif').hide()
+        $.ajax({
+            url: '<?=base_url("kinerja/C_Kinerja/checkLockTpp")?>',
+            method: 'post',
+            data: {
+                bulan: '<?=$bulan?>',
+                tahun: '<?=$tahun?>',
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    $('.class_button_verif').show()
+                    $('#error_labels').hide()
+                } else {
+                    $('.class_button_verif').hide()
+                    $('#error_labels').show()
+                    $('#error_labels').html(rs.message)
+                }
+            }, error: function(e){
+                $('.class_button_verif').show()
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
 
     function hapusKomponenKinerja(id){
         if(confirm('Apakah Anda yakin ingin menghapus data?')){

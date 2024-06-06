@@ -104,7 +104,7 @@
   </div>
   <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
   <div class="form-group col-lg-12 class_form" style="display: none;" >
-      <button id="btn_simpan" class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+      <button  class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
 
@@ -143,7 +143,7 @@
         loadListKegiatan(tahun,bulan)
         loadListTugasJabatan()
         checkLockTpp()
-    })
+    }) 
     
     function checkLockTpp(){
         $('.class_form').hide()

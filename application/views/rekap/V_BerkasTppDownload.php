@@ -816,6 +816,7 @@
                 $rekap['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
                 $rekap['bpjs'] = $jumlah_bpjs;
                 $rekap['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
+                $rekap['selisih_capaian_pagu'] = $rekap['pagu_tpp'] - $rekap['jumlah_pajak_pph'] - $rekap['bpjs'] - $rekap['jumlah_yang_diterima'];
 
                 $data_rekap['result'] = $result;
                 $data_rekap['rekap'] = $rekap;

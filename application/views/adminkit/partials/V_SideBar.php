@@ -201,8 +201,8 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hukuman-dinas')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Hukuman Dinas
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/lock-tpp')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Lock TPP
 					</a>
 				</li>
 				<li class="sidebar-item ">
@@ -312,11 +312,11 @@
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 		<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
 				
-			<li class="sidebar-item ">
-					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
-					</a>
-				</li>
+			<!-- <li class="sidebar-item ">
+				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+				</a>
+			</li> -->
 		
 		<?php } ?>
 		<li class="sidebar-item ">

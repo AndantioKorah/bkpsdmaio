@@ -5,6 +5,7 @@ $route['user/setting'] = 'user/C_User/userSetting';
 $route['roles'] = 'user/C_User/roles';
 $route['menu'] = 'user/C_User/menu';
 $route['master/pesan/jenis'] = 'master/C_Master/jenisPesan';
+$route['master/lock-tpp'] = 'master/C_Master/lockTpp';
 $route['master/hari-libur'] = 'master/C_Master/hariLibur';
 $route['master/jam-kerja'] = 'master/C_Master/jamKerja';
 $route['master/jenis-layanan'] = 'master/C_Master/jenisLayanan';

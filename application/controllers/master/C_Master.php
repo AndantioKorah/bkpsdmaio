@@ -302,6 +302,24 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_ListTppData', $data);
     }
 
+    public function lockTpp(){
+        $data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        render('master/V_LockTpp', '', '', $data);
+    }
+
+    public function loadLockTpp(){
+        $data['result'] = $this->master->loadLockTppData();
+        $this->load->view('master/V_LockTppData', $data);
+    }
+
+    public function updateLockTpp($id){
+        $this->master->updateLockTpp($id);
+    }
+
+    public function inputLockTpp(){
+        $this->master->inputLockTpp($this->input->post());
+    }
+
     public function inputGaji(){
         $data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
         render('master/V_InputGaji', '', '', $data);

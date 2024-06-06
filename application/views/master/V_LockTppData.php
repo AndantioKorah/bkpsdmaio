@@ -14,7 +14,7 @@
       <tr style="cursor: pointer;">
         <td class="text-center"><?=$no++;?></td>
         <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-        <td class="text-center"><?=getNamaBulan($periode[1]).' '.$periode[0]?></td>
+        <td class="text-center"><?=getNamaBulan($rs['bulan']).' '.$periode[0]?></td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-left">
           <?=getNamaPegawaiFull($rs)?><br>

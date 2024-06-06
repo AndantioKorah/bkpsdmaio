@@ -1755,8 +1755,6 @@
                                     'aktivitas' => $absen['aktivitas']
                                 ]);
                 }
-  
-
                 $this->db->where_in('id', $id)
                 ->update('t_peninjauan_absensi', $data_verif);
             } 

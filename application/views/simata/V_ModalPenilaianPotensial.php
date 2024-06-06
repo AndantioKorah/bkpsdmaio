@@ -657,10 +657,10 @@
 						if (result.success == true) {
 							successtoast(result.msg)
 							if (kode == 1) {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian,0,0,0),
 									1000);
 							} else {
-								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian),
+								const myTimeout = setTimeout(loadListPegawaiPenilaianPotensialJpt(kode,jenis_pengisian,0,0,0),
 									1000);
 							}
 						

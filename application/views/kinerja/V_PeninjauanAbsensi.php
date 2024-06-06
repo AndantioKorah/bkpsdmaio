@@ -17,42 +17,32 @@
 
 <h1 class="h3 mb-3">Form Peninjauan Absensi</h1>
 <div class="card card-default">
-    <!-- <div class="card-header"  style="display: block;">
-        <h3 class="card-title">Realisasi Kerja</h3>
-    </div> -->
+
     
     <div class="card-body" style="display: block;">
 
-  <div class="card" id="bar-progress-realisaasi" style="display: none;"> 
-  <div class="card-body">
-    <?php $progress = 60;?>
-                      <center>
-                      <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_tugas_jabatan">
-                        </small>
-                  
-                        </center>
-    <div class="progress progress-sm" style="height:30px;">
-            <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="" aria-valuemax="100"  style="height:30px; width: 0%; background-color: #000;">
-                            </div>
-                        </div>
-                        <center>
-                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_proogress">
-                        </small>
-                        <!-- <br>
-                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_target">
-                        </small>
-                        <br>
-                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_sudah_verif">
-                        </small>
-                        <br>
-                        <small style="font-size: 90% !important; font-weight: bold !important;" id="ket_belum_verif">
-                        </small> -->
-                        </center>
-  </div>
-  </div>
-  <style>
-
-  </style>
+    <div class="row col-lg-12">
+    <div class="col-lg-6">
+    <span>
+    <br>
+    Keterangan : <br> 
+    - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti.<br>
+    - Jika menggunakan foto berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
+    - Upload bukti pada hari yang sama. <br>
+    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    </span>
+    <div class="row ml-2">
+    <div class="col-lg-6">
+      <b style="color:red" >contoh Foto Bersama Teman</b><br>
+      <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
+    </div>
+    <div class="col-lg-6">
+    <b style="color:red">contoh Screenshot Whatsapp</b><br>
+    <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-6 mt-3">
     <form method="post" id="form_tinjau_absen" enctype="multipart/form-data" >
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
@@ -91,8 +81,56 @@
 
   <div class="form-group mt-2">
     <label>Dokumen Bukti  (Format PNG/JPG)</label>
-    <!-- <input onclick="getDok()" class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
-    <!-- <input  class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" /> -->
+    <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  multiple="multiple" />
+
+    <div id="uploadPreview"></div>
+
+  </div>
+  <div class="form-group col-lg-12 mt-2">
+     <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+ </div>
+</form> 
+    </div>
+    </div>
+
+    <!-- <form method="post" id="form_tinjau_absen" enctype="multipart/form-data" >
+    <div class="form-group" >
+    <label for="exampleFormControlInput1">Tanggal Absensi</label>
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" readonly value="<?= date('Y-m-d') ;?>">
+    </div>
+
+    <div class="form-group mt-2">
+         <label class="bmd-label-floating">Jenis Absensi </label>
+         <select class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
+         <option value="" selected disabled>- Pilih Jenis Absen -</option>
+         <option value="1" >Absen Pagi </option>
+         <option value="2" >Absen Sore </option>
+         </select>
+    </div>
+
+    <div class="form-group mt-2">
+         <label class="bmd-label-floating">Jenis Bukti Absensi </label>
+         <select class="form-control select2-navy select2" name="jenis_bukti" id="jenis_bukti"  required>
+         <option value="" selected disabled>- Pilih Jenis Bukti Absen -</option>
+         <option value="1" >Foto Bersama Teman </option>
+         <option value="2" >Screenshot Whatsapp </option>
+         </select>
+    </div>
+
+    <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
+         <label class="bmd-label-floating">Nama Teman Pegawai </label>
+         <select class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
+         <option value="" selected>- Pilih Pegawai -</option>
+         <?php if($pegawai){ foreach($pegawai as $r){ ?>
+                        <option value="<?=$r['id']?>"><?=$r['gelar1']?><?=$r['nama']?><?=$r['gelar2']?></option>
+                    <?php } } ?>
+         </select>
+    </div>
+
+   
+
+  <div class="form-group mt-2">
+    <label>Dokumen Bukti  (Format PNG/JPG)</label>
     <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  multiple="multiple" />
 
     <div id="uploadPreview"></div>
@@ -106,28 +144,23 @@
 <span>
     <br>
     Keterangan : <br> 
-    <!-- - Pada bagian keterangan jika bukti foto berupa foto bersama teman, tuliskan nama pegawai yang tersebut jika bukan cukup ketik - saja.<br> -->
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti.<br>
     - Jika menggunakan foto berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
-- Upload bukti pada hari yang sama. <br>
-- Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
-</span>
-
+    - Upload bukti pada hari yang sama. <br>
+    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+</span> -->
     </div>
 
 <div class="row ml-2">
-<div class="col-lg-3">
+<!-- <div class="col-lg-3">
   contoh Foto Bersama Teman<br>
   <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
 </div>
 <div class="col-lg-6">
 contoh Screenshot Whatsapp<br>
 <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
-
+</div> -->
 </div>
-</div>
-
-
 </div>
 
 <h1 class="h3 mb-3">List Peninjauan Absensi</h1>

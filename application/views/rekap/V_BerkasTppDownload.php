@@ -664,7 +664,7 @@
                     ?>
                     <tr>
                         <td colspan=6 style="text-align: center; font-weight: bold;">JUMLAH</td>
-                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp($total_capaian_tpp, 0)?></td>
+                        <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(($total_capaian_tpp_prestasi_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_beban_kerja), 0)?></td>
                         <td colspan=1 style="text-align: right; font-weight: bold;"><?=formatCurrencyWithoutRp(pembulatan($total_capaian_tpp_kondisi_kerja), 0)?></td>

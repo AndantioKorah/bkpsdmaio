@@ -412,6 +412,7 @@ class C_Rekap extends CI_Controller
 
                 $explode_param = explode(";", $param['skpd']);
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $param['id_unitkerja'] = $explode_param[0];
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);

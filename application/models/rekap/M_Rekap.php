@@ -1115,6 +1115,12 @@
         $result = null;
         $skpd = explode(";", $param['skpd']);
         $uksearch = null;
+
+        $temp_list_nip = null;
+        foreach($data_disiplin['result'] as $dd){
+            $temp_list_nip[] = isset($dd['nip']) ? $dd['nip'] : $dd['nipbaru_ws'];
+        }
+
         if($flag_rekap_tpp == 1){
             $uksearch = $this->db->select('*')
                                     ->from('db_pegawai.unitkerja')
@@ -1128,13 +1134,14 @@
                 ->where('a.bulan', $param['bulan'])
                 ->where('a.tahun', $param['tahun'])
                 ->where('c.id_m_status_pegawai', '1')
+                ->where_in('c.nipbaru_ws', $temp_list_nip)
                 ->where('a.flag_active', 1);
-        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-            $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
-                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-        } else {
-            $this->db->where('c.skpd', $skpd[0]);
-        }         
+        // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+        //     $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+        //                 ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        // } else {
+        //     $this->db->where('c.skpd', $skpd[0]);
+        // }         
         $list_komponen_kinerja = $this->db->get()->result_array();
         $komponen_kinerja = null;
         if($list_komponen_kinerja){
@@ -1157,14 +1164,15 @@
                         // ->where('c.skpd', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->where('c.id_m_status_pegawai', '1')
+                        ->where_in('c.nipbaru_ws', $temp_list_nip)
                         ->group_by('a.id');
 
-        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-            $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
-                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-        } else {
-            $this->db->where('c.skpd', $skpd[0]);
-        } 
+        // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+        //     $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+        //                 ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        // } else {
+        //     $this->db->where('c.skpd', $skpd[0]);
+        // } 
         
         $list_rencana_kinerja = $this->db->get()->result_array();
         $list_kinerja = null;
@@ -1187,13 +1195,14 @@
                         // ->where('b.id', 37851)
                         ->where('a.status_verif', 1)
                         ->where('b.flag_active', 1)
+                        ->where_in('d.nipbaru_ws', $temp_list_nip)
                         ->group_by('a.id');
-        if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-            $this->db->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
-                        ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-        } else {
-            $this->db->where('d.skpd', $skpd[0]);
-        }
+        // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+        //     $this->db->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+        //                 ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        // } else {
+        //     $this->db->where('d.skpd', $skpd[0]);
+        // }
         $list_realisasi = $this->db->get()->result_array();        
         if($list_realisasi){
             foreach($list_realisasi as $lr){
@@ -1227,7 +1236,7 @@
         return $data_disiplin;
     }
 
-    public function getPltPlhTambahan($id_unitkerja, $bulan, $tahun){
+    public function getPltPlhTambahan($id_unitkerja, $bulan, $tahun, $list_pegawai){
         if($bulan == null){
             $bulan = date('m');
         }
@@ -1239,8 +1248,8 @@
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg,
-            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp,
-            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan')
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip,
+            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
                                 ->join('m_user c', 'a.id_m_user = c.id')
@@ -1252,12 +1261,32 @@
                                 ->where('a.flag_active', 1)
                                 ->get()->result_array();
 
-        // $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
+        $list_hari_kerja = null;
+        $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
+        if($hari_kerja){
+            foreach($hari_kerja[3] as $hk){
+                $list_hari_kerja[$hk] = $hk;
+            }
+        }
         // cari tanggal kerja dari tanggal awal s/d tanggal akhir PLT dan cocokkan dengan hari kerja di bulan yang dicari.
         // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
-        // if($pegawai){
-        //     foreach($pegawai as $p);
-        // }
+        if($pegawai){
+            foreach($pegawai as $p){
+                $hari_kerja_tmt = countHariKerjaDateToDate($p['tanggal_mulai'], $p['tanggal_akhir']);   
+                $jumlah_hari_kerja_tmt = 0;
+                foreach($hari_kerja_tmt[3] as $hkt){
+                    if(isset($list_hari_kerja[$hkt])){
+                        $jumlah_hari_kerja_tmt++;
+                    }
+                }
+                $presentase = ($jumlah_hari_kerja_tmt / $hari_kerja[0]) * 100;
+                if($presentase >= 50){
+                    $list_pegawai[] = $p;
+                }
+            }
+        }
+
+        return $list_pegawai;
     }
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){
@@ -1310,6 +1339,8 @@
             }
 
             $list_pegawai = $this->db->get()->result_array();
+
+            $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
         if($flag_absen_aars == 1){
@@ -1333,9 +1364,11 @@
             $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
 
             $tlp = null;
+            $temp_list_nip = null;
             //ambil kelas jabatan tiap pegawai
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
             foreach($list_pegawai as $lpw){
+                $temp_list_nip[] = $lpw['nip'];
                 $tlp[$lpw['nip']]['nama_pegawai'] = getNamaPegawaiFull($lpw);
                 $tlp[$lpw['nip']]['nip'] = ($lpw['nip']);
                 $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
@@ -1369,12 +1402,15 @@
 
             if($flag_rekap_personal == 1){
                 $this->db->where('b.id', $data['id_m_user']); 
-            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-                $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
-                        ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
             } else {
-                $this->db->where('c.skpd', $data['id_unitkerja']); 
+                $this->db->where_in('c.nipbaru_ws', $temp_list_nip);
             }
+            // else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            //     $this->db->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+            //             ->where('d.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            // } else {
+            //     $this->db->where('c.skpd', $data['id_unitkerja']); 
+            // }
 
             $list_data_absen = $this->db->get()->result_array();
 
@@ -1539,16 +1575,17 @@
                 ->where('a.bulan', floatval($data['bulan']))
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
+                ->where_in('c.nipbaru_ws', $temp_list_nip)
                 // ->where('c.skpd', $uker['id_unitkerja'])
                 ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
 
-        if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-            $this->db->join('db_pegawai.unitkerja e', 'c.skpd = e.id_unitkerja')
-                    ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-        } else {
-            $this->db->where('c.skpd', $uker['id_unitkerja']);
-        }
+        // if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+        //     $this->db->join('db_pegawai.unitkerja e', 'c.skpd = e.id_unitkerja')
+        //             ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        // } else {
+        //     $this->db->where('c.skpd', $uker['id_unitkerja']);
+        // }
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
         if($tmp_dokpen){

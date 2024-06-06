@@ -868,6 +868,28 @@
         return $result;
     }
 
+    public function lockTpp($param){
+        unset($param['nm_unitkerja']);
+        $param['created_by'] = $this->general_library->getId();
+        $exists = $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('id_unitkerja', $param['id_unitkerja'])
+                        ->where('bulan', $param['bulan'])
+                        ->where('tahun', $param['tahun'])
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        if($exists){
+            // ganti created_by jadi updated_by supaya dapa tau sapa yang tarek dan yg tarek pertama tetap dapa tau
+            $param['updated_by'] = $param['created_by'];
+            unset($param['created_by']);
+            $this->db->where('id', $exists['id'])
+                    ->update('t_lock_tpp', $param);
+        } else {
+            $this->db->insert('t_lock_tpp', $param);
+        }
+    }
+
     public function getDataPenandatangananBerkasTpp($id_unitkerja){
         $result['kepalaskpd'] = null;
         $result['kasubag'] = null;
@@ -880,6 +902,8 @@
         $result['flag_bagian'] = 0;
         $result['setda'] = 0;
         $result['bendahara_setda'] = 0;
+        $result['kadis'] = 0;
+        $result['flag_rs'] = 0;
 
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
@@ -939,6 +963,9 @@
                 if(stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // jika puskes
                     $result['kapus'] = $lp;
                     $result['flag_puskesmas'] = 1;
+                } else if(stringStartWith('Rumah Sakit', $unitkerja['nm_unitkerja'])){ // jika RS
+                    $result['kadis'] = $lp;
+                    $result['flag_rs'] = 1;
                 } else {
                     $result['kepalaskpd'] = $lp;
                 }
@@ -1025,7 +1052,9 @@
 
         if($id_unitkerja == 3012000 
         || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
-        || $id_unitkerja == 6160000){ 
+        || $id_unitkerja == 6160000
+        || $id_unitkerja == 7005020
+        || $id_unitkerja == 7005010){ 
             // jika dinkes, puskes dan instalasi farmasi, ambil bendahara hardocde yang ada
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1196,6 +1225,39 @@
         //     dd($data_disiplin);
         // }
         return $data_disiplin;
+    }
+
+    public function getPltPlhTambahan($id_unitkerja, $bulan, $tahun){
+        if($bulan == null){
+            $bulan = date('m');
+        }
+
+        if($tahun == null){
+            $tahun = date('Y');
+        }
+
+        $result = null;
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp,
+            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan')
+                                ->from('t_plt_plh a')
+                                ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
+                                ->join('m_user c', 'a.id_m_user = c.id')
+                                ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                                ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
+                                ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
+                                ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
+                                ->where('a.id_unitkerja', $id_unitkerja)
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+
+        // $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
+        // cari tanggal kerja dari tanggal awal s/d tanggal akhir PLT dan cocokkan dengan hari kerja di bulan yang dicari.
+        // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
+        // if($pegawai){
+        //     foreach($pegawai as $p);
+        // }
     }
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){
@@ -2295,7 +2357,7 @@
                 
                 // $result[$l['nipbaru_ws']]['nomor_golongan'] = $l['rekap_kehadiran']['golongan'];
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
-                $result[$l['nipbaru_ws']]['eselon'] = $l['rekap_kehadiran']['eselon'];
+                $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;

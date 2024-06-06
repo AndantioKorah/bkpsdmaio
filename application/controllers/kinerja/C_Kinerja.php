@@ -339,14 +339,18 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_VerifSkbpKomponenKinerja', $data);
     }
 
-    public function openListKegiatanKinerjaPegawai($id){
+    public function openListKegiatanKinerjaPegawai($id, $bulan = 0, $tahun = 0){
         $data['id_rencana_kegiatan'] = $id;
         $data['result'] = $this->verifkinerja->loadListKegiatanRencanaKinerja($id);
+        $data['param']['bulan'] = $bulan;
+        $data['param']['tahun'] = $tahun;
         $this->load->view('kinerja/V_VerifSkbpListKegiatan', $data);
     }
 
     public function openRekapKinerjaPegawai($id, $bulan, $tahun){
         $data['list_rekap_kinerja'] = $this->kinerja->loadRekapKinerjaByIdPegawai($tahun, $bulan, $id);
+        $data['param']['bulan'] = $bulan;
+        $data['param']['tahun'] = $tahun;
         $this->load->view('kinerja/V_VerifSkbpRekapKinerja', $data);
     }
 
@@ -585,6 +589,10 @@ class C_Kinerja extends CI_Controller
             }
             // echo json_encode($this->kinerja->insertDisiplinKerja($this->input->post()));
         }
+    }
+
+    public function checkLockTpp(){
+        echo json_encode($this->kinerja->checkLockTpp());
     }
 
     public function modalTambahDataDisiplinKerja($id_unitkerja)

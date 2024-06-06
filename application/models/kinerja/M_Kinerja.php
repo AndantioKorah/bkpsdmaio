@@ -6,6 +6,7 @@
             parent::__construct();
             $this->db = $this->load->database('main', true);
             $this->load->model('master/M_Master', 'master');
+            $this->load->model('rekap/M_Rekap', 'rekap');
         }
 
         public function insert($tablename, $data){
@@ -608,7 +609,7 @@
         
     }
 
-    public function getAtasanPegawai($pegawai, $id_m_user = null){
+    public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         if($id_m_user != null){
             $pegawai = $this->db->select('b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
                         d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan')
@@ -617,7 +618,7 @@
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
                                 ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
                                 ->join('m_bidang e', 'a.id_m_bidang = e.id', 'left')
-                                ->join('m_sub_bidang f', 'e.id = a.id_m_sub_bidang', 'left')
+                                ->join('m_sub_bidang f', 'f.id = a.id_m_sub_bidang', 'left')
                                 ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon')
                                 ->where('a.id', $id_m_user)
                                 ->where('a.flag_active', 1)
@@ -643,10 +644,12 @@
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
                 if($pegawai['jenis_jabatan'] == "JFU" && $pegawai['id_m_bidang'] != null){ //cari kepala sub bidang
-                    $atasan = $this->baseQueryAtasan()
+                    if($flag_cuti != 1){ // kalau cuti, ambil langsung eselon 3
+                        $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
                                     ->where('nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
                                     ->get()->row_array();
+                    }
                     if(!$atasan){ //cari kepala bidang
                         $atasan = $this->baseQueryAtasan()
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -923,7 +926,37 @@
             }
         }
 
-        return ['atasan' => $atasan, 'kepala' => $kepala];
+        $kadis = null;
+        $sek = null;
+        if($flag_cuti == 1){
+            if(stringStartWith('Puskesmas', $pegawai['nm_unitkerja'])
+            || $pegawai['id_unitkerja'] == 7005020 
+            || $pegawai['id_unitkerja'] == 7005010
+            || $pegawai['id_unitkerja'] == 6160000
+            ){ // jika puskes, rumah sakit, gudang farmasi, ambil kadis dan sek dinkes 
+                $kadis = $this->baseQueryAtasan()
+                            ->where('b.skpd', 3012000)
+                            ->where('eselon', 'II B')
+                            ->get()->row_array(); // kadis
+                
+                $sek = $this->baseQueryAtasan()
+                            ->where('b.skpd', 3012000)
+                            ->where('eselon', 'III A')
+                            ->get()->row_array(); // sek
+            } else if (in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah, ambil kadis dan sek diknas
+                $kadis = $this->baseQueryAtasan()
+                            ->where('b.skpd', 3010000)
+                            ->where('eselon', 'II B')
+                            ->get()->row_array(); // kadis
+                
+                $sek = $this->baseQueryAtasan()
+                            ->where('b.skpd', 3010000)
+                            ->where('eselon', 'III A')
+                            ->get()->row_array(); // sek
+            }
+        }
+
+        return ['atasan' => $atasan, 'kepala' => $kepala, 'kadis' => $kadis, 'sek' => $sek];
     }
 
     public function createSkpBulanan($data){
@@ -1285,7 +1318,7 @@
                         ->where('tahun <=', $explode_tanggal_akhir[0])
                         ->where('bulan >=', $explode_tanggal_awal[1])
                         ->where('bulan <=', $explode_tanggal_akhir[1])
-                        ->where('status', 2)
+                        ->where('status !=', 3)
                         ->where('flag_active', 1)
                         ->get()->result_array();
         if($exist){
@@ -1947,6 +1980,63 @@
         return $beban_kerja;
     }
 
+    public function checkLockTpp(){
+        $result['code'] = 0;
+        $result['message'] = '';
+        $result['data'] = '';
+
+        $param = $this->input->post();
+        $id_unitkerja = $this->general_library->getUnitKerjaPegawai();
+        $bulan = date('m');
+        $tahun = date('Y');
+        if(isset($param['periode'])){
+            $periode = explodeRangeDate($param['periode']);
+            $periode_awal = explode("-", $periode[0]);
+            $bulan = $periode_awal[2];
+            $tahun = $periode_awal[0];
+        } else if(isset($param['tanggal'])){
+            $explode = explode('-', $param['tanggal']);
+            $bulan = $explode[1];
+            $tahun = $explode[0];
+        } else if(isset($param['bulan']) && isset($param['tahun'])){
+            $bulan = $param['bulan'];
+            $tahun = $param['tahun'];
+        }
+        
+        $uk = $this->db->select('*')
+                    ->from('db_pegawai.unitkerja')
+                    ->where('id_unitkerja', $this->general_library->getUnitKerjaPegawai())
+                    ->get()->row_array();
+        if($uk){
+            if(in_array($uk['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){ // kelurahan, ambil kecamatan pe id_unitkerja
+                $uk_kec = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster', $uk['id_unitkerjamaster'])
+                            ->like('nm_unitkerja', 'Kecamatan%')
+                            ->get()->row_array();
+                if($uk_kec){
+                    $uk = $uk_kec;
+                    $id_unitkerja = $uk_kec['id_unitkerja'];
+                }
+            }
+        }
+
+        $exist = $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('id_unitkerja', $id_unitkerja)
+                        ->where('bulan', floatval($bulan)) 
+                        ->where('tahun', floatval($tahun))
+                        ->where('flag_active', 1)
+                        ->get()->row_array(); 
+        if($exist){
+            $result['code'] = 1;
+            $result['message'] = 'Berkas TPP '.$uk['nm_unitkerja'].' untuk periode '.getNamaBulan($bulan).' tahun '.$tahun.' sudah dilakukan rekapitulasi. Proses ini tidak dapat dilanjutkan.';
+            $result['data'] = $uk;
+        }
+
+        return $result;
+    }
+
     public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
         $result = null;
         // $data['bulan'] = '3';
@@ -2004,6 +2094,13 @@
             // }
         // }
         
+        $tambahan = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null);
+        if($tambahan){
+            foreach($tambahan as $tam){
+                $pegawai[] = $tam;
+            }
+        }
+
         if($pegawai){
             $i = 0;
             foreach($pegawai as $p){
@@ -2141,6 +2238,10 @@
                 
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
                 $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
+                if(isset($p['presentasi_tpp'])){
+                    $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                }
+
                 $explode = explode(".", $result[$p['id_m_user']]['pagu_tpp']);
                 $minus = substr($explode[0], -3);
                 $result[$p['id_m_user']]['pagu_tpp'] = intval($explode[0]) - intval($minus);
@@ -2180,7 +2281,6 @@
 
         usort($result, 'comparator1');
 
-        // dd(($result));
         return $result;
     }
 

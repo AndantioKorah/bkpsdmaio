@@ -4915,30 +4915,31 @@ public function submitEditJabatan(){
                 //                 ->get()->row_array();
 
                 $id_m_user = $this->general_library->getId();
-                $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user);
-                $atasan = $pegawai['kepala'];
+                $id_m_user = 108;
+                $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
+                dd($pegawai);
+                $progressCuti = $this->buildProgressCuti($pegawai);
+                // if($atasan){
+                //     $master = $this->db->select('*')
+                //                     ->from('db_pegawai.cuti')
+                //                     ->where('id_cuti', $data['id_cuti'])
+                //                     ->get()->row_array();
 
-                if($atasan){
-                    $master = $this->db->select('*')
-                                    ->from('db_pegawai.cuti')
-                                    ->where('id_cuti', $data['id_cuti'])
-                                    ->get()->row_array();
-
-                    $encrypt = simpleEncrypt($atasan['nipbaru_ws'].'-'.$insert_id);
-                    $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                    $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
-                    $sendTo = convertPhoneNumber($atasan['handphone']);
-                    // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
-                    $cronWa = [
-                        'sendTo' => $sendTo,
-                        'message' => $message.FOOTER_MESSAGE_CUTI,
-                        'type' => 'text'
-                    ];
-                    $this->general->saveToCronWa($cronWa);
-                } else {
-                    $res['code'] = 1;
-                    $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
-                }
+                //     $encrypt = simpleEncrypt($atasan['nipbaru_ws'].'-'.$insert_id);
+                //     $link = base_url('whatsapp-verification/cuti/'.$encrypt);
+                //     $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
+                //     $sendTo = convertPhoneNumber($atasan['handphone']);
+                //     // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
+                //     $cronWa = [
+                //         'sendTo' => $sendTo,
+                //         'message' => $message.FOOTER_MESSAGE_CUTI,
+                //         'type' => 'text'
+                //     ];
+                //     $this->db->insert('t_cron_wa', $cronWa);
+                // } else {
+                //     $res['code'] = 1;
+                //     $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
+                // }
             }
         }
         if($res['code'] == 0){
@@ -4947,6 +4948,15 @@ public function submitEditJabatan(){
             $this->db->trans_rollback();
         }
         return $res;
+    }
+
+    public function buildProgressCuti($pegawai){
+        $progress = null;
+        if($pegawai['atasan']['id_unitkerja'] == '4018000'){ // jika kabid di bkpsdm
+
+        } else if($pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
+
+        }
     }
 
     public function deletePermohonanCuti($id, $flag_delete_record = 1){

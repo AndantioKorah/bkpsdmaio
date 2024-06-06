@@ -206,7 +206,7 @@
             $('#list_kegiatan').show()
             $('#list_kegiatan').html('')
             $('#list_kegiatan').append(divLoaderNavy)
-            $('#list_kegiatan').load('<?=base_url("kinerja/C_Kinerja/openListKegiatanKinerjaPegawai")?>'+'/'+id, function(){
+            $('#list_kegiatan').load('<?=base_url("kinerja/C_Kinerja/openListKegiatanKinerjaPegawai")?>'+'/'+id+'/'+<?=$param['bulan']?>+'/'+<?=$param['tahun']?>, function(){
                 $('#loader').hide()
             })
         } 

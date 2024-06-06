@@ -314,6 +314,10 @@ class C_Rekap extends CI_Controller
         // if($skpd[0] == 3020000){
         //     dd($data);
         // }
+
+        //lock TPP
+        $this->rekap->lockTpp($data['param']);
+
         $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(

@@ -109,6 +109,7 @@
 </style>
     <hr>
     <div  class="col-12 table-responsive">
+    <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
     <table border=0 class="table" id="table_list_kegiatan_detail_rekap">
         <thead>
             <th style="padding: 0px; width: 5%;" class="text-center">No</th>
@@ -180,10 +181,10 @@
                           <div class="col-lg-12">
                             <textarea style="width: 100%;" id="keterangan_verif_modal_<?=$rs['id']?>"><?=$rs['keterangan_verif']?></textarea>
                           </div>
-                          <div class="col-lg-6">
+                          <div class="col-lg-6 class_button_verif" style="display: none;">
                             <button onclick="saveKeteranganVerif('<?=$rs['id']?>')" class="btn btn-sm btn-warning"><i class="fa fa-save"></i> Simpan</button>
                           </div>
-                          <div class="col-lg-6 text-right">
+                          <div class="col-lg-6 text-right class_button_verif" style="display: none;">
                             <?php if($rs['status_verif'] == 1){?>
                               <button onclick="checkVerifModal('2','<?=$rs['id']?>')" class="btn_batal_verif_modal_<?=$rs['id']?> btn btn-sm btn-danger"><i class="fa fa-times"></i> Tolak</button>
                               <button disabled style="display: none;" class="btn_loading_batal_verif_modal_<?=$rs['id']?> btn btn-sm btn-danger"><i class="fa fa-spin fa-spinner"></i> Loading...</button>
@@ -265,8 +266,35 @@
     <script>
         $(function(){
             $('#table_list_kegiatan_detail_rekap').dataTable()
+            checkLockTpp()
         })
 
+        function checkLockTpp(){
+            $('.class_button_verif').hide()
+            $.ajax({
+                url: '<?=base_url("kinerja/C_Kinerja/checkLockTpp")?>',
+                method: 'post',
+                data: {
+                    bulan: '<?=$param['bulan']?>',
+                    tahun: '<?=$param['tahun']?>',
+                },
+                success: function(data){
+                    let rs = JSON.parse(data)
+                    if(rs.code == 0){
+                        $('.class_button_verif').show()
+                        $('#error_label').hide()
+                    } else {
+                        $('.class_button_verif').hide()
+                        $('#error_label').show()
+                        $('#error_label').html('Verifikasi tidak dapat dilakukan karena berkas TPP '+rs.data.nm_unitkerja+' bulan '+<?=$param['bulan']?>+' tahun '+<?=$param['tahun']?>+' sudah dilakukan rekapitulasi.')
+                        // $('#error_label').html(rs.message)
+                    }
+                }, error: function(e){
+                    $('.class_button_verif').show()
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        }
      
 
 

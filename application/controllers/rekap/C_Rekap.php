@@ -315,8 +315,6 @@ class C_Rekap extends CI_Controller
         //     dd($data);
         // }
 
-        //lock TPP
-        $this->rekap->lockTpp($data['param']);
 
         $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
@@ -334,8 +332,33 @@ class C_Rekap extends CI_Controller
             12
         ); // margin footer
         // $this->mpdf->setFooter('{PAGENO}');
+        $filename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf';
         $this->mpdf->WriteHTML($html);
-        $this->mpdf->Output('Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf', 'D'); // download force
+        $this->mpdf->Output($filename, 'D'); // download force
+
+        $folder = 'arsiptpp/'.$data['param']['tahun'].'/'.getNamaBulan($data['param']['bulan']);
+        if(!file_exists($folder)){
+            if(!file_exists('arsiptpp')){
+                $oldmask = umask(0);
+                mkdir('arsiptpp', 0777);
+                umask($oldmask);
+            }
+
+            if(!file_exists('arsiptpp/'.$data['param']['tahun'])){
+                $oldmask = umask(0);
+                mkdir('arsiptpp/'.$data['param']['tahun'], 0777);
+                umask($oldmask);
+            }
+
+            $oldmask = umask(0);
+            mkdir($folder, 0777);
+            umask($oldmask);
+        }
+        $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
+
+        //lock TPP
+        $data['param']['url_file'] = $folder.'/'.$filename;
+        $this->rekap->lockTpp($data['param']);
 
         // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }
@@ -412,6 +435,7 @@ class C_Rekap extends CI_Controller
 
                 $explode_param = explode(";", $param['skpd']);
                 $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $param['id_unitkerja'] = $explode_param[0];
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 // $data_rekap = $this->rekap->readAbsensiAars($param, $flag_alpha = null);

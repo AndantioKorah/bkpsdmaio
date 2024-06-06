@@ -725,6 +725,38 @@
                     ]);
         }
 
+        public function loadLockTppData(){
+            return $this->db->select('a.*, b.nm_unitkerja, d.gelar1, d.gelar2, d.nama, d.nipbaru_ws')
+                            ->from('t_lock_tpp a')
+                            ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                            ->join('m_user c', 'a.created_by = c.id')
+                            ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->order_by('a.created_date', 'desc')
+                            ->order_by('b.nm_unitkerja')
+                            ->get()->result_array();
+        }
+
+        public function inputLockTpp($data){
+            $data['created_by'] = $this->general_library->getId();
+            $this->db->insert('t_lock_tpp', $data);
+        }
+
+        public function updateLockTpp($id){
+            $data = $this->db->select('*')
+                                ->from('t_lock_tpp')
+                                ->where('id', $id)
+                                ->get()->row_array();
+            $flag_active = 1;
+            if($data['flag_active'] == 1){
+                $flag_active = 0;
+            }
+            $this->db->where('id', $id)
+                    ->update('t_lock_tpp', [
+                        'flag_active' => $flag_active,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
         public function loadInputGajiData($data){
             $uksearch = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')

@@ -2094,12 +2094,8 @@
             // }
         // }
         
-        $tambahan = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null);
-        if($tambahan){
-            foreach($tambahan as $tam){
-                $pegawai[] = $tam;
-            }
-        }
+        // ambil jika ada pegawai PLT / PLH dari luar dinas
+        $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null, $pegawai);
 
         if($pegawai){
             $i = 0;

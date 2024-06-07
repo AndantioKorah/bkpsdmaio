@@ -1259,7 +1259,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPendidikanFormal($id){
-            $this->db->select('*')
+            $this->db->select('a.pendidikan')
                 ->from('db_pegawai.pegawai a')
                 ->where('a.id_peg', $id)
                 ->limit(1);
@@ -1281,7 +1281,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPenghargaan($id){
-            $this->db->select('*')
+            $this->db->select('a.pemberi')
                 ->from('db_pegawai.pegpenghargaan a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.status', 2)
@@ -1326,7 +1326,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             $currentYear = date('Y'); 
             $previous1Year = $currentYear - 1;   
 
-            $this->db->select('*')
+            $this->db->select('a.jam')
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('year(a.tglmulai)', $previous1Year)
@@ -1375,7 +1375,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             
             
             $id_pangkat = null;
-            $this->db->select('*')
+            $this->db->select('a.pangkat,a.tmtpangkat')
                 ->from('db_pegawai.pegpangkat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.flag_active', 1)
@@ -1654,7 +1654,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         $id_diklat = null;
         if($jenis_pengisian == 3){
             if($eselonpegawai == "III B" || $eselonpegawai == "III A"){
-                $this->db->select('*')
+                $this->db->select('a.id')
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.jenjang_diklat', 3)
@@ -1663,7 +1663,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 if($diklat){
                     $id_diklat = 105;
                 } else {
-                    $this->db->select('*')
+                    $this->db->select('a.id')
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
@@ -1672,7 +1672,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     if($diklat){
                         $id_diklat = 106;
                     } else {
-                        $this->db->select('*')
+                        $this->db->select('a.id')
                         ->from('db_pegawai.pegdiklat a')
                         ->where('a.id_pegawai', $id)
                         ->where('a.jenjang_diklat', 1)
@@ -1684,7 +1684,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
                 }
             } else if($eselonpegawai == "II B"){
-                $this->db->select('*')
+                $this->db->select('a.id')
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.jenjang_diklat', 3)
@@ -1693,7 +1693,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 if($diklat){
                     $id_diklat = 105;
                 } else {
-                    $this->db->select('*')
+                    $this->db->select('a.id')
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
@@ -1726,7 +1726,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
                 }
             } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV A"){
-                $this->db->select('*')
+                $this->db->select('a.id')
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
@@ -1735,7 +1735,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     if($diklat){
                         $id_diklat = 105;
                     } else {
-                        $this->db->select('*')
+                        $this->db->select('a.id')
                         ->from('db_pegawai.pegdiklat a')
                         ->where('a.id_pegawai', $id)
                         ->where('a.jenjang_diklat', 1)
@@ -1754,7 +1754,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 }
 
     function getHukdisPengawai($id){
-        $this->db->select('*')
+        $this->db->select('a.tglsurat')
             ->from('db_pegawai.pegdisiplin a')
             ->where('a.id_pegawai', $id)
             ->where('a.flag_active', 1);
@@ -3195,10 +3195,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
         function updateMasakerja($id){
-            $this->db->select('*')
+            $this->db->select('a.tmtjabatan,a.id')
             ->from('db_pegawai.pegjabatan a')
-            ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg','left')
-            ->join('db_pegawai.eselon c', 'a.eselon = c.id_eselon','left')
+            // ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg','left')
+            // ->join('db_pegawai.eselon c', 'a.eselon = c.id_eselon','left')
             ->where('a.id_pegawai', $id)
             ->where('a.status', 2)
             ->where('a.tmtjabatan !=', "0000-00-00")
@@ -3231,11 +3231,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             // }
          }
         
-         
-     
-
         
-
          $sdate = $tglawal;
          $edate = $tgl_akhir;
          
@@ -3995,7 +3991,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                      //   tutup assesment
                                      
                                     // rekam jejak
-                                        // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                                        $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
 
                                         // testing
                                         $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 

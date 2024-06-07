@@ -196,9 +196,9 @@
    
       
 <ul class="nav nav-tabs">
-<?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
+<?php if($jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
-            <button onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true" href="#pngws">Pengawas</button>
+            <a onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false" href="#pngws">Pengawas</a>
         </li>
         <?php } ?>
         <?php if($jenis_pengisian == 3 || $jenis_pengisian == 2) { ?>
@@ -348,12 +348,17 @@ $(function(){
                 var form_data = new FormData(formvalue[0]);
 
                 var eselon = $('#eselon').val()
+                
                 if(eselon == 4 || eselon == 5){
                   var id = 2;
                   activaTab('jpt');
-                } else {
+                } else if(eselon == 6 || eselon == 7) {
                   var id = 1;
                   activaTab('adm');
+                } else {
+                  alert(0)
+                  var id = 3;
+                  activaTab('pngws');
                 }
               
                
@@ -388,9 +393,11 @@ $(function(){
     }); 
 
     $("#btn_nilai").click(function(){
+    
       var eselon = $('#eselon').val()
       var jenis_pengisian = $('#jenis_pengisian').val()
       var skpd = $('#unitkerjamaster').val()
+     
       if(eselon == 4 || eselon == 5){
         var id = 2;
         activaTab('jpt');

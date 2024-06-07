@@ -2067,7 +2067,7 @@
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                        ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
+                        // ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon')
                         ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
                         ->join('m_user f', 'a.nipbaru_ws = f.username')
                         ->join('db_pegawai.jabatan g', 'a.id_jabatan_tambahan = g.id_jabatanpeg', 'left')

@@ -737,8 +737,21 @@
         }
 
         public function inputLockTpp($data){
-            $data['created_by'] = $this->general_library->getId();
-            $this->db->insert('t_lock_tpp', $data);
+            $exists = $this->db->select('*')
+                                ->from('t_lock_tpp')
+                                ->where('bulan', $data['bulan'])
+                                ->where('tahun', $data['tahun'])
+                                ->where('id_unitkerja', $data['id_unitkerja'])
+                                ->get()->row_array();
+            if($exists){
+                $this->db->where('id', $exists['id'])
+                        ->update('t_lock_tpp', [
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+            } else {
+                $data['created_by'] = $this->general_library->getId();
+                $this->db->insert('t_lock_tpp', $data);
+            }
         }
 
         public function updateLockTpp($id){

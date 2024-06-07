@@ -11,6 +11,14 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function getUnitKerjaKecamatanDiknas(){
+            return $this->db->select('id_unitkerja, concat("Sekolah ", nm_unitkerja) as nm_unitkerja')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('nm_unitkerja LIKE', 'Kecamatan%')
+                                ->order_by('nm_unitkerja', 'asc')
+                                ->get()->result_array();
+        }
+
         public function getAllSkpd(){
             return $this->db->select('id_unitkerja, nm_unitkerja')
                             ->from('db_pegawai.unitkerja')

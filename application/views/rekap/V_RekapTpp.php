@@ -32,7 +32,20 @@
                                     <?=$uk['nm_unitkerja']?>
                                 </option>
                                 <?php } } ?>
-                            <?php } } } ?>
+                            <?php } } ?>
+                            <?php 
+                                if($this->general_library->isProgrammer() 
+                                || $this->general_library->isAdminAplikasi() 
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+                                || $this->general_library->getIdUnitKerjaPegawai() == 3010000) //jika diknas, buka akses untuk Sekolah per Kecamatan
+                                { 
+                                    foreach($skpd_diknas as $sd){
+                            ?>
+                                <option value="<?=$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                    <?=$sd['nm_unitkerja']?>
+                                </option>
+                            <?php } } ?>
+                        <?php } ?>
                         </select>
                     </div>
                 </div>

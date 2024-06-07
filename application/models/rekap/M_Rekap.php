@@ -871,12 +871,21 @@
     public function lockTpp($param){
         unset($param['nm_unitkerja']);
         $param['created_by'] = $this->general_library->getId();
+
+        $today = date("Y-m-d");
+        $explode = explode('-', $today);
+        $date_param = date("Y-m-01", strtotime($param['tahun'].'-'.$param['bulan'].'-01'));
+        $date_today = date("Y-m-01", strtotime($explode[0].'-'.$explode[1].'-01'));
+        if($date_param >= $date_today){
+            return null;
+        }
+
         $exists = $this->db->select('*')
                         ->from('t_lock_tpp')
                         ->where('id_unitkerja', $param['id_unitkerja'])
                         ->where('bulan', $param['bulan'])
                         ->where('tahun', $param['tahun'])
-                        ->where('flag_active', 1)
+                        // ->where('flag_active', 1)
                         ->get()->row_array();
 
         if($exists){
@@ -2343,7 +2352,7 @@
         foreach($data_rekap['result'] as $dr){
             $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
         }
-        
+
         $rekap['jumlah_pegawai'] = 0;
         $rekap['rata_rata_presentase_kehadiran'] = 0;
         $rekap['total_presentase_kehadiran'] = 0;

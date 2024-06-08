@@ -771,27 +771,38 @@
         }
 
         public function loadInputGajiData($data){
+            $flag_show_unitkerja = 0;
+            $expl = explode('_', $data['id_unitkerja']);
+            if(isset($expl[1])){
+                $expl_next = explode(';', $expl[1]);
+            }
+
             $uksearch = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $data['id_unitkerja'])
                             ->get()->row_array();
 
-            $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji')
+            $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji, c.nm_unitkerja')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
                             // ->where('a.skpd', $data['id_unitkerja'])
+                            ->where('a.id_m_status_pegawai', 1)
                             ->order_by('b.eselon', 'a.nama');
             
             if(in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                $flag_show_unitkerja = 1;
                 $this->db->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
                         ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            } else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
+                $flag_show_unitkerja = 1;
+                $this->db->where('c.id_unitkerjamaster_kecamatan', $expl_next[0]);
             } else {
                 $this->db->where('a.skpd', $data['id_unitkerja']); 
             }
 
-            return $this->db->get()->result_array();
+            return [$this->db->get()->result_array(), $flag_show_unitkerja];
         }
 
         public function saveInputGaji($data){

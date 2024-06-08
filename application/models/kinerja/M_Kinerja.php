@@ -2037,7 +2037,7 @@
         return $result;
     }
 
-    public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0){
+    public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0, $flag_sekolah_kecamatan = 0){
         $result = null;
         // $data['bulan'] = '3';
         // $data['tahun'] = '2024';
@@ -2048,7 +2048,12 @@
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $data['id_unitkerja'])
                             ->get()->row_array();
-
+            if($flag_sekolah_kecamatan == 1){
+                $unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster_kecamatan', $data['id_unitkerja'])
+                            ->get()->row_array();
+            }
             $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
 
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
@@ -2081,7 +2086,10 @@
             }
             if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
                 $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
-                        ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+                            ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
+            } else if($flag_sekolah_kecamatan == 1){
+                $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
+                            ->where('h.id_unitkerjamaster_kecamatan', $unitkerja['id_unitkerjamaster_kecamatan']);
             } else {
                 $this->db->where('a.skpd', $data['id_unitkerja']);
             }
@@ -2094,8 +2102,10 @@
             // }
         // }
         
-        // ambil jika ada pegawai PLT / PLH dari luar dinas
-        $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null, $pegawai);
+        if($flag_sekolah_kecamatan == 0){
+            // ambil jika ada pegawai PLT / PLH dari luar dinas
+            $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null, $pegawai);
+        }
 
         if($pegawai){
             $i = 0;
@@ -2271,12 +2281,11 @@
             }
         }
 
-        function comparator1($object1, $object2) {
-            return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
-        }
+        // function comparator1($object1, $object2) {
+        //     return $object1['kelas_jabatan'] < $object2['kelas_jabatan'];
+        // }
 
-        usort($result, 'comparator1');
-
+        // usort($result, 'comparator1');
         return $result;
     }
 

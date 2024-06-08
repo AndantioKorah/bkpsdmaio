@@ -41,7 +41,7 @@
                                 { 
                                     foreach($skpd_diknas as $sd){
                             ?>
-                                <option value="<?=$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
                                     <?=$sd['nm_unitkerja']?>
                                 </option>
                             <?php } } ?>

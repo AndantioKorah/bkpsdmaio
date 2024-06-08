@@ -1360,10 +1360,12 @@
                     $rekap['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
                     $rekap['bpjs'] = $jumlah_bpjs;
                     $rekap['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
+                    $rekap_pppk['unitkerja'][0] = $rekap['unitkerja'][0];
 
-                    $data_rekap['result'] = $result;
-                    $data_rekap['rekap'] = $rekap;
+                    $data_rekap['result'] = $pppk;
+                    $data_rekap['rekap'] = $rekap_pppk;
                     $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['flag_pppk'] = 1;
                     $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                     if($pegawai['flag_puskesmas'] == 1){
                         $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
@@ -1373,6 +1375,21 @@
                     $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                 ?>
             </div>
+            <div class="div_salinan_surat_pengantar">
+                <?php
+                    $data_rekap['result'] = $pppk;
+                    $data_rekap['rekap'] = $rekap_pppk;
+                    $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['flag_pppk'] = 1;
+                    $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
+                    if($pegawai['flag_puskesmas'] == 1){
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
+                    } else if($pegawai['flag_rs'] == 1){
+                        $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                    }
+                    $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
+                ?>
+        </div>
         <?php } ?>
     </div>
 </html>

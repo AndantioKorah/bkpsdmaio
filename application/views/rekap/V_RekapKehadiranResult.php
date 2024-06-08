@@ -83,7 +83,7 @@
                                     ?>
                                         <td style="text-align: center; color: <?=$color?>" rowspan="1" colspan="1"><?=$rs['rekap'][$md['keterangan']]['total']?></td>
                                     <?php } ?>
-                                    <td style="text-align: center;"><?=$presentase_hadir.'%'?></td>
+                                    <td style="text-align: center;"><?=formatTwoMaxDecimal($presentase_hadir).'%'?></td>
                                 </tr>
                             <?php }
                                 $total_presentase_kehadiran = $total_presentase_kehadiran / count($result);

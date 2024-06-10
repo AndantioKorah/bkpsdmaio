@@ -110,7 +110,7 @@
                         <div class="col-lg-12 mt-2">
                             <label class="label-filter">Jabatan Fungsional</label>
                             <div class="">
-                                <select class="form-control select2-navy" 
+                                <select multiple="multiple" class="form-control select2-navy" 
                                     id="jft" data-dropdown-css-class="select2-navy" name="jft" required>
                                     <option value="0" selected>Semua</option>
                                     <?php foreach($jft as $u){ ?>

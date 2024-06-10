@@ -310,7 +310,12 @@
 			</span>
 		</a>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-		<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
+		<?php 
+			if(
+				$this->general_library->isProgrammer()
+				// || $this->general_library->isPegawaiBkpsdm()
+			)
+			{ ?>
 				
 			<!-- <li class="sidebar-item ">
 				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">

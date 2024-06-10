@@ -871,12 +871,21 @@
     public function lockTpp($param){
         unset($param['nm_unitkerja']);
         $param['created_by'] = $this->general_library->getId();
+
+        $today = date("Y-m-d");
+        $explode = explode('-', $today);
+        $date_param = date("Y-m-01", strtotime($param['tahun'].'-'.$param['bulan'].'-01'));
+        $date_today = date("Y-m-01", strtotime($explode[0].'-'.$explode[1].'-01'));
+        if($date_param >= $date_today){
+            return null;
+        }
+
         $exists = $this->db->select('*')
                         ->from('t_lock_tpp')
                         ->where('id_unitkerja', $param['id_unitkerja'])
                         ->where('bulan', $param['bulan'])
                         ->where('tahun', $param['tahun'])
-                        ->where('flag_active', 1)
+                        // ->where('flag_active', 1)
                         ->get()->row_array();
 
         if($exists){
@@ -1120,7 +1129,7 @@
         foreach($data_disiplin['result'] as $dd){
             $temp_list_nip[] = isset($dd['nip']) ? $dd['nip'] : $dd['nipbaru_ws'];
         }
-
+        
         if($flag_rekap_tpp == 1){
             $uksearch = $this->db->select('*')
                                     ->from('db_pegawai.unitkerja')
@@ -1295,15 +1304,23 @@
         $periode = null;
         $list_hari = null;
         $raw_data_excel = json_encode($data);
-
+        $expluk = null;
         $uksearch = null;
         if($flag_rekap_tpp == 1){
-            $uksearch = $this->db->select('*')
+            if(stringStartWith('sekolah_', $data['id_unitkerja'])){
+                $expluk = explode("_",$data['id_unitkerja']);
+                $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerjamaster_kecamatan', $expluk[1])
+                                    ->get()->row_array();
+            } else {
+                $uksearch = $this->db->select('*')
                                     ->from('db_pegawai.unitkerja')
                                     ->where('id_unitkerja', $data['id_unitkerja'])
                                     ->get()->row_array();
+            }         
         }
-        
+
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
             b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat,
@@ -1326,6 +1343,8 @@
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
                 if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
                     $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+                } else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
+                    $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);
                 } else {
                     $this->db->where('a.skpd', $data['id_unitkerja']);
                 }
@@ -1337,12 +1356,12 @@
                 $this->db->join('m_user d', 'a.nipbaru_ws = d.username')
                         ->where('d.id', $data['id_m_user']);
             }
-
             $list_pegawai = $this->db->get()->result_array();
 
             $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
+        $temp_list_nip = null;
         if($flag_absen_aars == 1){
             if($flag_rekap_personal == 1){
                 $temp['skpd'] = $list_pegawai[0]['nm_unitkerja'];
@@ -1364,7 +1383,6 @@
             $list_hari = getDateBetweenDates($tanggal_awal, $tanggal_akhir);
 
             $tlp = null;
-            $temp_list_nip = null;
             //ambil kelas jabatan tiap pegawai
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
             foreach($list_pegawai as $lpw){
@@ -1853,6 +1871,8 @@
         if($flag_alpha == 1){
             return $list_alpha;
         }
+
+        $data['temp_list_nip'] = $temp_list_nip;
         return $data;
     }
 
@@ -1962,6 +1982,7 @@
 
     public function rekapPenilaianDisiplinSearch($data, $flag_rekap_tpp = 0){
         $result = null;
+        $flag_sekolah_kecamatan = 0;
 
         $disiplin_kerja = $this->db->select('*')
                             ->from('m_jenis_disiplin_kerja')
@@ -2005,13 +2026,18 @@
         }
                     
         $skpd = explode(";", $data['skpd']);
+        if(stringStartWith('sekolah_', $skpd[0])){ // jika sekolah per kecamatan, ambil dinas pendidikan punya penandatanganan
+            $flag_sekolah_kecamatan = 1;
+            $expl = explode('_', $skpd[0]);
+            $skpd[0] = $expl[1];
+        }
         $param['bulan'] = $data['bulan'];
         $param['tahun'] = $data['tahun'];
         $param['skpd'] = $skpd[0];
         // dd($data);
         // $temp = $this->readAbsensiFromDb($param);
         $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
-
+        // dd($temp['temp_list_nip']);
         if($temp){
             $result['skpd'] = $temp['skpd'];
             $result['periode'] = $temp['periode'];
@@ -2021,10 +2047,17 @@
             $list_akumulasi_tidak_berkinerja = ['S', 'I', 'TK', 'DISP', 'C'];
             
             //cek jika ada hukdis
-            $uksearch = $this->db->select('*')
+            if($flag_sekolah_kecamatan == 1){
+                $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerjamaster_kecamatan', $skpd[0])
+                                    ->get()->row_array();
+            } else {
+                $uksearch = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $skpd[0])
                             ->get()->row_array();
+            }
 
             $this->db->select('a.*, c.nama as nama_hd, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat')
                     ->from('db_pegawai.pegdisiplin a')
@@ -2033,29 +2066,33 @@
                     ->join('db_pegawai.jhd d', 'a.jhd = d.id_jhd')
                     ->join('db_pegawai.jabatan f', 'b.jabatan = f.id_jabatanpeg')
                     ->join('db_pegawai.pangkat g', 'b.pangkat = g.id_pangkat')
+                    ->where('b.flag_terima_tpp', 1)
+                    ->where('b.id_m_status_pegawai', 1)
+                    ->where_in('b.nipbaru_ws', $temp['temp_list_nip'])
                     ->where('a.flag_active', 1);
 
-            if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
-                $this->db->join('db_pegawai.unitkerja e', 'b.skpd = e.id_unitkerja')
-                        ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
-            } else {
-                $this->db->where('b.skpd', $skpd[0]); 
-            }
+            // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            //     $this->db->join('db_pegawai.unitkerja e', 'b.skpd = e.id_unitkerja')
+            //             ->where('e.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            // } else {
+            //     $this->db->where('b.skpd', $skpd[0]); 
+            // }
             $list_hukdis = $this->db->get()->result_array();
             $hukdis = null;
             if($list_hukdis){
                 foreach($list_hukdis as $l){
-                    $valid_date = date('Y-m-d', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
+                    if($l['tmt']){
+                        $valid_date = date('Y-m-d', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
+                        $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
+                        $last_date = $list_date[count($list_date)-1];
 
-                    $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
-                    $last_date = $list_date[count($list_date)-1];
-
-                    if($last_date <= $valid_date){
-                        $hukdis[$l['nipbaru_ws']] = $l;
+                        if($last_date <= $valid_date){
+                            $hukdis[$l['nipbaru_ws']] = $l;
+                        }
                     }
                 }
             }
-
+            
             foreach($temp['result'] as $tr){
                 if(isset($tr['nama_pegawai'])){
                     $result['result'][$tr['nip']]['nama_pegawai'] = $tr['nama_pegawai'];
@@ -2121,7 +2158,6 @@
         //         ->update('t_rekap_absen', [
         //             'json_rekap_penilaian_disiplin_kerja' => json_encode($result)
         //         ]);
-        
         return $result;
     }
 
@@ -2343,7 +2379,7 @@
         foreach($data_rekap['result'] as $dr){
             $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
         }
-        
+
         $rekap['jumlah_pegawai'] = 0;
         $rekap['rata_rata_presentase_kehadiran'] = 0;
         $rekap['total_presentase_kehadiran'] = 0;

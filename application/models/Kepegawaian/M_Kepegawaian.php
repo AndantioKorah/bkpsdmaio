@@ -4915,31 +4915,37 @@ public function submitEditJabatan(){
                 //                 ->get()->row_array();
 
                 $id_m_user = $this->general_library->getId();
-                $id_m_user = 108;
+                // $id_m_user = 555;
+                
                 $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
-                dd($pegawai);
-                $progressCuti = $this->buildProgressCuti($pegawai);
-                // if($atasan){
-                //     $master = $this->db->select('*')
-                //                     ->from('db_pegawai.cuti')
-                //                     ->where('id_cuti', $data['id_cuti'])
-                //                     ->get()->row_array();
+                $progressCuti = $this->buildProgressCuti($pegawai, $insert_id, $id_m_user);
+                dd($progressCuti);
+                // kirim pesan yang bisa langsung direply untuk persetujuan
+                // simpan dpe messageId untuk reply
+                $this->db->insert_batch('t_progress_cuti', $progressCuti);
+                if($progressCuti){
+                    $master = $this->db->select('*')
+                                    ->from('db_pegawai.cuti')
+                                    ->where('id_cuti', $data['id_cuti'])
+                                    ->get()->row_array();
 
-                //     $encrypt = simpleEncrypt($atasan['nipbaru_ws'].'-'.$insert_id);
-                //     $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                //     $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
-                //     $sendTo = convertPhoneNumber($atasan['handphone']);
-                //     // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
-                //     $cronWa = [
-                //         'sendTo' => $sendTo,
-                //         'message' => $message.FOOTER_MESSAGE_CUTI,
-                //         'type' => 'text'
-                //     ];
-                //     $this->db->insert('t_cron_wa', $cronWa);
-                // } else {
-                //     $res['code'] = 1;
-                //     $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
-                // }
+                    // $encrypt = simpleEncrypt($progressCuti['nipbaru_ws'].'-'.$insert_id);
+                    // $link = base_url('whatsapp-verification/cuti/'.$encrypt);
+                    // $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
+                    $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". \n\nBalas pesan ini dengan 'YA' untuk menyetujui atau 'Tidak' untuk menolak.";
+                    $sendTo = convertPhoneNumber($progressCuti['handphone']);
+                    // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
+                    $cronWa = [
+                        'sendTo' => $sendTo,
+                        'message' => $message.FOOTER_MESSAGE_CUTI,
+                        'type' => 'text',
+                        'ref_id' => $insert_id
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWa);
+                } else {
+                    $res['code'] = 1;
+                    $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
+                }
             }
         }
         if($res['code'] == 0){
@@ -4950,14 +4956,97 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function buildProgressCuti($pegawai){
+    public function buildProgressCuti($pegawai, $insert_id, $id_m_user){
+        $result = [];
+        $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_Ws = b.username')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->where('c.kepalaskpd', 1)
+                                ->where('a.skpd', '4018000')
+                                ->where('b.flag_active', 1)
+                                ->get()->row_array();
+
+        $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
+                                ->where('b.id', $id_m_user)
+                                ->get()->row_array();
+
         $progress = null;
-        if($pegawai['atasan']['id_unitkerja'] == '4018000'){ // jika kabid di bkpsdm
-
+        if($pegawai['atasan']['id_unitkerja'] == '4018000' && stringStartWith('Kepala', $thisuser['nama_jabatan'])){ // jika kabid di bkpsdm
+            unset($pegawai['atasan']);
+            unset($pegawai['kepala']);
+            unset($pegawai['kadis']);
+            unset($pegawai['sek']);
         } else if($pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
-
+            unset($pegawai['kepala']);
+            unset($pegawai['sek']);
+        } else {
+            // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
+            //     unset($pegawai['atasan']);
+            // }
+            if($pegawai['atasan']['id'] == $pegawai['kepala']['id'] && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
+                //jika atasan sama dengan kepala sama dengan kadis, hapus atasan dan kepala
+                unset($pegawai['atasan']);
+                unset($pegawai['kepala']);
+            } else if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
+                //jika atasan dan sama dengan kepala, hapus atasan
+                unset($pegawai['atasan']);
+            } else if($pegawai['atasan']['id'] == $pegawai['kadis']['id']){
+                //jika atasan dan sama dengan kadis, hapus atasan
+                unset($pegawai['atasan']);
+            } else if($pegawai['atasan']['id'] == $pegawai['sek']['id']){
+                //jika atasan dan sama dengan sek, hapus atasan
+                unset($pegawai['atasan']);
+            }
         }
+
+        $new_progress = null;
+        if($pegawai){
+            foreach($pegawai as $peg){
+                if($peg && $peg['id'] != $thisuser['id_m_user'] && $peg['id'] != $kepalabkpsdm['id_m_user']){
+                    $new_progress[] = $peg;
+                }
+            }
+
+            $i = 0;
+            if($new_progress){
+                foreach($new_progress as $np){
+                    $result[$i]['id_m_user_verifikasi'] = $np['id'];
+                    $result[$i]['nama_jabatan'] = $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
+                    $result[$i]['nohp'] = $np['handphone'];
+                    $i++;
+                }
+            }
+        }
+
+        return $this->pelengkapDataProgressCuti($result, $insert_id, $kepalabkpsdm);
     }
+
+    public function pelengkapDataProgressCuti($list, $insert_id, $kepalabkpsdm){
+        $result = null;
+        $urutan = 1;
+        $i = 0;
+        foreach($list as $l){
+            $result[$i] = $l;
+            $result[$i]['created_by'] = $this->general_library->getId();
+            $result[$i]['id_t_pengajuan_cuti'] = $insert_id;
+            $result[$i]['urutan'] = $urutan++;
+            $i++;
+        }
+
+        $last = $i++;
+        $result[$last]['id_m_user_verifikasi'] = $kepalabkpsdm['id_m_user'];
+        $result[$last]['nama_jabatan'] = $kepalabkpsdm['nama_jabatan'];
+        $result[$last]['created_by'] = $this->general_library->getId();
+        $result[$last]['urutan'] = $urutan++;
+
+        return $result;
+    }
+
 
     public function deletePermohonanCuti($id, $flag_delete_record = 1){
         $res['code'] = 0;

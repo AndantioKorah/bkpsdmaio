@@ -2,6 +2,9 @@
   <thead>
     <th class="text-center">No</th>
     <th class="text-left">Pegawai</th>
+    <?php if($flag_show_unitkerja == 1){ ?>
+      <th class="text-center">Unit Kerja</th>
+    <?php } ?>
     <th class="text-center">Besaran Gaji</th>
     <th class="text-center">Pilihan</th>
   </thead>
@@ -16,6 +19,9 @@
             <span style="font-size: 12px; color: black; font-weight: bold;"><?=$rs['nama_jabatan']?></span><br>
             <span style="font-size: 12px; color: black;"><?=$rs['nm_pangkat']?></span>
           </td>
+          <?php if($flag_show_unitkerja == 1){ ?>
+            <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+          <?php } ?>
           <td class="text-center">
             <input class="form-control" id="gaji_<?=$rs['nipbaru_ws']?>" type="number" value="<?=$rs['besaran_gaji']?>" />        
           </td>

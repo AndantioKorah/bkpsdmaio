@@ -361,12 +361,12 @@
                             <td style="text-align: center;"><?=formatTwoMaxDecimal($r['bobot_produktivitas_kerja'])?> %</td>
                             <td style="text-align: center;"><?=formatTwoMaxDecimal($r['bobot_disiplin_kerja'])?> %</td>
                             <td style="text-align: center;"><?=formatTwoMaxDecimal($r['presentase_tpp'])?> %</td>
-                            <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_tpp'], 0)?></td>
+                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_tpp']), 0)?></td>
                             <td style="text-align: center;">
                                 <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                             </td>
-                            <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
-                            <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
+                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
+                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_diterima']), 0)?></td>
                         </tr>
                     <?php }
                     $rata_rata_bobot_produktivitas = $jumlah_bobot_produktivitas_kerja / count($result);
@@ -449,7 +449,7 @@
                         $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
                         $potongan_pajak_keseluruhan += $r['nominal_pph'];
                         $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
-                        $jumlah_gaji += $r['besaran_gaji'];
+                        $jumlah_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
                         $jumlah_bpjs += ($r['bpjs']);
                         $jumlah_tpp_diterima += $r['tpp_final'];
                     ?>
@@ -469,7 +469,7 @@
                             </td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_diterima']), 0)?></td>
-                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_gaji']), 0)?></td>
+                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_gaji'] ? $r['besaran_gaji'] : 0), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                         </tr>
@@ -599,7 +599,7 @@
                         $tpp_final_beban_kerja += $r['tpp_final_beban_kerja'];
                         $tpp_final_kondisi_kerja += $r['tpp_final_kondisi_kerja'];
                         $tpp_final_permintaan_bkad += $r['tpp_final'];
-                        $total_besaran_gaji += ($r['besaran_gaji']);
+                        $total_besaran_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
                     ?>
                         <tr>
                             <td style="text: align: center;"><?=$no++;?></td>
@@ -624,7 +624,7 @@
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_prestasi_kerja']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_beban_kerja']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_kondisi_kerja']), 0)?></td>
-                            <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'], 0)?></td>
+                            <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'] ? $r['besaran_gaji'] : 0, 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_prestasi_kerja']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_beban_kerja']), 0)?></td>
                             <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_kondisi_kerja']), 0)?></td>
@@ -816,7 +816,7 @@
                 $rekap['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
                 $rekap['bpjs'] = $jumlah_bpjs;
                 $rekap['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
-                $rekap['selisih_capaian_pagu'] = $rekap['pagu_tpp'] - $rekap['jumlah_pajak_pph'] - $rekap['bpjs'] - $rekap['jumlah_yang_diterima'];
+                $rekap['selisih_capaian_pagu'] = $rekap['pagu_tpp'] - pembulatan($rekap['jumlah_pajak_pph']) - pembulatan($rekap['bpjs']) - pembulatan($rekap['jumlah_yang_diterima']);
 
                 $data_rekap['result'] = $result;
                 $data_rekap['rekap'] = $rekap;
@@ -905,12 +905,12 @@
                                 <td style="text-align: center;"><?=formatTwoMaxDecimal($r['bobot_produktivitas_kerja'])?> %</td>
                                 <td style="text-align: center;"><?=formatTwoMaxDecimal($r['bobot_disiplin_kerja'])?> %</td>
                                 <td style="text-align: center;"><?=formatTwoMaxDecimal($r['presentase_tpp'])?> %</td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_tpp'], 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_tpp']), 0)?></td>
                                 <td style="text-align: center;">
                                     <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                                 </td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['nominal_pph'], 0)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['tpp_diterima'], 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_diterima']), 0)?></td>
                             </tr>
                         <?php }
                         $rata_rata_bobot_produktivitas = $jumlah_bobot_produktivitas_kerja / count($result);
@@ -924,10 +924,10 @@
                             <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($rata_rata_bobot_produktivitas, 0).' %'?></strong></td>
                             <td style="text-align: center;"><strong><?=formatTwoMaxDecimal($rata_rata_bobot_disiplin, 0).' %'?></strong></td>
                             <td style="text-align: center;"></td>
-                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($jumlah_capaian_keseluruhan, 0)?></strong></td>
+                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp(pembulatan($jumlah_capaian_keseluruhan), 0)?></strong></td>
                             <td style="text-align: center;"></td>
-                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($potongan_pajak_keseluruhan, 0)?></strong></td>
-                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp($jumlah_setelah_pajak_keseluruhan, 0)?></strong></td>
+                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp(pembulatan($potongan_pajak_keseluruhan), 0)?></strong></td>
+                            <td style="text-align: center;"><strong><?=formatCurrencyWithoutRp(pembulatan($jumlah_setelah_pajak_keseluruhan), 0)?></strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -993,7 +993,7 @@
                             $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
                             $potongan_pajak_keseluruhan += $r['nominal_pph'];
                             $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
-                            $jumlah_gaji += $r['besaran_gaji'];
+                            $jumlah_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
                             $jumlah_bpjs += ($r['bpjs']);
                             $jumlah_tpp_diterima += $r['tpp_final'];
                         ?>
@@ -1013,7 +1013,7 @@
                                 </td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_diterima']), 0)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_gaji']), 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['besaran_gaji'] ? $r['besaran_gaji'] : 0), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                             </tr>
@@ -1143,7 +1143,7 @@
                             $tpp_final_beban_kerja += $r['tpp_final_beban_kerja'];
                             $tpp_final_kondisi_kerja += $r['tpp_final_kondisi_kerja'];
                             $tpp_final_permintaan_bkad += $r['tpp_final'];
-                            $total_besaran_gaji += ($r['besaran_gaji']);
+                            $total_besaran_gaji += ($r['besaran_gaji'] ? $r['besaran_gaji'] : 0);
                         ?>
                             <tr>
                                 <td style="text: align: center;"><?=$no++;?></td>
@@ -1168,7 +1168,7 @@
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_prestasi_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_beban_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['jumlah_setelah_pph_kondisi_kerja']), 0)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'], 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp($r['besaran_gaji'] ? $r['besaran_gaji'] : 0, 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_prestasi_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_beban_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs_kondisi_kerja']), 0)?></td>
@@ -1360,10 +1360,12 @@
                     $rekap['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
                     $rekap['bpjs'] = $jumlah_bpjs;
                     $rekap['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
+                    $rekap_pppk['unitkerja'][0] = $rekap['unitkerja'][0];
 
-                    $data_rekap['result'] = $result;
-                    $data_rekap['rekap'] = $rekap;
+                    $data_rekap['result'] = $pppk;
+                    $data_rekap['rekap'] = $rekap_pppk;
                     $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['flag_pppk'] = 1;
                     $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                     if($pegawai['flag_puskesmas'] == 1){
                         $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
@@ -1373,6 +1375,21 @@
                     $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                 ?>
             </div>
+            <div class="div_salinan_surat_pengantar">
+                <?php
+                    $data_rekap['result'] = $pppk;
+                    $data_rekap['rekap'] = $rekap_pppk;
+                    $data_rekap['hukdis'] = $hukdis;
+                    $data_rekap['flag_pppk'] = 1;
+                    $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
+                    if($pegawai['flag_puskesmas'] == 1){
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
+                    } else if($pegawai['flag_rs'] == 1){
+                        $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                    }
+                    $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
+                ?>
+        </div>
         <?php } ?>
     </div>
 </html>

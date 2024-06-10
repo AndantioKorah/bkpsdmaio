@@ -241,6 +241,7 @@ class C_Rekap extends CI_Controller
     public function rekapTpp()
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('rekap/V_RekapTpp', '', '', $data);
     }
 
@@ -256,8 +257,16 @@ class C_Rekap extends CI_Controller
 
     public function downloadBerkasTpp(){
         $param = $this->input->post();
+        $flag_sekolah_kecamatan = 0;
         // dd($param);
         $skpd = explode(";", $param['skpd']);
+        $pd_group = null;
+        if(stringStartWith('sekolah_', $skpd[0])){ // jika sekolah per kecamatan, ambil dinas pendidikan punya penandatanganan
+            $flag_sekolah_kecamatan = 1;
+            $expl = explode('_', $skpd[0]);
+            $pd_group = $expl[1];
+            $skpd[0] = '3010000';
+        }
         $data['param']['id_unitkerja'] = $skpd[0];
         $data['param']['nm_unitkerja'] = $skpd[1];
         $data['param']['bulan'] = $param['bulan'];
@@ -266,15 +275,15 @@ class C_Rekap extends CI_Controller
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
         $pagu_tpp = $this->kinerja->countPaguTpp([
-            'id_unitkerja' => $data['param']['id_unitkerja'],
+            'id_unitkerja' => $flag_sekolah_kecamatan == 0 ? $data['param']['id_unitkerja'] : $pd_group,
             'bulan' => $data['param']['bulan'],
             'tahun' => $data['param']['tahun']
-        ], null, 0, 1);
+        ], null, 0, 1, $flag_sekolah_kecamatan);
         
         $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
         
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
-        
+
         foreach ($data['rekap_penilaian_tpp']['result'] as $key => $row) {
             if(isset($row['nama']) || isset($row['nama_pegawai'])){
                 $nama_pegawai[$key]  = isset($row['nama_pegawai']) ? $row['nama_pegawai'] : $row['nama'];
@@ -288,11 +297,16 @@ class C_Rekap extends CI_Controller
         // }
 
         $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
+        // if($param['id_unitkerja'] == 6060000){
+        //     dd($pagu_tpp);
+        //     // dd($data['result']);
+        // }
         $data['rekap'] = $data['result']['rekap'];
         $data['rekap_pppk'] = $data['result']['rekap_pppk'];
         $data['hukdis'] = $data['result']['hukdis'];
         $data['kepalabkpsdm'] = $data['result']['kepalabkpsdm'];
         $data['pppk'] = isset($data['result']['pppk']) ? $data['result']['pppk'] : null ;
+        $data['flag_sekolah_kecamatan'] = $flag_sekolah_kecamatan;
         
         unset($data['result']['rekap_pppk']);
         unset($data['result']['pppk']);
@@ -314,7 +328,6 @@ class C_Rekap extends CI_Controller
         // if($skpd[0] == 3020000){
         //     dd($data);
         // }
-
 
         $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);

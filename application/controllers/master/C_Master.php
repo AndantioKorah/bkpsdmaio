@@ -8,6 +8,7 @@ class C_Master extends CI_Controller
         $this->load->model('general/M_General', 'general');
         $this->load->model('master/M_Master', 'master');
         $this->load->model('kinerja/M_Kinerja', 'kinerja');
+        $this->load->model('user/M_User', 'user');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
@@ -321,12 +322,13 @@ class C_Master extends CI_Controller
     }
 
     public function inputGaji(){
-        $data['unit_kerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        $data['list_skpd'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('master/V_InputGaji', '', '', $data);
     }
 
     public function loadInputGaji(){
-        $data['result'] = $this->master->loadInputGajiData($this->input->post());
+        list($data['result'], $data['flag_show_unitkerja']) = $this->master->loadInputGajiData($this->input->post());
         $this->load->view('master/V_InputGajiData', $data);
     }
 

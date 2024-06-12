@@ -317,11 +317,11 @@
 			)
 			{ ?>
 				
-			<!-- <li class="sidebar-item ">
+			<li class="sidebar-item ">
 				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
-			</li> -->
+			</li>
 		
 		<?php } ?>
 		<li class="sidebar-item ">

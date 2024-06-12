@@ -604,8 +604,8 @@
             ->join('m_bidang g', 'a.id_m_bidang = g.id', 'left')
             ->join('db_pegawai.jabatan h', 'b.id_jabatan_tambahan = h.id_jabatanpeg', 'left')
             ->where('a.flag_active', 1)
-            ->where('b.id_m_status_pegawai', 1)
-            ->where('b.flag_terima_tpp', 1);
+            ->where('b.id_m_status_pegawai', 1);
+            // ->where('b.flag_terima_tpp', 1);
     }
 
     public function recursiveAtasan($pegawai, $params){

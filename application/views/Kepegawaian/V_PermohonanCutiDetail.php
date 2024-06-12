@@ -15,16 +15,16 @@
   <div class="row">
     <?php if($result){ ?>
       <div class="col-lg-12 text-left mb-3">
-        <?php foreach($result['progress'] as $p){ ?>
+        <?php foreach($progress as $p){ ?>
           <span style="
-            background-color: <?=$p['color']?>;
+            background-color: <?=$p['bg-color']?>;
             padding: 2px;
             border-radius: 5px;
             font-weight: bold;
             margin-bottom: 5px;
             font-size: .9rem;
             color: <?=$p['font-color']?>
-          "><i class="<?=$p['icon']?>"></i> <?=$p['keterangan']?></span><br>
+          "><i class="fa <?=$p['icon']?>"></i> <?=$p['keterangan']?></span><br>
         <?php } ?>
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4">

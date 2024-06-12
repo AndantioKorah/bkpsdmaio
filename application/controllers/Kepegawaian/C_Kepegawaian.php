@@ -1469,6 +1469,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCutiVerif($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);
         $data['list_disiplin_kerja'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'keterangan', 'asc');
 		$count = (count($data['list_disiplin_kerja']));
 		$tambahan = ["TK", "TMK1", "TMK2", "TMK3", "PKSW1", "PKSW2", "PKSW3"];

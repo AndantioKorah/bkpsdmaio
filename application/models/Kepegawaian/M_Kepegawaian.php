@@ -5009,12 +5009,18 @@ public function submitEditJabatan(){
                     break;
                 }
                 $result[$i] = $p;
+                // if($p['flag_verif'] == 0){
+                //     $result[$i]['keterangan'] = 'Menunggu ';
+                // }
                 $result[$i]['keterangan'] = 'Verifikasi '.$p['nama_jabatan'];
                 if($i == count($progress)-1){
                     $result[$i]['keterangan'] = 'Digital Signature oleh '.$p['nama_jabatan'];
                 }
 
-                $result[$i]['keterangan'] .= ' pada '.formatDateNamaBulanWT($p['tanggal_verif']);
+                if($p['flag_verif'] == 1){
+                    $result[$i]['keterangan'] .= ' pada '.formatDateNamaBulanWT($p['tanggal_verif']);
+                }
+
                 $result[$i]['bg-color'] = 'yellow';
                 $result[$i]['font-color'] = 'black';
                 $result[$i]['icon'] = 'fa-spin fa-spinner';
@@ -5544,94 +5550,32 @@ public function submitEditJabatan(){
     }
 
     public function loadDetailCutiVerif($id){
-        $result = $this->db->select('a.*, b.nama_status, c.nm_cuti, e.gelar1, e.nama, e.gelar2, e.nipbaru_ws, f.nm_unitkerja,
+        $result['detail'] = null;
+        $meta = null;
+        $result = $this->db->select('a.*, c.nm_cuti, e.gelar1, e.nama, e.gelar2, e.nipbaru_ws, f.nm_unitkerja,
                 g.nama_jabatan, h.nm_pangkat, d.id as id_m_user, g.eselon, f.id_unitkerja')
                 ->from('t_pengajuan_cuti a')
-                ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
-                ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti')
-                ->join('m_user d', 'a.id_m_user = d.id')
-                ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
-                ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
-                ->join('db_pegawai.jabatan g', 'e.jabatan = g.id_jabatanpeg')
-                ->join('db_pegawai.pangkat h', 'e.pangkat = h.id_pangkat')
-                ->join('m_user i', 'a.id_m_user_verifikasi_atasan = i.id', 'left')
-                ->join('m_user j', 'a.id_m_user_verifikasi_kepala_bkpsdm = j.id', 'left')
+                ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti', 'left')
+                ->join('m_user d', 'a.id_m_user = d.id', 'left')
+                ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws', 'left')
+                ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja', 'left')
+                ->join('db_pegawai.jabatan g', 'e.jabatan = g.id_jabatanpeg', 'left')
+                ->join('db_pegawai.pangkat h', 'e.pangkat = h.id_pangkat', 'left')
                 ->where('a.flag_active', 1)
                 ->where('a.id', $id)
                 ->get()->row_array();
 
         if($result){
-            $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
-            $progress[0]['icon'] = "fa fa-spin fa-spinner";
-            $progress[0]['color'] = "yellow";
-            $progress[0]['font-color'] = "black";
-            if($result['id_m_status_pengajuan_cuti'] == 2){
-                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                $progress[1]['icon'] = "fa fa-spin fa-spinner";
-                $progress[1]['color'] = "yellow";
-                $progress[1]['font-color'] = "black";
-            } else if($result['id_m_status_pengajuan_cuti'] == 3){
-                $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan'])." : ".$result['keterangan_verifikasi_atasan'];
-                $progress[1]['icon'] = "fa fa-times";
-                $progress[1]['color'] = "red";
-                $progress[1]['font-color'] = "white";
-            }
-
-            if($result['id_m_status_pengajuan_cuti'] == 4){
-                $progress[1]['icon'] = "fa fa-check";
-                $progress[1]['color'] = "green";
-                $progress[1]['font-color'] = "white";
-                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-                if($result['url_sk']){
-                    $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result['updated_date']).". SK Cuti sudah dapat diunduh.";
-                    $progress[2]['icon'] = "fa fa-check";
-                    $progress[2]['color'] = "green";
-                    $progress[2]['font-color'] = "white";
-                } else {
-                    $progress[2]['keterangan'] = "DITERIMA OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-                    $progress[2]['icon'] = "fa fa-spin fa-spinner";
-                    $progress[2]['color'] = "yellow";
-                    $progress[2]['font-color'] = "black";
-                }
-            } else if($result['id_m_status_pengajuan_cuti'] == 5){
-                $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm'])." : ".$result['keterangan_verifikasi_kepala_bkpsdm'];
-                $progress[2]['icon'] = "fa fa-times";
-                $progress[2]['color'] = "red";
-                $progress[2]['font-color'] = "white";
-            } else if($result['id_m_status_pengajuan_cuti'] == 6){
-                $progress[1]['icon'] = "fa fa-check";
-                $progress[1]['color'] = "green";
-                $progress[1]['font-color'] = "white";
-                $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_atasan']).". Menunggu Verifikasi BKPSDM";
-    
-                $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($result['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-                $progress[2]['icon'] = "fa fa-check";
-                $progress[2]['color'] = "green";
-                $progress[2]['font-color'] = "white";
-    
-                $progress[3]['keterangan'] = "SK SUDAH SELESAI DS PADA ".formatDateNamaBulanWT($result['updated_date']);
-                $progress[3]['icon'] = "fa fa-check";
-                $progress[3]['color'] = "green";
-                $progress[3]['font-color'] = "white";
-            }
-
-            if($result['id_m_status_pengajuan_cuti'] != 1){
-                $progress[0]['icon'] = "fa fa-check";
-                $progress[0]['color'] = "green";
-                $progress[0]['font-color'] = "white";
-            }
-            
-            $result['progress'] = $progress;
-
             $meta = $this->db->select('a.*')
                         ->from('t_meta_cuti a')
                         ->where('a.id_t_penggunaan_cuti', $result['id'])
                         // ->where('flag_active', 1)
                         ->order_by('tahun', 'desc')
                         ->get()->result_array();
-            if($meta){
-                $result['detail'] = $meta;
-            }
+        }
+
+        if($meta){
+            $result['detail'] = $meta;
         }
 
         return $result;

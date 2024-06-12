@@ -35,53 +35,23 @@
       <div class="card-body">
         <form id="form_search">
           <div class="row" style="margin-top: -40px;">
-            <?php if($this->general_library->isKepalaBkpsdm() 
-            || $this->general_library->isAdminAplikasi() 
-            || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
-            || $this->general_library->isProgrammer()){?>
-              <div class="col">
-                <label>Unit Kerja</label>
-                <select class="form-control select2-navy" style="width: 100%"
+            <div class="col-lg-12 col-md-12">
+              <label>PERANGKAT DAERAH</label>
+              <select class="form-control select2-navy" style="width: 100%"
                 id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
-                    <option value="0" selected>Semua</option>
-                    <?php if($unitkerja){
-                        foreach($unitkerja as $uk){ if($uk['id_unitkerja'] != "0") {
-                        ?>
+                  <?php if($unitkerja){
+                    if(!$this->general_library->isKepalaBkpsdm() 
+                    || !$this->general_library->isAdminAplikasi() 
+                      || !$this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+                      || !$this->general_library->isProgrammer()){ ?>
+                        <option value="0" selected>Semua</option>
+                      <?php }
+                        foreach($unitkerja as $uk){
+                      ?>
                         <option value="<?=$uk['id_unitkerja']?>">
                             <?=$uk['nm_unitkerja']?>
                         </option>
-                    <?php } } } ?>
-                </select>
-              </div>
-            <?php } ?>
-            <div class="col">
-              <label>Status Pengajuan</label>
-              <select class="form-control select2-navy" style="width: 100%"
-              id="id_m_status_pengajuan_cuti" data-dropdown-css-class="select2-navy" name="id_m_status_pengajuan_cuti">
-                  <option value="0" selected>Semua</option>
-                  <?php if($master_status){
-                      foreach($master_status as $ms){
-                      ?>
-                      <option 
-                      <?php
-                        if($this->general_library->isKepalaBkpsdm()){
-                          if($ms['id'] == 4){
-                            echo "selected";
-                          }
-                        } else if($this->general_library->isKepalaPd() && !$this->general_library->isKepalaBkpsdm()){
-                          if($ms['id'] == 1){
-                            echo "selected";
-                          }
-                        } else if($this->general_library->isHakAkses('verifikasi_permohonan_cuti')){
-                          if($ms['id'] == 2){
-                            echo "selected";
-                          }
-                        }
-                      ?>
-                      value="<?=$ms['id']?>">
-                          <?=$ms['nama_status']?>
-                      </option>
-                  <?php } } ?>
+                      <?php } } ?>
               </select>
             </div>
           </div>

@@ -247,16 +247,17 @@ class C_Rekap extends CI_Controller
 
     public function rekapTppSearch()
     {
-        
         $this->session->set_userdata('params_rekap_tpp', $this->input->post());
         $data = $this->rekap->rekapTppSearch($this->input->post());
-        // dd($data);
         $data['data_search'] = $this->input->post();
+        $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
-    public function downloadBerkasTpp(){
+    public function downloadBerkasTpp($id_m_tpp_tambahan = 0){
         $param = $this->input->post();
+        $param['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+
         $flag_sekolah_kecamatan = 0;
         // dd($param);
         $skpd = explode(";", $param['skpd']);
@@ -271,6 +272,9 @@ class C_Rekap extends CI_Controller
         $data['param']['nm_unitkerja'] = $skpd[1];
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
+        $data['param']['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+        $data['param']['presentasi_tpp_tambahan'] = $param['presentasi_tpp_tambahan'];
+        $data['param']['nama_tpp_tambahan'] = $param['nama_tpp_tambahan'];
         $param['id_unitkerja'] = $skpd[0];
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
@@ -346,10 +350,17 @@ class C_Rekap extends CI_Controller
         ); // margin footer
         // $this->mpdf->setFooter('{PAGENO}');
         $filename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf';
+        if($id_m_tpp_tambahan != 0){
+            $filename = 'Rekap TPP '.$skpd[1].' '.$data['param']['nama_tpp_tambahan'].'.pdf';
+        }
         $this->mpdf->WriteHTML($html);
         $this->mpdf->Output($filename, 'D'); // download force
 
         $folder = 'arsiptpp/'.$data['param']['tahun'].'/'.getNamaBulan($data['param']['bulan']);
+        if($id_m_tpp_tambahan != 0){
+            $folder = 'arsiptpp/'.$data['param']['nama_tpp_tambahan'];
+        }
+
         if(!file_exists($folder)){
             if(!file_exists('arsiptpp')){
                 $oldmask = umask(0);
@@ -357,7 +368,7 @@ class C_Rekap extends CI_Controller
                 umask($oldmask);
             }
 
-            if(!file_exists('arsiptpp/'.$data['param']['tahun'])){
+            if(!file_exists('arsiptpp/'.$data['param']['tahun']) && $id_m_tpp_tambahan == 0){
                 $oldmask = umask(0);
                 mkdir('arsiptpp/'.$data['param']['tahun'], 0777);
                 umask($oldmask);
@@ -371,7 +382,9 @@ class C_Rekap extends CI_Controller
 
         //lock TPP
         $data['param']['url_file'] = $folder.'/'.$filename;
-        $this->rekap->lockTpp($data['param']);
+        if($id_m_tpp_tambahan == 0){
+            $this->rekap->lockTpp($data['param']);
+        }
 
         // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }

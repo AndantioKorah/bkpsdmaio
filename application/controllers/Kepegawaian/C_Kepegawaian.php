@@ -1434,8 +1434,13 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_PermohonanCutiItem', $data);
 	}
 
+	public function getProgressCutiAktif($id){
+		return $this->kepegawaian->getProgressCutiAktif($id);
+	}
+
 	public function loadDetailCuti($id){
 		$data['result'] = $this->session->userdata('riwayat_cuti')[$id];
+		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);
 		$data['flag_only_see'] = 0;
 		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
 	}
@@ -1446,8 +1451,13 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function verifikasiPermohonanCuti(){
-		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
-		$data['master_status'] = $this->general->getAllWithOrder('m_status_pengajuan_cuti', 'id', 'asc');
+		$data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
+		if($this->general_library->isKepalaBkpsdm() 
+        	|| $this->general_library->isAdminAplikasi() 
+            || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+            || $this->general_library->isProgrammer()){
+			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		}
         render('kepegawaian/V_VerifPermohonanCuti', '', '', $data);
 	}
 
@@ -1459,6 +1469,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCutiVerif($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);
         $data['list_disiplin_kerja'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'keterangan', 'asc');
 		$count = (count($data['list_disiplin_kerja']));
 		$tambahan = ["TK", "TMK1", "TMK2", "TMK3", "PKSW1", "PKSW2", "PKSW3"];

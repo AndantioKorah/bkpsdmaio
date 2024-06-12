@@ -2364,6 +2364,37 @@
         dd($list_pegawai);
     }
 
+    public function getTppTambahan($data){
+        $result = null;
+        $skpd = explode(";", $data['skpd']);
+        $exists = $this->db->select('*')
+                        ->from('t_tpp_tambahan a')
+                        ->where('a.id_unitkerja', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+        $list_exists = null;
+        if($exists){
+            foreach($exists as $e){
+                $list_exists[$e['id_m_tpp_tambahan']] = $e;
+            }
+        }
+
+        $master = $this->db->select('*')
+                        ->from('m_tpp_tambahan a')
+                        ->where('a.flag_show', 1)
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+        if($master){
+            foreach($master as $m){
+                if(!isset($list_exists[$m['id']])){
+                    $result[] = $m;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function getDaftarPerhitunganTppNew($pagu_tpp, $param, $flag_rekap_tpp = 0){
         $list_pegawai = null;
         foreach($pagu_tpp as $pt){
@@ -2432,6 +2463,9 @@
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
+                if($param['id_m_tpp_tambahan'] != 0){
+                    $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
+                }
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                 $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;
@@ -2464,7 +2498,7 @@
                     $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
                 }
                             
-                $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($l['pagu_tpp'])) / 100;
+                $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100;
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                 $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);

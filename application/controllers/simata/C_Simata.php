@@ -549,16 +549,6 @@ class C_Simata extends CI_Controller
         //     $this->load->view('user/V_RencanaSuksesiExcel', $data);
         // }
     }
-
-    
-
-    
-
-
-
-
-
-
     
 
    

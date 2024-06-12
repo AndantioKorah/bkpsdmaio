@@ -1691,8 +1691,8 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
 	}
 
-	public function loadListRiwayatPensiun(){
-		$data['result'] = $this->kepegawaian->loadListRiwayatPensiun();
+	public function loadListRiwayatPensiun($jenis_pensiun){
+		$data['result'] = $this->kepegawaian->loadListRiwayatPensiun($jenis_pensiun);
 		// dd($data);
 		$this->load->view('kepegawaian/layanan/V_KarisKarsuItem', $data);
 	}
@@ -1723,40 +1723,41 @@ class C_Kepegawaian extends CI_Controller
 
 	public function verifikasiKarisKarsuDetail($id){
 		$data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
-		// dd($data);
-		// $this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', $data);
+		
+		
 		render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 	}
 
 	public function verifikasiPenisunDetail($id,$jenis_pensiun){
 		$data['result'] = $this->kepegawaian->getPengajuanLayananPensiun($id);
+		$id_peg = $data['result'][0]['id_peg'];
 		$data['jenis_layanan'] = $jenis_pensiun;
 
-		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
-		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
-		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
-		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','18','0');
-		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','19','0');
-		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','30','0');
-		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
-		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
-		$data['surat_ket_kematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','56','0');
-		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
-		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');
-		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','26','0');
-		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
-		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
-		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
-		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','59','0');
-		$data['spt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','60','0');
-		$data['surat_berhenti'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','61','0');
-		$data['surat_rekom_sakit'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','62','0');
-		$data['visum'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','63','0');
-		$data['berita_acara'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','64','0');
-		$data['npwp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','38','0');
-		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','39','0');
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','24','0',$id_peg);
+		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','18','0',$id_peg);
+		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','19','0',$id_peg);
+		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','30','0',$id_peg);
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','29','0',$id_peg);
+		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegskp','29','0',$id_peg);
+		$data['surat_ket_kematian'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','56','0',$id_peg);
+		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','57','0',$id_peg);
+		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','25','0',$id_peg);
+		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','26','0',$id_peg);
+		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','58','0',$id_peg);
+		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','28','0',$id_peg);
+		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','37','0',$id_peg);
+		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','59','0',$id_peg);
+		$data['spt'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','60','0',$id_peg);
+		$data['surat_berhenti'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','61','0',$id_peg);
+		$data['surat_rekom_sakit'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','62','0',$id_peg);
+		$data['visum'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','63','0',$id_peg);
+		$data['berita_acara'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','64','0',$id_peg);
+		$data['npwp'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','38','0',$id_peg);
+		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','39','0',$id_peg);
 
 
 		$data['list_layanan_skcpns'] = array(7,8,9,10,11);
@@ -1818,6 +1819,16 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanKarisKarsu());
 	}
 
+	public function submitVerifikasiPengajuanPensiun()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanPensiun());
+	}
+
+	public function batalVerifikasiPengajuanPensiun()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanPensiun());
+	}
+
 	public function LayananPensiun($jenis_layanan){
 		$data['jenis_layanan'] = $jenis_layanan;
 
@@ -1830,7 +1841,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','19','0');
 		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','30','0');
 		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
-		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');
+		$data['skp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegskp','29','0');
 		$data['surat_ket_kematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','56','0');
 		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
 		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');

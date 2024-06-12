@@ -6412,7 +6412,6 @@ public function submitEditJabatan(){
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
         ->where('status', 2)
-        
         ->from($table);
 
         if($table == "db_pegawai.pegarsip"){
@@ -6421,6 +6420,41 @@ public function submitEditJabatan(){
 
         if($table == "db_pegawai.pegberkaspns"){
             $this->db->where('jenissk', $jenissk);
+        }
+
+        if($table == "db_pegawai.pegskp"){
+            $currentYear = date('Y'); 
+            $previous1Year = $currentYear - 1;
+            $this->db->where('tahun', $previous1Year); 
+        }
+    
+    
+        $query = $this->db->get()->row_array();
+    
+        return $query;  
+
+    }
+
+    public function getDokumenForKarisKarsuAdmin($table,$id_dokumen,$jenissk,$id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->from($table);
+
+        if($table == "db_pegawai.pegarsip"){
+            $this->db->where('id_dokumen', $id_dokumen);
+        }
+
+        if($table == "db_pegawai.pegberkaspns"){
+            $this->db->where('jenissk', $jenissk);
+        }
+
+        if($table == "db_pegawai.pegskp"){
+            $currentYear = date('Y'); 
+            $previous1Year = $currentYear - 1;
+            $this->db->where('tahun', $previous1Year); 
         }
     
     
@@ -6487,11 +6521,12 @@ public function submitEditJabatan(){
                        return $query;
    }
 
-       function loadListRiwayatPensiun(){
+       function loadListRiwayatPensiun($jenis_pensiun){
         $this->db->select('*')
                        ->from('t_pensiun a')
                        ->where('a.id_m_user', $this->general_library->getId())
                        ->where('a.flag_active', 1)
+                       ->where('a.jenis_pensiun', $jenis_pensiun)
                        ->order_by('a.id','desc');
     
                        $query = $this->db->get()->result_array();
@@ -6687,6 +6722,32 @@ public function getFileForKarisKarsu()
         return $res;
     }
 
+    public function submitVerifikasiPengajuanPensiun(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+        $id_pengajuan = $datapost['id_pengajuan'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+        $this->db->where('id', $id_pengajuan)
+                ->update('t_pensiun', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
 
     public function batalVerifikasiPengajuanKarisKarsu(){
         $res['code'] = 0;
@@ -6701,6 +6762,32 @@ public function getFileForKarisKarsu()
         $data["keterangan"] = "";
         $this->db->where('id', $id_usul)
                 ->update('t_karis_karsu', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function batalVerifikasiPengajuanPensiun(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $id_usul = $datapost['id_batal'];
+        $data["status"] = 0; 
+        $data["keterangan"] = "";
+        $this->db->where('id', $id_usul)
+                ->update('t_pensiun', $data);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

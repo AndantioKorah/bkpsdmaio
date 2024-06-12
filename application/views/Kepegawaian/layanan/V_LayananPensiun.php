@@ -232,9 +232,33 @@ ol {
 
 					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+          <input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+          <input type="hidden" id="sk_jabatan" value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
 					<input type="hidden" id="akte_nikah" value="<?php if($akte_nikah) echo $akte_nikah['id']; else echo "";?>">
+					
+        
+          <input type="hidden" id="hd" value="<?php if($hd) echo $hd['id']; else echo "";?>">
+          <input type="hidden" id="pidana" value="<?php if($pidana) echo $pidana['id']; else echo "";?>">
 					<input type="hidden" id="dpcp" value="<?php if($dpcp) echo $dpcp['id']; else echo "";?>">
-					<input type="hidden" id="jandaduda" value="<?php if($dpcp) echo $dpcp['id']; else echo "";?>">
+
+          <input type="hidden" id="pmk" value="<?php if($pmk) echo $pmk['id']; else echo "";?>">
+          <input type="hidden" id="skp" value="<?php if($skp) echo $skp['id']; else echo "";?>">
+          <input type="hidden" id="surat_ket_kematian" value="<?php if($surat_ket_kematian) echo $surat_ket_kematian['id']; else echo "";?>">
+          <input type="hidden" id="surat_laporan_kronologis" value="<?php if($surat_laporan_kronologis) echo $surat_laporan_kronologis['id']; else echo "";?>">
+          <input type="hidden" id="aktecerai" value="<?php if($aktecerai) echo $aktecerai['id']; else echo "";?>">
+          <input type="hidden" id="aktekematian" value="<?php if($aktekematian) echo $aktekematian['id']; else echo "";?>">
+          <input type="hidden" id="akteanak" value="<?php if($akteanak) echo $akteanak['id']; else echo "";?>">
+          <input type="hidden" id="kk" value="<?php if($kk) echo $kk['id']; else echo "";?>">
+         
+          <input type="hidden" id="ktp" value="<?php if($ktp) echo $ktp['id']; else echo "";?>">
+					<input type="hidden" id="jandaduda" value="<?php if($jandaduda) echo $jandaduda['id']; else echo "";?>">
+          <input type="hidden" id="spt" value="<?php if($spt) echo $spt['id']; else echo "";?>">
+          <input type="hidden" id="surat_berhenti" value="<?php if($surat_berhenti) echo $surat_berhenti['id']; else echo "";?>">
+          <input type="hidden" id="surat_rekom_sakit" value="<?php if($surat_rekom_sakit) echo $surat_rekom_sakit['id']; else echo "";?>">
+          <input type="hidden" id="visum" value="<?php if($visum) echo $visum['id']; else echo "";?>">
+          <input type="hidden" id="berita_acara" value="<?php if($berita_acara) echo $berita_acara['id']; else echo "";?>">
+          <input type="hidden" id="npwp" value="<?php if($npwp) echo $npwp['id']; else echo "";?>">
+          <input type="hidden" id="buku_rekening" value="<?php if($buku_rekening) echo $buku_rekening['id']; else echo "";?>">
 
 
 					<span>Berkas Persyaratan :</span>
@@ -250,17 +274,25 @@ ol {
               <?php } ?> -->
 
               <?php if (in_array($jenis_layanan, $list_layanan_surat_berhenti)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                <?php if($jenis_layanan == 9) { ?>
+                  <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
+									onclick="filterClicked1('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper(' Surat permohonan berhenti atas permintaan sendiri bermeterai yang ditandatangani oleh PNS ybs mengetahui kepala perangkat daerah'); ?></a></li>
+                  <?php echo strtoupper(' Surat permohonan berhenti atas permintaan sendiri bermeterai yang ditandatangani oleh PNS ybs mengetahui kepala perangkat daerah*'); ?></a></li>
+                  <?php } else if($jenis_layanan == 10){ ?>
+                    <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
+									onclick="filterClicked1('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
+                  <?php echo strtoupper(' Surat permohonan berhenti atas permintaan sendiri karena sakit/uzur bermeterai yang ditandatangani oleh PNS ybs mengetahui kepala perangkat daerah*'); ?></a></li>
+                   <?php } ?>
+                  
 							<li>
 						  <?php } ?>
             <?php if (in_array($jenis_layanan, $list_layanan_skcpns)) { ?>
 							<li>
 								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
 									onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS <i
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS* <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
@@ -268,7 +300,7 @@ ol {
 							<li>
 								<a class="<?php if($sk_pns) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
 									onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> SK PNS <i
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK PNS* <i
 											class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
@@ -276,42 +308,42 @@ ol {
 							<li>
 								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
 									onclick="filterClicked1('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> SK PANGKAT </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK PANGKAT* </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skjabatan)) { ?>
 							<li>
 								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
 									onclick="filterClicked1('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN* </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_dpcp)) { ?>
 							<li>
 								<a class="<?php if($dpcp) echo 'select'; else echo 'unselect';?>" <?php if($dpcp) { ?>
-									onclick="filterClicked1('<?=$dpcp['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('daftar perorangan calon penerima pensiun (dpcp)'); ?> </a>
+									onclick="filterClicked1('<?=$dpcp['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('daftar perorangan calon penerima pensiun (dpcp)*'); ?> </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_pmk)) { ?>
 							<li>
 								<a class="<?php if($pmk) echo 'select'; else echo 'unselect';?>" <?php if($pmk) { ?>
-									onclick="filterClicked1('<?=$pmk['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sk peninjauan masa kerja (PMK)'); ?> </a>
+									onclick="filterClicked1('<?=$pmk['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sk peninjauan masa kerja (PMK)*'); ?> </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skp)) { ?>
 							<li>
 								<a class="<?php if($skp) echo 'select'; else echo 'unselect';?>" <?php if($skp) { ?>
-									onclick="filterClicked1('<?=$skp['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sasaran kinerja pegawai dan penilaian prestasi kerja 1 tahun terakhir'); ?> </a>
+									onclick="filterClicked1('<?=$skp['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sasaran kinerja pegawai dan penilaian prestasi kerja 1 tahun terakhir*'); ?> </a>
 							</li>
               <?php } ?>
               
               <?php if (in_array($jenis_layanan, $list_layanan_hd)) { ?>
                   <li><a class="<?php if($hd) echo 'select'; else echo 'unselect';?>" <?php if($hd) { ?>
 									onclick="filterClicked1('<?=$hd['gambarsk'];?>',4)" data-toggle="modal"
-									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> <?php echo strtoupper('Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin Tingkat Sedang/Berat'); ?> </a></li>
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> <?php echo strtoupper('Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin Tingkat Sedang/Berat*'); ?> </a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_rekom_sakit)) { ?>
@@ -332,36 +364,55 @@ ol {
                   <li><a class="<?php if($surat_ket_kematian) echo 'select'; else echo 'unselect';?>" <?php if($surat_ket_kematian) { ?>
 									onclick="filterClicked1('<?=$surat_ket_kematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('surat keterangan kematian dari dokter yang menerangkan secara detail penyebab kematian'); ?></a></li>
+                  <?php echo strtoupper('surat keterangan kematian dari dokter yang menerangkan secara detail penyebab kematian*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_laporan_kronologis)) { ?>
                   <li><a class="<?php if($surat_laporan_kronologis) echo 'select'; else echo 'unselect';?>" <?php if($surat_laporan_kronologis) { ?>
 									onclick="filterClicked1('<?=$surat_laporan_kronologis['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('laporan kronologis kejadian secara detail dan terperinci dibuat oleh pimpinan unit kerja ybs'); ?></a></li>
+                  <?php echo strtoupper('laporan kronologis kejadian secara detail dan terperinci dibuat oleh pimpinan unit kerja ybs*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktenikah)) { ?>
+                <?php if($jenis_layanan != 8) { ?>
                   <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
 									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('akte perkawinan'); ?></a></li>
+                  <?php echo strtoupper('akte perkawinan (bagi yang sudah menikah/ pernah menikah)'); ?></a></li>
 							<li>
+
+              <?php } else if($jenis_layanan == 8) { ?>
+                <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
+									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
+                  <?php echo strtoupper('akte perkawinan*'); ?></a></li>
+							<li>
+              <?php } ?>
+                 
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktercerai)) { ?>
                   <li><a class="<?php if($aktecerai) echo 'select'; else echo 'unselect';?>" <?php if($aktecerai) { ?>
 									onclick="filterClicked1('<?=$aktecerai['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('akte cerai (bagi yang pernah bercerai'); ?></a></li>
+                  <?php echo strtoupper('akte cerai (bagi yang pernah bercerai)'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktekematian)) { ?>
+                <?php if($jenis_layanan != 8) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="filterClicked1('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('akte kematian yang bersangkutan'); ?></a></li>
+                  <?php echo strtoupper('akte kematian (bagi pasangan yang sudah meninggal)'); ?></a></li>
 							<li>
+              <?php } ?>
+              <?php if($jenis_layanan == 8) { ?>
+                  <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
+									onclick="filterClicked1('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
+                  <?php echo strtoupper('akte kematian pns yang bersangkutan*'); ?></a></li>
+							<li>
+              <?php } ?>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_akteanak)) { ?>
                   <li><a class="<?php if($akteanak) echo 'select'; else echo 'unselect';?>" <?php if($akteanak) { ?>
@@ -374,56 +425,56 @@ ol {
                   <li><a class="<?php if($kk) echo 'select'; else echo 'unselect';?>" <?php if($kk) { ?>
 									onclick="filterClicked1('<?=$kk['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('kartu keluarga'); ?></a></li>
+                  <?php echo strtoupper('kartu keluarga*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_ket_janda_duda)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($jandaduda) echo 'select'; else echo 'unselect';?>" <?php if($jandaduda) { ?>
+									onclick="filterClicked1('<?=$jandaduda['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('surat keterangan janda/duda dari almarhum/almarhumah yang diterbitkan oleh kelurahan/kecamatan'); ?></a></li>
+                  <?php echo strtoupper('surat keterangan janda/duda dari almarhum/almarhumah yang diterbitkan oleh kelurahan/kecamatan*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_spt)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($spt) echo 'select'; else echo 'unselect';?>" <?php if($spt) { ?>
+									onclick="filterClicked1('<?=$spt['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('surat perintah tugas (penugasan tertulis) bagi yang meninggal dunia karena menjalankan tugas jabatan dan/atau tugas kedinasan lainnya baik didalam maupun diluar lingkungan kerja'); ?></a></li>
+                  <?php echo strtoupper('surat perintah tugas (penugasan tertulis) bagi yang meninggal dunia karena menjalankan tugas jabatan dan/atau tugas kedinasan lainnya baik didalam maupun diluar lingkungan kerja*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_visum)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($visum) echo 'select'; else echo 'unselect';?>" <?php if($visum) { ?>
+									onclick="filterClicked1('<?=$visum['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('visum yang dikeluarkan oleh dokter yang antara lain berisi penyebab kematian bagi yang meninggal dunia karena penganiayaan, penculikan atau kecelakaan'); ?></a></li>
+                  <?php echo strtoupper('visum yang dikeluarkan oleh dokter yang antara lain berisi penyebab kematian bagi yang meninggal dunia karena penganiayaan, penculikan atau kecelakaan*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_berita_acara)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($berita_acara) echo 'select'; else echo 'unselect';?>" <?php if($berita_acara) { ?>
+									onclick="filterClicked1('<?=$berita_acara['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('Berita Acara kepolisian/laporan polisi yang menyebutkan secara lengkap tentang waktu kejadian, kronologis kejadian, serta kesimpulan bagi pegawai yang meninggal karena kecelakaan'); ?></a></li>
+                  <?php echo strtoupper('Berita Acara kepolisian/laporan polisi yang menyebutkan secara lengkap tentang waktu kejadian, kronologis kejadian, serta kesimpulan bagi pegawai yang meninggal karena kecelakaan*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_ktp)) { ?>
                   <li><a class="<?php if($ktp) echo 'select'; else echo 'unselect';?>" <?php if($ktp) { ?>
 									onclick="filterClicked1('<?=$ktp['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('KTP'); ?></a></li>
+                  <?php echo strtoupper('KTP*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_npwp)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($npwp) echo 'select'; else echo 'unselect';?>" <?php if($npwp) { ?>
+									onclick="filterClicked1('<?=$npwp['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('NPWP'); ?></a></li>
+                  <?php echo strtoupper('NPWP*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_buku_rek)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="filterClicked1('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($buku_rekening) echo 'select'; else echo 'unselect';?>" <?php if($buku_rekening) { ?>
+									onclick="filterClicked1('<?=$buku_rekening['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper('buku rekening'); ?></a></li>
+                  <?php echo strtoupper('buku rekening*'); ?></a></li>
 							<li>
 						  <?php } ?>
 						</ol>
@@ -496,7 +547,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatPensiun()
+  loadListRiwayatPensiun(<?=$jenis_layanan;?>)
     })
     $('#form_pensiun').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -504,39 +555,156 @@ $(function(){
         e.preventDefault();
         var formvalue = $('#form_pensiun');
         var form_data = new FormData(formvalue[0]);
+
         var sk_cpns = $('#sk_cpns').val();
         var sk_pns = $('#sk_pns').val();
+        var sk_pangkat = $('#sk_pangkat').val();
+        var sk_pangkat = $('#sk_pangkat').val();
         var akte_nikah = $('#akte_nikah').val();
+
+        var hd = $('#hd').val();
+        var pidana = $('#pidana').val();
         var dpcp = $('#dpcp').val();
+        var pmk = $('#pmk').val();
+        var skp = $('#skp').val();
+        var surat_ket_kematian = $('#surat_ket_kematian').val();
+        var surat_laporan_kronologis = $('#surat_laporan_kronologis').val();
+        var aktecerai = $('#aktecerai').val();
+        var aktekematian = $('#aktekematian').val();
+        var akteanak = $('#akteanak').val();
+        var kk = $('#kk').val();
+        var ktp = $('#ktp').val();
         var jandaduda = $('#jandaduda').val();
+        var spt = $('#spt').val();
+        var surat_berhenti = $('#surat_berhenti').val();
+        var surat_rekom_sakit = $('#surat_rekom_sakit').val();
+        var visum = $('#visum').val();
+        var berita_acara = $('#berita_acara').val();
+        var npwp = $('#npwp').val();
+        var buku_rekening = $('#buku_rekening').val();
         
 
 
-        // var jenis_layanan = "<?=$jenis_layanan;?>"
+        var jenis_layanan = "<?=$jenis_layanan;?>"
 
-        // if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
-        // if(sk_cpns == ""){
-        //     errortoast(' Berkas Belum Lengkap')
-        //     return false;
-        // }
+        if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
+        if(sk_cpns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
         
-        // if(sk_pns == ""){
-        //     errortoast(' Berkas Belum Lengkap')
-        //     return false;
-        // }
+        if(sk_pns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_pangkat == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
 
-        // if(dpcp == ""){
+        if(hd == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(pidana == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(dpcp == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_jabatan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(pmk == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(skp == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        // if(akte_nikah == ""){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;
         // }
+        // if(aktecerai == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
         // }
+        // if(aktekematian == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        // if(akteanak == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        if(kk == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(ktp == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(npwp == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(buku_rekening == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+      
+        }
 
-        // if(jenis_layanan == 8){
-        //   if(jandaduda == ""){
-        //     errortoast(' Berkas Belum Lengkap')
-        //     return false;
-        // }
-        // }
+        if(jenis_layanan == 8){
+          if(jandaduda == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+         if(aktekematian == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+         if(akte_nikah == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+
+        if(jenis_layanan == 9 || jenis_layanan == 10){
+          if(surat_berhenti == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+        }
+
+        if(jenis_layanan == 11){
+          if(surat_ket_kematian == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+          if(spt == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+          if(visum == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+          if(berita_acara == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+          if(surat_laporan_kronologis == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+        }
 
 
         $.ajax({  
@@ -552,7 +720,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatKarisKarsu()
+                loadListRiwayatPensiun(jenis_layanan)
                 window.scrollTo(0, document.body.scrollHeight);
               } else {
                 errortoast(result.msg)
@@ -618,7 +786,11 @@ $(function(){
           dir = "arsipjabatan/";
         } else if(kode == 4){
           dir = "arsiplain/";
+        } else {
+          dir = "arsipskp/"
         }
+
+        
     
     var number = Math.floor(Math.random() * 1000);
     $link = "<?=base_url();?>/"+dir+"/"+filename+"?v="+number;
@@ -648,10 +820,10 @@ $(function(){
 
   }
 
-  function loadListRiwayatPensiun(){
+  function loadListRiwayatPensiun(jenis_pensiun){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
-    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPensiun/")?>', function(){
+    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPensiun/")?>'+jenis_pensiun, function(){
       $('#loader').hide()
     })
     }

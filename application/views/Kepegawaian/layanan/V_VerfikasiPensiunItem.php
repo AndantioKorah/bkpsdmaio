@@ -5,6 +5,7 @@
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-left">Tanggal Pengajuan</th>
+          <th class="text-left">Jenis Pensiun</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th></th>
@@ -18,6 +19,9 @@
                <span>NIP. <?=$rs['nipbaru']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_pengajuan'])?></td>
+              <td class="text-left">
+              <?php if($rs['jenis_pensiun'] == '7') echo "Pensiun BUP"; else if($rs['jenis_pensiun'] == '8') echo "Pensiun Janda/Duda"; else if($rs['jenis_pensiun'] == '9') echo "Pensiun Atas Permintaan Sendiri"; else if($rs['jenis_pensiun'] == '10') echo "Pensiun Sakit/Uzur";else if($rs['jenis_pensiun'] == '11') echo "Pensiun Tewas";?>
+              </td>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '1') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>
               </span>

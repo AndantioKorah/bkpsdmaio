@@ -2076,6 +2076,7 @@
         }
 
         public function searchAllPegawai($data){
+            
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
@@ -2097,8 +2098,12 @@
             if($data['unitkerja'] != 0){
                 $this->db->where('a.skpd', $data['unitkerja']);
             }
-            if($data['jft'] != '0'){
-                $this->db->where('c.id_jabatanpeg', $data['jft']);
+            if($data['jft'][0] != '0'){
+                $list_jft = null;
+                    foreach($data['jft'] as $jft){
+                        $list_jft[] = $jft;
+                    }
+                $this->db->where_in('c.id_jabatanpeg', $list_jft);
             }
             if(isset($data['eselon'])){
                 $this->db->where_in('g.id_eselon', $data['eselon']);

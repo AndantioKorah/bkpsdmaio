@@ -27,7 +27,7 @@
     <br>
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti.<br>
-    - Jika menggunakan foto berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
+    - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
     - Upload bukti pada hari yang sama. <br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>

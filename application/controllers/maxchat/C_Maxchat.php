@@ -28,7 +28,7 @@ class C_Maxchat extends CI_Controller
                     $this->chatBotLayanan($result);
                 } else {
                     $res = $this->kepegawaian->checkIfReplyCuti($result);
-                    if($res){
+                    if($res && isset($res['wa']) && isset($res['cuti']) && isset($res['progress'])){
                         $this->replyCuti($res, $result);
                     }
                 }

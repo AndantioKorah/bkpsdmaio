@@ -381,36 +381,18 @@ class C_Rekap extends CI_Controller
         if($flag_excel == 0){
             $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
         } else {
-            $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $rekapKehadiranSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'REKAPITULASI KEHADIRAN PEGAWAI');
+            $spreadsheet->addSheet($rekapKehadiranSheet, 0);
+            $dataSheet = $this->getDataSheet($data);
 
-            // $this->load->helper("file");
-            // $fileName = "temp_file_name.html";
-            // $path = "arsiptpp/";
-            // $path_file = $path . $fileName; 
 
-            // if (write_file($path_file, $html)){
-            //     //create spreadsheet the temp html
-            //     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-            //     $spreadsheet = $reader->load($path_file);
-
-            //     //write out to html file
-            //     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Html($spreadsheet);
-            //     $writer->save($path."05featuredemo.htm");
-
-            //     //delete the temporary file
-            //     unlink($path_file);
-            // }
-
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-            $spreadsheet = $reader->loadFromString($html);
-
-            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
-            // $writer->save('arsitpp/write.xls'); 
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
             ob_end_clean();
             header('Content-type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename=example.xls');
+            header('Content-Disposition: attachment; filename='.$filename.'.xlsx');
             $writer->save('php://output');
-            dd('asdsad');
+            // dd('asdsad');
         }
         //lock TPP
         $data['param']['url_file'] = $folder.'/'.$filename;
@@ -419,6 +401,22 @@ class C_Rekap extends CI_Controller
         }
 
         // $this->load->view('rekap/V_BerkasTppDownload', $data);
+    }
+
+    public function getDataSheet($sheetType, $data){
+        $header = [
+            "No",
+            "Nama Pegawai",
+            "Gol/Ruang",
+            "Jabatan",
+            "Ess",
+            "Kelas Jabatan",
+            "JHK",
+            "TARGET CAP. PEN. DISIPLIN KERJA"
+        ];
+        foreach($header as $h){
+            
+        }
     }
 
     public function loadViewByJenisFile($jenis_file)

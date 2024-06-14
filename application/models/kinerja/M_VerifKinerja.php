@@ -35,10 +35,12 @@
                     }
                 }
             }
-            $this_user = $this->db->select('a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster')
+            $this_user = $this->db->select('a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster, d.nama_jabatan, e.nama_jabatan as nama_jabatan_tambahan')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.jabatan e', 'b.id_jabatan_tambahan = e.id_jabatanpeg', 'left')
                                 ->where('a.id', $this->general_library->getId())
                                 ->where('a.flag_active', 1)
                                 ->where('id_m_status_pegawai', 1)
@@ -298,7 +300,11 @@
                 //                             ->group_by('a.id')
                 //                             ->get()->result_array();
                 // }
-            } else if($this->general_library->isKepalaSekolah()){
+            } else if(stringStartWith('Kepala Sekolah', $this_user['nama_jabatan'])
+            || stringStartWith('Kepala Taman', $this_user['nama_jabatan'])
+            || stringStartWith('Kepala Sekolah', $this_user['nama_jabatan_tambahan'])
+            || stringStartWith('Kepala Taman', $this_user['nama_jabatan_tambahan'])
+            ){ // jika kepsek
                 $list_role = ['gurusekolah'];
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
@@ -322,6 +328,7 @@
                                             ->join('m_role c', 'c.id = b.id_m_role')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.id !=', $this->general_library->getId())
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
@@ -336,6 +343,7 @@
                                             ->join('m_role c', 'c.id = b.id_m_role')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.id !=', $this->general_library->getId())
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)
@@ -349,6 +357,7 @@
                                             ->join('m_role c', 'c.id = b.id_m_role')
                                             ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
                                             ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.id !=', $this->general_library->getId())
                                             ->where('a.flag_active', 1)
                                             ->where('b.flag_active', 1)
                                             ->where('a.flag_active', 1)

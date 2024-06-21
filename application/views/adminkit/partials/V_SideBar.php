@@ -330,7 +330,7 @@
 					</a>
 		</li>
 
-<!-- 
+
 		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
@@ -354,7 +354,7 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li> -->
+							</li>
 		
 		</ul>
 	</li>
@@ -419,11 +419,11 @@
 				</a>
 				</li>
 
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Pensiun
 				</a>
-				</li> -->
+				</li>
 				<?php } ?>
 			</ul>
 		</li>

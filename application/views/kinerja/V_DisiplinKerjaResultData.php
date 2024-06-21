@@ -1,4 +1,5 @@
 <?php if($result){ ?>
+    <div class="table-responsive">
     <table border=1 class="table table-hover" id="table_disiplin_kerja_result_data">
         <thead>
             <th class="text-center">No</th>
@@ -71,6 +72,7 @@
             <?php $no++; } ?>
         </tbody>
     </table>
+    </div>
 <?php } else { ?>
     <div class="col-12 text-center">
         <h6>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h6>

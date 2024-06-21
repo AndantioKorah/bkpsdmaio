@@ -12,46 +12,53 @@
             <!-- <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank"> -->
                 <!-- <center><h5><strong>REKAPITULASI PENILAIAN DISIPLIN KERJA</strong></h5></center> -->
                 <br>
-                
-                <table style="width: 100%; position: relative;">
-                    <tr>
-                        <td style="text-align: right;" colspan=3>
-                            <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp')?>" target="_blank" method="post">
-                            <!-- <form class="form_download_berkas_tpp" method="post"> -->
+                <div class="col-lg-12 row">
+                    <div class="col-lg-4">
+                        <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp')?>" target="_blank" method="post">
+                            <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
+                            <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
+                            <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
+                            <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
+                                <i class="fa fa-download"></i> Download as PDF
+                            </button>
+                        </form>
+                    </div>
+                    <?php if($this->general_library->isProgrammer()){ ?>
+                        <div class="col-lg-4">
+                            <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp/0/1')?>" target="_blank" method="post">
                                 <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
-                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
-                                    <i class="fa fa-download"></i> Download Berkas TPP
+                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success">
+                                    <i class="fa fa-download"></i> Download as Excel
                                 </button>
-                                <!-- <button id="btn_download_berkas_loading" style="display: none;" type="button" disabled class="btn btn-block btn-danger">
-                                    <i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...
-                                </button> -->
                             </form>
-                            <?php if($tpp_tambahan){ ?>
-                                <div class="btn-group" role="group" style="margin-top: 10px;">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    TPP TAMBAHAN
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <?php foreach($tpp_tambahan as $tt) {?>
-                                            <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp/'.$tt['id'])?>" target="_blank" method="post">
-                                                <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
-                                                <input style="display: none;" autocomplete="off" class="form-control" id="tahun_<?=$tt['id']?>" name="tahun" value="<?= $tt['tahun']; ?>" />
-                                                <input style="display: none;" autocomplete="off" class="form-control" id="bulan_<?=$tt['id']?>" name="bulan" value="<?= $tt['bulan']; ?>" />
-                                                <input style="display: none;" autocomplete="off" class="form-control" id="presentasi_tpp_tambahan_<?=$tt['id']?>" name="presentasi_tpp_tambahan" value="<?= $tt['presentasi_tpp_tambahan']; ?>" />
-                                                <input style="display: none;" autocomplete="off" class="form-control" id="nama_tpp_tambahan_<?=$tt['id']?>" name="nama_tpp_tambahan" value="<?= $tt['nama_tpp_tambahan']; ?>" />
-                                                <a class="dropdown-item"><button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
-                                                    <i class="fa fa-download"></i> <?=$tt['nama_tpp_tambahan']?>
-                                                </button></a>
-                                            </form>
-                                        <?php } ?>
-                                        <!-- <a class="dropdown-item" href="#">Dropdown link</a> -->
-                                    </div>
-                                </div>
-                            <?php } ?>
-                        </td>
-                    </tr>
+                        </div>
+                    <?php } ?>
+                    <?php if($tpp_tambahan){ ?>
+                        <div class="btn-group col-lg-4" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-block btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            TPP TAMBAHAN
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <?php foreach($tpp_tambahan as $tt) {?>
+                                    <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp/'.$tt['id'])?>" target="_blank" method="post">
+                                        <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
+                                        <input style="display: none;" autocomplete="off" class="form-control" id="tahun_<?=$tt['id']?>" name="tahun" value="<?= $tt['tahun']; ?>" />
+                                        <input style="display: none;" autocomplete="off" class="form-control" id="bulan_<?=$tt['id']?>" name="bulan" value="<?= $tt['bulan']; ?>" />
+                                        <input style="display: none;" autocomplete="off" class="form-control" id="presentasi_tpp_tambahan_<?=$tt['id']?>" name="presentasi_tpp_tambahan" value="<?= $tt['presentasi_tpp_tambahan']; ?>" />
+                                        <input style="display: none;" autocomplete="off" class="form-control" id="nama_tpp_tambahan_<?=$tt['id']?>" name="nama_tpp_tambahan" value="<?= $tt['nama_tpp_tambahan']; ?>" />
+                                        <a class="dropdown-item"><button id="btn_download_berkas" type="submit" class="btn btn-block btn-info">
+                                            <i class="fa fa-download"></i> <?=$tt['nama_tpp_tambahan']?>
+                                        </button></a>
+                                    </form>
+                                <?php } ?>
+                                <!-- <a class="dropdown-item" href="#">Dropdown link</a> -->
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <table style="width: 100%; position: relative;">
                     <tr>
                         <td>SKPD</td>
                         <td>:</td>

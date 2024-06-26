@@ -1590,16 +1590,19 @@ class M_Kepegawaian extends CI_Model
             
         $target_dir						= './arsiptimkerja/';
         
-		
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = str_replace(' ', '', $random_number.$_FILES['file']['name']);
+
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
+        $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
       
-	
+	    
 		// coba upload file		
 		if (!$this->upload->do_upload('file')) {
 
@@ -1609,8 +1612,7 @@ class M_Kepegawaian extends CI_Model
             return $res;
 		} else {
 			$dataFile 			= $this->upload->data();
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $random_number.$dataFile['file_name'];
+           
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
@@ -1666,13 +1668,18 @@ class M_Kepegawaian extends CI_Model
             
         $target_dir						= './arsipinovasi/';
         
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = str_replace(' ', '', $random_number.$_FILES['file']['name']);
 		
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE;
+        $config['file_name']            = "$filename";
+        
 
+       
 		$this->load->library('upload', $config);
       
 	
@@ -1686,7 +1693,7 @@ class M_Kepegawaian extends CI_Model
 		} else {
 			$dataFile 			= $this->upload->data();
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $random_number.$dataFile['file_name'];
+            
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);

@@ -480,6 +480,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
 				</li>
+
 				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
 
 				<li class="sidebar-item ">

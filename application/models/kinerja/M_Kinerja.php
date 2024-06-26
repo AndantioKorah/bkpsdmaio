@@ -1727,7 +1727,7 @@
 
 
         if($status == 1){
-            $this->db->order_by('created_date', 'asc');
+            $this->db->order_by('created_date', 'desc');
         } else {
             $this->db->order_by('a.updated_date', 'desc');
         }

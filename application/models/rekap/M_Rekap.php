@@ -914,6 +914,10 @@
         $result['kadis'] = 0;
         $result['flag_rs'] = 0;
 
+        if($id_unitkerja == '7000096'){
+            $id_unitkerja = '3010000';
+        }
+
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $id_unitkerja)

@@ -9,6 +9,8 @@ require FCPATH . '/vendor/autoload.php';
 // use mpdf\mpdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// use Symfony\Component\HttpFoundation\StreamedResponse;
+// use Symfony\Component\HttpFoundation\Response;
 
 class C_Rekap extends CI_Controller
 {
@@ -381,43 +383,65 @@ class C_Rekap extends CI_Controller
         if($flag_excel == 0){
             $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
         } else {
-            $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            // $html = $this->load->view('rekap/V_BerkasTppDownloadExcel', $data, true);
 
             // $this->load->helper("file");
             // $fileName = "temp_file_name.html";
             // $path = "arsiptpp/";
             // $path_file = $path . $fileName; 
+            $newfilename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.xlsx';
 
-            // if (write_file($path_file, $html)){
+            if (write_file($path_file, $html)){
             //     //create spreadsheet the temp html
             //     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
             //     $spreadsheet = $reader->load($path_file);
 
-            //     //write out to html file
-            //     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Html($spreadsheet);
-            //     $writer->save($path."05featuredemo.htm");
+            //     //write out to excel file
+            //     // $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            //     // $writer->save($path.$newfilename);
+            //     // file_get_contents($path.$newfilename);
 
+            //     header('Content-Type: application/vnd.ms-excel');
+            //     header('Content-Disposition: attachment;filename="GeneratedFile.xls"');
+            //     header('Cache-Control: max-age=0');
+
+            //     $writer = new Xlsx($spreadsheet);
+            //     $writer->save('php://output');
+            //     fastcgi_finish_request();
+
+            //     // $streamedResponse = new StreamedResponse();
+            //     // $streamedResponse->setCallback(function () {
+            //     //     $spreadsheet = //create you spreadsheet here;
+
+            //     //     $writer =  new Xlsx($spreadsheet);
+            //     //     $writer->save('php://output');
+            //     // });
+
+            //     // $streamedResponse->setStatusCode(Response::HTTP_OK);
+            //     // $streamedResponse->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //     // $streamedResponse->headers->set('Content-Disposition', 'attachment; filename="your_file.xlsx"');
+
+            //     // return $streamedResponse->send();
+                
             //     //delete the temporary file
             //     unlink($path_file);
-            // }
+            }
 
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-            $spreadsheet = $reader->loadFromString($html);
+            
+            // $headers = [];
 
-            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
-            // $writer->save('arsitpp/write.xls'); 
-            ob_end_clean();
-            header('Content-type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename=example.xls');
-            $writer->save('php://output');
-            dd('asdsad');
+            // $spreadsheet = new Spreadsheet();
+            // $spreadsheet->setActiveSheetIndex(0);   
+            // $spreadsheet->setTitle('Rekap Kehadiran');
+
         }
         //lock TPP
-        $data['param']['url_file'] = $folder.'/'.$filename;
-        if($id_m_tpp_tambahan == 0){
-            $this->rekap->lockTpp($data['param']);
+        if($flag_excel == 0){
+            $data['param']['url_file'] = $folder.'/'.$filename;
+            if($id_m_tpp_tambahan == 0){
+                $this->rekap->lockTpp($data['param']);
+            }
         }
-
         // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }
 

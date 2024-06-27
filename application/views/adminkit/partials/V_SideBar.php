@@ -375,6 +375,7 @@
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
+	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -405,7 +406,8 @@
 				<?php if($this->general_library->isProgrammer() ||
 				$this->general_library->isAdminAplikasi() || 
 				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
-				$this->general_library->isKepalaPd()){ ?>
+				$this->general_library->isKepalaPd() ||
+				$this->general_library->isVerifPermohonanCuti()){ ?>
 					<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
@@ -559,6 +561,7 @@
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
 				){ ?>
 				<li class="sidebar-item ">
@@ -628,7 +631,9 @@
 				|| $this->general_library->isPejabatEselon() 
 				|| $this->general_library->isKepalaPd()
 				|| $this->general_library->isWalikota()
-				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())){ ?>
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai

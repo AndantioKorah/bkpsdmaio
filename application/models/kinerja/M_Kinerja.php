@@ -2107,7 +2107,7 @@
                         c.kepalaskpd, c.prestasi_kerja, c.beban_kerja, c.kondisi_kerja, c.kelas_jabatan, c.jenis_jabatan, c.id_jabatanpeg, a.skpd,
                         a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
                         g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
-                        g.kondisi_kerja AS kondisi_kerja_tambahan, a.statuspeg,
+                        g.kondisi_kerja AS kondisi_kerja_tambahan, a.statuspeg, e.id_unitkerja,
                         g.nama_jabatan AS nama_jabatan_tambahan, a.besaran_gaji')
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
@@ -2141,15 +2141,19 @@
             //     dd($pegawai);
             // }
         // }
-        
+
         if($flag_sekolah_kecamatan == 0){
-            // ambil jika ada pegawai PLT / PLH dari luar dinas
+            // ambil jika ada pegawai PLT / PLH
             $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null, $pegawai);
         }
-
+        
         if($pegawai){
             $i = 0;
+            $temp = null;
             foreach($pegawai as $p){
+                if(isset($result[$p['id_m_user']])){
+                    $temp[$p['id_m_user']] = $result[$p['id_m_user']];
+                }
                 $result[$p['id_m_user']] = $p;
 
                 $result[$p['id_m_user']]['kepala_skpd'] = $p['kepalaskpd'];
@@ -2282,10 +2286,22 @@
                 + floatval($result[$p['id_m_user']]['kondisi_kerja'])) 
                 / 100;
                 
-                $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
                 $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
+                $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
+
                 if(isset($p['presentasi_tpp'])){
-                    $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                    if($p['id_unitkerja'] == $data['id_unitkerja']){
+                        // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
+                        if(isset($temp[$p['id_m_user']])){
+                            $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
+                            $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                            $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp; 
+                        }
+                    }
+                    else {
+                        // jika pegawai plt / plh bukan di unitkerja yang sama, maka hanya presentasi tambahan
+                        $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                    }
                 }
 
                 $explode = explode(".", $result[$p['id_m_user']]['pagu_tpp']);

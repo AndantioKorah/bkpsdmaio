@@ -155,6 +155,7 @@ define('ID_BIDANG_PEKIN', 166);
 define('URL_MENU_PEKIN', ['rekapitulasi/absensi', 'dokumen-pendukung-absensi/verifikasi']);
 define('ID_UNITKERJA_DIKBUD', 3010000);
 define('ID_UNITKERJA_BKPSDM', 4018000);
+define('ID_JABATAN_KABAN_BKPSDM', "4018000JS01");
 define('DOKUMEN_PENDUKUNG_DISIPLIN_KERJA', 'assets/dokumen_pendukung_disiplin_kerja');
 
 define('TARGET_BOBOT_PRODUKTIVITAS_KERJA', 60);

@@ -1260,7 +1260,7 @@
 
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
-            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
@@ -2467,7 +2467,7 @@
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
-                if($param['id_m_tpp_tambahan'] != 0){
+                if(isset($param['id_m_tpp_tambahan']) && $param['id_m_tpp_tambahan'] != 0){
                     $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
                 }
 

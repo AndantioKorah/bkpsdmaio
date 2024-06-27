@@ -5000,7 +5000,7 @@ public function submitEditJabatan(){
 
     public function loadProgressCuti($id){
         $result = null;
-        $progress = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2')
+        $progress = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.jabatan, c.id_jabatan_tambahan')
                         ->from('t_progress_cuti a')
                         ->join('m_user b', 'a.id_m_user_verifikasi = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -5173,6 +5173,14 @@ public function submitEditJabatan(){
                     $this->db->insert('t_cron_wa', $cronWa);
                     foreach($progressCuti as $pc){
                         $this->db->insert('t_progress_cuti', $pc);
+                        if($pc['urutan'] == '1'){
+                            $last_id = $this->db->insert_id();
+                            $this->db->where('id', $insert_id)
+                            ->update('t_permohonan_cuti', [
+                                'status_pengajuan_cuti' => 'Verifikasi '.$pc['nama_jabatan'],
+                                'id_t_progress_cuti' => $last_id
+                            ]);
+                        }
                     }
                 } else {
                     $res['code'] = 1;
@@ -5479,17 +5487,23 @@ public function submitEditJabatan(){
             $data['id_unitkerja'] = 0;
         }
 
-        $this->db->select('a.*, b.nama_status, c.nm_cuti, e.gelar1, e.nama, e.gelar2, e.nipbaru_ws, f.nm_unitkerja')
+        // if(!$this->general_library->isKepalaBkpsdm() 
+        // || !$this->general_library->isAdminAplikasi() 
+        // || !$this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+        // || !$this->general_library->isProgrammer()){
+    	// 	$data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
+        // }
+
+        $this->db->select('a.*, c.nm_cuti, e.gelar1, e.nama, e.gelar2, e.nipbaru_ws, f.nm_unitkerja, a.status_pengajuan_cuti, h.id_m_user_verifikasi')
                 ->from('t_pengajuan_cuti a')
-                ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
                 ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti')
                 ->join('m_user d', 'a.id_m_user = d.id')
                 ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
                 ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
-                ->join('t_progress_cuti g', 'a.id = g.id_t_pengajuan_cuti')
+                ->join('t_progress_cuti g', 'a.id = g.id_t_pengajuan_cuti', 'left')
+                ->join('t_progress_cuti h', 'a.id_t_progress_cuti = h.id', 'left')
                 ->where('a.flag_active', 1)
                 ->group_by('a.id')
-                ->order_by('a.id_m_status_pengajuan_cuti', 'asc')
                 ->order_by('created_date', 'asc');
 
         if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -5501,6 +5515,17 @@ public function submitEditJabatan(){
             $this->db->where('g.id_m_user_verifikasi', $this->general_library->getId());
         }
 
+        $result = $this->db->get()->result_array();
+        // dd($result);
+        
+        usort($result, function($a, $b) {
+            if ($a['id_m_user_verifikasi'] != $this->general_library->getId()) {
+                return 1;
+            } elseif ($a['id_m_user_verifikasi'] == $this->general_library->getId()) {
+                return -1;
+            }
+            return 0;
+        });
         // if(isset($data['id_m_status_pengajuan_cuti']) && $data['id_m_status_pengajuan_cuti'] != "0"){
         //     $this->db->where('a.id_m_status_pengajuan_cuti', $data['id_m_status_pengajuan_cuti']);
         // }
@@ -5508,7 +5533,7 @@ public function submitEditJabatan(){
         // if($this->general_library->isKepalaPd() && !$this->general_library->isKepalaBkpsdm()){
         //     $this->db->where('e.skpd', $this->general_library->getUnitKerjaPegawai());
         // }
-        return $this->db->get()->result_array();
+        return $result;
     }
 
     public function authVerifEncryptCuti($enc_string){
@@ -5560,7 +5585,7 @@ public function submitEditJabatan(){
         $result['detail'] = null;
         $meta = null;
         $result = $this->db->select('a.*, c.nm_cuti, e.gelar1, e.nama, e.gelar2, e.nipbaru_ws, f.nm_unitkerja,
-                g.nama_jabatan, h.nm_pangkat, d.id as id_m_user, g.eselon, f.id_unitkerja')
+                g.nama_jabatan, h.nm_pangkat, d.id as id_m_user, g.eselon, f.id_unitkerja, i.id_m_user_verifikasi')
                 ->from('t_pengajuan_cuti a')
                 ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti', 'left')
                 ->join('m_user d', 'a.id_m_user = d.id', 'left')
@@ -5568,6 +5593,7 @@ public function submitEditJabatan(){
                 ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja', 'left')
                 ->join('db_pegawai.jabatan g', 'e.jabatan = g.id_jabatanpeg', 'left')
                 ->join('db_pegawai.pangkat h', 'e.pangkat = h.id_pangkat', 'left')
+                ->join('t_progress_cuti i', 'a.id_t_progress_cuti = i.id', 'left')
                 ->where('a.flag_active', 1)
                 ->where('a.id', $id)
                 ->get()->row_array();
@@ -5604,123 +5630,115 @@ public function submitEditJabatan(){
     }
 
     public function saveVerifikasiPermohonanCuti($status, $id, $kepalapd = 0, $kepalabkpsdm = 0){
+        $this->db->trans_begin();
+
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
         $res['status'] = null;
         $data_verif = $this->input->post();
-        $update['id_m_status_pengajuan_cuti'] = 0;
         
         $data = $this->db->select('a.*, b.nm_cuti, d.handphone, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                         f.nama_jabatan, g.nm_unitkerja, g.id_unitkerja')
                         ->from('t_pengajuan_cuti a')
                         ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
                         ->join('m_user c', 'c.id = a.id_m_user')
-                        ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
-                        ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
-                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
-                        ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
+                        ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username', 'left')
+                        ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat', 'left')
+                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja', 'left')
                         ->where('a.id', $id)
                         ->get()->row_array();
 
         $res['data'] = $data;
+        $res['progress'] = $this->getProgressCutiAktif($id);
 
-        if($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()){
-            if($data['id_m_status_pengajuan_cuti'] != 2){
-                if($data['id_m_status_pengajuan_cuti'] == 1 && $data['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){
-                    $update['id_m_status_pengajuan_cuti'] = $status == 0 ? 5 : 4;
-                    $update['id_m_user_verifikasi_atasan'] = $this->general_library->getId();
-                    $update['tanggal_verifikasi_atasan'] = date('Y-m-d H:i:s');
-                    $update['keterangan_verifikasi_atasan'] = $data_verif['keterangan_verif'];
-                    $update['id_m_user_verifikasi_kepala_bkpsdm'] = $this->general_library->getId();
-                    $update['tanggal_verifikasi_kepala_bkpsdm'] = date('Y-m-d H:i:s');
-                    $update['keterangan_verifikasi_kepala_bkpsdm'] = $data_verif['keterangan_verif'];
-                } else {
-                    $res['code'] = 1;
-                    $res['message'] = "Tidak bisa melakukan Verifikasi pada tahap ini";
+        if($res['progress']){
+            $update_data_pengajuan = null;
+            if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
+                $res['code'] = 1;
+                $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
+            } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
+                $reply = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", \n Yth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
+                if($status == 1){ // jika diterima
+                    $reply .= "*DITERIMA*";
+                    $update_data_pengajuan = [
+                        'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
+                        'id_t_progress_cuti' => $res['progress']['next']['id']
+                    ];
+                    // jika masih ada next verifikator
+                    if($res['progress']['next']){
+                        $replyToNextVerifikator = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        if($res['progress']['next']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){ // jika next kaban, buat nods SK Cuti
+                            $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
+                            $update['url_sk_temp'] = $path_file;
+                            // dd($path_file);
+                            $mpdf = new \Mpdf\Mpdf([
+                                'format' => 'Legal-P',
+                                // 'debug' => true
+                            ]);
+                            $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $res, true);
+                            $mpdf->WriteHTML($html);
+                            $mpdf->showImageErrors = true;
+                            $mpdf->Output($path_file, 'F');
+                            $this->db->where('id', $data['id'])
+                                        ->update('t_pengajuan_cuti', $update);
+                        }
+
+                        $cronWaNextVerifikator = [
+                            'sendTo' => convertPhoneNumber($res['progress']['next']['nohp']),
+                            'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                            'type' => 'text',
+                            'ref_id' => $data['id'],
+                            'jenis_layanan' => 'Cuti'
+                        ];
+                        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                    }
+                } else if($status == 0){ // jika ditolak
+                    $reply .= "*DITOLAK*";
+                    $update_data_pengajuan = [
+                        'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan']
+                    ];
+                }
+                $reply .= ' oleh '.$res['progress']['current']['nama_jabatan'].' pada '.formatDateNamaBulanWT(date('Y-m-d H:i:s')); // pilih dari progress untuk progress yang aktif
+                if($res['code'] == 0){
+                    if($update_data_pengajuan){
+                        $this->db->where('id', $data['id'])
+                                ->update('t_pengajuan_cuti', $update_data_pengajuan);
+                    }
+
+                    $cronWaPegawai = [
+                        'sendTo' => convertPhoneNumber($data['handphone']),
+                        'message' => trim($reply.FOOTER_MESSAGE_CUTI),
+                        'type' => 'text',
+                        'ref_id' => $data['id'],
+                        'jenis_layanan' => 'Cuti'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWaPegawai);
+
+                    $this->db->where('id', $res['progress']['current']['id'])
+                                ->update('t_progress_cuti', [
+                                    'flag_verif' => 1,
+                                    'flag_diterima' => $status,
+                                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                                    'keterangan_verif' => trim($data_verif['keterangan_verif'])
+                                ]);
                 }
             } else {
-                $update['id_m_status_pengajuan_cuti'] = $status == 0 ? 5 : 4;
-                $update['id_m_user_verifikasi_kepala_bkpsdm'] = $this->general_library->getId();
-                $update['tanggal_verifikasi_kepala_bkpsdm'] = date('Y-m-d H:i:s');
-                $update['keterangan_verifikasi_kepala_bkpsdm'] = $data_verif['keterangan_verif'];
+                $res['code'] == 1;
+                $res['message'] == 'Maaf, Anda tidak dapat melakukan verifikasi pada tahap ini'; 
+                $res['data'] == null;
             }
-        } else if($kepalapd == 1 || $this->general_library->isKepalaPd()){
-            if($data['id_m_status_pengajuan_cuti'] != 1){
-                $res['code'] = 1;
-                $res['message'] = "Tidak bisa melakukan Verifikasi pada tahap ini";
-            } else {
-                $update['id_m_status_pengajuan_cuti'] = $status == 0 ? 3 : 2;
-                $update['id_m_user_verifikasi_atasan'] = $this->general_library->getId();
-                $update['tanggal_verifikasi_atasan'] = date('Y-m-d H:i:s');
-                $update['keterangan_verifikasi_atasan'] = $data_verif['keterangan_verif'];
-            }
+        } else {
+            $res['code'] == 1;
+            $res['message'] == 'Terjadi Kesalahan';
+            $res['data'] == null;
         }
 
-        if($res['code'] == 0){
-            $message_to_pegawai = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data)."\nPermohonan Pengajuan ".$data['nm_cuti']." Anda ";
-            $send_to_pegawai = $data['handphone'];
-            $path_file = null;
-            if(($res['code'] == 0 && $res['data']['id_m_status_pengajuan_cuti'] == 2 && $status == 1) ||
-            (($kepalabkpsdm == 1 || $this->general_library->isKepalaBkpsdm()) && $status == 1)){
-                $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
-                $update['url_sk_temp'] = $path_file;
-                // dd($path_file);
-                $mpdf = new \Mpdf\Mpdf([
-                    'format' => 'Legal-P',
-                    // 'debug' => true
-                ]);
-                $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $res, true);
-                $mpdf->WriteHTML($html);
-                $mpdf->showImageErrors = true;
-                $mpdf->Output($path_file, 'F');
-            }
-            $this->db->where('id', $id)
-                        ->update('t_pengajuan_cuti', $update);
-
-            $kepala_bkpsdm = $this->db->select('a.*')
-                                        ->from('db_pegawai.pegawai a')
-                                        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                        ->where('c.kepalaskpd', 1)
-                                        ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-                                        ->get()->row_array();
-
-            if($update['id_m_status_pengajuan_cuti'] == 2){ //disetujui atasan, kirim whatsapp ke pegawai dan ke kepala bkpsdm untuk verif
-                $message_to_pegawai .= "telah *disetujui oleh Kepala PD Anda* dan saat ini sedang menunggu Verifikasi oleh Keplaa BKPSDM. Terima kasih.";
-                $encrypt = simpleEncrypt($kepala_bkpsdm['nipbaru_ws'].'-'.$id);
-                $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                $message_to_kepala_bkpsdm = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", Permohonan Pengajuan ".$data['nm_cuti']." pegawai atas nama ".getNamaPegawaiFull($data)." telah diverifikasi oleh Kepala PD dan membutuhkan verifikasi Kepala BKPSDM. Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
-                
-                // $this->maxchatlibrary->sendText($kepala_bkpsdm['handphone'], $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI, 0, 0);
-                $cronWa = [
-                    'sendTo' => $kepala_bkpsdm['handphone'],
-                    'message' => $message_to_kepala_bkpsdm.FOOTER_MESSAGE_CUTI,
-                    'type' => 'text'
-                ];
-                $this->general->saveToCronWa($cronWa);
-
-            } else if($update['id_m_status_pengajuan_cuti'] == 3){ //ditolak atasan
-                $message_to_pegawai .= '*ditolak oleh Kepala PD* Anda dengan keterangan: *"'.$update['keterangan_verifikasi_atasan'].'"*';
-                $this->deletePermohonanCuti($id, 0);
-            } else if($update['id_m_status_pengajuan_cuti'] == 4){ //diterima kepala bkpsdm dan menunggu DS
-                $message_to_pegawai .= 'telah *disetujui oleh Kepala BKPSDM* dan saat ini sedang menunggu untuk proses *DS (Digital Sign)*. Terima kasih.';
-            } else if($update['id_m_status_pengajuan_cuti'] == 5){ //ditolak oleh kepala BKPSDM
-                $message_to_pegawai .= '*ditolak oleh Kepala BKPSDM* dengan keterangan: *"'.$update['keterangan_verifikasi_kepala_bkpsdm'].'"*';
-                $this->deletePermohonanCuti($id, 0);
-            }
-            $cronWa = [
-                'sendTo' => convertPhoneNumber($send_to_pegawai),
-                'message' => $message_to_pegawai.FOOTER_MESSAGE_CUTI,
-                'type' => 'text'
-            ];
-            $this->general->saveToCronWa($cronWa);
-            // $this->maxchatlibrary->sendText($send_to_pegawai, $message_to_pegawai.FOOTER_MESSAGE_CUTI, 0, 0);
-
-            // if($this->general_library->isKepalaBkpsdm() && $status == 1){
-            //     //pembuatan file SK simpan di url_sk_temp sebelum DS
-            //     $res['status'] = $status;
-            //     $res['data'] = $data;
-            // }
+        if($res['code'] == 1){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
         }
 
         return $res;
@@ -6418,7 +6436,10 @@ public function submitEditJabatan(){
                     ->join('m_user b', 'a.id_m_user = b.id')
                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                     ->join('db_pegawai.unitkerja d', 'd.id_unitkerja = c.skpd')
-                    ->where('a.id_m_status_pengajuan_cuti', 4)
+                    ->join('t_progress_cuti e', 'a.id_t_progress_cuti = e.id')
+                    ->join('m_user f', 'e.id_m_user_verifikasi = f.id')
+                    ->join('db_pegawai.pegawai g', 'f.username = g.nipbaru_ws')
+                    ->where('g.jabatan', ID_JABATAN_KABAN_BKPSDM)
                     ->where('a.url_sk', null)
                     ->where('a.flag_active', 1)
                     ->where('a.batchId IS NULL')

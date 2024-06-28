@@ -965,6 +965,25 @@
 				</span>
 			</a>	
 		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaian-pimpinan" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+			Penilaian Pimpinan
+				</span>
+			</a>	
+		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaiain-rekan" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+			Penilaian Rekan Kerja
+				</span>
+			</a>	
+		</li>
+
 		<?php } ?>
 
 </ul>

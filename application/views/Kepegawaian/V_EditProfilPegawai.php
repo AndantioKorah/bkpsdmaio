@@ -340,7 +340,7 @@
         <label for="inputPassword6" class="col-form-label"> No Seri Karpeg </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="" class="form-control" value="">
+        <input type="text" id="edit_karpeg" name="edit_karpeg" class="form-control" value="<?= $profil_pegawai['karpeg'];?>">
       </div>
 
       <div class="col-lg-2">

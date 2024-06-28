@@ -3092,6 +3092,7 @@ public function submitEditProfil(){
     $data["jenispeg"] = $datapost["edit_jenis_pegawai"];
     $data["nik"] = $datapost["edit_nik"];
     $data["taspen"] = $datapost["edit_taspen"];
+    $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
 

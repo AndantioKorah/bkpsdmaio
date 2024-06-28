@@ -67,7 +67,9 @@
     || $this->general_library->isPejabatEselon() 
     || $this->general_library->isKepalaPd()
     || $this->general_library->isWalikota()
-    || stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())){
+    || stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+    || stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+    ){
     ?>
     <div onclick="href('kinerja/verifikasi')" class="col">
         <div class="card menu-container">

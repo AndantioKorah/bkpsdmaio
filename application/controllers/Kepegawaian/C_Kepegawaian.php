@@ -1452,7 +1452,8 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function verifikasiPermohonanCuti(){
-		$data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
+		// $data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
+		$data['unitkerja'] = null;
 		if($this->general_library->isKepalaBkpsdm() 
         	|| $this->general_library->isAdminAplikasi() 
             || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 

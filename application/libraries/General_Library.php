@@ -427,6 +427,12 @@ class General_library
         return getNamaPegawaiFull($this->userLoggedIn);
     }
 
+    public function isVerifPermohonanCuti(){
+        return stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan_tambahan'])
+        ? true : false;
+    }
+
     public function getNamaJabatan(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn['nama_jabatan'];
@@ -438,7 +444,7 @@ class General_library
     }
 
     public function isKepalaBkpsdm(){
-        return $this->getIdJabatan() == "4018000JS01";
+        return $this->getIdJabatan() == ID_JABATAN_KABAN_BKPSDM;
     }
 
     public function getEselon(){

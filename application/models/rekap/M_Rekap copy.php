@@ -1303,7 +1303,6 @@
     }
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){
-        // dd($flag_alpha);
         $rs = null;
         $periode = null;
         $list_hari = null;
@@ -1324,7 +1323,7 @@
                                     ->get()->row_array();
             }         
         }
-
+        
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
             b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat,
@@ -1364,7 +1363,7 @@
 
             $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
-
+        
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
             if($flag_rekap_personal == 1){
@@ -1435,7 +1434,7 @@
             // }
 
             $list_data_absen = $this->db->get()->result_array();
-            
+
             $data_absen = null;
             if($list_data_absen){
                 foreach($list_data_absen as $lda){
@@ -1457,28 +1456,21 @@
                 }
                 $data_absen = $tlp;
                 // dd(json_encode($data_absen));
-            } else {
-                $temp_tlp = $tlp;
-                $tlp = null;
-
-                foreach($temp_tlp as $tmplp){
-                    foreach($list_hari as $lhtemp){
-                        $tlp[$tmplp['nip']] = $tmplp;
-                        $tlp[$tmplp['nip']]['absen'][$lhtemp]['jam_masuk'] = ""; 
-                        $tlp[$tmplp['nip']]['absen'][$lhtemp]['jam_pulang'] = ""; 
-                    }
-                }
-                $data_absen = $tlp;
             }
-
+            // else {
+            //     return null;
+            // }
+            $data['list_hari'] = $list_hari;
             if($data_absen){
                 $data = $temp;
                 $data['result'] = $data_absen;
                 $data['list_hari'] = $list_hari;
                 // $raw_data_excel = json_encode($data);
-            } else {
-                return null;
             }
+            
+            // else {
+            //     return null;
+            // }
 
         } else {
             if(!$data['unitkerja']){
@@ -1512,7 +1504,7 @@
                 $lp[$l['nip']] = $l;
             }
         }
-        
+
         $jskpd = 1;
         if(in_array($uker['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
             $jskpd = 2;
@@ -1633,7 +1625,7 @@
                 
             }
         }
-        $tempresult = $data['result'];
+        $tempresult = isset($data['result']) ? $data['result'] : null;
         $data['result'] = null;
         
         $i = 0;
@@ -1685,33 +1677,39 @@
         // }
         // usort($tempresult, 'comparatorTempResult');
         // dd($tempresult);
+        if(!$tempresult){
+            $tempresult = $lp;
+        }        
 
-        foreach($tempresult as $tr){
-            // if(!isset($tr['nip'])){
-            //     dd($tr);
-            // }
-            if(isset($tr['nip']) && isset($lp[$tr['nip']])){
-                $lp[$tr['nip']] = $tr;
-                $lp[$tr['nip']]['rekap']['tmk1'] = 0;
-                $lp[$tr['nip']]['rekap']['tmk2'] = 0;
-                $lp[$tr['nip']]['rekap']['tmk3'] = 0;
-                $lp[$tr['nip']]['rekap']['pksw1'] = 0;
-                $lp[$tr['nip']]['rekap']['pksw2'] = 0;
-                $lp[$tr['nip']]['rekap']['pksw3'] = 0;
-                $lp[$tr['nip']]['rekap']['TK'] = 0;
-                $lp[$tr['nip']]['rekap']['jhk'] = 0;
-                $lp[$tr['nip']]['rekap']['hadir'] = 0;
-                // $lp[$tr['nip']]['rekap']['hadir_mk'] = 0;
-                if($data['disiplin_kerja']){
-                    foreach($data['disiplin_kerja'] as $dk){
-                        $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+        if($tempresult){
+            foreach($tempresult as $tr){
+                // if(!isset($tr['nip'])){
+                //     dd($tr);
+                // }
+                if(isset($tr['nip']) && isset($lp[$tr['nip']])){
+                    $lp[$tr['nip']] = $tr;
+                    $lp[$tr['nip']]['rekap']['tmk1'] = 0;
+                    $lp[$tr['nip']]['rekap']['tmk2'] = 0;
+                    $lp[$tr['nip']]['rekap']['tmk3'] = 0;
+                    $lp[$tr['nip']]['rekap']['pksw1'] = 0;
+                    $lp[$tr['nip']]['rekap']['pksw2'] = 0;
+                    $lp[$tr['nip']]['rekap']['pksw3'] = 0;
+                    $lp[$tr['nip']]['rekap']['TK'] = 0;
+                    $lp[$tr['nip']]['rekap']['jhk'] = 0;
+                    $lp[$tr['nip']]['rekap']['hadir'] = 0;
+                    // $lp[$tr['nip']]['rekap']['hadir_mk'] = 0;
+                    if($data['disiplin_kerja']){
+                        foreach($data['disiplin_kerja'] as $dk){
+                            $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+                        }
                     }
-                }
-                foreach($list_hari as $l){
-                    if($l <= date('Y-m-d')){
+                    foreach($list_hari as $l){
+                        if($l <= date('Y-m-d')){
+
                         if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
+                            
                             $lp[$tr['nip']]['rekap']['jhk']++;
-                            // Surat Tugas
+                    // Surat Tugas
                             if(isset($dokpen[$tr['nip']][$l])){  
                                 if($dokpen[$tr['nip']][$l] == "TLS"){
                                     $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
@@ -1726,9 +1724,9 @@
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
                                 } 
                             }
-                            
-                            // Tutup Surat Tugas
+                    // Tutup Surat Tugas
                             $flag_check = 1;
+                            dd($lp);
                             if($lp[$tr['nip']]['absen'][$l]['ket'] == 'TK' && $flag_absen_aars == 0){
                                 if(isset($dokpen[$tr['nip']][$l])){  
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
@@ -1758,10 +1756,6 @@
                                 } else {
                                     if((!$lp[$tr['nip']]['absen'][$l]['jam_masuk'] || 
                                         $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "")){
-                                            // if($l == '2024-04-30'){
-                                            //     dd('asd');
-                                            //     dd($lp[$tr['nip']]['absen'][$l]);
-                                            // }
                                             if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == 'TLS'){ // cek jika TLS dan tidak ada absen masuk
                                                 // $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "00:00";
                                                 // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
@@ -1873,10 +1867,12 @@
                             }   
                         }
                     }
-                } 
+                    } 
+                }
             }
         }
         $data['result'] = $lp;
+        $data['periode'] = getNamaBulan($data['bulan']).' '.$data['tahun'];
         // if($tr['nip'] == 197612142009022002){
         //     dd($tr);
         // }

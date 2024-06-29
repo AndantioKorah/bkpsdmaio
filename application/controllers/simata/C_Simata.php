@@ -246,7 +246,7 @@ class C_Simata extends CI_Controller
         $data['timkerja'] = $this->simata->getPengalamanTimPegawai($id_peg);
         $eselonpegawai = $data['profil_pegawai']['eselon']; 
         $data['penugasan'] = $this->simata->getPenugasanPengawai($id_peg,$eselonpegawai);
-        // dd($data['kriteria_kinerja_1']);
+        // dd($data['penugasan']);
 
         $this->load->view('simata/V_ModalPenilaianKinerja', $data);
     }
@@ -353,7 +353,7 @@ class C_Simata extends CI_Controller
         $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
         $data['kode'] = $kode;  
         $data['jenis_pengisian'] = $jenis_pengisian;
-    //    dd( $data['nilai_potensial']);
+    //    dd( $data['pangkatgol']);
         $this->load->view('simata/V_ModalPenilaianPotensial', $data);
     }
 
@@ -549,16 +549,6 @@ class C_Simata extends CI_Controller
         //     $this->load->view('user/V_RencanaSuksesiExcel', $data);
         // }
     }
-
-    
-
-    
-
-
-
-
-
-
     
 
    

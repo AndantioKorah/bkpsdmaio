@@ -8,6 +8,7 @@ class C_Maxchat extends CI_Controller
         $this->load->model('general/M_General', 'general');
         $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('user/M_User', 'user');
+        $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
         // $this->load->library('MaxchatLibrary', 'maxchat');
     }
 
@@ -17,10 +18,21 @@ class C_Maxchat extends CI_Controller
             'text' => json_encode($result)
         ]);
         $this->general->updateCronWa($result);
+
+        // $str = '{"id":"3EB01753E301E927B16914","time":1717986787000,"type":"text","status":"none","replyId":"BAE5A0746DA472F8","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","text":"ya silahkan diurus sesuai ketentuan"}';
+        // $result = json_decode($str);
         if (($result->type == "text" || $result->type == "image") && 
             $result->chatType != "story" &&
-            $result->from != GROUP_CHAT_HELPDESK && !isset($result->replyId)) {
-                $this->chatBotLayanan($result);
+            $result->from != GROUP_CHAT_HELPDESK) {
+                if(!isset($result->replyId)){
+                    $this->chatBotLayanan($result);
+                } else {
+                    $res = $this->kepegawaian->checkIfReplyCuti($result);
+                    if($res && isset($res['wa']) && isset($res['cuti']) && isset($res['progress'])){
+                        $this->replyCuti($res, $result);
+                    }
+                }
+
         } else if($result->to == GROUP_CHAT_HELPDESK){
             // if(!isset($result->replyId)){
             //     $this->forwardToPegawai($result);
@@ -28,6 +40,31 @@ class C_Maxchat extends CI_Controller
                 $this->chatHelpdeskSiladen($result);
             // }
         }
+    }
+
+    function replyCuti($data, $result){
+        $explodeText = explode(" ", $result->text);
+        $keterangan = "";
+        $i = 0;
+        foreach($explodeText as $et){
+            if($i != 0){
+                $keterangan .= $et.' '; 
+            }
+            $i++;
+        }
+
+        $response['flag_diterima'] = 1;
+        $response['flag_verif'] = 1;
+        $response['tanggal_verif'] = date('Y-m-d H:i:s');
+        $response['messageId'] = $result->id;
+        $response['keterangan_verif'] = trim($keterangan);
+        if(strcasecmp($explodeText[0], "ya") == 0){ // jika diterima
+            
+        } else if(strcasecmp($explodeText[0], "tidak") == 0){ // jika ditolak
+            $response['flag_diterima'] = 2;
+        }
+        $data['response'] = $response;
+        $this->kepegawaian->verifPermohonanCutiFromWa($data, $result);
     }
 
     public function forwardToPegawai($result){

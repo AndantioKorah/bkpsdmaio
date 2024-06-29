@@ -1380,13 +1380,14 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 ->where('a.id_pegawai', $id)
                 ->where('a.flag_active', 1)
                 ->where('a.status', 2)
-                ->order_by('a.tmtpangkat', 'desc')
+                ->order_by('a.tmtpangkat', 'asc')
                 ->limit(1);
             $pangkat =  $this->db->get()->result_array();
             
             if($pangkat){
             if($kode == 1){
                 if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
+                    // dd(1);
                     if($jenis_pengisian == 3){
                         $sdate = $pangkat[0]['tmtpangkat'];
                         $edate = date('Y-m-d');
@@ -2042,6 +2043,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where('a.status', 2)
             ->where('a.flag_active', 1);
         $penugasan = $this->db->get()->result_array();
+        // dd($penugasan);
        
         $id_penugasan = null;
         $qty1 = 0;
@@ -3110,6 +3112,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                       ->where('a.res_potensial_total >=', 85)
                       ->where('a.res_kinerja >=', 85)
                       ->where('a.flag_active', 1)
+                      ->where('b.id_m_status_pegawai', 1)
                       ->group_by('a.id_peg')
                       ->order_by('b.pangkat desc, d.eselon');
                      
@@ -3907,7 +3910,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                    }
 
                                    if($skpd != 0){
-                                    // dd($skpd);
+                                    
                                     $this->db->join('db_pegawai.unitkerja i', 'a.skpd = i.id_unitkerja');
                                     $this->db->join('db_pegawai.unitkerjamaster j', 'i.id_unitkerjamaster = j.id_unitkerjamaster');
                                    if($skpd == "5000000") {
@@ -3915,6 +3918,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                    } else if($skpd == "8000000"){
                                     $this->db->where_in('j.id_unitkerjamaster',['8000000','8010000','8020000']);
                                    } else {
+                                    
                                     $this->db->where('j.id_unitkerjamaster',$skpd);
                                    }
                                    }
@@ -3924,6 +3928,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                   
                                    if($penilaian != 0){
                                    foreach ($query as $rs) {
+                                    
                                     
                                      //    assesment
                                      $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
@@ -4066,12 +4071,15 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             $cekkrj =  $this->db->select('*')
                                                     ->from('db_simata.t_penilaian_potensial a')
                                                     ->where('a.id_peg', $rs['id_pegawai'])
+                                                    ->where('jenjang_jabatan', $jenis_pengisian)
                                                     ->where('a.flag_active', 1)
                                                     ->where('a.nilai_assesment is not null')
                                                     ->get()->result_array();
+                                                    // dd($cekkrj);
     
                             if($cekkrj){
                                 $this->db->where('id_peg', $rs['id_pegawai'])
+                                ->where('jenjang_jabatan', $jenis_pengisian)
                                 ->update('db_simata.t_penilaian_potensial', 
                                 ['pendidikan_formal' => $id_rekamjjk1,
                                 'pangkat_gol' => $id_rekamjjk2,

@@ -1065,6 +1065,17 @@ function logErrorTelegram($data)
     $this->general_library->logErrorTelegram($data);
 }
 
+function getExcelColumnNameByNumber($num) {
+    $numeric = ($num - 1) % 26;
+    $letter = chr(65 + $numeric);
+    $num2 = intval(($num - 1) / 26);
+    if ($num2 > 0) {
+        return getExcelColumnNameByNumber($num2) . $letter;
+    } else {
+        return $letter;
+    }
+}
+
 function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
 }

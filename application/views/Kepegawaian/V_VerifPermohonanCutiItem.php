@@ -10,9 +10,7 @@
       <th style="border: 1px solid grey;" class="text-center">Tanggal Pengajuan</th>
       <th style="border: 1px solid grey;" class="text-center">Tanggal Cuti</th>
       <th style="border: 1px solid grey;" class="text-center">Lama Cuti</th>
-      <?php if(isset($param['id_m_status_pengajuan_cuti']) && $param['id_m_status_pengajuan_cuti'] == "0"){ ?>
-        <th style="border: 1px solid grey;" class="text-center">Status</th>
-      <?php } ?>
+      <th style="border: 1px solid grey;" class="text-center">Status</th>
       <th style="border: 1px solid grey;" class="text-center">Pilihan</th>
     </thead>
     <tbody>
@@ -33,9 +31,7 @@
           <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
           <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
           <td style="border: 1px solid grey;" class="text-center"><?=$rs['lama_cuti'].' hari'?></td>
-          <?php if(isset($param['id_m_status_pengajuan_cuti']) && $param['id_m_status_pengajuan_cuti'] == "0"){ ?>
-            <td style="border: 1px solid grey;" class="text-center"><span class="lbl_status_pengajuan_<?=$rs['id_m_status_pengajuan_cuti']?>"><?=($rs['nama_status'])?></span></td>
-          <?php } ?>
+          <td style="border: 1px solid grey;" class="text-center"><span><?=($rs['status_pengajuan_cuti'])?></span></td>
           <td style="border: 1px solid grey;" class="text-center">
             <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"
             data-toggle="modal" class="btn btn-navy">Detail</button> -->

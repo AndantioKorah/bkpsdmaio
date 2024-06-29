@@ -16,16 +16,16 @@
   <div class="row">
     <?php if($result){ ?>
       <div class="col-lg-12 text-left mb-3">
-        <?php foreach($result['progress'] as $p){ ?>
+        <?php foreach($progress as $p){ ?>
           <span style="
-            background-color: <?=$p['color']?>;
+            background-color: <?=$p['bg-color']?>;
             padding: 2px;
             border-radius: 5px;
             font-weight: bold;
             margin-bottom: 5px;
             font-size: .9rem;
             color: <?=$p['font-color']?>
-          "><i class="<?=$p['icon']?>"></i> <?=$p['keterangan']?></span><br>
+          "><i class="fa <?=$p['icon']?>"></i> <?=$p['keterangan']?></span><br>
         <?php } ?>
       </div>
       <div class="col-lg-6">
@@ -171,10 +171,7 @@
         <div class="col-lg-12">
           <form id="form_verifikasi">
             <div class="row">
-              <?php if(($this->general_library->isKepalaPd() && $result['id_m_status_pengajuan_cuti'] == 1 && !$this->general_library->isKepalaBkpsdm()) || 
-              ($result['id_m_status_pengajuan_cuti'] == 2 && $this->general_library->isKepalaBkpsdm()) || 
-              ($result['id_m_status_pengajuan_cuti'] == 1 && $this->general_library->isKepalaBkpsdm() && $this->general_library->getIdUnitKerjaPegawai() == $result['id_unitkerja'])){ ?>
-                <div class="col-lg-3 col-md-3 col-sm-3">
+              <div class="col-lg-3 col-md-3 col-sm-3">
                   <label>VERIFIKASI</label>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
@@ -196,27 +193,18 @@
                 <div class="mt-2 col-lg-8 col-md-8 col-sm-8">
                   <textarea rows=5 name="keterangan_verif" class="form-control"></textarea>
                 </div>
-              <?php } ?>
             </div>
             <div class="col-lg-12 mt-2 text-right">
               <div class="row">
-                <div class="col-lg-6 text-left">
-                  <?php if($result['id_m_status_pengajuan_cuti'] == 4 && !$result['url_sk']){ ?>
-                    <button type="button" onclick="digitalSign()" id="button_ds" class="btn btn-success"><i class="fa fa-signature fa-2x"></i> Digital Sign </button>
-                    <button style="display: none;" id="button_ds_loader" disabled class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu... </button>
-                  <?php } ?>
-                </div>
-                <div class="col-lg-6 text-right">
-                  <?php if(($this->general_library->isKepalaPd() && $result['id_m_status_pengajuan_cuti'] == 1 && !$this->general_library->isKepalaBkpsdm()) || 
-                  ($result['id_m_status_pengajuan_cuti'] == 2 && $this->general_library->isKepalaBkpsdm()) ||
-                  ($result['id_m_status_pengajuan_cuti'] == 1 && $this->general_library->isKepalaBkpsdm() && $this->general_library->getIdUnitKerjaPegawai() == $result['id_unitkerja'])){ ?> 
-                    <button id="button_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan Verifikasi </button>
-                    <button style="display: none;" id="button_submit_loader" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
-                  <?php } else if(($this->general_library->isKepalaPd() && ($result['id_m_status_pengajuan_cuti'] == 2 || $result['id_m_status_pengajuan_cuti'] == 3) && !$this->general_library->isKepalaBkpsdm()) || 
-                  ($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk'] == null && $this->general_library->isKepalaBkpsdm())){ ?>
-                    <button id="btn_batal_verif" onclick="batalVerifikasi()" type="button" class="btn btn-danger"><i class="fa fa-times"></i> Batal Verifikasi </button>
-                    <button style="display: none;" id="btn_batal_verif_loading" type="button" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
-                  <?php } ?>
+                <div class="col-lg-12 text-right">
+                    <?php if($result['id_m_user_verifikasi'] == $this->general_library->getId() || $this->general_library->isProgrammer()){ ?>
+                      <button id="button_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan Verifikasi </button>
+                      <button style="display: none;" id="button_submit_loader" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button>
+                      <!-- <button id="btn_batal_verif" onclick="batalVerifikasi()" type="button" class="btn btn-danger"><i class="fa fa-times"></i> Batal Verifikasi </button>
+                      <button style="display: none;" id="btn_batal_verif_loading" type="button" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Menyimpan... </button> -->
+                    <?php } else { ?>
+                      <h5 style="color: red; font-style: italic;">Anda tidak dapat melakukan verifikasi di tahap ini</h5>
+                    <?php } ?>
                 </div>
               </div>
             </div>
@@ -313,5 +301,7 @@
         $('#button_submit_loader').hide()
       }
     })
+    // $('#button_submit').show()
+    // $('#button_submit_loader').hide()
   })
 </script>

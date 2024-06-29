@@ -146,7 +146,7 @@
           <tr>
             <td class="td-lab-dd">Nama Jabatan</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?php if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];?></td>
+            <td class="td-val-dd"><?php if($result['id_jabatanpeg']) {if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];} else echo $result['nm_jabatan'];  ?></td>
           </tr>
           <tr>
             <td class="td-lab-dd">Pejabat Yang Menetapkan</td>

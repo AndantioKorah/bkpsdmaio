@@ -317,11 +317,11 @@
 			)
 			{ ?>
 				
-			<!-- <li class="sidebar-item ">
+			<li class="sidebar-item ">
 				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
-			</li> -->
+			</li>
 		
 		<?php } ?>
 		<li class="sidebar-item ">
@@ -331,7 +331,7 @@
 		</li>
 
 
-		<!-- <li class="sidebar-item">
+		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
 				style="position: absolute;
@@ -354,7 +354,7 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li> -->
+							</li>
 		
 		</ul>
 	</li>
@@ -375,6 +375,7 @@
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
+	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -405,7 +406,8 @@
 				<?php if($this->general_library->isProgrammer() ||
 				$this->general_library->isAdminAplikasi() || 
 				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
-				$this->general_library->isKepalaPd()){ ?>
+				$this->general_library->isKepalaPd() ||
+				$this->general_library->isVerifPermohonanCuti()){ ?>
 					<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
@@ -419,11 +421,11 @@
 				</a>
 				</li>
 
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Pensiun
 				</a>
-				</li> -->
+				</li>
 				<?php } ?>
 			</ul>
 		</li>
@@ -480,6 +482,7 @@
 						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
 					</a>
 				</li>
+
 				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
 
 				<li class="sidebar-item ">
@@ -558,6 +561,7 @@
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
 				){ ?>
 				<li class="sidebar-item ">
@@ -627,7 +631,9 @@
 				|| $this->general_library->isPejabatEselon() 
 				|| $this->general_library->isKepalaPd()
 				|| $this->general_library->isWalikota()
-				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())){ ?>
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi SKP Pegawai
@@ -959,6 +965,25 @@
 				</span>
 			</a>	
 		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaian-pimpinan" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+			Penilaian Pimpinan
+				</span>
+			</a>	
+		</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaiain-rekan" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+			Penilaian Rekan Kerja
+				</span>
+			</a>	
+		</li>
+
 		<?php } ?>
 
 </ul>

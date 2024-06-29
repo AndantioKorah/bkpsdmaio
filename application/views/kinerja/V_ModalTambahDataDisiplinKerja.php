@@ -42,7 +42,7 @@
                 <select class="form-control select2-navy" style="width: 100%" onchange="suratTugas(this);"
                     id="jenis_disiplin" data-dropdown-css-class="select2-navy" name="jenis_disiplin">
                     <?php foreach($jenis_disiplin as $j){ ?>
-                        <option value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan']?>"><?=$j['nama_jenis_disiplin_kerja']?></option>
+                        <option value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan'].';'.$j['batas_waktu']?>"><?=$j['nama_jenis_disiplin_kerja']?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -79,6 +79,8 @@
 
 <script>
     $(function(){
+        // checkLockButton()
+
         var firstDay = getFirstDayOfMonth(
             date.getFullYear(),
             date.getMonth(),
@@ -95,8 +97,38 @@
         checkLockTpp()
     })
 
+    function checkLockButton(){
+        let periode = $("#range_periode").val()
+        let explode_periode = periode.split("-");
+        let tanggal_akhir = explode_periode[1]
+        // let tanggal_akhir_date = Date.parse(tanggal_akhir)
+        let tanggal_akhir_date = new Date(tanggal_akhir)
+        let jenis_disiplin = $('#jenis_disiplin').val()
+        let explode_jenis_disiplin = jenis_disiplin.split(";")
+        let batas_waktu = explode_jenis_disiplin[3]
+        let batas_waktu_date = tanggal_akhir_date.setDate(tanggal_akhir_date.getDate() + parseInt(batas_waktu))
+        let today = new Date()
+        batas_waktu_date = new Date(batas_waktu_date)
+
+        today = today.setHours(0, 0, 0, 0)
+        batas_waktu_date = batas_waktu_date.setHours(0, 0, 0, 0)
+        
+        if(today > batas_waktu_date){
+            $('#btn_tambah').hide()
+            $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
+            $('#error_label').show()
+        }
+        // console.log (today + ' / ' + batas_waktu_date)
+        // console.log(today > batas_waktu_date)
+    }
+
+    $('#jenis_disiplin').on('change', function(){
+        checkLockButton()
+    })
+
     $("#range_periode").on('change', function(){
         checkLockTpp()
+        checkLockButton()
     })
 
     function checkLockTpp(){
@@ -114,6 +146,7 @@
                     $('#btn_tambah').show()
                     $('#btn_loading').hide()
                     $('#error_label').hide()
+                    checkLockButton()
                 } else {
                     $('#btn_tambah').hide()
                     $('#btn_loading').hide()

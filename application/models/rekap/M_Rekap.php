@@ -914,6 +914,10 @@
         $result['kadis'] = 0;
         $result['flag_rs'] = 0;
 
+        if($id_unitkerja == '7000096'){
+            $id_unitkerja = '3010000';
+        }
+
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $id_unitkerja)
@@ -1256,7 +1260,7 @@
 
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
-            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
@@ -1431,7 +1435,7 @@
             // }
 
             $list_data_absen = $this->db->get()->result_array();
-
+            
             $data_absen = null;
             if($list_data_absen){
                 foreach($list_data_absen as $lda){
@@ -1454,7 +1458,17 @@
                 $data_absen = $tlp;
                 // dd(json_encode($data_absen));
             } else {
-                return null;
+                $temp_tlp = $tlp;
+                $tlp = null;
+
+                foreach($temp_tlp as $tmplp){
+                    foreach($list_hari as $lhtemp){
+                        $tlp[$tmplp['nip']] = $tmplp;
+                        $tlp[$tmplp['nip']]['absen'][$lhtemp]['jam_masuk'] = ""; 
+                        $tlp[$tmplp['nip']]['absen'][$lhtemp]['jam_pulang'] = ""; 
+                    }
+                }
+                $data_absen = $tlp;
             }
 
             if($data_absen){
@@ -1695,167 +1709,170 @@
                 }
                 foreach($list_hari as $l){
                     if($l <= date('Y-m-d')){
-
-                    if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
-                        
-                        $lp[$tr['nip']]['rekap']['jhk']++;
-                // Surat Tugas
-                        if(isset($dokpen[$tr['nip']][$l])){  
-                            if($dokpen[$tr['nip']][$l] == "TLS"){
-                                $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
-                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLS';
-                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
-                            } else if($dokpen[$tr['nip']][$l] == "TLP"){
-                                $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
-                                $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = '';
-                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLP';
-                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
-                            } else {
-                                $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
-                            } 
-                        }
-                // Tutup Surat Tugas
-                        $flag_check = 1;
-                        if($lp[$tr['nip']]['absen'][$l]['ket'] == 'TK' && $flag_absen_aars == 0){
+                        if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
+                            $lp[$tr['nip']]['rekap']['jhk']++;
+                            // Surat Tugas
                             if(isset($dokpen[$tr['nip']][$l])){  
-                                $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
-                                $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
-                            } else {
-                                $lp[$tr['nip']]['rekap']['TK']++;
-                                if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
-                                    $list_alpha[$tr['nip']] = $tr['nip'];
-                                }
+                                if($dokpen[$tr['nip']][$l] == "TLS"){
+                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
+                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLS';
+                                    $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                } else if($dokpen[$tr['nip']][$l] == "TLP"){
+                                    $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
+                                    $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = '';
+                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLP';
+                                    $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                } else {
+                                    $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
+                                } 
                             }
-                            $flag_check = 0;
-                        } else if($flag_absen_aars == 1){
-                            if(isset($dokpen[$tr['nip']][$l]) &&
-                                $dokpen[$tr['nip']][$l] != "TLS" && $dokpen[$tr['nip']][$l] != "TLP"){
-                                    $flag_check = 0;
+                            
+                            // Tutup Surat Tugas
+                            $flag_check = 1;
+                            if($lp[$tr['nip']]['absen'][$l]['ket'] == 'TK' && $flag_absen_aars == 0){
+                                if(isset($dokpen[$tr['nip']][$l])){  
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                                     $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
-                                    if($dokpen[$tr['nip']][$l] == "MTTI"){
-                                        $flag_check = 1;
-                                    } else {
-                                        $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "";
-                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "";
+                                } else {
+                                    $lp[$tr['nip']]['rekap']['TK']++;
+                                    if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
+                                        $list_alpha[$tr['nip']] = $tr['nip'];
                                     }
-                                    if($dokpen[$tr['nip']][$l] == "TL"){
-                                        $lp[$tr['nip']]['rekap']['hadir']++;
-                                    }
-                            } else {
-                                if((!$lp[$tr['nip']]['absen'][$l]['jam_masuk'] || 
-                                    $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "")){
-                                        if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == 'TLS'){ // cek jika TLS dan tidak ada absen masuk
-                                            // $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "00:00";
-                                            // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
-                                            // $lp[$tr['nip']]['rekap']['tmk3']++;
+                                }
+                                $flag_check = 0;
+                            } else if($flag_absen_aars == 1){
+                                if(isset($dokpen[$tr['nip']][$l]) &&
+                                    $dokpen[$tr['nip']][$l] != "TLS" && $dokpen[$tr['nip']][$l] != "TLP"){
+                                        $flag_check = 0;
+                                        $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
+                                        $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                        if($dokpen[$tr['nip']][$l] == "MTTI"){
                                             $flag_check = 1;
                                         } else {
-                                            $lp[$tr['nip']]['absen'][$l]['ket'] = 'TK';
-                                            $lp[$tr['nip']]['rekap']['TK']++;
-                                            if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
-                                                $list_alpha[$tr['nip']] = $tr['nip'];
-                                            }
-                                            $flag_check = 0;
+                                            $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "";
+                                            $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "";
                                         }
-                                    }
-                            }
-                        }
-
-                        if($flag_check == 1) {
-                            $flag_check_done = 0;
-                            $lp[$tr['nip']]['rekap']['hadir']++;
-                            // if(isset($dokpen[$tr['nip']][$l]) && $dokpen[$tr['nip']][$l] == 'TLP'){
-                            //     dd($lp[$tr['nip']]['absen'][$l]);
-                            // }
-                            if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "TLP" && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "Invalid"){
-                                $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
-                                if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == ''){
-                                    $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = '00:00';
-                                    $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
-                                    $lp[$tr['nip']]['rekap']['tmk3']++;
+                                        if($dokpen[$tr['nip']][$l] == "TL"){
+                                            $lp[$tr['nip']]['rekap']['hadir']++;
+                                        }
+                                } else {
+                                    if((!$lp[$tr['nip']]['absen'][$l]['jam_masuk'] || 
+                                        $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "")){
+                                            // if($l == '2024-04-30'){
+                                            //     dd('asd');
+                                            //     dd($lp[$tr['nip']]['absen'][$l]);
+                                            // }
+                                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == 'TLS'){ // cek jika TLS dan tidak ada absen masuk
+                                                // $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "00:00";
+                                                // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                                // $lp[$tr['nip']]['rekap']['tmk3']++;
+                                                $flag_check = 1;
+                                            } else {
+                                                $lp[$tr['nip']]['absen'][$l]['ket'] = 'TK';
+                                                $lp[$tr['nip']]['rekap']['TK']++;
+                                                if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
+                                                    $list_alpha[$tr['nip']] = $tr['nip'];
+                                                }
+                                                $flag_check = 0;
+                                            }
+                                        }
                                 }
-                                if($diff_masuk > 0){
-                                    $ket_masuk = floatval($diff_masuk) / 1800;
-                                    if($ket_masuk <= 1){
-                                        $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk1';
-                                        $lp[$tr['nip']]['rekap']['tmk1']++;
-                                    } else if($ket_masuk > 1 && $ket_masuk <= 2){
-                                        $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk2';
-                                        $lp[$tr['nip']]['rekap']['tmk2']++;
-                                    } else if($ket_masuk > 2) {
+                            }
+
+                            if($flag_check == 1) {
+                                $flag_check_done = 0;
+                                $lp[$tr['nip']]['rekap']['hadir']++;
+                                // if(isset($dokpen[$tr['nip']][$l]) && $dokpen[$tr['nip']][$l] == 'TLP'){
+                                //     dd($lp[$tr['nip']]['absen'][$l]);
+                                // }
+                                if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "TLP" && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != "Invalid"){
+                                    $diff_masuk = strtotime($lp[$tr['nip']]['absen'][$l]['jam_masuk']) - strtotime($format_hari[$l]['jam_masuk'].'+ 59 seconds');
+                                    if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == ''){
+                                        $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = '00:00';
                                         $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
                                         $lp[$tr['nip']]['rekap']['tmk3']++;
                                     }
+                                    if($diff_masuk > 0){
+                                        $ket_masuk = floatval($diff_masuk) / 1800;
+                                        if($ket_masuk <= 1){
+                                            $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk1';
+                                            $lp[$tr['nip']]['rekap']['tmk1']++;
+                                        } else if($ket_masuk > 1 && $ket_masuk <= 2){
+                                            $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk2';
+                                            $lp[$tr['nip']]['rekap']['tmk2']++;
+                                        } else if($ket_masuk > 2) {
+                                            $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                            $lp[$tr['nip']]['rekap']['tmk3']++;
+                                        }
+                                    }
+                                    
+                                    if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ""){
+                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "00:00";
+                                    }
+                                    $flag_check_done = 1;
+                                }
+
+                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TLS" && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "Invalid"){
+                                    $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
+                                    if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ''){
+                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
+                                    }
+                                    if($diff_keluar > 0){
+                                        $ket_pulang = floatval($diff_keluar) / 1800;
+                                        if($ket_pulang <= 1){
+                                            $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw1';
+                                            $lp[$tr['nip']]['rekap']['pksw1']++;
+                                        } else if($ket_pulang > 1 && $ket_pulang <= 2){
+                                            $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw2';
+                                            $lp[$tr['nip']]['rekap']['pksw2']++;
+                                        } else if($ket_pulang > 2) {
+                                            // if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TL"){
+                                                $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                                $lp[$tr['nip']]['rekap']['pksw3']++;
+                                            // }
+                                        
+                                        }
+                                    }
+                                    $flag_check_done = 1;
                                 }
                                 
-                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ""){
-                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = "00:00";
+                                if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "Invalid"){
+                                    // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
+                                    $lp[$tr['nip']]['rekap']['tmk3']++;
                                 }
-                                $flag_check_done = 1;
-                            }
-
-                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TLS" && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "Invalid"){
-                                $diff_keluar = strtotime($format_hari[$l]['jam_pulang']) - strtotime($lp[$tr['nip']]['absen'][$l]['jam_pulang']);
-                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == ''){
-                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
+                                if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == "Invalid"){
+                                    // $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                    $lp[$tr['nip']]['rekap']['pksw3']++;
                                 }
-                                if($diff_keluar > 0){
-                                    $ket_pulang = floatval($diff_keluar) / 1800;
-                                    if($ket_pulang <= 1){
-                                        $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw1';
-                                        $lp[$tr['nip']]['rekap']['pksw1']++;
-                                    } else if($ket_pulang > 1 && $ket_pulang <= 2){
-                                        $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw2';
-                                        $lp[$tr['nip']]['rekap']['pksw2']++;
-                                    } else if($ket_pulang > 2) {
-                                        // if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] != "TL"){
-                                            $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
-                                            $lp[$tr['nip']]['rekap']['pksw3']++;
-                                        // }
-                                    
+                                
+                                if($flag_check_done == 0){
+                                    if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == 'TLP' 
+                                    && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != 'Invalid'
+                                    && ($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == '' || $lp[$tr['nip']]['absen'][$l]['jam_pulang'] == '00:00')){
+                                        // jika TLP dan tidak absen pulang
+                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
+                                        $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                        $lp[$tr['nip']]['rekap']['pksw3']++;
+                                    } else if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == 'TLS' 
+                                    && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != 'Invalid'
+                                    && ($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == '' || $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == '00:00')){
+                                        // jika TLS dan tidak absen masuk
+                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
+                                        $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
+                                        $lp[$tr['nip']]['rekap']['pksw3']++;
                                     }
                                 }
-                                $flag_check_done = 1;
-                            }
-                            
-                            if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "Invalid"){
-                                // $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = 'tmk3';
-                                $lp[$tr['nip']]['rekap']['tmk3']++;
-                            }
-                            if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == "Invalid"){
-                                // $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
-                                $lp[$tr['nip']]['rekap']['pksw3']++;
-                            }
-                            
-                            if($flag_check_done == 0){
-                                if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == 'TLP' 
-                                && $lp[$tr['nip']]['absen'][$l]['jam_pulang'] != 'Invalid'
-                                && ($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == '' || $lp[$tr['nip']]['absen'][$l]['jam_pulang'] == '00:00')){
-                                    // jika TLP dan tidak absen pulang
-                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
-                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
-                                    $lp[$tr['nip']]['rekap']['pksw3']++;
-                                } else if($lp[$tr['nip']]['absen'][$l]['jam_pulang'] == 'TLS' 
-                                && $lp[$tr['nip']]['absen'][$l]['jam_masuk'] != 'Invalid'
-                                && ($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == '' || $lp[$tr['nip']]['absen'][$l]['jam_masuk'] == '00:00')){
-                                    // jika TLS dan tidak absen masuk
-                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = '00:00';
-                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'pksw3';
-                                    $lp[$tr['nip']]['rekap']['pksw3']++;
+
+                                if(isset($dokpen[$tr['nip']][$l])){
+                                    if($dokpen[$tr['nip']][$l] == "TLS"){
+
+                                    } else if ($dokpen[$tr['nip']][$l] == "TLP"){
+
+                                    }
                                 }
-                            }
-
-                            if(isset($dokpen[$tr['nip']][$l])){
-                                if($dokpen[$tr['nip']][$l] == "TLS"){
-
-                                } else if ($dokpen[$tr['nip']][$l] == "TLP"){
-
-                                }
-                            }
-                        }   
+                            }   
+                        }
                     }
-                }
                 } 
             }
         }
@@ -2364,6 +2381,37 @@
         dd($list_pegawai);
     }
 
+    public function getTppTambahan($data){
+        $result = null;
+        $skpd = explode(";", $data['skpd']);
+        $exists = $this->db->select('*')
+                        ->from('t_tpp_tambahan a')
+                        ->where('a.id_unitkerja', $skpd[0])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+        $list_exists = null;
+        if($exists){
+            foreach($exists as $e){
+                $list_exists[$e['id_m_tpp_tambahan']] = $e;
+            }
+        }
+
+        $master = $this->db->select('*')
+                        ->from('m_tpp_tambahan a')
+                        ->where('a.flag_show', 1)
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+        if($master){
+            foreach($master as $m){
+                if(!isset($list_exists[$m['id']])){
+                    $result[] = $m;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function getDaftarPerhitunganTppNew($pagu_tpp, $param, $flag_rekap_tpp = 0){
         $list_pegawai = null;
         foreach($pagu_tpp as $pt){
@@ -2432,6 +2480,9 @@
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
+                if(isset($param['id_m_tpp_tambahan']) && $param['id_m_tpp_tambahan'] != 0){
+                    $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
+                }
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                 $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;
@@ -2464,7 +2515,7 @@
                     $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
                 }
                             
-                $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($l['pagu_tpp'])) / 100;
+                $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100;
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                 $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);

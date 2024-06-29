@@ -601,6 +601,10 @@ class C_Kinerja extends CI_Controller
         $data['pegawai'] = $this->master->getPegawaiBySkpd($id_unitkerja);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
+        $data['meta_jenis_disiplin'] = null;
+        foreach($data['jenis_disiplin'] as $jd){
+            $data['meta_jenis_disiplin'][$jd['id']] = $jd;
+        }
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
     }
 
@@ -751,5 +755,156 @@ class C_Kinerja extends CI_Controller
         $data['list_pegawai'] = $this->general->getAllPegawai();
         // dd($data['list_pegawai']);
         render('kinerja/V_Pelanggaran', '', '', $data);
+    }
+
+    public function exportExcel(){
+        
+        include APPPATH.'third_party/PHPExcel/PHPExcel.php';
+    
+  
+    $excel = new PHPExcel();
+    
+    $excel->getProperties()->setCreator('Bee Technology')
+                 ->setLastModifiedBy('Bee Technology')
+                 ->setTitle("Data Siswa")
+                 ->setSubject("Siswa")
+                 ->setDescription("Laporan Semua Data Siswa")
+                 ->setKeywords("Data Siswa");
+    
+    $style_col = array(
+      'font' => array('bold' => true), 
+      'alignment' => array(
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, 
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER 
+      ),
+      'borders' => array(
+        'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), 
+        'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  
+        'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), 
+        'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN)
+      )
+    );
+    
+    $style_row = array(
+      'alignment' => array(
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER 
+      ),
+      'borders' => array(
+        'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), 
+        'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  
+        'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), 
+        'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) 
+      )
+    );
+
+    // sheet 1
+    $excel->setActiveSheetIndex(0)->setCellValue('A1', "DATA SISWA"); 
+    $excel->getActiveSheet()->mergeCells('A1:E1'); 
+    $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); 
+    $excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); 
+    $excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+    
+    $excel->setActiveSheetIndex(0)->setCellValue('A3', "NO"); 
+    $excel->setActiveSheetIndex(0)->setCellValue('B3', "NIS"); 
+    $excel->setActiveSheetIndex(0)->setCellValue('C3', "NAMA"); 
+    $excel->setActiveSheetIndex(0)->setCellValue('D3', "JENIS KELAMIN"); 
+    $excel->setActiveSheetIndex(0)->setCellValue('E3', "ALAMAT"); 
+    
+    $excel->getActiveSheet()->getStyle('A3')->applyFromArray($style_col);
+    $excel->getActiveSheet()->getStyle('B3')->applyFromArray($style_col);
+    $excel->getActiveSheet()->getStyle('C3')->applyFromArray($style_col);
+    $excel->getActiveSheet()->getStyle('D3')->applyFromArray($style_col);
+    $excel->getActiveSheet()->getStyle('E3')->applyFromArray($style_col);
+    
+
+  
+      $excel->setActiveSheetIndex(0)->setCellValue('A4', 1);
+      $excel->setActiveSheetIndex(0)->setCellValue('B4', "tes");
+      $excel->setActiveSheetIndex(0)->setCellValue('C4', "tes");
+      $excel->setActiveSheetIndex(0)->setCellValue('D4', "tes");
+      $excel->setActiveSheetIndex(0)->setCellValue('E4', "tes");
+      
+      
+      $excel->getActiveSheet()->getStyle('A4')->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('B4')->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('C4')->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('D4')->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('E4')->applyFromArray($style_row);
+      
+   
+    
+    $excel->getActiveSheet()->getColumnDimension('A')->setWidth(5); 
+    $excel->getActiveSheet()->getColumnDimension('B')->setWidth(15); 
+    $excel->getActiveSheet()->getColumnDimension('C')->setWidth(25); 
+    $excel->getActiveSheet()->getColumnDimension('D')->setWidth(20); 
+    $excel->getActiveSheet()->getColumnDimension('E')->setWidth(30); 
+    
+    
+    $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+    
+    $excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+    
+    $excel->getActiveSheet(0)->setTitle("Tes Sheet 1");
+    $excel->setActiveSheetIndex(0);
+    // tutup sheet 1
+    $excel->createSheet();
+      // sheet 2
+      $excel->setActiveSheetIndex(1)->setCellValue('A1', "DATA SISWA 2"); 
+      $excel->getActiveSheet()->mergeCells('A1:E1'); 
+      $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); 
+      $excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); 
+      $excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+      
+      $excel->setActiveSheetIndex(1)->setCellValue('A3', "NO"); 
+      $excel->setActiveSheetIndex(1)->setCellValue('B3', "NIS"); 
+      $excel->setActiveSheetIndex(1)->setCellValue('C3', "NAMA"); 
+      $excel->setActiveSheetIndex(1)->setCellValue('D3', "JENIS KELAMIN"); 
+      $excel->setActiveSheetIndex(1)->setCellValue('E3', "ALAMAT"); 
+      
+      $excel->getActiveSheet()->getStyle('A3')->applyFromArray($style_col);
+      $excel->getActiveSheet()->getStyle('B3')->applyFromArray($style_col);
+      $excel->getActiveSheet()->getStyle('C3')->applyFromArray($style_col);
+      $excel->getActiveSheet()->getStyle('D3')->applyFromArray($style_col);
+      $excel->getActiveSheet()->getStyle('E3')->applyFromArray($style_col);
+      
+  
+    
+        $excel->setActiveSheetIndex(1)->setCellValue('A4', 1);
+        $excel->setActiveSheetIndex(1)->setCellValue('B4', "tes");
+        $excel->setActiveSheetIndex(1)->setCellValue('C4', "tes");
+        $excel->setActiveSheetIndex(1)->setCellValue('D4', "tes");
+        $excel->setActiveSheetIndex(1)->setCellValue('E4', "tes");
+        
+        
+        $excel->getActiveSheet()->getStyle('A4')->applyFromArray($style_row);
+        $excel->getActiveSheet()->getStyle('B4')->applyFromArray($style_row);
+        $excel->getActiveSheet()->getStyle('C4')->applyFromArray($style_row);
+        $excel->getActiveSheet()->getStyle('D4')->applyFromArray($style_row);
+        $excel->getActiveSheet()->getStyle('E4')->applyFromArray($style_row);
+        
+     
+      
+      $excel->getActiveSheet()->getColumnDimension('A')->setWidth(5); 
+      $excel->getActiveSheet()->getColumnDimension('B')->setWidth(15); 
+      $excel->getActiveSheet()->getColumnDimension('C')->setWidth(25); 
+      $excel->getActiveSheet()->getColumnDimension('D')->setWidth(20); 
+      $excel->getActiveSheet()->getColumnDimension('E')->setWidth(30); 
+      
+      
+      $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+      
+      $excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+      
+      $excel->getActiveSheet(0)->setTitle("Tes Sheet 2");
+      $excel->setActiveSheetIndex(0);
+     // tutup sheet 2
+
+    
+    $filename="datasiswa.xls";
+    $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+    ob_end_clean();
+    header('Content-type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename='.$filename);
+    $objWriter->save('php://output');
     }
 }

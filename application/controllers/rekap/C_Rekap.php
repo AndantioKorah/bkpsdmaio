@@ -9,6 +9,8 @@ require FCPATH . '/vendor/autoload.php';
 // use mpdf\mpdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// use Symfony\Component\HttpFoundation\StreamedResponse;
+// use Symfony\Component\HttpFoundation\Response;
 
 class C_Rekap extends CI_Controller
 {
@@ -247,16 +249,17 @@ class C_Rekap extends CI_Controller
 
     public function rekapTppSearch()
     {
-        
         $this->session->set_userdata('params_rekap_tpp', $this->input->post());
         $data = $this->rekap->rekapTppSearch($this->input->post());
-        // dd($data);
         $data['data_search'] = $this->input->post();
+        $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
-    public function downloadBerkasTpp(){
+    public function downloadBerkasTpp($id_m_tpp_tambahan = 0, $flag_excel = 0){
         $param = $this->input->post();
+        $param['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+
         $flag_sekolah_kecamatan = 0;
         // dd($param);
         $skpd = explode(";", $param['skpd']);
@@ -271,6 +274,9 @@ class C_Rekap extends CI_Controller
         $data['param']['nm_unitkerja'] = $skpd[1];
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
+        $data['param']['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+        $data['param']['presentasi_tpp_tambahan'] = isset($param['presentasi_tpp_tambahan']) ? $param['presentasi_tpp_tambahan'] : null;;
+        $data['param']['nama_tpp_tambahan'] = isset($param['nama_tpp_tambahan']) ? $param['nama_tpp_tambahan'] : null;;
         $param['id_unitkerja'] = $skpd[0];
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
@@ -325,31 +331,37 @@ class C_Rekap extends CI_Controller
             }
         }
         array_multisort($kelas_jabatan_result, SORT_DESC, $nama_pegawai_result, SORT_ASC, $data['result']);
-        // if($skpd[0] == 3020000){
-        //     dd($data);
-        // }
 
-        $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
-        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
-        $this->mpdf->AddPage(
-            'L', // L - landscape, P - portrait
-            '',
-            '',
-            '',
-            '',
-            10, // margin_left
-            10, // margin right
-            5, // margin top
-            10, // margin bottom
-            18, // margin header
-            12
-        ); // margin footer
-        // $this->mpdf->setFooter('{PAGENO}');
-        $filename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf';
-        $this->mpdf->WriteHTML($html);
-        $this->mpdf->Output($filename, 'D'); // download force
+        if($flag_excel == 0){
+            $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+            $this->mpdf->AddPage(
+                'L', // L - landscape, P - portrait
+                '',
+                '',
+                '',
+                '',
+                10, // margin_left
+                10, // margin right
+                5, // margin top
+                10, // margin bottom
+                18, // margin header
+                12
+            ); // margin footer
+            // $this->mpdf->setFooter('{PAGENO}');
+            $filename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.pdf';
+            if($id_m_tpp_tambahan != 0){
+                $filename = 'Rekap TPP '.$skpd[1].' '.$data['param']['nama_tpp_tambahan'].'.pdf';
+            }
+            $this->mpdf->WriteHTML($html);
+            $this->mpdf->Output($filename, 'D'); // download force
+        }
 
         $folder = 'arsiptpp/'.$data['param']['tahun'].'/'.getNamaBulan($data['param']['bulan']);
+        if($id_m_tpp_tambahan != 0){
+            $folder = 'arsiptpp/'.$data['param']['nama_tpp_tambahan'];
+        }
+
         if(!file_exists($folder)){
             if(!file_exists('arsiptpp')){
                 $oldmask = umask(0);
@@ -357,7 +369,7 @@ class C_Rekap extends CI_Controller
                 umask($oldmask);
             }
 
-            if(!file_exists('arsiptpp/'.$data['param']['tahun'])){
+            if(!file_exists('arsiptpp/'.$data['param']['tahun']) && $id_m_tpp_tambahan == 0){
                 $oldmask = umask(0);
                 mkdir('arsiptpp/'.$data['param']['tahun'], 0777);
                 umask($oldmask);
@@ -367,12 +379,69 @@ class C_Rekap extends CI_Controller
             mkdir($folder, 0777);
             umask($oldmask);
         }
-        $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
 
+        if($flag_excel == 0){
+            $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
+        } else {
+            // $html = $this->load->view('rekap/V_BerkasTppDownloadExcel', $data, true);
+
+            // $this->load->helper("file");
+            // $fileName = "temp_file_name.html";
+            // $path = "arsiptpp/";
+            // $path_file = $path . $fileName; 
+            $newfilename = 'Rekap TPP '.$skpd[1].' '.getNamaBulan($data['param']['bulan']).' '.$data['param']['tahun'].'.xlsx';
+
+            if (write_file($path_file, $html)){
+            //     //create spreadsheet the temp html
+            //     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+            //     $spreadsheet = $reader->load($path_file);
+
+            //     //write out to excel file
+            //     // $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            //     // $writer->save($path.$newfilename);
+            //     // file_get_contents($path.$newfilename);
+
+            //     header('Content-Type: application/vnd.ms-excel');
+            //     header('Content-Disposition: attachment;filename="GeneratedFile.xls"');
+            //     header('Cache-Control: max-age=0');
+
+            //     $writer = new Xlsx($spreadsheet);
+            //     $writer->save('php://output');
+            //     fastcgi_finish_request();
+
+            //     // $streamedResponse = new StreamedResponse();
+            //     // $streamedResponse->setCallback(function () {
+            //     //     $spreadsheet = //create you spreadsheet here;
+
+            //     //     $writer =  new Xlsx($spreadsheet);
+            //     //     $writer->save('php://output');
+            //     // });
+
+            //     // $streamedResponse->setStatusCode(Response::HTTP_OK);
+            //     // $streamedResponse->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //     // $streamedResponse->headers->set('Content-Disposition', 'attachment; filename="your_file.xlsx"');
+
+            //     // return $streamedResponse->send();
+                
+            //     //delete the temporary file
+            //     unlink($path_file);
+            }
+
+            
+            // $headers = [];
+
+            // $spreadsheet = new Spreadsheet();
+            // $spreadsheet->setActiveSheetIndex(0);   
+            // $spreadsheet->setTitle('Rekap Kehadiran');
+
+        }
         //lock TPP
-        $data['param']['url_file'] = $folder.'/'.$filename;
-        $this->rekap->lockTpp($data['param']);
-
+        if($flag_excel == 0){
+            $data['param']['url_file'] = $folder.'/'.$filename;
+            if($id_m_tpp_tambahan == 0){
+                $this->rekap->lockTpp($data['param']);
+            }
+        }
         // $this->load->view('rekap/V_BerkasTppDownload', $data);
     }
 

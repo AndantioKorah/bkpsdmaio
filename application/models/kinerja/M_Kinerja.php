@@ -1390,12 +1390,14 @@
                     $insert_data[$i]['tanggal'] = $date[2];
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
                     if($disiplin[0] == 14){
-                        if($data['jenis_tugas_luar'] == 'Tugas Luar Pagi'){
-                            $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 19;
-                        } else if($data['jenis_tugas_luar'] == 'Tugas Luar Sore'){
-                            $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 20;
+                        if(isset($data['jenis_tugas_luar'])){
+                            if($data['jenis_tugas_luar'] == 'Tugas Luar Pagi'){
+                                $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 19;
+                            } else if($data['jenis_tugas_luar'] == 'Tugas Luar Sore'){
+                                $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 20;
+                            }
+                            $insert_data[$i]['keterangan'] = $data['jenis_tugas_luar'];
                         }
-                        $insert_data[$i]['keterangan'] = $data['jenis_tugas_luar'];
                     } else {
                         $insert_data[$i]['keterangan'] = $disiplin[1];
                     }

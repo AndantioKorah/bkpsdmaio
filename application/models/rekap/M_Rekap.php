@@ -2622,15 +2622,17 @@
                         unset($result[$l['nipbaru_ws']]);
                     }
                 } else {
-                    $rekap['jumlah_pegawai']++;
-                    $rekap['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];
-                    $rekap['total_bobot_disiplin_kerja'] += $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
-                    $rekap['total_bobot_produktivitas_kerja'] += $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'];
-                    $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
-                    $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
-                    $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                    $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
-                    $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
+                    if($result[$l['nipbaru_ws']]['flag_terima_tpp'] == 1){ //jika terima TPP
+                        $rekap['jumlah_pegawai']++;
+                        $rekap['total_presentase_kehadiran'] += $result[$l['nipbaru_ws']]['presentase_kehadiran'];
+                        $rekap['total_bobot_disiplin_kerja'] += $result[$l['nipbaru_ws']]['bobot_disiplin_kerja'];
+                        $rekap['total_bobot_produktivitas_kerja'] += $result[$l['nipbaru_ws']]['bobot_produktivitas_kerja'];
+                        $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
+                        $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
+                        $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
+                        $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
+                    }
                 }
             }
         }

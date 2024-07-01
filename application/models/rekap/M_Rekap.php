@@ -1208,6 +1208,7 @@
                         // ->where('b.id', 37851)
                         ->where('a.status_verif', 1)
                         ->where('b.flag_active', 1)
+                        ->where('a.flag_active', 1)
                         ->where_in('d.nipbaru_ws', $temp_list_nip)
                         ->group_by('a.id');
         // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){

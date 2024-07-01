@@ -32,7 +32,7 @@
                     <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
                     <td class="text-center"><?= $tanggal_dokumen ?></td>
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
-                    <td class="text-center"><?= ($r['keterangan']) ?></td>
+                    <td class="text-center"><?= ($r['nama_jenis_disiplin_kerja']) ?></td>
                     <td class="text-center">
                         <?php if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if($dokpen[0] != "") { $nodok = 1; ?>
                             <div class="btn-group" role="group">

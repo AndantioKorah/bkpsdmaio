@@ -1151,12 +1151,13 @@
                                     ->get()->row_array();
         }
 
-        $this->db->select('c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        $this->db->select('f.nama_jenis_disiplin_kerja,c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
         ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
         ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
+        ->join('m_jenis_disiplin_kerja f', 'a.id_m_jenis_disiplin_kerja = f.id')
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
@@ -1821,7 +1822,7 @@
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
+        $this->db->select('g.nama_jenis_disiplin_kerja,a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
         d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
@@ -1829,6 +1830,7 @@
         ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
         ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
         ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+        ->join('m_jenis_disiplin_kerja g', 'a.id_m_jenis_disiplin_kerja = g.id')
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))
@@ -1876,7 +1878,7 @@
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
         $this->db->select('g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
-        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 limit 1) as total_diverif')
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_diverif')
         ->from('t_peninjauan_absensi a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')

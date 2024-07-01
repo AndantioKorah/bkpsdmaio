@@ -157,9 +157,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="table-admModalLabelIndikator"><span id="nm_indikator"></span></h3>
-        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+        <!-- <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       </div>
       <div class="modal-body">
       <div id="div_modal_detail_profil_talenta">

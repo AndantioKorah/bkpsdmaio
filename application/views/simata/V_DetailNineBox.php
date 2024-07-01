@@ -41,7 +41,9 @@
 		<?php $no = 1; foreach($result as $rs2){ ?>
 			<?php $total_nilai = $rs2['res_kinerja'] + $rs2['res_potensial_total'];?>
             <?php ;?>
-            <tr>
+            <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id']?>" data-kode="1"
+            href="#exampleModal2"  class="open-DetailPT">
+            
                 <!-- <td><?=$rs2['nama_jabatan'];?></td> -->
                 <td class="text-center"><?=$rs2['res_kinerja'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
@@ -63,11 +65,15 @@
             
         </tbody>
         <tfoot>
-            <tr>
+            <tr >
+                
            <!-- <th>Jabatan Target</th> -->
                 <th class="text-center">Nilai Kinerja</th>
-                <th>Nama</th>
-                <th class="text-center">Nilai Potensial</th>
+                
+                <th>Nama
+                    
+                </th>
+                <th class="text-center">Nilai Potensial </th>
                 <th class="text-center">Total Nilai</th>
                 <th class="text-center">Hasil Pemetaan Talenta</th>
                 <?php if($jt == 0) { ?>
@@ -78,6 +84,26 @@
             </tr>
         </tfoot>
     </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#2e4963;">
+        <h5 style="color:#fff" class="modal-title" id="exampleModalLabel">Detail Penilaian</h5>
+       
+      </div>
+      <div class="modal-body" id="div_modal_detail_profil_talenta">
+        ...
+      </div>
+      <div class="modal-footer" style="background-color:#2e4963;">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
     </div>
 </div>
 
@@ -128,6 +154,31 @@ $('#example2 tbody').on('click', 'tr.group', function () {
         // table.order([groupColumn, 'asc']).draw();
     }
 });
+
+$(document).on("click", ".open-DetailPT", function () {
+
+var id = $(this).data('id');
+var nip = $(this).data('nip');
+var kode = $(this).data('kode');
+var jt = $(this).data('jt');
+
+if(id == ""){
+  id = 0;
+}
+
+if(jt == ""){
+  jt = 0;
+}
+
+
+$('#div_modal_detail_profil_talenta').html('')
+$('#div_modal_detail_profil_talenta').append(divLoaderNavy)
+$('#div_modal_detail_profil_talenta').load('<?=base_url("simata/C_Simata/loadModalDetailProfilTalenta/")?>'+id+'/'+nip+'/'+kode+'/'+jt, function(){
+$('#loader').hide()
+})
+
+});
+
 </script>
 
 

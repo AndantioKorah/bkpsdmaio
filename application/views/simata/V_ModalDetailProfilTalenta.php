@@ -109,7 +109,7 @@
 		cursor: pointer;
 	}
 
-	.foto_container:hover .middle {
+	/* .foto_container:hover .middle {
 		opacity: 1;
 		cursor: pointer;
 	}
@@ -117,7 +117,7 @@
 	label{
 		color:#222e3c;
 		font-weight:bold
-	}
+	} */
 
 </style>
 
@@ -125,7 +125,7 @@
 
 <div class="row">
 	<div class="col-lg-12">
-		<div class="card card-default">
+		<div class="card card-default" style="background-color:#e1e1e1;">
 			<div class="row p-3">
 				<div class="col-lg-4">
 					<div class="row">
@@ -194,7 +194,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-8">
+				<div class="col-lg-8" >
 					<div class="row">
 						<!-- profil  -->
 						<ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">

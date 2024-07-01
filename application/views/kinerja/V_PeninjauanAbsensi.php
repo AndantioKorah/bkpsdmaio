@@ -273,7 +273,7 @@ var doc = image_file.value.split('.')
 var extension = doc[doc.length - 1]
 const  fileType = this.files[0].type;
 
-const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+const validImageTypes = ['image/jpg', 'image/png'];
 
 if (!validImageTypes.includes(fileType)) {
     errortoast("Harus File Gambar")

@@ -1649,7 +1649,7 @@
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
+        $this->db->select('g.nama_jenis_disiplin_kerja,a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
         d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
@@ -1657,6 +1657,7 @@
         ->join('m_status_dokumen_pendukung d', 'a.status = d.id')
         ->join('m_user e', 'a.id_m_user_verif = e.id', 'left')
         ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+        ->join('m_jenis_disiplin_kerja g', 'a.id_m_jenis_disiplin_kerja = g.id')
         ->where('a.bulan', floatval($bulan))
         ->where('a.tahun', floatval($tahun))
         ->where('a.status', floatval($status))

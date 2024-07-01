@@ -24,7 +24,7 @@
                     <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
                     <td class="text-center"><?= formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']) ?></td>
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
-                    <td class="text-center"><?= ($r['keterangan']) ?></td>
+                    <td class="text-center"><?= ($r['nama_jenis_disiplin_kerja']) ?></td>
                     <td class="text-center">
                         <?php if($r['url_outside']){ ?>
                             <div class="btn-group" role="group">

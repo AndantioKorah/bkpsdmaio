@@ -591,6 +591,84 @@ class C_Kinerja extends CI_Controller
         }
     }
 
+    public function reuploadDisiplinKerja($random_string)
+    {
+        
+        $this->load->library('image_lib');
+        $countfiles = count($_FILES['files']['name']);
+
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        $ress = 1;
+        if (implode($_FILES['files']['name']) == "") {
+            $nama_file = '[""]';
+            $image = $nama_file;
+            // $dataPost = $this->input->post();
+            echo json_encode($this->kinerja->reuploadDisiplinKerja($this->input->post(), $image, $random_string));
+            // $this->kinerja->createLaporanKegiatan($dataPost,$image);
+        } else {
+            for ($i = 0; $i < $countfiles; $i++) {
+                if (!empty($_FILES['files']['name'][$i])) {
+                    $data = null;
+                    $_FILES['file']['name'] = date('ymdhis') . '_' . $_FILES['files']['name'][$i];
+                    $_FILES['file']['type'] = $_FILES['files']['type'][$i];
+                    $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
+                    $_FILES['file']['error'] = $_FILES['files']['error'][$i];
+                    $_FILES['file']['size'] = $_FILES['files']['size'][$i];
+
+                    // Set preference
+                    $random_number = intval("0" . rand(1, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9));
+                    $config['upload_path'] = './assets/dokumen_pendukung_disiplin_kerja';
+                    //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
+                    $config['allowed_types'] = '*';
+                    $config['max_size'] = '5000'; // max_size in kb
+
+                    //Load upload library
+                    $this->load->library('upload', $config);
+                    if ( ! $this->upload->do_upload('file'))
+                    {
+                            $error = array('error' => $this->upload->display_errors());
+                            $res = array('msg' => $error, 'success' => false);
+                            return $res;
+                    }
+
+                  
+                    if ($this->upload->do_upload('file')) {
+
+                        $data = $this->upload->data();
+                        $insert['name'] = $data['file_name'];
+                        $config['image_library'] = 'gd2';
+                        $config['source_image'] = './assets/dokumen_pendukung_disiplin_kerja/' . $data["file_name"];
+                        $config['create_thumb'] = FALSE;
+                        $config['maintain_ratio'] = FALSE;
+
+                        if ($data['image_height'] > 1000 || $data['image_width'] > 1000) {
+                            // $imgdata=exif_read_data($this->upload->upload_path.$this->upload->file_name, 'IFD0');
+                            $config['width'] = $data['image_width'] * 50 / 100;
+                            $config['height'] = $data['image_height'] * 50 / 100;
+                        }
+                        // else {
+                        //     $config['width'] = 600;
+                        //     $config['height'] = 600;  
+                        // }
+                        $config['master_dim'] = 'auto';
+                        $config['quality'] = "50%";
+
+                        $this->image_lib->initialize($config);
+                        $this->image_lib->resize();
+                    }
+                }
+                $nama_file[] = $data['file_name'];
+            }
+            if ($ress == 1) {
+                $image = json_encode($nama_file);
+                echo json_encode($this->kinerja->reuploadDisiplinKerja($this->input->post(), $image, $random_string));
+                // $dataPost = $this->input->post();
+                // $this->kinerja->createLaporanKegiatan($dataPost,$image);
+            }
+            // echo json_encode($this->kinerja->reuploadDisiplinKerja($this->input->post()));
+        }
+    }
+
     public function checkLockTpp(){
         echo json_encode($this->kinerja->checkLockTpp());
     }
@@ -606,6 +684,20 @@ class C_Kinerja extends CI_Controller
             $data['meta_jenis_disiplin'][$jd['id']] = $jd;
         }
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
+    }
+
+    public function reuploadDataDisiplinKerja($random_string)
+    {
+        $data['data'] = $this->kinerja->getDataForReuploadDisiplinKerja($random_string);
+        // $id_unitkerja = "4018000";
+        // $data['pegawai'] = $this->master->getPegawaiBySkpd($id_unitkerja);
+        // $data['skpd'] = $this->master->getAllUnitKerja();
+        $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
+        $data['meta_jenis_disiplin'] = null;
+        foreach($data['jenis_disiplin'] as $jd){
+            $data['meta_jenis_disiplin'][$jd['id']] = $jd;
+        }
+        $this->load->view('kinerja/V_ModalReuploadDataDisiplinKerja', $data);
     }
 
     public function deleteDataDisiplinKerja($id)

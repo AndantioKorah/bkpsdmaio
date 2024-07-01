@@ -457,6 +457,11 @@ function formatDateOnlyForEdit($data)
     return date("Y-m-d", strtotime($data));
 }
 
+function formatDateOnlyForEdit3($data)
+{
+    return date("m-d-Y", strtotime($data));
+}
+
 function formatDateForEdit($data)
 {
     return date("Y-m-d H:i:s", strtotime($data));

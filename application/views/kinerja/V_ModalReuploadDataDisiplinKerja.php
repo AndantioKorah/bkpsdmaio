@@ -4,12 +4,26 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 mt-3">
                     <label>Pilih Periode</label>  
-                    <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
+                    <input style="display: <?=$data['flag_fix_tanggal'] == 1 ? 'none' : 'block'?>;" <?=$data['flag_fix_tanggal'] == 0 ? 'disabled' : ''?> class="form-control range_periode form-control-sm" readonly/>
+                    <input style="display: <?=$data['flag_fix_tanggal'] == 0 ? 'none' : 'block'?>;" class="form-control form-control-sm range_periode" name="range_periode" readonly/>
                 </div>
                 <div class="col-lg-12 col-md-12 mt-3">
                     <label>Pilih Jenis Disiplin</label>  
-                    <select class="form-control select2-navy" style="width: 100%" onchange="suratTugas(this);"
-                        id="jenis_disiplin" data-dropdown-css-class="select2-navy" name="jenis_disiplin">
+                    <?php if($data['flag_fix_jenis_disiplin'] == 0){ ?>
+                        <select class="form-control jenis_disiplin select2-navy" onchange="suratTugas(this);"
+                            style="display: <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'none' : 'block'?>; width: 100%;"
+                            data-dropdown-css-class="select2-navy" <?=$data['flag_fix_jenis_disiplin'] == 0 ? 'disabled' : ''?>>
+                            <?php foreach($jenis_disiplin as $j){ ?>
+                                <option <?=$j['id'] == $data['id_m_jenis_disiplin_kerja'] ? 'selected' : '' ;?>
+                                    value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan'].';'.$j['batas_waktu']?>">
+                                    <?=$j['nama_jenis_disiplin_kerja']?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    <?php } ?>
+                    <select class="form-control <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'jenis_disiplin' : ''?> select2-navy" onchange="suratTugas(this);"
+                        style="width: 100%; display: <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'block' : 'none'?>"
+                        data-dropdown-css-class="select2-navy" name="jenis_disiplin">
                         <?php foreach($jenis_disiplin as $j){ ?>
                             <option <?=$j['id'] == $data['id_m_jenis_disiplin_kerja'] ? 'selected' : '' ;?>
                                 value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan'].';'.$j['batas_waktu']?>">
@@ -20,15 +34,19 @@
                 </div>
 
                 <div class="col-lg-12 col-md-12 mt-3">
-                    <label>Dokumen Pendukung</label>  
-                    <input class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
+                    <label>Dokumen Pendukung</label>
+                    <input disabled style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'block' : 'none'?>"
+                        <?=$data['flag_fix_dokumen_upload'] == 0 ? 'disabled' : ''?> class="form-control"
+                        type="file" multiple="multiple" />
+                    <input style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'none' : 'block'?>" class="form-control"
+                        type="file" id="image_file" name="files[]" multiple="multiple" />
                     <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
                         Biarkan kosong jika tidak ingin mengganti dokumen pendukung yang sudah diupload sebelumnya
                     </label>
                 </div>
                 <div class="col-lg-12 col-md-12 mt-3" style="margin-top: 28px;">
                     <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
-                    <button id="btn_tambah" type="submit" class="btn btn-block btn-navy"><i class="fa fa-input"></i> Tambah</button>
+                    <button id="btn_tambah" type="submit" class="btn btn-block btn-navy"><i class="fa fa-save"></i> Simpan</button>
                     <button style="display: none;" id="btn_loading" disabled type="button" class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
                 </div>
             </div>
@@ -43,9 +61,9 @@
             );
 
             $('#pegawai').select2()
-            $('#jenis_disiplin').select2()
+            $('.jenis_disiplin').select2()
             $('#cariunitkerja').select2()
-            $("#range_periode").daterangepicker({
+            $(".range_periode").daterangepicker({
                 format: 'DD/MM/YYYY',
                 showDropdowns: true,
                 startDate: '<?=formatDateOnlyForEdit3($data['tanggal_awal'])?>',
@@ -55,10 +73,10 @@
             checkLockTpp()
         })
 
-        $('#jenis_disiplin').on('change', function(){
+        $('.jenis_disiplin').on('change', function(){
         })
 
-        $("#range_periode").on('change', function(){
+        $(".range_periode").on('change', function(){
             checkLockTpp()
         })
 
@@ -69,7 +87,7 @@
                 url: '<?=base_url("kinerja/C_Kinerja/checkLockTpp")?>',
                 method: 'post',
                 data: {
-                    periode: $("#range_periode").val()
+                    periode: $(".range_periode").val()
                 },
                 success: function(data){
                     let rs = JSON.parse(data)

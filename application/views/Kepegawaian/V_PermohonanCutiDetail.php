@@ -102,7 +102,7 @@
           </a>
         </div>
       <?php } ?>
-      <?php if($result['id_m_status_pengajuan_cuti'] == 4 && $result['url_sk'] && (isset($flag_only_see) && $flag_only_see == 0)){ ?>
+      <?php if($result['url_sk'] && (isset($flag_only_see) && $flag_only_see == 0)){ ?>
       <?php //if($result['id_m_status_pengajuan_cuti'] == 6){ ?>
         <hr>
         <div class="col-lg-12 text-center">
@@ -116,7 +116,7 @@
     <?php } ?>
   </div>
 </div>
-<?php if($result && $result['id_m_status_pengajuan_cuti'] == 1){ ?>
+<?php if($progress[0]['flag_verif'] == 0 && $result && $result['id_m_user'] == $this->general_library->getId()){ ?>
   <div class="modal-footer">
     <button onclick="deletePermohonanCuti('<?=$result['id']?>')" class="btn btn-danger">Hapus</button>
   </div>

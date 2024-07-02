@@ -168,7 +168,7 @@
             method: 'post',
             data: {
                 list_id : $('.btn_verif_'+$('#id_modal_verif').val()).data('list_id'),
-                keterangan_verif: $('#modal_ket_verif').val(),
+                keterangan: $('#modal_ket_verif').html(),
                 flag_fix_tanggal: $('#flag_fix_tanggal').is(":checked"),
                 flag_fix_jenis_disiplin: $('#flag_fix_jenis_disiplin').is(":checked"),
                 flag_fix_dokumen_upload: $('#flag_fix_dokumen_upload').is(":checked")

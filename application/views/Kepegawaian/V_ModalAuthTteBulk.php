@@ -51,5 +51,7 @@
         $('#btn_submit_auth_loader').hide()
       }
     })
+    // $('#btn_submit_auth').show()
+    // $('#btn_submit_auth_loader').hide()
   })
 </script>

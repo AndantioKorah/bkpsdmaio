@@ -98,6 +98,7 @@
     })
 
     function checkLockButton(){
+        let param_lock_upload_dokpen = '<?= $param_lock_upload_dokpen ?>'
         let periode = $("#range_periode").val()
         let explode_periode = periode.split("-");
         let tanggal_akhir = explode_periode[1]
@@ -113,13 +114,11 @@
         today = today.setHours(0, 0, 0, 0)
         batas_waktu_date = batas_waktu_date.setHours(0, 0, 0, 0)
         
-        if(today > batas_waktu_date){
+        if((today > batas_waktu_date) && param_lock_upload_dokpen == '1'){
             $('#btn_tambah').hide()
             $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
             $('#error_label').show()
         }
-        // console.log (today + ' / ' + batas_waktu_date)
-        // console.log(today > batas_waktu_date)
     }
 
     $('#jenis_disiplin').on('change', function(){

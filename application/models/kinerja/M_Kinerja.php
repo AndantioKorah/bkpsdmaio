@@ -1194,51 +1194,51 @@
             $temp = $result;
             $result = null;
             foreach($temp as $t){
-                // if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
-                //     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
-                //         $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                //     }
+                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                    //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
 
-                //     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
-                //         $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                //     }
+                    //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    }
 
-                //     $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
-                // } else {
-                //     $result[$t['nip'].$t['dokumen_pendukung']] = $t;
-                //     $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
-                //     $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                //     $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                // }
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                } else {
+                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
+                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                }
 
                 // if($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] == $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal']){
                 //     $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = null;
                 // }
 
-                if(isset($result[$t['nip'].$t['id']])){
-                    //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['id']]['dari_tanggal'])){
-                        $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    }
+                // if(isset($result[$t['nip'].$t['id']])){
+                //     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
+                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['id']]['dari_tanggal'])){
+                //         $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     }
 
-                    //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['id']]['sampai_tanggal'])){
-                        $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    }
+                //     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
+                //     if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['id']]['sampai_tanggal'])){
+                //         $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     }
 
-                    $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
-                } else {
-                    $result[$t['nip'].$t['id']] = $t;
-                    $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
-                    $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                }
+                //     $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
+                // } else {
+                //     $result[$t['nip'].$t['id']] = $t;
+                //     $result[$t['nip'].$t['id']]['list_id'][] = $t['id'];
+                //     $result[$t['nip'].$t['id']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                //     $result[$t['nip'].$t['id']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                // }
 
-                if($result[$t['nip'].$t['id']]['dari_tanggal'] == $result[$t['nip'].$t['id']]['sampai_tanggal']){
-                    $result[$t['nip'].$t['id']]['sampai_tanggal'] = null;
-                }
+                // if($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] == $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal']){
+                //     $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = null;
+                // }
             }
         }
         
@@ -1253,6 +1253,42 @@
         //     $count['batal'] = count($result);
         // }
         return [$result, $count];
+    }
+
+    public function getDataForReuploadDisiplinKerja($random_string){
+        $data = $this->db->select('*')
+                        ->from('t_dokumen_pendukung')
+                        ->where('flag_active', 1)
+                        ->where('random_string', $random_string)
+                        ->order_by('id')
+                        ->get()->result_array();
+        if($data){
+            $result = $data[0];
+            $i = 0;
+            if(count($data) == 1){
+                $tanggal_awal = $data[0]['tanggal'] < 10 ? '0'.$data[0]['tanggal'] : $data[0]['tanggal'];
+                $bulan_awal = $data[0]['bulan'] < 10 ? '0'.$data[0]['bulan'] : $data[0]['bulan'];
+                $result['tanggal_awal'] = $data[0]['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal;
+
+                $tanggal_akhir = $data[0]['tanggal'] < 10 ? '0'.$data[0]['tanggal'] : $data[0]['tanggal'];
+                $bulan_akhir = $data[0]['bulan'] < 10 ? '0'.$data[0]['bulan'] : $data[0]['bulan'];
+                $result['tanggal_akhir'] = $data[0]['tahun'].'-'.$bulan_akhir.'-'.$tanggal_akhir;
+            } else {
+                foreach($data as $d){
+                    if($i == 0){
+                        $tanggal_awal = $d['tanggal'] < 10 ? '0'.$d['tanggal'] : $d['tanggal'];
+                        $bulan_awal = $d['bulan'] < 10 ? '0'.$d['bulan'] : $d['bulan'];
+                        $result['tanggal_awal'] = $d['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal; 
+                    } else if($i == count($data) - 1){
+                        $tanggal_akhir = $d['tanggal'] < 10 ? '0'.$d['tanggal'] : $d['tanggal'];
+                        $bulan_akhir = $d['bulan'] < 10 ? '0'.$d['bulan'] : $d['bulan'];
+                        $result['tanggal_akhir'] = $d['tahun'].'-'.$bulan_akhir.'-'.$tanggal_akhir;
+                    }
+                    $i++;
+                }
+            }
+        }
+        return $result;
     }
 
     public function searchDisiplinKerja($data){
@@ -1324,14 +1360,65 @@
         // return $result;
     }
 
+    public function batchRandomString($bulan, $tahun){
+        $result = $this->db->select('*')
+                        ->from('t_dokumen_pendukung')
+                        ->where('random_string IS NULL')
+                        ->where_in('status', [3])
+                        ->where('bulan', $bulan)
+                        ->where('tahun', $tahun)
+                        ->where('flag_active', 1)
+                        ->get()->result_array();
+        if($result){
+            $before = null;
+            $curr = null;
+            $list_id = null;
+
+            $meta = null;
+            foreach($result as $t){
+                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja'];
+                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+            }
+
+            if($meta){
+                foreach($meta as $m){
+                    $explode = explode(";", $m['name']);
+                    $this->db->where('id_m_user', $explode[0])
+                            ->where('id_m_jenis_disiplin_kerja', $explode[1])
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->update('t_dokumen_pendukung', [
+                                'random_string' => $m['random_string']
+                            ]);
+                }
+            }
+        }
+    }
+
     public function insertDisiplinKerja($data, $filename){
         $res['code'] = 0;
         $res['message'] = '';
 
         $this->db->trans_begin();
 
+        $param_lock_upload_dokpen = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_UPLOAD_DOKPEN', 1)['parameter_value'];
+
         $tanggal = explodeRangeDateNew($data['range_periode']);
         $jenis_disiplin = explode(';', $data['jenis_disiplin']);
+        $tanggal_akhir = $tanggal[1];
+        
+        $batas_waktu = date('Y-m-d');
+        $date = new DateTime($batas_waktu);
+        $date->sub(new DateInterval('P3D'));
+        $expirydate = $date->format('Y-m-d');
+        
+        // dd($tanggal_akhir.' - '.$expirydate.'<br>');
+        // $tanggal_akhir = '2024-06-27';
+        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1){
+            $res['code'] = 1;
+            $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
+            return $res;
+        }
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
         
@@ -1370,6 +1457,7 @@
             }
         }
         // dd($list_exist);
+        $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
         $insert_data = null;
         $i = 0;
         foreach($data['pegawai'] as $d){
@@ -1410,13 +1498,140 @@
                     || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) {
                         $insert_data[$i]['status'] = 2;
                     }
-
-
+                    $insert_data[$i]['random_string'] = $batchId;
                     $i++;
                 // }
             }
         }
         $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function reuploadDisiplinKerja($data, $filename, $random_string){
+        $res['code'] = 0;
+        $res['message'] = '';
+
+        $this->db->trans_begin();
+
+        $temp_filename = json_decode($filename, true);
+        if($temp_filename && $temp_filename[0] != ""){
+            $temp_filename = $filename;
+        } else {
+            $temp_filename = null;
+        }
+        // dd($data);
+        $tanggal = explodeRangeDateNew($data['range_periode']);
+        $jenis_disiplin = explode(';', $data['jenis_disiplin']);
+
+        $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
+        
+        $explode_tanggal_awal = explode('-', $tanggal[0]);
+        $explode_tanggal_akhir = explode('-', $tanggal[1]);
+
+        $list_pegawai = null;
+        
+        $temp_data = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('flag_active', 1)
+                            ->where('random_string', $random_string)
+                            ->get()->row_array();
+
+        // foreach($data['pegawai'] as $dp){
+        //     $list_pegawai[] = $dp;
+        // }
+        $list_pegawai[] = $temp_data['id_m_user'];
+        $list_nama_pegawai = $this->db->select('*')
+                                    ->from('m_user')
+                                    ->where_in('id', $list_pegawai)
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+
+        $data['pegawai'] = $list_nama_pegawai;
+
+        $list_exist = null;
+        $exist = $this->db->select('*')
+                        ->from('t_dokumen_pendukung')
+                        ->where_in('id_m_user', $list_pegawai)
+                        ->where('tahun >=', $explode_tanggal_awal[0])
+                        ->where('tahun <=', $explode_tanggal_akhir[0])
+                        ->where('bulan >=', $explode_tanggal_awal[1])
+                        ->where('bulan <=', $explode_tanggal_akhir[1])
+                        ->where('status !=', 3)
+                        ->where('flag_active', 1)
+                        ->get()->result_array();
+        if($exist){
+            foreach($exist as $e){
+                $tanggal = $e['tanggal'] > 10 ? $e['tanggal'] : '0'.$e['tanggal'];
+                $bulan = $e['bulan'] > 10 ? $e['bulan'] : '0'.$e['bulan'];
+                $list_exist[$e['id_m_user'].$tanggal.$bulan.$e['tahun']] = $e;
+            }
+        }
+        // dd($list_exist);
+        $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
+        $insert_data = null;
+        $i = 0;
+        foreach($data['pegawai'] as $d){
+            $disiplin = explode(';', $data['jenis_disiplin']);
+            foreach($list_tanggal as $l){
+                // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
+                    $date = explode('-', $l);
+                    // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
+                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]])){ // jika ada dokumen pendukung pada tanggal tersebut
+                        $this->db->trans_rollback();
+                        $res['code'] = 1;
+                        $res['message'] = 'Gagal mengisi dokumen pendukung. Pegawai atas nama '.$d['nama'].' memiliki dokumen pendukung pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
+                        $res['data'] = null;
+                        return $res;                        
+                    }
+                    $insert_data[$i]['id_m_user'] = $d['id'];
+                    $insert_data[$i]['tahun'] = $date[0];
+                    $insert_data[$i]['bulan'] = $date[1];
+                    $insert_data[$i]['tanggal'] = $date[2];
+                    $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
+                    if($disiplin[0] == 14){
+                        if(isset($data['jenis_tugas_luar'])){
+                            if($data['jenis_tugas_luar'] == 'Tugas Luar Pagi'){
+                                $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 19;
+                            } else if($data['jenis_tugas_luar'] == 'Tugas Luar Sore'){
+                                $insert_data[$i]['id_m_jenis_disiplin_kerja'] = 20;
+                            }
+                            $insert_data[$i]['keterangan'] = $data['jenis_tugas_luar'];
+                        }
+                    } else {
+                        $insert_data[$i]['keterangan'] = $disiplin[1];
+                    }
+                   
+                    $insert_data[$i]['pengurangan'] = $disiplin[2];
+                    $insert_data[$i]['dokumen_pendukung'] = $temp_filename ? $temp_filename : $temp_data['dokumen_pendukung'];
+                    $insert_data[$i]['created_by'] = $this->general_library->getId();
+                    if($this->general_library->isProgrammer() 
+                    || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) {
+                        $insert_data[$i]['status'] = 2;
+                    }
+                    $insert_data[$i]['random_string'] = $batchId;
+                    $insert_data[$i]['random_string_reupload'] = $random_string;
+                    $i++;
+                // }
+            }
+        }
+        $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
+
+        $this->db->where('random_string', $random_string)
+                ->update('t_dokumen_pendukung', 
+                [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -1498,12 +1713,21 @@
 
         $this->db->trans_begin();
 
-        $this->db->where_in('id', $this->input->post('list_id'))
-                ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+        // $this->db->where_in('id', $this->input->post('list_id'))
+        //         ->update('t_dokumen_pendukung', ['flag_active' => 0]);
         
         $tmp = $this->db->select('*')
-                        ->from('t_dokumen_pendukung', $id)
+                        ->from('t_dokumen_pendukung')
+                        ->where('id', $id)
                         ->get()->row_array();
+
+        if($tmp['random_string']){
+            $this->db->where('random_string', $tmp['random_string'])
+                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+        } else {
+            $this->db->where_in('id', $this->input->post('list_id'))
+                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+        }
 
         $id_count = $tmp['id_m_user'];
         if($this->general_library->isProgrammer()){
@@ -1745,24 +1969,34 @@
         $rs['message'] = 'OK';        
         $this->db->trans_begin();
 
+        $temp = $this->input->post();
+        
         $data_verif['status'] = $status;
         $data_verif['id_m_user_verif'] = $this->general_library->getId();
         $data_verif['updated_by'] = $this->general_library->getId();
         $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+        $data_verif['flag_fix_tanggal'] = isset($temp['flag_fix_tanggal']) ? $temp['flag_fix_tanggal'] == "true" ? 1 : 0 : 0;
+        $data_verif['flag_fix_jenis_disiplin'] = isset($temp['flag_fix_jenis_disiplin']) ? $temp['flag_fix_jenis_disiplin'] == "true" ? 1 : 0 : 0;
+        $data_verif['flag_fix_dokumen_upload'] = isset($temp['flag_fix_dokumen_upload']) ? $temp['flag_fix_dokumen_upload'] == "true" ? 1 : 0 : 0;
         if($status == 2 || $status == 3){
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $this->db->where_in('id', $this->input->post('list_id'))
-                ->update('t_dokumen_pendukung', $data_verif);
-
-        $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string')
                         ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                         ->where('a.id', $id)
                         ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
+
+        if($temp['random_string']){
+            $this->db->where('random_string', $temp['random_string'])
+                ->update('t_dokumen_pendukung', $data_verif);
+        } else {
+            $this->db->where_in('id', $this->input->post('list_id'))
+                ->update('t_dokumen_pendukung', $data_verif);
+        }
 
         $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
 

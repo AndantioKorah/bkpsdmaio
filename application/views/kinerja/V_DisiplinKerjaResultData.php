@@ -1,5 +1,5 @@
 <?php if($result){ ?>
-    <div class="table-responsive">
+    <div style="width: 100%;" class="table-responsive">
     <table border=1 class="table table-hover" id="table_disiplin_kerja_result_data">
         <thead>
             <th class="text-center">No</th>
@@ -51,8 +51,10 @@
                     </td>
                     <?php if($status != 1){ ?>
                         <td class="text-left">
-                        <!-- <span style="font-size: 14px;"><?='<strong>'.$r['keterangan_verif'].'</strong><br>(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span> -->
-                        <span style="font-size: 14px;"><?='<strong>'.$r['keterangan_verif'].'</strong><br>(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) { ?>
+                                <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php } ?>
+                            <span style="font-size: 14px;"><?='<strong>'.$r['keterangan_verif'].'</strong><br>(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         </td>
                     <?php } ?>
                     <td class="text-center">
@@ -64,7 +66,12 @@
                                 <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                                 <?php } ?>
                                 <?php } else { ?>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                    <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                    <?php if($status == 3){ ?>
+                                        <button data-list_id='<?=json_encode($r['list_id'])?>' href="#tambah_data_disiplin_kerja"
+                                        onclick="reupload('<?=$r['random_string']?>')" type="button" data-toggle="modal"
+                                        id="btn_reupload_detail_<?=$r['random_string']?>" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Reupload</button>
+                                    <?php } ?>
                             <?php } ?>
                             <button type="button" disabled style="display: none;" id="btn_loading_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
                     </td>
@@ -87,4 +94,12 @@
 
         $('#table_disiplin_kerja_result_data').dataTable()
     })
+
+    function reupload(random_string){
+        $('#tambah_data_disiplin_kerja_content').html('')
+        $('#tambah_data_disiplin_kerja_content').append(divLoaderNavy)
+        $('#tambah_data_disiplin_kerja_content').load('<?=base_url("kinerja/C_Kinerja/reuploadDataDisiplinKerja")?>'+'/'+random_string, function(){
+            $('#loader').hide()
+        })
+    }
 </script>

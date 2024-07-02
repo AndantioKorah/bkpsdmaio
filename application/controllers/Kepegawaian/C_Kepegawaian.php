@@ -50,6 +50,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCutiForDs($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);
 		$data['flag_only_see'] = 1;
 		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
 	}

@@ -1401,7 +1401,7 @@
 
         $this->db->trans_begin();
 
-        $param_lock_tpp = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_TPP', 1)['parameter_value'];
+        $param_lock_upload_dokpen = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_UPLOAD_DOKPEN', 1)['parameter_value'];
 
         $tanggal = explodeRangeDateNew($data['range_periode']);
         $jenis_disiplin = explode(';', $data['jenis_disiplin']);
@@ -1414,7 +1414,7 @@
         
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
-        if(($tanggal_akhir < $expirydate) && $param_lock_tpp == 1){
+        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1){
             $res['code'] = 1;
             $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
             return $res;

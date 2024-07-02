@@ -52,7 +52,7 @@
                     <?php if($status != 1){ ?>
                         <td class="text-left">
                             <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) { ?>
-                                <span style="font-size: 14px;"><?='<strong>'.$r['keterangan_verif'].'</strong><br>(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                                <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                             <?php } ?>
                             <span style="font-size: 14px;"><?='<strong>'.$r['keterangan_verif'].'</strong><br>(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         </td>

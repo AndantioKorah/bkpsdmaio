@@ -98,7 +98,7 @@
     })
 
     function checkLockButton(){
-        let param_lock_tpp = '<?= $param_lock_tpp ?>'
+        let param_lock_upload_dokpen = '<?= $param_lock_upload_dokpen ?>'
         let periode = $("#range_periode").val()
         let explode_periode = periode.split("-");
         let tanggal_akhir = explode_periode[1]
@@ -114,7 +114,7 @@
         today = today.setHours(0, 0, 0, 0)
         batas_waktu_date = batas_waktu_date.setHours(0, 0, 0, 0)
         
-        if((today > batas_waktu_date) && param_lock_tpp == '1'){
+        if((today > batas_waktu_date) && param_lock_upload_dokpen == '1'){
             $('#btn_tambah').hide()
             $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
             $('#error_label').show()

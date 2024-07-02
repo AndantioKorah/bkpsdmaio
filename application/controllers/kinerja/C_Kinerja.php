@@ -682,7 +682,7 @@ class C_Kinerja extends CI_Controller
         foreach($data['jenis_disiplin'] as $jd){
             $data['meta_jenis_disiplin'][$jd['id']] = $jd;
         }
-        $data['param_lock_tpp'] = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_TPP', 1)['parameter_value'];
+        $data['param_lock_upload_dokpen'] = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_UPLOAD_DOKPEN', 1)['parameter_value'];
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
     }
 

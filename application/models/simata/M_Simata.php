@@ -3996,7 +3996,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                      //   tutup assesment
                                      
                                     // rekam jejak
-                                        $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+                                        // $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
 
                                         // testing
                                         $id_rekamjjk1 = $this->getPendidikanFormal($rs['id_pegawai']); 
@@ -4007,8 +4007,11 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $id_rekamjjk6 = $this->getPenghargaan($rs['id_pegawai']); 
                                         $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                                             
-                                        // $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
-    
+                                        $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
+                                        $id_pertimbangan2 = 124;
+                                        $id_pertimbangan3 = 126;
+                                        
+                                     
                                         // $id_rekamjjk1 = 93; 
                                         // $id_rekamjjk2 = 96;
                                         // $id_rekamjjk3 = 102; 
@@ -4046,13 +4049,21 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                     $bobot7 = $this->getBobot($id_rekamjjk7); 
                                     $total_rj7 = $skor7  * $bobot7 / 100;
     
-                                    // $skor8 =  $this->getSkor($id_pertimbangan1); 
-                                    // $bobot8 = $this->getBobot($id_pertimbangan1); 
-                                    // $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
+                                    $skor8 =  $this->getSkor($id_pertimbangan1); 
+                                    $bobot8 = $this->getBobot($id_pertimbangan1); 
+                                    $total_pertimbangan_lainnya1 = $skor8  * $bobot8 / 100;
+
+                                    $skor9 =  $this->getSkor($id_pertimbangan2); 
+                                    $bobot9 = $this->getBobot($id_pertimbangan2); 
+                                    $total_pertimbangan_lainnya2 = $skor9  * $bobot9 / 100;
+
+                                    $skor10 =  $this->getSkor($id_pertimbangan3); 
+                                    $bobot10 = $this->getBobot($id_pertimbangan3); 
+                                    $total_pertimbangan_lainnya3 = $skor10  * $bobot10 / 100;
                                     
-                                    $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5 + + $total_rj6 + + $total_rj7;
-                                    // $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1;
-                        
+                                    $total_rj = $total_rj1 + $total_rj2 + $total_rj3 + $total_rj4 + $total_rj5  + $total_rj6  + $total_rj7;
+                                    $total_pertimbangan_lainnya = $total_pertimbangan_lainnya1 + $total_pertimbangan_lainnya2 + $total_pertimbangan_lainnya3;
+                                    //  dd($total_pertimbangan_lainnya);
                                         $data["id_peg"] = $rs['id_pegawai'];
                                         $data["pendidikan_formal"] = $id_rekamjjk1;
                                         $data["pangkat_gol"] = $id_rekamjjk2;
@@ -4062,7 +4073,9 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $data["penghargaan"] = $id_rekamjjk6;
                                         $data["riwayat_hukdis"] = $id_rekamjjk7;
                                         // $data['nilai_assesment'] = $nilaiass;
-                                        // $data["pengalaman_organisasi"] = $id_pertimbangan1;
+                                        $data["pengalaman_organisasi"] = $id_pertimbangan1;
+                                        $data["aspirasi_karir"] = $id_pertimbangan2;
+                                        $data["asn_ceria"] = $id_pertimbangan3;
                                         $data["jenjang_jabatan"] = $jenis_pengisian;
 
                                         
@@ -4089,7 +4102,9 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 'penghargaan' => $id_rekamjjk6,
                                 'riwayat_hukdis' => $id_rekamjjk7,
                                 // 'nilai_assesment' => $nilaiass,
-                                // 'pengalaman_organisasi' => $id_pertimbangan1,
+                                'pengalaman_organisasi' => $id_pertimbangan1,
+                                'aspirasi_karir' => $id_pertimbangan2,
+                                'asn_ceria' => $id_pertimbangan3,
                                 'jenjang_jabatan' => $jenis_pengisian]);
                                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                                     } else {
@@ -4111,16 +4126,16 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         ->get()->result_array();
                             
                                         if($getAllNilaiPotensial){
-                                        // $total_potensial = $getAllNilaiPotensial[0]['res_potensial_cerdas'] + $getAllNilaiPotensial[0]['res_potensial_rj'] + $getAllNilaiPotensial[0]['res_potensial_lainnya'];
     
                                             foreach ($getAllNilaiPotensial as $rs2) {
-                                            // $total_potensial = $rs['res_potensial_cerdas'] + $total_rj + $total_pertimbangan_lainnya;
-                                            $total_potensial = $total_nilai + $total_rj + $rs['res_potensial_lainnya'];
+                                            // $total_potensial = $total_nilai + $total_rj + $rs['res_potensial_lainnya'];
+                                            $total_potensial = $total_nilai + $total_rj + $total_pertimbangan_lainnya;
                                             $this->db->where('id_peg', $rs['id_pegawai'])
                                             ->where('jenjang_jabatan', $jenis_pengisian)
                                             ->update('db_simata.t_penilaian', 
                                             ['res_potensial_total' => $total_potensial,
                                             'res_potensial_rj' => $total_rj,
+                                            'res_potensial_lainnya' => $total_pertimbangan_lainnya,
                                             'jenjang_jabatan' => $jenis_pengisian]);
                                                         
                                             }
@@ -4129,7 +4144,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             $dataInsert2['res_potensial_rj']      = $total_rj;
                                             $dataInsert2['jenjang_jabatan']      = $jenis_pengisian;
                                             $dataInsert2['res_potensial_total']      = $total_rj;
-                                            // $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
+                                            $dataInsert2['res_potensial_lainnya']      = $total_pertimbangan_lainnya;
                                             $this->db->insert('db_simata.t_penilaian', $dataInsert2);  
                                         }
         
@@ -4173,6 +4188,56 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->from('db_pegawai.unitkerjamaster a');
                             return $this->db->get()->result_array(); 
                         }
+
+
+                        public function getPegawaiPenilaianPotensialMasaKerja($id,$jenis_pengisian,$penilaian,$eselon,$skpd){
+                            // $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang,
+                            // (select d.res_potensial_cerdas from db_simata.t_penilaian as d where a.id_peg = d.id_peg and d.flag_active = 1 and d.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_cerdas,
+                            // (select e.res_potensial_rj from db_simata.t_penilaian as e where a.id_peg = e.id_peg and e.flag_active = 1 and e.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_rj,
+                            // (select f.res_potensial_lainnya from db_simata.t_penilaian as f where a.id_peg = f.id_peg and f.flag_active = 1 and f.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_lainnya')
+                            $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
+                                           ->from('db_pegawai.pegawai a')
+                                           ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
+                                           ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                           ->join('db_pegawai.eselon h', 'c.eselon = h.nm_eselon')
+                                           ->where('a.id_m_status_pegawai', 1)
+                                           ->where('b.jenjang_jabatan', $jenis_pengisian)
+                                           ->order_by('c.eselon', 'asc')
+                                           ->group_by('a.id_peg');
+                       
+                                           if($eselon != 0){
+                                               $this->db->where('h.id_eselon',$eselon);
+                                           }
+        
+                                           if($skpd != 0){
+                                            
+                                            $this->db->join('db_pegawai.unitkerja i', 'a.skpd = i.id_unitkerja');
+                                            $this->db->join('db_pegawai.unitkerjamaster j', 'i.id_unitkerjamaster = j.id_unitkerjamaster');
+                                           if($skpd == "5000000") {
+                                            $this->db->where_in('j.id_unitkerjamaster',['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
+                                           } else if($skpd == "8000000"){
+                                            $this->db->where_in('j.id_unitkerjamaster',['8000000','8010000','8020000']);
+                                           } else {
+                                            
+                                            $this->db->where('j.id_unitkerjamaster',$skpd);
+                                           }
+                                           }
+                       
+         
+                                           $query = $this->db->get()->result_array();
+                                          
+                                           if($penilaian != 0){
+                                           foreach ($query as $rs) {
+                                            
+                                                $updateMasakerja = $this->updateMasakerja($rs['id_pegawai']);
+        
+                                               
+                                           
+                                           }
+                                        }
+                                        
+                                   return $query;
+                                   }
           
       
             

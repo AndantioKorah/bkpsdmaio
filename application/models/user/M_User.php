@@ -1943,9 +1943,10 @@
                                 ->where('flag_active', 1)
                                 ->get()->row_array();
 
+               
                 $this->db->insert('db_sip.absen', [
                     'masuk' => $new_absensi_masuk,
-                    'pulang' => $new_absensi_pulang,
+                    'pulang' => $new_absensi_pulang == "00:00:00" ? null : $new_absensi_pulang,
                     'user_id' => $user['id'],
                     'tgl' => $date 
                 ]);

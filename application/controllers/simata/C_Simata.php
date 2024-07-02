@@ -319,6 +319,13 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
     }
 
+    public function loadListPegawaiPenilainPotensialMasaKerja($id,$jenis_pengisian=null,$penilaian,$eselon,$skpd){
+        $data['result'] = $this->simata->getPegawaiPenilaianPotensialMasaKerja($id,$jenis_pengisian,$penilaian,$eselon,$skpd);  
+        $data['kode'] = $id;  
+        $data['jenis_pengisian'] = $jenis_pengisian;  
+        $this->load->view('simata/V_PenilaianPotensialItemJpt', $data);
+    }
+
 
     public function loadModalPenilaianPotensial($id,$nip,$kode,$jenis_pengisian)
     {

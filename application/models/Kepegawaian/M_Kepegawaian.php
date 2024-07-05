@@ -4934,6 +4934,15 @@ public function submitEditJabatan(){
                         'jenis_layanan' => 'Cuti'
                     ];
                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+                    // update t_pengajuan_cuti
+                    if($progress['next']){
+                        $this->db->where('id', $resp['cuti']['id'])
+                                ->update('t_pengajuan_cuti', [
+                                    'id_t_progress_cuti' => $progress['next']['id'],
+                                    'status_pengajuan_cuti' => $progress['next']['keterangan']
+                                ]);
+                    }
                 }
             } else {
                 $reply .= '*DITOLAK*';

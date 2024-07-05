@@ -36,6 +36,7 @@
     <?php if($file_exists == 0){ ?>
       <div class="text-center">
         <h2 style="color: red; font-weight: bold;"><i class="fa fa-times"></i> FILE TIDAK DITEMUKAN</h2>
+        <button onclick="location.reload()" class="btn btn-block btn-navy"><i class="fa fa-refresh"></i> REFRESH</button>
       </div>
     <?php } else {
       if($result){

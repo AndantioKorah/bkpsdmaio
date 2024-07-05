@@ -17,10 +17,12 @@ class C_Maxchat extends CI_Controller
         $this->general->insert('t_chat_group', [
             'text' => json_encode($result)
         ]);
-        $this->general->updateCronWa($result);
-
-        // $str = '{"id":"3EB01753E301E927B16914","time":1717986787000,"type":"text","status":"none","replyId":"BAE5A0746DA472F8","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","text":"ya silahkan diurus sesuai ketentuan"}';
-        // $result = json_decode($str);
+        // if($this->general_library->isProgrammer()){
+        //     $str = '{"id":"3A1694AEB8FEB133CFCD","time":1719902192000,"type":"text","status":"none","replyId":"BAE511E208F6511F","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","text":"ya"}';
+        //     $result = json_decode($str);
+        // } else {
+            $this->general->updateCronWa($result);
+        // }
         if (($result->type == "text" || $result->type == "image") && 
             $result->chatType != "story" &&
             $result->from != GROUP_CHAT_HELPDESK) {

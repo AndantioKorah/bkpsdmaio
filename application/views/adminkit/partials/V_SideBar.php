@@ -331,7 +331,7 @@
 		</li>
 
 
-		<li class="sidebar-item">
+		<!-- <li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
 				style="position: absolute;
@@ -354,7 +354,7 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li>
+							</li> -->
 		
 		</ul>
 	</li>
@@ -423,11 +423,11 @@
 				</a>
 				</li>
 
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Pensiun
 				</a>
-				</li>
+				</li> -->
 				<?php } ?>
 			</ul>
 		</li>
@@ -968,25 +968,35 @@
 			</a>	
 		</li>
 
-		<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaian-pimpinan" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
-				<span class="align-middle">
-			Penilaian Pimpinan
-				</span>
-			</a>	
-		</li>
+		
 
-		<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-potensial/penilaiain-rekan" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
-				<span class="align-middle">
-			Penilaian Rekan Kerja
-				</span>
-			</a>	
-		</li>
+		
 
 		<?php } ?>
+
+		<?php
+				if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isPejabatEselon() 
+				|| $this->general_library->isKepalaPd()
+				|| $this->general_library->isWalikota()
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+				){ ?>
+
+		    <li class="sidebar-header">
+				Manajemen Talenta
+			</li>
+
+				<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-pimpinan/" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+				Penilaian Pimpinan
+					</span>
+				</a>	
+			</li>
+				<?php } ?>
 
 </ul>
 <div class="mt-5">

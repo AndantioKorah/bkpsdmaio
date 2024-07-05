@@ -1854,7 +1854,7 @@
             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
             ->where('a.flag_active', 1)
             ->where('c.id_m_status_pegawai', 1)
-            ->order_by('a.created_date', 'desc');
+            ->order_by('a.tanggal_absensi', 'desc');
             if($data['id_unitkerja'] != "0"){
                 $this->db->where('c.skpd', $data['id_unitkerja']);
             }
@@ -1938,8 +1938,8 @@
         ->join('db_pegawai.pegawai g', 'e.username = g.nipbaru_ws','left')
         ->where('a.status', floatval($status))
         ->where('c.id_m_status_pegawai', 1)
-        ->where('a.flag_active', 1);
-
+        ->where('a.flag_active', 1)
+        ->order_by('a.tanggal_absensi', 'asc');
         if($id_unitkerja != 0){
             $this->db->where('c.skpd', $id_unitkerja);
         }

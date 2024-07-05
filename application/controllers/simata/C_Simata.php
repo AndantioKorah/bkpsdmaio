@@ -8,6 +8,8 @@ class C_Simata extends CI_Controller
         $this->load->model('simata/M_Simata', 'simata');
         $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
+        $this->load->model('master/M_Master', 'master');
+        $this->load->model('user/M_User', 'user');
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
@@ -556,6 +558,29 @@ class C_Simata extends CI_Controller
         //     $this->load->view('user/V_RencanaSuksesiExcel', $data);
         // }
     }
+
+    public function penilaianPimpinan(){
+        $data = null;
+        if($this->general_library->isKaban()){
+            $data['list_bidang'] = $this->master->loadMasterBidangByUnitKerja($this->general_library->getUnitKerjaPegawai());
+        } 
+        if($this->general_library->isWalikota() || $this->general_library->isSetda()){
+            $data['list_skpd'] = $this->user->getAllSkpd();
+        }
+        render('simata/V_PenilaianPimpinan', '', '', $data);
+    }
+
+    public function loadPegawaiPenilaianPimpinan()
+    {
+        $data['periode'] = $this->input->post();
+        $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianPimpinan($this->input->post());
+        $this->load->view('simata/V_PenilaianPimpinanItem', $data);
+    }
+
+    public function submitPenilaianPimpinan()
+	{ 
+		echo json_encode( $this->kepegawaian->submitPenilaianPimpinan());
+	}
     
 
    

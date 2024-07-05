@@ -273,6 +273,7 @@ var doc = image_file.value.split('.')
 var extension = doc[doc.length - 1]
 const  fileType = this.files[0].type;
 
+
 const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
 if (!validImageTypes.includes(fileType)) {
@@ -280,10 +281,10 @@ if (!validImageTypes.includes(fileType)) {
     $(this).val('');
 }
 
-// if (extension != "png" || extension != "jpg" || extension != "jpeg"){
-//   errortoast("Harus File Gambar")
-//   $(this).val('');
-// }
+if (extension == "jfif"){
+  errortoast("Harus File Gambar")
+  $(this).val('');
+}
 
 });
 

@@ -108,6 +108,7 @@ $route['mt/data-rumpun'] = 'simata/C_Simata/rumpun';
 $route['mt/data-rumpun/(:any)'] = 'simata/C_Simata/rumpun/$1';
 $route['mt/penilaian-kompetensi'] = 'simata/C_Simata/penilaianKompetensi';
 $route['mt/jabatan-kosong'] = 'simata/C_Simata/jabatanKosong';
+$route['mt/penilaian-pimpinan'] = 'simata/C_Simata/penilaianPimpinan';
 // $route['mt/penilaian-kinerja-pegawai/(:any)'] = 'simata/C_Simata/penilaianKinerjaPegawai/$1';
 
  

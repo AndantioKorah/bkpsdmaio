@@ -189,6 +189,15 @@
           <i class="fa fa-sync"></i> Penilaian 
         </label>
           </button>
+          <?php if($this->general_library->isProgrammer()) { ?>
+          <button id="btn_hitung_masa_kerja" type="button" style="width: 25% !important; height: 35px !important; font-size: .8rem;"
+            class="btn btn-navy btn-sm"> 
+            <label class="form-check-label" for="flexCheckChecked">
+          <i class="fa fa-sync"></i> Hitung Masa Kerja 
+        </label>
+          </button>
+          <?php } ?>
+
           </div>
         </div>
       <!-- </form> -->
@@ -414,6 +423,30 @@ $(function(){
          
     });
 
+
+    $("#btn_hitung_masa_kerja").click(function(){
+    
+    var eselon = $('#eselon').val()
+    var jenis_pengisian = $('#jenis_pengisian').val()
+    var skpd = $('#unitkerjamaster').val()
+   
+    if(eselon == 4 || eselon == 5){
+      var id = 2;
+      activaTab('jpt');
+    } else if(eselon == 6 || eselon == 7) {
+      var id = 1;
+      activaTab('adm');
+    } else {
+      var id = 3;
+      activaTab('pngws');
+    }
+  
+   
+    loadListPegawaiPenilaianPotensialMasaKerja(id,jenis_pengisian,1,eselon,skpd);
+       
+  });
+    
+
     
 
 
@@ -452,6 +485,35 @@ $(function(){
    $('.list_pegawai_penilaian_kinerja_jpt').html('')
    $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
    $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialJpt/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon+'/'+skpd, function(){
+     $('#loader').hide()
+   })
+  }
+
+  function loadListPegawaiPenilaianPotensialMasaKerja(id,jenis_pengisian,penilaian,eselon,skpd){
+    var radios = document.getElementsByName('inlineRadioOptions');
+    // var penilaian = 0;
+    for (var i = 0, length = radios.length; i < length; i++) {
+      if (radios[i].checked) {
+        // do whatever you want with the checked radio
+        var penilaian = radios[i].value;
+
+        // only one radio can be logically checked, don't check the rest
+        break;
+      }
+    }
+
+  
+  //  return false;
+
+  //  if($('#flexCheckChecked').prop('checked')){
+  //   var penilaian = 1;
+  //  } else {
+  //   var penilaian = 0;
+  //  }
+
+   $('.list_pegawai_penilaian_kinerja_jpt').html('')
+   $('.list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
+   $('.list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListPegawaiPenilainPotensialMasaKerja/")?>'+id+'/'+jenis_pengisian+'/'+penilaian+'/'+eselon+'/'+skpd, function(){
      $('#loader').hide()
    })
   }

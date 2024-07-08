@@ -260,6 +260,20 @@ function stringStartWith($string, $string_check){
     return substr($string_check, 0, strlen($string)) == $string;
 }
 
+function jsonToUrlEncode($json){
+    $i = 0;
+    $res = null;
+    foreach($json as $key => $val){
+        $res .= $key."=".$val;
+        if($i != count($json) - 1){
+            $res .= "&";
+        }
+        $i++;
+    }
+
+    return $res;
+}
+
 function getListDateByMonth($month, $year){
     $list=array();
     for($d=1; $d<=31; $d++)

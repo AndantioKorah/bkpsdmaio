@@ -1360,7 +1360,7 @@
         // return $result;
     }
 
-    public function batchRandomString($bulan, $tahun){
+    public function batchRandomString($bulan, $tahun, $id_m_user = 0){
         $result = $this->db->select('*')
                         ->from('t_dokumen_pendukung')
                         ->where('random_string IS NULL')
@@ -1376,8 +1376,15 @@
 
             $meta = null;
             foreach($result as $t){
-                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja'];
-                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                if($id_m_user != 0){
+                    if($t['id_m_user'] == $id_m_user){
+                        $meta[$id_m_user.';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $id_m_user.';'.$t['id_m_jenis_disiplin_kerja'];
+                        $meta[$id_m_user.';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                    }
+                } else {
+                    $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja'];
+                    $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                }
             }
 
             if($meta){
@@ -1722,8 +1729,13 @@
                         ->get()->row_array();
 
         if($tmp['random_string']){
-            $this->db->where('random_string', $tmp['random_string'])
+            if($this->input->post('list_id')){
+                $this->db->where_in('id', $this->input->post('list_id'))
+                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);    
+            } else {
+                $this->db->where('random_string', $tmp['random_string'])
                         ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+            }
         } else {
             $this->db->where_in('id', $this->input->post('list_id'))
                         ->update('t_dokumen_pendukung', ['flag_active' => 0]);

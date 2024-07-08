@@ -2538,9 +2538,14 @@
                 
                 $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
-
+                
                 if(isset($p['presentasi_tpp'])){
-                    if($p['id_unitkerja'] == $data['id_unitkerja']){
+                    $uk_asal = $this->db->select('*')
+                                        ->from('db_pegawai.pegawai')
+                                        ->where('nipbaru_ws', $p['nipbaru_ws'])
+                                        ->get()->row_array();
+
+                    if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
                             $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];

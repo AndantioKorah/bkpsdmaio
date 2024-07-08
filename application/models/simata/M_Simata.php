@@ -3895,7 +3895,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     // (select d.res_potensial_cerdas from db_simata.t_penilaian as d where a.id_peg = d.id_peg and d.flag_active = 1 and d.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_cerdas,
                     // (select e.res_potensial_rj from db_simata.t_penilaian as e where a.id_peg = e.id_peg and e.flag_active = 1 and e.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_rj,
                     // (select f.res_potensial_lainnya from db_simata.t_penilaian as f where a.id_peg = f.id_peg and f.flag_active = 1 and f.jenjang_jabatan = '.$jenis_pengisian.' limit 1) as res_potensial_lainnya')
-                    $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang')
+                    $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang,
+                    (select pertimbangan_pimpinan from db_simata.t_penilaian_pimpinan aa where aa.id_peg = a.id_peg and aa.flag_active = 1 limit 1) as pertimbangan_pimpinan')
                                    ->from('db_pegawai.pegawai a')
                                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg', 'left')
                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -3926,9 +3927,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
  
                                    $query = $this->db->get()->result_array();
                                   
+                                  
                                    if($penilaian != 0){
                                    foreach ($query as $rs) {
-                                    
+                                  
                                     
                                      //    assesment
                                      $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
@@ -4008,7 +4010,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                                             
                                         $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
-                                        $id_pertimbangan2 = 124;
+                                        $id_pertimbangan2 = $rs['pertimbangan_pimpinan'];
                                         $id_pertimbangan3 = 126;
                                         
                                      
@@ -4246,7 +4248,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $list_id_pegawai = $this->getListIdPegawaiForPenilaianPimpinan($data);
             // dd($data);
             if($list_id_pegawai){
-                $result = $this->db->select('*, a.id as id_m_user')
+                $result = $this->db->select('*, a.id as id_m_user,
+                (select pertimbangan_pimpinan from db_simata.t_penilaian_pimpinan aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as pertimbangan_pimpinan')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
@@ -4687,65 +4690,30 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         public function submitPenilaianPimpinan(){
     
             $datapost = $this->input->post();
-            dd($datapost);
             
             $this->db->trans_begin();
-        
-            if(isset($datapost["edit_goldar"])){
-                $goldar = $datapost["edit_goldar"];
-            } else {
-                $goldar = null;
-            } 
-        
-            $id_pegawai = $datapost['edit_id_pegawai'];
-            $data["gelar1"] = $datapost["edit_gelar1"];
-            $data["nama"] = $datapost["edit_nama"];
-            $data["gelar2"] = $datapost["edit_gelar2"];
-            $data["nipbaru"] = $datapost["edit_nip_baru"];
-            $data["tptlahir"] = $datapost["edit_tptlahir"];
-            $data["tgllahir"] = $datapost["edit_tgllahir"];
-            $data["alamat"] = $datapost["edit_alamat"];
-            $data["jk"] = $datapost["edit_jkelamin"];
-            $data["goldarah"] = $goldar;
-            $data["agama"] = $datapost["edit_agama"];
-            $data["skpd"] = $datapost["edit_unit_kerja"];
-            $data["pendidikan"] = $datapost["edit_pendidikan"];
-            // $data["tmtjabatan"] = $datapost["edit_gelar1"];
-            $data["statusjabatan"] = $datapost["edit_status_jabatan"];
-            $data["jenisjabpeg"] = $datapost["edit_jenis_jabatan"];
-            $data["pangkat"] = $datapost["edit_pangkat"];
-            // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
-            $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
-            // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
-            $data["status"] = $datapost["edit_status_kawin"];
-            $data["statuspeg"] = $datapost["edit_status_pegawai"];
-            $data["jenispeg"] = $datapost["edit_jenis_pegawai"];
-            $data["nik"] = $datapost["edit_nik"];
-            $data["taspen"] = $datapost["edit_taspen"];
-            $data["karpeg"] = $datapost["edit_karpeg"];
-            $data["handphone"] = $datapost["edit_no_hp"];
-            $data["email"] = $datapost["edit_email"];
-        
-            $data["id_m_provinsi"] = 71;
-            if(isset($datapost['edit_kab_kota'])){
-            $data["id_m_kabupaten_kota"] = $datapost["edit_kab_kota"];
-            $data["id_m_kecamatan"] = $datapost["edit_kecamatan"];
-            $data["id_m_kelurahan"] = $datapost["edit_kelurahan"];
-            }
-            $data["id_m_status_pegawai"] = $datapost["edit_id_m_status_pegawai"];
-            $idUser = $datapost["edit_id_m_user"];
-            $dataUser["id_m_bidang"] = $datapost["edit_id_m_bidang"];
-            $dataUser["id_m_sub_bidang"] = $datapost["edit_id_m_sub_bidang"];
-        
-            // dd($data);
-            $this->db->where('id_peg', $id_pegawai)
-                    ->update('db_pegawai.pegawai', $data);
-        
-            $this->db->where('id', $idUser)
-                    ->update('m_user', $dataUser);
-        
-            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-        
+            $id_pegawai = $datapost['id_peg'];
+            $data["id_peg"] = $datapost["id_peg"];
+            $data["pertimbangan_pimpinan"] = $datapost["nilai"];
+            
+             $cek =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian_pimpinan a')
+                            ->where('a.id_peg', $id_pegawai)
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+   
+
+               if($cek){
+                $this->db->where('id_peg', $id_pegawai)
+                ->update('db_simata.t_penilaian_pimpinan', $data);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                } else {
+                    $this->db->insert('db_simata.t_penilaian_pimpinan', $data);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+
+               
+            
         
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();

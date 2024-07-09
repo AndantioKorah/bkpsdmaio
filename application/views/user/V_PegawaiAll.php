@@ -132,6 +132,8 @@
                                     <?php foreach($unitkerja as $u){ ?>
                                         <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
                                     <?php } ?>
+                                    <option value="991" >Semua SD</option>
+                                    <option value="992" >Semua SMP</option>
                                 </select>
                             </div>
                         </div>

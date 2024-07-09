@@ -22,6 +22,11 @@
                       <option value="<?=$uk['id_unitkerja']?>">
                           <?=$uk['nm_unitkerja']?>
                       </option>
+                      <?php if($this->general_library->getIdUnitKerjaPegawai() == 3010000 && isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
+                        <option value="0">
+                          Semua Sekolah
+                      </option>
+                      <?php } ?>
                     <?php } } ?>
                 <?php } } } ?>
             </select>

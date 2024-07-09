@@ -2374,7 +2374,13 @@
             if($flag_profil == 1){
                 $this->db->where('id_m_status_pegawai', 1);
             }
-            if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            if(isset($data['from_list_tpp']) && $data['from_list_tpp'] == 1){
+                if($this->general_library->getUnitKerjaPegawai() == 3010000){
+                    if($data['id_unitkerja'] == 0){
+                        $this->db->where_in('e.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH);
+                    }
+                }
+            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
                 $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
                             ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
             } else if($flag_sekolah_kecamatan == 1){
@@ -2415,8 +2421,11 @@
                 
                 if($p['jenis_jabatan'] == 'JFT'){ // jika JFT
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
-                    $namaunitkerja = explode(" ", $unitkerja['nm_unitkerja']);
-                    if($namaunitkerja[0] == 'Puskesmas'){
+                    $namaunitkerja = null;
+                    if($unitkerja){
+                        $namaunitkerja = explode(" ", $unitkerja['nm_unitkerja']);
+                    }
+                    if($unitkerja && $namaunitkerja[0] == 'Puskesmas'){
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);

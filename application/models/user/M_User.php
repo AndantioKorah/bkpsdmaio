@@ -2097,8 +2097,15 @@
                 $this->db->like('a.nama', $data['nama_pegawai']);
             }
             if($data['unitkerja'] != 0){
-                $this->db->where('a.skpd', $data['unitkerja']);
+                if($data['unitkerja'] == 991){
+                    $this->db->where('b.id_unitkerjamaster', '8010000');
+                } else if($data['unitkerja'] == 992){
+                    $this->db->where('b.id_unitkerjamaster', '8020000');
+                } else {
+                    $this->db->where('a.skpd', $data['unitkerja']);
+                }
             }
+        
             if($data['jft'][0] != '0'){
                 $list_jft = null;
                     foreach($data['jft'] as $jft){

@@ -12,7 +12,7 @@
   box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
   padding: 0.15rem;
   width: 100%;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .radio-inputs .radio {
@@ -52,10 +52,11 @@
   background-color: #1f7640;
   font-weight: 600;
   color: #fff;
+  
 }
 
 .radio-inputs .radio input:checked + .name2 {
-  background-color: #e8e195;
+  background-color: #f5d60a;
   font-weight: 600;
   color: #000;
 }
@@ -66,10 +67,11 @@
             <thead>
                 <th class="text-center">No</th>
                 <th class="text-left">Nama Pegawai</th>
-                <?php if($this->general_library->isWalikota()){ ?>
+                <?php if($this->general_library->isWalikota() || $this->general_library->isSetda()){ ?>
                     <!-- <th class="text-left">Unit Kerja</th> -->
-                    <th class="text-left">Jabatan</th>
+                  
                 <?php } ?>
+                <th class="text-left">Jabatan</th>
                 <th class="text-center"></th>
                 <!-- <th class="text-center">Rotasi Jabatan</th> -->
                 <!-- <th class="text-center">Pilihan</th> -->
@@ -79,10 +81,11 @@
                 <tr>
                     <td class="text-center"><?=$no++;?></td>
                     <td><?=getNamaPegawaiFull($p)?> </td>
-                    <?php if($this->general_library->isWalikota()){ ?>
+                    <?php if($this->general_library->isWalikota() || $this->general_library->isSetda()){ ?>
                         <!-- <td class="text-left"><?=$p['nm_unitkerja']?></td> -->
-                        <td class="text-left"><?=$p['nama_jabatan']?></td>
+                      
                     <?php } ?>
+                    <td class="text-left"><?=$p['nama_jabatan']?></td>
                     <td class="text-left">
                     <div class="radio-inputs mb-3">
                     <label class="radio">

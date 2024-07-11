@@ -570,11 +570,31 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianPimpinan', '', '', $data);
     }
 
+    public function penilaianSejawat(){
+        $data = null;
+        if($this->general_library->isKaban()){
+            $data['list_bidang'] = $this->master->loadMasterBidangByUnitKerja($this->general_library->getUnitKerjaPegawai());
+        } 
+        if($this->general_library->isWalikota() || $this->general_library->isSetda()){
+            $data['list_skpd'] = $this->user->getAllSkpd();
+        }
+        render('simata/V_PenilaianSejawat', '', '', $data);
+    }
+
+    
+
     public function loadPegawaiPenilaianPimpinan()
     {
         $data['periode'] = $this->input->post();
         $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianPimpinan($this->input->post());
         $this->load->view('simata/V_PenilaianPimpinanItem', $data);
+    }
+
+    public function loadPegawaiPenilaianSejawat()
+    {
+        $data['periode'] = $this->input->post();
+        $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianSejawat($this->input->post());
+        $this->load->view('simata/V_PenilaianSejawatItem', $data);
     }
 
     public function submitPenilaianPimpinan()

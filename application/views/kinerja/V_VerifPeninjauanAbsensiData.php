@@ -62,7 +62,7 @@
                                         // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$r['id']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
 
                                       } else {
-                                        echo "<a class='dropdown-item' href=".base_url('assets/bukti_kegiatan/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                        echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
                                         // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$r['id']."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
                                       }
                                     }

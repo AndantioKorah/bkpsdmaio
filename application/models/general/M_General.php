@@ -816,5 +816,63 @@
             }
         }
 
+        public function getOauthToken(){
+            $token = null;
+            $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_OAUTH_TOKEN');
+            if($exists){
+                $now = date('Y-m-d H:i:s');
+                if($now <= $exists['created_date'] && $exists['parameter_value']){
+                    $value = json_decode($exists['parameter_value'], true);
+                    $token = $value['access_token'];
+                } else {
+                    $res = $this->siasnlib->getOauthToken();
+                    if($res['code'] == 0){
+                        $data = json_decode($res['data'], true);
+                        $token = $data['access_token']; 
+    
+                        $batas_waktu = date('Y-m-d H:i:s');
+                        $date = new DateTime($batas_waktu);
+                        $date->add(new DateInterval('PT'.$data['expires_in'].'S'));
+    
+                        $this->update('parameter_name', 'PARAM_OAUTH_TOKEN', 'm_parameter', [
+                            'parameter_value' => ($res['data']),
+                            'created_date' => $date->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+            echo $token;
+            // return $token;
+        }
+    
+        public function getSsoToken(){
+            $token = null;
+            $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_SSO_TOKEN');
+            if($exists){
+                $now = date('Y-m-d H:i:s');
+                if($now <= $exists['created_date'] && $exists['parameter_value']){
+                    $value = json_decode($exists['parameter_value'], true);
+                    $token = $value['access_token'];
+                } else {
+                    $res = $this->siasnlib->getSsoToken();
+                    if($res['code'] == 0){
+                        $data = json_decode($res['data'], true);
+                        $token = $data['access_token']; 
+    
+                        $batas_waktu = date('Y-m-d H:i:s');
+                        $date = new DateTime($batas_waktu);
+                        $date->add(new DateInterval('PT'.$data['expires_in'].'S'));
+    
+                        $this->update('parameter_name', 'PARAM_SSO_TOKEN', 'm_parameter', [
+                            'parameter_value' => ($res['data']),
+                            'created_date' => $date->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+            echo $token;
+            // return $token;
+        }
+
 	}
 ?>

@@ -1360,7 +1360,7 @@
         // return $result;
     }
 
-    public function batchRandomString($bulan, $tahun){
+    public function batchRandomString($bulan, $tahun, $id_m_user = 0){
         $result = $this->db->select('*')
                         ->from('t_dokumen_pendukung')
                         ->where('random_string IS NULL')
@@ -1376,8 +1376,15 @@
 
             $meta = null;
             foreach($result as $t){
-                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja'];
-                $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                if($id_m_user != 0){
+                    if($t['id_m_user'] == $id_m_user){
+                        $meta[$id_m_user.';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $id_m_user.';'.$t['id_m_jenis_disiplin_kerja'];
+                        $meta[$id_m_user.';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                    }
+                } else {
+                    $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['name'] = $t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja'];
+                    $meta[$t['id_m_user'].';'.$t['id_m_jenis_disiplin_kerja']]['random_string'] = generateRandomString(10, null, 't_dokumen_pendukung');
+                }
             }
 
             if($meta){
@@ -1722,8 +1729,13 @@
                         ->get()->row_array();
 
         if($tmp['random_string']){
-            $this->db->where('random_string', $tmp['random_string'])
+            if($this->input->post('list_id')){
+                $this->db->where_in('id', $this->input->post('list_id'))
+                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);    
+            } else {
+                $this->db->where('random_string', $tmp['random_string'])
                         ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+            }
         } else {
             $this->db->where_in('id', $this->input->post('list_id'))
                         ->update('t_dokumen_pendukung', ['flag_active' => 0]);
@@ -2362,7 +2374,13 @@
             if($flag_profil == 1){
                 $this->db->where('id_m_status_pegawai', 1);
             }
-            if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            if(isset($data['from_list_tpp']) && $data['from_list_tpp'] == 1){
+                if($this->general_library->getUnitKerjaPegawai() == 3010000){
+                    if($data['id_unitkerja'] == 0){
+                        $this->db->where_in('e.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH);
+                    }
+                }
+            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
                 $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
                             ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
             } else if($flag_sekolah_kecamatan == 1){
@@ -2403,8 +2421,11 @@
                 
                 if($p['jenis_jabatan'] == 'JFT'){ // jika JFT
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
-                    $namaunitkerja = explode(" ", $unitkerja['nm_unitkerja']);
-                    if($namaunitkerja[0] == 'Puskesmas'){
+                    $namaunitkerja = null;
+                    if($unitkerja){
+                        $namaunitkerja = explode(" ", $unitkerja['nm_unitkerja']);
+                    }
+                    if($unitkerja && $namaunitkerja[0] == 'Puskesmas'){
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kepalaskpd'] == 1 ? $p['kelas_jabatan'] : $p['kelas_jabatan_jft'];
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
@@ -2526,9 +2547,14 @@
                 
                 $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
-
+                
                 if(isset($p['presentasi_tpp'])){
-                    if($p['id_unitkerja'] == $data['id_unitkerja']){
+                    $uk_asal = $this->db->select('*')
+                                        ->from('db_pegawai.pegawai')
+                                        ->where('nipbaru_ws', $p['nipbaru_ws'])
+                                        ->get()->row_array();
+
+                    if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
                             $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];

@@ -1262,7 +1262,7 @@
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
-            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
@@ -2476,6 +2476,9 @@
                 $result[$l['nipbaru_ws']]['kelas_jabatan'] = $l['kelas_jabatan'];
                 $result[$l['nipbaru_ws']]['flag_terima_tpp'] = $l['flag_terima_tpp'];
                 $result[$l['nipbaru_ws']]['statuspeg'] = $l['statuspeg'];
+                if(isset($l['flag_use_bpjs'])){
+                    $result[$l['nipbaru_ws']]['flag_use_bpjs'] = $l['flag_use_bpjs'];
+                }
                 
                 // $result[$l['nipbaru_ws']]['nomor_golongan'] = $l['rekap_kehadiran']['golongan'];
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
@@ -2612,6 +2615,23 @@
                 // $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_beban_kerja'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'], 2);
+
+                if(isset($result[$l['nipbaru_ws']]['flag_use_bpjs']) && $result[$l['nipbaru_ws']]['flag_use_bpjs'] == 0){
+                    $data_pegawai_plt = $this->db->select('*')
+                                                ->from('db_pegawai.pegawai')
+                                                ->where('nipbaru_ws', $l['nipbaru_ws'])
+                                                ->get()->row_array();
+                    if($data_pegawai_plt){
+                        $skpd = explode(";", $param['skpd']);
+                        if($data_pegawai_plt['skpd'] != $skpd[0]){
+                            //jika PLT / PLH di PD lain
+                            $result[$l['nipbaru_ws']]['bpjs'] = 0;
+                            $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = 0;
+                            $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = 0;
+                            $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'] = 0;
+                        }
+                    }
+                }
 
                 //TPP Final
                 // $result[$l['nipbaru_ws']]['tpp_final'] = 

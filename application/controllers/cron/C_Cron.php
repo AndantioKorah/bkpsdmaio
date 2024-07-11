@@ -40,4 +40,12 @@ class C_Cron extends CI_Controller
     public function cronDsBulkTte(){
 		$this->kepegawaian->cronDsBulkTte();
 	}
+
+    public function getOauthToken(){
+        return $this->general->getOauthToken();
+    }
+
+    public function getSsoToken(){
+        return $this->general->getSsoToken();
+    }
 }

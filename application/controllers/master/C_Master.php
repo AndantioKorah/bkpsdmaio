@@ -299,7 +299,11 @@ class C_Master extends CI_Controller
     }
 
     public function loadListTpp(){
-        $data['result'] = $this->kinerja->countPaguTpp($this->input->post());
+        $params = $this->input->post();
+        if($this->general_library->getUnitKerjaPegawai() == 3010000){
+            $params['from_list_tpp'] = 1;
+        }
+        $data['result'] = $this->kinerja->countPaguTpp($params);
         $this->load->view('master/V_ListTppData', $data);
     }
 

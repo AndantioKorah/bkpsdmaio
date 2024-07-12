@@ -975,7 +975,7 @@
 		<?php } ?>
 
 	
-
+<!-- 
 		    <li class="sidebar-header">
 				Manajemen Talenta
 			</li>
@@ -1008,7 +1008,7 @@
 				Penilaian Sejawat
 					</span>
 				</a>	
-			</li>
+			</li> -->
 
 </ul>
 <div class="mt-5">

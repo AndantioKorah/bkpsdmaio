@@ -2101,6 +2101,8 @@
                     $this->db->where('b.id_unitkerjamaster', '8010000');
                 } else if($data['unitkerja'] == 992){
                     $this->db->where('b.id_unitkerjamaster', '8020000');
+                } else if($data['unitkerja'] == 990){
+                    $this->db->where('b.id_unitkerjamaster', '8000000');
                 } else {
                     $this->db->where('a.skpd', $data['unitkerja']);
                 }

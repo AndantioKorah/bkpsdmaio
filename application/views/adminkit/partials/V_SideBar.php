@@ -974,7 +974,12 @@
 
 		<?php } ?>
 
-		<?php
+	
+
+		    <li class="sidebar-header">
+				Manajemen Talenta
+			</li>
+			<?php
 				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
@@ -984,11 +989,7 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				){ ?>
 
-		    <li class="sidebar-header">
-				Manajemen Talenta
-			</li>
-
-				<li class="sidebar-item ">
+			<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-pimpinan/" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 				<span class="align-middle">
@@ -996,7 +997,18 @@
 					</span>
 				</a>	
 			</li>
+
+			
 				<?php } ?>
+
+				<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+				Penilaian Sejawat
+					</span>
+				</a>	
+			</li>
 
 </ul>
 <div class="mt-5">

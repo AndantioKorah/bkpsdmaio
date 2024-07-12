@@ -728,8 +728,8 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_VerifDokumenSearch', $data);
     }
 
-    public function batchRandomString($bulan, $tahun, $id_m_user = 0){
-        $this->kinerja->batchRandomString($bulan, $tahun, $id_m_user);
+    public function batchRandomString($bulan, $tahun, $nip = 0){
+        $this->kinerja->batchRandomString($bulan, $tahun, $nip);
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja)

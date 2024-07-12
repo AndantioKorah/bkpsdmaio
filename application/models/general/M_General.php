@@ -406,9 +406,15 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
                     ->where('a.statuspeg', 2)
-                    // ->where('id_m_status_pegawai', 2)
+                    // ->where_in('id_m_status_pegawai', [1,2])
                     ->group_by('a.nipbaru_ws')
                     ->order_by('c.eselon');
+
+            if($data['tahun'] == date('Y')){
+                $this->db->where_in('id_m_status_pegawai', [1,2,3]);
+            } else if($data['tahun'] > date('Y')) {
+                $this->db->where_in('id_m_status_pegawai', [1]);
+            }
 
             if($data['eselon'] != "0"){
                 $this->db->where('c.eselon', $data['eselon']);
@@ -872,6 +878,59 @@
             }
             echo $token;
             // return $token;
+        }
+
+        public function mappingUnor($percent){
+            $uker = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unor_siasn IS NULL')
+                            ->get()->result_array();
+
+            $unorSiasn = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('row_level', '2')
+                            ->get()->result_array();
+
+            $list_uker = null;
+            $i = 0;
+            foreach($uker as $uk){
+                // $list_uker[$uk['nm_unitkerja']] = $uk;
+
+                foreach($unorSiasn as $us){
+                    $nama_unor = substr($us['nama_unor'], 2);
+                    $sim = similar_text(strtoupper($uk['nm_unitkerja']), strtoupper($nama_unor), $sim);
+                    if($sim >= $percent){
+                        $this->db->where('id_unitkerja', $uk['id_unitkerja'])
+                                ->update('db_pegawai.unitkerja', [
+                                    'id_unor_siasn' => $us['id']
+                                ]);
+                    }
+                }
+                $i++;
+            }
+            dd($unorSiasn);
+        }
+
+        public function revertMappingUnor($percent){
+            $uker = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id')
+                            ->where('a.id_unor_siasn IS NOT NULL')
+                            ->get()->result_array();
+
+            $i = 0;
+
+            foreach($uker as $uk){
+                $nama_unor = substr($uk['nama_unor'], 2);
+                $sim = similar_text(strtoupper($uk['nm_unitkerja']), strtoupper($nama_unor), $sim);
+                if($sim < $percent){
+                    $this->db->where('id_unitkerja', $uk['id_unitkerja'])
+                                ->update('db_pegawai.unitkerja', [
+                                    'id_unor_siasn' => null
+                                ]);
+                }
+                $i++;
+            }
         }
 
 	}

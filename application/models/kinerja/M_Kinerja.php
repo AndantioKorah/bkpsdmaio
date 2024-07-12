@@ -1360,15 +1360,23 @@
         // return $result;
     }
 
-    public function batchRandomString($bulan, $tahun, $id_m_user = 0){
-        $result = $this->db->select('*')
-                        ->from('t_dokumen_pendukung')
-                        ->where('random_string IS NULL')
-                        ->where_in('status', [3])
-                        ->where('bulan', $bulan)
-                        ->where('tahun', $tahun)
-                        ->where('flag_active', 1)
-                        ->get()->result_array();
+    public function batchRandomString($bulan, $tahun, $nip = 0){
+        $id_m_user = 0;
+        $this->db->select('a.*')
+                ->from('t_dokumen_pendukung a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->where('a.random_string IS NULL')
+                ->where_in('a.status', [3])
+                ->where('a.bulan', $bulan)
+                ->where('a.tahun', $tahun)
+                ->where('a.flag_active', 1)
+                ->where('b.flag_active', 1);
+        if($nip != 0){
+            $this->db->where('b.username', $nip);
+        }
+
+        $result = $this->db->get()->result_array();
+
         if($result){
             $before = null;
             $curr = null;

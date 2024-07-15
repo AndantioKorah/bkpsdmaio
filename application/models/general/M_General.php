@@ -933,5 +933,43 @@
             }
         }
 
+        public function getDataMappingUnor(){
+            $data = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->group_by('a.id_unitkerja')
+                            ->get()->result_array();
+            return $data;
+        }
+
+        public function editMappingUnor($id){
+            return $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id_unitkerja', $id)
+                            ->get()->row_array();
+        }
+
+        public function saveEditMappingUnor(){
+            $data = $this->input->post();
+            $this->db->where('id_unitkerja', $data['id_unitkerja'])
+                    ->update('db_pegawai.unitkerja', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function deleteMappingUnor($id){
+            $this->db->where('id_unitkerja', $id)
+                    ->update('db_pegawai.unitkerja', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
 	}
 ?>

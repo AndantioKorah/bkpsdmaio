@@ -86,3 +86,6 @@ $route['verifPdf/(:any)'] = 'kepegawaian/C_VerifTte/verifPdf/$1';
 
 //DS
 $route['kepegawaian/digital-signature'] = 'kepegawaian/C_Kepegawaian/digitalSignature';
+
+//SIASN
+$route['siasn/mapping/unor'] = 'master/C_Master/mappingUnor';

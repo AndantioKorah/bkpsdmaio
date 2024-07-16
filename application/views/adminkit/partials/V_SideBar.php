@@ -246,6 +246,25 @@
 			</ul>
 		</li>
 	<?php } ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+		<a title="SIASN" data-bs-target="#siasn" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-users-cog"></i> 
+			<span class="align-middle">SIASN
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
+		</a>
+		<ul id="siasn" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			<li class="sidebar-item ">
+				<a title="Mapping Unor" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/unor')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Unor
+				</a>
+			</li>
+		</ul>
+	<?php } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian

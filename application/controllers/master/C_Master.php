@@ -480,4 +480,40 @@ class C_Master extends CI_Controller
         $this->general->deleteMappingUnor($id);
     }
 
+    public function mappingBidang(){
+        $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        render('master/V_SiasnMappingBidang', '', '', $data);
+    }
+
+    public function loadBidangForMappingUnor($id_unitkerja){
+        $data['list_master_bidang'] = $this->general->loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja);
+        $this->load->view('master/V_SiasnListBidangMapping', $data);
+    }
+
+    public function deleteMappingBidang($id){
+        $this->general->deleteMappingBidang($id);
+    }
+
+    public function deleteMappingSubBidang($id){
+        $this->general->deleteMappingSubBidang($id);
+    }
+
+    public function editUnorBidang($id){
+        $data['id_unitkerja'] = $id;
+        $data['result'] = $this->general->getDataForEditUnorBidang($id);
+        $data['list_unor_siasn'] = $this->general->getUnorSiasnByUnitKerja($data['result']['id_unitkerja']);
+        $data['list_sub_bidang'] = $this->general->getListSubBidangByIdBidang($data['result']['id_m_bidang']);
+        $data['list_unor_siasn_sub_bidang'] = $this->general->getUnorSiasnByBidang($data['result']['id_m_bidang']);
+
+        $this->load->view('master/V_SiasnEditMappingBidang', $data);
+    }
+
+    public function saveEditMappingBidang(){
+        echo json_encode($this->general->saveEditMappingBidang());
+    }
+
+    public function saveEditMappingSubBidang($id){
+        echo json_encode($this->general->saveEditMappingSubBidang($id));
+    }
+
 }

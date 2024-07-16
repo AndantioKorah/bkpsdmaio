@@ -263,6 +263,11 @@
 					<i class="align-middle me-2 far fa-circle"></i>Mapping Unor
 				</a>
 			</li>
+			<li class="sidebar-item ">
+				<a title="Mapping Bidang" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/bidang')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Bidang
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 

@@ -1080,6 +1080,71 @@
                         ->get()->result_array();
         }
         
+        public function loadJabatanForMappingSiasn($jenis, $skpd){
+            $this->db->select('a.*')
+                        ->from('db_pegawai.jabatan a');
+            if($jenis == 'struktural'){
+                $this->db->select('b.nama_jabatan as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_struktural b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis)
+                        ->where('a.id_unitkerja', $skpd);
+            } else if($jenis == 'JFU'){
+                $this->db->select('b.nama as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_pelaksana b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis);
+            } else if($jenis == 'JFT'){
+                $this->db->select('b.nama as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_fungsional b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis);
+            }
+
+            return $this->db->get()->result_array();
+        }
+
+        public function loadDetailJabatanMapping($id){
+            $result = null;
+
+            $temp = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('id_jabatanpeg', $id)
+                                ->get()->row_array();
+            $list_unor_siasn = null;
+            
+            if($temp['jenis_jabatan'] == 'Struktural'){
+                $this->db->select('a.*, b.nama_jabatan as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_struktural b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan']);
+                $result = $this->db->get()->row_array();
+
+                $list_unor_siasn = $this->db->select('*, nama_jabatan as nama_jabatan_siasn')
+                                                ->from('db_siasn.m_ref_jabatan_struktural')
+                                                ->get()->result_array();
+            } else if($temp['jenis_jabatan'] == 'JFU'){
+                $this->db->select('a.*, b.nama as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_pelaksana b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan'])
+                        ->where('a.id_unitkerja', $skpd);
+                $result = $this->db->get()->row_array();
+
+                // $list_unor_siasn = $this->db->select('*, nama as nama_jabatan_siasn')
+                //                                 ->from('db_siasn.m_ref_jabatan_pelaksana')
+                //                                 ->get()->result_array();
+            } else if($temp['jenis_jabatan'] == 'JFT'){
+                $this->db->select('a.*, b.nama as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_fungsional b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan']);
+                $result = $this->db->get()->row_array();
+                
+                // $list_unor_siasn = $this->db->select('*, nama as nama_jabatan_siasn')
+                //                                 ->from('db_siasn.m_ref_jabatan_fungsional')
+                //                                 ->get()->result_array();
+            }
+            
+            return [$result, $list_unor_siasn];
+        }
 
 	}
 ?>

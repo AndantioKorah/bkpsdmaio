@@ -90,4 +90,4 @@ $route['kepegawaian/digital-signature'] = 'kepegawaian/C_Kepegawaian/digitalSign
 //SIASN
 $route['siasn/mapping/unor'] = 'master/C_Master/mappingUnor';
 $route['siasn/mapping/bidang'] = 'master/C_Master/mappingBidang';
-$route['siasn/mapping/sub-bidang'] = 'master/C_Master/mappingSubBidang';
+$route['siasn/mapping/jabatan'] = 'master/C_Master/mappingJabatan';

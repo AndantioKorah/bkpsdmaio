@@ -2086,6 +2086,9 @@
                     ->join('db_pegawai.pangkat g', 'b.pangkat = g.id_pangkat')
                     ->where('b.flag_terima_tpp', 1)
                     ->where('b.id_m_status_pegawai', 1)
+                    ->where('a.tmt IS NOT NULL')
+                    ->where('a.tmt !=', null)
+                    ->where('a.tmt !=', '0000-00-00')
                     ->where_in('b.nipbaru_ws', $temp['temp_list_nip'])
                     ->where('a.flag_active', 1);
 
@@ -2103,8 +2106,8 @@
                         $valid_date = date('Y-m-d', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
                         $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
                         $last_date = $list_date[count($list_date)-1];
-
-                        if($last_date <= $valid_date){
+                       
+                        if($last_date <= $valid_date && date('Y-m-d') >= $valid_date){
                             $hukdis[$l['nipbaru_ws']] = $l;
                         }
                     }

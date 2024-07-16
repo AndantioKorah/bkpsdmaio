@@ -971,5 +971,115 @@
                     ]);
         }
 
+        public function deleteMappingSubBidang($id){
+            $this->db->where('id', $id)
+                    ->update('m_sub_bidang', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
+        public function deleteMappingBidang($id){
+            $this->db->where('id', $id)
+                    ->update('m_bidang', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
+        public function loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja){
+            return $this->db->select('a.*, b.nama_unor')
+                            ->from('m_bidang a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id_unitkerja', $id_unitkerja)
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.nama_bidang', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getDataForEditUnorBidang($id){
+            return $this->db->select('a.*, a.id as id_m_bidang, b.nama_unor, b.id')
+                            ->from('m_bidang a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+        }
+        
+        public function getUnorSiasnByUnitKerja($id_unitkerja){
+            return $this->db->select('*')
+                        ->from('db_pegawai.unitkerja a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                        ->where('a.id_unitkerja', $id_unitkerja)
+                        ->get()->result_array();
+        }
+
+        public function getUnorSiasnByBidang($id_m_bidang){
+            $data = $this->db->select('*')
+                        ->from('m_bidang a')
+                        ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id')
+                        ->where('a.id', $id_m_bidang)
+                        ->get()->result_array();
+
+            $tambahan = $this->db->select('*')
+                                ->from('m_bidang a')
+                                ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                                ->where('a.id', $id_m_bidang)
+                                ->get()->result_array();
+            if($data && (stringStartWith('Kecamatan', $data[0]['nm_unitkerja']) || stringStartWith('Kelurahan', $data[0]['nm_unitkerja']))){
+                $result = null;
+                foreach($data as $d){
+                    $result[] = $d;
+                }
+
+                if($tambahan){
+                    foreach($tambahan as $t){
+                        $result[] = $t;
+                    }
+                }
+                return $result;
+            } else {
+                return $tambahan;
+            }
+        }
+
+        public function saveEditMappingBidang(){
+            $data = $this->input->post();
+            $this->db->where('id', $data['id_m_bidang'])
+                    ->update('m_bidang', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function saveEditMappingSubBidang($id){
+            $data = $this->input->post();
+            $this->db->where('id', $id)
+                    ->update('m_sub_bidang', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function getListSubBidangByIdBidang($id_m_bidang){
+            return $this->db->select('a.*, b.nama_unor')
+                        ->from('m_sub_bidang a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                        ->where('a.id_m_bidang', $id_m_bidang)
+                        ->where('a.flag_active', 1)
+                        ->group_by('a.id')
+                        ->get()->result_array();
+        }
+        
+
 	}
 ?>

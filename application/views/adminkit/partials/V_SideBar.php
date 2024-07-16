@@ -1000,7 +1000,7 @@
 
 	
 
-		    <!-- <li class="sidebar-header">
+		    <li class="sidebar-header">
 				Manajemen Talenta
 			</li>
 			<?php
@@ -1032,7 +1032,7 @@
 				Penilaian Sejawat
 					</span>
 				</a>	
-			</li> -->
+			</li>
 
 </ul>
 <div class="mt-5">

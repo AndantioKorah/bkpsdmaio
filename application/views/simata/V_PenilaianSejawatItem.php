@@ -1,66 +1,94 @@
 <?php if($list_pegawai){ ?>
-   <style>
-.radio-inputs {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 0.5rem;
-  /* background-color: #EEE; */
-  background-color: #dbd7d7;
-  
+  <style>
+        *,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-  padding: 0.15rem;
-  width: 100%;
-  font-size: 10px;
+}
+/* body {
+  min-height: 100svh;
+  background-color: #022C22;
+  display: grid;
+  place-content: center;
+} */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.rating {
+  --star-size: clamp(2rem, 5vw, 5rem);
+  --star-clr-inactive: rgba(128, 128, 128, 0.7);
+  --star-clr-active: rgb(245, 158, 11);
+  --star-clr-hover: rgba(236, 201, 136, 0.2);
+  --star-clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  /* display: flex; */
+  /* align-items: center; */
+  gap: 0.5rem;
 }
 
-.radio-inputs .radio {
-  flex: 1 1 auto;
-  text-align: center;
-}
-
-.radio-inputs .radio input {
-  display: none;
-}
-
-.radio-inputs .radio .name {
-  display: flex;
+label {
+  position: relative;
   cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.5rem;
-  border: none;
-  padding: .5rem 0;
-  color: rgba(51, 65, 85, 1);
-  transition: all .15s ease-in-out;
+  width: var(--star-size);
+  height: var(--star-size);
+}
+label::before {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  border-radius: 50%;
+  background-color: var(--star-clr-hover);
+  transition: rotate 450ms ease-in-out, inset 300ms ease-in-out;
+  clip-path: var(--star-clip-path);
+}
+label:hover::before {
+  inset: -1rem;
+  rotate: 45deg;
+}
+label::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--star-clr-inactive);
+  clip-path: var(--star-clip-path);
+  transition: 300ms ease-in-out;
+  scale: 0.75;
+}
+label:has(~ label:hover)::after,
+label:has(~ label > :checked)::after,
+label:has(:checked)::after,
+label:hover::after {
+  background-color: var(--star-clr-active);
+  scale: 1;
 }
 
-.radio-inputs .radio .name2 {
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.5rem;
-  border: none;
-  padding: .5rem 0;
-  color: rgba(51, 65, 85, 1);
-  transition: all .15s ease-in-out;
+label:hover ~ label::after {
+  scale: 0.75;
 }
-
-.radio-inputs .radio input:checked + .name {
-  background-color: #1f7640;
-  font-weight: 600;
-  color: #fff;
-  
+label:active::before {
+  inset: -2rem;
 }
-
-.radio-inputs .radio input:checked + .name2 {
-  background-color: #f5d60a;
-  font-weight: 600;
-  color: #000;
-}
-   </style>
+      </style>
    
     <div class="col-lg-12 table-responsive">
     <table class="table table-striped" id="table_list_pegawai">
@@ -124,45 +152,74 @@
         </button>
       </div>
       <div class="modal-body">
-      
+
        <form id="form_penilaian_pimpinan" method="post" enctype="multipart/form-data">
-       <input type="hidden" name="id_pegawai" id="id_pegawai">
-       <!-- <span>Promosi Jabatan</span> -->
-       <div class="radio-inputs mb-3">
-        <label class="radio">
-            <input type="radio" name="radio" checked="" value="124">
-            <span class="name">Sangat Mendukung</span>
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="radio" checked="" value="0">
-            <span class="name">|</span>
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="radio" value="125">
-            <span class="name">Tidak Mendukung</span>
-        </label>
-        </div>
-
-        <!-- <span>Rotasi Jabatan</span>
-       <div class="radio-inputs mb-3">
-        <label class="radio">
-            <input type="radio" name="radio2" checked="" value="124">
-            <span class="name">Sangat Mendukung</span>
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="radio2" checked="" value="0">
-            <span class="name">|</span>
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="radio2" value="125">
-            <span class="name">Tidak Mendukung</span>
-        </label>
-        </div> -->
-
+                     
+       <h3>Berorientasi Pelayanan</h3>
+       <div class="rating">
+        <label for="radio-1" aria-label="Rating 1"><input type="radio" name="rating" id="radio-1" class="sr-only"></label>
+        <label for="radio-2" aria-label="Rating 2"> <input type="radio" name="rating" id="radio-2" class="sr-only"></label>
+        <label for="radio-3" aria-label="Rating 3"><input type="radio" name="rating" id="radio-3" class="sr-only" ></label>
+        <label for="radio-4" aria-label="Rating 4"><input type="radio" name="rating" id="radio-4" class="sr-only"></label>
+        <label for="radio-5" aria-label="Rating 5"><input type="radio" name="rating" id="radio-5" class="sr-only"></label>
+      </div>
+      <hr>
+     
+      <h3>Akuntabel</h3>
+       <div class="rating">
+        <label for="radio-12" aria-label="Rating2 1"><input type="radio" name="rating2" id="radio-12" class="sr-only"></label>
+        <label for="radio-22" aria-label="Rating2 2"> <input type="radio" name="rating2" id="radio-22" class="sr-only"></label>
+        <label for="radio-32" aria-label="Rating2 3"><input type="radio" name="rating2" id="radio-32" class="sr-only" ></label>
+        <label for="radio-42" aria-label="Rating2 4"><input type="radio" name="rating2" id="radio-42" class="sr-only"></label>
+        <label for="radio-52" aria-label="Rating2 5"><input type="radio" name="rating2" id="radio-52" class="sr-only"></label>
+      </div>
+      <hr>
+      <h3>Kompeten</h3>
+       <div class="rating">
+        <label for="radio-13" aria-label="Rating3 1"><input type="radio" name="rating3" id="radio-13" class="sr-only"></label>
+        <label for="radio-23" aria-label="Rating3 2"> <input type="radio" name="rating3" id="radio-23" class="sr-only"></label>
+        <label for="radio-33" aria-label="Rating3 3"><input type="radio" name="rating3" id="radio-33" class="sr-only" ></label>
+        <label for="radio-43" aria-label="Rating3 4"><input type="radio" name="rating3" id="radio-43" class="sr-only"></label>
+        <label for="radio-53" aria-label="Rating3 5"><input type="radio" name="rating3" id="radio-53" class="sr-only"></label>
+      </div>
+      <hr>
+      <h3>Harmonis</h3>
+       <div class="rating">
+        <label for="radio-14" aria-label="Rating4 1"><input type="radio" name="rating4" id="radio-14" class="sr-only"></label>
+        <label for="radio-24" aria-label="Rating4 2"> <input type="radio" name="rating4" id="radio-24" class="sr-only"></label>
+        <label for="radio-34" aria-label="Rating4 3"><input type="radio" name="rating4" id="radio-34" class="sr-only" ></label>
+        <label for="radio-44" aria-label="Rating4 4"><input type="radio" name="rating4" id="radio-44" class="sr-only"></label>
+        <label for="radio-54" aria-label="Rating4 5"><input type="radio" name="rating4" id="radio-54" class="sr-only"></label>
+      </div>
+      <hr>
+      <h3>Loyal</h3>
+       <div class="rating">
+        <label for="radio-15" aria-label="Rating5 1"><input type="radio" name="rating5" id="radio-15" class="sr-only"></label>
+        <label for="radio-25" aria-label="Rating5 2"> <input type="radio" name="rating5" id="radio-25" class="sr-only"></label>
+        <label for="radio-35" aria-label="Rating5 3"><input type="radio" name="rating5" id="radio-35" class="sr-only" ></label>
+        <label for="radio-45" aria-label="Rating5 4"><input type="radio" name="rating5" id="radio-45" class="sr-only"></label>
+        <label for="radio-55" aria-label="Rating5 5"><input type="radio" name="rating5" id="radio-55" class="sr-only"></label>
+      </div>
+      <hr>
+      <h3>Adaptif</h3>
+       <div class="rating">
+        <label for="radio-16" aria-label="Rating6 1"><input type="radio" name="rating6" id="radio-16" class="sr-only"></label>
+        <label for="radio-26" aria-label="Rating6 2"> <input type="radio" name="rating6" id="radio-26" class="sr-only"></label>
+        <label for="radio-36" aria-label="Rating6 3"><input type="radio" name="rating6" id="radio-36" class="sr-only" ></label>
+        <label for="radio-46" aria-label="Rating6 4"><input type="radio" name="rating6" id="radio-46" class="sr-only"></label>
+        <label for="radio-56" aria-label="Rating6 5"><input type="radio" name="rating6" id="radio-56" class="sr-only"></label>
+      </div>
+      <hr>
+      <h3>Kolaboratif</h3>
+       <div class="rating">
+        <label for="radio-17" aria-label="Rating7 1"><input type="radio" name="rating7" id="radio-17" class="sr-only"></label>
+        <label for="radio-27" aria-label="Rating7 2"> <input type="radio" name="rating7" id="radio-27" class="sr-only"></label>
+        <label for="radio-37" aria-label="Rating7 3"><input type="radio" name="rating7" id="radio-37" class="sr-only" ></label>
+        <label for="radio-47" aria-label="Rating7 4"><input type="radio" name="rating7" id="radio-47" class="sr-only"></label>
+        <label for="radio-57" aria-label="Rating7 5"><input type="radio" name="rating7" id="radio-57" class="sr-only"></label>
+      </div>
+      <hr>
+     
         <button class="btn btn-primary float-right">Simpan</button>
         </form>
       </div>

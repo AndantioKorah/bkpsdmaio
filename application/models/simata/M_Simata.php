@@ -4686,7 +4686,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
                 if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ //jika lurah
                     $this->db->where('b.skpd ', $this_user['skpd']);
-                    $this->db->where('c.eselon', 'IV A');
+                    $this->db->where('c.kelas_jabatan', 9);
+                    // $this->db->where('c.eselon', 'IV A');
                 } else {
                     $this->db->where('d.id_unitkerjamaster',$this_user['id_unitkerjamaster']);
                     $this->db->where('c.nama_jabatan like', '%Lurah%');
@@ -4777,6 +4778,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             }  else if($eselon == 1){
+                
                 $this->db->select('*, id as id_m_user')
                 ->from('m_user a')
                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -4784,19 +4786,24 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
                 ->where('a.id !=', $this->general_library->getId())
                 ->where('b.skpd ', $this_user['skpd'])
-                ->where('a.flag_active', 1);
+                ->where('a.flag_active', 1)
+                ->where('b.statuspeg', 2);
 
                 if($this_user['jenis_jabatan'] == 'JFT'){
-                // $this->db->where('c.jenis_jabatan', 'JFT');
                 if($this_user['kelas_jabatan'] == 8){
-                  
-                    // $this->db->group_start();
-                    $this->db->where('c.jenis_jabatan', 'JFU');
-                    $this->db->or_where('c.kelas_jabatan', 8);
-                    // $this->db->group_end();
-                   
+                    $this->db->where_in('c.kelas_jabatan', [7,8]);
+                } else if($this_user['kelas_jabatan'] == 9){
+                    $this->db->group_start();
+                    $this->db->where('c.kelas_jabatan', 9);
+                    $this->db->group_end();
                 }
-               
+                } else {
+                    if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ //jika lurah
+                        $this->db->where_in('c.kelas_jabatan', [7,8]);
+                    } else {
+                        $this->db->where_in('c.kelas_jabatan', [7]);
+                    }
+                  
                 }
 
                 $list_pegawai = $this->db->get()->result_array();

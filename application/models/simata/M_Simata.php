@@ -4271,7 +4271,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             // dd($data);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user,
-                (select pertimbangan_pimpinan from db_simata.t_penilaian_pimpinan aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as pertimbangan_pimpinan')
+                (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as berorientasi_pelayanan,
+                (select akuntabel from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as akuntabel,
+                (select kompeten from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as kompeten,
+                (select harmonis from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as harmonis,
+                (select loyal from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as loyal,
+                (select adaptif from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as adaptif,
+                (select kolaboratif from db_simata.t_penilaian_sejawat aa where aa.id_peg = b.id_peg and aa.flag_active = 1 limit 1) as kolaboratif')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
@@ -4367,10 +4373,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $this->db->where('f.eselon', 'III B');
                     } else {
                         // $this->db->select('b.*')
-                        // ->join('m_bidang b', 'a.id_m_bidang = b.id')
-                        // ->where('b.id', $this_user['id_m_bidang'])
+                        $this->db->join('m_bidang b', 'a.id_m_bidang = b.id');
+                        $this->db->where('b.id', $this_user['id_m_bidang']);
                         $this->db->where('e.skpd', $this_user['skpd']);
-                        $this->db->where('f.eselon', 'IV A');
+                        // $this->db->where('f.eselon', 'IV A');
                     }
 
                     $list_pegawai = $this->db->get()->result_array();
@@ -4846,6 +4852,71 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                 } else {
                     $this->db->insert('db_simata.t_penilaian_pimpinan', $data);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+
+               
+            
+        
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                // $res['code'] = 1;
+                // $res['message'] = 'Terjadi Kesalahan';
+                // $res['data'] = null;
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            } else {
+                $this->db->trans_commit();
+            }
+        
+            return $res;
+        }
+
+        public function submitPenilaianSejawat(){
+    
+            $datapost = $this->input->post();
+         
+            
+            $this->db->trans_begin();
+            $id_pegawai = $datapost['id_pegawai'];
+            $data["id_peg"] = $datapost["id_pegawai"];
+
+            if(isset($datapost["berorientasi_pelayanan"])){
+            $data["berorientasi_pelayanan"] = $datapost["berorientasi_pelayanan"];
+            }
+            if(isset($datapost["akuntabel"])){
+            $data["akuntabel"] = $datapost["akuntabel"];
+            }
+            if(isset($datapost["kompeten"])){
+            $data["kompeten"] = $datapost["kompeten"];
+            }
+            if(isset($datapost["harmonis"])){
+            $data["harmonis"] = $datapost["harmonis"];
+            }
+            if(isset($datapost["loyal"])){
+            $data["loyal"] = $datapost["loyal"];
+            }
+            if(isset($datapost["adaptif"])){
+            $data["adaptif"] = $datapost["adaptif"];
+            }
+            if(isset($datapost["kolaboratif"])){
+            $data["kolaboratif"] = $datapost["kolaboratif"];
+            }
+
+                   
+            
+             $cek =  $this->db->select('*')
+                            ->from('db_simata.t_penilaian_sejawat a')
+                            ->where('a.id_peg', $id_pegawai)
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+   
+
+               if($cek){
+                $this->db->where('id_peg', $id_pegawai)
+                ->update('db_simata.t_penilaian_sejawat', $data);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                } else {
+                    $this->db->insert('db_simata.t_penilaian_sejawat', $data);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                 }
 

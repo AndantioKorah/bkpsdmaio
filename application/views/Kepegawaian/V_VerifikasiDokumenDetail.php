@@ -147,12 +147,12 @@
             <td class="td-lab-dd">Nama Jabatan</td>
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd">
-              <?php if($result['id_jabatanpeg']) {if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];} else echo $result['nm_jabatan'];  ?>
+              <!-- <?php if($result['id_jabatanpeg']) {if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];} else echo $result['nm_jabatan'];  ?> -->
               
-              <select class="form-control select2 "  data-dropdown-css-class="select2-navy" name="jabatan_nama_verif" id="jabatan_nama_verif" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
+              <select class="form-control select22"  data-dropdown-css-class="select2-navy" name="jabatan_nama_verif" id="jabatan_nama_verif" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
-                        <option <?php if($r['id_jabatanpeg'] == $result['jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
+                        <option <?php if($r['id_jabatanpeg'] == $result['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
     </select>
             </td>
@@ -900,7 +900,7 @@
     autoclose: true
     });
 
-    $(".select2").select2({   
+    $(".select22").select2({   
      width: '100%',
      dropdownAutoWidth: true,
      allowClear: true,

@@ -4292,6 +4292,7 @@ public function submitEditJabatan(){
             $data['jp']         = $this->input->post('edit_disiplin_nama');
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data['tmt']         = $this->input->post('edit_disiplin_tmt');
             $data["gambarsk"]     = $filename;
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
@@ -4309,6 +4310,7 @@ public function submitEditJabatan(){
             $data['jp']         = $this->input->post('edit_disiplin_nama');
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data['tmt']         = $this->input->post('edit_disiplin_tmt');
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
             $data['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -6354,6 +6356,7 @@ public function submitEditJabatan(){
             ->where('a.status', 2)
             // ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
+            ->order_by('a.id', 'desc')
             ->limit(1)
             ->get()->row_array();
         

@@ -463,7 +463,8 @@ class C_Kepegawaian extends CI_Controller
             }       else {
 				$data['path'] = null;
 			}
-			// dd($data['result']);
+			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+			// dd($data['nama_jabatan']);
 			
 		
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);

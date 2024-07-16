@@ -601,6 +601,11 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianPimpinan());
 	}
+
+    public function submitPenilaianSejawat()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianSejawat());
+	}
     
 
    

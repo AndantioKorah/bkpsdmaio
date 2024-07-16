@@ -11,7 +11,8 @@
     </thead>
     <tbody>
       <?php $no=1; foreach($result as $rs){ ?>
-        <tr>
+        <tr style="<?php if($rs['flag_terima_tpp'] == 1) echo 'background-color:#88eda6'; ?>">
+        
           <td class="text-center"><?=$no++;?></td>
           <td class="text-center"><?=formatNip($rs['nipbaru_ws'])?></td>
           <td class="text-center"><?=getNamaPegawaiFull($rs)?></td>

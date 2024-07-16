@@ -270,7 +270,11 @@ class M_Kepegawaian extends CI_Model
             }
 
             if($data['unitkerja'] != '0'){
+                if($data['unitkerja'] == '3010000'){
+                $this->db->where_in('c.id_unitkerjamaster', ['8000000','8010000','8020000']);
+                } else {
                 $this->db->where('b.skpd', $data['unitkerja']);
+                }
             }
             
 
@@ -2831,11 +2835,20 @@ public function submitVerifikasiDokumen(){
     $data["id_m_user_verif"] = $this->general_library->getId();
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
     $data["tmtjabatan"] = $datapost["edit_tmt_jabatan_verif"];
+    // $data["id_jabatan"] = $datapost["edit_nama_jabatan_verif"];
+    $str = $datapost["edit_nama_jabatan_verif"];
+    if($str){
+        $newStr = explode(",", $str);
+        $id_jabatan = $newStr[0];
+        $nama_jabatan = $newStr[1];
+        $data['id_jabatan']      = $id_jabatan; 
+        $data['nm_jabatan']      = $nama_jabatan; 
+    }
     }
     if(trim($datapost["jenis_dokumen"]) == "skp"){
         $data["predikat"] = $datapost["edit_predikat"];
     }
-
+     
  
     
    
@@ -4279,6 +4292,7 @@ public function submitEditJabatan(){
             $data['jp']         = $this->input->post('edit_disiplin_nama');
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data['tmt']         = $this->input->post('edit_disiplin_tmt');
             $data["gambarsk"]     = $filename;
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
@@ -4296,6 +4310,7 @@ public function submitEditJabatan(){
             $data['jp']         = $this->input->post('edit_disiplin_nama');
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
+            $data['tmt']         = $this->input->post('edit_disiplin_tmt');
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
             $data['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -6341,6 +6356,7 @@ public function submitEditJabatan(){
             ->where('a.status', 2)
             // ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
+            ->order_by('a.id', 'desc')
             ->limit(1)
             ->get()->row_array();
         

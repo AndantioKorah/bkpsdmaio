@@ -999,8 +999,8 @@
 		<?php } ?>
 
 	
-<!-- 
-		    <li class="sidebar-header">
+
+		    <!-- <li class="sidebar-header">
 				Manajemen Talenta
 			</li>
 			<?php

@@ -53,6 +53,11 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php }  ?>
+<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+  <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$this->general_library->getId()?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
+    <i class="fa fa-users-cog"></i> SIASN
+  </button>
+<?php } ?>
 <script>
     function openModalStatusPmd(jenisberkas){
       var jumlah = $('#jumlahdokjab').val()
@@ -88,7 +93,18 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 </div>
 
-
+<div class="modal fade" id="modal_sync_siasn" data-backdrop="static">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">RIWAYAT JABATAN SIASN</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body" id="modal_sync_siasn_content">
+     </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="modal_view_file_jabatan" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
@@ -229,7 +245,14 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 
     <script>
-      
+      function openSiasn(jenis, id){
+        $('#modal_sync_siasn_content').html('')
+        $('#modal_sync_siasn_content').append(divLoaderNavy)
+        $('#modal_sync_siasn_content').load('<?=base_url("siasn/C_Siasn/siasnJabatan/")?>'+id, function(){
+          $('#loader').hide()
+        })
+      }
+
        $("#jenis_fungsional").change(function() {
       var id = $("#jabatan_jenis").val();
       var skpd = $("#jabatan_unitkerja").val();

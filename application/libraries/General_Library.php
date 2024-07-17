@@ -438,6 +438,11 @@ class General_library
         return $this->userLoggedIn['nama_jabatan'];
     }
 
+    public function getNamaJabatanTambahan(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['nama_jabatan_tambahan'];
+    }
+
     public function getIdJabatan(){
         return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
         // return $this->userLoggedIn['jabatan'];
@@ -511,6 +516,14 @@ class General_library
 
     public function countHariKerjaBulanan($bulan, $tahun){
         return $this->nikita->m_user->countHariKerjaBulanan($bulan, $tahun);
+    }
+
+    public function getOauthSiasnApiToken(){
+        return $this->nikita->m_general->getOauthToken();
+    }
+
+    public function getSsoSiasnApiToken(){
+        return $this->nikita->m_general->getSsoToken();
     }
 
     public function getPaguTppPegawai($bulan, $tahun){

@@ -847,8 +847,8 @@
                     }
                 }
             }
-            echo $token;
-            // return $token;
+            // echo $token;
+            return $token;
         }
     
         public function getSsoToken(){
@@ -876,8 +876,8 @@
                     }
                 }
             }
-            echo $token;
-            // return $token;
+            // echo $token;
+            return $token;
         }
 
         public function mappingUnor($percent){

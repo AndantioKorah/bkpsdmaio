@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Siasnlib{
     // ganti dg url api dan token sesuai di admin panel
     public $URL;
+    public $API_URL;
     public $URL_OAUTH;
     public $URL_SSO;
     public $CONSUMER_KEY;
@@ -16,6 +17,7 @@ class Siasnlib{
     public function __construct()
     {
         $this->URL = "https://core.siasnlib.id/bkdmdo/api";
+        $this->API_URL = "https://apimws.bkn.go.id:8243/apisiasn/1.0/";
         $this->URL_OAUTH = "https://apimws.bkn.go.id/oauth2/token";
         $this->URL_SSO = "https://sso-siasn.bkn.go.id/auth/realms/public-siasn/protocol/openid-connect/token";
         $this->CONSUMER_KEY = "1Bwdhd4h99RBEec87M3LB1f3n94a";
@@ -54,7 +56,27 @@ class Siasnlib{
         );
     }
 
-    function postCurl($url, $data, $method = "POST", $flag_use_auth = 1) {
+    function getJabatanByNip($nip){
+        return $this->postCurl(
+            $this->API_URL.'jabatan/pns/'.$nip,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
+    function downloadDokumen($url){
+        return $this->postCurl(
+            $this->API_URL.'download-dok?filePath='.$url,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
+    function postCurl($url, $data, $method = "POST", $flag_use_auth = 1, $flag_use_bearer = 0) {
         $res['code'] = 0;
         $res['data'] = null;
         
@@ -82,11 +104,19 @@ class Siasnlib{
             curl_setopt($curl, CURLOPT_USERPWD, $this->CONSUMER_KEY . ":" . $this->CONSUMER_SECRET);
         } else {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                    "Content-Type: application/x-www-form-urlencoded",
-                    "cache-control: no-cache",
-                )
-            );
+            if($flag_use_bearer != null){
+                $headers = array();
+                $headers[] = 'Accept: application/json';
+                $headers[] = 'Auth: bearer '.$this->siasnlib->general_library->getSsoSiasnApiToken();
+                $headers[] = 'Authorization: Bearer '.$this->siasnlib->general_library->getOauthSiasnApiToken();
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            } else {
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                        "Content-Type: application/x-www-form-urlencoded",
+                        "cache-control: no-cache"
+                    )
+                );
+            }
         }
 
         $response = curl_exec($curl);
@@ -104,8 +134,18 @@ class Siasnlib{
         }
 
         $dec_resp = json_decode($response, true);
-        if(isset($dec_resp['error']) || isset($dec_resp['error_description'])){
+
+        $decode_resp = null;
+        if(isset($dec_resp['data'])){
+            // $decode_resp = json_decode($dec_resp['data'], true);
+        }
+
+        if(isset($dec_resp['error']) 
+        || isset($dec_resp['error_description']) 
+        || ($decode_resp && $decode_resp['code'] != 1
+        || isset($dec_resp['code']) && $dec_resp['code'] != '1')){
             $res['code'] = 1;
+            $res['data'] = $dec_resp['message'];
         }
 
         $this->siasnlib->general->insert('t_log_ws_siasn', [

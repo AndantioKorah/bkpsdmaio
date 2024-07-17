@@ -720,12 +720,12 @@
 		<?php } ?>
 	</li> -->
 	<?php } ?>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
 		Manajemen Talenta
 	</li>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 	
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
@@ -991,19 +991,8 @@
 				</span>
 			</a>	
 		</li>
-
-		
-
-		
-
 		<?php } ?>
-
-	
-
-		    <li class="sidebar-header">
-				Manajemen Talenta
-			</li>
-			<?php
+		<?php
 				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isPejabatEselon() 
@@ -1024,8 +1013,12 @@
 
 			
 				<?php } ?>
+				
+			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
+			{ 
+			?>
 
-				<li class="sidebar-item ">
+			<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 				<span class="align-middle">
@@ -1033,6 +1026,19 @@
 					</span>
 				</a>	
 			</li>
+			<?php 
+		    }
+		    ?>
+		
+
+		
+
+		
+
+	
+
+
+			
 
 </ul>
 <div class="mt-5">

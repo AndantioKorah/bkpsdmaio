@@ -615,6 +615,12 @@ class C_Simata extends CI_Controller
 	}
 
 
+    public function getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id)
+	{ 
+		echo json_encode( $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id));
+	}
+    
+
 
    
 }

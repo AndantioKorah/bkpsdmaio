@@ -1,21 +1,4 @@
 
-
-	<!-- <link href="<?= base_url() ?>assets/select2/dist/css/select2.min.css" rel="stylesheet" />
-
-	<script src="<?= base_url() ?>assets/jquery-3.3.1.min.js"></script>
-
-	<script src="<?= base_url() ?>assets/select2/dist/js/select2.min.js"></script> -->
-	
-
-
-	<!-- Select Element -->
-	<select id='selUser' style='width: 200px;'>
-		<option value='0'>-- Select user --</option>
-	</select>
-
-
-
-
 <div class="card card-default">
     <div class="card-header">
         <h4>Penilaian Rekan Sejawat</h4>
@@ -108,27 +91,7 @@
         $('.select2').select2()
         $('#form_search_komponen_kinerja').submit() 
 
-        $("#selUser").select2({
-			  	ajax: { 
-			   		url: '<?= base_url()?>simata/C_Simata/getJabatan',
-			   		type: "post",
-			   		dataType: 'json',
-			   		delay: 250,
-			   		data: function (params) {
-			    		return {
-			      			searchTerm: params.term // search term
-			    		};
-			   		},
-			   		processResults: function (response) {
-			     		return {
-			        		results: response
-			     		};
-			   		},
-			   		cache: true
-			  	},
-				  minimumInputLength: 1
-
-			});
+       
 
         })
 

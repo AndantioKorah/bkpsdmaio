@@ -608,9 +608,9 @@ class C_Simata extends CI_Controller
 	}
 
 
-    public function getJabatan(){
+    public function getRefJabatanFungsional(){
 		$searchTerm = $this->input->post('searchTerm');
-		$response = $this->simata->getJabatan($searchTerm);
+		$response = $this->simata->getRefJabatanFungsional($searchTerm);
 		echo json_encode($response);
 	}
 

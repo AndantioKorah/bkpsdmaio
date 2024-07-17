@@ -543,4 +543,10 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_SiasnMappingJabatanDetail', $data);
     }
 
+    public function getRefJabatanFungsional(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->master->getRefJabatanFungsional($searchTerm);
+		echo json_encode($response);
+	}
+
 }

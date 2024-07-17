@@ -1,13 +1,10 @@
 
 
-	<!-- Select2 CSS -->
-	<link href="<?= base_url() ?>assets/select2/dist/css/select2.min.css" rel="stylesheet" />
+	<!-- <link href="<?= base_url() ?>assets/select2/dist/css/select2.min.css" rel="stylesheet" />
 
-	<!-- jQuery library -->
 	<script src="<?= base_url() ?>assets/jquery-3.3.1.min.js"></script>
 
-	<!-- Select2 JS -->
-	<script src="<?= base_url() ?>assets/select2/dist/js/select2.min.js"></script>
+	<script src="<?= base_url() ?>assets/select2/dist/js/select2.min.js"></script> -->
 	
 
 

@@ -1,4 +1,24 @@
-<select class="js-example-data-ajax col-lg-12"></select>
+
+
+	<!-- Select2 CSS -->
+	<link href="<?= base_url() ?>assets/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+	<!-- jQuery library -->
+	<script src="<?= base_url() ?>assets/jquery-3.3.1.min.js"></script>
+
+	<!-- Select2 JS -->
+	<script src="<?= base_url() ?>assets/select2/dist/js/select2.min.js"></script>
+	
+
+
+	<!-- Select Element -->
+	<select id='selUser' style='width: 200px;'>
+		<option value='0'>-- Select user --</option>
+	</select>
+
+
+
+
 <div class="card card-default">
     <div class="card-header">
         <h4>Penilaian Rekan Sejawat</h4>
@@ -91,93 +111,27 @@
         $('.select2').select2()
         $('#form_search_komponen_kinerja').submit() 
 
-        $(".js-example-data-ajax").select2({
-  ajax: {
-    url: "https://api.github.com/search/repositories",
-    dataType: 'json',
-    delay: 250,
-    data: function (params) {
-      return {
-        q: params.term, // search term
-        page: params.page
-      };
-    },
-    processResults: function (data, params) {
-      // parse the results into the format expected by Select2
-      // since we are using custom formatting functions we do not need to
-      // alter the remote JSON data, except to indicate that infinite
-      // scrolling can be used
-      params.page = params.page || 1;
+        $("#selUser").select2({
+			  	ajax: { 
+			   		url: '<?= base_url()?>simata/C_Simata/getJabatan',
+			   		type: "post",
+			   		dataType: 'json',
+			   		delay: 250,
+			   		data: function (params) {
+			    		return {
+			      			searchTerm: params.term // search term
+			    		};
+			   		},
+			   		processResults: function (response) {
+			     		return {
+			        		results: response
+			     		};
+			   		},
+			   		cache: true
+			  	},
+				  minimumInputLength: 1
 
-      return {
-        results: data.items,
-        pagination: {
-          more: (params.page * 30) < data.total_count
-        }
-      };
-    },
-    cache: true
-  },
-  placeholder: 'Search for a repository',
-  minimumInputLength: 1,
-  templateResult: formatRepo,
-  templateSelection: formatRepoSelection
-});
-
-function formatRepo (repo) {
-  if (repo.loading) {
-    return repo.text;
-  }
-
-  var $container = $(
-    "<div class='select2-result-repository clearfix'>" +
-      "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
-      "<div class='select2-result-repository__meta'>" +
-        "<div class='select2-result-repository__title'></div>" +
-        "<div class='select2-result-repository__description'></div>" +
-        "<div class='select2-result-repository__statistics'>" +
-          "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> </div>" +
-          "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> </div>" +
-          "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> </div>" +
-        "</div>" +
-      "</div>" +
-    "</div>"
-  );
-
-  $container.find(".select2-result-repository__title").text(repo.full_name);
-  $container.find(".select2-result-repository__description").text(repo.description);
-  $container.find(".select2-result-repository__forks").append(repo.forks_count + " Forks");
-  $container.find(".select2-result-repository__stargazers").append(repo.stargazers_count + " Stars");
-  $container.find(".select2-result-repository__watchers").append(repo.watchers_count + " Watchers");
-
-  return $container;
-}
-
-function formatRepoSelection (repo) {
-  return repo.full_name || repo.text;
-}
-        
-        // $('.js-data-example-ajax').select2({
-        //     ajax: {
-        //         url: 'https://api.github.com/orgs/select2/repos',
-        //         dataType: 'json',
-        //         processResults: function (data) {
-        //             alert(data.length)
-
-        //             var html = '';
-        //               var i;
-        //               for(i=0; i<data.length; i++){
-        //                   html += '<option value='+data[i].id+'>'+data[i].name+'</option>';
-        //               }
-        //               $('.testt').html(html);
-        //         // Transforms the top-level key of the response object from 'items' to 'results'
-        //         return {
-        //             results: data.items
-        //         };
-        //         }
-        //         // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-        //     }
-        //     });
+			});
 
         })
 

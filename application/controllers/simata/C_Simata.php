@@ -606,7 +606,15 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianSejawat());
 	}
-    
+
+
+    public function getJabatan(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->simata->getJabatan($searchTerm);
+		echo json_encode($response);
+	}
+
+
 
    
 }

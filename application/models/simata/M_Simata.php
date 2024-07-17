@@ -4935,6 +4935,21 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         
             return $res;
         }
+
+
+
+        function getJabatan($searchTerm=""){
+
+            $this->db->select('*');
+            $this->db->where("nama_jabatan like '%".$searchTerm."%' ");
+            $fetched_records = $this->db->get('db_pegawai.jabatan');
+            $jabatan = $fetched_records->result_array();
+            $data = array();
+            foreach($jabatan as $jabatan){
+                $data[] = array("id"=>$jabatan['id_jabatanpeg'], "text"=>$jabatan['nama_jabatan']);
+            }
+            return $data;
+        }
             
        
 	}

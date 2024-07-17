@@ -606,7 +606,21 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianSejawat());
 	}
+
+
+    public function getRefJabatanFungsional(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->simata->getRefJabatanFungsional($searchTerm);
+		echo json_encode($response);
+	}
+
+
+    public function getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id)
+	{ 
+		echo json_encode( $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id));
+	}
     
+
 
    
 }

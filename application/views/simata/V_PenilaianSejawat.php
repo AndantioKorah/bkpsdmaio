@@ -1,4 +1,4 @@
-<?php // if(!$this->general_library->isWalikota()) { ?>
+
 <div class="card card-default">
     <div class="card-header">
         <h4>Penilaian Rekan Sejawat</h4>
@@ -85,12 +85,15 @@
 
 <div class="col-12 card card-default p-3" >
 </div>
-<?php // } ?>
+
 <script>
     $(function(){
         $('.select2').select2()
-        $('#form_search_komponen_kinerja').submit()   
-    })
+        $('#form_search_komponen_kinerja').submit() 
+
+       
+
+        })
 
     $('#form_search_komponen_kinerja').submit(function(e){
         $('#result').show()

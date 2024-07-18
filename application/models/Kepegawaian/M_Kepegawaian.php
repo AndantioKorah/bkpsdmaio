@@ -3499,8 +3499,26 @@ public function getAllPelanggaranByNip($nip){
 
         }
 
+        function syncSiasnJabatan($id){
+            $siasn = null;
+            $data = $this->getJabatanPegawaiEdit($id)[0];
+            if($data['meta_data_siasn']){
+                $siasn = json_decode($data['meta_data_siasn'], true);
+            }
+
+            $data_siasn = null;
+            if($siasn){
+                $data_siasn = $siasn;
+                dd($data);
+            } else {
+
+            }
+        }
+
         function getJabatanPegawaiEdit($id){
-            $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan,c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan')
+            $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan,
+            c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan, d.id_jabatan_siasn,
+            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -3734,6 +3752,7 @@ public function submitEditJabatan(){
             $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
             $data['ket']      = $this->input->post('edit_jataban_keterangan');
             $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+            $data['id_unor_siasn']      = $this->input->post('id_unor_siasn');
             $data['updated_by']      = $this->general_library->getId();
             $data["gambarsk"] = $filename;
              $this->db->where('id', $id)
@@ -3768,6 +3787,7 @@ public function submitEditJabatan(){
         $data['angkakredit']      = $this->input->post('edit_jabatan_angka_kredit');
         $data['ket']      = $this->input->post('edit_jataban_keterangan');
         $data['tglsk']      = $this->input->post('edit_jabatan_tanggal_sk');
+        $data['id_unor_siasn']      = $this->input->post('id_unor_siasn');
         $data['updated_by']      = $this->general_library->getId();
         $this->db->where('id', $id)
                 ->update('db_pegawai.pegjabatan', $data);

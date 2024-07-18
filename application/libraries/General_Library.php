@@ -526,6 +526,19 @@ class General_library
         return $this->nikita->m_general->getSsoToken();
     }
 
+    public function downloadFileSiasn($url){
+        $file = null;
+        $downloadFile = $this->nikita->siasnlib->downloadDokumen($url);
+        if($downloadFile['code'] == 0){
+            $fileName = generateRandomNumber(20).'.pdf';
+            file_put_contents('temp_pdf_from_api_siasn/'.$fileName, $downloadFile['data']);
+            $file = convertToBase64('temp_pdf_from_api_siasn/'.$fileName);
+            unlink('temp_pdf_from_api_siasn/'.$fileName);
+        }
+
+        return $file;
+    }
+
     public function getPaguTppPegawai($bulan, $tahun){
         $unitkerja = $this->nikita->m_user->getUnitKerjaByPegawai($this->getId(),1);
         $data['id_unitkerja'] = $this->userLoggedIn['skpd'];

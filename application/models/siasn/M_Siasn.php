@@ -23,7 +23,8 @@
                     ->update('db_pegawai.pegjabatan', [
                         'updated_by' => $this->general_library->getId(),
                         'id_siasn' => $id_siasn,
-                        'meta_data_siasn' => json_encode($data['siasn'][$id_siasn])
+                        'id_unor_siasn' => $data['siasn'][$id_siasn]['unorId'],
+                        'meta_data_siasn' => json_encode($data['siasn'][$id_siasn]),
                     ]);
         }
     }

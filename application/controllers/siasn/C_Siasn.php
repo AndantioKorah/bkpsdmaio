@@ -82,12 +82,12 @@ class C_Siasn extends CI_Controller
         $file = null;
         
         if($base == 'siasn'){
-            $ws = $this->siasnlib->downloadDokumen($data[$base][$id]['path'][872]['dok_uri']);
-            if($ws['code'] == 0){
-                $random = generateRandomNumber(20);
-                file_put_contents('temp_pdf_from_api_siasn/'.$random, $ws['data']);
-                $file = convertToBase64('temp_pdf_from_api_siasn/'.$random);
-                unlink('temp_pdf_from_api_siasn/'.$random);
+            $downloadFile = $this->siasnlib->downloadDokumen($data[$base][$id]['path'][872]['dok_uri']);
+            if($downloadFile['code'] == 0){
+                $fileName = generateRandomNumber(20).'.pdf';
+                file_put_contents('temp_pdf_from_api_siasn/'.$fileName, $downloadFile['data']);
+                $file = convertToBase64('temp_pdf_from_api_siasn/'.$fileName);
+                unlink('temp_pdf_from_api_siasn/'.$fileName);
             }
         }
 
@@ -99,6 +99,11 @@ class C_Siasn extends CI_Controller
     public function sinkronIdSiasn($id_siladen, $id_siasn){
         $data = $this->session->userdata('riwayat_jabatan');
         $this->siasn->sinkronIdSiasn($id_siladen, $id_siasn, $data);
+    }
+
+    public function downloadFileSiasn(){
+        $data = $this->general_library->downloadFileSiasn($this->input->post('url'));
+        echo $data;
     }
     
 }

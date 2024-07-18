@@ -110,6 +110,9 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-12 text-center" id="div_detail_jabatan_siasn_loader" style="display: none;">
+                <i class="fa fa-5x fa-spin fa-spinner"></i>
+            </div>
         </div>
     </div>
     <div class="col-lg-12 text-center mt-2">
@@ -174,7 +177,8 @@
     }
 
     function loadDivDetailJabatanSiasn(){
-        $('#div_detail_jabatan_siasn').show()
+        $('#div_detail_jabatan_siasn').hide()
+        $('#div_detail_jabatan_siasn_loader').show()
         $.ajax({
             url: '<?=base_url("siasn/C_Siasn/loadDetailRiwayat/siasn/")?>'+$('#id_jabatan_siasn').val(),
             method: 'post',
@@ -187,8 +191,12 @@
                 $('.lbl_siasn_tmt_jabatan').html(res.tmtJabatan)
                 $('.lbl_siasn_tanggal_sk').html(res.tanggalSk)
                 $('.file_siasn').attr('src', "data:application/pdf;base64,"+res.file)
+                $('#div_detail_jabatan_siasn').show()
+                $('#div_detail_jabatan_siasn_loader').hide()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
+                $('#div_detail_jabatan_siasn').show()
+                $('#div_detail_jabatan_siasn_loader').hide()
             }
         })
     }

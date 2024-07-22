@@ -105,5 +105,13 @@ class C_Siasn extends CI_Controller
         $data = $this->general_library->downloadFileSiasn($this->input->post('url'));
         echo $data;
     }
+
+    public function mappingJabatanFungsional($flag_only_show){
+        $this->siasn->mappingJabatanFungsional($flag_only_show);
+    }
+
+    public function revertMappingJabatan($jenis = 'Struktural', $percent, $flag_only_show){
+        $this->siasn->revertMappingJabatan($jenis, $percent, $flag_only_show);
+    }
     
 }

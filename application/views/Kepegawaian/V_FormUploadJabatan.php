@@ -54,7 +54,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
-  <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$this->general_library->getId()?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
+  <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
   </button>
 <?php } ?>

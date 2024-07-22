@@ -309,7 +309,7 @@ class M_Kepegawaian extends CI_Model
 
         function getProfilPegawaiByAdmin($username){
             $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
-            h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan')
+            h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan, k.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
@@ -320,7 +320,9 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
                 ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
                 ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
+                ->join('m_user k', 'a.nipbaru_ws = k.username')
                 ->where('a.nipbaru_ws', $username)
+                ->where('k.flag_active', 1)
                 ->limit(1);
             return $this->db->get()->row_array();
         }
@@ -3509,16 +3511,44 @@ public function getAllPelanggaranByNip($nip){
             $data_siasn = null;
             if($siasn){
                 $data_siasn = $siasn;
-                dd($data);
-            } else {
-
             }
+
+            $update = null;
+
+            $path[] = $data_siasn['path'][872];
+
+            $jenis_jabatan = "4";
+            if($data['jenis_jabatan'] == "Struktural"){
+                $jenis_jabatan = "1";
+            } else if($data['jenis_jabatan'] == "JFT"){
+                $jenis_jabatan = "2";
+            }
+
+            $update = [
+                "eselonId" => $data['id_eselon'] == 1 ? null : $data['id_eselon'],
+                "id" => $data_siasn ? $data_siasn['id'] : null,
+                "instansiId" => ID_INSTANSI_SIASN,
+                "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $data['id_jabatan_siasn'] : null,
+                "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $data['id_jabatan_siasn'] : null,
+                "jenisJabatan" => $jenis_jabatan,
+                "nomorSk" => $data['nosk'],
+                "path" => $path,
+                "pnsId" => $data['id_pns_siasn'],
+                "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
+                "tanggalSk" => formatDateOnlyForEdit2($data['tglsk']),
+                "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
+                "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
+                "unorId" => $data['id_unor_siasn']
+            ];
+
+            $ws = $this->siasnlib->saveJabatan($update);
+            return $ws;
         }
 
         function getJabatanPegawaiEdit($id){
-            $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan,
+            $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan, b.id_pns_siasn,
             c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan, d.id_jabatan_siasn,
-            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn')
+            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn, e.id_eselon')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')

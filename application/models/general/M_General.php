@@ -1146,5 +1146,136 @@
             return [$result, $list_unor_siasn];
         }
 
+        public function downloadRekapAbsenRequest(){
+            $bulan = ['1', '2', '3', '4', '5', '6'];
+            $list_bulan = null;
+            foreach($bulan as $b){
+                $list_bulan[$b] = $b;
+            }
+
+            $tahun = ['2024'];
+            $list_tahun = null;
+            foreach($tahun as $t){
+                $list_bulan[$t] = $t;
+            }
+
+            $unitkerja = [
+                'Puskesmas Bahu',
+                'Puskesmas Bailang',
+                'Puskesmas Bengkol',
+                'Puskesmas Kombos',
+                'Puskesmas Minanga',
+                'Puskesmas Paniki Bawah',
+                'Puskesmas Ranomuut',
+                'Puskesmas Ranotana Weru',
+                'Puskesmas Sario',
+                'Puskesmas Teling Atas',
+                'Puskesmas Tikala Baru',
+                'Puskesmas Tongkaina',
+                'Puskesmas Tuminting',
+                'Puskesmas Wawonasa',
+                'Puskesmas Wenang',
+                'Puskesmas Bunaken',
+                'Rumah Sakit Khusus Daerah Gigi dan Mulut',
+                'Rumah Sakit Umum Daerah',
+                'Sekretariat DPRD',
+                'Dinas Pekerjaan Umum dan Penataan Ruang'
+            ];
+
+            $folder_name = 'request_kasub_erik_19_juli_2024';
+            $folder_name = 'temp_pdf_from_api_siasn/temp_pdf_request/'.$folder_name;
+
+            if (!file_exists($folder_name) && !is_dir($folder_name) ) {
+                mkdir($folder_name);
+            }
+
+            $folder_name .= '/';
+
+            $total = 0;
+            $exists = 0;
+            $not_found = 0;
+            $failed = 0;
+            $success = 0;
+            $absen = 0;
+            $tpp = 0;
+
+            $list_nama = [];
+            foreach($unitkerja as $u){
+                foreach($bulan as $b){
+                    foreach($tahun as $t){
+                        $flag_cari_rekap_tpp = 0;
+                        $list_nama[$u.$b.$t]['nama'] = 'Rekap Absensi '.$u.' Bulan '.getNamaBulan($b).' '.$t.'.pdf';
+                        // $list_nama[$u.$b.$t]['url'] = base_url('assets/arsipabsensibulanan/'.str_replace(' ', '%20', $list_nama[$u.$b.$t]['nama']));
+                        // $list_nama[$u.$b.$t]['url'] = ('assets/arsipabsensibulanan/'.str_replace(' ', '%20', $list_nama[$u.$b.$t]['nama']));
+                        $list_nama[$u.$b.$t]['url'] = ('assets/arsipabsensibulanan/'.$list_nama[$u.$b.$t]['nama']);
+                        $total++;
+
+                        $flag_cari_rekap_tpp = $this->moveFile($list_nama[$u.$b.$t]['url'], $list_nama[$u.$b.$t]['nama'], $folder_name, $u);
+
+                        // if(file_exists($list_nama[$u.$b.$t]['url'])){
+                        //     if(!file_exists($folder_name.$list_nama[$u.$b.$t]['nama'])){
+                        //         if (file_put_contents($folder_name.$list_nama[$u.$b.$t]['nama'], file_get_contents($list_nama[$u.$b.$t]['url']))){ 
+                        //             $success++;
+                        //             echo $list_nama[$u.$b.$t]['nama']." successfully"."<br>"; 
+                        //         } else { 
+                        //             $flag_cari_rekap_tpp = 1;
+                        //             $failed++;
+                        //             echo $list_nama[$u.$b.$t]['nama']." failed"."<br>"; 
+                        //         }
+                        //     } else {
+                        //         $exists++;
+                        //         echo $list_nama[$u.$b.$t]['nama']." EXISTS"."<br>"; 
+                        //     }
+                        // } else {
+                        //     $flag_cari_rekap_tpp = 1;
+                        //     $not_found++;
+                        //     echo $list_nama[$u.$b.$t]['nama']." NOT FOUND"."<br>"; 
+                        // }
+
+                        if($flag_cari_rekap_tpp == 1){
+                            $nama_rekap_tpp = 'Rekap TPP '.$u.' '.getNamaBulan($b).' '.$t.'.pdf';
+                            // $url_rekap_tpp = 'arsiptpp/'.$t.'/'.getNamaBulan($b).'/'.str_replace(' ', '%20', $nama_rekap_tpp);
+                            $url_rekap_tpp = 'arsiptpp/'.$t.'/'.getNamaBulan($b).'/'.$nama_rekap_tpp;
+                            $last = $this->moveFile($url_rekap_tpp, $nama_rekap_tpp, $folder_name, $u);
+                            if($last == 1){
+                                echo "memang so nda dapa ".$u.' Bulan '.getNamaBulan($b).' '.$t.'<br>';
+                            }
+                        }
+                    }
+                }
+            }
+            dd(count($list_nama));
+        }
+
+        public function moveFile($url, $name, $folder, $unitkerja){
+            $folder_per_uk = null;
+            if (!file_exists($folder.$unitkerja) && !is_dir($folder.$unitkerja)){
+                $folder_per_uk = $folder.$unitkerja.'/';
+                mkdir($folder.$unitkerja);
+            } else {
+                $folder_per_uk = $folder.$unitkerja.'/';
+            }
+
+            $flag_cari_rekap_tpp = 0;
+            if(file_exists(($url))){
+                if(!file_exists($folder.$name)){
+                    if (file_put_contents($folder.$name, file_get_contents($url))){ 
+                        file_put_contents($folder_per_uk.$name, file_get_contents($url));
+                        echo $name." successfully"."<br>"; 
+                    } else { 
+                        $flag_cari_rekap_tpp = 1;
+                        echo $name." failed"."<br>"; 
+                    }
+                } else {
+                    echo $name." EXISTS"."<br>"; 
+                }
+            } else {
+                $flag_cari_rekap_tpp = 1;
+                echo $name." NOT FOUND"."<br>"; 
+            }
+
+            return $flag_cari_rekap_tpp;
+        }
+
 	}
 ?>

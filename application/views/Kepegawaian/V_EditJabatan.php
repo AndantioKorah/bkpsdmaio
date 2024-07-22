@@ -288,7 +288,12 @@ function syncSiasn(){
     method: 'post',
     data: null,
     success: function(data){
-      successtoast('Sinkronisasi dengan SIASN berhasil')
+      let rs = JSON.parse(data)
+      if(rs.code == 0){
+        successtoast('Sinkronisasi dengan SIASN berhasil')
+      } else {
+        errortoast('Terjadi Kesalahan. '+rs.message)
+      }
       $('#btn_sync').show()
       $('#btn_sync_loading').hide()
     }, error: function(e){

@@ -76,7 +76,18 @@ class Siasnlib{
         );
     }
 
+    function saveJabatan($data){
+        return $this->postCurl(
+            $this->API_URL.'jabatan/save',
+            $data,
+            "POST",
+            0,
+            1
+        );
+    }
+
     function postCurl($url, $data, $method = "POST", $flag_use_auth = 1, $flag_use_bearer = 0) {
+        $data = json_encode($data);
         $res['code'] = 0;
         $res['data'] = null;
         
@@ -92,7 +103,7 @@ class Siasnlib{
             CURLOPT_TIMEOUT => 60,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => ($data),
+            CURLOPT_POSTFIELDS => $data,
             CURLOPT_HTTPHEADER => array(
                     "Content-Type: application/json",
                     "cache-control: no-cache",
@@ -103,10 +114,11 @@ class Siasnlib{
         if($flag_use_auth == 1){
             curl_setopt($curl, CURLOPT_USERPWD, $this->CONSUMER_KEY . ":" . $this->CONSUMER_SECRET);
         } else {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            // curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             if($flag_use_bearer != null){
                 $headers = array();
                 $headers[] = 'Accept: application/json';
+                $headers[] = 'Content-Type: application/json; charset=utf-8';
                 $headers[] = 'Auth: bearer '.$this->siasnlib->general_library->getSsoSiasnApiToken();
                 $headers[] = 'Authorization: Bearer '.$this->siasnlib->general_library->getOauthSiasnApiToken();
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);

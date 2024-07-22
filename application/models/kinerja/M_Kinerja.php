@@ -2564,15 +2564,15 @@
                                         ->from('db_pegawai.pegawai')
                                         ->where('nipbaru_ws', $p['nipbaru_ws'])
                                         ->get()->row_array();
-
-                    if($uk_asal['skpd'] == $data['id_unitkerja']){
+                                        
+                    // if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
                             $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
                             $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
                             $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp; 
                         }
-                    }
+                    // }
                     else {
                         // jika pegawai plt / plh bukan di unitkerja yang sama, maka hanya presentasi tambahan
                         $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
@@ -2607,6 +2607,8 @@
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
                     return $result[$p['id_m_user']];
                 }
+
+                
 
                 $i++;
             }

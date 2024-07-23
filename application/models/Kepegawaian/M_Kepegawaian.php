@@ -3701,6 +3701,18 @@ function getSumpahJanjiEdit($id){
                    return $query;
 }
 
+function getTimKerjaEdit($id){
+    $this->db->select('*')
+                   ->from('m_user a')
+                   ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                   ->join('db_pegawai.pegtimkerja c', 'b.id_peg = c.id_pegawai')
+                   ->where('c.id', $id)
+                   ->where('c.flag_active', 1)
+                   ->where('a.flag_active', 1);
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
+
 
 public function submitEditJabatan(){
     $nama_jabatan = null;
@@ -4614,6 +4626,84 @@ public function submitEditJabatan(){
             $data["tglba"] = $datapost["edit_tglba"];
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegsumpah', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+       public function submitEditTimKerja(){
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $target_dir = './arsiptimkerja/';
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+       
+        if($_FILES['file']['name'] != ""){
+       
+            if($filename == ""){
+                $filename = $_FILES['file']['name'];
+            } 
+           
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            // $file_tmp = $_FILES['file']['tmp_name'];
+            // $data_file = file_get_contents($file_tmp);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
+           
+            $id = $datapost['id'];
+            $data["nm_timkerja"] = $datapost["edit_nama_timkerja"];
+            $data["jabatan"] = $datapost["edit_jabatan_timkerja"];
+            $data["lingkup_timkerja"] = $datapost["edit_ruanglingkup"];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegtimkerja', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        } else {
+            $id = $datapost['id'];
+            $data["nm_timkerja"] = $datapost["edit_nama_timkerja"];
+            $data["jabatan"] = $datapost["edit_jabatan_timkerja"];
+            $data["lingkup_timkerja"] = $datapost["edit_ruanglingkup"];
+           
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegtimkerja', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
         }

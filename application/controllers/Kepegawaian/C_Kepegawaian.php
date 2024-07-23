@@ -1435,6 +1435,13 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_EditSumjan', $data);
     }
 
+	public function loadEditTimKerja($id)
+    {
+		$data['lingkup_tim'] = $this->kepegawaian->getLingkupTimKerja();
+		$data['timkerja'] = $this->kepegawaian->getTimKerjaEdit($id);
+		$this->load->view('kepegawaian/V_EditTimKerja', $data);
+    }
+
 	public function permohonanCuti(){
 		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
 		
@@ -1653,6 +1660,11 @@ class C_Kepegawaian extends CI_Controller
 	public function submitEditSumjan()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditSumjan());
+	}
+
+	public function submitEditTimKerja()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditTimKerja());
 	}
 
 	public function submitEditArsipLain()

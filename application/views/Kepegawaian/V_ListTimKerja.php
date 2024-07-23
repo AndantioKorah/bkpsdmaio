@@ -34,6 +34,11 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_tim"
+                onclick="loadEditTim('<?=$rs['id_pegtimkerja']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
               <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </td>
               <?php } ?>
@@ -43,6 +48,11 @@
 
               <td>
               <?php if($rs['status'] == 1) { ?>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_tim"
+                onclick="loadEditTim('<?=$rs['id_pegtimkerja']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
               <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                <?php } ?>
               </td>
@@ -100,7 +110,13 @@
                        })
                    }
                }
-
+               function loadEditTim(id){
+              $('#edit_tim_kerja_pegawai').html('')
+              $('#edit_tim_kerja_pegawai').append(divLoaderNavy)
+              $('#edit_tim_kerja_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditTimKerja")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
   
 </script>
 <?php } else { ?>

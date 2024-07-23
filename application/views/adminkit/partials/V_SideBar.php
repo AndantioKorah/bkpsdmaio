@@ -268,6 +268,11 @@
 					<i class="align-middle me-2 far fa-circle"></i>Mapping Bidang
 				</a>
 			</li>
+			<li class="sidebar-item ">
+				<a title="Mapping Jabatan" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/jabatan')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Jabatan
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 
@@ -659,6 +664,8 @@
 				|| $this->general_library->isWalikota()
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatanTambahan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatanTambahan())
 				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">

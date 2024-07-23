@@ -1258,7 +1258,7 @@
         if($tahun == null){
             $tahun = date('Y');
         }
-
+        
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
@@ -2077,7 +2077,7 @@
                             ->get()->row_array();
             }
 
-            $this->db->select('a.*, c.nama as nama_hd, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat')
+            $this->db->select('a.*, c.nama as nama_hd, b.nipbaru_ws, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat')
                     ->from('db_pegawai.pegdisiplin a')
                     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b. id_peg')
                     ->join('db_pegawai.hd c', 'a.hd = c.idk')
@@ -2103,10 +2103,11 @@
             if($list_hukdis){
                 foreach($list_hukdis as $l){
                     if($l['tmt']){
-                        $valid_date = date('Y-m-d', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
+                        $l['lama_potongan'] = floatval($l['lama_potongan']) - 1;
+                        $valid_date = date('Y-m-t', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
                         $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
                         $last_date = $list_date[count($list_date)-1];
-                       
+
                         if($last_date <= $valid_date && date('Y-m-d') >= $valid_date){
                             $hukdis[$l['nipbaru_ws']] = $l;
                         }
@@ -2421,9 +2422,9 @@
         foreach($pagu_tpp as $pt){
             $list_pegawai['result'][$pt['nipbaru_ws']] = $pt;
         }
-
+        
         $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
-
+        
         $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
 
         $hukdis = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : null;
@@ -2431,7 +2432,7 @@
         foreach($data_rekap['result'] as $dr){
             $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
         }
-
+        
         $rekap['jumlah_pegawai'] = 0;
         $rekap['rata_rata_presentase_kehadiran'] = 0;
         $rekap['total_presentase_kehadiran'] = 0;

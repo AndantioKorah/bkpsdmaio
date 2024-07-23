@@ -56,4 +56,8 @@ class C_Cron extends CI_Controller
     public function revertMappingUnor($percent){
         return $this->general->revertMappingUnor($percent);
     }
+
+    public function downloadRekapAbsenRequest(){
+        $this->general->downloadRekapAbsenRequest();
+    }
 }

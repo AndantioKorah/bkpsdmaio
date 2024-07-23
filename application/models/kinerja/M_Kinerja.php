@@ -1151,7 +1151,8 @@
                                     ->get()->row_array();
         }
 
-        $this->db->select('f.nama_jenis_disiplin_kerja,c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, d.status as status_dokumen, e.nama as nama_verif')
+        $this->db->select('f.nama_jenis_disiplin_kerja,c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
+        d.status as status_dokumen, e.nama as nama_verif, a.random_string')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -1194,23 +1195,23 @@
             $temp = $result;
             $result = null;
             foreach($temp as $t){
-                if(isset($result[$t['nip'].$t['dokumen_pendukung']])){
+                if(isset($result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']])){
                     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['dari_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
                     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['sampai_tanggal'])){
+                        $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['list_id'][] = $t['id'];
                 } else {
-                    $result[$t['nip'].$t['dokumen_pendukung']] = $t;
-                    $result[$t['nip'].$t['dokumen_pendukung']]['list_id'][] = $t['id'];
-                    $result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']] = $t;
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['list_id'][] = $t['id'];
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['nip'].$t['dokumen_pendukung'].$t['random_string']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                 }
 
                 // if($result[$t['nip'].$t['dokumen_pendukung']]['dari_tanggal'] == $result[$t['nip'].$t['dokumen_pendukung']]['sampai_tanggal']){
@@ -2408,9 +2409,11 @@
 
         if($flag_sekolah_kecamatan == 0){
             // ambil jika ada pegawai PLT / PLH
-            $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], null, null, $pegawai);
+            $bulan = isset($data['bulan']) ? $data['bulan'] : null;
+            $tahun = isset($data['tahun']) ? $data['tahun'] : null;
+            $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], $bulan, $tahun, $pegawai);
         }
-        
+
         if($pegawai){
             $i = 0;
             $temp = null;
@@ -2561,15 +2564,15 @@
                                         ->from('db_pegawai.pegawai')
                                         ->where('nipbaru_ws', $p['nipbaru_ws'])
                                         ->get()->row_array();
-
-                    if($uk_asal['skpd'] == $data['id_unitkerja']){
+                                        
+                    // if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
                             $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
                             $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
                             $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp; 
                         }
-                    }
+                    // }
                     else {
                         // jika pegawai plt / plh bukan di unitkerja yang sama, maka hanya presentasi tambahan
                         $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
@@ -2604,6 +2607,8 @@
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
                     return $result[$p['id_m_user']];
                 }
+
+                
 
                 $i++;
             }

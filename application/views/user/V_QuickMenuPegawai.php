@@ -69,6 +69,8 @@
     || $this->general_library->isWalikota()
     || stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
     || stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+    || stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatanTambahan())
+    || stringStartWith('Kepala Taman', $this->general_library->getNamaJabatanTambahan())
     ){
     ?>
     <div onclick="href('kinerja/verifikasi')" class="col">

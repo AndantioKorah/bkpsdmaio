@@ -568,7 +568,8 @@ class C_Kepegawaian extends CI_Controller
 	public function profilPegawai($nip){
 		if(!$this->general_library->isProgrammer() 
 		&& !$this->general_library->isAdminAplikasi() 
-		&& !$this->general_library->isHakAkses('akses_profil_pegawai') ){
+		&& !$this->general_library->isHakAkses('akses_profil_pegawai')
+		&& !$this->general_library->isKasubagKepegawaianDiknas()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
@@ -1305,9 +1306,12 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
 		$data['jabatan_siasn'] = null;
+		$data['list_jabatan_siasn'] = null;
+		$jenis_jabatan = 'JFU';
 		// dd($data['jabatan'][0]['unitkerja_id']);
 		if($data['jabatan']) {
 			$data['jabatan_siasn'] = json_decode($data['jabatan'][0]['meta_data_siasn'], true);
+			$jenis_jabatan = $data['jabatan'][0]['jenis_jabatan'];
 			if($data['jabatan'][0]['jenis_jabatan'] == "JFT") {
 				$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditJFT();
 			} else if($data['jabatan'][0]['jenis_jabatan'] == "Struktural") {
@@ -1319,6 +1323,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
 		}
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
+		$data['list_jabatan_siasn'] = $this->kepegawaian->getListJabatanSiasn($jenis_jabatan);
 		
 		// dd($data['nama_jabatan']);
         $this->load->view('kepegawaian/V_EditJabatan', $data);
@@ -1328,6 +1333,9 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->syncSiasnJabatan($id));
 	}
 
+	public function loadListJabatanSiasn($id){
+		return getListJabatanSiasn();
+	}
 
 	public function loadEditPangkaPegawai($id)
     {

@@ -259,6 +259,10 @@ class General_library
         return $this->getUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM;
     }
 
+    public function isKasubagKepegawaianDiknas(){
+        return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
+    }
+
     public function getDataUnitKerjaPegawai(){
         $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
         $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];

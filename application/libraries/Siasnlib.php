@@ -79,7 +79,7 @@ class Siasnlib{
     function saveJabatan($data){
         return $this->postCurl(
             $this->API_URL.'jabatan/save',
-            $data,
+            json_encode($data),
             "POST",
             0,
             1
@@ -87,7 +87,7 @@ class Siasnlib{
     }
 
     function postCurl($url, $data, $method = "POST", $flag_use_auth = 1, $flag_use_bearer = 0) {
-        $data = json_encode($data);
+        // $data = json_encode($data);
         $res['code'] = 0;
         $res['data'] = null;
         
@@ -146,7 +146,7 @@ class Siasnlib{
         }
 
         $dec_resp = json_decode($response, true);
-
+        
         $decode_resp = null;
         if(isset($dec_resp['data'])){
             // $decode_resp = json_decode($dec_resp['data'], true);
@@ -155,9 +155,10 @@ class Siasnlib{
         if(isset($dec_resp['error']) 
         || isset($dec_resp['error_description']) 
         || ($decode_resp && $decode_resp['code'] != 1
-        || isset($dec_resp['code']) && $dec_resp['code'] != '1')){
+        || isset($dec_resp['code']) && $dec_resp['code'] != '1')
+        || $response == "0"){
             $res['code'] = 1;
-            $res['data'] = $dec_resp['message'];
+            $res['data'] = isset($dec_resp['message']) ? $dec_resp['message'] : $response;
         }
 
         $this->siasnlib->general->insert('t_log_ws_siasn', [

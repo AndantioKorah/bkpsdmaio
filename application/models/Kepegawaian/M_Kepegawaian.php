@@ -6472,6 +6472,32 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    function getListJabatanSiasn($jenis = 'JFU', $id = null){
+        if($id != null){
+            $jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('id_jabatanpeg', $id)
+                                ->get()->row_array();
+            if($jabatan){
+                $jenis = $jabatan['jenis_jabatan'];
+            }
+        }
+
+        if($jenis == 'Struktural'){
+            return $this->db->select('*, nama_jabatan as nama')
+                            ->from('db_siasn.m_ref_jabatan_struktural')
+                            ->get()->result_array();
+        } else if($jenis == 'JFT'){
+            return $this->db->select('*')
+                            ->from('db_siasn.m_ref_jabatan_fungsional')
+                            ->get()->result_array();
+        } else if($jenis == 'JFU'){
+            return $this->db->select('*')
+                            ->from('db_siasn.m_ref_jabatan_pelaksana')
+                            ->get()->result_array();
+        }
+    }
+
     function getSelectJabatanEdit(){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')

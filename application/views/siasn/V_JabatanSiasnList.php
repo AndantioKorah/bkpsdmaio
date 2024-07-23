@@ -27,7 +27,7 @@
         </tbody>
     </table>
 <?php } else { ?>
-    <h3 class="text-center"><?=$result['data']?></h3>
+    <h3 class="text-center"><?=isset($result['data']) ? $result['data'] : dd($result)?></h3>
 <?php } ?>
 
 <script>

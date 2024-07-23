@@ -121,6 +121,13 @@
               </select>
               </div>
 
+              <div class="form-group" style="margin-bottom:10px !important;" id="div_jabatan_siasn">
+                <label for="jabatan_jenis">Nama Jabatan SIASN </label>
+                <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="list_jabatan_siasn" id="list_jabatan_siasn" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
+                                <option value="" disabled selected>Pilih Item</option>
+                </select>
+              </div>
+
 
             <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
               </div>
@@ -244,6 +251,7 @@
     
 $(function(){
   loadFileSiasn()
+  loadJabatanSiasn()
 
   $(".select2").select2({   
       width: '100%',
@@ -262,6 +270,29 @@ $(function(){
  // orientation: 'bottom',
  autoclose: true
 });
+
+$('#jabatan_nama').on('change', function(){
+  loadJabatanSiasn()
+})
+
+function loadJabatanSiasn(){
+  $.ajax({
+    url: '<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatanSiasn")?>',
+    method: 'post',
+    data: {
+      id_jabatanpeg: $('#jabatan_nama').value()
+    },
+    success: function(data){
+      $('#list_jabatan_siasn').empty()
+      let rs = JSON.parse(data)
+      rs.forEach(function(item) {
+        $('#list_jabatan_siasn').append('<option value="'+item.id+'">'+item.nama+'</option>')
+      })
+    }, error: function(e){
+      errortoast('Terjadi Kesalahan')
+    }
+  })
+}
 
 function loadFileSiasn(){
   <?php if($jabatan_siasn && isset($jabatan_siasn['path'][872]['dok_uri'])){ ?>

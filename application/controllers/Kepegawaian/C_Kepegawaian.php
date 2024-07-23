@@ -13,6 +13,7 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
+        $this->load->model('simata/M_Simata', 'simata');
 		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -913,6 +914,23 @@ class C_Kepegawaian extends CI_Controller
 		}
         $this->load->view('kepegawaian/V_FormUploadArsipLainnya', $data);
     }
+
+	public function LoadViewTalenta($nip){
+		$data['nip'] = $nip;
+		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'data_lainnya');
+
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_ProfilTalenta', $data);
+    }
+
+	
 
 
 
@@ -1956,6 +1974,33 @@ class C_Kepegawaian extends CI_Controller
         $id = $this->input->post('id');
         $response   = $this->kepegawaian->getSearchPegawai($id);
         echo json_encode($response);
+    }
+
+	public function loadListProfilTalenta($nip,$jenis_pengisian){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$id_peg = $data['profil_pegawai']['id_peg'];
+		$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,1);
+
+        $data['result'] = $this->kepegawaian->loadListProfilTalenta( $id_peg,$jenis_pengisian);  
+        $data['jenis_pengisian'] = $jenis_pengisian;
+        $this->load->view('simata/V_ProfilTalentaAdmList', $data);
+        
+    }
+
+
+	public function loadDetailProfilTalenta($nip,$jt)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+       
+        $id_peg = $data['profil_pegawai']['id_peg'];
+        // $data['id_t_penilaian'] = $id;
+        $data['jabatan_target'] = $jt;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPT($nip,$jt);
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPT($nip);
+        $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        // $data['kode'] = $kode; 
+		$data['nip'] = $nip; 
+        $this->load->view('kepegawaian/V_DetailProfilTalenta', $data);
     }
 
 

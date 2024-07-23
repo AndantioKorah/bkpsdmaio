@@ -439,7 +439,7 @@ $('#table_list_pegawai').DataTable({
       
 
         $.ajax({  
-        url:"<?=base_url("simata/C_simata/submitPenilaianSejawat")?>",
+        url:"<?=base_url("simata/C_Simata/submitPenilaianSejawat")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

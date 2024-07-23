@@ -400,25 +400,28 @@ class C_Simata extends CI_Controller
         } 
         $data['jt'] = $jt;
         
+        $data['jenis_pengisian'] = $jenis_pengisian;
+        
         $this->load->view('simata/V_DetailNineBox', $data);
     }
 
-    public function profilTalenta(){
+    public function profilTalenta($jenis_pengisian){
         $data['result'] = null;
+        $data['jenis_pengisian'] = $jenis_pengisian;
         render('simata/V_ProfilTalenta', '', '', $data);
     }
 
 
-    public function loadListProfilTalentaAdm($id){
-        $data['result'] = $this->simata->loadListProfilTalentaAdm($id);  
+    public function loadListProfilTalentaAdm($id,$jenis_pengisian){
+        $data['result'] = $this->simata->loadListProfilTalentaAdm($id,$jenis_pengisian);  
         $data['jenis_jabatan'] = $id;
+        $data['jenis_pengisian'] = $jenis_pengisian;
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
             $this->load->view('simata/V_ProfilTalentaJptList', $data);
 
         }
-        
     }
 
 

@@ -1015,7 +1015,7 @@
 				<?php } ?>
 				
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
-			{ 
+			// { 
 			?>
 
 			<li class="sidebar-item ">
@@ -1027,7 +1027,7 @@
 				</a>	
 			</li>
 			<?php 
-		    }
+		    // }
 		    ?>
 		
 

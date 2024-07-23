@@ -6922,6 +6922,20 @@ public function getFileForKarisKarsu()
         
     }
 
+    public function loadListProfilTalenta($id_peg,$jenis_pengisian){
+        $this->db->select('f.flag_active as fa,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+        where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
+        (SELECT y.nama_jabatan from db_pegawai.jabatan as y
+        where f.jabatan_target = y.id_jabatanpeg limit 1) as jabatan_target,')
+                       ->from('db_pegawai.pegawai a')
+                       ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
+                       ->join('db_simata.t_jabatan_target f', 'f.id_peg = b.id_peg', 'left')
+                       ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                       ->where('a.id_peg', $id_peg)
+                       ->where('b.jenjang_jabatan', $jenis_pengisian);
+       return $this->db->get()->result_array();
+   }
+
     public function getDokumenPangkatForPensiun()
     {
         $this->db->select('*')

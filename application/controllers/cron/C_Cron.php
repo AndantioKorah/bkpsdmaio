@@ -42,11 +42,11 @@ class C_Cron extends CI_Controller
 	}
 
     public function getOauthToken(){
-        return $this->general->getOauthToken();
+        return dd($this->general->getOauthToken());
     }
 
     public function getSsoToken(){
-        return $this->general->getSsoToken();
+        return dd($this->general->getSsoToken());
     }
 
     public function mappingUnor($percent = 100){

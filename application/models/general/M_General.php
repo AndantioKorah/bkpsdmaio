@@ -832,7 +832,7 @@
                     $token = $value['access_token'];
                 } else {
                     $res = $this->siasnlib->getOauthToken();
-                    if($res['code'] == 0){
+                    if($res['code'] == 0 && isset($res['data'])){
                         $data = json_decode($res['data'], true);
                         $token = $data['access_token']; 
     
@@ -861,7 +861,7 @@
                     $token = $value['access_token'];
                 } else {
                     $res = $this->siasnlib->getSsoToken();
-                    if($res['code'] == 0){
+                    if($res['code'] == 0 && isset($res['data'])){
                         $data = json_decode($res['data'], true);
                         $token = $data['access_token']; 
     

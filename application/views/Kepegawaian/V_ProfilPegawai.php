@@ -242,7 +242,7 @@
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
                 
              
                 <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
@@ -255,7 +255,18 @@
                   <i class="fa fa-id-badge"></i> DRH
                 </button>
             
-                <?php }?>
+                <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'){ ?>
+                  <hr>
+                  <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
+                    <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;" class="form-check-input" type="checkbox" id="radio_button_sertifikasi" 
+                    <?=$profil_pegawai['flag_sertifikasi'] == 1 ? "checked" : ""?>>
+                    <label class="form-check-label" for="radio_button_sertifikasi" style="
+                      font-weight: bold;
+                      font-size: 1rem;
+                      margin-top: 4px;
+                      margin-left: 30px;">GURU SERTIFIKASI</label>
+                  </div>
+                <?php } ?>
 
               </div>
             </div>

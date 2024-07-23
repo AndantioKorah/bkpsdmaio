@@ -418,7 +418,15 @@ class C_User extends CI_Controller
 
     public function searchPegawaiNavbar(){
         $data['result_pegawai'] = $this->user->searchPegawai($this->input->post());
-        $data['result_skpd'] = $this->user->searchSkpd($this->input->post());
+
+        $data['result_skpd'] = null;
+        if($this->general_library->getRole() == 'programmer' 
+        || $this->general_library->getRole() == 'admin_aplikasi' 
+        || $this->general_library->isHakAkses('akses_profil_pegawai') 
+        || $this->general_library->isKasubagKepegawaianDiknas() 
+        || $this->general_library->getRole() == 'walikota'){
+            $data['result_skpd'] = $this->user->searchSkpd($this->input->post());
+        }
         $this->load->view('user/V_ResultSearchPegawaiNavbar', $data);
     }
 

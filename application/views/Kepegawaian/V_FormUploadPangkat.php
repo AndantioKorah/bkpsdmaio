@@ -52,7 +52,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <script>
     function openModalStatusPmd(jenisberkas){
       var jumlah = $('#jumlahdokpangkat').val()
-      var status = "<?=$profil_pegawai['id_statuspeg']; ?>"
+      var status = "<?=$profil_pegawai['statuspeg']; ?>"
       if(status != 3){
         if(jumlah == 0){
         jenisberkas = null 

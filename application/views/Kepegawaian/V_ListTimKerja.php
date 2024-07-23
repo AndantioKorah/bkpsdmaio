@@ -1,21 +1,22 @@
 <?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
-      <table class="table table-hover datatable">
+      <table class="table table-hover datatable" border="1">
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Nama Tim Kerja</th>
           <th class="text-left">Jabatan</th>
           <th class="text-left">Ruang Lingkup Tim Kerja</th>
-          <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
-          <th></th>
-            <?php } ?>
+         
           <?php if($kode == 2) { ?>
-          <th class="text-left">Keterangan</th>
-          <th></th>
+          <th class="text-left"></th>
+          <th>Keterangan</th>
           <th class="text-left">  </th>
-          <?php } ?>
+          <?php } else { ?>
+            <th></th>
+            <?php } ?>
+         
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -31,18 +32,22 @@
                 <i class="fa fa-file-pdf"></i></button>
               <?php } ?>
               </td>
+              
+              
+              <td>  
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
-                <td>
+                
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
                 href="#modal_edit_tim"
                 onclick="loadEditTim('<?=$rs['id_pegtimkerja']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
               <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-              </td>
+              
               <?php } ?>
                <?php } ?>
+               </td>
              <?php if($kode == 2) { ?>
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 

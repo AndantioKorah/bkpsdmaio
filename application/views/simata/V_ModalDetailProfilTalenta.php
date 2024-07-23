@@ -2,7 +2,7 @@
   if($profil_pegawai){
 ?>
 <style>
-	.sp_profil {
+	/* .sp_profil {
 		font-size: .9rem;
 		font-weight: bold;
 	}
@@ -18,16 +18,13 @@
 		border: .05rem solid black;
 	}
 
-	.sp_profil_alamat {
-		/* line-height: 100px; */
-	}
 
 	.sp_label {
 		font-size: .8rem;
 		font-style: italic;
 		font-weight: 600;
 		color: grey;
-	}
+	} */
 
 	.div_label {
 		margin-bottom: -5px;

@@ -376,7 +376,9 @@
                                                 <td style="width:25%"><span class="sp_label">Pertimbangan Pimpinan</span></td>
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor2'])) { ?>
+                                                    <?php if(($nilai_potensial['skor2'] == "")) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor9'];?> Point] <?=$nilai_potensial['potensial9'];?></span>
+                                                <?php } ?>
                                                 <?php } ?>
                                             </td>
                                             </tr>
@@ -384,7 +386,9 @@
                                                 <td style="width:25%"><span class="sp_label">Survey Pegawai ASN </span></td>
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor3'])) { ?>
+                                                    <?php if($nilai_potensial['skor3'] == "") { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor10'];?> Point] <?=$nilai_potensial['potensial10'];?></span>
+                                                <?php } ?>
                                                 <?php } ?>
                                             </td>
                                             </tr>

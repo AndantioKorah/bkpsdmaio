@@ -61,12 +61,12 @@ input#tabToggle03:checked ~ tab-content:not(:nth-of-type(3)),
 input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 
 </style>
-<tab-container>
+<tab-container  id="tabs-mt">
 	<!-- TAB CONTROLS -->
 	<input type="radio" id="tabToggle01" name="tabs" value="1" checked />
 	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
-	<label class="tab-label" onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
 
 	<tab-content>
 		<!-- <p>TAB [ <tab-number>01</tab-number> ] content</p>
@@ -124,8 +124,15 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 
 <script>
   var nip = "<?= $nip;?>";
+  var eselon = "<?= $this->general_library->getIdEselon();?>";
   $(function(){
-    $('#tab-rotasi').click()
+    if(eselon == 4 || eselon == 5) {
+      $('#tab-promosi').click()
+      $("#tabs-mt").hide();
+    } else {
+      $('#tab-rotasi').click()
+    }
+   
     })
 
  function LoadNilaiTalenta($jenis_pengisian){

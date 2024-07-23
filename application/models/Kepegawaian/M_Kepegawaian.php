@@ -327,6 +327,18 @@ class M_Kepegawaian extends CI_Model
             return $this->db->get()->row_array();
         }
 
+        public function changeFlagSertifikasi($status, $nip){
+            $data['flag_sertifikasi'] = 0;
+            $data['flag_terima_tpp'] = 1;
+            if($status == "true"){
+                $data['flag_sertifikasi'] = 1;
+                $data['flag_terima_tpp'] = 0;
+            }
+
+            $this->db->where('nipbaru_ws', $nip)
+                    ->update('db_pegawai.pegawai', $data);
+        }
+
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() 

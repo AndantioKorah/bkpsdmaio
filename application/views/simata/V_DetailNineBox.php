@@ -25,7 +25,7 @@
         <thead>
             <tr>
                 <!-- <th>Jabatan Target</th> -->
-                <th class="text-center">Nilai Kinerja</th>
+                <th class="text-center">Nilai Kinerja </th>
                 <th>Nama</th>
                 <th class="text-center">Nilai Potensial</th>
                 <th class="text-center">Total Nilai</th>
@@ -41,7 +41,7 @@
 		<?php $no = 1; foreach($result as $rs2){ ?>
 			<?php $total_nilai = $rs2['res_kinerja'] + $rs2['res_potensial_total'];?>
             <?php ;?>
-            <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id']?>" data-kode="1"
+            <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian;?>" data-kode="1"
             href="#exampleModal2"  class="open-DetailPT">
             
                 <!-- <td><?=$rs2['nama_jabatan'];?></td> -->

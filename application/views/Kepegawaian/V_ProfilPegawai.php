@@ -777,6 +777,11 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
+              <?php if($this->general_library->getIdEselon() < 8 && $this->general_library->getIdEselon() != 1){ ?>
+              <li class="nav-item nav-item-profile" role="presentation"> 
+                <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
+              </li>
+              <?php } ?>
             </ul>
           </div>
           <div class="col-lg-12">
@@ -881,6 +886,9 @@
                   </form>
                   <div class="mt-3" id="div_presensi_result"></div>
                 </div>
+              </div>
+              <div class="tab-pane fade" id="pills-mt" role="tabpanel" aria-labelledby="pills-mt-tab">
+                <div id="div_manajamen_talenta"></div>
               </div>
             </div>
           </div>
@@ -1436,6 +1444,14 @@
   $('#form_arsip').html(' ')
     $('#form_arsip').append(divLoaderNavy)
     $('#form_arsip').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormArsip/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function LoadViewTalenta(){
+  $('#div_manajamen_talenta').html(' ')
+    $('#div_manajamen_talenta').append(divLoaderNavy)
+    $('#div_manajamen_talenta').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadViewTalenta/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

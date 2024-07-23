@@ -1408,6 +1408,16 @@
 
         }
 
+        public function getEselonPegawai($id_pegawai){
+            $this->db->select('b.eselon')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+            ->where('a.id_peg', $id_pegawai);
+            return $this->db->get()->row_array();
+           
+
+        }
+
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){
             $new_tanggal_awal = date('Y-m-d', strtotime($tanggal_awal));
             $new_tanggal_akhir = date('Y-m-d', strtotime($tanggal_awal));

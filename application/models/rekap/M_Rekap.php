@@ -834,7 +834,7 @@
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
-                        $result[$i]['kelas_jabatan'] = 7;
+                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                     }
                 }
     

@@ -1356,7 +1356,8 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function loadListJabatanSiasn($id){
-		return getListJabatanSiasn();
+		echo null;
+		// echo json_encode($this->kepegawaian->getListJabatanSiasn($id));
 	}
 
 	public function loadEditPangkaPegawai($id)

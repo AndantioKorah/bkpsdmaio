@@ -308,7 +308,7 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
+            $this->db->select('e.eselon,a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
             h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan, k.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
@@ -2677,7 +2677,7 @@ class M_Kepegawaian extends CI_Model
 function getNamaJabatan(){
     $this->db->select('*')
     ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
-    // ->where('flag_active', 1)
+    ->where('flag_active', 1)
     ->group_by('a.nama_jabatan')
     ->from('db_pegawai.jabatan a');
     return $this->db->get()->result_array(); 
@@ -6605,10 +6605,12 @@ public function submitEditJabatan(){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
             ->group_start()
-            // ->where('a.jenis_jabatan', 'JFU')
-            ->where("FIND_IN_SET(a.jenis_jabatan,'JFU,Struktural')!=",0)
+            ->where('a.jenis_jabatan', 'JFU')
+            // ->where("FIND_IN_SET(a.jenis_jabatan,'JFU,Struktural')!=",0)
+            ->where_in('a.jenis_jabatan', ['JFU','Struktural'])
             // ->where('a.id_unitkerja', '4018000')
             ->group_end()
+              ->where('a.flag_active', 1)
             ->or_where('a.jenis_jabatan', 'JFT');
         return $this->db->get()->result_array();
     }
@@ -6616,6 +6618,7 @@ public function submitEditJabatan(){
     function getSelectJabatanEditJFT(){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
+            ->where('a.flag_active', 1)
             ->where('a.jenis_jabatan', 'JFT');
         return $this->db->get()->result_array();
     }
@@ -6624,6 +6627,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
             ->where('a.jenis_jabatan', 'Struktural')
+            ->where('a.flag_active', 1)
             ->where('a.id_unitkerja', $id_unitkerja);
         return $this->db->get()->result_array();
     }
@@ -6633,6 +6637,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
             ->from('db_pegawai.jabatan a')
             ->where('a.jenis_jabatan', 'JFU')
+            ->where('a.flag_active', 1)
             ->where('a.id_unitkerja', $id_unitkerja);
         return $this->db->get()->result_array();
     }

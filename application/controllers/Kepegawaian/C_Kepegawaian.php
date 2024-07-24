@@ -2012,7 +2012,19 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListProfilTalenta($nip,$jenis_pengisian){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$id_peg = $data['profil_pegawai']['id_peg'];
-		$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,1);
+		// dd($data['profil_pegawai']['eselon']);
+		// $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,1);
+		if($data['profil_pegawai']['eselon'] == "III A" || $data['profil_pegawai']['eselon'] == "III B"){
+			$id = 1;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
+			$id = 2;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			} else {
+			$id = 3;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			}
 
         $data['result'] = $this->kepegawaian->loadListProfilTalenta( $id_peg,$jenis_pengisian);  
         $data['jenis_pengisian'] = $jenis_pengisian;

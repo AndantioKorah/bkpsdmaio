@@ -63,11 +63,15 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 </style>
 <tab-container  id="tabs-mt">
 	<!-- TAB CONTROLS -->
+	 <?php if($profil_pegawai['eselon'] == "IV A") { ?>
+	<input type="radio" id="tabToggle022" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi-iv"  onclick="LoadNilaiTalenta(2)" for="tabToggle02">Promosi</label>
+	<?php } else { ?>
 	<input type="radio" id="tabToggle01" name="tabs" value="1" checked />
 	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
-
+	<?php } ?>
 	<tab-content>
 		<!-- <p>TAB [ <tab-number>01</tab-number> ] content</p>
 		<p>CSS...</p>
@@ -80,25 +84,6 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 </tab-container>
 <div id="div_detail_profil_talenta" ></div>
 
-<!-- 
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-items" role="presentation">
-    <button onclick="LoadNilaiTalenta(2)" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Rotasi</button>
-  </li>
-  <li class="nav-items" role="presentation">
-    <button onclick="LoadNilaiTalenta(3)" class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Promosi</button>
-  </li>
-
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" ></div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
-  <div id="div_detail_profil_talenta"></div>
-</div> -->
-
-
-
- 
 <!-- modal detail indikator -->
 <div class="modal fade" id="modal_detail_profil_talenta" tabindex="-1" role="dialog" aria-labelledby="table-admModalLabelIndikator" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -125,11 +110,19 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 <script>
   var nip = "<?= $nip;?>";
   var eselon = "<?= $this->general_library->getIdEselon();?>";
+  var eselonby_admin = "<?=$profil_pegawai['eselon'];?>"
   $(function(){
     if(eselon == 4 || eselon == 5) {
       $('#tab-promosi').click()
       $("#tabs-mt").hide();
-    } else {
+    } else if(eselon == 6 || eselon == 7) {
+      $('#tab-rotasi').click()
+    }
+
+	if(eselonby_admin == 'II A' || eselonby_admin == 'II B') {
+      $('#tab-promosi').click()
+      $("#tabs-mt").hide();
+    } else if(eselonby_admin == 'III A' || eselonby_admin == 'III B') {
       $('#tab-rotasi').click()
     }
    

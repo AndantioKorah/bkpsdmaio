@@ -364,7 +364,9 @@
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Kepemimpinan Organisasi</span></td>
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor1'])) { ?>
+                                                    <?php if(($nilai_potensial['skor1'] == "")) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor8'];?> Point] <?=$nilai_potensial['potensial8'];?></span>
+                                                <?php } ?>
                                                 <?php } ?>
 
                                             </td>

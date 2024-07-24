@@ -3535,7 +3535,7 @@ public function getAllPelanggaranByNip($nip){
             } else if($data['jenis_jabatan'] == "JFT"){
                 $jenis_jabatan = "2";
             }
-
+            
             $update = [
                 "eselonId" => $data['id_eselon'] == 1 ? null : $data['id_eselon'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,
@@ -7158,6 +7158,79 @@ public function getFileForKarisKarsu()
     }
     return $data;
 }
+
+    public function automationJabatanFungsional(){
+        $jabatan_siladen = $this->db->select('*')
+                                    ->from('db_pegawai.jabatannew a')
+                                    ->where('a.jenis_jabatan', 'JFT')
+                                    ->where('a.id_jabatan_siasn IS NOT NULL')
+                                    ->get()->result_array();
+
+        $list_jabatan_siladen = null;
+        foreach($jabatan_siladen as $jsil){
+            $list_jabatan_siladen[$jsil['nama_jabatan']] = $jsil;
+        }
+
+        $jabatan_siasn = $this->db->select('*')
+                                ->from('db_siasn.m_ref_jabatan_fungsional')
+                                ->get()->result_array();
+
+        foreach($jabatan_siasn as $jsia){
+            if(!isset($list_jabatan_siladen[$jsia['nama']])){
+                $kelas_jabatan = "7";
+
+                $explode_nama_jabatan = explode(" ", $jsia['nama']);
+                $kategori = $explode_nama_jabatan[count($explode_nama_jabatan)-1];
+
+                switch($kategori){
+                    case "Pertama":
+                        $kelas_jabatan = "8";
+                        break;
+                    case "Muda":
+                        $kelas_jabatan = "9";
+                        break;
+                    case "Madya":
+                        $kelas_jabatan = "10";
+                        break;
+                    case "Utama":
+                        $kelas_jabatan = "11";
+                        break;
+                    case "Penyelia":
+                        $kelas_jabatan = "8";
+                        break;
+                    case "Terampil":
+                        $kelas_jabatan = "6";
+                        break;
+                    case "Pelaksana":
+                        $kelas_jabatan = "7";
+                        break;
+                    default:
+                        $kelas_jabatan = "6";
+                }
+                $data = [
+                    'id_jabatanpeg' => $jsia['id'],
+                    'id_unitkerja' => "9999000",
+                    'id_jabatan_siasn' => $jsia['id'],
+                    'nama_jabatan' => $jsia['nama'],
+                    'nama_jabatan_pendek' => $jsia['nama'],
+                    'jenis_jabatan' => 'JFT',
+                    'eselon' => 'Non Eselon',
+                    'kepalaskpd' => '0',
+                    'prestasi_kerja' => '0',
+                    'beban_kerja' => '0',
+                    'kondisi_kerja' => '0',
+                    'kelas_jabatan' => $kelas_jabatan,
+                    'flag_uptd' => 0,
+                    'flag_from_siasn' => 1,
+                ];
+                // if($kategori == "Pertama"){
+                //     dd($data);
+                // }
+                $this->db->insert('db_pegawai.jabatannew', $data);
+                echo $jsia['nama'].'<br>';
+            }
+        }
+    }
 
 
 

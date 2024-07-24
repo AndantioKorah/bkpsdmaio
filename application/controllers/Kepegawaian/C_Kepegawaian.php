@@ -2048,6 +2048,9 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_DetailProfilTalenta', $data);
     }
 
+	public function automationJabatanFungsional(){
+		$this->kepegawaian->automationJabatanFungsional();
+	}
 
 	
 

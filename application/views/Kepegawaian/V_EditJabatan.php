@@ -322,7 +322,7 @@ function syncSiasn(){
       if(rs.code == 0){
         successtoast('Sinkronisasi dengan SIASN berhasil')
       } else {
-        errortoast('Terjadi Kesalahan. '+rs.message)
+        errortoast('Terjadi Kesalahan. '+rs.data)
       }
       $('#btn_sync').show()
       $('#btn_sync_loading').hide()

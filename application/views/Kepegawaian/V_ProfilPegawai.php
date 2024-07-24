@@ -255,10 +255,12 @@
                   <i class="fa fa-id-badge"></i> DRH
                 </button>
             
-                <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'){ ?>
+                <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'
+                || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                   <hr>
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
-                    <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;" class="form-check-input" type="checkbox" id="radio_button_sertifikasi" 
+                    <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;"
+                    name="radio_button_sertifikasi" class="form-check-input" type="checkbox" id="radio_button_sertifikasi" 
                     <?=$profil_pegawai['flag_sertifikasi'] == 1 ? "checked" : ""?>>
                     <label class="form-check-label" for="radio_button_sertifikasi" style="
                       font-weight: bold;
@@ -1212,6 +1214,19 @@
         });  
           
         });
+
+        $('#radio_button_sertifikasi').on('click', function(){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/changeFlagSertifikasi/")?>'+$(this).is(':checked')+'/'+'<?=$profil_pegawai['nipbaru_ws']?>',
+              method: 'post',
+              data: $(this).serialize(),
+              success: function(data){
+                  successtoast('Berhasil')
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+        })
 </script>
 
   <script>

@@ -594,6 +594,10 @@ class C_Kepegawaian extends CI_Controller
 		}
 	}
 
+	public function changeFlagSertifikasi($status, $nip){
+		$this->kepegawaian->changeFlagSertifikasi($status, $nip);
+	}
+
 	public function uploadDokumen($page = null){
 		
         // $this->kepegawaian->copyfoto();

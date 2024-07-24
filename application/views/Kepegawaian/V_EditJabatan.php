@@ -112,11 +112,11 @@
           
 
               <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
-              <label for="jabatan_jenis">Nama Jabatan </label>
+              <label for="jabatan_jenis">Nama Jabatan vfd</label>
               <select class="form-control select2 edit_nama_jab" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
-                              <option value="" disabled selected>Pilih Item</option>
+                              <option value="" disabled selected>Pilih Itemf</option>
                               <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
-                                  <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
+                                  <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>;<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?>b</option>
                               <?php } } ?>
               </select>
               </div>
@@ -341,8 +341,8 @@ $('#form_edit_jabatann').on('submit', function(e){
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pdf_file_jab').files.length;
     
-     document.getElementById('btn_edit_jabatan').disabled = true;
-     $('#btn_edit_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+    //  document.getElementById('btn_edit_jabatan').disabled = true;
+    //  $('#btn_edit_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
    
      $.ajax({  
      url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditJabatan")?>",
@@ -418,7 +418,7 @@ $('#form_edit_jabatann').on('submit', function(e){
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.edit_nama_jab').html(html);
                                     }
@@ -440,7 +440,7 @@ $('#form_edit_jabatann').on('submit', function(e){
               var html = '';
                       var i;
                       for(i=0; i<data.length; i++){
-                        html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                        html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                       }
                       $('.edit_nama_jab').html(html);
                           }
@@ -468,7 +468,7 @@ $('#form_edit_jabatann').on('submit', function(e){
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.edit_nama_jab').html(html);
                                     }

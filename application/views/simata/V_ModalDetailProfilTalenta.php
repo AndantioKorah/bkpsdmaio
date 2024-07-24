@@ -363,10 +363,8 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Kepemimpinan Organisasi</span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor1'])) { ?>
-                                                    <?php if(($nilai_potensial['skor1'] == "")) { ?>
+                                                <?php if(isset($nilai_potensial['skor8'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor8'];?> Point] <?=$nilai_potensial['potensial8'];?></span>
-                                                <?php } ?>
                                                 <?php } ?>
 
                                             </td>
@@ -374,20 +372,16 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pertimbangan Pimpinan</span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor2'])) { ?>
-                                                    <?php if(($nilai_potensial['skor2'] == "")) { ?>
+                                                <?php if(isset($nilai_potensial['skor9'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor9'];?> Point] <?=$nilai_potensial['potensial9'];?></span>
-                                                <?php } ?>
                                                 <?php } ?>
                                             </td>
                                             </tr>
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Survey Pegawai ASN </span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor3'])) { ?>
-                                                    <?php if($nilai_potensial['skor3'] == "") { ?>
+                                                <?php if(isset($nilai_potensial['skor10'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor10'];?> Point] <?=$nilai_potensial['potensial10'];?></span>
-                                                <?php } ?>
                                                 <?php } ?>
                                             </td>
                                             </tr>

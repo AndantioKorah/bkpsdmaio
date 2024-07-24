@@ -794,7 +794,7 @@
               if(
                 // $this->general_library->getIdEselon() < 8 && 
               // $this->general_library->getIdEselon() != 1 || 
-              $this->general_library->isAdminAplikasi()){ ?>
+              $this->general_library->isHakAkses('manajemen_talenta')){ ?>
               <?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "II B") {?>
               <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>

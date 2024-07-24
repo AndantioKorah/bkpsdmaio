@@ -5251,6 +5251,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 $id_rekamjjk7 = $this->getHukdisPengawai($id_pegawai); 
                                     
                                 $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($id_pegawai);
+                                // dd($id_pertimbangan1);
                                 $id_pertimbangan2 = $query[0]['pertimbangan_pimpinan'];
                                 $id_pertimbangan3 = $query[0]['id_kriteria_penilaian'];
                                 

@@ -983,7 +983,7 @@
 					</a>
 				</li> -->
 				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta')?>">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>

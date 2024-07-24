@@ -6574,7 +6574,8 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    function getListJabatanSiasn($jenis = 'JFU', $id = null){
+    function getListJabatanSiasn($id = null){
+        $jenis = 'JFU';
         if($id != null){
             $jabatan = $this->db->select('*')
                                 ->from('db_pegawai.jabatan')
@@ -6584,7 +6585,7 @@ public function submitEditJabatan(){
                 $jenis = $jabatan['jenis_jabatan'];
             }
         }
-
+        
         if($jenis == 'Struktural'){
             return $this->db->select('*, nama_jabatan as nama')
                             ->from('db_siasn.m_ref_jabatan_struktural')

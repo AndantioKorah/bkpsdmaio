@@ -121,12 +121,12 @@
               </select>
               </div>
 
-              <div class="form-group" style="margin-bottom:10px !important;" id="div_jabatan_siasn">
+              <!-- <div class="form-group" style="margin-bottom:10px !important;" id="div_jabatan_siasn">
                 <label for="jabatan_jenis">Nama Jabatan SIASN </label>
                 <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="list_jabatan_siasn" id="list_jabatan_siasn" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
                                 <option value="" disabled selected>Pilih Item</option>
                 </select>
-              </div>
+              </div> -->
 
 
             <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?> 
@@ -251,7 +251,7 @@
     
 $(function(){
   loadFileSiasn()
-  loadJabatanSiasn()
+  // loadJabatanSiasn('<?=$jabatan[0]['id_jabatan']?>')
 
   $(".select2").select2({   
       width: '100%',
@@ -272,19 +272,18 @@ $(function(){
 });
 
 $('#jabatan_nama').on('change', function(){
-  loadJabatanSiasn()
+  // loadJabatanSiasn($(this).val())
 })
 
-function loadJabatanSiasn(){
+function loadJabatanSiasn(id){
   $.ajax({
-    url: '<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatanSiasn")?>',
+    url: '<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatanSiasn/")?>'+id,
     method: 'post',
-    data: {
-      id_jabatanpeg: $('#jabatan_nama').value()
-    },
+    data: null,
     success: function(data){
       $('#list_jabatan_siasn').empty()
       let rs = JSON.parse(data)
+      console.log(rs)
       rs.forEach(function(item) {
         $('#list_jabatan_siasn').append('<option value="'+item.id+'">'+item.nama+'</option>')
       })

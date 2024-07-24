@@ -308,7 +308,7 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
+            $this->db->select('e.eselon,a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
             h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan, k.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')

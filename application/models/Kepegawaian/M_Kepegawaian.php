@@ -3782,7 +3782,7 @@ public function submitEditJabatan(){
        
             $str = $this->input->post('jabatan_nama');
             if($str){
-                $newStr = explode("/", $str);
+                $newStr = explode(";", $str);
                 $id_jabatan = $newStr[0];
                 $nama_jabatan = $newStr[1];
                 $data['id_jabatan']      = $id_jabatan; 

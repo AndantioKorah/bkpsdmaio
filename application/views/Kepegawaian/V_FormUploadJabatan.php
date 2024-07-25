@@ -301,7 +301,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
               var html = '';
                       var i;
                       for(i=0; i<data.length; i++){
-                        html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                        html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                       }
                       $('.nama_jab').html(html);
                           }
@@ -329,7 +329,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.nama_jab').html(html);
                                     }
@@ -357,7 +357,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.nama_jab').html(html);
                                     }

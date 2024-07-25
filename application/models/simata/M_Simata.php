@@ -1386,28 +1386,33 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
           
             if($pangkat){
             if($kode == 1){
+              
                 if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
-                    // dd($pangkat[0]['pangkat']);
+                   
                     if($jenis_pengisian == 3){
+                       
                         if($pangkat[0]['pangkat'] > 41 && $pangkat[0]['pangkat'] < 45) {
                             $id_pangkat = 96;
+                        } else {
+                            $sdate = $pangkat[0]['tmtpangkat'];
+                            $edate = date('Y-m-d');
+                            $date_diff = abs(strtotime($edate) - strtotime($sdate));
+                            $years = floor($date_diff / (365*60*60*24));
+                            $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+                            $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+        
+                            if($years >= 5) {
+                                $id_pangkat = 97;
+                            } else if($years == 4){
+                                $id_pangkat = 98;
+                            } else if($years == 3){
+                                $id_pangkat = 99;
+                            } else if($years <= 2){
+                                $id_pangkat = 100;
+                            }
                         }
-                        $sdate = $pangkat[0]['tmtpangkat'];
-                        $edate = date('Y-m-d');
-                        $date_diff = abs(strtotime($edate) - strtotime($sdate));
-                        $years = floor($date_diff / (365*60*60*24));
-                        $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
-                        $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-    
-                        if($years >= 5) {
-                            $id_pangkat = 97;
-                        } else if($years == 4){
-                            $id_pangkat = 98;
-                        } else if($years == 3){
-                            $id_pangkat = 99;
-                        } else if($years <= 2){
-                            $id_pangkat = 100;
-                        }
+                       
+                       
                     } else if($jenis_pengisian == 2){
                         $id_pangkat = 96;
                     }
@@ -1437,6 +1442,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             //   if($id == 'IDPeg167'){
             //     dd($pangkat);
             //   }
+           
                 if($pangkat[0]['pangkat'] > 41 && $pangkat[0]['pangkat'] < 45) {
                     $id_pangkat = 96;
                 } else if($pangkat[0]['pangkat'] =  41) {
@@ -1485,6 +1491,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
             }
         }
+        // dd($id_pangkat);
 
             return $id_pangkat;
         }

@@ -915,7 +915,7 @@ class M_Kepegawaian extends CI_Model
                 $nama_jabatan = $this->input->post('jabatan_lama');
             } else {
                 $str = $this->input->post('jabatan_nama');
-                $newStr = explode(",", $str);
+                $newStr = explode(";", $str);
                 $id_jabatan = $newStr[0];
                 $nama_jabatan = $newStr[1];
             }
@@ -3783,7 +3783,7 @@ public function submitEditJabatan(){
        
             $str = $this->input->post('jabatan_nama');
             if($str){
-                $newStr = explode(",", $str);
+                $newStr = explode("/", $str);
                 $id_jabatan = $newStr[0];
                 $nama_jabatan = $newStr[1];
                 $data['id_jabatan']      = $id_jabatan; 
@@ -3820,7 +3820,8 @@ public function submitEditJabatan(){
     } else {
         $str = $this->input->post('jabatan_nama');
         if($str){
-            $newStr = explode(",", $str);
+            $newStr = explode(";", $str,2);
+            // dd($newStr);
             $id_jabatan = $newStr[0];
             $nama_jabatan = $newStr[1];
             $data['id_jabatan']      = $id_jabatan; 

@@ -54,6 +54,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+  <button onclick="syncRiwayatJabatanSiasn('<?=$profil_pegawai['id_m_user']?>')" class="btn btn-block text-right float-right btn-info ml-2">
+    <i class="fa fa-file-download"></i> Sinkron Riwayat Jabatan SIASN
+  </button>
   <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
   </button>
@@ -245,6 +248,36 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 
     <script>
+      function syncRiwayatJabatanSiasn(id_m_user){
+        // $('#list_jabatan').html('')
+        // $('#list_jabatan').append(divLoaderNavy)
+        // $('#list_jabatan').load('<?=base_url("siasn/C_Siasn/syncRiwayatJabatanSiasn/")?>'+id_m_user, function(){
+        //   $('#loader').hide()
+        // })
+        $('#list_jabatan').html('')
+        $('#list_jabatan').append(divLoaderNavy)
+        $.ajax({
+          url: '<?=base_url("siasn/C_Siasn/syncRiwayatJabatanSiasn/")?>'+id_m_user,
+          method: 'POST',
+          data: null,
+          success: function(data){
+            $('#list_jabatan').html('')
+            let rs = JSON.parse(data)
+            if(rs.code == 0){
+              successtoast(rs.message)
+            } else {
+              errortoast(rs.message)
+            }
+            loadListJabatan()
+          }, error: function(err){
+            $('#list_jabatan').html('')
+            loadListJabatan()
+          }
+        })
+
+        loadListJabatan()
+      }
+      
       function openSiasn(jenis, id){
         $('#modal_sync_siasn_content').html('')
         $('#modal_sync_siasn_content').append(divLoaderNavy)

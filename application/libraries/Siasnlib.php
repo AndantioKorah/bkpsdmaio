@@ -150,12 +150,12 @@ class Siasnlib{
         
         $decode_resp = null;
         if(isset($dec_resp['data'])){
-            $decode_resp = json_decode($dec_resp['data'], true);
+            // $decode_resp = json_decode($dec_resp['data'], true);
         }
 
         if(isset($dec_resp['error']) 
         || isset($dec_resp['error_description'])
-        || (isset($dec_resp) && $dec_resp['success'] == false) 
+        || (isset($dec_resp['success']) && $dec_resp['success'] == false) 
         || ($decode_resp && $decode_resp['code'] != 1
         || isset($dec_resp['code']) && $dec_resp['code'] != '1')
         || $response == "0"){

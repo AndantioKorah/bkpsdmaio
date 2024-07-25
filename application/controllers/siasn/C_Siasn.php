@@ -113,5 +113,9 @@ class C_Siasn extends CI_Controller
     public function revertMappingJabatan($jenis = 'Struktural', $percent, $flag_only_show){
         $this->siasn->revertMappingJabatan($jenis, $percent, $flag_only_show);
     }
+
+    public function syncRiwayatJabatanSiasn($id_m_user){
+        echo json_encode($this->siasn->syncRiwayatJabatanSiasn($id_m_user));
+    }
     
 }

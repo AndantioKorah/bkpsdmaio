@@ -154,6 +154,89 @@
                 }
             }
         }
+
+        public function syncRiwayatJabatanSiasn($id_m_user){
+            $rs['code'] = 0;
+            $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';
+
+            $user = $this->db->select('b.*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->where('a.id', $id_m_user)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            $this->db->trans_begin();
+
+            if($user){
+                $reqWs = $this->siasnlib->getJabatanByNip($user['nipbaru_ws']);
+                if($reqWs['code'] == 0){
+                    $riwayatJabatanSiasn = json_decode($reqWs['data'], true);
+
+                    $listJabatanSiladen = null;
+                    $riwayatJabatanSiladen = $this->db->select('*')
+                                                    ->from('db_pegawai.pegjabatan')
+                                                    ->where('id_pegawai', $user['id_peg'])
+                                                    ->where('flag_active', 1)
+                                                    ->get()->result_array();
+                    if($riwayatJabatanSiladen){
+                        foreach($riwayatJabatanSiladen as $rw){
+                            $listJabatanSiladen[$rw['nosk']]['id'] = $rw['id'];
+                            // $listJabatanSiladen[$rw['nosk']]['meta_data_siasn'] = $rw['meta_data_siasn'];
+                        }
+                    }
+
+                    if($riwayatJabatanSiasn['data']){
+                        foreach($riwayatJabatanSiasn['data'] as $d){
+                            if($d['nomorSk'] && isset($listJabatanSiladen[$d['nomorSk']])){
+                                // kalo ada nomor SK yang sama dengan riwayat, update meta_data_siasn
+                                $this->db->where('id', $listJabatanSiladen[$d['nomorSk']]['id'])
+                                        ->update('db_pegawai.pegjabatan', [
+                                            'meta_data_siasn' => json_encode($d),
+                                            'created_by' => $this->general_library->getId()
+                                        ]);
+                            } else {
+                                // kalo tidak ada, buat baru dan kasih tanda flag_from_siasn
+                                dd($d);
+                                $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
+                                if($file['code'] == 0){
+                                    $fileName = 'SK_JABATAN_'.$d['nomorSk'].'_'.date('ymdhis').'.pdf';
+                                    file_put_contents('arsipjabatan/'.$fileName, $file['data']);
+                                    if(file_exists('arsipjabatan/'.$fileName)){
+                                        $insert_data['id_pegawai'] = $user['id_peg'];
+                                        // MULAI DI SINI
+                                        // $insert_data['nm_jabatan'] = ;
+                                    } else {
+                                        $rs['code'] = 1;
+                                        $rs['message'] = "Gagal menyimpan file.";
+                                    }
+                                } else {
+                                    $rs['code'] = 1;
+                                    $rs['message'] = $file['data'];
+                                }
+                            }
+                        }
+                    }
+                    
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = $reqWs['data'];
+                }
+            } else {
+                $rs['code'] = 0;
+                $rs['message'] = 'Terjadi Kesalahan. User tidak ditemukan.';
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = "Terjadi Kesalahan";
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
     }
 
 ?>

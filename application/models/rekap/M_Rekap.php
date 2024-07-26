@@ -938,7 +938,7 @@
         }
 
         $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-        e.id as id_m_user, a.flag_bendahara, e.flag_uptd,
+        g.id as id_m_user, a.flag_bendahara, e.flag_uptd,
         TRIM(
             CONCAT(
             IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
@@ -949,9 +949,9 @@
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                            ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->join('db_pegawai.jabatan f', 'a.id_jabatan_tambahan = f.id_jabatanpeg', 'left')
-                            ->where('e.flag_active', 1)
+                            ->join('m_user g', 'a.nipbaru_ws = g.username')
+                            ->where('g.flag_active', 1)
                             // ->where('e.kepalaskpd', 1)
                             ->where('a.skpd', $id_unitkerja)
                             ->where('id_m_status_pegawai', 1)
@@ -1001,25 +1001,25 @@
         if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah, cari kepalaskpd, bendahara dan kasubag umum di diknas
             $result['flag_sekolah'] = 1;
             $list_pegawai_unor_induk = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                ->where('e.flag_active', 1)
+                                ->join('m_user f', 'a.nipbaru_ws = f.username')
+                                ->where('f.flag_active', 1)
                                 ->where('a.skpd', 3010000)
                                 ->order_by('a.nama', 'asc')
                                 ->where('id_m_status_pegawai', 1)
                                 ->get()->result_array();
         } else if(stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // jika puskes, cari kepalaskpd, bendahara dan kasubag umum di dinkes
             $list_pegawai_unor_induk = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                 ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                ->join('m_user f', 'a.nipbaru_ws = f.username')
                                 ->where('e.flag_active', 1)
                                 ->where('a.skpd', 3012000)
                                 ->order_by('a.nama', 'asc')
@@ -1028,23 +1028,23 @@
         } else if($unitkerja['id_unitkerjamaster'] == 2000000 || $unitkerja['id_unitkerjamaster'] == 1000000){ // jika bagian, flag_bagian = 1
             $result['flag_bagian'] = 1;
                 $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                    f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                         ->from('db_pegawai.pegawai a')
                                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                        ->join('m_user f', 'a.nipbaru_ws = f.username')
                                         ->where('e.nama_jabatan', 'Sekretaris Daerah')
                                         ->where('id_m_status_pegawai', 1)
                                         ->get()->row_array();
 
                 $result['bendahara_setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                    f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->join('m_user f', 'a.nipbaru_ws = f.username')
                                     ->where('a.nipbaru_ws', '197403302007012022')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();

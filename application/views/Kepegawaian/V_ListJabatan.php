@@ -30,8 +30,17 @@
 
 
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nama_jabatan']?></td>
-              
+              <td class="text-left">
+                <?=$rs['nama_jabatan']?><br>
+                <?php if($rs['flag_from_siasn'] == 1){ ?> 
+                  <span class="badge badge-info" title="Data yang disinkronisasi dari SIASN">SIASN</span><br>
+                <?php } ?>
+                <?php if($rs['id_siasn']){ ?> 
+                  <span class="badge badge-success" title="Data ini sudah tersinkronisasi dengan SIASN"><i class="fa fa-check"></i> Sinkron SIASN</span>
+                <?php } else { ?>
+                  <span class="badge badge-danger" title="Data ini belum tersinkronisasi dengan SIASN"><i class="fa fa-times"></i> Belum Sinkron SIASN</span>
+                <?php } ?>
+              </td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tmtjabatan'])?></td>
               <td class="text-left"><?=$rs['nm_eselon']?></td>
               <td class="text-left"><?=$rs['angkakredit']?></td>
@@ -271,7 +280,7 @@
 
   function deleteData(id,file,kode){
                    
-                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                   if(confirm('Menghapus data ini juga akan menghapus data yang ada di SIASN. Apakah Anda yakin?')){
                        $.ajax({
                            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegjabatan/'+file,
                            method: 'post',

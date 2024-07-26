@@ -21,7 +21,9 @@
                     <td class="text-center"><?=formatDateNamaBulan($d['tmtJabatan'])?></td>
                     <td class="text-center"><?=formatDateNamaBulan($d['tanggalSk'])?></td>
                     <td class="text-center"></td>
-                    <td class="text-center"></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" onclick="deleteRiwayat('<?=$d['id']?>')"><i class="fa fa-trash"></i></button>
+                    </td>
                 </tr>
             <?php } } ?>
         </tbody>
@@ -32,4 +34,8 @@
 
 <script>
     $('#table_jabatan_siasn').dataTable()
+
+    function deleteRiwayat(id){
+        
+    }
 </script>

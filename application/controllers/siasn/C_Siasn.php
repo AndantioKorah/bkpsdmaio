@@ -82,6 +82,7 @@ class C_Siasn extends CI_Controller
         $file = null;
         
         if($base == 'siasn'){
+            dd($data[$base][$id]['path'][872]['dok_uri']);
             $downloadFile = $this->siasnlib->downloadDokumen($data[$base][$id]['path'][872]['dok_uri']);
             if($downloadFile['code'] == 0){
                 $fileName = generateRandomNumber(20).'.pdf';
@@ -112,6 +113,10 @@ class C_Siasn extends CI_Controller
 
     public function revertMappingJabatan($jenis = 'Struktural', $percent, $flag_only_show){
         $this->siasn->revertMappingJabatan($jenis, $percent, $flag_only_show);
+    }
+
+    public function syncRiwayatJabatanSiasn($id_m_user){
+        echo json_encode($this->siasn->syncRiwayatJabatanSiasn($id_m_user));
     }
     
 }

@@ -2458,15 +2458,20 @@
                     // penentuan besaran presentasi
                     if($data['id_unitkerja'] == '4011000'){ // jika INSPEKTORAT
                         if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
-                            $result[$p['id_m_user']]['beban_kerja'] = "99";
+                            // $result[$p['id_m_user']]['beban_kerja'] = "99";
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
                         } else if(isContainSeq($p['nama_jabatan'], "Ahli Madya")){
-                            $result[$p['id_m_user']]['beban_kerja'] = "99";
+                            // $result[$p['id_m_user']]['beban_kerja'] = "99";
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
                         } else if(isContainSeq($p['nama_jabatan'], "Ahli Muda")){
-                            $result[$p['id_m_user']]['beban_kerja'] = "93.50";
+                            // $result[$p['id_m_user']]['beban_kerja'] = "93.50";
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
                         } else if(isContainSeq($p['nama_jabatan'], "Ahli Pertama")){
-                            $result[$p['id_m_user']]['beban_kerja'] = "41";
+                            // $result[$p['id_m_user']]['beban_kerja'] = "41";
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
                         }  else if(isContainSeq($p['nama_jabatan'], "Mahir") || isContainSeq($p['nama_jabatan'], "Terampil") || isContainSeq($p['nama_jabatan'], "Penyelia")){
-                            $result[$p['id_m_user']]['beban_kerja'] = "41";
+                            // $result[$p['id_m_user']]['beban_kerja'] = "41";
+                            $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
                         }
                     } else if($data['id_unitkerja'] == '4026000'){ // jika BKAD
                         if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){

@@ -2785,6 +2785,10 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
         ->limit(1)
         ->get()->row_array();
 
+        if($getJabatan['id_siasn']){
+            $delete = $this->siasnlib->deleteJabatanByIdRiwayat($getJabatan['id_siasn']);
+        }
+
         // dd($getJabatan['statusjabatan']);
 
         if($getJabatan['statusjabatan'] == 1){
@@ -3531,7 +3535,10 @@ public function getAllPelanggaranByNip($nip){
 
             $update = null;
 
-            $path[] = $data_siasn['path'][872];
+            $path = null;
+            if($data_siasn && isset($data_siasn['path'][872])){
+                $path[] = $data_siasn['path'][872];
+            }
 
             $jenis_jabatan = "4";
             if($data['jenis_jabatan'] == "Struktural"){
@@ -3557,8 +3564,35 @@ public function getAllPelanggaranByNip($nip){
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $data['id_unor_siasn']
             ];
-
             $ws = $this->siasnlib->saveJabatan($update);
+            
+            if($ws['code'] == 0){
+                $data_success = json_decode($ws['data'], true);
+                $id_jabatan_siasn = $data_success['mapData']['rwJabatanId'];
+
+                $url = ('arsipjabatan/'.$data['gambarsk']);
+                $request = [
+                    'id_riwayat' => $id_jabatan_siasn,
+                    'id_ref_dokumen' => 872,
+                    'file' => new CURLFile ($url)
+                ];
+                // dd($request);
+                $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+
+                $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($id_jabatan_siasn);
+                if($updatedJabatan['code'] == 0){
+                    $newMeta = json_decode($updatedJabatan['data'], true);
+                    $this->db->where('id', $data['id'])
+                            ->update('db_pegawai.pegjabatan', [
+                                'meta_data_siasn' => json_encode($newMeta['data']),
+                                'id_siasn' => $newMeta['data']['id'],
+                                'id_unor_siasn' => $newMeta['data']['unorId'],
+                                'gambarsk' => isset($newMeta['data']['path'][872]['dok_uri']) ? $newMeta['data']['path'][872]['dok_uri'] : null,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+                }
+            }
+
             return $ws;
         }
 
@@ -3944,9 +3978,9 @@ public function submitEditJabatan(){
                 return $res;
             }  
         } else {
-            $res = array('msg' => 'Data gagal disimpan. Gagal menyimpan data di SIASN', 'success' => false);
-            $this->db->trans_rollback();
-            return $res;
+            // $res = array('msg' => 'Data gagal disimpan. Gagal menyimpan data di SIASN', 'success' => false);
+            // $this->db->trans_rollback();
+            // return $res;
         }   
     }
 

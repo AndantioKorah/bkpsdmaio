@@ -96,6 +96,16 @@ class Siasnlib{
         );
     }
 
+    function deleteJabatanByIdRiwayat($id){
+        return $this->postCurl(
+            $this->API_URL.'jabatan/delete/'.$id,
+            null,
+            "DELETE",
+            0,
+            1
+        );
+    }
+
     function uploadRiwayatDokumen($data){
         return $this->postCurl(
             $this->API_URL.'upload-dok-rw',

@@ -181,86 +181,89 @@
                                                     ->get()->result_array();
                     if($riwayatJabatanSiladen){
                         foreach($riwayatJabatanSiladen as $rw){
-                            $listJabatanSiladen[$rw['nosk']]['id'] = $rw['id'];
+                            if($rw['id_siasn'] == null){
+                                $listJabatanSiladen[$rw['nosk'].formatDateOnlyForEdit2($rw['tmtjabatan'])]['id'] = $rw['id'];
+                            }
                             // $listJabatanSiladen[$rw['nosk']]['meta_data_siasn'] = $rw['meta_data_siasn'];
                         }
                     }
 
                     if($riwayatJabatanSiasn['data']){
                         foreach($riwayatJabatanSiasn['data'] as $d){
-                            if($d['nomorSk'] && isset($listJabatanSiladen[$d['nomorSk']])){
+                            if($d['nomorSk'] && isset($listJabatanSiladen[$d['nomorSk'].formatDateOnlyForEdit2($d['tmtJabatan'])])){
                                 // kalo ada nomor SK yang sama dengan riwayat, update meta_data_siasn
-                                $this->db->where('id', $listJabatanSiladen[$d['nomorSk']]['id'])
+                                $this->db->where('id', $listJabatanSiladen[$d['nomorSk'].formatDateOnlyForEdit2($d['tmtJabatan'])]['id'])
                                         ->update('db_pegawai.pegjabatan', [
                                             'meta_data_siasn' => json_encode($d),
+                                            'id_siasn' => $d['id'],
+                                            'id_unor_siasn' => $d['unorId'],
                                             'created_by' => $this->general_library->getId()
                                         ]);
                             } else {
                                 // kalo tidak ada, buat baru dan kasih tanda flag_from_siasn
-                                $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
-                                if($file['code'] == 0){
-                                    $fileName = 'SK_JABATAN_'.$d['nomorSk'].'_'.date('ymdhis').'.pdf';
-                                    file_put_contents('arsipjabatan/'.$fileName, $file['data']);
-                                    if(file_exists('arsipjabatan/'.$fileName)){
-                                        $id_jabatan_siasn = '';
-                                        $nama_jabatan_siasn = '';
+                                $id_jabatan_siasn = '';
+                                $nama_jabatan_siasn = '';
 
-                                        if($d['jabatanFungsionalId'] != null && $d['jabatanFungsionalId'] != ""){
-                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
-                                            $nama_jabatan_siasn = $d['jabatanFungsionalNama'];
-                                        } else if($d['jabatanFungsionalUmumId'] != null && $d['jabatanFungsionalUmumId'] != ""){
-                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
-                                            $nama_jabatan_siasn = $d['jabatanFungsionalUmumNama'];
-                                        } else if($d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != ""){
-                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
-                                            $nama_jabatan_siasn = $d['jabatanStrukturalNama'];
-                                        }
+                                if($d['jabatanFungsionalId'] != null && $d['jabatanFungsionalId'] != ""){
+                                    $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                    $nama_jabatan_siasn = $d['jabatanFungsionalNama'];
+                                } else if($d['jabatanFungsionalUmumId'] != null && $d['jabatanFungsionalUmumId'] != ""){
+                                    $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                    $nama_jabatan_siasn = $d['jabatanFungsionalUmumNama'];
+                                } else if($d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != ""){
+                                    $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                    $nama_jabatan_siasn = $d['jabatanStrukturalNama'];
+                                }
+                                $unor = $this->db->select('*, b.id as id_m_bidang, c.id as id_m_sub_bidang')
+                                                ->from('db_pegawai.unitkerja a')
+                                                ->join('m_bidang b', 'a.id_unitkerja = b.id_unitkerja')
+                                                ->join('m_sub_bidang c', 'c.id_m_bidang = b.id')
+                                                ->where('(a.id_unor_siasn = "'.$d['unorId'].'" OR b.id_unor_siasn = "'.$d['unorId'].'" OR c.id_unor_siasn = "'.$d['unorId'].'")')
+                                                ->get()->row_array();
 
-                                        $unor = $this->db->select('*, b.id as id_m_bidang, c.id as id_m_sub_bidang')
-                                                        ->from('db_pegawai.unitkerja a')
-                                                        ->join('m_bidang b', 'a.id_unitkerja = b.id_unitkerja')
-                                                        ->join('m_sub_bidang c', 'c.id_m_bidang = b.id')
-                                                        ->where('(a.id_unor_siasn = "'.$d['unorId'].'" OR b.id_unor_siasn = "'.$d['unorId'].'" OR c.id_unor_siasn = "'.$d['unorId'].'")')
+                                $eselon = $this->db->select('*')
+                                                ->from('db_pegawai.eselon')
+                                                ->where('id_eselon_siasn', $d['eselonId'])
+                                                ->get()->row_array();
+
+                                $jabatanSiladen = $this->db->select('*')
+                                                        ->from('db_pegawai.jabatan')
+                                                        ->where('id_jabatan_siasn', $id_jabatan_siasn)
                                                         ->get()->row_array();
 
-                                        $eselon = $this->db->select('*')
-                                                        ->from('db_pegawai.eselon')
-                                                        ->where('id_eselon_siasn', $d['eselonId'])
-                                                        ->get()->row_array();
+                                $insert_data['id_pegawai'] = $user['id_peg'];
+                                $insert_data['nm_jabatan'] = $jabatanSiladen ? $jabatanSiladen['nama_jabatan'] : $nama_jabatan_siasn;
+                                $insert_data['id_jabatan'] = $jabatanSiladen ? $jabatanSiladen['id_jabatanpeg'] : null;
+                                $insert_data['tmtjabatan'] = formatDateOnlyForEdit($d['tmtJabatan']);
+                                $insert_data['jenisjabatan'] = isset($d['jabatanStrukturalId']) && $d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != "" ? "00" : "10";
+                                $insert_data['eselon'] = $eselon ? $eselon['id_eselon'] : 1;
+                                $insert_data['nosk'] = $d['nomorSk'];
+                                $insert_data['tglsk'] = formatDateOnlyForEdit($d['tanggalSk']);
+                                $insert_data['skpd'] = $unor ? $unor['nm_unitkerja'] : "";
+                                $insert_data['alamatskpd'] = $unor ? $unor['alamat_unitkerja'] : "";
+                                // $insert_data['gambarsk'] = $fileName;
+                                $insert_data['status'] = "2";
+                                $insert_data['created_by'] = $this->general_library->getId();
+                                $insert_data['statusjabatan'] = "1";
+                                $insert_data['id_unitkerja'] = $unor ? $unor['id_unitkerja'] : "";
+                                $insert_data['id_siasn'] = $d['id'];
+                                $insert_data['id_unor_siasn'] = $d['unorId'];
+                                $insert_data['meta_data_siasn'] = json_encode($d);
+                                $insert_data['flag_from_siasn'] = 1;
 
-                                        $jabatanSiladen = $this->db->select('*')
-                                                                ->from('db_pegawai.jabatan')
-                                                                ->where('id_jabatan_siasn', $id_jabatan_siasn)
-                                                                ->get()->row_array();
-
-                                        $insert_data['id_pegawai'] = $user['id_peg'];
-                                        $insert_data['nm_jabatan'] = $jabatanSiladen ? $jabatanSiladen['nama_jabatan'] : $nama_jabatan_siasn;
-                                        $insert_data['id_jabatan'] = $jabatanSiladen ? $jabatanSiladen['id_jabatanpeg'] : null;
-                                        $insert_data['tmtjabatan'] = formatDateOnlyForEdit($d['tmtJabatan']);
-                                        $insert_data['jenisjabatan'] = isset($d['jabatanStrukturalId']) && $d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != "" ? "00" : "10";
-                                        $insert_data['eselon'] = $eselon ? $eselon['id_eselon'] : 1;
-                                        $insert_data['nosk'] = $d['nomorSk'];
-                                        $insert_data['tglsk'] = formatDateOnlyForEdit($d['tanggalSk']);
-                                        $insert_data['skpd'] = $unor ? $unor['nm_unitkerja'] : "";
-                                        $insert_data['alamatskpd'] = $unor ? $unor['alamat_unitkerja'] : "";
+                                // $this->db->insert('db_pegawai.pegjabatan', $insert_data);
+                                $fileName = null;
+                                if($d['path']){
+                                    $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
+                                    if($file['code'] == 0){
+                                        $fileName = 'SK_JABATAN_'.$d['id'].'_'.date('ymdhis').'.pdf';
+                                        file_put_contents('arsipjabatan/'.$fileName, $file['data']);
                                         $insert_data['gambarsk'] = $fileName;
-                                        $insert_data['status'] = "2";
-                                        $insert_data['created_by'] = $this->general_library->getId();
-                                        $insert_data['statusjabatan'] = "1";
-                                        $insert_data['id_unitkerja'] = $unor ? $unor['id_unitkerja'] : "";
-                                        $insert_data['id_siasn'] = $d['id'];
-                                        $insert_data['id_unor_siasn'] = $d['unorId'];
-                                        $insert_data['meta_data_siasn'] = json_encode($d);
-                                        $insert_data['flag_from_siasn'] = 1;
-
                                         $this->db->insert('db_pegawai.pegjabatan', $insert_data);
                                     } else {
                                         $rs['code'] = 1;
-                                        $rs['message'] = "Gagal menyimpan file.";
+                                        $rs['message'] = "Gagal menyimpan file. Sinkronisasi Gagal. ".$file['data'];
                                     }
-                                } else {
-                                    $rs['code'] = 1;
-                                    $rs['message'] = $file['data'];
                                 }
                             }
                         }
@@ -271,8 +274,13 @@
                     $rs['message'] = $reqWs['data'];
                 }
             } else {
-                $rs['code'] = 0;
+                $rs['code'] = 1;
                 $rs['message'] = 'Terjadi Kesalahan. User tidak ditemukan.';
+            }
+
+            if($rs['code'] == 1){
+                $this->db->trans_rollback();
+                return $rs;
             }
 
             if($this->db->trans_status() == FALSE){

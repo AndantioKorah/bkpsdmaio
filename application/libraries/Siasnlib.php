@@ -66,6 +66,16 @@ class Siasnlib{
         );
     }
 
+    function getJabatanByIdRiwayat($id){
+        return $this->postCurl(
+            $this->API_URL.'jabatan/id/'.$id,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
     function downloadDokumen($url){
         return $this->postCurl(
             $this->API_URL.'download-dok?filePath='.$url,
@@ -86,8 +96,24 @@ class Siasnlib{
         );
     }
 
-    function postCurl($url, $data, $method = "POST", $flag_use_auth = 1, $flag_use_bearer = 0) {
+    function uploadRiwayatDokumen($data){
+        return $this->postCurl(
+            $this->API_URL.'upload-dok-rw',
+            ($data),
+            "POST",
+            0,
+            1,
+            1
+        );
+    }
+
+    function postCurl($url, $data, $method = "POST", $flag_use_auth = 1, $flag_use_bearer = 0, $flag_form_data_type = 0) {
         // $data = json_encode($data);
+        $content_type = "application/json";
+        if($flag_form_data_type == 1){
+            $content_type = "multipart/form-data";
+        }
+
         $res['code'] = 0;
         $res['data'] = null;
         
@@ -105,7 +131,7 @@ class Siasnlib{
             CURLOPT_CUSTOMREQUEST => $method,
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_HTTPHEADER => array(
-                    "Content-Type: application/json",
+                    "Content-Type: ".$content_type,
                     "cache-control: no-cache",
                 ),
             )
@@ -118,9 +144,14 @@ class Siasnlib{
             if($flag_use_bearer != null){
                 $headers = array();
                 $headers[] = 'Accept: application/json';
-                $headers[] = 'Content-Type: application/json; charset=utf-8';
+                if($flag_form_data_type == 0){
+                    $headers[] = 'Content-Type: application/json; charset=utf-8';
+                } else {
+                    $headers[] = 'Content-Type: multipart/form-data';
+                }
                 $headers[] = 'Auth: bearer '.$this->siasnlib->general_library->getSsoSiasnApiToken();
                 $headers[] = 'Authorization: Bearer '.$this->siasnlib->general_library->getOauthSiasnApiToken();
+                // dd($headers);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             } else {
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array(
@@ -158,14 +189,15 @@ class Siasnlib{
         || (isset($dec_resp['success']) && $dec_resp['success'] == false) 
         || ($decode_resp && $decode_resp['code'] != 1
         || isset($dec_resp['code']) && $dec_resp['code'] != '1')
-        || $response == "0"){
+        || $response == "0"
+        || $response == ""){
             $res['code'] = 1;
             $res['data'] = isset($dec_resp['message']) ? $dec_resp['message'] : $response;
         }
-
+        
         $this->siasnlib->general->insert('t_log_ws_siasn', [
             'url' => $url,
-            'request' => ($data),
+            'request' => is_array($data) ? json_encode($data) : $data,
             'method' => $method,
             'response' => ($response),
             'created_by' => $this->siasnlib->general_library->getId()

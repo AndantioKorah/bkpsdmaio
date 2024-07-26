@@ -112,11 +112,11 @@
           
 
               <div class="form-group" style="margin-bottom:10px !important;" id="jabatan_baru">
-              <label for="jabatan_jenis">Nama Jabatan vfd</label>
+              <label for="jabatan_jenis">Nama Jabatan</label>
               <select class="form-control select2 edit_nama_jab" data-dropdown-parent="#modal_edit_jabatan" data-dropdown-css-class="select2-navy" name="jabatan_nama" id="jabatan_nama" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
-                              <option value="" disabled selected>Pilih Itemf</option>
+                              <option value="" disabled selected>Pilih Item</option>
                               <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
-                                  <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>;<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?>b</option>
+                                  <option <?php if($r['id_jabatanpeg'] == $jabatan[0]['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>;<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
                               <?php } } ?>
               </select>
               </div>

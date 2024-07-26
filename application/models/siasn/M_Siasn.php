@@ -197,15 +197,63 @@
                                         ]);
                             } else {
                                 // kalo tidak ada, buat baru dan kasih tanda flag_from_siasn
-                                dd($d);
                                 $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
                                 if($file['code'] == 0){
                                     $fileName = 'SK_JABATAN_'.$d['nomorSk'].'_'.date('ymdhis').'.pdf';
                                     file_put_contents('arsipjabatan/'.$fileName, $file['data']);
                                     if(file_exists('arsipjabatan/'.$fileName)){
+                                        $id_jabatan_siasn = '';
+                                        $nama_jabatan_siasn = '';
+
+                                        if($d['jabatanFungsionalId'] != null && $d['jabatanFungsionalId'] != ""){
+                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                            $nama_jabatan_siasn = $d['jabatanFungsionalNama'];
+                                        } else if($d['jabatanFungsionalUmumId'] != null && $d['jabatanFungsionalUmumId'] != ""){
+                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                            $nama_jabatan_siasn = $d['jabatanFungsionalUmumNama'];
+                                        } else if($d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != ""){
+                                            $id_jabatan_siasn = $d['jabatanFungsionalId'];
+                                            $nama_jabatan_siasn = $d['jabatanStrukturalNama'];
+                                        }
+
+                                        $unor = $this->db->select('*, b.id as id_m_bidang, c.id as id_m_sub_bidang')
+                                                        ->from('db_pegawai.unitkerja a')
+                                                        ->join('m_bidang b', 'a.id_unitkerja = b.id_unitkerja')
+                                                        ->join('m_sub_bidang c', 'c.id_m_bidang = b.id')
+                                                        ->where('(a.id_unor_siasn = "'.$d['unorId'].'" OR b.id_unor_siasn = "'.$d['unorId'].'" OR c.id_unor_siasn = "'.$d['unorId'].'")')
+                                                        ->get()->row_array();
+
+                                        $eselon = $this->db->select('*')
+                                                        ->from('db_pegawai.eselon')
+                                                        ->where('id_eselon_siasn', $d['eselonId'])
+                                                        ->get()->row_array();
+
+                                        $jabatanSiladen = $this->db->select('*')
+                                                                ->from('db_pegawai.jabatan')
+                                                                ->where('id_jabatan_siasn', $id_jabatan_siasn)
+                                                                ->get()->row_array();
+
                                         $insert_data['id_pegawai'] = $user['id_peg'];
-                                        // MULAI DI SINI
-                                        // $insert_data['nm_jabatan'] = ;
+                                        $insert_data['nm_jabatan'] = $jabatanSiladen ? $jabatanSiladen['nama_jabatan'] : $nama_jabatan_siasn;
+                                        $insert_data['id_jabatan'] = $jabatanSiladen ? $jabatanSiladen['id_jabatanpeg'] : null;
+                                        $insert_data['tmtjabatan'] = formatDateOnlyForEdit($d['tmtJabatan']);
+                                        $insert_data['jenisjabatan'] = isset($d['jabatanStrukturalId']) && $d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != "" ? "00" : "10";
+                                        $insert_data['eselon'] = $eselon ? $eselon['id_eselon'] : 1;
+                                        $insert_data['nosk'] = $d['nomorSk'];
+                                        $insert_data['tglsk'] = formatDateOnlyForEdit($d['tanggalSk']);
+                                        $insert_data['skpd'] = $unor ? $unor['nm_unitkerja'] : "";
+                                        $insert_data['alamatskpd'] = $unor ? $unor['alamat_unitkerja'] : "";
+                                        $insert_data['gambarsk'] = $fileName;
+                                        $insert_data['status'] = "2";
+                                        $insert_data['created_by'] = $this->general_library->getId();
+                                        $insert_data['statusjabatan'] = "1";
+                                        $insert_data['id_unitkerja'] = $unor ? $unor['id_unitkerja'] : "";
+                                        $insert_data['id_siasn'] = $d['id'];
+                                        $insert_data['id_unor_siasn'] = $d['unorId'];
+                                        $insert_data['meta_data_siasn'] = json_encode($d);
+                                        $insert_data['flag_from_siasn'] = 1;
+
+                                        $this->db->insert('db_pegawai.pegjabatan', $insert_data);
                                     } else {
                                         $rs['code'] = 1;
                                         $rs['message'] = "Gagal menyimpan file.";

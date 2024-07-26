@@ -1351,6 +1351,10 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_EditJabatan', $data);
     }
 
+	public function tesUploadDokumenRiwayat(){
+		$this->kepegawaian->tesUploadDokumenRiwayat();
+	}
+
 	public function syncSiasnJabatan($id){
 		echo json_encode($this->kepegawaian->syncSiasnJabatan($id));
 	}

@@ -341,8 +341,8 @@ $('#form_edit_jabatann').on('submit', function(e){
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pdf_file_jab').files.length;
     
-    //  document.getElementById('btn_edit_jabatan').disabled = true;
-    //  $('#btn_edit_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+     document.getElementById('btn_edit_jabatan').disabled = true;
+     $('#btn_edit_jabatan').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
    
      $.ajax({  
      url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditJabatan")?>",

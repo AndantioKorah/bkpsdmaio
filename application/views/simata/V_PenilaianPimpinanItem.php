@@ -51,7 +51,8 @@
                     <th class="text-left">Unit Kerja</th>
                     <th class="text-left">Jabatan</th>
                 <?php } ?>
-               
+               <th class="text-left">Promosi Jabatan</th>
+               <th class="text-left">Rotasi Jabatan</th>
                 <th class="text-center">Pilihan</th>
             </thead>
             <tbody>
@@ -78,9 +79,36 @@
                         <td class="text-left"><?=$p['nm_unitkerja']?></td>
                         <td class="text-left"><?=$p['nama_jabatan']?></td>
                     <?php } ?>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
                      <td class="text-center">
-                        <!-- <button data-toggle="modal" href="#modal_edit_data_nilai" onclick="lihatSKP('<?=$p['id_m_user']?>')" 
-                        class="btn btn-sm btn-navy"><i class="fa fa-search"></i> Lihat SKP</button> -->
+
+
+
+
+                     <!-- <form id="form_penilaian_pimpinan" method="post" enctype="multipart/form-data">
+       <input type="hidden" id="id_pegawai">
+       <div class="radio-inputs mb-3">
+        <label class="radio">
+            <input type="radio" name="radio" checked="" value="124">
+            <span class="name">Sangat Mendukung</span>
+        </label>
+
+        <label class="radio">
+            <input type="radio" name="radio" checked="" value="0">
+            <span class="name">|</span>
+        </label>
+
+
+        <label class="radio">
+            <input type="radio" name="radio" value="125">
+            <span class="name">Tidak Mendukung</span>
+        </label>
+        </div>
+       
+        </form> -->
+                       
+      
                         <button data-id="<?=$p['id_peg']?>" type="button" class="btn btn-primary btn-sm open-DetailPT"  data-toggle="modal" data-target="#exampleModal">
                         Input Nilai
                         </button>
@@ -121,6 +149,7 @@
       <div class="modal-body">
       
        <form id="form_penilaian_pimpinan" method="post" enctype="multipart/form-data">
+        <span>Promosi Jabatan</span>
        <input type="hidden" id="id_pegawai">
        <div class="radio-inputs mb-3">
         <label class="radio">
@@ -129,10 +158,37 @@
         </label>
 
         <label class="radio">
+            <input type="radio" name="radio" checked="" value="0">
+            <span class="name">|</span>
+        </label>
+
+
+        <label class="radio">
             <input type="radio" name="radio" value="125">
             <span class="name">Tidak Mendukung</span>
         </label>
         </div>
+        
+        <span>Rotasi Jabatan</span>
+       <input type="hidden" id="id_pegawai">
+       <div class="radio-inputs mb-3">
+        <label class="radio">
+            <input type="radio" name="radio2" checked="" value="124">
+            <span class="name">Sangat Mendukung</span>
+        </label>
+
+        <label class="radio">
+            <input type="radio" name="radio2" checked="" value="0">
+            <span class="name">|</span>
+        </label>
+
+
+        <label class="radio">
+            <input type="radio" name="radio2" value="125">
+            <span class="name">Tidak Mendukung</span>
+        </label>
+        </div>
+
         <button class="btn btn-primary float-right">Simpan</button>
         </form>
       </div>
@@ -168,24 +224,25 @@ $('#table_list_pegawai').DataTable({
         var formvalue = $('#form_penilaian_pimpinan');
         var form_data = new FormData(formvalue[0]);
 
-        alert(form_data);
+
+       location.reload()   
        
       
 
-        $.ajax({  
-        url:"<?=base_url("simata/C_simata/submitPenilaianPimpinan")?>",
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        success:function(res){ 
-            console.log(res)
-            var result = JSON.parse(res); 
-            console.log(result)
+        // $.ajax({  
+        // url:"<?=base_url("simata/C_simata/submitPenilaianPimpinan")?>",
+        // method:"POST",  
+        // data:form_data,  
+        // contentType: false,  
+        // cache: false,  
+        // processData:false,  
+        // success:function(res){ 
+        //     console.log(res)
+        //     var result = JSON.parse(res); 
+        //     console.log(result)
                 
-        }  
-        });  
+        // }  
+        // });  
           
         });
 

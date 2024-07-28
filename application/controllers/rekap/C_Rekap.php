@@ -557,7 +557,7 @@ class C_Rekap extends CI_Controller
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
                 $param['id_unitkerja'] = $explode_param[0];
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $pagu_tpp = $this->kinerja->countPaguTpp($param, null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 // }
@@ -570,7 +570,7 @@ class C_Rekap extends CI_Controller
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
                 $param['id_unitkerja'] = $explode_param[0];
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $pagu_tpp = $this->kinerja->countPaguTpp($param, null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 // }
@@ -583,7 +583,7 @@ class C_Rekap extends CI_Controller
                 // } else {
                 $explode_param = explode(";", $param['skpd']);
                 $param['id_unitkerja'] = $explode_param[0];
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $pagu_tpp = $this->kinerja->countPaguTpp($param, null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 // }
@@ -593,7 +593,7 @@ class C_Rekap extends CI_Controller
             case "surat_pengantar":
                 $explode_param = explode(";", $param['skpd']);
                 $param['id_unitkerja'] = $explode_param[0];
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $pagu_tpp = $this->kinerja->countPaguTpp($param, null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['param'] = $param;
                 $data['param']['nm_unitkerja'] = $explode_param[1];
@@ -612,7 +612,7 @@ class C_Rekap extends CI_Controller
             case "salinan_surat_pengantar":
                 $explode_param = explode(";", $param['skpd']);
                 $param['id_unitkerja'] = $explode_param[0];
-                $pagu_tpp = $this->kinerja->countPaguTpp(['id_unitkerja' => $explode_param[0]], null, 0, 1);
+                $pagu_tpp = $this->kinerja->countPaguTpp($param, null, 0, 1);
                 $data['result'] = $this->rekap->getDaftarPerhitunganTppNew($pagu_tpp, $param, 1);
                 $data['param'] = $param;
                 $data['param']['nm_unitkerja'] = $explode_param[1];

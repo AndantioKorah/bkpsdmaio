@@ -1,7 +1,7 @@
 <?php // if(!$this->general_library->isWalikota()) { ?>
 <div class="card card-default">
     <div class="card-header">
-        <h4>Pertimbangan Pimpinan apakah mendukung atau tidak untuk dipromosikan dalam jabatan baru</h4>
+        <h4>Pertimbangan Pimpinan apakah mendukung atau tidak untuk ditempatkan dalam jabatan baru</h4>
     </div>
     <div class="card-body">
         <form id="form_search_komponen_kinerja" style="display:none">

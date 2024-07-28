@@ -10,6 +10,7 @@ class C_Kinerja extends CI_Controller
         $this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('user/M_User', 'user');
         $this->load->model('rekap/M_Rekap', 'rekap');
+        $this->load->model('simata/M_Simata', 'simata');
         $this->load->model('kinerja/M_VerifKinerja', 'verifkinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
@@ -35,6 +36,7 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kerja'] = "";
         $data['list_rencana_kinerja'] = $this->kinerja->getListRencanaKinerjaTugas();
         $data['list_sasaran_kerja'] = $this->kinerja->getListRencanaKinerjaSasaran();
+        $this->simata->updateMasakerja($this->general_library->getIdPegSimpeg());
         // dd($data['list_rencana_kinerja']);
         // $data['apel-pagi'] = $this->kinerja->cekRencanaKinerjaApelPagi();
         render('kinerja/V_RencanaKinerja', '', '', $data);
@@ -728,8 +730,8 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_VerifDokumenSearch', $data);
     }
 
-    public function batchRandomString($bulan, $tahun){
-        $this->kinerja->batchRandomString($bulan, $tahun);
+    public function batchRandomString($bulan, $tahun, $nip = 0){
+        $this->kinerja->batchRandomString($bulan, $tahun, $nip);
     }
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja)

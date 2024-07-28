@@ -406,9 +406,15 @@
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
                     ->where('a.statuspeg', 2)
-                    // ->where('id_m_status_pegawai', 2)
+                    // ->where_in('id_m_status_pegawai', [1,2])
                     ->group_by('a.nipbaru_ws')
                     ->order_by('c.eselon');
+
+            if($data['tahun'] == date('Y')){
+                $this->db->where_in('id_m_status_pegawai', [1,2,3]);
+            } else if($data['tahun'] > date('Y')) {
+                $this->db->where_in('id_m_status_pegawai', [1]);
+            }
 
             if($data['eselon'] != "0"){
                 $this->db->where('c.eselon', $data['eselon']);
@@ -814,6 +820,461 @@
                 $this->db->where('id', $data['id'])
                         ->update('t_cron_wa', $update);
             }
+        }
+
+        public function getOauthToken(){
+            $token = null;
+            $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_OAUTH_TOKEN');
+            if($exists){
+                $now = date('Y-m-d H:i:s');
+                if($now <= $exists['created_date'] && $exists['parameter_value']){
+                    $value = json_decode($exists['parameter_value'], true);
+                    $token = $value['access_token'];
+                } else {
+                    $res = $this->siasnlib->getOauthToken();
+                    if($res['code'] == 0 && isset($res['data'])){
+                        $data = json_decode($res['data'], true);
+                        $token = $data['access_token']; 
+    
+                        $batas_waktu = date('Y-m-d H:i:s');
+                        $date = new DateTime($batas_waktu);
+                        $date->add(new DateInterval('PT'.$data['expires_in'].'S'));
+    
+                        $this->update('parameter_name', 'PARAM_OAUTH_TOKEN', 'm_parameter', [
+                            'parameter_value' => ($res['data']),
+                            'created_date' => $date->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+            // echo $token;
+            return $token;
+        }
+    
+        public function getSsoToken(){
+            $token = null;
+            $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_SSO_TOKEN');
+            if($exists){
+                $now = date('Y-m-d H:i:s');
+                if($now <= $exists['created_date'] && $exists['parameter_value']){
+                    $value = json_decode($exists['parameter_value'], true);
+                    $token = $value['access_token'];
+                } else {
+                    $res = $this->siasnlib->getSsoToken();
+                    if($res['code'] == 0 && isset($res['data'])){
+                        $data = json_decode($res['data'], true);
+                        $token = $data['access_token']; 
+    
+                        $batas_waktu = date('Y-m-d H:i:s');
+                        $date = new DateTime($batas_waktu);
+                        $date->add(new DateInterval('PT'.$data['expires_in'].'S'));
+    
+                        $this->update('parameter_name', 'PARAM_SSO_TOKEN', 'm_parameter', [
+                            'parameter_value' => ($res['data']),
+                            'created_date' => $date->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+            // echo $token;
+            return $token;
+        }
+
+        public function mappingUnor($percent){
+            $uker = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unor_siasn IS NULL')
+                            ->get()->result_array();
+
+            $unorSiasn = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('row_level', '2')
+                            ->get()->result_array();
+
+            $list_uker = null;
+            $i = 0;
+            foreach($uker as $uk){
+                // $list_uker[$uk['nm_unitkerja']] = $uk;
+
+                foreach($unorSiasn as $us){
+                    $nama_unor = substr($us['nama_unor'], 2);
+                    $sim = similar_text(strtoupper($uk['nm_unitkerja']), strtoupper($nama_unor), $sim);
+                    if($sim >= $percent){
+                        $this->db->where('id_unitkerja', $uk['id_unitkerja'])
+                                ->update('db_pegawai.unitkerja', [
+                                    'id_unor_siasn' => $us['id']
+                                ]);
+                    }
+                }
+                $i++;
+            }
+            dd($unorSiasn);
+        }
+
+        public function revertMappingUnor($percent){
+            $uker = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id')
+                            ->where('a.id_unor_siasn IS NOT NULL')
+                            ->get()->result_array();
+
+            $i = 0;
+
+            foreach($uker as $uk){
+                $nama_unor = substr($uk['nama_unor'], 2);
+                $sim = similar_text(strtoupper($uk['nm_unitkerja']), strtoupper($nama_unor), $sim);
+                if($sim < $percent){
+                    $this->db->where('id_unitkerja', $uk['id_unitkerja'])
+                                ->update('db_pegawai.unitkerja', [
+                                    'id_unor_siasn' => null
+                                ]);
+                }
+                $i++;
+            }
+        }
+
+        public function getDataMappingUnor(){
+            $data = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->group_by('a.id_unitkerja')
+                            ->get()->result_array();
+            return $data;
+        }
+
+        public function editMappingUnor($id){
+            return $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
+                            ->from('db_pegawai.unitkerja a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id_unitkerja', $id)
+                            ->get()->row_array();
+        }
+
+        public function saveEditMappingUnor(){
+            $data = $this->input->post();
+            $this->db->where('id_unitkerja', $data['id_unitkerja'])
+                    ->update('db_pegawai.unitkerja', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function deleteMappingUnor($id){
+            $this->db->where('id_unitkerja', $id)
+                    ->update('db_pegawai.unitkerja', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
+        public function deleteMappingSubBidang($id){
+            $this->db->where('id', $id)
+                    ->update('m_sub_bidang', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
+        public function deleteMappingBidang($id){
+            $this->db->where('id', $id)
+                    ->update('m_bidang', [
+                        'id_unor_siasn' => null
+                    ]);
+        }
+
+        public function loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja){
+            return $this->db->select('a.*, b.nama_unor')
+                            ->from('m_bidang a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id_unitkerja', $id_unitkerja)
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.nama_bidang', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getDataForEditUnorBidang($id){
+            return $this->db->select('a.*, a.id as id_m_bidang, b.nama_unor, b.id')
+                            ->from('m_bidang a')
+                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+        }
+        
+        public function getUnorSiasnByUnitKerja($id_unitkerja){
+            return $this->db->select('*')
+                        ->from('db_pegawai.unitkerja a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                        ->where('a.id_unitkerja', $id_unitkerja)
+                        ->get()->result_array();
+        }
+
+        public function getUnorSiasnByBidang($id_m_bidang){
+            $data = $this->db->select('*')
+                        ->from('m_bidang a')
+                        ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id')
+                        ->where('a.id', $id_m_bidang)
+                        ->get()->result_array();
+
+            $tambahan = $this->db->select('*')
+                                ->from('m_bidang a')
+                                ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                                ->where('a.id', $id_m_bidang)
+                                ->get()->result_array();
+            if($data && (stringStartWith('Kecamatan', $data[0]['nm_unitkerja']) || stringStartWith('Kelurahan', $data[0]['nm_unitkerja']))){
+                $result = null;
+                foreach($data as $d){
+                    $result[] = $d;
+                }
+
+                if($tambahan){
+                    foreach($tambahan as $t){
+                        $result[] = $t;
+                    }
+                }
+                return $result;
+            } else {
+                return $tambahan;
+            }
+        }
+
+        public function saveEditMappingBidang(){
+            $data = $this->input->post();
+            $this->db->where('id', $data['id_m_bidang'])
+                    ->update('m_bidang', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function saveEditMappingSubBidang($id){
+            $data = $this->input->post();
+            $this->db->where('id', $id)
+                    ->update('m_sub_bidang', [
+                        'id_unor_siasn' => $data['id_unor_siasn']
+                    ]);
+
+            $rs = $this->db->select('*')
+                            ->from('db_siasn.m_unor_perencanaan')
+                            ->where('id', $data['id_unor_siasn'])
+                            ->get()->row_array();
+            return $rs;
+        }
+
+        public function getListSubBidangByIdBidang($id_m_bidang){
+            return $this->db->select('a.*, b.nama_unor')
+                        ->from('m_sub_bidang a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                        ->where('a.id_m_bidang', $id_m_bidang)
+                        ->where('a.flag_active', 1)
+                        ->group_by('a.id')
+                        ->get()->result_array();
+        }
+        
+        public function loadJabatanForMappingSiasn($jenis, $skpd){
+            $this->db->select('a.*')
+                        ->from('db_pegawai.jabatan a');
+            if($jenis == 'struktural'){
+                $this->db->select('b.nama_jabatan as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_struktural b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis)
+                        ->where('a.id_unitkerja', $skpd);
+            } else if($jenis == 'JFU'){
+                $this->db->select('b.nama as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_pelaksana b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis);
+            } else if($jenis == 'JFT'){
+                $this->db->select('b.nama as nama_jabatan_siasn')
+                        ->join('db_siasn.m_ref_jabatan_fungsional b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $jenis);
+            }
+
+            return $this->db->get()->result_array();
+        }
+
+        public function loadDetailJabatanMapping($id){
+            $result = null;
+
+            $temp = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('id_jabatanpeg', $id)
+                                ->get()->row_array();
+            $list_unor_siasn = null;
+            
+            if($temp['jenis_jabatan'] == 'Struktural'){
+                $this->db->select('a.*, b.nama_jabatan as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_struktural b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan']);
+                $result = $this->db->get()->row_array();
+
+                $list_unor_siasn = $this->db->select('*, nama_jabatan as nama_jabatan_siasn')
+                                                ->from('db_siasn.m_ref_jabatan_struktural')
+                                                ->get()->result_array();
+            } else if($temp['jenis_jabatan'] == 'JFU'){
+                $this->db->select('a.*, b.nama as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_pelaksana b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan'])
+                        ->where('a.id_unitkerja', $skpd);
+                $result = $this->db->get()->row_array();
+
+                // $list_unor_siasn = $this->db->select('*, nama as nama_jabatan_siasn')
+                //                                 ->from('db_siasn.m_ref_jabatan_pelaksana')
+                //                                 ->get()->result_array();
+            } else if($temp['jenis_jabatan'] == 'JFT'){
+                $this->db->select('a.*, b.nama as nama_jabatan_siasn')
+                        ->from('db_pegawai.jabatan a')
+                        ->join('db_siasn.m_ref_jabatan_fungsional b', 'a.id_jabatan_siasn = b.id', 'left')
+                        ->where('a.jenis_jabatan', $temp['jenis_jabatan']);
+                $result = $this->db->get()->row_array();
+                
+                // $list_unor_siasn = $this->db->select('*, nama as nama_jabatan_siasn')
+                //                                 ->from('db_siasn.m_ref_jabatan_fungsional')
+                //                                 ->get()->result_array();
+            }
+            
+            return [$result, $list_unor_siasn];
+        }
+
+        public function downloadRekapAbsenRequest(){
+            $bulan = ['1', '2', '3', '4', '5', '6'];
+            $list_bulan = null;
+            foreach($bulan as $b){
+                $list_bulan[$b] = $b;
+            }
+
+            $tahun = ['2024'];
+            $list_tahun = null;
+            foreach($tahun as $t){
+                $list_bulan[$t] = $t;
+            }
+
+            $unitkerja = [
+                'Puskesmas Bahu',
+                'Puskesmas Bailang',
+                'Puskesmas Bengkol',
+                'Puskesmas Kombos',
+                'Puskesmas Minanga',
+                'Puskesmas Paniki Bawah',
+                'Puskesmas Ranomuut',
+                'Puskesmas Ranotana Weru',
+                'Puskesmas Sario',
+                'Puskesmas Teling Atas',
+                'Puskesmas Tikala Baru',
+                'Puskesmas Tongkaina',
+                'Puskesmas Tuminting',
+                'Puskesmas Wawonasa',
+                'Puskesmas Wenang',
+                'Puskesmas Bunaken',
+                'Rumah Sakit Khusus Daerah Gigi dan Mulut',
+                'Rumah Sakit Umum Daerah',
+                'Sekretariat DPRD',
+                'Dinas Pekerjaan Umum dan Penataan Ruang'
+            ];
+
+            $folder_name = 'request_kasub_erik_19_juli_2024';
+            $folder_name = 'temp_pdf_from_api_siasn/temp_pdf_request/'.$folder_name;
+
+            if (!file_exists($folder_name) && !is_dir($folder_name) ) {
+                mkdir($folder_name);
+            }
+
+            $folder_name .= '/';
+
+            $total = 0;
+            $exists = 0;
+            $not_found = 0;
+            $failed = 0;
+            $success = 0;
+            $absen = 0;
+            $tpp = 0;
+
+            $list_nama = [];
+            foreach($unitkerja as $u){
+                foreach($bulan as $b){
+                    foreach($tahun as $t){
+                        $flag_cari_rekap_tpp = 0;
+                        $list_nama[$u.$b.$t]['nama'] = 'Rekap Absensi '.$u.' Bulan '.getNamaBulan($b).' '.$t.'.pdf';
+                        // $list_nama[$u.$b.$t]['url'] = base_url('assets/arsipabsensibulanan/'.str_replace(' ', '%20', $list_nama[$u.$b.$t]['nama']));
+                        // $list_nama[$u.$b.$t]['url'] = ('assets/arsipabsensibulanan/'.str_replace(' ', '%20', $list_nama[$u.$b.$t]['nama']));
+                        $list_nama[$u.$b.$t]['url'] = ('assets/arsipabsensibulanan/'.$list_nama[$u.$b.$t]['nama']);
+                        $total++;
+
+                        $flag_cari_rekap_tpp = $this->moveFile($list_nama[$u.$b.$t]['url'], $list_nama[$u.$b.$t]['nama'], $folder_name, $u);
+
+                        // if(file_exists($list_nama[$u.$b.$t]['url'])){
+                        //     if(!file_exists($folder_name.$list_nama[$u.$b.$t]['nama'])){
+                        //         if (file_put_contents($folder_name.$list_nama[$u.$b.$t]['nama'], file_get_contents($list_nama[$u.$b.$t]['url']))){ 
+                        //             $success++;
+                        //             echo $list_nama[$u.$b.$t]['nama']." successfully"."<br>"; 
+                        //         } else { 
+                        //             $flag_cari_rekap_tpp = 1;
+                        //             $failed++;
+                        //             echo $list_nama[$u.$b.$t]['nama']." failed"."<br>"; 
+                        //         }
+                        //     } else {
+                        //         $exists++;
+                        //         echo $list_nama[$u.$b.$t]['nama']." EXISTS"."<br>"; 
+                        //     }
+                        // } else {
+                        //     $flag_cari_rekap_tpp = 1;
+                        //     $not_found++;
+                        //     echo $list_nama[$u.$b.$t]['nama']." NOT FOUND"."<br>"; 
+                        // }
+
+                        if($flag_cari_rekap_tpp == 1){
+                            $nama_rekap_tpp = 'Rekap TPP '.$u.' '.getNamaBulan($b).' '.$t.'.pdf';
+                            // $url_rekap_tpp = 'arsiptpp/'.$t.'/'.getNamaBulan($b).'/'.str_replace(' ', '%20', $nama_rekap_tpp);
+                            $url_rekap_tpp = 'arsiptpp/'.$t.'/'.getNamaBulan($b).'/'.$nama_rekap_tpp;
+                            $last = $this->moveFile($url_rekap_tpp, $nama_rekap_tpp, $folder_name, $u);
+                            if($last == 1){
+                                echo "memang so nda dapa ".$u.' Bulan '.getNamaBulan($b).' '.$t.'<br>';
+                            }
+                        }
+                    }
+                }
+            }
+            dd(count($list_nama));
+        }
+
+        public function moveFile($url, $name, $folder, $unitkerja){
+            $folder_per_uk = null;
+            if (!file_exists($folder.$unitkerja) && !is_dir($folder.$unitkerja)){
+                $folder_per_uk = $folder.$unitkerja.'/';
+                mkdir($folder.$unitkerja);
+            } else {
+                $folder_per_uk = $folder.$unitkerja.'/';
+            }
+
+            $flag_cari_rekap_tpp = 0;
+            if(file_exists(($url))){
+                if(!file_exists($folder.$name)){
+                    if (file_put_contents($folder.$name, file_get_contents($url))){ 
+                        file_put_contents($folder_per_uk.$name, file_get_contents($url));
+                        echo $name." successfully"."<br>"; 
+                    } else { 
+                        $flag_cari_rekap_tpp = 1;
+                        echo $name." failed"."<br>"; 
+                    }
+                } else {
+                    echo $name." EXISTS"."<br>"; 
+                }
+            } else {
+                $flag_cari_rekap_tpp = 1;
+                echo $name." NOT FOUND"."<br>"; 
+            }
+
+            return $flag_cari_rekap_tpp;
         }
 
 	}

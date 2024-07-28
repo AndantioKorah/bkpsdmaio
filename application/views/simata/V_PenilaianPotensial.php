@@ -185,7 +185,7 @@
           <div class="col-lg-12 mt-3 text-right">
             <button id="btn_nilai" type="button" style="width: 25% !important; height: 35px !important; font-size: .8rem;"
             class="btn btn-navy btn-sm"> 
-            <label class="form-check-label" for="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked" style="color:#fff;">
           <i class="fa fa-sync"></i> Penilaian 
         </label>
           </button>

@@ -2,7 +2,7 @@
   if($profil_pegawai){
 ?>
 <style>
-	.sp_profil {
+	/* .sp_profil {
 		font-size: .9rem;
 		font-weight: bold;
 	}
@@ -18,16 +18,13 @@
 		border: .05rem solid black;
 	}
 
-	.sp_profil_alamat {
-		/* line-height: 100px; */
-	}
 
 	.sp_label {
 		font-size: .8rem;
 		font-style: italic;
 		font-weight: 600;
 		color: grey;
-	}
+	} */
 
 	.div_label {
 		margin-bottom: -5px;
@@ -204,7 +201,7 @@
 									aria-controls="pills-profile" aria-selected="false">Kinerja</button>
 							</li>
                         <li class="nav-item nav-item-profile" role="presentation">
-                            <button class="nav-link nav-link-profile " id="pills-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Assesment</button>
+                            <button class="nav-link nav-link-profile " id="pills-mt-assesment-tab" data-bs-toggle="pill" data-bs-target="#pills-assesment-mt" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Assesment</button>
                         </li>
                         
                         <li class="nav-item nav-item-profile" role="presentation">
@@ -277,8 +274,8 @@
 								</div>
                                 <!-- tutup kinerja  -->
                                 <!-- assesment  -->
-                                <div class="tab-pane show " id="pills-assesment" role="tabpanel"
-									aria-labelledby="pills-assesment-tab">
+                                <div class="tab-pane show " id="pills-assesment-mt" role="tabpanel"
+									aria-labelledby="pills-mt-assesment-tab">
                                     <table class="table" >
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Nilai Assement</span></td>
@@ -366,24 +363,24 @@
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pengalaman dalam Kepemimpinan Organisasi</span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor1'])) { ?>
+                                                <?php if(isset($nilai_potensial['skor8'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor8'];?> Point] <?=$nilai_potensial['potensial8'];?></span>
                                                 <?php } ?>
 
                                             </td>
                                             </tr>
                                             <tr>
-                                                <td style="width:25%"><span class="sp_label">Pertimbangan Aspirasi Karier</span></td>
+                                                <td style="width:25%"><span class="sp_label">Pertimbangan Pimpinan</span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor2'])) { ?>
+                                                <?php if(isset($nilai_potensial['skor9'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor9'];?> Point] <?=$nilai_potensial['potensial9'];?></span>
                                                 <?php } ?>
                                             </td>
                                             </tr>
                                             <tr>
-                                                <td style="width:25%"><span class="sp_label">Survey Pegawai ASN Ceria</span></td>
+                                                <td style="width:25%"><span class="sp_label">Survey Pegawai ASN </span></td>
                                                 <td style="width:75%">
-                                                <?php if(isset($nilai_potensial['skor3'])) { ?>
+                                                <?php if(isset($nilai_potensial['skor10'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor10'];?> Point] <?=$nilai_potensial['potensial10'];?></span>
                                                 <?php } ?>
                                             </td>

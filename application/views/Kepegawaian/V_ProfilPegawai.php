@@ -242,7 +242,7 @@
                 </span>
               </div>
               <div class="col-lg-12 text-center" >
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
                 
              
                 <button data-toggle="modal" onclick="loadEditProfilModal('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#editProfileModal">
@@ -255,7 +255,20 @@
                   <i class="fa fa-id-badge"></i> DRH
                 </button>
             
-                <?php }?>
+                <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'
+                || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                  <hr>
+                  <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
+                    <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;"
+                    name="radio_button_sertifikasi" class="form-check-input" type="checkbox" id="radio_button_sertifikasi" 
+                    <?=$profil_pegawai['flag_sertifikasi'] == 1 ? "checked" : ""?>>
+                    <label class="form-check-label" for="radio_button_sertifikasi" style="
+                      font-weight: bold;
+                      font-size: 1rem;
+                      margin-top: 4px;
+                      margin-left: 30px;">GURU SERTIFIKASI</label>
+                  </div>
+                <?php } ?>
 
               </div>
             </div>
@@ -777,6 +790,17 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
+              <?php 
+              if(
+                // $this->general_library->getIdEselon() < 8 && 
+              // $this->general_library->getIdEselon() != 1 || 
+              $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+              <?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "II B") {?>
+              <li class="nav-item nav-item-profile" role="presentation"> 
+                <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
+              </li>
+              <?php } ?>
+              <?php } ?>
             </ul>
           </div>
           <div class="col-lg-12">
@@ -881,6 +905,9 @@
                   </form>
                   <div class="mt-3" id="div_presensi_result"></div>
                 </div>
+              </div>
+              <div class="tab-pane fade" id="pills-mt" role="tabpanel" aria-labelledby="pills-mt-tab">
+                <div id="div_manajamen_talenta"></div>
               </div>
             </div>
           </div>
@@ -1189,6 +1216,19 @@
         });  
           
         });
+
+        $('#radio_button_sertifikasi').on('click', function(){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/changeFlagSertifikasi/")?>'+$(this).is(':checked')+'/'+'<?=$profil_pegawai['nipbaru_ws']?>',
+              method: 'post',
+              data: $(this).serialize(),
+              success: function(data){
+                  successtoast('Berhasil')
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+        })
 </script>
 
   <script>
@@ -1436,6 +1476,14 @@
   $('#form_arsip').html(' ')
     $('#form_arsip').append(divLoaderNavy)
     $('#form_arsip').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormArsip/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+ function LoadViewTalenta(){
+  $('#div_manajamen_talenta').html(' ')
+    $('#div_manajamen_talenta').append(divLoaderNavy)
+    $('#div_manajamen_talenta').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadViewTalenta/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

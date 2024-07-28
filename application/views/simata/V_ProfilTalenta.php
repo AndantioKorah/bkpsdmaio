@@ -193,9 +193,10 @@ $(function(){
 
     function loadListPegawaiPenilaianPotensialAdm(){
    var id = $('#unit_kerja').val()
+   var jenis_pengisian = '<?= $jenis_pengisian;?>'
    $('#list_pegawai_penilaian_kinerja').html('')
    $('#list_pegawai_penilaian_kinerja').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/1")?>', function(){
+   $('#list_pegawai_penilaian_kinerja').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/1/")?>'+jenis_pengisian, function(){
      $('#loader').hide()
    })
   }
@@ -224,16 +225,12 @@ $(function(){
         var id = $(this).data('id');
         var nip = $(this).data('nip');
         var kode = $(this).data('kode');
-        var jt = $(this).data('jt');
+        var jt = '<?= $jenis_pengisian;?>'
 
         if(id == ""){
           id = 0;
         }
 
-        if(jt == ""){
-          jt = 0;
-        }
-     
 
         $('#div_modal_detail_profil_talenta').html('')
         $('#div_modal_detail_profil_talenta').append(divLoaderNavy)

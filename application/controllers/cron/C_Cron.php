@@ -40,4 +40,24 @@ class C_Cron extends CI_Controller
     public function cronDsBulkTte(){
 		$this->kepegawaian->cronDsBulkTte();
 	}
+
+    public function getOauthToken(){
+        return dd($this->general->getOauthToken());
+    }
+
+    public function getSsoToken(){
+        return dd($this->general->getSsoToken());
+    }
+
+    public function mappingUnor($percent = 100){
+        return $this->general->mappingUnor($percent);
+    }
+
+    public function revertMappingUnor($percent){
+        return $this->general->revertMappingUnor($percent);
+    }
+
+    public function downloadRekapAbsenRequest(){
+        $this->general->downloadRekapAbsenRequest();
+    }
 }

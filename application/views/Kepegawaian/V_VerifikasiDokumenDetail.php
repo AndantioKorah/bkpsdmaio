@@ -146,7 +146,16 @@
           <tr>
             <td class="td-lab-dd">Nama Jabatan</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?php if($result['id_jabatanpeg']) {if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];} else echo $result['nm_jabatan'];  ?></td>
+            <td class="td-val-dd">
+              <!-- <?php if($result['id_jabatanpeg']) {if($result['nama_jabatan'] == "") echo $result['nm_jabatan']; else echo $result['nama_jabatan'];} else echo $result['nm_jabatan'];  ?> -->
+              
+              <select class="form-control select22"  data-dropdown-css-class="select2-navy" name="jabatan_nama_verif" id="jabatan_nama_verif" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
+                    <option value="" disabled selected>Pilih Item</option>
+                    <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
+                        <option <?php if($r['id_jabatanpeg'] == $result['id_jabatan']) echo "selected"; else echo "";?> value="<?=$r['id_jabatanpeg']?>,<?=$r['nama_jabatan']?>"><?=$r['nama_jabatan']?></option>
+                    <?php } } ?>
+    </select>
+            </td>
           </tr>
           <tr>
             <td class="td-lab-dd">Pejabat Yang Menetapkan</td>
@@ -190,6 +199,10 @@
 
             $('#jabatan_tmt_verif').on('change', function() {
               $("#edit_tmt_jabatan_verif").val(this.value);
+          });
+
+          $('#jabatan_nama_verif').on('change', function() {
+              $("#edit_nama_jabatan_verif").val(this.value);
           });
 
           </script>
@@ -837,6 +850,7 @@
 
   <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif" value="<?php if(isset($result['tmt_jabatan'])) echo $result['tmt_jabatan']; else echo "";?>">
   <input type="hidden" name="edit_predikat" id="edit_predikat" value="<?php if(isset($result['predikat'])) echo $result['predikat']; else echo "";?>">
+  <input type="hidden" name="edit_nama_jabatan_verif" id="edit_nama_jabatan_verif" value="<?php if(isset($result['id_jabatanpeg'])) echo ''.$result['id_jabatanpeg'].','.$result['nama_jabatan'].''; else echo "";?>">
   
   <div class="form-group" style="display:none" id="field_ket">
     <label for="exampleFormControlTextarea1">Keterangan</label>
@@ -873,6 +887,8 @@
     </div>
   </div>
   <script>
+
+    
     $(function(){
       getDokumenWs()
 
@@ -883,6 +899,12 @@
     // orientation: 'bottom',
     autoclose: true
     });
+
+    $(".select22").select2({   
+     width: '100%',
+     dropdownAutoWidth: true,
+     allowClear: true,
+ });
 
     })
 
@@ -954,6 +976,9 @@
 
       var predikat = $("#input_predikat").val()
       $("#edit_predikat").val(predikat);
+
+      var jabatan = $("#jabatan_nama_verif").val()
+      $("#edit_nama_jabatan_verif").val(jabatan);
 
       
     

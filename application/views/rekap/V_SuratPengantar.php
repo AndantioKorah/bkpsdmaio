@@ -129,6 +129,25 @@
             <td style="width: 50%"></td>
             <td style="width: 50%">
                 <table style="width: 100%; text-align: center;">
+                <?php if($kepalabkpsdm['nm_unitkerja'] == "Dinas Komunikasi dan Informatika"){ ?>
+                    <tr>
+                        <td>
+                        Plt. Kepala Dinas Komunikasi dan Informatika
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br><br><br><br><br></td>
+                    </tr>
+                    <tr>
+                        <td>Erwin Simson Kontu, SH</td>
+                    </tr>
+                    <tr>
+                        <td>Pembina Utama Muda, IV/c</td>
+                    </tr>
+                    <tr>
+                        <td>NIP. 197410152002121009</td>
+                    </tr>
+                <?php } else { ?>
                     <tr>
                         <td>
                             <?=$kepalabkpsdm['nama_jabatan']?>
@@ -146,6 +165,8 @@
                     <tr>
                         <td>NIP. <?=($kepalabkpsdm['nipbaru_ws'])?></td>
                     </tr>
+                    <?php } ?>
+                    
                 </table>
             </td>
         </tr>

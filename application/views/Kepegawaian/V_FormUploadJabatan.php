@@ -53,6 +53,14 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php }  ?>
+<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+  <button onclick="syncRiwayatJabatanSiasn('<?=$profil_pegawai['id_m_user']?>')" class="btn btn-block text-right float-right btn-info ml-2">
+    <i class="fa fa-file-download"></i> Sinkron Riwayat Jabatan SIASN
+  </button>
+  <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
+    <i class="fa fa-users-cog"></i> SIASN
+  </button>
+<?php } ?>
 <script>
     function openModalStatusPmd(jenisberkas){
       var jumlah = $('#jumlahdokjab').val()
@@ -88,7 +96,18 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 </div>
 
-
+<div class="modal fade" id="modal_sync_siasn" data-backdrop="static">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">RIWAYAT JABATAN SIASN</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body" id="modal_sync_siasn_content">
+     </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="modal_view_file_jabatan" data-backdrop="static">
 <div id="modal-dialog" class="modal-dialog modal-xl">
@@ -229,7 +248,44 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </div>
 
     <script>
+      function syncRiwayatJabatanSiasn(id_m_user){
+        // $('#list_jabatan').html('')
+        // $('#list_jabatan').append(divLoaderNavy)
+        // $('#list_jabatan').load('<?=base_url("siasn/C_Siasn/syncRiwayatJabatanSiasn/")?>'+id_m_user, function(){
+        //   $('#loader').hide()
+        // })
+        $('#list_jabatan').html('')
+        $('#list_jabatan').append(divLoaderNavy)
+        $.ajax({
+          url: '<?=base_url("siasn/C_Siasn/syncRiwayatJabatanSiasn/")?>'+id_m_user,
+          method: 'POST',
+          data: null,
+          success: function(data){
+            $('#list_jabatan').html('')
+            let rs = JSON.parse(data)
+            if(rs.code == 0){
+              successtoast(rs.message)
+            } else {
+              errortoast(rs.message)
+            }
+            loadListJabatan()
+          }, error: function(err){
+            $('#list_jabatan').html('')
+            loadListJabatan()
+          }
+        })
+
+        loadListJabatan()
+      }
       
+      function openSiasn(jenis, id){
+        $('#modal_sync_siasn_content').html('')
+        $('#modal_sync_siasn_content').append(divLoaderNavy)
+        $('#modal_sync_siasn_content').load('<?=base_url("siasn/C_Siasn/siasnJabatan/")?>'+id, function(){
+          $('#loader').hide()
+        })
+      }
+
        $("#jenis_fungsional").change(function() {
       var id = $("#jabatan_jenis").val();
       var skpd = $("#jabatan_unitkerja").val();
@@ -245,7 +301,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
               var html = '';
                       var i;
                       for(i=0; i<data.length; i++){
-                        html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                        html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                       }
                       $('.nama_jab').html(html);
                           }
@@ -273,7 +329,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.nama_jab').html(html);
                                     }
@@ -301,7 +357,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         var html = '';
                                 var i;
                                 for(i=0; i<data.length; i++){
-                                  html += '<option value="'+data[i].id+','+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
+                                  html += '<option value="'+data[i].id+';'+data[i].nama_jabatan+'">'+data[i].nama_jabatan+'</option>';
                                 }
                                 $('.nama_jab').html(html);
                                     }

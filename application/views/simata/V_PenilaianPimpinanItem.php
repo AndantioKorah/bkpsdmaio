@@ -10,9 +10,9 @@
   
   box-sizing: border-box;
   box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-  padding: 0.25rem;
+  padding: 0.15rem;
   width: 100%;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .radio-inputs .radio {
@@ -36,9 +36,29 @@
   transition: all .15s ease-in-out;
 }
 
+.radio-inputs .radio .name2 {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all .15s ease-in-out;
+}
+
 .radio-inputs .radio input:checked + .name {
-  background-color: #fff;
+  background-color: #1f7640;
   font-weight: 600;
+  color: #fff;
+  
+}
+
+.radio-inputs .radio input:checked + .name2 {
+  background-color: #f5d60a;
+  font-weight: 600;
+  color: #000;
 }
    </style>
    
@@ -47,74 +67,63 @@
             <thead>
                 <th class="text-center">No</th>
                 <th class="text-left">Nama Pegawai</th>
-                <?php if($this->general_library->isWalikota()){ ?>
-                    <th class="text-left">Unit Kerja</th>
-                    <th class="text-left">Jabatan</th>
+                <?php if($this->general_library->isWalikota() || $this->general_library->isSetda()){ ?>
+                    <!-- <th class="text-left">Unit Kerja</th> -->
+                  
                 <?php } ?>
-               <th class="text-left">Promosi Jabatan</th>
-               <th class="text-left">Rotasi Jabatan</th>
-                <th class="text-center">Pilihan</th>
+                <th class="text-left">Jabatan</th>
+                <th class="text-center"></th>
+                <!-- <th class="text-center">Rotasi Jabatan</th> -->
+                <!-- <th class="text-center">Pilihan</th> -->
             </thead>
             <tbody>
-            <?php $no=1; foreach($list_pegawai as $p){
-                $capaian = null;
-                $pembobotan = null;
-               
-                if(isset($p['komponen_kinerja']) && $p['komponen_kinerja']){
-                    // dd($p['komponen_kinerja']);
-                    list($capaian, $pembobotan) = countNilaiKomponen($p['komponen_kinerja']);
-                    // $pembobotan = $pembobotan * 100;
-                    // dd($p['created_by']);
-                    // dd($this->general_library->getId());
-                    // $pembobotan = (formatTwoMaxDecimal($pembobotan)).'%';
-                    $pembobotan = number_format((float)$pembobotan, 2, '.', '').'%';
-                    // $capaian = $p['komponen_kinerja']['capaian'];
-                    // $pembobotan = $p['komponen_kinerja']['bobot']."%";
-                }
-            ?>
+            <?php $no=1; foreach($list_pegawai as $p){?>
                 <tr>
                     <td class="text-center"><?=$no++;?></td>
-                    <td><?=getNamaPegawaiFull($p)?></td>
-                    <?php if($this->general_library->isWalikota()){ ?>
-                        <td class="text-left"><?=$p['nm_unitkerja']?></td>
-                        <td class="text-left"><?=$p['nama_jabatan']?></td>
+                    <td><?=getNamaPegawaiFull($p)?> </td>
+                    <?php if($this->general_library->isWalikota() || $this->general_library->isSetda()){ ?>
+                        <!-- <td class="text-left"><?=$p['nm_unitkerja']?></td> -->
+                      
                     <?php } ?>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                     <td class="text-center">
+                    <td class="text-left"><?=$p['nama_jabatan']?></td>
+                    <td class="text-left">
+                    <div class="radio-inputs mb-3">
+                    <label class="radio">
+                        <input type="radio" onchange="handleChange(this,'<?=$p['id_peg']?>');" name="radio_<?=$p['id_m_user']?>" <?php if($p['pertimbangan_pimpinan'] == 124) echo "checked" ?>  value="124">
+                        <span class="name">Sangat Mendukung</span>
+                    </label>
 
+                  
 
+                    <label class="radio">
+                        <input type="radio" onchange="handleChange(this,'<?=$p['id_peg']?>');" name="radio_<?=$p['id_m_user']?>"  <?php if($p['pertimbangan_pimpinan'] == 125) echo "checked" ?>  value="125">
+                        <span class="name2">Tidak Mendukung</span>
+                    </label>
+                    </div>
+                    </td>
+                    <!-- <td class="text-left">
+                    <div class="radio-inputs mb-3">
+                    <label class="radio">
+                        <input type="radio" name="radio2_<?=$p['id']?>" checked="" value="124">
+                        <span class="name">Sangat Mendukung</span>
+                    </label>
 
+                    <label class="radio">
+                        <input type="radio" name="radio2_<?=$p['id']?>" checked="" value="0">
+                        <span class="name">|</span>
+                    </label>
 
-                     <!-- <form id="form_penilaian_pimpinan" method="post" enctype="multipart/form-data">
-       <input type="hidden" id="id_pegawai">
-       <div class="radio-inputs mb-3">
-        <label class="radio">
-            <input type="radio" name="radio" checked="" value="124">
-            <span class="name">Sangat Mendukung</span>
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="radio" checked="" value="0">
-            <span class="name">|</span>
-        </label>
-
-
-        <label class="radio">
-            <input type="radio" name="radio" value="125">
-            <span class="name">Tidak Mendukung</span>
-        </label>
-        </div>
-       
-        </form> -->
-                       
-      
+                    <label class="radio">
+                        <input type="radio" name="radio2_<?=$p['id']?>" value="125">
+                        <span class="name">Tidak Mendukung</span>
+                    </label>
+                    </div>
+                    </td> -->
+                     <!-- <td class="text-center">                                             
                         <button data-id="<?=$p['id_peg']?>" type="button" class="btn btn-primary btn-sm open-DetailPT"  data-toggle="modal" data-target="#exampleModal">
                         Input Nilai
                         </button>
-
-                        <?php // if($p['komponen_kinerja'] && $p['created_by'] == $this->general_library->getId()){ ?>
-                    </td>
+                    </td> -->
                 </tr>
             <?php } ?>
             </tbody>
@@ -149,8 +158,8 @@
       <div class="modal-body">
       
        <form id="form_penilaian_pimpinan" method="post" enctype="multipart/form-data">
-        <span>Promosi Jabatan</span>
-       <input type="hidden" id="id_pegawai">
+       <input type="hidden" name="id_pegawai" id="id_pegawai">
+       <!-- <span>Promosi Jabatan</span> -->
        <div class="radio-inputs mb-3">
         <label class="radio">
             <input type="radio" name="radio" checked="" value="124">
@@ -162,15 +171,13 @@
             <span class="name">|</span>
         </label>
 
-
         <label class="radio">
             <input type="radio" name="radio" value="125">
             <span class="name">Tidak Mendukung</span>
         </label>
         </div>
-        
-        <span>Rotasi Jabatan</span>
-       <input type="hidden" id="id_pegawai">
+
+        <!-- <span>Rotasi Jabatan</span>
        <div class="radio-inputs mb-3">
         <label class="radio">
             <input type="radio" name="radio2" checked="" value="124">
@@ -182,12 +189,11 @@
             <span class="name">|</span>
         </label>
 
-
         <label class="radio">
             <input type="radio" name="radio2" value="125">
             <span class="name">Tidak Mendukung</span>
         </label>
-        </div>
+        </div> -->
 
         <button class="btn btn-primary float-right">Simpan</button>
         </form>
@@ -224,28 +230,46 @@ $('#table_list_pegawai').DataTable({
         var formvalue = $('#form_penilaian_pimpinan');
         var form_data = new FormData(formvalue[0]);
 
-
-       location.reload()   
        
       
 
-        // $.ajax({  
-        // url:"<?=base_url("simata/C_simata/submitPenilaianPimpinan")?>",
-        // method:"POST",  
-        // data:form_data,  
-        // contentType: false,  
-        // cache: false,  
-        // processData:false,  
-        // success:function(res){ 
-        //     console.log(res)
-        //     var result = JSON.parse(res); 
-        //     console.log(result)
+        $.ajax({  
+        url:"<?=base_url("simata/C_simata/submitPenilaianPimpinan")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        success:function(res){ 
+          //  location.reload()
                 
         // }  
         // });  
           
         });
 
+
+        function verifDokumen(val,id){
+       alert(val)
+        
+    }
+
+    function handleChange(src,id) {
+   
+      $.ajax({
+            url: '<?=base_url("simata/C_Simata/submitPenilaianPimpinan/")?>',
+            method: 'post',
+            data: {
+                nilai : src.value,
+                id_peg: id
+            },
+            success: function(data){
+                
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
     </script>
 <?php } else { ?>
 <?php } ?>

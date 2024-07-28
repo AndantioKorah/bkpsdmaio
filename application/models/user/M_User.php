@@ -73,7 +73,7 @@
             $result = null;
 
             if($data['search_param'] != ''){
-                $nama = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
+                $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja','left')
@@ -83,10 +83,15 @@
                                 ->where('a.flag_active', 1)
                                 ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
-                                ->limit(5)
-                                ->get()->result_array();
+                                ->limit(5);
+                                
+                if($this->general_library->isKasubagKepegawaianDiknas()){
+                    $this->db->where('(c.id_unitkerja = "3010000" OR c.id_unitkerjamaster IN ('.implode(", ", LIST_UNIT_KERJA_MASTER_SEKOLAH).'))');
+                }
 
-                $nip = $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
+                $nama = $this->db->get()->result_array();
+
+                $this->db->select('b.gelar1, b.nama, b.gelar2, a.id, a.username, c.nm_unitkerja, b.fotopeg, b.id_m_status_pegawai, b.statuspeg, d.nama_status_pegawai, e.nm_statuspeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja','left')
@@ -96,8 +101,13 @@
                                 ->where('a.flag_active', 1)
                                 ->order_by('b.id_m_status_pegawai')
                                 ->group_by('a.id')
-                                ->limit(5)
-                                ->get()->result_array();
+                                ->limit(5);
+
+                if($this->general_library->isKasubagKepegawaianDiknas()){
+                    $this->db->where('(c.id_unitkerja = "3010000" OR c.id_unitkerjamaster IN ('.implode(", ", LIST_UNIT_KERJA_MASTER_SEKOLAH).'))');
+                }
+
+                $nip = $this->db->get()->result_array();
 
                 foreach($nama as $nm){
                     $result[] = $nm;
@@ -1398,6 +1408,16 @@
 
         }
 
+        public function getEselonPegawai($id_pegawai){
+            $this->db->select('b.eselon')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+            ->where('a.id_peg', $id_pegawai);
+            return $this->db->get()->row_array();
+           
+
+        }
+
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){
             $new_tanggal_awal = date('Y-m-d', strtotime($tanggal_awal));
             $new_tanggal_akhir = date('Y-m-d', strtotime($tanggal_awal));
@@ -2097,8 +2117,17 @@
                 $this->db->like('a.nama', $data['nama_pegawai']);
             }
             if($data['unitkerja'] != 0){
-                $this->db->where('a.skpd', $data['unitkerja']);
+                if($data['unitkerja'] == 991){
+                    $this->db->where('b.id_unitkerjamaster', '8010000');
+                } else if($data['unitkerja'] == 992){
+                    $this->db->where('b.id_unitkerjamaster', '8020000');
+                } else if($data['unitkerja'] == 990){
+                    $this->db->where('b.id_unitkerjamaster', '8000000');
+                } else {
+                    $this->db->where('a.skpd', $data['unitkerja']);
+                }
             }
+        
             if($data['jft'][0] != '0'){
                 $list_jft = null;
                     foreach($data['jft'] as $jft){

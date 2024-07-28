@@ -13,6 +13,8 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
+        $this->load->model('simata/M_Simata', 'simata');
+		$this->load->model('siasn/M_Siasn', 'siasn');
 		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -463,7 +465,8 @@ class C_Kepegawaian extends CI_Controller
             }       else {
 				$data['path'] = null;
 			}
-			// dd($data['result']);
+			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+			// dd($data['nama_jabatan']);
 			
 		
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);
@@ -566,7 +569,8 @@ class C_Kepegawaian extends CI_Controller
 	public function profilPegawai($nip){
 		if(!$this->general_library->isProgrammer() 
 		&& !$this->general_library->isAdminAplikasi() 
-		&& !$this->general_library->isHakAkses('akses_profil_pegawai') ){
+		&& !$this->general_library->isHakAkses('akses_profil_pegawai')
+		&& !$this->general_library->isKasubagKepegawaianDiknas()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');
 		} else {
@@ -588,6 +592,10 @@ class C_Kepegawaian extends CI_Controller
 			// dd($data['profil_pegawai']);
 			render('kepegawaian/V_ProfilPegawai', '', '', $data);
 		}
+	}
+
+	public function changeFlagSertifikasi($status, $nip){
+		$this->kepegawaian->changeFlagSertifikasi($status, $nip);
 	}
 
 	public function uploadDokumen($page = null){
@@ -912,6 +920,23 @@ class C_Kepegawaian extends CI_Controller
 		}
         $this->load->view('kepegawaian/V_FormUploadArsipLainnya', $data);
     }
+
+	public function LoadViewTalenta($nip){
+		$data['nip'] = $nip;
+		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
+		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'data_lainnya');
+
+		
+		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
+			
+		} else {
+			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		}
+        $this->load->view('kepegawaian/V_ProfilTalenta', $data);
+    }
+
+	
 
 
 
@@ -1297,28 +1322,47 @@ class C_Kepegawaian extends CI_Controller
 		// $data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
 		$data['jabatan'] = $this->kepegawaian->getJabatanPegawaiEdit($id);
+		$data['jabatan_siasn'] = null;
+		$data['list_jabatan_siasn'] = null;
+		$jenis_jabatan = 'JFU';
 		// dd($data['jabatan'][0]['unitkerja_id']);
 		if($data['jabatan']) {
-		if($data['jabatan'][0]['jenis_jabatan'] == "JFT") {
-		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditJFT();
-		} else if($data['jabatan'][0]['jenis_jabatan'] == "Struktural") {
-		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditStruktural($data['jabatan'][0]['unitkerja_id']);
-		} else {
-		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
-		}
+			$data['jabatan_siasn'] = json_decode($data['jabatan'][0]['meta_data_siasn'], true);
+			$jenis_jabatan = $data['jabatan'][0]['jenis_jabatan'];
+			if($data['jabatan'][0]['jenis_jabatan'] == "JFT") {
+				$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditJFT();
+			} else if($data['jabatan'][0]['jenis_jabatan'] == "Struktural") {
+				$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditStruktural($data['jabatan'][0]['unitkerja_id']);
+			} else {
+				$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
+			}
 	    } else {
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
 		}
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
+		$data['list_jabatan_siasn'] = $this->kepegawaian->getListJabatanSiasn($jenis_jabatan);
 		
 		// dd($data['nama_jabatan']);
         $this->load->view('kepegawaian/V_EditJabatan', $data);
     }
 
+	public function tesUploadDokumenRiwayat(){
+		$this->kepegawaian->tesUploadDokumenRiwayat();
+	}
+
+	public function syncSiasnJabatan($id){
+		echo json_encode($this->kepegawaian->syncSiasnJabatan($id));
+	}
+
+	public function loadListJabatanSiasn($id){
+		echo null;
+		// echo json_encode($this->kepegawaian->getListJabatanSiasn($id));
+	}
 
 	public function loadEditPangkaPegawai($id)
     {
@@ -1406,6 +1450,13 @@ class C_Kepegawaian extends CI_Controller
 		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
 		$data['sumjan'] = $this->kepegawaian->getSumpahJanjiEdit($id);
 		$this->load->view('kepegawaian/V_EditSumjan', $data);
+    }
+
+	public function loadEditTimKerja($id)
+    {
+		$data['lingkup_tim'] = $this->kepegawaian->getLingkupTimKerja();
+		$data['timkerja'] = $this->kepegawaian->getTimKerjaEdit($id);
+		$this->load->view('kepegawaian/V_EditTimKerja', $data);
     }
 
 	public function permohonanCuti(){
@@ -1626,6 +1677,11 @@ class C_Kepegawaian extends CI_Controller
 	public function submitEditSumjan()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditSumjan());
+	}
+
+	public function submitEditTimKerja()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditTimKerja());
 	}
 
 	public function submitEditArsipLain()
@@ -1957,6 +2013,48 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($response);
     }
 
+	public function loadListProfilTalenta($nip,$jenis_pengisian){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$id_peg = $data['profil_pegawai']['id_peg'];
+		// dd($data['profil_pegawai']['eselon']);
+		// $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,1);
+		if($data['profil_pegawai']['eselon'] == "III A" || $data['profil_pegawai']['eselon'] == "III B"){
+			$id = 1;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
+			$id = 2;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			} else {
+			$id = 3;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			}
+
+        $data['result'] = $this->kepegawaian->loadListProfilTalenta( $id_peg,$jenis_pengisian);  
+        $data['jenis_pengisian'] = $jenis_pengisian;
+        $this->load->view('simata/V_ProfilTalentaAdmList', $data);
+        
+    }
+
+
+	public function loadDetailProfilTalenta($nip,$jt)
+    {
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+       
+        $id_peg = $data['profil_pegawai']['id_peg'];
+        // $data['id_t_penilaian'] = $id;
+        $data['jabatan_target'] = $jt;
+        $data['nilai_potensial'] = $this->simata->getPegawaiNilaiPotensialPT($nip,$jt);
+        $data['nilai_kinerja'] = $this->simata->getPegawaiNilaiKinerjaPT($nip);
+        $data['nilai_assesment'] = $this->simata->getNilaiAssesment($id_peg);
+        // $data['kode'] = $kode; 
+		$data['nip'] = $nip; 
+        $this->load->view('kepegawaian/V_DetailProfilTalenta', $data);
+    }
+
+	public function automationJabatanFungsional(){
+		$this->kepegawaian->automationJabatanFungsional();
+	}
 
 	
 

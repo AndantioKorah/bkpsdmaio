@@ -299,7 +299,11 @@ class C_Master extends CI_Controller
     }
 
     public function loadListTpp(){
-        $data['result'] = $this->kinerja->countPaguTpp($this->input->post());
+        $params = $this->input->post();
+        if($this->general_library->getUnitKerjaPegawai() == 3010000){
+            $params['from_list_tpp'] = 1;
+        }
+        $data['result'] = $this->kinerja->countPaguTpp($params);
         $this->load->view('master/V_ListTppData', $data);
     }
 
@@ -454,5 +458,95 @@ class C_Master extends CI_Controller
         $this->general->delete('id', $id, 'm_syarat_layanan');
     }
 
+    public function mappingUnor(){
+        // $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        // $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        $data['result'] = $this->general->getDataMappingUnor();
+        render('master/V_SiasnMappingUnor', '', '', $data);
+    }
+
+    public function editMappingUnor($id){
+        $data['result'] = $this->general->editMappingUnor($id);
+        $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        $data['id_unitkerja'] = $id;
+        $this->load->view('master/V_SiasnEditMappingUnor', $data);
+    }
+
+    public function saveEditMappingUnor(){
+        echo json_encode($this->general->saveEditMappingUnor());
+    }
+
+    public function deleteMappingUnor($id){
+        $this->general->deleteMappingUnor($id);
+    }
+
+    public function mappingBidang(){
+        $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        render('master/V_SiasnMappingBidang', '', '', $data);
+    }
+
+    public function loadBidangForMappingUnor($id_unitkerja){
+        $data['list_master_bidang'] = $this->general->loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja);
+        $this->load->view('master/V_SiasnListBidangMapping', $data);
+    }
+
+    public function deleteMappingBidang($id){
+        $this->general->deleteMappingBidang($id);
+    }
+
+    public function deleteMappingSubBidang($id){
+        $this->general->deleteMappingSubBidang($id);
+    }
+
+    public function editUnorBidang($id){
+        $data['id_unitkerja'] = $id;
+        $data['result'] = $this->general->getDataForEditUnorBidang($id);
+        $data['list_unor_siasn'] = $this->general->getUnorSiasnByUnitKerja($data['result']['id_unitkerja']);
+        $data['list_sub_bidang'] = $this->general->getListSubBidangByIdBidang($data['result']['id_m_bidang']);
+        $data['list_unor_siasn_sub_bidang'] = $this->general->getUnorSiasnByBidang($data['result']['id_m_bidang']);
+
+        $this->load->view('master/V_SiasnEditMappingBidang', $data);
+    }
+
+    public function saveEditMappingBidang(){
+        echo json_encode($this->general->saveEditMappingBidang());
+    }
+
+    public function saveEditMappingSubBidang($id){
+        echo json_encode($this->general->saveEditMappingSubBidang($id));
+    }
+
+    public function mappingJabatan(){
+        // $data['jenis_jabatan'][0]['jenis'] = 'semua';
+        // $data['jenis_jabatan'][0]['nama'] = 'Semua';
+
+        $data['jenis_jabatan'][3]['jenis'] = 'JFT';
+        $data['jenis_jabatan'][3]['nama'] = 'JFT';
+        
+        $data['jenis_jabatan'][1]['jenis'] = 'JFU';
+        $data['jenis_jabatan'][1]['nama'] = 'JFU';
+
+        $data['jenis_jabatan'][2]['jenis'] = 'struktural';
+        $data['jenis_jabatan'][2]['nama'] = 'Struktural';
+
+        $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        render('master/V_SiasnMappingJabatan', '', '', $data);
+    }
+
+    public function loadJabatanForMappingSiasn($jenis, $skpd){
+        $data['result'] = $this->general->loadJabatanForMappingSiasn($jenis, $skpd);
+        $this->load->view('master/V_SiasnMappingJabatanList', $data);
+    }
+
+    public function loadDetailJabatanMapping($id){
+        list($data['result'], $data['list_jabatan_siasn']) = $this->general->loadDetailJabatanMapping($id);
+        $this->load->view('master/V_SiasnMappingJabatanDetail', $data);
+    }
+
+    public function getRefJabatanFungsional(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->master->getRefJabatanFungsional($searchTerm);
+		echo json_encode($response);
+	}
 
 }

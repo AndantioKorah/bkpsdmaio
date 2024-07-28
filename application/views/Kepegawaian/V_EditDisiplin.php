@@ -57,6 +57,11 @@
   </div>
 
   <div class="form-group">
+    <label>TMT</label>
+    <input class="form-control customInput datepicker" type="text" id="edit_disiplin_tmt" name="edit_disiplin_tmt" value="<?= $disiplin[0]['tmt'];?>"  required/>
+  </div>
+
+  <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_edit_disiplin" name="file"/>
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>

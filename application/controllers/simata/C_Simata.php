@@ -400,25 +400,28 @@ class C_Simata extends CI_Controller
         } 
         $data['jt'] = $jt;
         
+        $data['jenis_pengisian'] = $jenis_pengisian;
+        
         $this->load->view('simata/V_DetailNineBox', $data);
     }
 
-    public function profilTalenta(){
+    public function profilTalenta($jenis_pengisian){
         $data['result'] = null;
+        $data['jenis_pengisian'] = $jenis_pengisian;
         render('simata/V_ProfilTalenta', '', '', $data);
     }
 
 
-    public function loadListProfilTalentaAdm($id){
-        $data['result'] = $this->simata->loadListProfilTalentaAdm($id);  
+    public function loadListProfilTalentaAdm($id,$jenis_pengisian){
+        $data['result'] = $this->simata->loadListProfilTalentaAdm($id,$jenis_pengisian);  
         $data['jenis_jabatan'] = $id;
+        $data['jenis_pengisian'] = $jenis_pengisian;
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
             $this->load->view('simata/V_ProfilTalentaJptList', $data);
 
         }
-        
     }
 
 
@@ -570,6 +573,19 @@ class C_Simata extends CI_Controller
         render('simata/V_PenilaianPimpinan', '', '', $data);
     }
 
+    public function penilaianSejawat(){
+        $data = null;
+        if($this->general_library->isKaban()){
+            $data['list_bidang'] = $this->master->loadMasterBidangByUnitKerja($this->general_library->getUnitKerjaPegawai());
+        } 
+        if($this->general_library->isWalikota() || $this->general_library->isSetda()){
+            $data['list_skpd'] = $this->user->getAllSkpd();
+        }
+        render('simata/V_PenilaianSejawat', '', '', $data);
+    }
+
+    
+
     public function loadPegawaiPenilaianPimpinan()
     {
         $data['periode'] = $this->input->post();
@@ -577,11 +593,37 @@ class C_Simata extends CI_Controller
         $this->load->view('simata/V_PenilaianPimpinanItem', $data);
     }
 
+    public function loadPegawaiPenilaianSejawat()
+    {
+        $data['periode'] = $this->input->post();
+        $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianSejawat($this->input->post());
+        $this->load->view('simata/V_PenilaianSejawatItem', $data);
+    }
+
     public function submitPenilaianPimpinan()
 	{ 
-		echo json_encode( $this->kepegawaian->submitPenilaianPimpinan());
+		echo json_encode( $this->simata->submitPenilaianPimpinan());
+	}
+
+    public function submitPenilaianSejawat()
+	{ 
+		echo json_encode( $this->simata->submitPenilaianSejawat());
+	}
+
+
+    public function getRefJabatanFungsional(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->simata->getRefJabatanFungsional($searchTerm);
+		echo json_encode($response);
+	}
+
+
+    public function getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id)
+	{ 
+		echo json_encode( $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id));
 	}
     
+
 
    
 }

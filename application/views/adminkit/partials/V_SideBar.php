@@ -246,6 +246,35 @@
 			</ul>
 		</li>
 	<?php } ?>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+		<a title="SIASN" data-bs-target="#siasn" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-users-cog"></i> 
+			<span class="align-middle">SIASN
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
+		</a>
+		<ul id="siasn" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			<li class="sidebar-item ">
+				<a title="Mapping Unor" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/unor')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Unor
+				</a>
+			</li>
+			<li class="sidebar-item ">
+				<a title="Mapping Bidang" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/bidang')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Bidang
+				</a>
+			</li>
+			<li class="sidebar-item ">
+				<a title="Mapping Jabatan" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/jabatan')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Mapping Jabatan
+				</a>
+			</li>
+		</ul>
+	<?php } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian
@@ -635,6 +664,8 @@
 				|| $this->general_library->isWalikota()
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatanTambahan())
+				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatanTambahan())
 				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">
@@ -696,12 +727,12 @@
 		<?php } ?>
 	</li> -->
 	<?php } ?>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
 		Manajemen Talenta
 	</li>
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 	
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
@@ -952,7 +983,7 @@
 					</a>
 				</li> -->
 				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta')?>">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/profil-talenta/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
 					</a>
 				</li>
@@ -967,13 +998,7 @@
 				</span>
 			</a>	
 		</li>
-
-		
-
-		
-
 		<?php } ?>
-
 		<?php
 				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
@@ -984,11 +1009,7 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				){ ?>
 
-		    <li class="sidebar-header">
-				Manajemen Talenta
-			</li>
-
-				<li class="sidebar-item ">
+			<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-pimpinan/" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 				<span class="align-middle">
@@ -996,7 +1017,35 @@
 					</span>
 				</a>	
 			</li>
+
+			
 				<?php } ?>
+				
+			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
+			// { 
+			?>
+
+			<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+				<span class="align-middle">
+				Penilaian Sejawat
+					</span>
+				</a>	
+			</li>
+			<?php 
+		    // }
+		    ?>
+		
+
+		
+
+		
+
+	
+
+
+			
 
 </ul>
 <div class="mt-5">

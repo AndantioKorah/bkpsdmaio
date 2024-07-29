@@ -939,6 +939,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
             $dataInsert['angkakredit']      = $this->input->post('jabatan_angka_kredit');
             $dataInsert['ket']      = $this->input->post('jabatan_keterangan');
+            $dataInsert['id_unor_siasn']      = $this->input->post('id_unor_siasn');
             $dataInsert['tglsk']      = $tgl_sk;
             $dataInsert['skpd']      = $nama_skpd;
             $dataInsert['id_unitkerja']      = $id_skpd;
@@ -3576,7 +3577,7 @@ public function getAllPelanggaranByNip($nip){
                 $data_success = json_decode($ws['data'], true);
                 $id_jabatan_siasn = $data_success['mapData']['rwJabatanId'];
 
-                $url = ('arsipjabatan/'.$data['gambarsk']);
+                $url = base_url('arsipjabatan/'.$data['gambarsk']);
                 $request = [
                     'id_riwayat' => $id_jabatan_siasn,
                     'id_ref_dokumen' => 872,
@@ -3955,7 +3956,7 @@ public function submitEditJabatan(){
                         return $res;    
                     } else {
                         if($_FILES['file']['name'] != ""){
-                            $url = ('arsipjabatan/'.$filename);
+                            $url = base_url('arsipjabatan/'.$filename);
                             $request = [
                                 'id_riwayat' => $pegjabatan['id_siasn'],
                                 'id_ref_dokumen' => 872,
@@ -4006,7 +4007,7 @@ public function submitEditJabatan(){
     public function tesUploadDokumenRiwayat(){
         $pegjabatan = $this->getJabatanPegawaiEdit('25113')[0];
 
-        $url = ('arsipjabatan/'.$pegjabatan['gambarsk']);
+        $url = base_url('arsipjabatan/'.$pegjabatan['gambarsk']);
         
         $request = [
             'id_riwayat' => $pegjabatan['id_siasn'],

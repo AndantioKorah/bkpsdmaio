@@ -82,7 +82,6 @@ class C_Siasn extends CI_Controller
         $file = null;
         
         if($base == 'siasn'){
-            dd($data[$base][$id]['path'][872]['dok_uri']);
             $downloadFile = $this->siasnlib->downloadDokumen($data[$base][$id]['path'][872]['dok_uri']);
             if($downloadFile['code'] == 0){
                 $fileName = generateRandomNumber(20).'.pdf';

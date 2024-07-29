@@ -957,7 +957,6 @@ class M_Kepegawaian extends CI_Model
             // dd(2);
             // }
            
-
             $getJabatan = $this->db->select('*')
             ->from('db_pegawai.pegjabatan a')
             ->where('a.id_pegawai', $id_peg)
@@ -999,6 +998,11 @@ class M_Kepegawaian extends CI_Model
             }
             /// insert jabatan di sini
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+          $id_pegjabatan = $this->db->insert_id();
+          if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+          $this->syncSiasnJabatan($id_pegjabatan);
+          }
+
         } else if($id_dok == 20){            
             $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
             $tgl_mulai = date("Y-m-d", strtotime($this->input->post('diklat_tangal_mulai')));
@@ -2947,6 +2951,7 @@ public function submitVerifikasiDokumen(){
 
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
         $this->updateJabatan($id_peg);
+        $this->syncSiasnJabatan($id); 
     }
     return $res;
 }
@@ -3428,14 +3433,14 @@ function getdatajab()
         $this->db->select('id_jabatanpeg, nama_jabatan');
         $this->db->where('jenis_jabatan', "Struktural");
         $this->db->where('id_unitkerja', $id_skpd);
-        $this->db->where('flac_active', 1);
+        $this->db->where('flag_active', 1);
         $fetched_records = $this->db->get('db_pegawai.jabatan');
         $datajab = $fetched_records->result_array();
     } else {
         if($jnsfung == "1"){
             $this->db->select('id_jabatanpeg, nama_jabatan');
-            $this->db->where('flac_active', 1);
-            $this->db->or_where('jenis_jabatan', "JFT");
+            $this->db->where('flag_active', 1);
+            $this->db->where('jenis_jabatan', "JFT");
             $this->db ->where_not_in('nama_jabatan', ['Pelaksana']);
             $this->db->group_by('nama_jabatan');
             $fetched_records = $this->db->get('db_pegawai.jabatan');
@@ -3444,7 +3449,7 @@ function getdatajab()
             $this->db->select('id_jabatanpeg, nama_jabatan');
             $this->db->where('jenis_jabatan', "JFU");
             $this->db->where('id_unitkerja', $id_skpd);
-            $this->db->where('flac_active', 1);
+            $this->db->where('flag_active', 1);
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
         }

@@ -181,9 +181,9 @@
                                                     ->get()->result_array();
                     if($riwayatJabatanSiladen){
                         foreach($riwayatJabatanSiladen as $rw){
-                            if($rw['id_siasn'] == null){
+                            // if($rw['id_siasn'] == null){
                                 $listJabatanSiladen[$rw['nosk'].formatDateOnlyForEdit2($rw['tmtjabatan'])]['id'] = $rw['id'];
-                            }
+                            // }
                             // $listJabatanSiladen[$rw['nosk']]['meta_data_siasn'] = $rw['meta_data_siasn'];
                         }
                     }
@@ -192,12 +192,22 @@
                         foreach($riwayatJabatanSiasn['data'] as $d){
                             if($d['nomorSk'] && isset($listJabatanSiladen[$d['nomorSk'].formatDateOnlyForEdit2($d['tmtJabatan'])])){
                                 // kalo ada nomor SK yang sama dengan riwayat, update meta_data_siasn
+                                $fileName = null;
+                                if($d['path']){
+                                    $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
+                                    if($file['code'] == 0){
+                                        $fileName = 'SK_JABATAN_'.$d['id'].'_'.date('ymdhis').'.pdf';
+                                        file_put_contents('arsipjabatan/'.$fileName, $file['data']);
+                                    }
+                                }
+
                                 $this->db->where('id', $listJabatanSiladen[$d['nomorSk'].formatDateOnlyForEdit2($d['tmtJabatan'])]['id'])
                                         ->update('db_pegawai.pegjabatan', [
                                             'meta_data_siasn' => json_encode($d),
                                             'id_siasn' => $d['id'],
                                             'id_unor_siasn' => $d['unorId'],
-                                            'created_by' => $this->general_library->getId()
+                                            'gambarsk' => $fileName,
+                                            'created_by' => $this->general_library->getId(),
                                         ]);
                             } else {
                                 // kalo tidak ada, buat baru dan kasih tanda flag_from_siasn

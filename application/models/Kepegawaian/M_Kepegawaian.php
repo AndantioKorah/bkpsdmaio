@@ -997,7 +997,7 @@ class M_Kepegawaian extends CI_Model
                 }
                 }
             }
-
+            /// insert jabatan di sini
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
         } else if($id_dok == 20){            
             $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
@@ -3535,10 +3535,10 @@ public function getAllPelanggaranByNip($nip){
 
             $update = null;
 
-            $path = null;
-            if($data_siasn && isset($data_siasn['path'][872])){
-                $path[] = $data_siasn['path'][872];
-            }
+            // $path = null;
+            // if($data_siasn && isset($data_siasn['path'][872])){
+            //     $path[] = $data_siasn['path'][872];
+            // }
 
             $jenis_jabatan = "4";
             if($data['jenis_jabatan'] == "Struktural"){
@@ -3556,7 +3556,7 @@ public function getAllPelanggaranByNip($nip){
                 "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
-                "path" => $path,
+                // "path" => $path,
                 "pnsId" => $data['id_pns_siasn'],
                 "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
                 "tanggalSk" => formatDateOnlyForEdit2($data['tglsk']),

@@ -957,7 +957,6 @@ class M_Kepegawaian extends CI_Model
             // dd(2);
             // }
            
-
             $getJabatan = $this->db->select('*')
             ->from('db_pegawai.pegjabatan a')
             ->where('a.id_pegawai', $id_peg)
@@ -999,6 +998,11 @@ class M_Kepegawaian extends CI_Model
             }
 
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+          $id_pegjabatan = $this->db->insert_id();
+          if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+          $this->syncSiasnJabatan($id_pegjabatan);
+          }
+
         } else if($id_dok == 20){            
             $tgl_sttpp = date("Y-m-d", strtotime($this->input->post('diklat_tanggal_sttpp')));
             $tgl_mulai = date("Y-m-d", strtotime($this->input->post('diklat_tangal_mulai')));
@@ -2947,6 +2951,7 @@ public function submitVerifikasiDokumen(){
 
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
         $this->updateJabatan($id_peg);
+        $this->syncSiasnJabatan($id); 
     }
     return $res;
 }

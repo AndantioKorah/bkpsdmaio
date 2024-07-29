@@ -3555,6 +3555,7 @@ public function getAllPelanggaranByNip($nip){
             $update = [
                 "eselonId" => $data['id_eselon_siasn'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,
+                "instansiIndukId" => ID_INSTANSI_SIASN, 
                 "instansiId" => ID_INSTANSI_SIASN,
                 "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $data['id_jabatan_siasn'] : null,
                 "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $data['id_jabatan_siasn'] : null,
@@ -3931,6 +3932,7 @@ public function submitEditJabatan(){
                     $update = [
                         "eselonId" => $mEselon ? $mEselon['id_eselon_siasn'] : null,
                         "id" => $pegjabatan['id_siasn'],
+                        "instansiIndukId" => ID_INSTANSI_SIASN, 
                         "instansiId" => ID_INSTANSI_SIASN,
                         "jabatanFungsionalId" => $dataJabatan['jenis_jabatan'] == 'JFT' ? $dataJabatan['id_jabatan_siasn'] : null,
                         "jabatanFungsionalUmumId" => $dataJabatan['jenis_jabatan'] == 'JFU' ? $dataJabatan['id_jabatan_siasn'] : null,

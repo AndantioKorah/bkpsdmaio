@@ -3577,7 +3577,7 @@ public function getAllPelanggaranByNip($nip){
                 $data_success = json_decode($ws['data'], true);
                 $id_jabatan_siasn = $data_success['mapData']['rwJabatanId'];
 
-                $url = base_url('arsipjabatan/'.$data['gambarsk']);
+                $url = ('arsipjabatan/'.$data['gambarsk']);
                 $request = [
                     'id_riwayat' => $id_jabatan_siasn,
                     'id_ref_dokumen' => 872,
@@ -3594,7 +3594,8 @@ public function getAllPelanggaranByNip($nip){
                                 'meta_data_siasn' => json_encode($newMeta['data']),
                                 'id_siasn' => $newMeta['data']['id'],
                                 'id_unor_siasn' => $newMeta['data']['unorId'],
-                                'gambarsk' => isset($newMeta['data']['path'][872]['dok_uri']) ? $newMeta['data']['path'][872]['dok_uri'] : null,
+                                'gambarsk' => $data['gambarsk'],
+                                // 'gambarsk' => isset($newMeta['data']['path'][872]['dok_uri']) ? $newMeta['data']['path'][872]['dok_uri'] : null,
                                 'updated_by' => $this->general_library->getId()
                             ]);
                 }
@@ -3956,7 +3957,7 @@ public function submitEditJabatan(){
                         return $res;    
                     } else {
                         if($_FILES['file']['name'] != ""){
-                            $url = base_url('arsipjabatan/'.$filename);
+                            $url = ('arsipjabatan/'.$filename);
                             $request = [
                                 'id_riwayat' => $pegjabatan['id_siasn'],
                                 'id_ref_dokumen' => 872,
@@ -4007,7 +4008,7 @@ public function submitEditJabatan(){
     public function tesUploadDokumenRiwayat(){
         $pegjabatan = $this->getJabatanPegawaiEdit('25113')[0];
 
-        $url = base_url('arsipjabatan/'.$pegjabatan['gambarsk']);
+        $url = ('arsipjabatan/'.$pegjabatan['gambarsk']);
         
         $request = [
             'id_riwayat' => $pegjabatan['id_siasn'],

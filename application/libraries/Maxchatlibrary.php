@@ -148,7 +148,7 @@ class Maxchatlibrary{
             'type' => 'document',
             "caption" => $caption,
             // "file" => fileToBase64($fileurl),
-            "url" => ("https://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $filename)),
+            "url" => (base_url().str_replace(' ', '%20', $filename)),
             // "url" => ("https://presensi.manadokota.go.id/siladen/assets/arsipabsensibulanan/".rawurlencode($filename)),
             "fileName" => $filename,
             "useTyping" => true
@@ -168,18 +168,18 @@ class Maxchatlibrary{
     function sendDocument($to, $fileurl, $filename, $caption) {
         // jika kontak belum dikenali pakai "/api/messages/push/file"
         $url = $this->API_URL . "/messages";
-        
+
         $data = array(
             "to" => $to,
             'type' => 'document',
             "caption" => $caption,
             // "file" => fileToBase64($fileurl),
-            "url" => ("https://presensi.manadokota.go.id/siladen/".str_replace(' ', '%20', $fileurl)),
+            "url" => base_url(str_replace(' ', '%20', $fileurl)),
             // "url" => (base_url().str_replace(' ', '%20', $fileurl)),
             "fileName" => $filename,
             "useTyping" => true
         );
-
+        // dd(json_encode($data));
         $response = $this->postCurl($url, $data);
 
         $this->maxchat->general->insert('t_log_maxchat', [

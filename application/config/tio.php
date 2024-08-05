@@ -91,3 +91,6 @@ $route['kepegawaian/digital-signature'] = 'kepegawaian/C_Kepegawaian/digitalSign
 $route['siasn/mapping/unor'] = 'master/C_Master/mappingUnor';
 $route['siasn/mapping/bidang'] = 'master/C_Master/mappingBidang';
 $route['siasn/mapping/jabatan'] = 'master/C_Master/mappingJabatan';
+
+//SIMPONI ASN (Pensiun Otomatis)
+$route['kepegawaian/pensiun/kelengkapan-berkas/(:any)'] = 'kepegawaian/C_Layanan/kelengkapanBerkas/$1';

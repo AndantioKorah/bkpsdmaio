@@ -2047,7 +2047,6 @@
         
         // dd($this->input->post());
 
-
         if($this->input->post('jenis_bukti') == 1){
            $absen = $this->db->select('*')
                         ->from('db_sip.absen a')

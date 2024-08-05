@@ -9,6 +9,7 @@
           <th class="text-left">Eselon</th>
           <th class="text-left">Angkat Kredit</th>
           <th class="text-left">Unit Kerja</th>
+          <th class="text-left">Pejabat yang menetapkan</th>
           <th class="text-left">No / Tanggal SK</th>
           <th class="text-left">Status Jabatan</th>
           <th class="text-left">Ket</th>
@@ -33,6 +34,7 @@
               <td class="text-left"><?=$rs['nm_eselon']?></td>
               <td class="text-left"><?=$rs['angkakredit']?></td>
               <td class="text-left"><?=$rs['skpd']?></td>
+              <td class="text-left"><?=$rs['pejabat']?></td>
               <td class="text-left"><?=$rs['nosk']?> / <?= formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left">
                 <?php

@@ -120,7 +120,7 @@
             <div class="col-lg-12">
                 <hr>
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-2">
                         <div class="card card-default card-pdm p-3 card-belum-lengkap">
                             <div class="col-12 text-center">
                                 <i class="text-dark fa fa-file fa-3x"></i>
@@ -131,6 +131,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-2">
+                        <div class="card card-default card-pdm p-3 card-belum-lengkap">
+                            <div class="col-12 text-center">
+                                <i class="text-dark fa fa-file fa-3x"></i>
+                            </div>
+                            <hr>
+                            <div class="col-12 text-center">
+                                <span class="card-title-pdm">SK PNS</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,13 +149,6 @@
 </div>
 <script>
     $(function(){
-        window.bLazy = new Blazy({
-            container: 'foto_containerx',
-            success: function(element){
-                console.log("Element loaded: ", element.nodeName);
-            }, error: function(e){
-                console.log(e)
-            }
-        });
+        $('#sidebar_toggle').click()
     })
 </script>

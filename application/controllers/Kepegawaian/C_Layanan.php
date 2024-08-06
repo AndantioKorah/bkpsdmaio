@@ -22,9 +22,12 @@ class C_Layanan extends CI_Controller
 		};
 	}
 
-	
 	public function kelengkapanBerkas($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
+		dd($data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);
 	}
 

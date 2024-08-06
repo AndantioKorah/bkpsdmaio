@@ -39,9 +39,7 @@
     font-size: .6rem;
     font-style: italic;
     font-weight: 600;
-    /* color: grey; */
-    color: #babfc3;
-
+    color: grey;
   }
 
   .div_label{
@@ -53,7 +51,7 @@
       height: calc(150px * 1.25);
       background-size: cover;
       object-fit: cover;
-      /* box-shadow: 5px 5px 10px #888888; */
+      box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
   }
 
@@ -276,254 +274,66 @@ ol {
 <div class="container-fluid pt-2" style="background-color:#fff;">
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
+   <div class="12">
+   <a href="<?= base_url('kepegawaian/verifikasi-pensiun');?>">
+    <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
+  </a>
+  <!-- <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div> -->
+  
+  <?php if($jenis_layanan == 7) { ?>
+    <center> <span><b>Verifikasi Pensiun BUP</b></span></center>
+    <?php } else if($jenis_layanan == 8) { ?>
+      <center> <span><b>Verifikasi Pensiun Janda/Duda</b></span></center>
+      <?php } else if($jenis_layanan == 9) { ?>
+        <center> <span><b>Verifikasi Pensiun Atas Permintaan Sendiri</b></span></center>
+      <?php } else if($jenis_layanan == 10) { ?>
+        <center> <span><b>Verifikasi Pensiun Sakit/Uzur</b></span></center>
+        <?php } else if($jenis_layanan == 11) { ?>
+          <center> <span><b>Verifikasi Pensiun Tewas</b></span></center>
+          <?php } ?>
+   </div>
 
-    <table>
-      <td>
-      <a href="<?= base_url('kepegawaian/verifikasi-pensiun');?>">
-        <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
-      </a>
-      </td>
-      <td>
-      <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+
+<div class="row">
+	
+				<div class="col-md-12">
+
+
+
+  <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
+    data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
+  </li>
+  
+
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Berkas Persyaratan</button>
+  <li>
+
+
+
+
+        <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
         <form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_pengajuan'];?>">
-        <button  id="btn_tolak_verifikasi"  class="btn btn-danger ml-2" style="display:nonex;">
+        <button  id="btn_tolak_verifikasi"  class="btn btn-danger ml-2" style="display:none;">
         Batal Verif
         </button>
         </form>
-      </td>
-    </table>
-  
-  
-        
-        <br>
-  <!-- <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div> -->
-  
-  
+        </li>
 
 
-
-   <div class="row">
-     <!-- profil -->
-   <div class="col-md-4" style="background-color:#222e3c;color:#fff;">
-   <div class="row">
-      <div class="col-lg-12">
-        <div class="row">
-          <?php if($result[0]['statuspeg'] == 1){ ?>
-            <div class="col-lg-12 text-left">
-              <h3><span class="badge badge-danger">CPNS</span></h3>
-            </div>
-          <?php } ?>
-          <div class="col-lg-12 text-center mt-2">
-          <a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result[0]['nipbaru_ws']?>" target="_blank">
-          <img id="profile_pegawai" class="img-fluid mb-2 b-lazy"
-                            data-src="<?php
-                                $path = './assets/fotopeg/'. $result[0]['fotopeg'];
-                                // $path = '../siladen/assets/fotopeg/'. $result[0]['fotopeg'];
-                                if( $result[0]['fotopeg']){
-                                if (file_exists($path)) {
-                                   $src = './assets/fotopeg/'. $result[0]['fotopeg'];
-                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                } else {
-                                  $src = './assets/img/user.png';
-                                  // $src = '../siladen/assets/img/user.png';
-                                }
-                                } else {
-                                  $src = './assets/img/user.png';
-                                }
-                                echo base_url().$src;?>" /> </a>
-
-           
-          </div>
-          <div class="col-lg-12 text-center">
-            <span class="sp_profil">
-              <?=$result[0]['gelar1'] != '' ? $result[0]['gelar1'].' ' : ''.$result[0]['nama_pegawai'].$result[0]['gelar2']?>
-            </span>
-          </div>
-          <div class="col-lg-12 text-center" >
-            <span class="sp_profil">
-              <?=formatNip($result[0]['nipbaru_ws'])?>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-12 div_label text-left">
-            <span class="sp_label">
-              Perangkat Daerah
-            </span>
-          </div>
-          <div class="col-lg-12 text-left" >
-            <span class="sp_profil_sm">
-              <?=($result[0]['nm_unitkerja'])?>
-            </span>
-          </div>
-          <div class="col-lg-12"></div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12 div_label text-left">
-                  <span class="sp_label">
-                    Pangkat / Gol. Ruang
-                  </span>
-                </div>
-                <div class="col-lg-12 text-left" >
-                  <span class="sp_profil_sm">
-                    <?=($result[0]['nm_pangkat'])?>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  TMT Pangkat
-                </span>
-              </div>
-              <div class="col-lg-12 text-right" >
-                <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nama_jabatan'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  TMT Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-right" >
-                <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($result[0]['tmtjabatan'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  NIK (Nomor Induk Kependudukan)
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nik'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  Agama
-                </span>
-              </div>
-              <div class="col-lg-12 text-right" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nm_agama'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Tempat, Tanggal Lahir
-                </span>
-              </div>
-              <div class="col-lg-12 text-left">
-                <span class="sp_profil_sm">
-                  <?=($result[0]['tptlahir'].', '.formatDateNamaBulan($result[0]['tgllahir']))?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  Jenis Kelamin / Umur
-                </span>
-              </div>
-              <div class="col-lg-12 text-right">
-                <span class="sp_profil_sm">
-                  <?=$result[0]['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $result[0]['tgllahir'], ['tahun', 'bulan'])?>
-                </span>
-              </div>
-            </div>
-
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Status Kepegawaian
-                </span>
-              </div>
-              <div class="col-lg-12 text-left">
-                <span class="sp_profil_sm">
-                <?=($result[0]['nm_statuspeg'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  No Handphone/WA
-                </span>
-              </div>
-              <div class="col-lg-12 text-right">
-                <span class="sp_profil_sm">
-                <?=($result[0]['handphone'])?>
-                </span>
-              </div>
-            </div>
-
-            <div class="col-lg-12">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Alamat
-                </span>
-              </div>
-              <div class="col-lg-12 text-left">
-                <span class="sp_profil_sm">
-                <?=($result[0]['alamat'])?>
-                </span>
-              </div>
-            </div>
-
-            
-
-          </div>
-        </div>
-      </div>
-    </div>
-   </div>
-    <!-- tutup profil -->
-
-   <!-- berkas -->
-   <div class="col-md-8">
-    <!-- berkas persyaratan -->
-<span>Berkas Persyaratan  <?php if($jenis_layanan == 7) { ?>
-   <b>Pensiun BUP</b>
-    <?php } else if($jenis_layanan == 8) { ?>
-     <b>Pensiun Janda/Duda</b>
-      <?php } else if($jenis_layanan == 9) { ?>
-       <b>Pensiun Atas Permintaan Sendiri</b>
-      <?php } else if($jenis_layanan == 10) { ?>
-        <b>Pensiun Sakit/Uzur</b>
-        <?php } else if($jenis_layanan == 11) { ?>
-          <b>Pensiun Tewas</b>
-          <?php } ?></span>
-        <div class="list-type1x">
+</ul>
+<hr style="margin-top: 10px;">
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+  <div style="margin-left:10px;">
+<!-- berkas persyaratan -->
+<span>Berkas Persyaratan :</span>
+<div class="list-type1x">
 						<ol class="rectangle-list">
 
             <!-- <?php $no = 1; foreach($dokumen_layanan as $rs){ ?>
@@ -741,10 +551,302 @@ ol {
 						</ol>
 					</div>
 <!-- berkas persyaratan -->
-   </div>
- <!-- tutup berkas -->
 
-   </div>
+
+
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
+  <div id=""></div>
+  </div>
+  <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
+  <div id=""></div>
+  </div>
+  <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
+  <div id=""></div>
+  </div>
+  <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
+  <div id=""></div>
+  </div>
+  <div class="tab-pane fade" id="pills-organisasi" role="tabpanel" aria-labelledby="pills-organisasi-tab">
+  <div id=""></div>
+  </div>
+  <div class="tab-pane fade" id="pills-penghargaan" role="tabpanel" aria-labelledby="pills-penghargaan-tab">
+  <div id="form_penghargaan"></div>
+  </div>
+  <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">...</div>
+  <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
+  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
+  <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
+  <div class="tab-pane fade" id="pills-skcpns" role="tabpanel" aria-labelledby="pills-skcpns-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-skpns" role="tabpanel" aria-labelledby="pills-skpns-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-drp" role="tabpanel" aria-labelledby="pills-drp-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-honor" role="tabpanel" aria-labelledby="pills-honor-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-suket_lain" role="tabpanel" aria-labelledby="pills-suket_lain-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-ibel" role="tabpanel" aria-labelledby="pills-ibel-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-tubel" role="tabpanel" aria-labelledby="pills-tubel-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-forlap" role="tabpanel" aria-labelledby="pills-forlap-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-karya_tulis" role="tabpanel" aria-labelledby="pills-karya_tulis-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-mutasi" role="tabpanel" aria-labelledby="pills-mutasi-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-serkom" role="tabpanel" aria-labelledby="pills-serkom-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-pak" role="tabpanel" aria-labelledby="pills-pak-tab">
+  </div>
+  <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab">
+  <form id="form_presensi_pegawai">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Bulan</label>
+                            <select class="form-control select2-navy" style="width: 100%"
+                                id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
+                                <option <?=date('m') == '01' ? 'selected' : ''?> value="01">Januari</option>
+                                <option <?=date('m') == '02' ? 'selected' : ''?> value="02">Feburari</option>
+                                <option <?=date('m') == '03' ? 'selected' : ''?> value="03">Maret</option>
+                                <option <?=date('m') == '04' ? 'selected' : ''?> value="04">April</option>
+                                <option <?=date('m') == '05' ? 'selected' : ''?> value="05">Mei</option>
+                                <option <?=date('m') == '06' ? 'selected' : ''?> value="06">Juni</option>
+                                <option <?=date('m') == '07' ? 'selected' : ''?> value="07">Juli</option>
+                                <option <?=date('m') == '08' ? 'selected' : ''?> value="08">Agustus</option>
+                                <option <?=date('m') == '09' ? 'selected' : ''?> value="09">September</option>
+                                <option <?=date('m') == '10' ? 'selected' : ''?> value="10">Oktober</option>
+                                <option <?=date('m') == '11' ? 'selected' : ''?> value="11">November</option>
+                                <option <?=date('m') == '12' ? 'selected' : ''?> value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Tahun</label>
+                            <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                        </div>
+                        <div class="col-lg-4">
+                            <label style="color: white;">.</label><br>
+                            <button class="btn btn-navy" type="submit">Submit</button>
+                        </div>
+                    </div>
+                  </form>
+                  <div class="mt-3" id="div_presensi_result"></div>
+
+  </div>
+  <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <?php if($result[0]['statuspeg'] == 1){ ?>
+            <div class="col-lg-12 text-left">
+              <h3><span class="badge badge-danger">CPNS</span></h3>
+            </div>
+          <?php } ?>
+          <div class="col-lg-12 text-center">
+    
+          <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
+                            data-src="<?php
+                                $path = './assets/fotopeg/'. $result[0]['fotopeg'];
+                                // $path = '../siladen/assets/fotopeg/'. $result[0]['fotopeg'];
+                                if( $result[0]['fotopeg']){
+                                if (file_exists($path)) {
+                                   $src = './assets/fotopeg/'. $result[0]['fotopeg'];
+                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                } else {
+                                  $src = './assets/img/user.png';
+                                  // $src = '../siladen/assets/img/user.png';
+                                }
+                                } else {
+                                  $src = './assets/img/user.png';
+                                }
+                                echo base_url().$src;?>" /> 
+
+           
+          </div>
+          <div class="col-lg-12 text-center">
+            <span class="sp_profil">
+              <?=$result[0]['gelar1'] != '' ? $result[0]['gelar1'].' ' : ''.$result[0]['nama_pegawai'].$result[0]['gelar2']?>
+            </span>
+          </div>
+          <div class="col-lg-12 text-center" >
+            <span class="sp_profil">
+              <?=formatNip($result[0]['nipbaru_ws'])?>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-12 div_label text-left">
+            <span class="sp_label">
+              Perangkat Daerah
+            </span>
+          </div>
+          <div class="col-lg-12 text-left" >
+            <span class="sp_profil_sm">
+              <?=($result[0]['nm_unitkerja'])?>
+            </span>
+          </div>
+          <div class="col-lg-12"></div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Pangkat / Gol. Ruang
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($result[0]['nm_pangkat'])?>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  TMT Pangkat
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nama_jabatan'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtjabatan'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  NIK (Nomor Induk Kependudukan)
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nik'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  Agama
+                </span>
+              </div>
+              <div class="col-lg-12 text-right" >
+                <span class="sp_profil_sm">
+                  <?=($result[0]['nm_agama'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Tempat, Tanggal Lahir
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                  <?=($result[0]['tptlahir'].', '.formatDateNamaBulan($result[0]['tgllahir']))?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  Jenis Kelamin / Umur
+                </span>
+              </div>
+              <div class="col-lg-12 text-right">
+                <span class="sp_profil_sm">
+                  <?=$result[0]['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $result[0]['tgllahir'], ['tahun', 'bulan'])?>
+                </span>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Alamat
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                <?=($result[0]['alamat'])?>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-right">
+                <span class="sp_label">
+                  No Handphone/WA
+                </span>
+              </div>
+              <div class="col-lg-12 text-right">
+                <span class="sp_profil_sm">
+                <?=($result[0]['handphone'])?>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<span id="ket"></span>
+<div id="divloader" class="col-lg-12 text-center">
+  
+</div>
+<!-- <iframe id="view_file_verif" style="width: 100%; height: 100vh;"></iframe> -->
+<h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+				</div>
+			</div>
+      
+	
+
+<!-- <button id="btn_verifikasi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelVerif">
+Verifikasi
+</button>
+<form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
+<input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_pengajuan'];?>">
+<button  id="btn_tolak_verifikasi"  class="btn btn-danger" >
+Batal Verif
+</button>
+</form> -->
+<style>
+</style>
 
 
 
@@ -824,7 +926,7 @@ var nip = "<?= $result[0]['nip'];?>";
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
-  $( "#sidebar_toggle" ).trigger( "click" );
+  // $( "#sidebar_toggle" ).trigger( "click" );
 
    if(status == 0){
     $('#btn_tolak_verifikasi').hide()

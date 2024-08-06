@@ -1257,6 +1257,8 @@
     }
 
     public function getNominatifPegawaiHardCode($id_unitkerja, $bulan, $tahun, $list_pegawai){
+        $flag_sekolah_kecamatan = 0;
+        
         if($bulan == null){
             $bulan = date('m');
         }
@@ -1271,7 +1273,22 @@
             $temp_list_pegawai[$nip] = $lp;
         }
 
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+        $uk = $this->db->select('*')
+                    ->from('db_pegawai.unitkerja')
+                    ->where('id_unitkerja', $id_unitkerja)
+                    ->get()->row_array();
+        
+        if(!$uk){
+            $uk = $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            ->where('id_unitkerjamaster', $id_unitkerja)
+                            ->get()->row_array();
+            if($uk){
+                $flag_sekolah_kecamatan = 1;
+            }
+        }
+
+        $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user,
             a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun')
@@ -1284,12 +1301,20 @@
                                 ->join('m_user h', 'a.nip = h.username')
                                 // ->where('a.bulan <=', floatval($bulan))
                                 // ->where('a.tahun <=', floatval($tahun))
-                                ->where('a.id_unitkerja', $id_unitkerja)
+                                // ->where('a.id_unitkerja', $id_unitkerja)
                                 ->where('a.flag_active', 1)
                                 ->where('h.flag_active', 1)
-                                ->group_by('a.id')
-                                ->get()->result_array();
+                                ->group_by('a.id');
 
+        if($uk && $flag_sekolah_kecamatan == 1){ // jika sekolah
+            $this->db->where('f.id_unitkerjamaster_kecamatan', $id_unitkerja);
+        } else if(stringStartWith('Kecamatan', $uk['nm_unitkerja'])){ // jika kecamatan
+            $this->db->where('f.id_unitkerjamaster', $uk['id_unitkerjamaster']);
+        } else {
+            $this->db->where('a.id_unitkerja', $id_unitkerja);
+        }
+        $pegawai = $this->db->get()->result_array();
+        // dd($pegawai);
         // if($id_unitkerja == '4011000'){
         //     dd($pegawai);
         // }

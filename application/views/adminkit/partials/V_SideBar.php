@@ -359,17 +359,15 @@
 					</a>
 		</li>
 
-
-		<!-- <li class="sidebar-item">
+   <?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')) { ?>
+		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
 				style="position: absolute;
 					right: 0;
 					margin-top: .35rem;"></i></a>
 								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
-									<li class="sidebar-item sub-sidebar-item" style="margin-left">
-										<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/7')?>"><i class="fa fa-minus"></i>Pensiun BUP</a>
-									</li>
+									
 									<li class="sidebar-item sub-sidebar-item">
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/8')?>"><i class="fa fa-minus"></i>Pensiun Janda/Duda</a>
 									</li>
@@ -383,8 +381,8 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li> -->
-		
+							</li>
+		<?php } ?>
 		</ul>
 	</li>
 	<?php } ?>
@@ -445,19 +443,22 @@
 						</li>
 					<?php } ?>
 				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 				</a>
 				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Pensiun
 				</a>
-				</li> -->
+				</li>
 				<?php } ?>
+				
 			</ul>
 		</li>
 		<?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isProgrammer()){ ?>

@@ -7000,7 +7000,7 @@ function getPengajuanLayananPensiun($id){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-    return $this->db->select('c.*, c.id as id_pengajuan,
+    return $this->db->select('k.nm_statuspeg,c.*, c.id as id_pengajuan,
     b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
     h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
     a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
@@ -7009,12 +7009,12 @@ function getPengajuanLayananPensiun($id){
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_pensiun c', 'a.id = c.id_m_user')
     // ->join('db_siladen.t_perbaikan_data_pegawai d', 'c.id_usul = d.id_usul')
-   
     ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
     ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
     ->join('db_pegawai.agama i', 'b.agama = id_agama')
     ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+    ->join('db_pegawai.statuspeg k', 'b.statuspeg = k.id_statuspeg')
     ->where('c.id', $id)
     ->get()->result_array();
 }

@@ -1093,8 +1093,7 @@
             //     ) AS nama_jabatan, e.kepalaskpd')
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 f.id as id_m_user, a.flag_bendahara,
-                e.nama_jabatan
-                ) AS nama_jabatan, e.kepalaskpd')
+                e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')

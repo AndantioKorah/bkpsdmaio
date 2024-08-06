@@ -14,8 +14,7 @@
         public function getListIdPegawaiForVerif($data = null, $return_data_pegawai = false){
             $role = $this->general_library->getRole();
             $eselon = $this->general_library->getIdEselon();
-            
-           
+
 
             $vt = $this->db->select('*')
                         ->from('t_verif_tambahan')
@@ -87,9 +86,9 @@
                     } else {
                         $this->db->select('b.*')
                         ->join('m_bidang b', 'a.id_m_bidang = b.id')
-                        ->where('b.id', $this_user['id_m_bidang']);
+                        ->where('b.id', $this_user['id_m_bidang'])
+                        ->where('e.skpd', $this_user['skpd']);
                     }
-
                     $list_pegawai = $this->db->get()->result_array();
                     if(stringStartWith('Kecamatan', $this_user['nm_unitkerja'])){
                         $list_pegawai_tambahan =  $this->db->select('a.*, e.skpd, a.id as id_m_user')

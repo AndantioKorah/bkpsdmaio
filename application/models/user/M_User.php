@@ -1632,7 +1632,7 @@
 
             //get dokumen pendukung
             $result['dokpen'] = null;
-            $list_dokpen = $this->db->select('a.*, b.keterangan as kode_dokpen')
+            $list_dokpen = $this->db->select('a.*, b.keterangan as kode_dokpen, b.nama_jenis_disiplin_kerja')
                                 ->from('t_dokumen_pendukung a')
                                 ->join('m_jenis_disiplin_kerja b', 'a.id_m_jenis_disiplin_kerja = b.id')
                                 ->where('a.id_m_user', $id_pegawai)
@@ -1648,6 +1648,7 @@
                     $date_dok = $ld['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
 
                     $result['dokpen'][$date_dok] = $ld;
+                    $result['dokpen'][$date_dok]['keterangan'] = $ld['nama_jenis_disiplin_kerja'];
                     $result['rincian_pengurangan_dk'][$ld['kode_dokpen']] = 0;
                 }
             }
@@ -1861,7 +1862,6 @@
                         $result['rincian_pengurangan_dk']['TK']++;
                         $keterangan[] = "TK";
                     }
-
                 }
                 // echo $tga.'  ';
                 // dd($keterangan);

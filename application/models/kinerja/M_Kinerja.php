@@ -2403,8 +2403,9 @@
             //     dd($pegawai);
             // }
         // }
-
-        $pegawai = $this->rekap->getNominatifPegawaiHardCode($data['id_unitkerja'], $bulan, $tahun, $pegawai);
+        if($id_pegawai == null){
+            $pegawai = $this->rekap->getNominatifPegawaiHardCode($data['id_unitkerja'], $bulan, $tahun, $pegawai);
+        }
 
         if($flag_sekolah_kecamatan == 0){
             // ambil jika ada pegawai PLT / PLH, BAGIAN INI HARUS MENJADI YANG PALING TERAKHIR
@@ -2415,7 +2416,6 @@
             $i = 0;
             $temp = null;
             $temp_plt = null;
-
             foreach($pegawai as $p){
                 // if(isset($result[$p['id_m_user']])){
                 //     $temp[$p['id_m_user']] = $result[$p['id_m_user']];

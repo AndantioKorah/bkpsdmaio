@@ -33,7 +33,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-    <div onclick="loadPage('pangkat')" class="card card-default card-pdm <?=isset($result['pas_foto']) ? 'card-lengkap' : 'card-belum-lengkap' ?> p-3">
+    <div onclick="loadPage('pangkat')" class="card card-defaultV <?=isset($result['pas_foto']) ? 'card-lengkap' : 'card-belum-lengkap' ?> p-3">
     <div class="col-12 text-center">
                     <i class="text-dark fa fa-id-badge fa-2x"></i>
                 </div>

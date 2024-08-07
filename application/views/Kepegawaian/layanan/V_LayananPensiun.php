@@ -306,14 +306,14 @@ ol {
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skpangak)) { ?>
 							<li>
-								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
+								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pangkat) { ?>
 									onclick="viewBerkas('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> SK PANGKAT* </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skjabatan)) { ?>
 							<li>
-								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
+								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan) { ?>
 									onclick="viewBerkas('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN* </a>
 							</li>

@@ -465,12 +465,12 @@ ol {
             <div class="col-lg-6">
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  Status Kepegawaian
+                  Email
                 </span>
               </div>
               <div class="col-lg-12 text-left">
                 <span class="sp_profil_sm">
-                <?=($result[0]['nm_statuspeg'])?>
+                <?=($result[0]['email'])?>
                 </span>
               </div>
             </div>

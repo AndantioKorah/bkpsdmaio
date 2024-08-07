@@ -7000,7 +7000,7 @@ function getPengajuanLayananPensiun($id){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-    return $this->db->select('k.nm_statuspeg,c.*, c.id as id_pengajuan,
+    return $this->db->select('b.email,k.nm_statuspeg,c.*, c.id as id_pengajuan,
     b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
     h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
     a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
@@ -7291,10 +7291,36 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getDokumenPangkatForPensiunAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->order_by('tmtpangkat', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegpangkat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanForPensiun()
     {
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->order_by('tmtjabatan', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegjabatan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getDokumenJabatanForPensiunAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
         ->where('status', 2)
         ->order_by('tmtjabatan', 'desc')

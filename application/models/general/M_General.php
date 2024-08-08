@@ -453,11 +453,15 @@
                                 $crit = 2;
                                 $temp = $d;
                                 $bup = 60;
-                            }else if($d['jenis_jabatan'] == 'JFT'){
+                            } else if($d['jenis_jabatan'] == 'JFT'){
                                 if(stringStartWith('Guru', $d['nama_jabatan'])){
                                     $crit = 2;
                                     $temp = $d;
                                     $bup = 60;
+                                } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                                    $crit = 4;
+                                    $temp = $d;
+                                    $bup = 65;
                                 } else {
                                     $crit = 2;
                                     $temp = $d;
@@ -483,7 +487,7 @@
                                 $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
                                 $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
-                                $temp['umur'] = $umur;
+                                $temp['umur'] = $bup;
                                 // if($d['nipbaru_ws'] == '196501271985022001'){
                                     // $temp['umur'] .= '  '.$crit;
                                     // dd($crit);

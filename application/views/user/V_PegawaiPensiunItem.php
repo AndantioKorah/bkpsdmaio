@@ -46,11 +46,7 @@
                             <td class="text-center"><?=($rs['eselon'])?></td>
                             <td class="text-center"><?=($rs['jenis_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                            <td class="text-center"><?=($rs['umur'])?></td>
-                            <!-- <td class="text-center">
-                            <?=countDiffDateLengkap(date('Y-m-d'), $rs['tgllahir'], ['tahun', 'bulan'])?>
-                            </td> -->
-                            
+                            <td class="text-center"><?=($rs['umur'])?></td>                            
                             <td class="text-center"><?=formatDateNamaBulan($rs['tmt_pensiun'])?></td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-navy" target="_blank" href="<?=base_url('kepegawaian/pensiun/kelengkapan-berkas/'.$rs['nipbaru_ws'])?>">

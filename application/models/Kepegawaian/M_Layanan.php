@@ -30,7 +30,7 @@ class M_Layanan extends CI_Model
         $result['rekening'] = null;
         $result['akte_kematian'] = null;
 
-        $skcpnspns = $this->db->select('a.nipbaru_ws, b.gambarsk, b.jenissk')
+        $skcpnspns = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegberkaspns b', 'a.id_peg = b.id_pegawai')
                         ->where('a.nipbaru_ws', $nip)
@@ -81,7 +81,7 @@ class M_Layanan extends CI_Model
                     $result['pmk'] = $a;
                 } else if($a['id_dokumen'] == 25){
                     $result['akte_cerai'] = $a;
-                } else if($a['id_dokumen'] == 58){
+                } else if($a['id_dokumen'] == 27){
                     $result['akte_anak'][] = $a;
                 } else if($a['id_dokumen'] == 28){
                     $result['kartu_keluarga'] = $a;
@@ -101,7 +101,7 @@ class M_Layanan extends CI_Model
 
     public function updateChecklistPensiun($nip, $data, $id_m_jenis_pensiun){
         $this->db->trans_begin();
-
+        $last_id = null;
         $exists = $this->db->select('*')
                         ->from('t_checklist_pensiun')
                         ->where('nip', $nip)
@@ -109,60 +109,94 @@ class M_Layanan extends CI_Model
                         ->where('flag_active', 1)
                         ->get()->row_array();
         if($exists){
-
+            $last_id = $exists['id'];
         } else {
             $this->db->insert('t_checklist_pensiun', [
                 'id_m_jenis_pensiun' => $id_m_jenis_pensiun,
-                'nip' => $nip
+                'nip' => $nip,
+                'created_by' => $this->general_library->getId()
             ]);
 
             $last_id = $this->db->insert_id();
-
-            $jenis_pensiun = $this->db->select('*')
-                                    ->from('m_jenis_pensiun')
-                                    ->where('id', $id_m_jenis_pensiun)
-                                    ->where('flag_active', 1)
-                                    ->get()->row_array();
-            if($jenis_pensiun){
-                $list_dokumen = json_decode($jenis_pensiun['list_dokumen'], true);
-
-                $master_dokumen = $this->db->select('*')
-                                        ->from('m_dokumen_pensiun')
-                                        ->where_in('id', $list_dokumen)
-                                        ->where('flag_active', 1)
-                                        ->get()->result_array();
-
-                $checklistDetail = null;
-                if($master_dokumen){
-                    $i = 0;
-                    foreach($master_dokumen as $md){
-                        $gambarsk = null;
-                        $id_ref = null;
-                        $table_ref = null;
-                        if(isset($data[$md['meta_name']])){
-                            $gambarsk = $data[$md['meta_name']]['gambarsk'];
-                            $id_ref = $data[$md['meta_name']]['id'];
-                            $table_ref = $md['table_ref'];
-                        }
-
-                        $checklistDetail[$i]['id_t_checklist_pensiun'] = $last_id;
-                        $checklistDetail[$i]['id_m_berkas'] = $md['id'];
-                        $checklistDetail[$i]['nama_berkas'] = $md['nama_dokumen'];
-                        $checklistDetail[$i]['gambarsk'] = $gambarsk;
-                        $checklistDetail[$i]['id_ref'] = $id_ref;
-                        $checklistDetail[$i]['table_ref'] = $table_ref;
-
-                        $i++;
-                    }
-                    dd($checklistDetail);
-                }
-            }
         }
+
+        return $last_id;
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
         } else {
             $this->db->trans_commit();
         }
+    }
+
+    public function validasiBerkas($nip, $berkas, $id_t_checklist_pensiun){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+        
+		$temp = $this->session->userdata('berkas_pensiun');
+
+        if($berkas == 'akte_anak'){
+			$data_berkas = $temp['berkas'][$berkas];
+		} else {
+			$data_berkas[] = $temp['berkas'][$berkas];
+		}
+
+        $master = $this->db->select('*')
+                        ->from('m_dokumen_pensiun')
+                        ->where('meta_name', $berkas)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        $exists = $this->db->select('*, a.id as id_t_checklist_pensiun_detail, c.id as id_t_checklist_pensiun')
+                        ->from('t_checklist_pensiun_detail a')
+                        ->join('m_dokumen_pensiun b', 'a.id_m_berkas = b.id')
+                        ->join('t_checklist_pensiun c', 'a.id_t_checklist_pensiun = c.id')
+                        ->where('b.meta_name', $berkas)
+                        ->where('c.nip', $nip)
+                        ->where('c.flag_active', 1)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+        if($exists){
+            $this->db->where('id_t_checklist_pensiun', $exists['id_t_checklist_pensiun'])
+                    ->where('id_m_berkas', $master['id'])
+                    ->update('t_checklist_pensiun_detail', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId(),
+                        // 'tanggal_validasi' => date('Y-m-d H:i:s')
+                    ]);
+        }
+
+        $list_input = null;
+        if($data_berkas){
+            $i = 0;
+            foreach($data_berkas as $d){
+                $list_input[$i] = [
+                    'id_t_checklist_pensiun' => $id_t_checklist_pensiun,
+                    'id_m_berkas' => $master['id'],
+                    'nama_berkas' => $master['nama_dokumen'],
+                    'gambarsk' => $d ? $d['gambarsk'] : null,
+                    'id_ref' => $d ? $d['id'] : null,
+                    'flag_validasi' => 1,
+                    'id_m_user_validasi' => $this->general_library->getId(),
+                    'tanggal_validasi' => date('Y-m-d H:i:s')
+                ];
+                $i++;
+            }
+        } else {
+            $list_input[] = [
+                'id_t_checklist_pensiun' => $id_t_checklist_pensiun,
+                'id_m_berkas' => $master['id'],
+                'nama_berkas' => $master['nama_dokumen'],
+                'gambarsk' => null,
+                'id_ref' => null,
+                'flag_validasi' => 1,
+                'id_m_user_validasi' => $this->general_library->getId(),
+                'tanggal_validasi' => date('Y-m-d H:i:s')
+            ];
+        }
+
+        $this->db->insert_batch('t_checklist_pensiun_detail', $list_input);
+
+        return $rs;
     }
 }

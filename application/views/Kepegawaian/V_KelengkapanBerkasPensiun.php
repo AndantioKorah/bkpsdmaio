@@ -94,6 +94,25 @@
         background-color: red;
         color: white;
     }
+
+    .nav-link-profile{
+      padding: 5px !important;
+      font-size: .7rem;
+      color: black;
+      border: .5px solid var(--primary-color) !important;
+      border-bottom-left-radius: 0px;
+    }
+
+    .nav-item-profile:hover, .nav-link-profile:hover{
+      color: white !important;
+      background-color: #222e3c91;
+    }
+
+    .nav-tabs .nav-link.active, .nav-tabs .show>.nav-link{
+      /* border-radius: 3px; */
+      background-color: var(--primary-color);
+      color: white;
+    }
 </style>
 
 <div class="row">
@@ -208,60 +227,104 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <ul class="list-group mx-auto">
-                            <?php
-                                $icon = 'fa-times';
-                                $icon_berkas = 'icon-berkas-belum-lengkap';
-                                if($berkas['cpns']){
-                                    if($berkas['cpns']['status'] == 1){
-                                        $icon = 'fa-check';
-                                        $icon_berkas = 'icon-berkas-lengkap';
-                                    } else {
-                                        $icon = 'fa-min';
-                                        $icon_berkas = 'icon-berkas-belum-verif';
-                                    }
-                                }
-                            ?>
-                            <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('cpns')">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
-                                        align-items-center justify-content-center rounded-circle m-1 me-2">
-                                            <i class="fas <?=$icon?> fa-lg"></i>
-                                        </span>
-                                        <span class="card-title-pdm">SK CPNS</span>
-                                    </div>
-                                    <div class="col-lg-12 div_berkas" id="div_berkas_cpns" style="display: none;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('pns')">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <span class="icon-berkas d-inline-flex <?=$berkas['pns'] ? 'icon-berkas-lengkap' : 'icon-berkas-belum-lengkap'?>
-                                        align-items-center justify-content-center rounded-circle m-1 me-2">
-                                            <i class="fas <?=$berkas['pns'] ? 'fa-check' : 'fa-times'?> fa-lg"></i>
-                                        </span>
-                                        <span class="card-title-pdm">SK PNS</span>
-                                    </div>
-                                    <div class="col-lg-12 div_berkas" id="div_berkas_pns" style="display: none;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('sk_pangkat')">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <span class="icon-berkas d-inline-flex <?=$berkas['sk_pangkat'] ? 'icon-berkas-lengkap' : 'icon-berkas-belum-lengkap'?>
-                                        align-items-center justify-content-center rounded-circle m-1 me-2">
-                                            <i class="fas <?=$berkas['sk_pangkat'] ? 'fa-check' : 'fa-times'?> fa-lg"></i>
-                                        </span>
-                                        <span class="card-title-pdm">SK Pangkat</span>
-                                    </div>
-                                    <div class="col-lg-12 div_berkas" id="div_berkas_sk_pangkat" style="display: none;">
-                                    </div>
-                                </div>
-                            </div>
+                        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item nav-item-profile" role="presentation">
+                                <button class="nav-link nav-link-profile active" id="pills-data-berkas-tab" data-bs-toggle="pill" data-bs-target="#pills-data-berkas" type="button" role="tab" aria-controls="pills-data-berkas" aria-selected="false">CHECKLIST BERKAS</button>
+                            </li>
+                            <li class="nav-item nav-item-profile" role="presentation">
+                                <button class="nav-link nav-link-profile " id="pills-data-pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data-pribadi" type="button" role="tab" aria-controls="pills-data-pribadi" aria-selected="true">DATA PRIBADI</button>
+                            </li>
                         </ul>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane show active" id="pills-data-berkas" role="tabpanel" aria-labelledby="pills-data-berkas">
+                                <ul class="list-group mx-auto">
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('cpns')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['cpns']){
+                                                if($berkas['cpns']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK CPNS</span>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_cpns" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('pns')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['pns']){
+                                                if($berkas['pns']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK PNS</span>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_pns" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_anak')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['akte_anak']){
+                                                foreach($berkas['akte_anak'] as $aa){
+                                                    if($aa['status'] == 2){
+                                                        $icon = 'fa-check';
+                                                        $icon_berkas = 'icon-berkas-lengkap';
+                                                    } else if($aa['status'] == 1) {
+                                                        $icon = 'fa-minus';
+                                                        $icon_berkas = 'icon-berkas-belum-verif';
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">Akte Lahir Anak</span>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_akte_anak" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="pills-data-pribadi" role="tabpanel" aria-labelledby="pills-data-berkas">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -2348,12 +2348,21 @@
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerja', $data['id_unitkerja'])
                             ->get()->row_array();
+
+            $id_unitkerja = $data['id_unitkerja'];
+            if(stringStartWith("sekolah_", $data['id_unitkerja'])){
+                $expl = explode("_", $data['id_unitkerja']);
+                $id_unitkerja = $expl[1];
+                $flag_sekolah_kecamatan = 1;
+            }
+            
             if($flag_sekolah_kecamatan == 1){
                 $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
-                            ->where('id_unitkerjamaster_kecamatan', $data['id_unitkerja'])
+                            ->where('id_unitkerjamaster_kecamatan', $id_unitkerja)
                             ->get()->row_array();
             }
+
             $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
 
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);

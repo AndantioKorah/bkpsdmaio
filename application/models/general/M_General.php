@@ -453,6 +453,16 @@
                                 $crit = 2;
                                 $temp = $d;
                                 $bup = 60;
+                            }else if($d['jenis_jabatan'] == 'JFT'){
+                                if(stringStartWith('Guru', $d['nama_jabatan'])){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else {
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 58;
+                                }
                             } else if($umur == 60 && ($d['eselon'] == 'II A' || $d['eselon'] == 'II B' || $d['jenis_jabatan'] == 'JFT')){
                                 $crit = 3;
                                 $temp = $d;

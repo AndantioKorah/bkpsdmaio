@@ -2101,7 +2101,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                  
                 } 
                 if($peng['eselon'] == "III B" || $peng['eselon'] == "III A"){ 
-                if($peng['eselon'] == "III A" && $peng['id_unitkerjamaster'] == "1000000"){
+                if($peng['eselon'] == "III A" && $peng['id_unitkerjamaster'] == "1000000" || $peng['eselon'] == "III A"){
                     if($peng['statusjabatan'] == 2) {
                         $qty1++;
                     } else {

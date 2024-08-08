@@ -56,7 +56,7 @@ class M_Layanan extends CI_Model
                         ->where_in('b.status', [1,2])
                         ->order_by('b.tahun, b.created_date')
                         ->where_in('flag_active', [1,2])
-                        ->get()->result_array();
+                        ->get()->row_array();
                         
         $arsip = $this->db->select('a.nipbaru_ws, b.*, c.keterangan')
                         ->from('db_pegawai.pegawai a')
@@ -96,7 +96,73 @@ class M_Layanan extends CI_Model
                 }
             }
         }
-        
         return $result;
+    }
+
+    public function updateChecklistPensiun($nip, $data, $id_m_jenis_pensiun){
+        $this->db->trans_begin();
+
+        $exists = $this->db->select('*')
+                        ->from('t_checklist_pensiun')
+                        ->where('nip', $nip)
+                        ->where('id_m_jenis_pensiun', $id_m_jenis_pensiun)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+        if($exists){
+
+        } else {
+            $this->db->insert('t_checklist_pensiun', [
+                'id_m_jenis_pensiun' => $id_m_jenis_pensiun,
+                'nip' => $nip
+            ]);
+
+            $last_id = $this->db->insert_id();
+
+            $jenis_pensiun = $this->db->select('*')
+                                    ->from('m_jenis_pensiun')
+                                    ->where('id', $id_m_jenis_pensiun)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+            if($jenis_pensiun){
+                $list_dokumen = json_decode($jenis_pensiun['list_dokumen'], true);
+
+                $master_dokumen = $this->db->select('*')
+                                        ->from('m_dokumen_pensiun')
+                                        ->where_in('id', $list_dokumen)
+                                        ->where('flag_active', 1)
+                                        ->get()->result_array();
+
+                $checklistDetail = null;
+                if($master_dokumen){
+                    $i = 0;
+                    foreach($master_dokumen as $md){
+                        $gambarsk = null;
+                        $id_ref = null;
+                        $table_ref = null;
+                        if(isset($data[$md['meta_name']])){
+                            $gambarsk = $data[$md['meta_name']]['gambarsk'];
+                            $id_ref = $data[$md['meta_name']]['id'];
+                            $table_ref = $md['table_ref'];
+                        }
+
+                        $checklistDetail[$i]['id_t_checklist_pensiun'] = $last_id;
+                        $checklistDetail[$i]['id_m_berkas'] = $md['id'];
+                        $checklistDetail[$i]['nama_berkas'] = $md['nama_dokumen'];
+                        $checklistDetail[$i]['gambarsk'] = $gambarsk;
+                        $checklistDetail[$i]['id_ref'] = $id_ref;
+                        $checklistDetail[$i]['table_ref'] = $table_ref;
+
+                        $i++;
+                    }
+                    dd($checklistDetail);
+                }
+            }
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
     }
 }

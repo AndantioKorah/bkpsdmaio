@@ -85,6 +85,11 @@
         color: white;
     }
 
+    .icon-berkas-belum-verif{
+        background-color: yellow;
+        color: black;
+    }
+
     .icon-berkas-belum-lengkap{
         background-color: red;
         color: white;
@@ -204,12 +209,25 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="list-group mx-auto">
+                            <?php
+                                $icon = 'fa-times';
+                                $icon_berkas = 'icon-berkas-belum-lengkap';
+                                if($berkas['cpns']){
+                                    if($berkas['cpns']['status'] == 1){
+                                        $icon = 'fa-check';
+                                        $icon_berkas = 'icon-berkas-lengkap';
+                                    } else {
+                                        $icon = 'fa-min';
+                                        $icon_berkas = 'icon-berkas-belum-verif';
+                                    }
+                                }
+                            ?>
                             <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('cpns')">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <span class="icon-berkas d-inline-flex <?=$berkas['cpns'] ? 'icon-berkas-lengkap' : 'icon-berkas-belum-lengkap'?>
+                                        <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
                                         align-items-center justify-content-center rounded-circle m-1 me-2">
-                                            <i class="fas <?=$berkas['cpns'] ? 'fa-check' : 'fa-times'?> fa-lg"></i>
+                                            <i class="fas <?=$icon?> fa-lg"></i>
                                         </span>
                                         <span class="card-title-pdm">SK CPNS</span>
                                     </div>

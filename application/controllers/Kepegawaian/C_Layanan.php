@@ -27,6 +27,7 @@ class C_Layanan extends CI_Controller
 		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
 		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$data['berkas']['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
+		$this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$this->session->set_userdata('berkas_pensiun', $data);
 		// dd($data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);

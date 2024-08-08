@@ -25,10 +25,31 @@ class C_Layanan extends CI_Controller
 	public function kelengkapanBerkas($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
-		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
-		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
-		dd($data);
+		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$data['berkas']['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
+		$this->session->set_userdata('berkas_pensiun', $data);
+		// dd($data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);
+	}
+
+	public function loadBerkasPensiun($berkas){
+		$temp = $this->session->userdata('berkas_pensiun');
+		$data['result'] = $temp['berkas'][$berkas];
+		$data['url'] = base_url();
+		if($data['result']){
+			if($berkas == 'cpns' || $berkas == 'pns'){
+				$data['url'] .= "arsipberkaspns/".$data['result']['gambarsk'];
+			} else if($berkas == 'skp'){
+				$data['url'] .= "arsipskp/".$data['result']['gambarsk'];
+			} else if($berkas == 'sk_pangkat') {
+				$data['url'] .= "arsipelektronik/".$data['result']['gambarsk'];
+			} else if($berkas == 'sk_jabatan') {
+				$data['url'] .= "arsipjabatan/".$data['result']['gambarsk'];
+			} else {
+				$data['url'] .= "arsiplainnya/".$data['result']['gambarsk'];
+			}
+		}
+		$this->load->view('kepegawaian/V_KelengkapanBerkasPensiunShowFile', $data);
 	}
 
 }

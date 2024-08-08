@@ -53,7 +53,7 @@ class M_Layanan extends CI_Model
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegskp b', 'a.id_peg = b.id_pegawai')
                         ->where('a.nipbaru_ws', $nip)
-                        // ->where('b.status', 2)
+                        ->where_in('b.status', [1,2])
                         ->order_by('b.tahun, b.created_date')
                         ->where_in('flag_active', [1,2])
                         ->get()->result_array();
@@ -63,7 +63,7 @@ class M_Layanan extends CI_Model
                         ->join('db_pegawai.pegarsip b', 'a.id_peg = b.id_pegawai')
                         ->join('m_dokumen c', 'b.id_dokumen = c.id_dokumen')
                         ->where('a.nipbaru_ws', $nip)
-                        // ->where('b.status', 2)
+                        ->where_in('b.status', [1,2])
                         ->order_by('b.created_date')
                         ->where_in('flag_active', [1,2])
                         ->get()->result_array();

@@ -11,6 +11,11 @@
                             <form action="<?=base_url('dashboard/C_Dashboard/downloadDataPdm')?>" target="_blank">
                             <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
                             </form>
+
+                            <!-- <form action="<?=base_url('dashboard/C_Dashboard/downloadDataPdmExcel')?>" target="_blank">
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Excel</button>
+                            </form> -->
+
                         </div>
                     <?php } ?>
                     <div class="col-lg-12 mt-2">

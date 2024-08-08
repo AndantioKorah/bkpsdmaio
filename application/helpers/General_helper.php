@@ -1105,6 +1105,10 @@ function isKasubKepegawaian($nama_jabatan, $eselon = null){
         $eselon = $CI->general_library->getEselon();
     }
 
+    if(stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan)){
+        $eselon = $CI->general_library->getEselon();
+    }
+
     if($CI->general_library->isHakAkses('role_kasubag_kepegawaian')){
         return true;
     }

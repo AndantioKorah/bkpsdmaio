@@ -145,6 +145,13 @@ class C_Dashboard extends CI_Controller
         // $this->load->view('dashboard/V_DashboardPdmDetailAllPdf', $data);
     }
 
+    public function downloadDataPdmExcel()
+    {
+        $data['result']  = $this->session->userdata('data_dashboard_pdm');
+        $this->load->view('dashboard/V_DashboardPdmDetailAllExcel', $data);
+
+    }
+
     public function dashboardKepegawaian(){
         $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
         dd($data);

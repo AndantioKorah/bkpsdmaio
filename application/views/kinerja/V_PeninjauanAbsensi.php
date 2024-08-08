@@ -54,7 +54,7 @@
          <select class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
          <option value="" selected disabled>- Pilih Jenis Absen -</option>
          <option value="1" >Absen Pagi </option>
-         <option value="2" >Absen Sore </option>
+         <option value="2" >Absen Pulang </option>
          </select>
     </div>
 

@@ -83,6 +83,7 @@
     $('#id_unitkerja').select2()
     $('#id_m_status_pengajuan_cuti').select2()
     $('#form_search').submit()
+   
   })
 
   $('#form_search').on('submit', function(e){

@@ -937,13 +937,16 @@
             $result['kepalaskpd']['nama_jabatan'] = $unitkerja['nama_jabatan_kepalaskpd_hardcode'];
         }
 
+        // $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+        // g.id as id_m_user, a.flag_bendahara, e.flag_uptd,
+        // TRIM(
+        //     CONCAT(
+        //     IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
+        //     ," ", e.nama_jabatan)
+        // ) AS nama_jabatan,
+        // e.kepalaskpd, e.eselon, d.id_unitkerjamaster, f.nama_jabatan as nama_jabatan_tambahan, f.kelas_jabatan as kelsa_jabatan_tambahan, f.kepalaskpd as kepalaskpd_tambahan')
         $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-        g.id as id_m_user, a.flag_bendahara, e.flag_uptd,
-        TRIM(
-            CONCAT(
-            IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
-            ," ", e.nama_jabatan)
-        ) AS nama_jabatan,
+        g.id as id_m_user, a.flag_bendahara, e.flag_uptd, e.nama_jabatan,
         e.kepalaskpd, e.eselon, d.id_unitkerjamaster, f.nama_jabatan as nama_jabatan_tambahan, f.kelas_jabatan as kelsa_jabatan_tambahan, f.kepalaskpd as kepalaskpd_tambahan')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
@@ -1081,13 +1084,16 @@
                                     ->get()->row_array(); 
 
             // karena kadis dinkes ada 2, hardcode ambil nip ybs dibawah untuk dinkes dan puskes
+            // $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+            //     f.id as id_m_user, a.flag_bendahara,
+            //     TRIM(
+            //         CONCAT(
+            //         IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
+            //         ," ", e.nama_jabatan)
+            //     ) AS nama_jabatan, e.kepalaskpd')
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 f.id as id_m_user, a.flag_bendahara,
-                TRIM(
-                    CONCAT(
-                    IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
-                    ," ", e.nama_jabatan)
-                ) AS nama_jabatan, e.kepalaskpd')
+                e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
@@ -1250,6 +1256,93 @@
         return $data_disiplin;
     }
 
+    public function getNominatifPegawaiHardCode($id_unitkerja, $bulan, $tahun, $list_pegawai){
+        $flag_sekolah_kecamatan = 0;
+        $data['bulan'] = $bulan;
+        $data['tahun'] = $tahun;
+
+        if($bulan == null){
+            $bulan = date('m');
+        }
+
+        if($tahun == null){
+            $tahun = date('Y');
+        }
+
+        $temp_list_pegawai = null;
+        foreach($list_pegawai as $lp){
+            $nip = isset($lp['nipbaru_ws']) ? $lp['nipbaru_ws'] : $lp['nip'];
+            $temp_list_pegawai[$nip] = $lp;
+        }
+
+        $uk = $this->db->select('*')
+                    ->from('db_pegawai.unitkerja')
+                    ->where('id_unitkerja', $id_unitkerja)
+                    ->get()->row_array();
+        
+        if(!$uk){
+            $uk = $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            ->where('id_unitkerjamaster', $id_unitkerja)
+                            ->get()->row_array();
+            if($uk){
+                $flag_sekolah_kecamatan = 1;
+            }
+        }
+
+        $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user,
+            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun')
+                                ->from('t_hardcode_nominatif a')
+                                ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
+                                ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
+                                ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
+                                ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
+                                ->join('m_user h', 'a.nip = h.username')
+                                // ->where('a.bulan <=', floatval($bulan))
+                                // ->where('a.tahun <=', floatval($tahun))
+                                // ->where('a.id_unitkerja', $id_unitkerja)
+                                ->where('a.flag_active', 1)
+                                ->where('h.flag_active', 1)
+                                ->group_by('a.id');
+
+        if($uk && $flag_sekolah_kecamatan == 1){ // jika sekolah
+            $this->db->where('f.id_unitkerjamaster_kecamatan', $id_unitkerja);
+        } else if(stringStartWith('Kecamatan', $uk['nm_unitkerja'])){ // jika kecamatan
+            $this->db->where('f.id_unitkerjamaster', $uk['id_unitkerjamaster']);
+        } else {
+            $this->db->where('a.id_unitkerja', $id_unitkerja);
+        }
+        $pegawai = $this->db->get()->result_array();
+        // if($id_unitkerja == '4011000'){
+        //     dd($pegawai);
+        // }
+        if($pegawai){
+            foreach($pegawai as $peg){
+                if(floatval($bulan) <= $peg['bulan'] && floatval($tahun) <= $peg['tahun']){
+                    if($peg['flag_add'] == 1){
+                        $temp_list_pegawai[$peg['nipbaru_ws']] = $peg;
+                    }
+
+                    if($peg['flag_add'] == 0){
+                        unset($temp_list_pegawai[$peg['nipbaru_ws']]);
+                    }
+                }
+            }
+        }
+
+        $list_pegawai = null;
+        if($temp_list_pegawai){
+            foreach($temp_list_pegawai as $tlp){
+                $list_pegawai[] = $tlp;
+            }
+        }
+        
+        return $list_pegawai;
+    }
+
     public function getPltPlhTambahan($id_unitkerja, $bulan, $tahun, $list_pegawai){
         if($bulan == null){
             $bulan = date('m');
@@ -1260,8 +1353,8 @@
         }
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, a.id_m_user, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
-            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
@@ -1328,12 +1421,7 @@
 
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
-            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat,
-            TRIM(
-                CONCAT(
-                IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
-                ," ", b.nama_jabatan)
-            ) AS nama_jabatan,
+            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan,
             b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
             a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg')
                             ->from('db_pegawai.pegawai a')
@@ -1364,6 +1452,8 @@
             $list_pegawai = $this->db->get()->result_array();
 
             $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
+
+            $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
         $temp_list_nip = null;

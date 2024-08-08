@@ -21,16 +21,17 @@
                 <!-- <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button> -->
             </form>
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-12 table-responsive">
             <table border=1 id="table_result" class="table table-hover datatable">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
-                    <th style="width: 45%;" class="text-center">Nama Pegawai</th>
+                    <th style="width: 35%;" class="text-center">Nama Pegawai</th>
                     <th style="width: 10%;" class="text-center">Eselon</th>
                     <th style="width: 10%;" class="text-center">Jenis Jabatan</th>
-                    <th style="width: 30%;" class="text-center">Unit Kerja</th>
-                    <th style="width: 10%;" class="text-center">Umur</th>
+                    <th style="width: 20%;" class="text-center">Unit Kerja</th>
+                    <th style="width: 10%;" class="text-center">BUP</th>
                     <th style="width: 10%;" class="text-center">TMT Pensiun</th>
+                    <th style="width: 20%;" class="text-center">Detail</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -45,8 +46,13 @@
                             <td class="text-center"><?=($rs['eselon'])?></td>
                             <td class="text-center"><?=($rs['jenis_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                            <td class="text-center"><?=($rs['umur'])?></td>
+                            <td class="text-center"><?=($rs['umur'])?></td>                            
                             <td class="text-center"><?=formatDateNamaBulan($rs['tmt_pensiun'])?></td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-navy" target="_blank" href="<?=base_url('kepegawaian/pensiun/kelengkapan-berkas/'.$rs['nipbaru_ws'])?>">
+                                    <i class="fa fa-file"></i> Berkas
+                                </a>
+                            </td>
                         </tr>
                     <?php } ?>
                 </tbody>

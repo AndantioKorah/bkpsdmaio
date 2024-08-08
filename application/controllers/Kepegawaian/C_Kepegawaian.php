@@ -710,6 +710,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['statusjabatan'] = $statusjab;
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['dok'] = $this->kepegawaian->getDataDok('db_pegawai.pegjabatan', $id_peg );
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
@@ -1805,8 +1806,8 @@ class C_Kepegawaian extends CI_Controller
 
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
-		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
-		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg); 
+		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiunAdmin($id_peg); 
 		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','24','0',$id_peg);
 		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','18','0',$id_peg);
 		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','19','0',$id_peg);

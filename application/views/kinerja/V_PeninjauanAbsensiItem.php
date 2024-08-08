@@ -19,6 +19,7 @@
                 <th class="text-left ">Jenis Bukti Absensi</th>
                 <th class="text-left ">Teman Absensi</th>
                 <th class="text-left ">Status</th>
+                <th class="text-left ">Keterangan</th>  
                 <th class="text-left ">Bukti Dokumen</th>               
                 <th></th>
             </thead>
@@ -40,7 +41,12 @@
                                                     else if($lp['status'] == 1) echo "diterima";
                                                     else if($lp['status'] == 2) echo "ditolak";
                                                     else if($lp['status'] == 3) echo "Menunggu Verifikasi BKPSDM"; ?></td>
-                        <td class="text-center">  
+                      
+                       <td class="text-left">
+                       <?php if($lp['status'] == 2) echo$lp['keterangan_verif'];?>
+                       </td>
+                      
+                       <td class="text-center">  
                         <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-file"></i> Lihat File
                             </button>

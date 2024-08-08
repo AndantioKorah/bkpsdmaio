@@ -399,7 +399,7 @@
 
         public function getListPegawaiPensiunByYear($data){
             // dd($data);
-            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
@@ -453,6 +453,20 @@
                                 $crit = 2;
                                 $temp = $d;
                                 $bup = 60;
+                            } else if($d['jenis_jabatan'] == 'JFT'){
+                                if(stringStartWith('Guru', $d['nama_jabatan'])){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                                    $crit = 4;
+                                    $temp = $d;
+                                    $bup = 65;
+                                } else {
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 58;
+                                }
                             } else if($umur == 60 && ($d['eselon'] == 'II A' || $d['eselon'] == 'II B' || $d['jenis_jabatan'] == 'JFT')){
                                 $crit = 3;
                                 $temp = $d;
@@ -473,7 +487,7 @@
                                 $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
                                 $explode = explode("-", $temp['tmt_pensiun']);
                                 // dd($temp['tmt_pensiun']);
-                                $temp['umur'] = $umur;
+                                $temp['umur'] = $bup;
                                 // if($d['nipbaru_ws'] == '196501271985022001'){
                                     // $temp['umur'] .= '  '.$crit;
                                     // dd($crit);

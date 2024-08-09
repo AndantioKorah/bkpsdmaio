@@ -449,20 +449,39 @@
                                 $crit = 1;
                                 $temp = $d;
                                 $bup = 58;
-                            } else if($d['jenis_jabatan'] == 'JFT' && $umur == 60 && in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //jika 60 dan JFT dan golongan IV
-                                $crit = 2;
-                                $temp = $d;
-                                $bup = 60;
-                            } else if($d['jenis_jabatan'] == 'JFT'){
+                            } 
+                            // else if($d['jenis_jabatan'] == 'JFT' && $umur == 60 && in_array($d['id_pangkat'], $id_pangkat_ahli_madya)){ //jika 60 dan JFT dan golongan IV
+                            //     $crit = 2;
+                            //     $temp = $d;
+                            //     $bup = 60;
+                            // } 
+                            else if($d['jenis_jabatan'] == 'JFT'){
+                                $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                                $list_selected_madya = ['Madya'];
+                                $list_selected_utama = ['Utama'];
+        
+                                if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_madya)){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else 
                                 if(stringStartWith('Guru', $d['nama_jabatan'])){
                                     $crit = 2;
                                     $temp = $d;
                                     $bup = 60;
-                                } else if(in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                                } 
+                                // else if(in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                                //     $crit = 4;
+                                //     $temp = $d;
+                                //     $bup = 65;
+                                // } 
+                                else if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_utama)){
                                     $crit = 4;
                                     $temp = $d;
                                     $bup = 65;
-                                } else {
+                                } 
+                                
+                                else {
                                     $crit = 2;
                                     $temp = $d;
                                     $bup = 58;

@@ -292,6 +292,32 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('sk_pangkat')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['sk_pangkat']){
+                                                if($berkas['sk_pangkat']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK Pangkat Terakhir</span>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_sk_pangkat" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_anak')">
                                         <?php
                                             $icon = 'fa-times';

@@ -17,11 +17,13 @@
         </div>
         <div class="col-lg-12">
             <div class="tab-content" id="pills-tabContent">
-                <?php $j = 1; foreach($url as $u){ ?>
+                <?php if($url){ $j = 1; foreach($url as $u){ ?>
                     <div class="tab-pane <?= $j == 1 ? 'show active' : ''?>" id="pills-data-<?=$j?>" role="tabpanel" aria-labelledby="pills-data-<?=$j?>">
                         <iframe src="<?=$u?>" style="width: 100%; height: 75vh;"></iframe>
                     </div>
-                <?php $j++; } ?>
+                <?php $j++; } } else { ?>
+                    <div class="text-center">DATA ADA TAPI FILE TIDAK DITEMUKAN DI SERVER</div>
+                <?php } ?>
             </div>
         </div>
     <?php } else { ?>

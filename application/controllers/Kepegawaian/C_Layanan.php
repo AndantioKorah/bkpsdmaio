@@ -30,7 +30,6 @@ class C_Layanan extends CI_Controller
 		$data['nip'] = $nip; 
 		$data['id_t_checklist_pensiun'] = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$this->session->set_userdata('berkas_pensiun', $data);
-		// dd($data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);
 	}
 
@@ -39,27 +38,31 @@ class C_Layanan extends CI_Controller
 		$data['nip'] = $temp['nip'];
 		$data['id_t_checklist_pensiun'] = $temp['id_t_checklist_pensiun'];
 		$data['result'] = null;
-
-		if($berkas == 'akte_anak'){
-			$data['result'] = $temp['berkas'][$berkas];
-		} else {
-			$data['result'][] = $temp['berkas'][$berkas];
-		}
 		
+		if($temp['berkas'][$berkas]){
+			if($berkas == 'akte_anak'){
+				$data['result'] = $temp['berkas'][$berkas];
+			} else {
+				$data['result'][] = $temp['berkas'][$berkas];
+			}
+		}
+
 		$data['url'] = null;
 		$data['jenis_berkas'] = $berkas;
 		if($data['result']){
 			foreach($data['result'] as $dr){
-				if($berkas == 'cpns' || $berkas == 'pns'){
-					$data['url'][] = base_url()."arsipberkaspns/".$dr['gambarsk'];
-				} else if($berkas == 'skp'){
-					$data['url'][] = base_url()."arsipskp/".$dr['gambarsk'];
-				} else if($berkas == 'sk_pangkat') {
-					$data['url'][] = base_url()."arsipelektronik/".$dr['gambarsk'];
-				} else if($berkas == 'sk_jabatan') {
-					$data['url'][] = base_url()."arsipjabatan/".$dr['gambarsk'];
-				} else {
-					$data['url'][] = base_url()."arsiplain/".$dr['gambarsk'];
+				if($dr['gambarsk']){
+					if($berkas == 'cpns' || $berkas == 'pns'){
+						$data['url'][] = base_url()."arsipberkaspns/".$dr['gambarsk'];
+					} else if($berkas == 'skp'){
+						$data['url'][] = base_url()."arsipskp/".$dr['gambarsk'];
+					} else if($berkas == 'sk_pangkat') {
+						$data['url'][] = base_url()."arsipelektronik/".$dr['gambarsk'];
+					} else if($berkas == 'sk_jabatan') {
+						$data['url'][] = base_url()."arsipjabatan/".$dr['gambarsk'];
+					} else {
+						$data['url'][] = base_url()."arsiplain/".$dr['gambarsk'];
+					}
 				}
 			}
 		}

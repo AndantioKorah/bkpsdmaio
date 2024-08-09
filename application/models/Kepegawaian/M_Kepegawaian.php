@@ -6585,7 +6585,7 @@ public function submitEditJabatan(){
        
         $this->db->trans_begin();
         
-            $getJabatan = $this->db->select('a.id_unitkerja,a.tmtjabatan,a.id_jabatan,a.jenisjabatan')
+            $getJabatan = $this->db->select('a.statusjabatan,a.id_unitkerja,a.tmtjabatan,a.id_jabatan,a.jenisjabatan')
             ->from('db_pegawai.pegjabatan a')
             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
             ->where('a.id_pegawai', $id_peg)
@@ -6606,6 +6606,7 @@ public function submitEditJabatan(){
                 $dataUpdate["tmtjabatan"] =  $getJabatan['tmtjabatan'];
                 $dataUpdate["jabatan"] =   $getJabatan['id_jabatan'];
                 $dataUpdate["jenisjabpeg"] =  $getJabatan['jenisjabatan'];
+                $dataUpdate["statusjabatan"] =  $getJabatan['statusjabatan'];
                 $this->db->where('id_peg', $id_peg)
                         ->update('db_pegawai.pegawai', $dataUpdate);
             }

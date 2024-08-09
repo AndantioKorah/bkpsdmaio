@@ -457,10 +457,10 @@
                             // } 
                             else if($d['jenis_jabatan'] == 'JFT'){
                                 $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
-                                $list_selected_madya = ['Madya'];
-                                $list_selected_utama = ['Utama'];
+                                // $list_selected_madya = ['Madya'];
+                                // $list_selected_utama = ['Utama'];
         
-                                if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_madya)){
+                                if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Madya'])){
                                     $crit = 2;
                                     $temp = $d;
                                     $bup = 60;
@@ -475,7 +475,7 @@
                                 //     $temp = $d;
                                 //     $bup = 65;
                                 // } 
-                                else if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_utama)){
+                                else if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Utama'])){
                                     $crit = 4;
                                     $temp = $d;
                                     $bup = 65;

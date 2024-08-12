@@ -29,7 +29,7 @@
   <div class="col-lg-12">
     <div class="card card-default">
       <div class="card-header">
-        <div class="card-title"><h5>VERIFIKASI PENGJUAN PENSIUN</h5></div>
+        <div class="card-title"><h5>VERIFIKASI PENGAJUAN PENSIUN</h5></div>
         <hr>
       </div>
       <div class="card-body">

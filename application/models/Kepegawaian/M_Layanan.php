@@ -129,6 +129,47 @@ class M_Layanan extends CI_Model
         }
     }
 
+    public function getProgressChecklistPensiun($id_t_checklist_pensiun){
+        $result = null;
+
+        $progress = $this->db->select('a.*, b.nama as verifikator, c.meta_name, a.created_date')
+                            ->from('t_checklist_pensiun_detail a')
+                            ->join('m_user b', 'a.id_m_user_validasi = b.id')
+                            ->join('m_dokumen_pensiun c', 'a.id_m_berkas = c.id')
+                            ->where('a.id_t_checklist_pensiun', $id_t_checklist_pensiun)
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            // ->group_by('a.id')
+                            ->get()->result_array();
+        if($progress){
+            foreach($progress as $p){
+                $result[$p['meta_name']] = $p;
+            }
+        }
+
+        return $result;
+    }
+
+    public function batalValidasiBerkas($berkas, $id_t_checklist_pensiun){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $master = $this->db->select('*')
+                        ->from('m_dokumen_pensiun')
+                        ->where('meta_name', $berkas)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        $this->db->where('id_t_checklist_pensiun', $id_t_checklist_pensiun)
+                ->where('id_m_berkas', $master['id'])
+                ->update('t_checklist_pensiun_detail', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
+        return $rs;
+    }
+
     public function validasiBerkas($nip, $berkas, $id_t_checklist_pensiun){
         $rs['code'] = 0;
         $rs['message'] = "";
@@ -161,7 +202,8 @@ class M_Layanan extends CI_Model
                     ->where('id_m_berkas', $master['id'])
                     ->update('t_checklist_pensiun_detail', [
                         'flag_active' => 0,
-                        'updated_by' => $this->general_library->getId(),
+                        'created_by' => $this->general_library->getId(),
+                        'udpated_by' => $this->general_library->getId(),
                         // 'tanggal_validasi' => date('Y-m-d H:i:s')
                     ]);
         }
@@ -180,6 +222,17 @@ class M_Layanan extends CI_Model
                     'id_m_user_validasi' => $this->general_library->getId(),
                     'tanggal_validasi' => date('Y-m-d H:i:s')
                 ];
+
+                if($d && $d['status'] == 1){ // jika belum diverif
+                    $this->db->where('id', $d['id'])
+                            ->where('status', 1)
+                            ->update($master['table_ref'], [
+                                'status' => 2,
+                                'id_m_user_verif' => $this->general_library->getId(),
+                                'tanggal_verfi' => date('Y-m-d H:i:s')
+                            ]);
+                }
+
                 $i++;
             }
         } else {
@@ -197,6 +250,8 @@ class M_Layanan extends CI_Model
 
         $this->db->insert_batch('t_checklist_pensiun_detail', $list_input);
 
+        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s'));
+        
         return $rs;
     }
 }

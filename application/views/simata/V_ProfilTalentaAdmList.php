@@ -32,7 +32,7 @@
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
                 <th>Total Nilai </th>
-                <th>Hasil Pemetanaan</th>
+                <th>Hasil Pemetanaan </th>
                 <th>Rekomendasi</th>
                 <th style="display:none">eselon</th>
 				<th></th>
@@ -40,7 +40,9 @@
         </thead>
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
-            <?php  if($rs2['fa'] == "" || $rs2['fa'] != 0){ ?>
+            <?php  
+            // if($rs2['fa'] == "" || $rs2['fa'] != 0){ 
+                ?>
 			<?php 
                 // if($jenis_jabatan == 2){
                 //     if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
@@ -79,7 +81,9 @@
 										<i class="fa fa-search"></i></button>
 				</td>
             </tr>
-			<?php } ?>
+			<?php 
+            // } 
+             ?>
             <?php } ?>
             
         </tbody>

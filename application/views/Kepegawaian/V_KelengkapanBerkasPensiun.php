@@ -261,6 +261,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK CPNS</span>
+                                                <?php if(isset($progress['cpns'])){ ?>
+                                                    <span class="badge badge-progress-cpns badge-success text-right float-right">
+                                                        Telah diverifikasi oleh <?=trim($progress['cpns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['cpns']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_cpns" style="display: none;">
                                             </div>
@@ -287,8 +292,292 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK PNS</span>
+                                                <?php if(isset($progress['pns'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah diverifikasi oleh <?=trim($progress['pns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pns']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_pns" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('sk_pangkat')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['sk_pangkat']){
+                                                if($berkas['sk_pangkat']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK Pangkat Terakhir</span>
+                                                <?php if(isset($progress['sk_pangkat'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['sk_pangkat']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_pangkat']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_sk_pangkat" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('hukdis')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['hukdis']){
+                                                if($berkas['hukdis']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR</span>
+                                                <?php if(isset($progress['hukdis'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['hukdis']['verifikator']).' pada '.formatDateNamaBulanWT($progress['hukdis']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_hukdis" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('pidana')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['pidana']){
+                                                if($berkas['pidana']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SURAT PERNYATAAN TIDAK SEDANG DIPIDANA ATAU PERNAH DIPIDANA PENJARA</span>
+                                                <?php if(isset($progress['pidana'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['pidana']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pidana']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_pidana" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('sk_jabatan')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['sk_jabatan']){
+                                                if($berkas['sk_jabatan']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK JABATAN STRUKTURAL TERAKHIR</span>
+                                                <?php if(isset($progress['sk_jabatan'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['sk_jabatan']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_jabatan']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_sk_jabatan" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('pmk')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['pmk']){
+                                                if($berkas['pmk']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SK PENINJAUAN MASA KERJA</span>
+                                                <?php if(isset($progress['pmk'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['pmk']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pmk']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_pmk" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('skp')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['skp']){
+                                                if($berkas['skp']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SASARAN KERJA PEGAWAI</span>
+                                                <?php if(isset($progress['skp'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['skp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['skp']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_skp" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_nikah')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['akte_nikah']){
+                                                if($berkas['akte_nikah']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">AKTE PERKAWINAN</span>
+                                                <?php if(isset($progress['akte_nikah'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="akte_nikah" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_cerai')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['akte_cerai']){
+                                                if($berkas['akte_cerai']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">AKTE CERAI</span>
+                                                <?php if(isset($progress['akte_cerai'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['akte_cerai']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_cerai']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_akte_cerai" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_kematian')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['akte_kematian']){
+                                                if($berkas['akte_kematian']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">AKTE KEMATIAN</span>
+                                                <?php if(isset($progress['akte_kematian'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['akte_kematian']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_kematian']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_akte_kematian" style="display: none;">
                                             </div>
                                         </div>
                                     </div>
@@ -315,8 +604,137 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">Akte Lahir Anak</span>
+                                                <?php if(isset($progress['akte_anak'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah diverifikasi oleh <?=trim($progress['akte_anak']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_anak']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_akte_anak" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('kartu_keluarga')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['kartu_keluarga']){
+                                                if($berkas['kartu_keluarga']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">KARTU KELUARGA</span>
+                                                <?php if(isset($progress['kartu_keluarga'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['kartu_keluarga']['verifikator']).' pada '.formatDateNamaBulanWT($progress['kartu_keluarga']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_kartu_keluarga" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('ktp')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['ktp']){
+                                                if($berkas['ktp']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">KARTU TANDA PENDUDUK</span>
+                                                <?php if(isset($progress['ktp'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['ktp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['ktp']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_ktp" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('npwp')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['npwp']){
+                                                if($berkas['npwp']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">NPWP</span>
+                                                <?php if(isset($progress['npwp'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['npwp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['npwp']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_npwp" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('rekening')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['rekening']){
+                                                if($berkas['rekening']['status'] == 2){
+                                                    $icon = 'fa-check';
+                                                    $icon_berkas = 'icon-berkas-lengkap';
+                                                } else {
+                                                    $icon = 'fa-minus';
+                                                    $icon_berkas = 'icon-berkas-belum-verif';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">SURAT PERNYATAAN TIDAK SEDANG DIPIDANA ATAU PERNAH DIPIDANA PENJARA</span>
+                                                <?php if(isset($progress['rekening'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah divalidasi oleh <?=trim($progress['rekening']['verifikator']).' pada '.formatDateNamaBulanWT($progress['rekening']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_rekening" style="display: none;">
                                             </div>
                                         </div>
                                     </div>

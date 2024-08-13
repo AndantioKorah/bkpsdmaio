@@ -1523,40 +1523,40 @@ animation06
             $nilaix = 0;
           }  
           
-          if($nilaix >= 85 && $nilaiy >= 85) {
+          if($nilaix >= $tinggi['dari'] && $nilaiy >= 85) {
               $data['talenta'][9][$rs->id_pegawai] = 0;
               $ix++;
               
              } 
-             if($nilaix >= 85 && $nilaiy >= 70 && $nilaiy < 85) {
+             if($nilaix >= $tinggi['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
              $data['talenta'][8][$rs->id_pegawai] = 0;
               $viii++;
              }
-             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 85) {
+             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= 85) {
              $data['talenta'][7][$rs->id_pegawai] = 0;
               $vii++;
              } 
-            if($nilaix >= 85 && $nilaiy < 70) {
+            if($nilaix >= $tinggi['dari'] && $nilaiy < 70) {
              $data['talenta'][6][$rs->id_pegawai] = 0;
               $vi++;
              } 
-             if($nilaix >= 70 && $nilaix < 85 && $nilaiy >= 70 && $nilaiy < 85) {
+             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
              $data['talenta'][5][$rs->id_pegawai] = 0;
               $v++;
             } 
-            if($nilaix < 70 && $nilaiy >= 85) {
+            if($nilaix < $menengah['dari'] && $nilaiy >= 85) {
              $data['talenta'][4][$rs->id_pegawai] = 0;
               $iv++;
             } 
-            if($nilaix >= 70 && $nilaix < 85 && $nilaiy < 70) {
+            if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy < 70) {
              $data['talenta'][3][$rs->id_pegawai] = 0;
               $iii++;
             }
-            if($nilaix < 70 && $nilaiy >= 70 && $nilaiy < 85) {
+            if($nilaix < $menengah['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
               $data['talenta'][2][$rs->id_pegawai] = 0;
               $ii++;
             }
-            if($nilaix < 70 && $nilaiy < 70) {
+            if($nilaix < $menengah['dari'] && $nilaiy < 70) {
              $data['talenta'][1][$rs->id_pegawai] = 0;
           
              $i++;
@@ -2017,31 +2017,31 @@ $(function(){
           }
 
         //   if(nilaiy > 0) {
-          if(nilaix < 70 && nilaiy < 70) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy < 70) {
             point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix < 70 && nilaiy >= 70 && nilaiy < 85) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point2.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 70 && nilaix < 85 && nilaiy < 70) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy < 70) {
             point3.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix < 70 && nilaiy >= 85) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= 85) {
             point4.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 70 && nilaiy < 85) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point5.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 85 && nilaiy < 70) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy < 70) {
             point6.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 70 && nilaix < 85 && nilaiy >= 85) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= 85) {
             point7.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 85 && nilaiy >= 70 && nilaiy < 85) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point8.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= 85 && nilaiy >= 85) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= 85) {
             point9.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
         // }
@@ -2140,8 +2140,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 0,
-     max: 69.99,
+     min: <?=$rendah['dari'];?>,
+     max: <?=$rendah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2226,8 +2226,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 0,
-     max: 69.99,
+     min: <?=$rendah['dari'];?>,
+     max: <?=$rendah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2281,7 +2281,7 @@ const nineGridLabels3 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('III', x.getPixelForValue(77), y.getPixelForValue(30)) 
+      ctx.fillText('III', x.getPixelForValue(<?=$label_menengah;?>), y.getPixelForValue(30)) 
   }) 
 }
 
@@ -2309,8 +2309,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 70,
-     max: 85,
+     min: <?=$menengah['dari'];?>,
+     max: <?=$menengah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2393,8 +2393,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 0,
-     max: 69.99,
+     min: <?=$rendah['dari'];?>,
+     max: <?=$rendah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2450,7 +2450,7 @@ const nineGridLabels5 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('V', x.getPixelForValue(77), y.getPixelForValue(77)) 
+      ctx.fillText('V', x.getPixelForValue(<?=$label_menengah;?>), y.getPixelForValue(77)) 
   }) 
 }
 
@@ -2478,8 +2478,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 70,
-     max: 84.99,
+     min: <?=$menengah['dari'];?>,
+     max: <?=$menengah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2535,7 +2535,7 @@ const nineGridLabels6 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('VI', x.getPixelForValue(92), y.getPixelForValue(31)) 
+      ctx.fillText('VI', x.getPixelForValue(<?=$label_tinggi;?>), y.getPixelForValue(31)) 
   }) 
 }
 
@@ -2563,8 +2563,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 85,
-     max: 100,
+     min: <?=$tinggi['dari'];?>,
+     max: <?=$tinggi['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2620,7 +2620,7 @@ const nineGridLabels7 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('VII', x.getPixelForValue(77), y.getPixelForValue(92)) 
+      ctx.fillText('VII', x.getPixelForValue(<?=$label_menengah;?>), y.getPixelForValue(92)) 
   }) 
 }
 
@@ -2648,8 +2648,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 70,
-     max: 84.99,
+     min: <?=$menengah['dari'];?>,
+     max: <?=$menengah['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2705,7 +2705,7 @@ const nineGridLabels8 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('VIII', x.getPixelForValue(92), y.getPixelForValue(77)) 
+      ctx.fillText('VIII', x.getPixelForValue(<?=$label_tinggi;?>), y.getPixelForValue(77)) 
   }) 
 }
 
@@ -2734,8 +2734,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 85,
-     max: 100,
+     min: <?=$tinggi['dari'];?>,
+     max: <?=$tinggi['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2791,7 +2791,7 @@ const nineGridLabels9 = {
    ctx.backgroundColor = "#dc3545",
    ctx.borderColor = "#dc3545",
    ctx.textAlign = 'center';
-      ctx.fillText('IX', x.getPixelForValue(92), y.getPixelForValue(92)) 
+      ctx.fillText('IX', x.getPixelForValue(<?=$label_tinggi;?>), y.getPixelForValue(92)) 
   }) 
 }
 
@@ -2819,8 +2819,8 @@ options: {
   aspectRatio : false   ,
   scales: {
   x: {
-     min: 85,
-     max: 100,
+     min: <?=$tinggi['dari'];?>,
+     max: <?=$tinggi['sampai'];?>,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];

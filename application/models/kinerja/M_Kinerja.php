@@ -2362,7 +2362,6 @@
                             ->where('id_unitkerjamaster_kecamatan', $id_unitkerja)
                             ->get()->row_array();
             }
-
             $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
 
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
@@ -2395,7 +2394,7 @@
                         $this->db->where_in('e.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH);
                     }
                 }
-            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            } else if($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW) && $flag_sekolah_kecamatan == 0){
                 $this->db->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
                             ->where('h.id_unitkerjamaster', $unitkerja['id_unitkerjamaster']);
             } else if($flag_sekolah_kecamatan == 1){
@@ -2409,7 +2408,7 @@
             }
             $pegawai = $this->db->get()->result_array();
             // if($data['id_unitkerja'] == 3021000){
-            //     dd($pegawai);
+                // dd($pegawai);
             // }
         // }
         if($id_pegawai == null){
@@ -2522,7 +2521,8 @@
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
-                    if($p['skpd'] == 6170000){ // if puskes bunaken
+                    if($p['skpd'] == 6170000 || // if puskes bunaken
+                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001){ //sekolah di bunaken kepulauan 
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }

@@ -2726,6 +2726,14 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
 
         public function getPegawaiPenilaianDetailNinebox($jenis_jab,$jt,$box,$jumlah,$jenis_pengisian){
+
+
+            $getInterval =  $this->db->select('*')
+            ->from('db_simata.m_interval_penilaian a')
+            ->where('a.flag_active', 1)
+            ->get()->result_array();
+     
+
             $this->db->select('a.*,b.*,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
             where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,  SUM(res_kinerja + res_potensial_total) as total')
                            ->from('db_pegawai.pegawai a')
@@ -2750,49 +2758,49 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
                            
                            if($box == 9){
-                               $this->db->where('b.res_potensial_total >=', 85);
-                               $this->db->where('b.res_kinerja >=', 85);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[0]['dari']);
                            }
                            if($box == 8){
-                               $this->db->where('b.res_potensial_total >=', 85);
-                               $this->db->where('b.res_kinerja >=', 70);
-                               $this->db->where('b.res_kinerja <', 85);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[2]['dari']);
+                               $this->db->where('b.res_kinerja <', $getInterval[0]['dari']);
                            }
                            if($box == 7){
-                               $this->db->where('b.res_potensial_total >=', 70);
-                               $this->db->where('b.res_potensial_total <', 85);
-                               $this->db->where('b.res_kinerja >=', 85);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[4]['dari']);
+                               $this->db->where('b.res_potensial_total <', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[0]['dari']);
                            }
                            if($box == 6){
-                               $this->db->where('b.res_potensial_total >=', 85);
-                               $this->db->where('b.res_kinerja <', 70);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja <', $getInterval[2]['dari']);
                            }
                            if($box == 5){
-                               $this->db->where('b.res_potensial_total >=', 70);
-                               $this->db->where('b.res_potensial_total <', 85);
-                               $this->db->where('b.res_kinerja >=', 70);
-                               $this->db->where('b.res_kinerja <', 85);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[4]['dari']);
+                               $this->db->where('b.res_potensial_total <', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[2]['dari']);
+                               $this->db->where('b.res_kinerja <', $getInterval[0]['dari']);
                            }
                            if($box == 4){
-                               $this->db->where('b.res_potensial_total <', 70);
-                               $this->db->where('b.res_kinerja >=', 85);
+                               $this->db->where('b.res_potensial_total <', $getInterval[4]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[0]['dari']);
                            }
                            if($box == 3){
-                               $this->db->where('b.res_potensial_total >=', 70);
-                               $this->db->where('b.res_potensial_total <', 85);
-                               $this->db->where('b.res_kinerja <', 70);
+                               $this->db->where('b.res_potensial_total >=', $getInterval[4]['dari']);
+                               $this->db->where('b.res_potensial_total <', $getInterval[1]['dari']);
+                               $this->db->where('b.res_kinerja <', $getInterval[2]['dari']);
                            }
                            if($box == 2){
-                               $this->db->where('b.res_potensial_total <', 70);
-                               $this->db->where('b.res_kinerja >=', 70);
-                               $this->db->where('b.res_kinerja <', 85);
+                               $this->db->where('b.res_potensial_total <', $getInterval[4]['dari']);
+                               $this->db->where('b.res_kinerja >=', $getInterval[2]['dari']);
+                               $this->db->where('b.res_kinerja <', $getInterval[0]['dari']);
                            }
                            if($box == 1){
                             //    $this->db->where('b.res_potensial_total <', 70);
                             //    $this->db->where('b.res_kinerja <', 70);
                             $this->db->group_start();
-                                  $this->db->where('b.res_potensial_total <', 70);
-                                  $this->db->where('b.res_kinerja <', 70);
+                                  $this->db->where('b.res_potensial_total <', $getInterval[4]['dari']);
+                                  $this->db->where('b.res_kinerja <', $getInterval[2]['dari']);
                                 //   $this->db->where('b.res_kinerja >', 0);
                                   $this->db->or_where('b.res_potensial_total is null');
                                   $this->db->or_where('b.res_kinerja is null');
@@ -2815,13 +2823,11 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
         
 public function loadListProfilTalentaAdm($id,$jenis_pengisian){
-     $this->db->select('f.flag_active as fa,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
-     where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
-     (SELECT y.nama_jabatan from db_pegawai.jabatan as y
-     where f.jabatan_target = y.id_jabatanpeg limit 1) as jabatan_target,')
+     $this->db->select('a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
-                    ->join('db_simata.t_jabatan_target f', 'f.id_peg = b.id_peg', 'left')
+                    // ->join('db_simata.t_jabatan_target f', 'f.id_peg = b.id_peg', 'left')
                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
                     // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                     ->where('a.id_m_status_pegawai', 1)
@@ -3164,7 +3170,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                       ->join('db_pegawai.pegawai b','a.id_peg = b.id_peg')
                       ->join('db_pegawai.pangkat c', 'b.pangkat = c.id_pangkat')
                       ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
-                      ->where('a.res_potensial_total >=', 85)
+                      ->where('a.res_potensial_total >=', 77)
                       ->where('a.res_kinerja >=', 85)
                       ->where('a.flag_active', 1)
                       ->where('b.id_m_status_pegawai', 1)
@@ -4066,8 +4072,11 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                                             
                                         $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
-                                        $id_pertimbangan2 = $rs['pertimbangan_pimpinan'];
-                                        $id_pertimbangan3 = $rs['id_kriteria_penilaian'];
+                                        // $id_pertimbangan2 = $rs['pertimbangan_pimpinan'];
+                                        // $id_pertimbangan3 = $rs['id_kriteria_penilaian'];
+
+                                        $id_pertimbangan2 = 124;
+                                        $id_pertimbangan3 = 126;
                                         
                                      
                                         // $id_rekamjjk1 = 93; 
@@ -5274,8 +5283,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                     
                                 $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($id_pegawai);
                                 // dd($id_pertimbangan1);
-                                $id_pertimbangan2 = $query[0]['pertimbangan_pimpinan'];
-                                $id_pertimbangan3 = $query[0]['id_kriteria_penilaian'];
+                                // $id_pertimbangan2 = $query[0]['pertimbangan_pimpinan'];
+                                // $id_pertimbangan3 = $query[0]['id_kriteria_penilaian'];
+                                $id_pertimbangan2 = 124;
+                                $id_pertimbangan3 = 126;
                                 
      
                             $skor1 =  $this->getSkor($id_rekamjjk1); 
@@ -5414,6 +5425,15 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
                    return $query;
                    }
+
+    
+                   function getInterval($unsur,$kriteria){
+                    $this->db->select('*')
+                    ->from('db_simata.m_interval_penilaian a')
+                    ->where('a.id_m_unsur_penilaian', $unsur)
+                    ->where('a.kriteria', $kriteria);
+                    return $this->db->get()->row_array(); 
+                }
                    
 
             

@@ -509,7 +509,7 @@
                     </div>
                     
 
-                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
                     </form>
 					</div>
 
@@ -552,7 +552,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
                     </form>
 					</div>
 

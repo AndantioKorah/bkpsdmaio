@@ -1486,11 +1486,12 @@ function rekomendasi($nilaix,$nilaiy){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
     $list_interval = $helper->simata->getListIntervalPotensial();
+    // dd($list_interval[0]['dari']);
 
     
     $hasil = null;
     $badge = null;
-    if($nilaix >= 77 && $nilaiy >= 85) {
+    if($nilaix >= $list_interval[0]['dari'] && $nilaiy >= 85) {
         $hasil = "IX";
         $rekom = "1. Dipromosikan dan dipertahankan<br>
         2. Masuk Kelompok Rencana Suksesi

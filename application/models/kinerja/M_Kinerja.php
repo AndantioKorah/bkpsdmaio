@@ -2521,7 +2521,8 @@
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
-                    if($p['skpd'] == 6170000){ // if puskes bunaken
+                    if($p['skpd'] == 6170000 || // if puskes bunaken
+                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001){ //sekolah di bunaken kepulauan 
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }

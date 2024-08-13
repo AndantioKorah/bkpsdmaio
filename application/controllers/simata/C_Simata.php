@@ -270,6 +270,21 @@ class C_Simata extends CI_Controller
         // $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
         $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxJpt();
         $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
+
+        $data['diatasekpektasi'] = $this->simata->getInterval(1,"Di atas ekspektasi");
+        $data['tinggi'] = $this->simata->getInterval(2,"Tinggi");
+        $data['menengah'] = $this->simata->getInterval(2,"Menengah");
+        $data['rendah'] = $this->simata->getInterval(2,"Rendah");
+
+        $labelMenengah = ($data['menengah']['sampai'] - $data['menengah']['dari']) / 2;
+        $data['label_menengah'] = $data['menengah']['sampai'] - $labelMenengah;
+
+        $labelTinggi = ($data['tinggi']['sampai'] - $data['tinggi']['dari']) / 2;
+        $data['label_tinggi'] = $data['tinggi']['sampai'] - $labelTinggi;
+        
+
+
+
         if($_POST) {
         $data['post'] = $_POST;
        

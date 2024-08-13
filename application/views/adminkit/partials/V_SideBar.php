@@ -1014,7 +1014,7 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-pimpinan/" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 				<span class="align-middle">
-				Penilaian Pimpinan
+				Pertimbangan Pimpinan
 					</span>
 				</a>	
 			</li>
@@ -1025,7 +1025,7 @@
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
 			// { 
 			?>
-
+			<?php if(!$this->general_library->isWalikota()) { ?>
 			<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
@@ -1037,7 +1037,7 @@
 			<?php 
 		    // }
 		    ?>
-		
+			<?php } ?>		
 
 		
 

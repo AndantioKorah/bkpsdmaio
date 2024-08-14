@@ -1275,7 +1275,6 @@ class C_Kepegawaian extends CI_Controller
 
 	public function getdatajab()
     {
-        
         $response   = $this->kepegawaian->getdatajab();
         echo json_encode($response);
     }

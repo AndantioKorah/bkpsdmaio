@@ -3357,7 +3357,6 @@ function getdatajab()
     $id_skpd = $newSkpd[0];
     $nama_skpd = $newSkpd[1];
     $jnsfung = $this->input->post('jnsfung');
-    
 
     if($id == "00"){
         $this->db->select('id_jabatanpeg, nama_jabatan');

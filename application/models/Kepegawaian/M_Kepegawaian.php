@@ -7562,13 +7562,14 @@ public function getFileForKarisKarsu()
 
     public function getDokumenPangkatForPensiunAdmin($id_peg)
     {
-        $this->db->select('*')
-        ->where('id_pegawai', $id_peg)
-        ->where('flag_active', 1)
-        ->where('status', 2)
-        ->order_by('tmtpangkat', 'desc')
+        $this->db->select('a.*, b.nm_pangkat')
+        ->where('a.id_pegawai', $id_peg)
+        ->where('a.flag_active', 1)
+        ->where('a.status', 2)
+        ->order_by('a.tmtpangkat', 'desc')
         ->limit(1)
-        ->from('db_pegawai.pegpangkat');
+        ->from('db_pegawai.pegpangkat a')
+        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat');
         $query = $this->db->get()->row_array();
         return $query;  
     }

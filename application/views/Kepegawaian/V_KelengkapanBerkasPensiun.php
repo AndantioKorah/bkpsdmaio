@@ -116,6 +116,19 @@
 </style>
 
 <div class="row">
+    <div class="col-lg-12">
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" action="<?=base_url('kepegawaian/C_Layanan/cetakDpcp/'.$profil_pegawai['nipbaru_ws'])?>" target="_blank">
+                            <button type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-print"></i> CETAK DPCP</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-4">
         <div class="card card-default" style="background-color: var(--primary-color);">
             <div class="card-body">
@@ -232,7 +245,7 @@
                                 <button class="nav-link nav-link-profile active" id="pills-data-berkas-tab" data-bs-toggle="pill" data-bs-target="#pills-data-berkas" type="button" role="tab" aria-controls="pills-data-berkas" aria-selected="false">CHECKLIST BERKAS</button>
                             </li>
                             <li class="nav-item nav-item-profile" role="presentation">
-                                <button class="nav-link nav-link-profile " id="pills-data-pribadi-tab" data-bs-toggle="pill" data-bs-target="#pills-data-pribadi" type="button" role="tab" aria-controls="pills-data-pribadi" aria-selected="true">DATA PRIBADI</button>
+                                <button class="nav-link nav-link-profile " id="pills-data-lainnya-tab" data-bs-toggle="pill" data-bs-target="#pills-data-lainnya" type="button" role="tab" aria-controls="pills-data-lainnya" aria-selected="true">DATA LAINNYA</button>
                             </li>
                         </ul>
                     </div>
@@ -740,7 +753,34 @@
                                     </div>
                                 </ul>
                             </div>
-                            <div class="tab-pane" id="pills-data-pribadi" role="tabpanel" aria-labelledby="pills-data-berkas">
+                            <div class="tab-pane" id="pills-data-lainnya" role="tabpanel" aria-labelledby="pills-data-lainnya">
+                                <form id="form_data_lainnya">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <label>GAJI POKOK PENSIUN</label>
+                                            <input type="number" class="form-control" name="gaji_pokok_pensiun" value="<?=$data_checklist_pensiun['gaji_pokok_pensiun']?>" />
+                                        </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>MASA KERJA GOLONGAN</label>
+                                            <input class="form-control" id="masa_kerja_golongan" name="masa_kerja_golongan" value="<?=$data_checklist_pensiun['masa_kerja_golongan']?>" />
+                                        </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>MASA KERJA PENSIUN</label>
+                                            <input class="form-control" id="masa_kerja_pensiun" name="masa_kerja_pensiun" value="<?=$data_checklist_pensiun['masa_kerja_pensiun']?>" />
+                                        </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>MASA KERJA SEBELUM DIANGKAT SEBAGAI PNS</label>
+                                            <input class="form-control" id="masa_kerja_sebelum_pns" name="masa_kerja_sebelum_pns" value="<?=$data_checklist_pensiun['masa_kerja_sebelum_pns']?>" />
+                                        </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>PENDIDIKAN SEBAGAI DASAR PENGANGKATAN PERTAMA</label>
+                                            <input class="form-control" id="pendidikan_pertama" name="pendidikan_pertama" value="<?=$data_checklist_pensiun['pendidikan_pertama']?>" />
+                                        </div>
+                                        <div class="col-lg-12 text-right mt-3">
+                                            <button type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -768,6 +808,12 @@
 <script>
     $(function(){
         $('#sidebar_toggle').click()
+        $('#mulai_masuk_pns').datepicker({
+            format: 'yyyy-mm-dd',
+            orientation: 'bottom',
+            autoclose: true,
+            todayBtn: true
+        })
     })
 
     function showBerkas(berkas){
@@ -786,4 +832,24 @@
             $('#loader.hide')
         })
     }
+
+    $('#form_data_lainnya').on('submit', function(e){
+        e.preventDefault()
+        $.ajax({
+            url: '<?=base_url('kepegawaian/C_Layanan/simpanDataLainnya/'.$id_t_checklist_pensiun)?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    successtoast('Data Berhasil Disimpan')
+                } else {
+                    errortoast(rs.message)
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+                console.log(e)
+            }
+        })
+    })
 </script>

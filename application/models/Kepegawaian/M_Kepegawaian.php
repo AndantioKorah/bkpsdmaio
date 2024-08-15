@@ -4939,14 +4939,11 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsipkeluarga/';
-        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+        // $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($this->input->post('hubkel_edit') == 20 || $this->input->post('hubkel_edit') == 30 || $this->input->post('hubkel_edit') == 40 ){
         if($_FILES['file']['name'] != ""){
-            if($filename == ""){
-                $filename = $_FILES['file']['name'];
-            } 
-        
+            $filename = str_replace(' ', '', $_FILES['file']['name']);
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
             $filename = $random_number.$filename;
     

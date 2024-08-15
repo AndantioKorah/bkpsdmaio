@@ -124,6 +124,35 @@ $('#form_edit_keluarga').on('submit', function(e){
      var formvalue = $('#form_edit_keluarga');
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pdf_file_keluarga_edit').files.length;
+
+     var hubkel = $('#hubkel_edit').val()
+        var tgl_nikah = $('#tglnikah_edit').val()
+        var paske = $('#pasangan_ke_edit').val()
+        var stts_anak = $('#statusanak_edit').val()
+        var ortu_anak = $('#nama_ortu_anak_edit').val()
+       
+
+        if(hubkel == 20 || hubkel == 30){
+          if(paske == "" || paske == 0) {
+            errortoast("Pasagan Ke berapa belum di sisi")
+            return false;
+          }
+          if(tgl_nikah == "" || tgl_nikah == "0000-00-00") {
+            errortoast("Tanggal Menikah belum di sisi")
+            return false;
+          }
+     
+        } else if(hubkel == 40){
+          if(stts_anak == "" || stts_anak == null) {
+            errortoast("Status Anak belum di sisi")
+            return false;
+          }
+          if(ortu_anak == "") {
+            errortoast("Nama orang tua anak belum di sisi")
+            return false;
+          }
+  
+        }
     
      document.getElementById('btn_edit_keluarga').disabled = true;
      $('#btn_edit_keluarga').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

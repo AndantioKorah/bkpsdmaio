@@ -9,14 +9,16 @@
           <th class="text-left">Tempat/Tanggal Lahir</th>
           <th class="text-left">Pendidikan</th>
           <th class="text-left">Pekerjaan</th>
+          <th></th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
           <?php if($kode == 2) { ?>
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
-          <th class="text-left">  </th>
+          <th class="text-left"></th>
           <?php } ?>
+          <th></th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -26,9 +28,15 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['nm_keluarga']?></td>
               <td class="text-left"><?=$rs['namakel']?></td>
-              <td class="text-left"><?= $rs['tptlahir']?></td>  
+              <td class="text-left"><?= $rs['tptlahir']?>, <?= formatDateNamaBulan($rs['tgllahir'])?></td>  
               <td class="text-left"><?= $rs['pendidikan']?></td>               
               <td class="text-left"><?= $rs['pekerjaan']?></td> 
+              <td>
+              <?php if($rs['gambarsk'] != "") { ?>
+                <button href="#modal_view_file_keluarga" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                 <i class="fa fa-file-pdf"></i></button>
+              <?php } ?>
+              </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <td>
               <?php if($kode == 1) { ?>
@@ -45,6 +53,13 @@
                <?php } ?>
               </td>
               <?php } ?>
+              <td>
+              <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_keluarga"
+                onclick="loadEditKeluarga('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
+              </td>
             </tr>
           <?php } ?>
         </tbody>
@@ -65,7 +80,48 @@
   </div>
 </div>                      
 
+
+<div class="modal fade" id="modal_view_file_keluarga" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file_jabatan"  frameborder="0" ></iframe>	
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
  
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_keluarga" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail Keluarga</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="edit_keluarga_pegawai">
+          
+        </div>
+    
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
   $(function(){
     $('.datatable').dataTable()
@@ -92,6 +148,31 @@
                        })
                    }
                }
+
+               async function openFileJabatan(filename){
+    $('#iframe_view_file_jabatan').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    
+    var number = Math.floor(Math.random() * 1000);
+    // $link = "http://siladen.manadokota.go.id/bidik/arsipjabatan/"+filename+"?v="+number;
+    $link = "<?=base_url();?>/arsipkeluarga/"+filename+"?v="+number;
+
+
+    $('#iframe_view_file_jabatan').attr('src', $link)
+        $('#iframe_view_file_jabatan').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+    })
+  }
+
+  function loadEditKeluarga(id){
+              $('#edit_keluarga_pegawai').html('')
+              $('#edit_keluarga_pegawai').append(divLoaderNavy)
+              $('#edit_keluarga_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditKeluarga")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
 
 </script>
 <?php } else { ?>

@@ -29,6 +29,25 @@ class M_Layanan extends CI_Model
         $result['npwp'] = null;
         $result['rekening'] = null;
         $result['akte_kematian'] = null;
+        $result['list_pasangan'] = null;
+        $result['list_anak'] = null;
+
+        $hubkel = $this->db->select('a.*')
+                            ->from('db_pegawai.pegkeluarga a')
+                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                            ->where('b.nipbaru_ws', $nip)
+                            ->where('a.status', 2)
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+        if($hubkel){
+            foreach($hubkel as $h){
+                if($h['hubkel'] == 20 || $h['hubkel'] == 30){
+                    $result['list_pasangan'][] = $h;
+                } else if($h['hubkel'] == 40){
+                    $result['list_anak'][] = $h;
+                }
+            }
+        }
 
         $skcpnspns = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
@@ -102,6 +121,7 @@ class M_Layanan extends CI_Model
     public function updateChecklistPensiun($nip, $data, $id_m_jenis_pensiun){
         $this->db->trans_begin();
         $last_id = null;
+        $result = null;
         $exists = $this->db->select('*')
                         ->from('t_checklist_pensiun')
                         ->where('nip', $nip)
@@ -110,6 +130,7 @@ class M_Layanan extends CI_Model
                         ->get()->row_array();
         if($exists){
             $last_id = $exists['id'];
+            $result = $exists;
         } else {
             $this->db->insert('t_checklist_pensiun', [
                 'id_m_jenis_pensiun' => $id_m_jenis_pensiun,
@@ -118,15 +139,20 @@ class M_Layanan extends CI_Model
             ]);
 
             $last_id = $this->db->insert_id();
+            $result = $this->db->select('*')
+                                ->from('t_checklist_pensiun')
+                                ->where('flag_active', 1)
+                                ->where('id', $last_id)
+                                ->get()->row_array();
         }
-
-        return $last_id;
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
         } else {
             $this->db->trans_commit();
         }
+
+        return [$last_id, $result];
     }
 
     public function getProgressChecklistPensiun($id_t_checklist_pensiun){
@@ -252,6 +278,19 @@ class M_Layanan extends CI_Model
 
         $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s'));
         
+        return $rs;
+    }
+
+    public function simpanDataLainnya($id){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $data = $this->input->post();
+        $data['updated_by'] = $this->general_library->getId();
+
+        $this->db->where('id', $id)
+                ->update('t_checklist_pensiun', $data);
+
         return $rs;
     }
 }

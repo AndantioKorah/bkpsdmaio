@@ -28,7 +28,7 @@ class C_Layanan extends CI_Controller
 		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($data['profil_pegawai']['id_peg']); 
 		$data['berkas']['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiunAdmin($data['profil_pegawai']['id_peg']);
 		$data['nip'] = $nip; 
-		$data['id_t_checklist_pensiun'] = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
+		list($data['id_t_checklist_pensiun'], $data['data_checklist_pensiun']) = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
 		$this->session->set_userdata('berkas_pensiun', $data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);
@@ -77,5 +77,20 @@ class C_Layanan extends CI_Controller
 
 	public function batalValidasiBerkas($berkas, $id){
 		echo json_encode($this->layanan->batalValidasiBerkas($berkas, $id));
+	}
+
+	public function simpanDataLainnya($id){
+		echo json_encode($this->layanan->simpanDataLainnya($id));
+	}
+
+	public function cetakDpcp($nip){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
+		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($data['profil_pegawai']['id_peg']); 
+		$data['berkas']['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiunAdmin($data['profil_pegawai']['id_peg']);
+		$data['nip'] = $nip; 
+		list($data['id_t_checklist_pensiun'], $data['data_checklist_pensiun']) = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
+		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
+		$this->load->view('kepegawaian/V_CetakDpcp', $data);
 	}
 }

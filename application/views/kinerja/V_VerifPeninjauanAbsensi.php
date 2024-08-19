@@ -15,12 +15,12 @@
                
                 
                 <div class="col-lg col-md-12" style="margin-top: 20px;">
-                    <button class="btn btn-block btn-navy"> Verifikasi</button>
+                    <button class="btn btn-block btn-navy" id="btn_verif_kolektif"> Verifikasi</button>
                 </div>
             </div>
             
         </form>
-        <form id="form_search_verif_dokumen">
+        <form id="form_search_verif_dokumen" class="mt-4">
             <div class="row">
                 <div class="col-lg col-md-12">
                     <label>Pilih Unit Kerja</label>
@@ -100,12 +100,21 @@
     $('#form_verifikasi_kolektif').submit(function(e){
         var tgl = $('#tanggal_kolektif').val()
 
+        document.getElementById('btn_verif_kolektif').disabled = true;
+        $('#btn_verif_kolektif').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
         if(tgl == ""){
             errortoast("Pilih tanggal terlebih dahulu")
+            document.getElementById('btn_verif_kolektif').disabled = false;
+            $('#btn_verif_kolektif').html('Verifikasi')
             return false;
         }
 
+        
+
         e.preventDefault()
+
+       
         
         $.ajax({
             url: '<?=base_url("kinerja/C_Kinerja/submitPeninjauanKolektif")?>',
@@ -113,6 +122,8 @@
             data: $(this).serialize(),
             success: function(data){
                 successtoast('Berhasi')
+                document.getElementById('btn_verif_kolektif').disabled = false;
+               $('#btn_verif_kolektif').html('Verifikasi')
                 $('#form_search_verif_dokumen').submit()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')

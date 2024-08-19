@@ -2161,7 +2161,7 @@
                     // 'lat' => $absen['lat'],
                     // 'lang' => $absen['lang'],
                     'tgl' => $this->input->post('tanggal_kolektif'),
-                    'status' => "2",
+                    'status' => "1",
                     'aktivitas' => 0,
                     'created_at' => $this->input->post('tanggal_kolektif'),
                     'updated_at' => $this->input->post('tanggal_kolektif')

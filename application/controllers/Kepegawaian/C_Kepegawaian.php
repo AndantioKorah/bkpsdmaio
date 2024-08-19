@@ -304,6 +304,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->doUploadArsipLainnya());
 	}
 
+	public function doUploadKeluarga()
+	{ 
+		echo json_encode( $this->kepegawaian->doUploadKeluarga());
+	}
+
 	public function doUpload()
 	{
 
@@ -1459,6 +1464,13 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_EditTimKerja', $data);
     }
 
+	public function loadEditKeluarga($id)
+    {
+		$data['hubungan_keluarga'] = $this->kepegawaian->getAllWithOrder('db_pegawai.keluarga', 'id_keluarga', 'asc');
+		$data['keluarga'] = $this->kepegawaian->getKeluargaEdit($id);
+		$this->load->view('kepegawaian/V_EditKeluarga', $data);
+    }
+
 	public function permohonanCuti(){
 		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
 		
@@ -1682,6 +1694,11 @@ class C_Kepegawaian extends CI_Controller
 	public function submitEditTimKerja()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditTimKerja());
+	}
+
+	public function submitEditKeluarga()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditKeluarga());
 	}
 
 	public function submitEditArsipLain()

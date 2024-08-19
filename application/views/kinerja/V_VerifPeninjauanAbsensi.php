@@ -3,8 +3,24 @@
         <h4>Verifikasi Peninjauan Absensi</h4>
     </div>
     <div class="card-body">
+    Verifikasi Kolektif
+        <form id="form_verifikasi_kolektif">
+        <div class="row">
+                <div class="col-lg col-md-12">
+                    <label>Pilih Tanggal</label>  
+                <input class="form-control customInput datepicker3" type="text" id="tanggal_kolektif" name="tanggal_kolektif" readonly  required/>
+                </div>
+                
+
+               
+                
+                <div class="col-lg col-md-12" style="margin-top: 20px;">
+                    <button class="btn btn-block btn-navy"> Verifikasi</button>
+                </div>
+            </div>
+            
+        </form>
         <form id="form_search_verif_dokumen">
-           
             <div class="row">
                 <div class="col-lg col-md-12">
                     <label>Pilih Unit Kerja</label>
@@ -72,6 +88,36 @@
         $('#bulan').select2()
         $('#id_unitkerja').select2()
         $('#form_search_verif_dokumen').submit()
+        $('.datepicker3').datepicker({
+        format: 'yyyy-mm-dd',
+            // viewMode: "years", 
+            // minViewMode: "years",
+            // orientation: 'bottom',
+            autoclose: true
+        });
+    })
+
+    $('#form_verifikasi_kolektif').submit(function(e){
+        var tgl = $('#tanggal_kolektif').val()
+
+        if(tgl == ""){
+            errortoast("Pilih tanggal terlebih dahulu")
+            return false;
+        }
+
+        e.preventDefault()
+        
+        $.ajax({
+            url: '<?=base_url("kinerja/C_Kinerja/submitPeninjauanKolektif")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                successtoast('Berhasi')
+                $('#form_search_verif_dokumen').submit()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
     })
 
     $('#form_search_verif_dokumen').submit(function(e){

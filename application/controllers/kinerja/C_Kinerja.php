@@ -498,6 +498,11 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', $data);
     }
 
+    public function submitPeninjauanKolektif(){
+        echo json_encode($this->kinerja->verifPeninjauanAbsensiKolektif());
+    }
+
+
     public function searchDisiplinKerja()
     {
         $data['result'] = $this->kinerja->searchDisiplinKerja($this->input->post());

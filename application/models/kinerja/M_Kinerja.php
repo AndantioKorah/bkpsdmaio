@@ -2117,6 +2117,70 @@
         return $rs;
     }
 
+    public function verifPeninjauanAbsensiKolektif(){
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';        
+        $this->db->trans_begin();
+
+       
+        $data_verif['status'] = 1;
+        $data_verif['id_m_user_verif'] = $this->general_library->getId();
+        $data_verif['updated_by'] = $this->general_library->getId();
+        $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+       
+        $peninjauan = $this->db->select('*')
+                        ->from('db_efort.t_peninjauan_absensi a')
+                        ->where('a.tanggal_absensi', $this->input->post('tanggal_kolektif'))
+                        ->where('a.status', 0)
+                        ->get()->result_array();
+        foreach ($peninjauan as $rs) {
+            $absen = $this->db->select('*')
+            ->from('db_sip.absen a')
+            ->where('a.user_id', $rs['id_m_user'])
+            ->where('a.tgl', $this->input->post('tanggal_kolektif'))
+            ->get()->row_array();
+            if($absen){
+                if($rs['jenis_absensi'] == 1){
+                    $dataUpdate['masuk'] = "07:00:00";
+                    $this->db->where('user_id', $rs['id_m_user'])
+                    ->where('tgl', $this->input->post('tanggal_kolektif'))
+                    ->update('db_sip.absen', $dataUpdate);
+                } else {
+                    $dataUpdate['pulang'] = "16:30:01";
+                    $this->db->where('user_id', $rs['id_m_user'])
+                    ->where('tgl', $this->input->post('tanggal_kolektif'))
+                    ->update('db_sip.absen', $dataUpdate);
+                }
+                $this->db->where('id', $rs['id'])
+                ->update('t_peninjauan_absensi', $data_verif);
+            } else {
+                $this->db->insert('db_sip.absen', [
+                    'user_id' => $rs['id_m_user'],
+                    'masuk' => "07:00:00",
+                    // 'pulang' => $absen['pulang'],
+                    // 'lat' => $absen['lat'],
+                    // 'lang' => $absen['lang'],
+                    'tgl' => $this->input->post('tanggal_kolektif'),
+                    'status' => "2",
+                    'aktivitas' => 0,
+                    'created_at' => $this->input->post('tanggal_kolektif'),
+                    'updated_at' => $this->input->post('tanggal_kolektif')
+                ]);
+            }
+        }
+       
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;        
+            $rs['message'] = 'Terjadi Kesalahan';
+        }else{
+            $this->db->trans_commit();
+        }
+        
+        return $rs;
+    }
+
     public function getPaguTppUnitKerja($id_unitkerja, $unitkerja){
         $result = null;
         $list_tpp_kelas_jabatan = $this->session->userdata('list_tpp_kelas_jabatan');

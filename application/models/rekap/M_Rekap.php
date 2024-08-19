@@ -2613,7 +2613,9 @@
                 } else if($result[$l['nipbaru_ws']]['presentase_kehadiran'] >= 25 && $result[$l['nipbaru_ws']]['presentase_kehadiran'] < 50){
                     $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
                 }
-                            
+
+                $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['presentase_tpp']);
+
                 $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100;
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
@@ -2622,8 +2624,8 @@
                 if($whole != 0){
                     // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
                     $result[$l['nipbaru_ws']]['nominal_pph'] = $whole >= 0.5 ? $rounded + 1 : $rounded;
-                } 
-
+                }
+                
                 $result[$l['nipbaru_ws']]['prestasi_kerja'] = formatTwoMaxDecimal($l['prestasi_kerja']); 
                 $result[$l['nipbaru_ws']]['beban_kerja'] = formatTwoMaxDecimal($l['beban_kerja']);  
                 $result[$l['nipbaru_ws']]['kondisi_kerja'] = formatTwoMaxDecimal($l['kondisi_kerja']);

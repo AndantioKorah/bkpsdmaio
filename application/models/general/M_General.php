@@ -459,7 +459,11 @@
                                 $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                                 // $list_selected_madya = ['Madya'];
                                 // $list_selected_utama = ['Utama'];
-        
+                                if((stringStartWith('Kepala Sekolah', $d['nama_jabatan'])) || (stringStartWith('Kepala Taman', $d['nama_jabatan']))){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else 
                                 if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Madya'])){
                                     $crit = 2;
                                     $temp = $d;
@@ -490,6 +494,10 @@
                                 $crit = 3;
                                 $temp = $d;
                                 $bup = 60;
+                            } else if($d['eselon'] == 'III A' || $d['eselon'] == 'III B'){
+                                $crit = 2;
+                                $temp = $d;
+                                $bup = 58;
                             } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
                                 $crit = 4;
                                 $temp = $d;

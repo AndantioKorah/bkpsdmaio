@@ -372,6 +372,8 @@ class M_Layanan extends CI_Model
             // dd($contentQr);
             $qr = generateQr($contentQr);
             $image_ds = explode("data:image/png;base64,", $qr);
+            
+            $fileBase64 = convertToBase64(base_url($path));
 
             $request_ws = [
                 'signatureProperties' => [
@@ -392,7 +394,8 @@ class M_Layanan extends CI_Model
                 'request' => json_encode($request_ws),
                 'url_file' => $path,
                 'url_image_ds' => $image_ds[1],
-                'created_by' => $this->general_library->getId()
+                'created_by' => $this->general_library->getId(),
+                'nip' => $data['nip']
             ]);
         }
 

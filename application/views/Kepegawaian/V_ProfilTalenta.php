@@ -67,8 +67,8 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 	<input type="radio" id="tabToggle022" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi-iv"  onclick="LoadNilaiTalenta(2)" for="tabToggle02">Promosi</label>
 	<?php } else { ?>
-	<input type="radio" id="tabToggle01" name="tabs" value="1" checked />
-	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label>
+	<!-- <input type="radio" id="tabToggle01" name="tabs" value="1" checked />
+	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label> -->
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
 	<?php } ?>
@@ -116,14 +116,18 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
       $('#tab-promosi').click()
       $("#tabs-mt").hide();
     } else if(eselon == 6 || eselon == 7) {
-      $('#tab-rotasi').click()
+    //   $('#tab-rotasi').click()
+      $('#tab-promosi').click()
+
     }
 
 	if(eselonby_admin == 'II A' || eselonby_admin == 'II B') {
       $('#tab-promosi').click()
       $("#tabs-mt").hide();
     } else if(eselonby_admin == 'III A' || eselonby_admin == 'III B') {
-      $('#tab-rotasi').click()
+    //   $('#tab-rotasi').click()
+      $('#tab-promosi').click()
+
     }
    
     })

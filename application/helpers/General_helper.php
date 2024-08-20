@@ -35,9 +35,9 @@ function validateKey($arr_needed, $arr_request){
 }
 
 function convertToBase64($path){
-    if(file_exists($path)){
+    // if(file_exists($path)){
         return (base64_encode(file_get_contents($path)));
-    }
+    // }
     return null;
 }
 

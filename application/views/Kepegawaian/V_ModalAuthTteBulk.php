@@ -31,7 +31,8 @@
         list_checked: list_checked,
         passphrase: $('#passphrase').val(),
         nik: '<?=$user['nik']?>',
-        table_ref: '<?=isset($table_ref) ? $table_ref : 't_pengajuan_cuti'?>'
+        table_ref: '<?=isset($table_ref) ? $table_ref : 't_pengajuan_cuti'?>',
+        jenis_layanan : jenis_layanan
       },
       success: function(res){
         let rs = JSON.parse(res)

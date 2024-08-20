@@ -36,7 +36,7 @@
                         </td>
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
-                        <td class="text-left"><?=($rs['nip'])?></td>
+                        <td class="text-center"><?=($rs['nip'])?></td>
                         <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_pengajuan'])?></td>
                         <td class="text-center">
@@ -48,7 +48,7 @@
                     </tr>
                 <?php } } else { ?>
                     <tr>
-                        <td colspan=5 class="text-center">Tidak ada data</td>
+                        <td colspan=7 class="text-center">Tidak ada data</td>
                     </tr>
                 <?php } ?>
             </tbody>

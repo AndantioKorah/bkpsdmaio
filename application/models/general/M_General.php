@@ -459,7 +459,11 @@
                                 $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                                 // $list_selected_madya = ['Madya'];
                                 // $list_selected_utama = ['Utama'];
-        
+                                if((stringStartWith('Kepala Sekolah', $d['nama_jabatan'])) || (stringStartWith('Kepala Taman', $d['nama_jabatan']))){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else 
                                 if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Madya'])){
                                     $crit = 2;
                                     $temp = $d;

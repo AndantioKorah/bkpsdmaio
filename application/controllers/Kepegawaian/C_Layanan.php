@@ -42,7 +42,7 @@ class C_Layanan extends CI_Controller
 		$data['berkas'] = $berkas;
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
 		if($temp['berkas'][$berkas]){
-			if($berkas == 'akte_anak'){
+			if($berkas == 'akte_anak' || $berkas == 'akte_nikah'){
 				$data['result'] = $temp['berkas'][$berkas];
 			} else {
 				$data['result'][] = $temp['berkas'][$berkas];
@@ -83,7 +83,7 @@ class C_Layanan extends CI_Controller
 		echo json_encode($this->layanan->simpanDataLainnya($id));
 	}
 
-	public function cetakDpcp($nip){
+	public function createDpcp($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
 		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($data['profil_pegawai']['id_peg']); 
@@ -91,6 +91,8 @@ class C_Layanan extends CI_Controller
 		$data['nip'] = $nip; 
 		list($data['id_t_checklist_pensiun'], $data['data_checklist_pensiun']) = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
-		$this->load->view('kepegawaian/V_CetakDpcp', $data);
+
+		echo json_encode($this->layanan->createDpcp($data));
+
 	}
 }

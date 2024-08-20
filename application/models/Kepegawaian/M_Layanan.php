@@ -32,22 +32,22 @@ class M_Layanan extends CI_Model
         $result['list_pasangan'] = null;
         $result['list_anak'] = null;
 
-        $hubkel = $this->db->select('a.*')
-                            ->from('db_pegawai.pegkeluarga a')
-                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                            ->where('b.nipbaru_ws', $nip)
-                            ->where('a.status', 2)
-                            ->where('a.flag_active', 1)
-                            ->get()->result_array();
-        if($hubkel){
-            foreach($hubkel as $h){
-                if($h['hubkel'] == 20 || $h['hubkel'] == 30){
-                    $result['list_pasangan'][] = $h;
-                } else if($h['hubkel'] == 40){
-                    $result['list_anak'][] = $h;
-                }
-            }
-        }
+        // $hubkel = $this->db->select('a.*')
+        //                     ->from('db_pegawai.pegkeluarga a')
+        //                     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+        //                     ->where('b.nipbaru_ws', $nip)
+        //                     ->where('a.status', 2)
+        //                     ->where('a.flag_active', 1)
+        //                     ->get()->result_array();
+        // if($hubkel){
+        //     foreach($hubkel as $h){
+        //         if($h['hubkel'] == 20 || $h['hubkel'] == 30){
+        //             $result['akte_nikah'][] = $h;
+        //         } else if($h['hubkel'] == 40){
+        //             $result['akte_anak'][] = $h;
+        //         }
+        //     }
+        // }
 
         $skcpnspns = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
@@ -67,6 +67,27 @@ class M_Layanan extends CI_Model
                 }
             }
         }
+
+        $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.pegkeluarga b', 'a.id_peg = b.id_pegawai')
+                        ->where('a.nipbaru_ws', $nip)
+                        ->where_in('b.status', [1,2])
+                        ->where_in('flag_active', [1,2])
+                        ->where('b.hubkel', '40')
+                        ->order_by('b.tgllahir', 'desc')
+                        ->get()->result_array();
+
+        $result['akte_nikah'] = $this->db->select('a.nipbaru_ws, b.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.pegkeluarga b', 'a.id_peg = b.id_pegawai')
+                        ->where('a.nipbaru_ws', $nip)
+                        ->where_in('b.status', [1,2])
+                        ->where_in('flag_active', [1,2])
+                        ->where_in('b.hubkel', [20,30])
+                        ->order_by('b.tgllahir', 'desc')
+                        ->get()->result_array();
+        
 
         $result['skp'] = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
@@ -89,7 +110,7 @@ class M_Layanan extends CI_Model
         if($arsip){
             foreach($arsip as $a){
                 if($a['id_dokumen'] == 24){
-                    $result['akte_nikah'] = $a;
+                    // $result['akte_nikah'] = $a;
                 } else if($a['id_dokumen'] == 18){
                     $result['hukdis'] = $a;
                 } else if($a['id_dokumen'] == 19){
@@ -100,9 +121,11 @@ class M_Layanan extends CI_Model
                     $result['pmk'] = $a;
                 } else if($a['id_dokumen'] == 25){
                     $result['akte_cerai'] = $a;
-                } else if($a['id_dokumen'] == 27){
-                    $result['akte_anak'][] = $a;
-                } else if($a['id_dokumen'] == 28){
+                }
+                // else if($a['id_dokumen'] == 27){
+                //     $result['akte_anak'][] = $a;
+                // }
+                else if($a['id_dokumen'] == 28){
                     $result['kartu_keluarga'] = $a;
                 } else if($a['id_dokumen'] == 37){
                     $result['ktp'] = $a;
@@ -122,6 +145,12 @@ class M_Layanan extends CI_Model
         $this->db->trans_begin();
         $last_id = null;
         $result = null;
+
+        $pegawai = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->where('nipbaru_ws', $nip)
+                            ->get()->row_array();
+
         $exists = $this->db->select('*')
                         ->from('t_checklist_pensiun')
                         ->where('nip', $nip)
@@ -135,6 +164,8 @@ class M_Layanan extends CI_Model
             $this->db->insert('t_checklist_pensiun', [
                 'id_m_jenis_pensiun' => $id_m_jenis_pensiun,
                 'nip' => $nip,
+                'alamat_sekarang' => $pegawai['alamat'],
+                'alamat_setelah_pensiun' => $pegawai['alamat'],
                 'created_by' => $this->general_library->getId()
             ]);
 
@@ -173,6 +204,11 @@ class M_Layanan extends CI_Model
             }
         }
 
+        $result['data'] = $this->db->select('*')
+                                    ->from('t_checklist_pensiun')
+                                    ->where('id', $id_t_checklist_pensiun)
+                                    ->get()->row_array();
+
         return $result;
     }
 
@@ -202,7 +238,7 @@ class M_Layanan extends CI_Model
         
 		$temp = $this->session->userdata('berkas_pensiun');
 
-        if($berkas == 'akte_anak'){
+        if($berkas == 'akte_anak' || $berkas == 'akte_nikah'){
 			$data_berkas = $temp['berkas'][$berkas];
 		} else {
 			$data_berkas[] = $temp['berkas'][$berkas];
@@ -291,6 +327,83 @@ class M_Layanan extends CI_Model
         $this->db->where('id', $id)
                 ->update('t_checklist_pensiun', $data);
 
+        return $rs;
+    }
+
+    public function createDpcp($data){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+        $rs['data'] = null;
+
+        $this->db->trans_begin();
+
+        $exists = $this->db->select('*')
+                        ->from('t_request_ds')
+                        ->where('ref_id', $data['id_t_checklist_pensiun'])
+                        ->where('table_ref', 't_checklist_pensiun')
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        if($exists){
+            $rs['code'] = 1;
+            $rs['message'] = 'DPCP sudah diajukan';
+        } else {
+            $path = 'arsipdpcp/DPCP_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true);
+            // dd($html);
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-L',
+                // 'debug' => true
+            ]);
+            // $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output($path, 'F');
+
+            $rs['data'] = $path;
+
+            $this->db->where('id', $data['id_t_checklist_pensiun'])
+                    ->update('t_checklist_pensiun', [
+                        'url_file_dpcp' => $path
+                    ]);
+
+            $randomString = generateRandomString(30, 1, 't_file_ds'); 
+            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+            // dd($contentQr);
+            $qr = generateQr($contentQr);
+            $image_ds = explode("data:image/png;base64,", $qr);
+
+            $request_ws = [
+                'signatureProperties' => [
+                    "tampilan" => "VISIBLE",
+                    "imageBase64" => $image_ds[1],
+                    "tag_koordinat" => "&&",
+                    "width" => 100,
+                    "height" => 100
+                ],
+                'file' => convertToBase64(($path))
+            ];
+
+            $this->db->insert('t_request_ds', [
+                'ref_id' => $data['id_t_checklist_pensiun'],
+                'table_ref' => 't_checklist_pensiun',
+                'id_m_jenis_ds' => 1,
+                'nama_jenis_ds' => 'DPCP',
+                'request' => json_encode($request_ws),
+                'url_file' => $path,
+                'url_image_ds' => $image_ds[1],
+                'created_by' => $this->general_library->getId()
+            ]);
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+        }
+            
         return $rs;
     }
 }

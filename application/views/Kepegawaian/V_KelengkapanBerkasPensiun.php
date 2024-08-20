@@ -121,9 +121,16 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form method="post" action="<?=base_url('kepegawaian/C_Layanan/cetakDpcp/'.$profil_pegawai['nipbaru_ws'])?>" target="_blank">
-                            <button type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-print"></i> CETAK DPCP</button>
-                        </form>
+                        <?php if($progress['data']['url_file_dpcp'] == null){ ?>
+                            <form id="form_create_dpcp">
+                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-input"></i> BUAT DPCP DAN AJUKAN DS</button>
+                                <button id="btn_create_dpcp_loading" style="display: none;" disabled type="button" class="btn btn-block btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</button>
+                            </form>
+                        <?php } else { ?>
+                            <form id="form_show_dpcp" action="<?=base_url('kepegawaian/C_Layanan/showDpcp/'.$id_t_checklist_pensiun)?>" target="_blank">
+                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT DPCP</button>
+                            </form>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -501,7 +508,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_nikah')">
+                                    <!-- <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_nikah')">
                                         <?php
                                             $icon = 'fa-times';
                                             $icon_berkas = 'icon-berkas-belum-lengkap';
@@ -529,6 +536,39 @@
                                                 <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="akte_nikah" style="display: none;">
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="list-group-item" style="cursor: pointer;" onclick="showBerkas('akte_nikah')">
+                                        <?php
+                                            $icon = 'fa-times';
+                                            $icon_berkas = 'icon-berkas-belum-lengkap';
+                                            if($berkas['akte_nikah']){
+                                                foreach($berkas['akte_nikah'] as $aa){
+                                                    if($aa['status'] == 2){
+                                                        $icon = 'fa-check';
+                                                        $icon_berkas = 'icon-berkas-lengkap';
+                                                    } else if($aa['status'] == 1) {
+                                                        $icon = 'fa-minus';
+                                                        $icon_berkas = 'icon-berkas-belum-verif';
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <span class="icon-berkas d-inline-flex <?=$icon_berkas?>
+                                                align-items-center justify-content-center rounded-circle m-1 me-2">
+                                                    <i class="fas <?=$icon?> fa-lg"></i>
+                                                </span>
+                                                <span class="card-title-pdm">Akte Perkawinan</span>
+                                                <?php if(isset($progress['akte_nikah'])){ ?>
+                                                    <span class="badge badge-success text-right float-right">
+                                                        Telah diverifikasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-lg-12 div_berkas" id="div_berkas_akte_nikah" style="display: none;">
                                             </div>
                                         </div>
                                     </div>
@@ -776,6 +816,14 @@
                                             <label>PENDIDIKAN SEBAGAI DASAR PENGANGKATAN PERTAMA</label>
                                             <input class="form-control" id="pendidikan_pertama" name="pendidikan_pertama" value="<?=$data_checklist_pensiun['pendidikan_pertama']?>" />
                                         </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>ALAMAT SEKARANG</label>
+                                            <input class="form-control" id="alamat_sekarang" name="alamat_sekarang" value="<?=$data_checklist_pensiun['alamat_sekarang']?>" />
+                                        </div>
+                                        <div class="col-lg-12 mt-2">
+                                            <label>ALAMAT SETELAH PENSIUNS</label>
+                                            <input class="form-control" id="alamat_setelah_pensiun" name="alamat_setelah_pensiun" value="<?=$data_checklist_pensiun['alamat_setelah_pensiun']?>" />
+                                        </div>
                                         <div class="col-lg-12 text-right mt-3">
                                             <button type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
                                         </div>
@@ -813,6 +861,33 @@
             orientation: 'bottom',
             autoclose: true,
             todayBtn: true
+        })
+    })
+
+    $('#form_create_dpcp').on('submit', function(e){
+        e.preventDefault()
+        $('#btn_create_dpcp').hide()
+        $('#btn_create_dpcp_loading').show()
+        $.ajax({
+            url: '<?=base_url('kepegawaian/C_Layanan/createDpcp/'.$profil_pegawai['nipbaru_ws'])?>',
+            method: 'POST',
+            data: null,
+            success: function(data){
+                $('#btn_create_dpcp').show()
+                $('#btn_create_dpcp_loading').hide()
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    $('#form_create_dpcp').hide()
+                    $('#form_show_dpcp').show()
+                    successtoast('DPCP berhasil dibuat dan sudah diajukan untuk dilakukan Digital Signature')
+                } else {
+                    errortoast(rs.message)
+                }
+            }, error: function(err){
+                errortoast(err)
+                $('#btn_create_dpcp').show()
+                $('#btn_create_dpcp_loading').hide()
+            }
         })
     })
 

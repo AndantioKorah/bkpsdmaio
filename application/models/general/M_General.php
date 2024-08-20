@@ -494,6 +494,10 @@
                                 $crit = 3;
                                 $temp = $d;
                                 $bup = 60;
+                            } else if($d['eselon'] == 'III A' || $d['eselon'] == 'III B'){
+                                $crit = 2;
+                                $temp = $d;
+                                $bup = 58;
                             } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
                                 $crit = 4;
                                 $temp = $d;

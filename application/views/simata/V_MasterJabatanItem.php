@@ -35,7 +35,7 @@
 
 </style>
 
-	<div class="table-responsive">
+	<div class="table-responsive" id="example">
 		<table class="table table-hover table-striped table-bordered datatablex" style="width:100%;">
 			<thead>
 				<th class="text-center" style="width:5%;">No</th>
@@ -144,7 +144,6 @@
     </div>
   </div>
 </div>
-
 
 
 <script>

@@ -16,12 +16,13 @@
     </style>
     <div class="row p-3">
         <div class="col-lg-12 pb-3 text-right float-right">
+            <!-- <button class="btn btn-sm btn-navy" id="dl-png" data-toggle="modal" data-target="#exampleModal">PNG</button> -->
             <form target="_blank" action="<?=base_url('user/C_User/cetakPensiun')?>">
                 <button type='submit' class="btn btn-sm btn-navy"><i class="fa fa-download"></i> Download File</button>
                 <!-- <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button> -->
             </form>
         </div>
-        <div class="col-lg-12 table-responsive">
+        <div class="col-lg-12 table-responsive" id="example">
             <table border=1 id="table_result" class="table table-hover datatable">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
@@ -59,6 +60,43 @@
             </table>
         </div>
     </div>
+
+    
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <img id="img" style="width:100%" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script>
+	document.getElementById("dl-png").onclick = function() {
+		const screenShotTarget = document.getElementById('example');
+		html2canvas(screenShotTarget).then((canvas) => {
+			const base64image = canvas.toDataURL("image/png");
+			var anchor = document.createElement('a');
+      $("#img").attr("src", base64image);
+			// anchor.setAttribute("href", base64image);
+			// anchor.setAttribute("download", "img.png");
+			anchor.click();
+			anchor.remove();
+		})
+	}
+</script>
+
 <?php } else { ?>
     <div class="p-3">
         <h5>DATA TIDAK DITEMUKAN <i class="fa fa-exclamation"></i></h5>

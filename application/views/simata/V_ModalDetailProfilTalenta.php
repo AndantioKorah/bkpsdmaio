@@ -369,6 +369,9 @@
 
                                             </td>
                                             </tr>
+
+                                            <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() != $profil_pegawai['nipbaru_ws']){ ?>
+
                                             <tr>
                                                 <td style="width:25%"><span class="sp_label">Pertimbangan Pimpinan</span></td>
                                                 <td style="width:75%">
@@ -385,7 +388,7 @@
                                                 <?php } ?>
                                             </td>
                                             </tr>
-                                            
+                                            <?php } ?>
                                         </table>
 								</div>
                                 <!-- tutup Pertimbangan Lainnya  -->

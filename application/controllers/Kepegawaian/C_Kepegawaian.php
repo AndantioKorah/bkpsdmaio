@@ -2049,7 +2049,14 @@ class C_Kepegawaian extends CI_Controller
 
         $data['result'] = $this->kepegawaian->loadListProfilTalenta( $id_peg,$jenis_pengisian);  
         $data['jenis_pengisian'] = $jenis_pengisian;
+
+	 if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() != $data['profil_pegawai']['nipbaru_ws']) {
         $this->load->view('simata/V_ProfilTalentaAdmList', $data);
+	 } else {
+        $this->load->view('simata/V_ProfilTalentaItem', $data);
+
+	 }
+
         
     }
 

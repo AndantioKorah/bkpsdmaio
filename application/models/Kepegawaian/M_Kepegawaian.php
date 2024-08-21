@@ -6425,12 +6425,16 @@ public function submitEditJabatan(){
                 $selectedId = $list_data[0]['id'];
 
                 $request = json_decode($selected['request'], true);
+                $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
 
-                $jsonRequest['file'][] = $request['file'];
+                $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
+                $jsonRequest['file'][] = $base64File;
+                // dd($base64File);
+
                 $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
                 $jsonRequest['nik'] = $params['nik'];
                 $jsonRequest['passphrase'] = $params['passphrase'];
-                // dd(json_encode($jsonRequest));
+                // dd(($jsonRequest));
 
                 $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
                 if(is_string($oneData)){

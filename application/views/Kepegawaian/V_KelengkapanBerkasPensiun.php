@@ -120,7 +120,10 @@
         <div class="card card-default">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <img src="<?=base_url('assets/img/logo-simponi-asn.png')?>" style="width: 300px;" />
+                    </div>
+                    <div class="col-lg-6">
                         <?php if($progress['data']['url_file_dpcp'] == null){ ?>
                             <form id="form_create_dpcp">
                                 <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-input"></i> BUAT DPCP DAN AJUKAN DS</button>

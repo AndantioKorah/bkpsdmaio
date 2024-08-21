@@ -1608,7 +1608,7 @@
         $jskpd = 1;
         if(in_array($uker['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
             $jskpd = 2;
-        } else if(in_array($uker['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+        } else if(in_array($uker['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) || stringStartWith('sekolah_', $data['id_unitkerja'])){
             $jskpd = 4;
         }
 

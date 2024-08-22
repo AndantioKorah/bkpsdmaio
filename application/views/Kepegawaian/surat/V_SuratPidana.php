@@ -26,6 +26,11 @@
 }
 </style> -->
 <style>
+ #bodysurat {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 15.8px !important;
+}
+
     td{
         text-align: left;
     }
@@ -41,7 +46,7 @@
 
    p {
 		font-size: 13.3pt;
-        font-family: "Bookman Old Style";
+        font-family: "Times New Roman";
         color:#000;
         margin-right:40px;
 	}
@@ -67,14 +72,17 @@
 </style>
 </style>
  <title>Surat Pidana</title>
-<div class="header" style="margin-right:40px;">
-<?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?>
+ <div id="bodysurat">
+<div class="header" style="margin-top:-40px;margin-right:40px;">
+<!-- <?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?> -->
+<?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?>
+ 
 </div>
 <center>
-        <p style="margin-top:25px;"> SURAT PERNYATAAN<br> 
+        <p style="margin-top:5px;"> SURAT PERNYATAAN<br> 
         TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA 
-BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP </p>
-        <p style="margin-top:-20px"> Nomor : <?= $result['0']['nomor_surat'];?></p>
+<u>BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP</u> </p>
+        <p style="margin-top:-18px;"> Nomor : <?= $result['0']['nomor_surat'];?></p>
 </center>
 
 <p>Yang bertanda-tangan dibawah ini :</p>
@@ -82,7 +90,7 @@ BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP </p>
     <tr>
         <td style="width:22%;">Nama</td>
         <td style="text-align: center;width:1%;">:</td>
-        <td style="width:70%;"><?= $kaban['0']['gelar1'];?><?= $kaban['0']['nama'];?><?= $kaban['0']['gelar2'];?></td>
+        <td style="width:70%;"><?= $kaban['0']['gelar1'];?><?= strtoupper($kaban['0']['nama']);?><?= $kaban['0']['gelar2'];?></td>
     </tr>
     <tr>
         <td>NIP</td>
@@ -111,7 +119,7 @@ Dengan ini menyatakan dengan sesungguhnya bahwa Pegawai Negeri Sipil :
     <tr>
         <td style="width:22%;">Nama</td>
         <td style="text-align: center;width:1%;">:</td>
-        <td style="width:70%;"><?= $result['0']['gelar1'];?><?= $result['0']['nama_pegawai'];?><?= $result['0']['gelar2'];?></td>
+        <td style="width:70%;"><?= $result['0']['gelar1'];?><?= strtoupper($result['0']['nama_pegawai']);?><?= $result['0']['gelar2'];?></td>
     </tr>
     <tr>
         <td>NIP</td>
@@ -154,14 +162,17 @@ perundang-undangan.
 </p>
 
 
-<table border="0" style="width:100%;margin-top:30px;margin-bottom:120px;">
+<table border="0" style="width:100%;margin-top:5px;">
     <tr>
         <td  style="width:50%;"></td>
-        <td class="center"  style="width:50%;">Manado, <?= formatDateNamaBulan($result['0']['tanggal_surat']);?>
+        <td class="center"  style="width:50%;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA MANADO
     </tr>
 </table>
 
-<span style="margin-top:120px;">
+<div style="margin-top: 120px;">
+<img  style="width: 100%;" src="<?=base_url();?>assets/images/footer.png" alt="" >
+</div>
+<!-- <span >
 
 Tembusan Yth.:<br>
 1. Wali Kota Manado;<br>
@@ -169,7 +180,6 @@ Tembusan Yth.:<br>
 3. Sekretaris Daerah Kota Manado;<br>
 4. <?= $this->general_library->getTembusanHukdis($result['0']['id_unitkerjamaster'],$result['0']['nm_unitkerjamaster'],$result['0']['nm_unitkerja']);?>;<br>
 5. Arsip.
-<img src="<?=base_url();?>assets/images/footer.png" alt="" style="width: 100%;margin-topx: -55px;">
-</span>
-
+</span> -->
+</div>
 

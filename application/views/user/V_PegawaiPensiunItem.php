@@ -14,9 +14,16 @@
             border: 1px solid gray;
         }
     </style>
+    
+
+<div id="tess">
+
+</div>
+
+
     <div class="row p-3">
         <div class="col-lg-12 pb-3 text-right float-right">
-            <!-- <button class="btn btn-sm btn-navy" id="dl-png" data-toggle="modal" data-target="#exampleModal">PNG</button> -->
+            <!-- <button class="btn btn-sm btn-navy" id="dl-png" data-toggle="modal" data-target="#exampleModalx">PNG</button> -->
             <form target="_blank" action="<?=base_url('user/C_User/cetakPensiun')?>">
                 <button type='submit' class="btn btn-sm btn-navy"><i class="fa fa-download"></i> Download File</button>
                 <!-- <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button> -->
@@ -81,20 +88,24 @@
 </div>
 
 
+
+
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
 	document.getElementById("dl-png").onclick = function() {
-		const screenShotTarget = document.getElementById('example');
+		const screenShotTarget = document.getElementById('tess');
 		html2canvas(screenShotTarget).then((canvas) => {
 			const base64image = canvas.toDataURL("image/png");
 			var anchor = document.createElement('a');
-      $("#img").attr("src", base64image);
-			// anchor.setAttribute("href", base64image);
-			// anchor.setAttribute("download", "img.png");
+            // $("#img").attr("src", base64image);
+			anchor.setAttribute("href", base64image);
+			anchor.setAttribute("download", "img.png");
 			anchor.click();
 			anchor.remove();
 		})
 	}
+
+
 </script>
 
 <?php } else { ?>

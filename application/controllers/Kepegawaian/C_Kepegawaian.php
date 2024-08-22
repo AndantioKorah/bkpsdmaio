@@ -986,10 +986,13 @@ class C_Kepegawaian extends CI_Controller
         $paper = 'F4';
         //orientasi paper potrait / landscape
         $orientation = "portrait";
-		$paper = array(0,0,645,990);
+		// $paper = array(0,0,645,990);
+		$paper = array(0,0,645,820);
+
         
 		if($jenis_layanan == 3){
-			$html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	    	
+			// $html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	
+			$html = $this->load->view('kepegawaian/surat/V_SuratPidana',$data, true);	    	
 		}
 		if($jenis_layanan == 8){
 			$html = $this->load->view('kepegawaian/surat/V_SuratHukdis',$data, true);	    	
@@ -1012,13 +1015,13 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->library('pdfgenerator');
         
         // filename dari pdf ketika didownload
-        $file_pdf = "surat_cuti_".$data['result'][0]['nip'];
+        $file_pdf = "surat_pidana_".$data['result'][0]['nip'];
         // setting paper
-        $paper = 'F4';
+        // $paper = 'F4';
         //orientasi paper potrait / landscape
         $orientation = "portrait";
 
-		$paper = array(0,0,645,990);
+		$paper = array(0,0,645,820);
         
 		if($jenis_layanan == 3){
 			$html = $this->load->view('kepegawaian/surat/V_SuratCuti',$data, true);	    	

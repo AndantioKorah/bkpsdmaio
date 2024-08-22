@@ -6447,7 +6447,6 @@ public function submitEditJabatan(){
                     $res['message'] = "Terjadi Kesalahan";
                     $res['data'] = null;
                 }
-
             }    
         }
         

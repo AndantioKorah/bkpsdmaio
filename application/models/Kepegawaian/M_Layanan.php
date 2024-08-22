@@ -1,6 +1,6 @@
 <?php
 
-// require "../vendor/pdfcrowd/pdfcrowd.php";
+include "vendor/html-to-jpeg-php-master/HtmlToJpeg.php";
 
 class M_Layanan extends CI_Model
 {
@@ -333,7 +333,19 @@ class M_Layanan extends CI_Model
         return $rs;
     }
 
+    public function getKepalaBkpsdm(){
+        return $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+        ->from('db_pegawai.pegawai a')
+        ->join('m_user b', 'a.nipbaru_Ws = b.username')
+        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+        ->where('c.kepalaskpd', 1)
+        ->where('a.skpd', '4018000')
+        ->where('b.flag_active', 1)
+        ->get()->row_array();
+    }
+
     public function createDpcp($data){
+        $base64Image = $this->input->post('base64image');
         $rs['code'] = 0;
         $rs['message'] = '';
         $rs['data'] = null;
@@ -371,45 +383,46 @@ class M_Layanan extends CI_Model
                     ]);
 
 
-            $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
-                    ->from('db_pegawai.pegawai a')
-                    ->join('m_user b', 'a.nipbaru_Ws = b.username')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                    ->where('c.kepalaskpd', 1)
-                    ->where('a.skpd', '4018000')
-                    ->where('b.flag_active', 1)
-                    ->get()->row_array();
+            // $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+            //         ->from('db_pegawai.pegawai a')
+            //         ->join('m_user b', 'a.nipbaru_Ws = b.username')
+            //         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            //         ->where('c.kepalaskpd', 1)
+            //         ->where('a.skpd', '4018000')
+            //         ->where('b.flag_active', 1)
+            //         ->get()->row_array();
 
-            $randomString = generateRandomString(30, 1, 't_file_ds'); 
-            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-            // dd($contentQr);
-            $qr = generateQr($contentQr);
-            $image_ds = explode("data:image/png;base64,", $qr);
-
-            $dataQr['user'] = $kepalabkpsdm;
-            $dataQr['qr'] = $qr;
-
-            $qr_page = $this->load->view('adminkit/partials/V_QrTte', $dataQr, true);
+            // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+            // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+            // // dd($contentQr);
+            // $qr = generateQr($contentQr);
+            $image_ds = explode("data:image/png;base64,", $base64Image);
+            // $dataQr['user'] = $kepalabkpsdm;
+            // $dataQr['qr'] = $qr;
+            // $qr_page = $this->load->view('adminkit/partials/V_QrTte', $dataQr, true);
             
-            $qr_path = "arsipdpcp/qr/qr_dpcp_".$data['profil_pegawai']['nipbaru_ws']."_".date('Ymd').".png";
+            // $qr_path = "arsipdpcp/qr/qr_dpcp_".$data['profil_pegawai']['nipbaru_ws']."_".date('Ymd').".png";
 
-            $client = new \Pdfcrowd\HtmlToImageClient("demo", "ce544b6ea52a5621fb9d55f8b542d14d");
-            // configure the conversion
-            $client->setOutputFormat("png");
-            // run the conversion and write the result to a file
-            $client->convertStringToFile('<html>haloo</html>', $qr_path);
+            // $client = new \Pdfcrowd\HtmlToImageClient("demo", "ce544b6ea52a5621fb9d55f8b542d14d");
+            // // configure the conversion
+            // $client->setOutputFormat("png");
+            // // run the conversion and write the result to a file
+            // $client->convertStringToFile('<html>haloo</html>', $qr_path);
 
-            $qrImageBase64 = convertToBase64(base_url($qr_path));
+            // $qrImageBase64 = convertToBase64(base_url($qr_path));
             // $qrImageBase64 = convertToBase64(base_url($qr_page));
 
-            dd($qrImageBase64);
+            // $html2jpeg = new HtmlToJpeg();
+            // $html2jpeg->renderHtml($qr_page);
+            // $html2jpeg->download();
+            // dd('asd');
 
             $fileBase64 = convertToBase64(base_url($path));
 
             $request_ws = [
                 'signatureProperties' => [
                     "tampilan" => "VISIBLE",
-                    // "imageBase64" => $qrImageBase64,
+                    // "imageBase64" => $image_ds[1],
                     "tag_koordinat" => "^",
                     "width" => 100,
                     "height" => 100,
@@ -425,7 +438,7 @@ class M_Layanan extends CI_Model
                 'nama_jenis_ds' => 'DPCP',
                 'request' => json_encode($request_ws),
                 'url_file' => $path,
-                'url_image_ds' => $qrImageBase64,
+                'url_image_ds' => $image_ds[1],
                 'created_by' => $this->general_library->getId(),
                 'nip' => $data['nip']
             ]);

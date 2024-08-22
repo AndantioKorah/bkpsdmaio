@@ -131,7 +131,7 @@
                             </form>
                         <?php } else { ?>
                             <form id="form_show_dpcp" action="<?=base_url('kepegawaian/C_Layanan/showDpcp/'.$id_t_checklist_pensiun)?>" target="_blank">
-                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT DPCP</button>
+                                <button id="btn_show_dpcp" type="submit" class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT DPCP</button>
                             </form>
                         <?php } ?>
                     </div>
@@ -839,6 +839,9 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-12" id="qr_here" style="display: none;">
+        <?php $this->load->view('adminkit/partials/V_QrTte', $dataQr); ?>
+    </div>
 </div>
 <div class="modal fade" id="modal_berkas" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
   aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -856,6 +859,7 @@
     </div>
   </div>
 
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
     $(function(){
         $('#sidebar_toggle').click()
@@ -869,28 +873,37 @@
 
     $('#form_create_dpcp').on('submit', function(e){
         e.preventDefault()
-        $('#btn_create_dpcp').hide()
-        $('#btn_create_dpcp_loading').show()
-        $.ajax({
-            url: '<?=base_url('kepegawaian/C_Layanan/createDpcp/'.$profil_pegawai['nipbaru_ws'])?>',
-            method: 'POST',
-            data: null,
-            success: function(data){
-                $('#btn_create_dpcp').show()
-                $('#btn_create_dpcp_loading').hide()
-                let rs = JSON.parse(data)
-                if(rs.code == 0){
-                    $('#form_create_dpcp').hide()
-                    $('#form_show_dpcp').show()
-                    successtoast('DPCP berhasil dibuat dan sudah diajukan untuk dilakukan Digital Signature')
-                } else {
-                    errortoast(rs.message)
+        $('#qr_here').show()
+        var base64image;
+        const screenShotTarget = document.getElementById('qr_here');
+		html2canvas(screenShotTarget).then((canvas) => {
+			base64image = canvas.toDataURL("image/png");
+            $('#qr_here').hide()
+            $('#btn_create_dpcp').hide()
+            $('#btn_create_dpcp_loading').show()
+            $.ajax({
+                url: '<?=base_url('kepegawaian/C_Layanan/createDpcp/'.$profil_pegawai['nipbaru_ws'])?>',
+                method: 'POST',
+                data: {
+                    base64image: base64image
+                },
+                success: function(data){
+                    $('#btn_create_dpcp').show()
+                    $('#btn_create_dpcp_loading').hide()
+                    let rs = JSON.parse(data)
+                    if(rs.code == 0){
+                        $('#form_create_dpcp').hide()
+                        $('#form_show_dpcp').show()
+                        successtoast('DPCP berhasil dibuat dan sudah diajukan untuk dilakukan Digital Signature')
+                    } else {
+                        errortoast(rs.message)
+                    }
+                }, error: function(err){
+                    errortoast(err)
+                    $('#btn_create_dpcp').show()
+                    $('#btn_create_dpcp_loading').hide()
                 }
-            }, error: function(err){
-                errortoast(err)
-                $('#btn_create_dpcp').show()
-                $('#btn_create_dpcp_loading').hide()
-            }
+            })
         })
     })
 

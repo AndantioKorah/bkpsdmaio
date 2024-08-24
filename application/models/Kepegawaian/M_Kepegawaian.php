@@ -6434,7 +6434,7 @@ public function submitEditJabatan(){
                 $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
                 $jsonRequest['nik'] = $params['nik'];
                 $jsonRequest['passphrase'] = $params['passphrase'];
-                // dd(($jsonRequest));
+                dd(($jsonRequest));
 
                 $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
                 // dd($oneData);
@@ -6502,7 +6502,6 @@ public function submitEditJabatan(){
                         }
                         $i++;
                     }
-
                     $this->db->insert_batch('t_cron_request_ds', $cronRequest);
                     $res['code'] = 0;
                     $res['message'] = "Berhasil";
@@ -6861,10 +6860,11 @@ public function submitEditJabatan(){
         if($data['jenis_layanan'] == 4){
             $result = $this->loadDataDsPengajuanCuti();
         } else {
-            $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja')
+            $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja, d.keterangan as jenis_ds')
                             ->from('t_request_ds a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->join('m_jenis_ds d', 'a.id_m_jenis_ds = d.id')
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
                             // ->where('id_m_jenis_ds', $data['jenis_layanan'])

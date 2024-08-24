@@ -541,15 +541,36 @@ class M_Layanan extends CI_Model
     }
 
     public function getDpcpData($id){
-        return $this->db->select('a.*, d.nama as nama_ds, c.created_date as tanggal_ds')
+        $result = [
+            'dpcp' => null,
+            'hukdis' => null,
+            'pidana' => null
+        ];
+
+        $data = $this->db->select('a.*, d.nama as nama_ds, c.created_date as tanggal_ds, b.flag_selected, e.keterangan, e.meta_name')
                         ->from('t_checklist_pensiun a')
                         ->join('t_request_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun"')
-                        ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds', 'left')
+                        ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
                         ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
+                        ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
                         ->where('a.id', $id)
+                        ->where('b.flag_active', 1)
                         // ->where('d.flag_active', 1)
-                        ->group_by('a.id')
-                        ->get()->row_array();
+                        ->group_by('b.id')
+                        ->get()->result_array();
+        if($data){
+            foreach($data as $d){
+                if($d['meta_name'] == 'dpcp'){
+                    $result['dpcp'] = $d;
+                } else if($d['meta_name'] == 'sp_hukdis'){
+                    $result['hukdis'] = $d;
+                } else if($d['meta_name'] == 'sp_pidana'){
+                    $result['pidana'] = $d;
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function deleteBerkasPensiun($id){

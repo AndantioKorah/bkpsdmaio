@@ -118,7 +118,8 @@
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
 			<td style="width:70%;">
-				<?= $profil_pegawai['gelar1'];?><?= $profil_pegawai['nama'];?><?= $profil_pegawai['gelar2'];?></td>
+			<?= getNamaPegawaiFull($profil_pegawai);?>
+			</td>
 		</tr>
 		<tr>
 			<td>NIP</td>

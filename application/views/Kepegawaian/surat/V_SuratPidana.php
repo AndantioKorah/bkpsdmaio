@@ -135,7 +135,7 @@
 			<td style="width:22%;">Nama</td>
 			<td style="text-align: center;width:1%;">:</td>
 			<td style="width:70%;">
-				<?= $profil_pegawai['gelar1'];?><?= strtoupper($profil_pegawai['nama']);?><?= $profil_pegawai['gelar2'];?>
+				<?= getNamaPegawaiFull($profil_pegawai);?>
 			</td>
 		</tr>
 		<tr>

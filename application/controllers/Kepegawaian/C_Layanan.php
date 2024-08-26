@@ -13,9 +13,7 @@ class C_Layanan extends CI_Controller
 		$this->load->model('kepegawaian/M_Layanan', 'layanan');
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
-		$this->load->model('kinerja/M_Kinerja', 'kinerja');
-        $this->load->model('simata/M_Simata', 'simata');
-		$this->load->model('siasn/M_Siasn', 'siasn');
+		$this->load->model('user/M_User', 'user');
 		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -30,6 +28,7 @@ class C_Layanan extends CI_Controller
 		$data['nip'] = $nip; 
 		list($data['id_t_checklist_pensiun'], $data['data_checklist_pensiun']) = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
+
 		$this->session->set_userdata('berkas_pensiun', $data);
 		render('kepegawaian/V_KelengkapanBerkasPensiun', '', '', $data);
 	}
@@ -93,6 +92,14 @@ class C_Layanan extends CI_Controller
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
 
 		echo json_encode($this->layanan->createDpcp($data));
+	}
 
+	public function showDpcp($id){
+		$data['result'] = $this->layanan->getDpcpData($id);
+		$this->load->view('kepegawaian/V_ShowDpcpData', $data);
+	}
+
+	public function deleteBerkasPensiun($id){
+		echo json_encode($this->layanan->deleteBerkasPensiun($id));
 	}
 }

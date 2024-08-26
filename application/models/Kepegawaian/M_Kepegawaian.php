@@ -6338,8 +6338,9 @@ public function submitEditJabatan(){
         // dd('asd');
         
         $list_checked_data = null;
+        $this->db->trans_begin();
 
-        if($params['jenis_layanan'] == 'permohonan_cuti'){
+        if($params['jenis_layanan'] == 4){ // permohonan cuti
             $batchId = generateRandomString(10, 1, 't_cron_tte_bulk_ds'); 
             // $hash_tte = $this->ttelib->hash();
             
@@ -6418,39 +6419,130 @@ public function submitEditJabatan(){
                                 ->get()->result_array();
             if(!$list_data){
                 $res['code'] = 1;
-                $res['message'] = 'Terjadi Kesalahan';
+                $res['message'] = 'Terjadi Kesalahan. Data tidak ditemukan.';
                 return $res;
             } else {
                 $selected = $list_data[0];
                 $selectedId = $list_data[0]['id'];
 
                 $request = json_decode($selected['request'], true);
+                $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
 
-                $jsonRequest['file'][] = $request['file'];
+                $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
+                $jsonRequest['file'][] = $base64File;
+                // dd($base64File);
+
                 $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
                 $jsonRequest['nik'] = $params['nik'];
                 $jsonRequest['passphrase'] = $params['passphrase'];
                 // dd(json_encode($jsonRequest));
 
                 $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
-                if(is_string($oneData)){
+                $response = json_decode($oneData, true);
+
+                if($response == null || !isset($response['file'])){ // jika gagal
                     $res['code'] = 1;
                     $res['message'] = $oneData;
                     $res['data'] = null;
-                } else {
-                    $rs = $oneData;
-                    $res['code'] = 1;
-                    $res['message'] = "Terjadi Kesalahan";
+                } else { // jika berhasil                    
+                    $this->db->where('id', $selected['ref_id'])
+                            ->update($selected['table_ref'], [
+                                $selected['nama_kolom_flag'] => 1
+                            ]);
+
+                    $this->db->where_in('id', $params['list_checked'])
+                            ->update('t_request_ds', [
+                                'batchId' => $batchId,
+                                'flag_selected' => 1,
+                                'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                            ]);
+
+                    $this->db->insert('t_file_ds', [
+                        'random_string' => $selected['random_string'],
+                        'url' => $selected['url_file'],
+                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                    ]);
+
+                    // $cronRequest[$selectedId] = [
+                    //     'credential' => json_encode([
+                    //         'nik' => $params['nik'],
+                    //         'passphrase' => $params['passphrase'],
+                    //     ]),
+                    //     'batchId' => $batchId,
+                    //     'request' => $selected['request'],
+                    //     'response' => $oneData,
+                    //     'flag_send' => 1,
+                    //     'date_send' => date('Y-m-d H:i:s'),
+                    //     'flag_sent' => 1,
+                    //     'date_sent' => date('Y-m-d H:i:s'),
+                    //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                    //     'id_t_request_ds' => $selectedId
+                    // ];
+
+                    $this->db->insert('t_cron_request_ds', [
+                        'credential' => json_encode([
+                            'nik' => $params['nik'],
+                            'passphrase' => $params['passphrase'],
+                        ]),
+                        'batchId' => $batchId,
+                        'request' => $selected['request'],
+                        'response' => $oneData,
+                        'flag_send' => 1,
+                        'date_send' => date('Y-m-d H:i:s'),
+                        'flag_sent' => 1,
+                        'date_sent' => date('Y-m-d H:i:s'),
+                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                        'id_t_request_ds' => $selectedId
+                    ]);
+
+                    foreach($list_data as $ld){
+                        if(!isset($cronRequest[$ld['id']])){
+                            // $cronRequest[$ld['id']] = [
+                            //     'credential' => json_encode([
+                            //         'nik' => $params['nik'],
+                            //         'passphrase' => $params['passphrase'],
+                            //     ]),
+                            //     'batchId' => $batchId,
+                            //     'request' => $ld['request'],
+                            //     'flag_send' => 0,
+                            //     'date_send' => null,
+                            //     'flag_sent' => 0,
+                            //     'date_sent' => null,
+                            //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                            //     'id_t_request_ds' => $ld['id']
+                            // ];
+                            $this->db->insert('t_cron_request_ds', [
+                                'credential' => json_encode([
+                                    'nik' => $params['nik'],
+                                    'passphrase' => $params['passphrase'],
+                                ]),
+                                'batchId' => $batchId,
+                                'request' => $ld['request'],
+                                'flag_send' => 0,
+                                'date_send' => null,
+                                'flag_sent' => 0,
+                                'date_sent' => null,
+                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                                'id_t_request_ds' => $ld['id']
+                            ]);
+                        }
+                    }
+                    // dd(json_encode($cronRequest));
+                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
+
+                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+
+                    $res['code'] = 0;
+                    $res['message'] = "Berhasil";
                     $res['data'] = null;
                 }
-
             }    
         }
         
-        if($this->db->trans_status() == FALSE){
+        if($this->db->trans_status() == FALSE || $res['code'] != 0){
             $this->db->trans_rollback();
             $res['code'] = 4;
-            $res['message'] = 'Terjadi Kesalahan';
+            // $res['message'] = 'Terjadi Kesalahan';
             $res['data'] = null;
         } else {
             if($res['code'] == 0){
@@ -6794,17 +6886,26 @@ public function submitEditJabatan(){
 
     public function loadDataForDs($data){
         $result = null;
-        if($data['jenis_layanan'] == 'permohonan_cuti'){
+        if($data['jenis_layanan'] == 4){
             $result = $this->loadDataDsPengajuanCuti();
-        } else if($data['jenis_layanan'] == 'dpcp'){
-            $result = $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja')
+        } else {
+            $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja, d.keterangan as jenis_ds')
                             ->from('t_request_ds a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->join('m_jenis_ds d', 'a.id_m_jenis_ds = d.id')
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
-                            ->order_by('a.created_date', 'desc')
-                            ->get()->result_array();   
+                            // ->where('id_m_jenis_ds', $data['jenis_layanan'])
+                            ->order_by('a.created_date', 'desc');
+                            // ->get()->result_array();
+            if($data['jenis_layanan'] != 0){
+                $this->db->where('id_m_jenis_ds', $data['jenis_layanan']);
+            } else {
+                $this->db->where('id_m_jenis_ds !=', 4);
+            }
+
+            $result = $this->db->get()->result_array();
         }
 
         return $result;

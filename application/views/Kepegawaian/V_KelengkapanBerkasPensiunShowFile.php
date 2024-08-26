@@ -1,10 +1,13 @@
 <div class="row p-3">
     <div class="col-lg-12 mb-3">
-        <?php if(isset($progress[$berkas])){ ?>
-            <span class="badge badge-success badge-progress-<?=$berkas?>">
+        <span style="display: <?=isset($progress[$berkas]) ? 'block' : 'none'?>" class="badge badge-success badge-progress-<?=$berkas?>">
+            <?php if(isset($progress[$berkas])){ dd($progress[$berkas]); if($progress[$berkas]['verifikator'] != "" && $progress[$berkas]['verifikator']){ ?>
                 Telah diverifikasi oleh <?=trim($progress[$berkas]['verifikator']).' pada '.formatDateNamaBulanWT($progress[$berkas]['created_date'])?>
-            </span>
-        <?php } ?>
+            <?php } else { ?>
+                Berkas sedang dalam proses Digital Signature (DS)
+            <?php } } ?>
+        </span>
+        <br>
         <button style="display: <?=isset($progress[$berkas]) ? 'block' : 'none'?> " onclick="batalValidasiBerkas()" id="btn-batal-validasi" class="float-right btn btn-danger">
             <i class="fa fa-times"></i> BATAL VALIDASI
         </button>
@@ -88,13 +91,14 @@
             success: function(data){
                 let rs = JSON.parse(data)
                 if(rs.code == 0){
+                    console.log('<?=$berkas?>')
                     console.log(rs.message)
                     successtoast('Validasi Berhasil')
                     $('#btn-batal-validasi').show()
                     $('#btn-validasi').hide()
-                    $('.badge-progress-'+'<?=$berkas?>').text("")
                     $('.badge-progress-'+'<?=$berkas?>').show()
-                    $('.badge-progress-'+'<?=$berkas?>').text(rs.message)
+                    $('.badge-progress-'+'<?=$berkas?>').text("")
+                    $('.badge-progress-'+'<?=$berkas?>').html(rs.message)
                 } else {
                     errortoast(rs.message)
                 }

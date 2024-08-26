@@ -120,16 +120,28 @@
         <div class="card card-default">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <img src="<?=base_url('assets/img/logo-simponi-asn.png')?>" style="width: 300px;" />
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <?php if($berkas['data_hukdis']){ ?>
+                            <span style="color: red; font-weight: bold; font-style: italic; font-size: .65rem;">*pegawai sedang dalam masa menjalani hukuman disiplin sedang/berat dalam 1 tahun terakhir. TMT <?=formatDateNamaBulan($berkas['data_hukdis']['tglsurat'])?></span><br>
+                        <?php } ?>
                         <?php if($progress['data']['url_file_dpcp'] == null){ ?>
                             <form id="form_create_dpcp">
-                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-input"></i> BUAT DPCP DAN AJUKAN DS</button>
+                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-input"></i> BUAT BERKAS PENSIUN DAN AJUKAN DS</button>
                                 <button id="btn_create_dpcp_loading" style="display: none;" disabled type="button" class="btn btn-block btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</button>
                             </form>
                         <?php } else { ?>
-                            <form id="form_show_dpcp" action="<?=base_url('kepegawaian/C_Layanan/showDpcp/'.$id_t_checklist_pensiun)?>" target="_blank">
-                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT DPCP</button>
-                            </form>
+                            <!-- <form id="form_show_dpcp" action="<?=base_url('kepegawaian/C_Layanan/showDpcp/'.$id_t_checklist_pensiun)?>" target="_blank"> -->
+                                <button id="btn_show_dpcp" href="#modal_berkas" data-toggle="modal" onclick="showDpcp('<?=$id_t_checklist_pensiun?>')"
+                                class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT BERKAS PENSIUN</button>
+
+                                <button id="btn_delete_berkas_pensiun" onclick="deleteBerkas('<?=$id_t_checklist_pensiun?>')"
+                                class="btn btn-block btn-danger float-right mr-3"><i class="fa fa-trash"></i> HAPUS BERKAS</button>
+                                <button id="btn_delete_berkas_pensiun_loading" style="display: none;" disabled
+                                class="btn btn-block btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Menghapus Data...</button>
+                            <!-- </form> -->
                         <?php } ?>
                     </div>
                 </div>
@@ -281,11 +293,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK CPNS</span>
-                                                <?php if(isset($progress['cpns'])){ ?>
-                                                    <span class="badge badge-progress-cpns badge-success text-right float-right">
-                                                        Telah diverifikasi oleh <?=trim($progress['cpns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['cpns']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['cpns']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-cpns badge-success text-right float-right">
+                                                        <?php if(isset($progress['cpns'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['cpns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['cpns']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_cpns" style="display: none;">
                                             </div>
@@ -312,11 +324,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK PNS</span>
-                                                <?php if(isset($progress['pns'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah diverifikasi oleh <?=trim($progress['pns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pns']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['pns']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-pns badge-success text-right float-right">
+                                                        <?php if(isset($progress['pns'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['pns']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pns']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_pns" style="display: none;">
                                             </div>
@@ -343,11 +355,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK Pangkat Terakhir</span>
-                                                <?php if(isset($progress['sk_pangkat'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['sk_pangkat']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_pangkat']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['sk_pangkat']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-sk_pangkat badge-success text-right float-right">
+                                                        <?php if(isset($progress['sk_pangkat'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['sk_pangkat']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_pangkat']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_sk_pangkat" style="display: none;">
                                             </div>
@@ -374,11 +386,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR</span>
-                                                <?php if(isset($progress['hukdis'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['hukdis']['verifikator']).' pada '.formatDateNamaBulanWT($progress['hukdis']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['hukdis']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-hukdis badge-success text-right float-right">
+                                                        <?php if(isset($progress['hukdis'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['hukdis']['verifikator']).' pada '.formatDateNamaBulanWT($progress['hukdis']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_hukdis" style="display: none;">
                                             </div>
@@ -405,11 +417,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SURAT PERNYATAAN TIDAK SEDANG DIPIDANA ATAU PERNAH DIPIDANA PENJARA</span>
-                                                <?php if(isset($progress['pidana'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['pidana']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pidana']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['pidana']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-pidana badge-success text-right float-right">
+                                                        <?php if(isset($progress['pidana'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['pidana']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pidana']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_pidana" style="display: none;">
                                             </div>
@@ -436,11 +448,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK JABATAN STRUKTURAL TERAKHIR</span>
-                                                <?php if(isset($progress['sk_jabatan'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['sk_jabatan']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_jabatan']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['sk_jabatan']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-sk_jabatan badge-success text-right float-right">
+                                                        <?php if(isset($progress['sk_jabatan'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['sk_jabatan']['verifikator']).' pada '.formatDateNamaBulanWT($progress['sk_jabatan']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_sk_jabatan" style="display: none;">
                                             </div>
@@ -467,11 +479,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SK PENINJAUAN MASA KERJA</span>
-                                                <?php if(isset($progress['pmk'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['pmk']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pmk']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['pmk']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-pmk badge-success text-right float-right">
+                                                        <?php if(isset($progress['pmk'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['pmk']['verifikator']).' pada '.formatDateNamaBulanWT($progress['pmk']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_pmk" style="display: none;">
                                             </div>
@@ -498,11 +510,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">SASARAN KERJA PEGAWAI</span>
-                                                <?php if(isset($progress['skp'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['skp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['skp']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['skp']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-skp badge-success text-right float-right">
+                                                        <?php if(isset($progress['skp'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['skp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['skp']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_skp" style="display: none;">
                                             </div>
@@ -529,11 +541,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">AKTE PERKAWINAN</span>
-                                                <?php if(isset($progress['akte_nikah'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['akte_nikah']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-akte_nikah badge-success text-right float-right">
+                                                        <?php if(isset($progress['akte_nikah'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="akte_nikah" style="display: none;">
                                             </div>
@@ -562,11 +574,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">Akte Perkawinan</span>
-                                                <?php if(isset($progress['akte_nikah'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah diverifikasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['akte_nikah']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-akte_nikah badge-success text-right float-right">
+                                                        <?php if(isset($progress['akte_nikah'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['akte_nikah']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_nikah']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_akte_nikah" style="display: none;">
                                             </div>
@@ -593,11 +605,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">AKTE CERAI</span>
-                                                <?php if(isset($progress['akte_cerai'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['akte_cerai']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_cerai']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['akte_cerai']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-akte_cerai badge-success text-right float-right">
+                                                        <?php if(isset($progress['akte_cerai'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['akte_cerai']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_cerai']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_akte_cerai" style="display: none;">
                                             </div>
@@ -624,11 +636,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">AKTE KEMATIAN</span>
-                                                <?php if(isset($progress['akte_kematian'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['akte_kematian']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_kematian']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['akte_kematian']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-akte_kematian badge-success text-right float-right">
+                                                        <?php if(isset($progress['akte_kematian'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['akte_kematian']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_kematian']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_akte_kematian" style="display: none;">
                                             </div>
@@ -657,11 +669,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">Akte Lahir Anak</span>
-                                                <?php if(isset($progress['akte_anak'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah diverifikasi oleh <?=trim($progress['akte_anak']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_anak']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['akte_anak']) ? 'block' : 'none'?>" class="badge badge-progress-pensiun badge-progress-akte_anak badge-success text-right float-right">
+                                                        <?php if(isset($progress['akte_anak'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['akte_anak']['verifikator']).' pada '.formatDateNamaBulanWT($progress['akte_anak']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_akte_anak" style="display: none;">
                                             </div>
@@ -688,11 +700,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">KARTU KELUARGA</span>
-                                                <?php if(isset($progress['kartu_keluarga'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['kartu_keluarga']['verifikator']).' pada '.formatDateNamaBulanWT($progress['kartu_keluarga']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['kartu_keluarga']) ? 'block' : 'none'?>" class="badge badge-progress-pensiun badge-progress-kartu_keluarga badge-success text-right float-right">
+                                                        <?php if(isset($progress['kartu_keluarga'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['kartu_keluarga']['verifikator']).' pada '.formatDateNamaBulanWT($progress['kartu_keluarga']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_kartu_keluarga" style="display: none;">
                                             </div>
@@ -719,11 +731,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">KARTU TANDA PENDUDUK</span>
-                                                <?php if(isset($progress['ktp'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['ktp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['ktp']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['ktp']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-ktp badge-success text-right float-right">
+                                                        <?php if(isset($progress['ktp'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['ktp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['ktp']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_ktp" style="display: none;">
                                             </div>
@@ -750,11 +762,11 @@
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
                                                 <span class="card-title-pdm">NPWP</span>
-                                                <?php if(isset($progress['npwp'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['npwp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['npwp']['created_date'])?>
+                                                    <span style="display: <?=isset($progress['npwp']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-npwp badge-success text-right float-right">
+                                                        <?php if(isset($progress['npwp'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['npwp']['verifikator']).' pada '.formatDateNamaBulanWT($progress['npwp']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_npwp" style="display: none;">
                                             </div>
@@ -780,12 +792,12 @@
                                                 align-items-center justify-content-center rounded-circle m-1 me-2">
                                                     <i class="fas <?=$icon?> fa-lg"></i>
                                                 </span>
-                                                <span class="card-title-pdm">SURAT PERNYATAAN TIDAK SEDANG DIPIDANA ATAU PERNAH DIPIDANA PENJARA</span>
-                                                <?php if(isset($progress['rekening'])){ ?>
-                                                    <span class="badge badge-success text-right float-right">
-                                                        Telah divalidasi oleh <?=trim($progress['rekening']['verifikator']).' pada '.formatDateNamaBulanWT($progress['rekening']['created_date'])?>
+                                                <span class="card-title-pdm">BUKU REKENING</span>
+                                                    <span style="display: <?=isset($progress['rekening']) ? 'block' : 'none'?>" class="badge-progress-pensiun badge badge-progress-rekening badge-success text-right float-right">
+                                                        <?php if(isset($progress['rekening'])){ ?>
+                                                            Telah divalidasi oleh <?=trim($progress['rekening']['verifikator']).' pada '.formatDateNamaBulanWT($progress['rekening']['created_date'])?>
+                                                        <?php } ?>
                                                     </span>
-                                                <?php } ?>
                                             </div>
                                             <div class="col-lg-12 div_berkas" id="div_berkas_rekening" style="display: none;">
                                             </div>
@@ -836,6 +848,9 @@
             </div>
         </div>
     </div>
+    <!-- <div class="col-lg-12" id="qr_here" style="display: none;">
+        <?php $this->load->view('adminkit/partials/V_QrTte', $dataQr); ?>
+    </div> -->
 </div>
 <div class="modal fade" id="modal_berkas" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
   aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -853,6 +868,7 @@
     </div>
   </div>
 
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
     $(function(){
         $('#sidebar_toggle').click()
@@ -864,31 +880,81 @@
         })
     })
 
+    function deleteBerkas(id){
+        if(confirm('Apakah Anda yakin ingin menghapus berkas?')){
+            $('#btn_delete_berkas_pensiun').hide()
+            $('#btn_delete_berkas_pensiun_loading').show()
+            $.ajax({
+                url: '<?=base_url('kepegawaian/C_Layanan/deleteBerkasPensiun/')?>'+id,
+                method: 'POST',
+                data: null,
+                success: function(data){
+                    $('#btn_delete_berkas_pensiun').hide()
+                    $('#btn_delete_berkas_pensiun_loading').hide()
+                    $('#btn_create_dpcp').show()
+                    let rs = JSON.parse(data)
+                    if(rs.code == 0){
+                        $('#btn_delete_berkas_pensiun').hide()
+                        $('#btn_delete_berkas_pensiun_loading').hide()
+                        $('#btn_create_dpcp').show()
+                        $('#btn_show_dpcp').hide()
+                        successtoast('Berkas berhasil dihapus')
+                        window.location=""
+                    } else {
+                        $('#btn_delete_berkas_pensiun').show()
+                        $('#btn_delete_berkas_pensiun_loading').hide()
+                        errortoast(rs.message)
+                    }
+                }, error: function(err){
+                    errortoast(err)
+                    $('#btn_delete_berkas_pensiun').show()
+                    $('#btn_delete_berkas_pensiun_loading').hide()
+                }
+            })
+        }
+    }
+
+    function showDpcp(id){
+        $('#modal_berkas_content').html('')
+        $('#modal_berkas_content').append(divLoaderNavy)
+        $('#modal_berkas_content').load('<?=base_url("kepegawaian/C_Layanan/showDpcp/")?>'+id, function(){
+            $('#loader').hide()
+        })
+    }
+
     $('#form_create_dpcp').on('submit', function(e){
         e.preventDefault()
-        $('#btn_create_dpcp').hide()
-        $('#btn_create_dpcp_loading').show()
-        $.ajax({
-            url: '<?=base_url('kepegawaian/C_Layanan/createDpcp/'.$profil_pegawai['nipbaru_ws'])?>',
-            method: 'POST',
-            data: null,
-            success: function(data){
-                $('#btn_create_dpcp').show()
-                $('#btn_create_dpcp_loading').hide()
-                let rs = JSON.parse(data)
-                if(rs.code == 0){
-                    $('#form_create_dpcp').hide()
-                    $('#form_show_dpcp').show()
-                    successtoast('DPCP berhasil dibuat dan sudah diajukan untuk dilakukan Digital Signature')
-                } else {
-                    errortoast(rs.message)
+        // $('#qr_here').show()
+        // var base64image;
+        // const screenShotTarget = document.getElementById('qr_here');
+		// html2canvas(screenShotTarget).then((canvas) => {
+			// base64image = canvas.toDataURL("image/png");
+            // $('#qr_here').hide()
+            $('#btn_create_dpcp').hide()
+            $('#btn_create_dpcp_loading').show()
+            $.ajax({
+                url: '<?=base_url('kepegawaian/C_Layanan/createDpcp/'.$profil_pegawai['nipbaru_ws'])?>',
+                method: 'POST',
+                data: null,
+                success: function(data){
+                    $('#btn_create_dpcp').show()
+                    $('#btn_create_dpcp_loading').hide()
+                    let rs = JSON.parse(data)
+                    if(rs.code == 0){
+                        $('#form_create_dpcp').hide()
+                        $('#btn_show_dpcp').show()
+                        successtoast('DPCP berhasil dibuat dan sudah diajukan untuk dilakukan Digital Signature')
+                        window.location=""
+                    } else {
+                        errortoast(rs.message)
+                    }
+                }, error: function(err){
+                    errortoast(err)
+                    $('#btn_create_dpcp').show()
+                    $('#btn_create_dpcp_loading').hide()
                 }
-            }, error: function(err){
-                errortoast(err)
-                $('#btn_create_dpcp').show()
-                $('#btn_create_dpcp_loading').hide()
-            }
-        })
+            })
+        // })
     })
 
     function showBerkas(berkas){

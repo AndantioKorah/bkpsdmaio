@@ -567,6 +567,13 @@
             return $result;
         }
 
+        public function logCron($nama_cron){
+            $this->db->where('nama_cron', $nama_cron)
+                    ->update('t_log_cron', [
+                        'last_hit' => date('Y-m-d H:i:s')
+                    ]);
+        }
+
         public function getDataChartDashboardAdmin(){
             $result['total'] = null;
             $result['pangkat'] = null;

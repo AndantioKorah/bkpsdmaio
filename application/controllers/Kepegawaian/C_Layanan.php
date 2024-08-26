@@ -90,7 +90,7 @@ class C_Layanan extends CI_Controller
 		$data['nip'] = $nip; 
 		list($data['id_t_checklist_pensiun'], $data['data_checklist_pensiun']) = $this->layanan->updateChecklistPensiun($nip, $data['berkas'], 1);
 		$data['progress'] = $this->layanan->getProgressChecklistPensiun($data['id_t_checklist_pensiun']);
-
+		
 		echo json_encode($this->layanan->createDpcp($data));
 	}
 

@@ -647,14 +647,64 @@ class M_Layanan extends CI_Model
     }
 
     public function cronBulkDs(){
-        $data = $this->db->select('a.*')
+        $data = $this->db->select('a.*, b.request, b.url_image_ds, b.url_file, b.ref_id, b.table_ref,
+                        b.nama_kolom_flag, b.random_string, b.id as id_t_request_ds')
                         ->from('t_cron_request_ds a')
+                        ->join('t_request_ds b', 'a.id_t_request_ds = b.id')
                         ->where('a.flag_active', 1)
                         ->where('a.flag_sent', 0)
                         // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
                         ->limit(3)
                         ->get()->result_array();
+        if($data){
+            foreach($data as $d){
+                $request = json_decode($d['request'], true);
+                $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
+
+                $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
+                $jsonRequest['file'][] = $base64File;
+
+                $credential = json_decode($d['credential'], true);
+                $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+                $jsonRequest['nik'] = $credential['nik'];
+                $jsonRequest['passphrase'] = $credential['passphrase'];
+                // dd(json_encode($jsonRequest));
+
+                $ws = $this->ttelib->signPdfNikPass($jsonRequest);
+                $response = json_decode($ws, true);
+                if($response == null || !isset($response['file'])){ // jika gagal
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_request_ds', [
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s'),
+                                'response' => $ws
+                            ]);    
+                } else {
+                    $this->db->where('id', $d['ref_id'])
+                            ->update($d['table_ref'], [
+                                $d['nama_kolom_flag'] => 1
+                            ]);
+
+                    $this->db->insert('t_file_ds', [
+                        'random_string' => $d['random_string'],
+                        'url' => $d['url_file'],
+                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                    ]);
+
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_request_ds', [
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s'),
+                                'flag_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s'),
+                                'response' => $ws
+                            ]);
+
+                    base64ToFile($response['file'][0], $d['url_file']); //simpan ke file
+                }
+            }
+        }
     }
 
     public function resizeImage($image, $w, $h){

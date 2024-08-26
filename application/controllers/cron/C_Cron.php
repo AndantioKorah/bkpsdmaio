@@ -18,7 +18,7 @@ class C_Cron extends CI_Controller
         $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('general/M_General', 'general');
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
-		$this->load->model('layanan/M_Layanan', 'layanan');
+		$this->load->model('kepegawaian/M_Layanan', 'layanan');
         $this->load->helper('url_helper');
         $this->load->helper('form');
     }
@@ -39,6 +39,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
+        $this->general->logCron('cronDsBulkTte');
 		$this->kepegawaian->cronDsBulkTte();
 		$this->layanan->cronBulkDs();
 	}

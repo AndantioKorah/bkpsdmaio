@@ -1029,12 +1029,8 @@ class C_Kepegawaian extends CI_Controller
 		}
 		if($jenis_layanan == 8){
 			$html = $this->load->view('kepegawaian/surat/V_SuratPidana',$data, true);	    	
-		}
-        
-        
+		} 
         $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
-
-
     }
 
 
@@ -2084,6 +2080,63 @@ class C_Kepegawaian extends CI_Controller
 		$this->kepegawaian->automationJabatanFungsional();
 	}
 
+	public function suratPidanaHukdis($nip,$jenis){
+		// $this->load->library('pdf');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$this->load->view('kepegawaian/surat/V_SuratHukdis',$data);	
+
+		// $this->load->library('pdfgenerator');
+        // // filename dari pdf ketika didownload
+        // // setting paper
+        // $paper = 'Legal';
+        // //orientasi paper potrait / landscape
+        // $orientation = "portrait";
+		// // $paper = array(0,0,645,820);
+		// if($jenis == 1){
+		// 	$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];
+		// 	$html = $this->load->view('kepegawaian/surat/V_SuratHukdis',$data, true);	    	
+		// }
+		// if($jenis == 2){
+		// 	$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];
+		// 	$html = $this->load->view('kepegawaian/surat/V_SuratPidana',$data, true);	    	
+		// } 
+        // $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
+
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'Legal-L',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+		if($jenis == 1){
+		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		}
+		if($jenis == 2){
+		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+		$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
+		} 
+		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
+
+
+
+    }
 	
 
 

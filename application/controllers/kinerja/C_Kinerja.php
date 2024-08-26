@@ -1010,4 +1010,10 @@ class C_Kinerja extends CI_Controller
     header('Content-Disposition: attachment; filename='.$filename);
     $objWriter->save('php://output');
     }
+
+    public function getDataPengajuanAbsensiPegawai()
+    {
+        $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
+        echo json_encode($response);
+    }
 }

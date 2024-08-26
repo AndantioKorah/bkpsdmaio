@@ -6463,21 +6463,7 @@ public function submitEditJabatan(){
                         'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                     ]);
 
-                    // $cronRequest[$selectedId] = [
-                    //     'credential' => json_encode([
-                    //         'nik' => $params['nik'],
-                    //         'passphrase' => $params['passphrase'],
-                    //     ]),
-                    //     'batchId' => $batchId,
-                    //     'request' => $selected['request'],
-                    //     'response' => $oneData,
-                    //     'flag_send' => 1,
-                    //     'date_send' => date('Y-m-d H:i:s'),
-                    //     'flag_sent' => 1,
-                    //     'date_sent' => date('Y-m-d H:i:s'),
-                    //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                    //     'id_t_request_ds' => $selectedId
-                    // ];
+                    $cronRequest[$selectedId] = [];
 
                     $this->db->insert('t_cron_request_ds', [
                         'credential' => json_encode([
@@ -6496,7 +6482,7 @@ public function submitEditJabatan(){
                     ]);
 
                     foreach($list_data as $ld){
-                        if(!isset($cronRequest[$ld['id']])){
+                        if($ld['id'] != $selectedId){
                             // $cronRequest[$ld['id']] = [
                             //     'credential' => json_encode([
                             //         'nik' => $params['nik'],
@@ -6524,6 +6510,12 @@ public function submitEditJabatan(){
                                 'date_sent' => null,
                                 'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
                                 'id_t_request_ds' => $ld['id']
+                            ]);
+
+                            $this->db->insert('t_file_ds', [
+                                'random_string' => $ld['random_string'],
+                                'url' => $ld['url_file'],
+                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                             ]);
                         }
                     }

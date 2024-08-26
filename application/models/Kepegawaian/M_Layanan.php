@@ -637,6 +637,17 @@ class M_Layanan extends CI_Model
         return $rs;
     }
 
+    public function cronBulkDs(){
+        $data = $this->db->select('a.*')
+                        ->from('t_cron_request_ds a')
+                        ->where('a.flag_active', 1)
+                        ->where('a.flag_sent', 0)
+                        // ->where('a.flag_send', 0)
+                        // ->where('b.url_sk IS NULL')
+                        ->limit(3)
+                        ->get()->result_array();
+    }
+
     public function resizeImage($image, $w, $h){
         imagealphablending( $image, FALSE );
         imagesavealpha( $image, TRUE );

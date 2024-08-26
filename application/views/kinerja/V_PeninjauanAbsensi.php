@@ -182,6 +182,7 @@ $(function(){
 	});
 
         loadListPeninjauan()
+        cekPengajuan()
     })
 
     $('.datepicker2').datepicker({
@@ -200,6 +201,22 @@ function loadListPeninjauan(){
        $('#list_kegiatan').load('<?=base_url("kinerja/C_Kinerja/loadPeninjauanAbsensi/")?>', function(){
            $('#loader').hide()
        })
+   }
+
+   function cekPengajuan(){
+    var tanggal = $('#tanggal_absensi').val()
+   
+    $.ajax({
+              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getDataPengajuanAbsensiPegawai",
+              method : "POST",
+              data : {tanggal: tanggal},
+              async : false,
+              dataType : 'json',
+              success: function(data){
+        
+                          }
+    });
+ 
    }
 
 $('#form_tinjau_absen').on('submit', function(e){  

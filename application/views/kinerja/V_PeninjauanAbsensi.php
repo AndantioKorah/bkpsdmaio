@@ -88,7 +88,8 @@
   </div>
   <div class="form-group col-lg-12 mt-2">
      <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
- </div>
+      <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
+    </div>
 </form> 
     </div>
     </div>
@@ -207,14 +208,20 @@ function loadListPeninjauan(){
     var tanggal = $('#tanggal_absensi').val()
    
     $.ajax({
-              url : "<?php echo base_url();?>kepegawaian/C_Kepegawaian/getDataPengajuanAbsensiPegawai",
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",
               method : "POST",
               data : {tanggal: tanggal},
               async : false,
               dataType : 'json',
-              success: function(data){
-        
-                          }
+              success: function(res){
+                total = res[0].total_pengajuan - res[0].total_tolak
+                if(total >= 2) {
+                  $('#btn_upload').hide()
+                  $('#ket').show()
+                } else {
+                  $('#btn_upload').show()
+                }
+              }
     });
  
    }

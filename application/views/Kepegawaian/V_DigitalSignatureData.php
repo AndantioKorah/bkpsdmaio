@@ -20,6 +20,7 @@
                 <th class="text-center">Pegawai</th>
                 <th class="text-center">NIP</th>
                 <th class="text-center">Unit Kerja</th>
+                <th class="text-center">Jenis Dokumen</th>
                 <th class="text-center">Tanggal Pengajuan</th>
                 <th class="text-center">Detail</th>
             </thead>
@@ -38,6 +39,7 @@
                         <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
                         <td class="text-center"><?=($rs['nip'])?></td>
                         <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
+                        <td class="text-left"><?=($rs['jenis_ds'])?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_pengajuan'])?></td>
                         <td class="text-center">
                             <?php if($jenis_layanan == 'permohonan_cuti'){ ?>

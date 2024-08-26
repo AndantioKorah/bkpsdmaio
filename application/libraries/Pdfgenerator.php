@@ -20,9 +20,11 @@ class Pdfgenerator extends Dompdf {
         $dompdf->setPaper($paper, $orientation);
         $dompdf->render();
         if ($stream) {
-            $dompdf->stream($filename.".pdf", array("Attachment" => 0));
+            // $dompdf->stream($filename.".pdf", array("Attachment" => false));
+            $dompdf->stream($filename.".pdf");
         } else {
             return $dompdf->output();
+           
         }
     }
 }

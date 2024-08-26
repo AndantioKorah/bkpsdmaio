@@ -3229,7 +3229,7 @@ public function getDataKabanBkd()
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
     ->where('a.jabatan', '4018000JS01');
     
-    return $this->db->get()->result_array(); 
+    return $this->db->get()->row_array(); 
 }
 
 public function updateStatusBerkas(){

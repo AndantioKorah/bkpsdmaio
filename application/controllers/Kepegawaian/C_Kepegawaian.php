@@ -2084,7 +2084,8 @@ class C_Kepegawaian extends CI_Controller
 		// $this->load->library('pdf');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-		$this->load->view('kepegawaian/surat/V_SuratHukdis',$data);	
+		$data['nomorsurat'] = "123";
+		$this->load->view('kepegawaian/surat/V_SuratPidana',$data);	
 
 		// $this->load->library('pdfgenerator');
         // // filename dari pdf ketika didownload
@@ -2105,7 +2106,7 @@ class C_Kepegawaian extends CI_Controller
 
 
 		$mpdf = new \Mpdf\Mpdf([
-			'format' => 'Legal-L',
+			'format' => 'Legal',
 			'debug' => true
 		]);
 		$mpdf->AddPage(
@@ -2132,7 +2133,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
 
 
 

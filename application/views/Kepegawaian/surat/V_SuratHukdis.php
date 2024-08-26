@@ -1,32 +1,14 @@
-<!-- <style>
-  @media print {
-
-    
-@page {
-  size: F4;
-}
-
-	p {
-		font-size: 16pt;
-        font-family: "Bookman Old Style";
-        color:#000;
-	}
-
-    table {
-        font-size: 14;
-        font-family: "Bookman Old Style";
-        color:#000;
-    }
-}
-</style> -->
-
+<html>
 <style>
+	#body_dpcp{
+	font-family: Tahoma !important;
+    }
+
 	#bodysurat {
-		font-family: Arial, Helvetica, sans-serif !important;
+		/* font-family: Arial, Helvetica, sans-serif !important; */
+		font-family: Tahoma !important;
 		font-size: 17px !important;
 		/* line-height: 20px !important; */
-		
-
 	}
 
 	/* td {
@@ -48,11 +30,11 @@
 
 	/* .center {
 		text-align: center;
-	}
+	} */
 
 	.justify {
 		text-align: justify;
-	} */
+	}
 
 	/* p {
 		font-family: Arial, Helvetica, sans-serif !important;
@@ -69,25 +51,43 @@
 		color: #000;
 	} */
 
-	table {
-		font-family: Arial, Helvetica, sans-serif !important;
+	/* table {
+		font-family: Tahoma !important;
 		font-size: 17px !important;
-	}
+	} */
+
+	
+	.table_footer_sk{
+            font-size: .95rem !important;
+			/* font-size: 17px !important; */
+    }
+
+	.footer-sk{
+        /* padding-right: 5rem; */
+        position: fixed;
+        bottom: 0;
+        /* margin-top: 50px; */
+        /* padding-bottom: 60px; */
+        /* display: none; */
+        /* width: 100%; */
+		width: 100%;
+		margin-top: 90px;
+      }
 </style>
-<title>Surat Hukdis</title>
-<div id="bodysurat">
+<body id="bodysurat">
+
 	<div class="header" style="margin-top:-40px;margin-right:40px;">
 		<?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?>
 	</div>
 		<p class="judul" style="margin-top:5px;text-align: center;"> SURAT PERNYATAAN<br>
 			<u>TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</u></p>
-		<p style="text-align: center;"> Nomor : </p>
+		<p style="text-align: center;"> Nomor : <?php if(isset($nomorsurat)) echo $nomorsurat; else echo "";?></p>
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
-			<td style="width:22%;">Nama</td>
-			<td style="text-align: center;width:1%;">:</td>
+			<td style="width:25%;">Nama</td>
+			<td style="width:5%;text-align: center;">:</td>
 			<td style="width:70%;"><?= $kaban['gelar1'];?><?= strtoupper($kaban['nama']);?><?= $kaban['gelar2'];?></td>
 		</tr>
 		<tr>
@@ -115,8 +115,8 @@
 
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
-			<td style="width:22%;">Nama</td>
-			<td style="text-align: center;width:1%;">:</td>
+			<td style="width:25%;">Nama</td>
+			<td style="width:5%;text-align: center;">:</td>
 			<td style="width:70%;">
 				<?= $profil_pegawai['gelar1'];?><?= $profil_pegawai['nama'];?><?= $profil_pegawai['gelar2'];?></td>
 		</tr>
@@ -141,13 +141,13 @@
 			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
 		</tr>
 		<tr>
-			<td colspan="3">Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </td>
+			<td colspan="3"> <p class="justify"> Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </p> </td>
 		</tr>
 
 	</table>
 
 
-	<p class="justify besar" style="margin-right:40px;">
+	<p class="justify" >
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian Surat Pernyataan ini saya buat dengan
 		sesungguhnya dengan mengingat
 		sumpah jabatan dan apabila dikemudian hari ternyata isi surat pernyataan ini tidak benar yang
@@ -166,7 +166,12 @@
 		</tr>
 	</table>
 
-	<img style="width: 100%;margin-top: 200px;" src="<?=base_url();?>assets/images/footer.png" alt="">
+	<div class="footer-sk">
+	<img src="<?=base_url();?>assets/images/footer.png" alt="">
+	</div>
+	<?php
+        // $this->load->view('adminkit/partials/V_FooterBsre');
+    ?>
 
 	<!-- <span style="margin-top:900px;">
 
@@ -177,4 +182,5 @@ Tembusan Yth.:<br>
 4. <?= $this->general_library->getTembusanHukdis($profil_pegawai['id_unitkerjamaster'],$profil_pegawai['nm_unitkerjamaster'],$profil_pegawai['nm_unitkerja']);?>;<br>
 5. Arsip.
 </span> -->
-</div>
+</body>
+</html>

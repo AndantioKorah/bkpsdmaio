@@ -444,6 +444,9 @@ class M_Layanan extends CI_Model
                 'format' => 'Legal-L',
                 // 'debug' => true
             ]);
+            $mpdf->AddPage(
+                'P'
+            );
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathHukdis, 'F');
@@ -492,6 +495,9 @@ class M_Layanan extends CI_Model
                 'format' => 'Legal-L',
                 // 'debug' => true
             ]);
+            $mpdf->AddPage(
+                'P'
+            );
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathPidana, 'F');

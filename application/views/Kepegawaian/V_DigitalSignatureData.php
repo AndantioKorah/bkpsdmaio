@@ -22,7 +22,7 @@
                 <th class="text-center">Unit Kerja</th>
                 <th class="text-center">Jenis Dokumen</th>
                 <th class="text-center">Tanggal Pengajuan</th>
-                <th class="text-center">Detail</th>
+                <th class="text-center">Lihat</th>
             </thead>
             <tbody>
                 <?php $all_check = null; if($result){ $no = 1; foreach($result as $rs){$all_check[] = $rs['id']; ?>
@@ -42,9 +42,12 @@
                         <td class="text-left"><?=($rs['jenis_ds'])?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_pengajuan'])?></td>
                         <td class="text-center">
-                            <?php if($jenis_layanan == 'permohonan_cuti'){ ?>
+                            <?php if($jenis_layanan == 4){ ?>
                                 <button type="button" href="#modal_detail" onclick="loadDetailCuti('<?=$rs['id']?>')"
                                 data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
+                            <?php } else { ?>
+                                <button type="button" href="#modal_detail_ds" onclick="openFile('<?=$rs['id']?>')"
+                                data-toggle="modal" class="btn btn-sm btn-navy"><i class="fa fa-file"></i></button>
                             <?php } ?>
                         </td>
                     </tr>
@@ -69,6 +72,13 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modal_detail_ds" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div id="modal-dialog" class="modal-dialog modal-xl">
+		<div class="modal-content" id="content_modal_detail_ds">
+		</div>
+	</div>
+</div>
 <script>
     $(function(){
         list_checked = [];
@@ -77,6 +87,14 @@
     // $('.data_tr').click(function(){
     //     setSelectedItem($(this).data("id"))
     // })
+
+    function openFile(id){
+        $('#content_modal_detail_ds').html('')
+        $('#content_modal_detail_ds').append(divLoaderNavy)
+        $('#content_modal_detail_ds').load('<?=base_url('kepegawaian/C_Kepegawaian/openFileDs/')?>'+id, function(){
+            $('#loader').hide()
+        })
+    }
 
     function setSelectedItem(id){
         if(id == '0'){

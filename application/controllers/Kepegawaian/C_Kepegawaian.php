@@ -2080,6 +2080,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->kepegawaian->automationJabatanFungsional();
 	}
 
+	public function openFileDs($id){
+		$data['result'] = $this->general->getOne('t_request_ds', 'id', $id);
+		$this->load->view('kepegawaian/V_DigitalSignatureShowFile', $data);
+	}
+
 	public function suratPidanaHukdis($nip,$jenis){
 		// $this->load->library('pdf');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);

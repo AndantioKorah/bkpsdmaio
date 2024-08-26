@@ -435,13 +435,18 @@ class M_Layanan extends CI_Model
             ]);
 
             ///////////////////////////////// SP HUKDIS
+    		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
             $pathHukdis = 'arsippensiunotomatis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
-            $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
+    		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+            // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
             $mpdf = new \Mpdf\Mpdf([
                 'format' => 'Legal-L',
                 // 'debug' => true
             ]);
+            $mpdf->AddPage(
+                'P'
+            );
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathHukdis, 'F');
@@ -483,12 +488,16 @@ class M_Layanan extends CI_Model
 
             ///////////////////////////////// SP PIDANA
             $pathPidana = 'arsippensiunotomatis/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
-            $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
+    		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+            // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
             $mpdf = new \Mpdf\Mpdf([
                 'format' => 'Legal-L',
                 // 'debug' => true
             ]);
+            $mpdf->AddPage(
+                'P'
+            );
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathPidana, 'F');
@@ -635,6 +644,17 @@ class M_Layanan extends CI_Model
         }
 
         return $rs;
+    }
+
+    public function cronBulkDs(){
+        $data = $this->db->select('a.*')
+                        ->from('t_cron_request_ds a')
+                        ->where('a.flag_active', 1)
+                        ->where('a.flag_sent', 0)
+                        // ->where('a.flag_send', 0)
+                        // ->where('b.url_sk IS NULL')
+                        ->limit(3)
+                        ->get()->result_array();
     }
 
     public function resizeImage($image, $w, $h){

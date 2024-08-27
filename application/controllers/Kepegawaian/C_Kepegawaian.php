@@ -2088,7 +2088,10 @@ class C_Kepegawaian extends CI_Controller
 	public function suratPidanaHukdis($nip,$jenis){
 		// $this->load->library('pdf');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		// dd($data['profil_pegawai']);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		// dd($data['pimpinan_opd']);
 		$data['nomorsurat'] = "123";
 		$this->load->view('kepegawaian/surat/V_SuratPidana',$data);	
 
@@ -2138,7 +2141,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
 
 
 

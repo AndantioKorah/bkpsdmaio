@@ -3228,8 +3228,17 @@ public function getDataKabanBkd()
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
     ->where('a.jabatan', '4018000JS01');
-    
     return $this->db->get()->row_array(); 
+}
+
+public function getDataKepalaOpd($unitkerja)
+{
+    $this->db->select('*')
+    ->from('db_pegawai.pegjabatan a')
+    ->where('a.nm_jabatan', 'Kepala '.$unitkerja)
+    ->order_by('a.tmtjabatan', 'desc');
+    return $this->db->get()->row_array(); 
+  
 }
 
 public function updateStatusBerkas(){

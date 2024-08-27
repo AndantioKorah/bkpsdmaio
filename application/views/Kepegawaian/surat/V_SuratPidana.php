@@ -88,6 +88,17 @@
 		width: 100%;
 		margin-top: 90px;
       }
+	  .footer-sk-2{
+        /* padding-right: 5rem; */
+        position: fixed;
+        bottom: 80;
+        /* margin-top: 50px; */
+        /* padding-bottom: 60px; */
+        /* display: none; */
+        /* width: 100%; */
+		width: 100%;
+		margin-top: 90px;
+      }
 </style>
 <body id="bodysurat">
 	<div class="header" style="margin-top:-40px;margin-right:40px;">
@@ -192,7 +203,23 @@
 			<td class="center" style="width:38%;height:150px;text-align: center;">^</td>
 		</tr>
 	</table>
+	<div class="footer-sk-2">
+	<table border="0" style="width:100%;">
+		<tr>
+			<td style="width:100%;">
+			Tembusan Yth. :<br>
+			1. Wali Kota Manado (sebagai laporan);<br>
+			2. Wakil Wali Kota Manado;<br>
+			3. Sekretaris Daerah Kota Manado;<br>
+			4. Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
+			5. Arsip.
 
+			</td>
+			
+		</tr>
+		
+	</table>
+	</div>
 	<div class="footer-sk">
 	<img src="<?=base_url();?>assets/images/footer.png" alt="">
 	</div>

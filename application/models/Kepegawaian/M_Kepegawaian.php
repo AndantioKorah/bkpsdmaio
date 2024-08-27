@@ -415,7 +415,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getPangkatPegawai($nip,$kode){
-             $this->db->select('c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
+             $this->db->select('b.id_peg,c.keterangan,c.created_date,c.gambarsk,c.id,c.status,e.nm_jenispengangkatan, c.masakerjapangkat, d.nm_pangkat, c.tmtpangkat, c.pejabat,
                             c.nosk, c.tglsk, c.gambarsk')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -457,7 +457,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
+              $this->db->select('b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
               c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.flag_from_siasn, c.meta_data_siasn')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
@@ -478,7 +478,7 @@ class M_Kepegawaian extends CI_Model
 
         function getJabatanPlt($nip,$kode){
           
-            $this->db->select('c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
+            $this->db->select('b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
@@ -503,7 +503,7 @@ class M_Kepegawaian extends CI_Model
 
 
         function getDiklat($nip,$kode){
-             $this->db->select('e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
+             $this->db->select('b.id_peg,e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
@@ -541,7 +541,7 @@ class M_Kepegawaian extends CI_Model
        }
 
         function getGajiBerkala($nip,$kode){
-             $this->db->select('c.created_date,c.id,c.status,c.masakerja,d.nm_pangkat,c.pejabat,c.nosk,c.tglsk,c.tmtgajiberkala,c.gambarsk,c.keterangan')
+             $this->db->select('b.id_peg,c.created_date,c.id,c.status,c.masakerja,d.nm_pangkat,c.pejabat,c.nosk,c.tglsk,c.tmtgajiberkala,c.gambarsk,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.peggajiberkala c', 'b.id_peg = c.id_pegawai')
@@ -641,7 +641,7 @@ class M_Kepegawaian extends CI_Model
 
 
        function getInovasi($nip,$kode){
-        $this->db->select('*')
+        $this->db->select('*, c.id as id_peginovasi')
                        ->from('m_user a')
                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                        ->join('db_pegawai.peginovasi c', 'b.id_peg = c.id_pegawai')
@@ -8070,12 +8070,17 @@ public function getFileForKarisKarsu()
         $this->db->trans_begin();
 
         $tabel = $this->input->post('tabel');
+        $id_peg = $this->input->post('id_pegawai');
         $data_verif['status'] = $status;
         $data_verif['keterangan'] = $this->input->post('keterangan');
                 
 
         $this->db->where('id', $id)
             ->update($tabel, $data_verif);
+        
+        if($tabel == "db_pegawai.pegjabatan"){
+            $this->updateJabatan($id_peg);
+        }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -8083,6 +8088,19 @@ public function getFileForKarisKarsu()
             $rs['message'] = 'Terjadi Kesalahan';
         }else{
             $this->db->trans_commit();
+        }
+
+        $eselonPeg = $this->general_library->getEselonPegawai($id_peg);  
+        if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
+        $id = 1;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+        } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
+        $id = 2;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+        } else {
+        $id = 3;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
         }
         
         return $rs;

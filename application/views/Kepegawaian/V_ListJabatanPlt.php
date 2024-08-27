@@ -80,8 +80,19 @@
               <td>
              
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-               <?php } ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <input style="width:100px;" class="form-control " id="ket_verif_<?=$rs['id']?>"/>&nbsp;
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button onclick="verifDokumen(2, '<?=$rs['id']?>','db_pegawai.pegjabatan','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-success" title="Terima"><i class="btn_verif_<?=$rs['id']?>  fa fa-check"></i></button>
+                <button onclick="verifDokumen(3, '<?=$rs['id']?>','db_pegawai.pegjabatan','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-warning" title="Tolak"><i class="btn_tolak_<?=$rs['id']?> fa fa-times"></i></button>
+                <?php } ?>
+                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
+              <?php } else { ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <button onclick="verifDokumen(1, '<?=$rs['id']?>','db_pegawai.pegjabatan','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-dark" title="Batal Verif"><i class="btn_tolak_<?=$rs['id']?> fa fa-times"></i></button>
+              <?php } ?>
+              <?php } ?>
               </td>
               <?php } ?>
             </tr>
@@ -272,7 +283,37 @@
                    }
                }
 
-
+               function verifDokumen(status, id,tabel,id_peg){
+        
+        if(status == 3){
+          if($('#ket_verif_'+id).val() == "" || $('#ket_verif_'+id).val() == null){
+            errortoast('Alasan Tolak belum diisi')
+            return false;
+          }
+        }
+        $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/verifDokumenPdm")?>'+'/'+id+'/'+status,
+            method: 'post',
+            data: {
+               id_pegawai: id_peg,
+               tabel: tabel,
+               keterangan: $('#ket_verif_'+id).val()
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                  loadListJabatan()
+                  loadRiwayatUsulJabatan()
+                } else {
+                    errortoast(rs.message)
+                }
+              
+            }, error: function(e){
+               
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
 </script>
 <?php } else { ?>
   <div class="row">

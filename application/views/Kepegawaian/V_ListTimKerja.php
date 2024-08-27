@@ -52,14 +52,30 @@
               <td><?php if($rs['status'] == 1) echo 'Menunggu Verifikasi BKPSDM'; else if($rs['status'] == 3) echo 'ditolak : '.$rs['keterangan']; else echo '';?></td>
 
               <td>
+
               <?php if($rs['status'] == 1) { ?>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <input style="width:100px;" class="form-control " id="ket_verif_<?=$rs['id_pegtimkerja']?>"/>&nbsp;
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button onclick="verifDokumen(2, '<?=$rs['id_pegtimkerja']?>','db_pegawai.pegtimkerja','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-success" title="Terima"><i class="btn_verif_<?=$rs['id_pegtimkerja']?>  fa fa-check"></i></button>
+                <button onclick="verifDokumen(3, '<?=$rs['id_pegtimkerja']?>','db_pegawai.pegtimkerja','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-warning" title="Tolak"><i class="btn_tolak_<?=$rs['id_pegtimkerja']?> fa fa-times"></i></button>
+                <?php } ?>
                 <button 
                 data-toggle="modal" 
-                data-id="<?=$rs['id']?>"
+                data-id="<?=$rs['id_pegtimkerja']?>"
                 href="#modal_edit_tim"
                 onclick="loadEditTim('<?=$rs['id_pegtimkerja']?>')" title="Ubah Data" class="open-DetailOrganisasi btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
-              <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-               <?php } ?>
+                <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
+              <?php } else { ?>
+              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <button onclick="verifDokumen(1, '<?=$rs['id_pegtimkerja']?>','db_pegawai.pegtimkerja','<?=$rs['id_peg']?>')"  class="btn btn-sm btn-dark" title="Batal Verif"><i class="btn_tolak_<?=$rs['id_pegtimkerja']?> fa fa-times"></i></button>
+              <?php } ?>
+              <?php } ?>
+
+             
+
+
               </td>
               <?php } ?>
             </tr>
@@ -115,6 +131,39 @@
                        })
                    }
                }
+
+      function verifDokumen(status, id,tabel,id_peg){
+        
+        if(status == 3){
+          if($('#ket_verif_'+id).val() == "" || $('#ket_verif_'+id).val() == null){
+            errortoast('Alasan Tolak belum diisi')
+            return false;
+          }
+        }
+        $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/verifDokumenPdm")?>'+'/'+id+'/'+status,
+            method: 'post',
+            data: {
+               id_pegawai: id_peg,
+               tabel: tabel,
+               keterangan: $('#ket_verif_'+id).val()
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                  loadListTimKerja()
+                  loadRiwayatUsulTimKerja()
+                } else {
+                    errortoast(rs.message)
+                }
+              
+            }, error: function(e){
+               
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
                function loadEditTim(id){
               $('#edit_tim_kerja_pegawai').html('')
               $('#edit_tim_kerja_pegawai').append(divLoaderNavy)

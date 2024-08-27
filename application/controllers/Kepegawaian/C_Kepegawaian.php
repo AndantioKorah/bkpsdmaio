@@ -2091,7 +2091,7 @@ class C_Kepegawaian extends CI_Controller
 		// dd($data['profil_pegawai']);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
-		// dd($data['pimpinan_opd']);
+		// dd($data['profil_pegawai']);
 		$data['nomorsurat'] = "123";
 		$this->load->view('kepegawaian/surat/V_SuratPidana',$data);	
 
@@ -2142,10 +2142,13 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
-
-
-
     }
+
+	public function verifDokumenPdm($id, $status)
+    {
+        echo json_encode($this->kepegawaian->verifDokumenPdm($id, $status));
+    }
+
 	
 
 

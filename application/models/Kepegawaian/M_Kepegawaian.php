@@ -8064,6 +8064,30 @@ public function getFileForKarisKarsu()
         }
     }
 
+    public function verifDokumenPdm($id, $status){
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';        
+        $this->db->trans_begin();
+
+        $tabel = $this->input->post('tabel');
+        $data_verif['status'] = $status;
+        $data_verif['keterangan'] = $this->input->post('keterangan');
+                
+
+        $this->db->where('id', $id)
+            ->update($tabel, $data_verif);
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;        
+            $rs['message'] = 'Terjadi Kesalahan';
+        }else{
+            $this->db->trans_commit();
+        }
+        
+        return $rs;
+    }
+
 
 
 

@@ -439,6 +439,16 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
   </div>
 
+  <div class="form-group">
+    <!-- <label>File SK</label> -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" name="flag_upload_siasn" id="flag_upload_siasn">
+      <label class="form-check-label" for="flag_upload_siasn">
+        Upload SIASN
+      </label>
+    </div>
+  </div>
+
   <div class="form-group col-lg-12">
     <br>
      <button class="btn btn-block btn-primary customButton"  id="btn_upload_jabatan"><i class="fa fa-save"></i> SIMPAN</button>

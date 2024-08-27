@@ -220,7 +220,9 @@ function loadListPeninjauan(){
                   $('#ket').show()
                 } else {
                   $('#btn_upload').show()
+                  $('#ket').hide()
                 }
+               
               }
     });
  
@@ -231,7 +233,6 @@ $('#form_tinjau_absen').on('submit', function(e){
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()
        
-
         var formvalue = $('#form_tinjau_absen');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('image_file').files.length;
@@ -272,6 +273,7 @@ $('#form_tinjau_absen').on('submit', function(e){
                 document.getElementById('btn_upload').disabled = true;
                 successtoast(result.msg)
                 loadListPeninjauan()
+                cekPengajuan()
               } else {
                 errortoast(result.msg)
                 document.getElementById('btn_upload').disabled = false;

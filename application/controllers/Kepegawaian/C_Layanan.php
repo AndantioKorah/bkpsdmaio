@@ -95,8 +95,15 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function showDpcp($id){
-		$data['result'] = $this->layanan->getDpcpData($id);
+		// $data['result'] = $this->layanan->getDpcpData($id);
+		$data['id'] = $id;
 		$this->load->view('kepegawaian/V_ShowDpcpData', $data);
+	}
+
+	public function loadBerkasPensun($id, $jenis){
+		$data['jenis_file'] = $jenis;
+		$data['result'] = $this->layanan->getDpcpData($id);
+		$this->load->view('kepegawaian/V_ShowDpcpDataDetail', $data);
 	}
 
 	public function deleteBerkasPensiun($id){

@@ -1002,7 +1002,10 @@ class M_Kepegawaian extends CI_Model
           $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
           $id_pegjabatan = $this->db->insert_id();
           if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
-          $this->syncSiasnJabatan($id_pegjabatan);
+            $inputPost = $this->input->post();
+            if(isset($inputPost['flag_upload_siasn'])){
+                $this->syncSiasnJabatan($id_pegjabatan);
+            }
           }
 
         } else if($id_dok == 20){            

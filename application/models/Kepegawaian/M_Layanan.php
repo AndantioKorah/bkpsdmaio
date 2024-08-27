@@ -436,7 +436,7 @@ class M_Layanan extends CI_Model
 
             ///////////////////////////////// SP HUKDIS
     		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-            $pathHukdis = 'arsippensiunotomatis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
     		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
             // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
@@ -487,7 +487,7 @@ class M_Layanan extends CI_Model
             ]);
 
             ///////////////////////////////// SP PIDANA
-            $pathPidana = 'arsippensiunotomatis/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathPidana = 'arsippensiunotomatis/arsipskpidana/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
     		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
             // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);

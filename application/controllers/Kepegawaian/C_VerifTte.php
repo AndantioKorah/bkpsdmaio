@@ -20,7 +20,7 @@ class C_VerifTte extends CI_Controller
 			$data['filepath'] = $exists['url'];
 			$explode = explode("/", $data['filepath']);
 
-			$data['filename'] = $explode[1];
+			$data['filename'] = $explode[count($explode)-1];
 		}
 		renderVerifWhatsapp('kepegawaian/verif_pdf/V_VerifPdfQrResult', null, null, $data);
 	}

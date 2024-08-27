@@ -808,6 +808,10 @@
                             <div class="tab-pane" id="pills-data-lainnya" role="tabpanel" aria-labelledby="pills-data-lainnya">
                                 <form id="form_data_lainnya">
                                     <div class="row">
+                                        <div class="col-lg-12 mt-2">
+                                            <label>BUP</label>
+                                            <input class="form-control" id="bup" name="bup" value="<?=$data_checklist_pensiun['bup']?>" />
+                                        </div>
                                         <div class="col-lg-12">
                                             <label>GAJI POKOK PENSIUN</label>
                                             <input type="number" class="form-control" name="gaji_pokok_pensiun" value="<?=$data_checklist_pensiun['gaji_pokok_pensiun']?>" />
@@ -833,7 +837,7 @@
                                             <input class="form-control" id="alamat_sekarang" name="alamat_sekarang" value="<?=$data_checklist_pensiun['alamat_sekarang']?>" />
                                         </div>
                                         <div class="col-lg-12 mt-2">
-                                            <label>ALAMAT SETELAH PENSIUNS</label>
+                                            <label>ALAMAT SETELAH PENSIUN</label>
                                             <input class="form-control" id="alamat_setelah_pensiun" name="alamat_setelah_pensiun" value="<?=$data_checklist_pensiun['alamat_setelah_pensiun']?>" />
                                         </div>
                                         <div class="col-lg-12 text-right mt-3">
@@ -852,13 +856,13 @@
         <?php $this->load->view('adminkit/partials/V_QrTte', $dataQr); ?>
     </div> -->
 </div>
-<div class="modal fade" id="modal_berkas" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
+<div class="modal fade" id="modal_berkas" tabindex="-1" 
   aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div id="modal-dialog" class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title">BERKAS PENSIUN</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

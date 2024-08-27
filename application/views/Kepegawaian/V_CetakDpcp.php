@@ -63,7 +63,7 @@
             <tr>
                 <td style="width: 15%;">BUP</td>
                 <td style="width: 3%;">:</td>
-                <td style="width: 82%;">asd</td>
+                <td style="width: 82%;"><?=$data_checklist_pensiun['bup']?></td>
             </tr>
         </table>
         <h4 style="margin-left: 15%;">DATA PERORANGAN CALON PENERIMA PENSIUN (DPCP) PEGAWAI NEGERI SIPIL</h4>
@@ -100,7 +100,7 @@
                         <td style="width: 2%;">D.</td>
                         <td style="width: 40%;">JABATAN/PEKERJAAN</td>
                         <td style="width: 3%;">:</td>
-                        <td style="width: 56%;"><?=strtoupper($berkas['sk_jabatan']['nm_jabatan'])?></td>
+                        <td style="width: 56%;"><?=strtoupper($profil_pegawai['nama_jabatan'])?></td>
                     </tr>
                     <tr valign="top">
                         <td style="width: 1%;"></td>

@@ -435,56 +435,64 @@ class M_Layanan extends CI_Model
             ]);
 
             ///////////////////////////////// SP HUKDIS
-    		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-            $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
-    		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
-            // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
-            // dd($html);
-            $mpdf = new \Mpdf\Mpdf([
-                'format' => 'Legal-L',
-                // 'debug' => true
-            ]);
-            $mpdf->AddPage(
-                'P'
-            );
-            $mpdf->WriteHTML($html);
-            $mpdf->showImageErrors = true;
-            $mpdf->Output($pathHukdis, 'F');
+            if(!$result['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
+                $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+                // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
+                // dd($html);
+                $mpdf = new \Mpdf\Mpdf([
+                    'format' => 'Legal-L',
+                    // 'debug' => true
+                ]);
+                $mpdf->AddPage(
+                    'P'
+                );
+                $mpdf->WriteHTML($html);
+                $mpdf->showImageErrors = true;
+                $mpdf->Output($pathHukdis, 'F');
 
-            $rs['data'] = $pathHukdis;
+                $rs['data'] = $pathHukdis;
 
-            $this->db->where('id', $data['id_t_checklist_pensiun'])
-                    ->update('t_checklist_pensiun', [
-                        'url_file_hukdis' => $pathHukdis
-                    ]);
+                $this->db->where('id', $data['id_t_checklist_pensiun'])
+                        ->update('t_checklist_pensiun', [
+                            'url_file_hukdis' => $pathHukdis
+                        ]);
 
-            $fileBase64 = convertToBase64(base_url($pathHukdis));
+                $fileBase64 = convertToBase64(base_url($pathHukdis));
 
-            $tteTemplateHukdis = $this->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 100,
-                    "height" => 100,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathHukdis))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 2,
-                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
-                'request' => json_encode($request_ws),
-                'url_file' => $pathHukdis,
-                'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
-                'random_string' => $tteTemplateHukdis['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_hukdis',
-                'nip' => $data['nip']
-            ]);
+                $tteTemplateHukdis = $this->createQrTte();
+                $request_ws = [
+                    'signatureProperties' => [
+                        "tampilan" => "VISIBLE",
+                        "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
+                        "tag" => "^",
+                        "width" => 100,
+                        "height" => 100,
+                        "page" => 1,
+                    ],
+                    // 'file' => convertToBase64(($pathHukdis))
+                ];
+                $this->db->insert('t_request_ds', [
+                    'ref_id' => $data['id_t_checklist_pensiun'],
+                    'table_ref' => 't_checklist_pensiun',
+                    'id_m_jenis_ds' => 2,
+                    'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                    'request' => json_encode($request_ws),
+                    'url_file' => $pathHukdis,
+                    'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
+                    'random_string' => $tteTemplateHukdis['data']['randomString'],
+                    'created_by' => $this->general_library->getId(),
+                    'nama_kolom_flag' => 'flag_ds_hukdis',
+                    'nip' => $data['nip']
+                ]);
+            } else {
+                $this->db->where('id', $data['id_t_checklist_pensiun'])
+                        ->update('t_checklist_pensiun', [
+                            'url_file_hukdis' => 'arsipdisiplin/'.$result['data_hukdis']['gambarsk']
+                        ]);
+            }
+
 
             ///////////////////////////////// SP PIDANA
             $pathPidana = 'arsippensiunotomatis/arsipskpidana/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';

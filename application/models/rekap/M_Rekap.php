@@ -915,7 +915,7 @@
         $result['kadis'] = 0;
         $result['flag_rs'] = 0;
 
-        if($id_unitkerja == '7000096'){
+        if($id_unitkerja == '7000096'){ // Sanggar Kegiatan Belajar
             $id_unitkerja = '3010000';
         }
 
@@ -924,19 +924,19 @@
                             ->where('id_unitkerja', $id_unitkerja)
                             ->get()->row_array();
 
-        if($unitkerja['nip_kepalaskpd_hardcode']){
-            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                                e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
-                                ->from('db_pegawai.pegawai a')
-                                ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                ->where('a.nipbaru_ws', $unitkerja['nip_kepalaskpd_hardcode'])
-                                ->get()->row_array();
+        // if($unitkerja['nip_kepalaskpd_hardcode']){
+        //     $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+        //                         e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
+        //                         ->from('db_pegawai.pegawai a')
+        //                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+        //                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+        //                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+        //                         ->join('m_user e', 'a.nipbaru_ws = e.username')
+        //                         ->where('a.nipbaru_ws', $unitkerja['nip_kepalaskpd_hardcode'])
+        //                         ->get()->row_array();
 
-            $result['kepalaskpd']['nama_jabatan'] = $unitkerja['nama_jabatan_kepalaskpd_hardcode'];
-        }
+        //     $result['kepalaskpd']['nama_jabatan'] = $unitkerja['nama_jabatan_kepalaskpd_hardcode'];
+        // }
 
         // $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
         // g.id as id_m_user, a.flag_bendahara, e.flag_uptd,
@@ -1128,6 +1128,33 @@
                 }
             }
         }
+        
+        if($unitkerja['nip_kepalaskpd_hardcode']){
+            $tempresult['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                ->where('a.nipbaru_ws', $unitkerja['nip_kepalaskpd_hardcode'])
+                                ->get()->row_array();
+
+            $tempresult['kepalaskpd']['nama_jabatan'] = $unitkerja['nama_jabatan_kepalaskpd_hardcode'];
+
+            if($result['flag_puskesmas'] == 1){
+                $result['kapus'] = $tempresult['kepalaskpd'];
+                $result['kapus']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+            } else {
+                $result['kepalaskpd'] = $tempresult['kepalaskpd'];
+                $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+            }
+        }
+
+        // if($id_unitkerja == 6090000){
+        //     dd($result);
+        // }
+
         return $result;
     }
 

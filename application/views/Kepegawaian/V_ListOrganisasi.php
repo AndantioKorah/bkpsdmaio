@@ -79,7 +79,7 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                 <button onclick="verifDokumen(2, '<?=$rs['id_pegorganisasi']?>','db_pegawai.pegorganisasi','<?=$rs['id_peg']?>')"  class="btn_verif_<?=$rs['id_pegorganisasi']?> btn btn-sm btn-success" title="Terima"><i class="  fa fa-check"></i></button>
                 <button onclick="verifDokumen(3, '<?=$rs['id_pegorganisasi']?>','db_pegawai.pegorganisasi','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id_pegorganisasi']?> btn btn-sm btn-warning" title="Tolak"><i class=" fa fa-times"></i></button>
-                <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+                <button disabled style="display: none;" id="btn_loading_<?=$rs['id_pegorganisasi']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                 
                 <?php } ?>
                 <button onclick="deleteData('<?=$rs['id_pegorganisasi']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -87,7 +87,7 @@
               <?php } else { ?>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <button onclick="verifDokumen(1, '<?=$rs['id_pegorganisasi']?>','db_pegawai.pegorganisasi','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id_pegorganisasi']?> btn btn-sm btn-dark" title="Batal Verif"><i class=" fa fa-times"></i></button>
-              <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+              <button disabled style="display: none;" id="btn_loading_<?=$rs['id_pegorganisasi']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
               
               <?php } ?>
               <?php } ?>

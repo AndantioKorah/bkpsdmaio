@@ -851,10 +851,6 @@
                     }
                 }
     
-                if($d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
-                    $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
-                }
-
                 if(isset($d['statuspeg']) && $d['statuspeg'] == 1){ // jika CPNS
                     $result[$i]['kelas_jabatan'] = 7;
                 }
@@ -862,6 +858,10 @@
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
             } else if($d['jenis_jabatan'] == 'JFU'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
+            }
+
+            if(isset($d['kelas_jabatan_hardcode']) && $d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
+                $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
             }
             
             $i++;
@@ -948,7 +948,7 @@
         // e.kepalaskpd, e.eselon, d.id_unitkerjamaster, f.nama_jabatan as nama_jabatan_tambahan, f.kelas_jabatan as kelsa_jabatan_tambahan, f.kepalaskpd as kepalaskpd_tambahan')
         $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
         g.id as id_m_user, a.flag_bendahara, e.flag_uptd, e.nama_jabatan,
-        e.kepalaskpd, e.eselon, d.id_unitkerjamaster, f.nama_jabatan as nama_jabatan_tambahan, f.kelas_jabatan as kelsa_jabatan_tambahan, f.kepalaskpd as kepalaskpd_tambahan')
+        e.kepalaskpd, e.eselon, d.id_unitkerjamaster, f.nama_jabatan as nama_jabatan_tambahan, f.kelas_jabatan as kelas_jabatan_tambahan, f.kepalaskpd as kepalaskpd_tambahan')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
@@ -2225,14 +2225,16 @@
                         $valid_date = date('Y-m-t', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
                         $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
                         $last_date = $list_date[count($list_date)-1];
-
-                        if($last_date <= $valid_date && date('Y-m-d') >= $valid_date){
+                        // if($l['id_pegawai'] == 'PEG0000000ei569'){
+                        //     dd($last_date.'  ;  '.$valid_date);
+                        // }
+                        if($last_date <= $valid_date && date('Y-m-d') <= $valid_date){
                             $hukdis[$l['nipbaru_ws']] = $l;
                         }
                     }
                 }
             }
-            
+            // dd($list_hukdis);
             foreach($temp['result'] as $tr){
                 if(isset($tr['nama_pegawai'])){
                     $result['result'][$tr['nip']]['nama_pegawai'] = $tr['nama_pegawai'];

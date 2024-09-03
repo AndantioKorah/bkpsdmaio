@@ -642,22 +642,51 @@ $(function(){
 
   function getFirstDayOfMonth(year, month) {
   return new Date(year, month, 1);
-}
+  }
+
+ 
 
   var date = new Date();
-var firstDay = getFirstDayOfMonth(
-  date.getFullYear(),
-  date.getMonth(),
-);
+  var tanggal = new Date().getDate();
+  
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
 
-  $('.datetimepickerthis').datetimepicker({
+
+  if(tanggal <= 3) {
+    $('.datetimepickerthis').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    // startDate: firstDay,
+    // startDate: firstDay, 
+    //  startDate:'2024-08-30',
     endDate: new Date()
   })
+  } else {
+    $('.datetimepickerthis').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    startDate: firstDay, 
+    //  startDate:'2024-08-30',
+    endDate: new Date()
+  })
+  }
+
+  // $('.datetimepickerthis').datetimepicker({
+  //   format: 'yyyy-mm-dd hh:ii:ss',
+  //   autoclose: true,
+  //   todayHighlight: true,
+  //   todayBtn: true,
+  //   startDate: firstDay, 
+  //   //  startDate:'2024-08-30',
+  //   endDate: new Date()
+  // })
+
 
   $('.yearpicker').datepicker({
     format: 'yyyy',

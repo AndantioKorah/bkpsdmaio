@@ -463,7 +463,6 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     // ->where('a.flag_active', 1)
                     ->order_by('c.eselon', 'asc')
                     ->group_by('a.id_peg');
-
                     if($id == 1){
                         $this->db->where_in('c.eselon', ["III B", "III A"]);
                     }
@@ -475,18 +474,21 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     if($id == 3){
                         $this->db->where_in('c.eselon', ["IV A", "IV B"]);
                     }
+                    if($id == 4){
+                        $this->db->where_in('c.jenis_jabatan', ["JFU"]);
+                    }
+                    // dd($jenis_pengisian);
              
              
                     $query = $this->db->get()->result_array();
-                    
-                    
+                  
                     if($penilaian == 1){
                        
                     $currentYear = date('Y'); 
                     $previous1Year = $currentYear - 1;   
                     $previous2Year = $currentYear - 2;  
 
-                    if($id == 2 || $id == 1 || $id == 3){
+                    if($id == 2 || $id == 1 || $id == 3 || $id == 4){
                     foreach ($query as $rs) {
                         // //    assesment
                         // $nilaiassesment = $this->getNilaiAssesment($rs['id_pegawai']); 
@@ -674,6 +676,10 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
                     if($id == 3){
                         $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                    }
+
+                    if($id == 4){
+                        $this->db->where_in('c.jenis_jabatan', ["JFU"]);
                     }
              
              
@@ -1489,6 +1495,30 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
                 }
 
+            } else if($kode == 4) {
+              
+                if($pangkat[0]['pangkat'] > 32 && $pangkat[0]['pangkat'] < 45) {
+                        $id_pangkat = 96;
+                } else if($pangkat[0]['pangkat'] =  32) {
+                    $sdate = $pangkat[0]['tmtpangkat'];
+                    $edate = date('Y-m-d');
+                    $date_diff = abs(strtotime($edate) - strtotime($sdate));
+                    $years = floor($date_diff / (365*60*60*24));
+                    $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+                    $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                    if($years >= 5) {
+                        $id_pangkat = 97;
+                    } else if($years == 4){
+                        $id_pangkat = 98;
+                    } else if($years == 3){
+                        $id_pangkat = 99;
+                    } else if($years <= 2){
+                        $id_pangkat = 100;
+                    }
+
+                }
+
             }
         }
         // dd($id_pangkat);
@@ -1998,6 +2028,11 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             if($kode == 3){
                 $this->db->where_in('c.id_eselon', [8,9]);
             }
+            if($kode == 4){
+                $this->db->where_in('b.jenis_jabatan', ["JFU"]);
+            }
+
+            
             
 
 
@@ -3354,6 +3389,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                            if($id == 3){
                                $this->db->where_in('c.eselon', ["IV A", "IV B"]);
                            }
+
+                           if($id == 4){
+                            $this->db->where_in('c.jenis_jabatan', ["JFU"]);
+                           }
                         //    if($penilaian == 0){
                         //     $this->db->where('b.jenjang_jabatan', $jenis_pengisian);
                         //    }
@@ -3940,6 +3979,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                            if($id == 3){
                                $this->db->where_in('c.eselon', ["IV A", "IV B"]);
                            }
+
+                           if($id == 4){
+                            $this->db->where_in('c.jenis_jabatan', ["JFU"]);
+                           }
                 
                            $query = $this->db->get()->result_array();
 
@@ -4240,6 +4283,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                
                                    if($id == 3){
                                        $this->db->where_in('c.eselon', ["IV A", "IV B"]);
+                                   }
+
+                                   if($id == 4){
+                                    $this->db->where_in('c.jenis_jabatan', ["JFU"]);
                                    }
                         
                                    $query = $this->db->get()->result_array();

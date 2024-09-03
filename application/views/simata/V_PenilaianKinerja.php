@@ -127,6 +127,11 @@
         <div class="card-body" style="margin-top:-20px;">
         
         <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <?php if($jenis_pengisian == 1) { ?>
+        <li class="nav-item" role="presentation">
+            <button onclick="loadListPegawaiPenilaianKinerja(4,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pelaksana</button>
+        </li>
+        <?php } ?>
         <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
             <button onclick="loadListPegawaiPenilaianKinerja(3,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#pengawas" type="button" role="tab" aria-controls="home" aria-selected="true">Pengawas</button>

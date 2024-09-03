@@ -2631,7 +2631,10 @@
                     }
                 }
 
-                if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){
+                // if($data['id_unitkerja'] == 1030550){
+                //     // dd($p);
+                // }
+                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                 }
                 

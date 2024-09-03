@@ -2586,7 +2586,8 @@
                     }
 
                     if($p['skpd'] == 6170000 || // if puskes bunaken
-                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001){ //sekolah di bunaken kepulauan 
+                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001 || // sekolah di bunaken kepulauan
+                    $p['skpd'] == 8020096){  // smp bunaken kepulauan
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
@@ -2628,6 +2629,10 @@
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
+                }
+
+                if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){
+                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                 }
                 
                 $result[$p['id_m_user']]['nama_jabatan'] = $p['nama_jabatan'];

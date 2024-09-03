@@ -648,12 +648,15 @@ $(function(){
 
   var date = new Date();
   var tanggal = new Date().getDate();
-  
+  var bulan = date.getMonth();
+  var tahun = date.getFullYear();
+
   var firstDay = getFirstDayOfMonth(
     date.getFullYear(),
     date.getMonth(),
   );
 
+  var fd = tahun+'-'+bulan+'-01';
 
   if(tanggal <= 3) {
     $('.datetimepickerthis').datetimepicker({
@@ -661,8 +664,8 @@ $(function(){
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    // startDate: firstDay, 
-    //  startDate:'2024-08-30',
+    startDate: fd, 
+     startDate:'2024-08-01',
     endDate: new Date()
   })
   } else {
@@ -672,7 +675,7 @@ $(function(){
     todayHighlight: true,
     todayBtn: true,
     startDate: firstDay, 
-    //  startDate:'2024-08-30',
+    //  startDate:'2024-08-01',
     endDate: new Date()
   })
   }

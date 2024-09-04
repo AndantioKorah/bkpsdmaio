@@ -69,7 +69,9 @@ class M_Layanan extends CI_Model
                     $expl = explode(" ", $diff);
                     // dd($diff[0] < 1)
                     if($expl[0] < 1){ // dibawah 1 tahun
+                        $until_date = date('Y-m-d', strtotime($dh['tmt'].'+ '.$dh['lama_potongan'].' months'));
                         $result['data_hukdis'] = $dh;
+                        $result['data_hukdis']['tmt_akhir'] = $until_date;
                     }
                 }
             }
@@ -433,10 +435,10 @@ class M_Layanan extends CI_Model
                 'nama_kolom_flag' => 'flag_ds_dpcp',
                 'nip' => $data['nip']
             ]);
+            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
             ///////////////////////////////// SP HUKDIS
-            if(!$result['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
-                $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+            if(!$data['berkas']['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
                 $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
                 $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
                 // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
@@ -486,10 +488,11 @@ class M_Layanan extends CI_Model
                     'nama_kolom_flag' => 'flag_ds_hukdis',
                     'nip' => $data['nip']
                 ]);
-            } else {
+            } else { // jika ada hukdis, masuk di sini
+                
                 $this->db->where('id', $data['id_t_checklist_pensiun'])
                         ->update('t_checklist_pensiun', [
-                            'url_file_hukdis' => 'arsipdisiplin/'.$result['data_hukdis']['gambarsk']
+                            'url_file_hukdis' => 'arsipdisiplin/'.$data['berkas']['data_hukdis']['gambarsk']
                         ]);
             }
 
@@ -585,6 +588,16 @@ class M_Layanan extends CI_Model
                     $result['pidana'] = $d;
                 }
             }
+        }
+
+        if(!$result['hukdis']){ // jika data hukdis tidak ada, dikarenakan ybs sedang dalam hukdis. ambil data hukdisnya
+            $result['hukdis'] = $this->db->select('a.*')
+                                        ->from('t_checklist_pensiun a')
+                                        ->where('a.id', $id)
+                                        ->where('a.flag_active', 1)
+                                        ->get()->row_array();
+
+            $result['hukdis']['flag_sedang_hukdis'] = 1;
         }
 
         return $result;

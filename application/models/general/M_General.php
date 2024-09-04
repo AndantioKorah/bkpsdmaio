@@ -408,7 +408,7 @@
                     ->where('a.statuspeg', 2)
                     // ->where_in('id_m_status_pegawai', [1,2])
                     ->group_by('a.nipbaru_ws')
-                    ->order_by('c.eselon');
+                    ->order_by('a.nipbaru_ws', 'asc');
 
             if($data['tahun'] == date('Y')){
                 $this->db->where_in('id_m_status_pegawai', [1,2,3]);
@@ -512,7 +512,9 @@
                             }
                             if($temp){
                                 $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
+                               
                                 $explode = explode("-", $temp['tmt_pensiun']);
+                                
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $bup;
                                 // if($d['nipbaru_ws'] == '196501271985022001'){
@@ -529,7 +531,15 @@
                                     //         'id_m_status_pegawai' => 1
                                     //     ]);
                                 }
-                                if($explode[0] == $data['tahun']){
+                                // if($explode[0] == $data['tahun']){
+                                //     $result[] = $temp;
+                                // }
+                          
+                                if($explode[0] == $data['tahun'] && $explode[1] != '01'){
+                                    $result[] = $temp;
+                                }
+                                $nextyear = $data['tahun']+1;
+                                if($explode[0] == $nextyear && $explode[1] == '01'){
                                     $result[] = $temp;
                                 }
                             }

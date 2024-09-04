@@ -2228,9 +2228,14 @@
                         // if($l['id_pegawai'] == 'PEG0000000ei569'){
                         //     dd($last_date.'  ;  '.$valid_date);
                         // }
-                        if($last_date <= $valid_date && date('Y-m-d') <= $valid_date){
+                        if($last_date <= $valid_date && date('Y-m-d') >= $last_date){ // jika tanggal penarikan rekap TPP lebih dari TMT
+                        // if($last_date <= $valid_date){
                             $hukdis[$l['nipbaru_ws']] = $l;
                         }
+                        // if($temp['id_unitkerja'] == '8020074'){
+                        //     dd($list_date);
+                        //     // dd($last_date.' ; '.$valid_date);
+                        // }
                     }
                 }
             }

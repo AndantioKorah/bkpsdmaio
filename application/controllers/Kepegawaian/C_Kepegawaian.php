@@ -2117,7 +2117,7 @@ class C_Kepegawaian extends CI_Controller
 
 
 		$mpdf = new \Mpdf\Mpdf([
-			'format' => 'Legal',
+			'format' => 'A4',
 			'debug' => true
 		]);
 		$mpdf->AddPage(
@@ -2147,10 +2147,12 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
     }
 
-	public function suratFormulirCuti($nip,$jenis){
+	public function suratFormulirCuti($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// $data['cuti'] = $this->kepegawaian->getDataCutiPegawai($data['profil_pegawai']['id_m_user']);
 		$data['nomorsurat'] = "123";
 		$this->load->view('kepegawaian/surat/V_FormulirCuti',$data);	
 

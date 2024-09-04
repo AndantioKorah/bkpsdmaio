@@ -8109,6 +8109,46 @@ public function getFileForKarisKarsu()
         return $rs;
     }
 
+    public function getDataAtasanPegawai($nip){
+        // $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, 
+        // a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, a.id_m_sub_bidang,
+        // (SELECT aa.nm_jabatan FROM db_pegawai.pegjabatan aa WHERE b.id_peg = aa.id_pegawai ORDER BY aa.tmtjabatan DESC LIMIT 1) as nama_jabatan')
+        //                     ->from('m_user a')
+        //                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        //                     ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+        //                     // ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+        //                     ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
+        //                     ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
+        //                     ->where('a.flag_active', 1)
+        //                     ->where('id_m_status_pegawai', 1)
+        //                     ->where('a.id',$this->general_library->getId())
+        //                     ->get()->row_array();
+
+        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
+        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                            ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
+                            ->join('db_pegawai.eselon f', 'd.eselon = f.nm_eselon')
+                            ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
+                            ->join('m_sub_bidang g', 'g.id = a.id_m_sub_bidang', 'left')
+                            ->where('a.flag_active', 1)
+                            ->where('id_m_status_pegawai', 1)
+                            ->where('b.nipbaru_ws', $nip)
+                            ->get()->row_array();
+        
+        $data_atasan = $this->kinerja->getAtasanPegawai($pegawai);
+        // dd($data_atasan);
+        $kepala_pd = $data_atasan['kepala'];
+        $atasan_pegawai = $data_atasan['atasan'];
+        
+        
+
+        return $atasan_pegawai;
+    }
+
 
 
 

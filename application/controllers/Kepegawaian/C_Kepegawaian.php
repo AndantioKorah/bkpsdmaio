@@ -2117,7 +2117,7 @@ class C_Kepegawaian extends CI_Controller
 
 
 		$mpdf = new \Mpdf\Mpdf([
-			'format' => 'Legal',
+			'format' => 'A4',
 			'debug' => true
 		]);
 		$mpdf->AddPage(
@@ -2145,6 +2145,42 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
+    }
+
+	public function suratFormulirCuti($nip){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// $data['cuti'] = $this->kepegawaian->getDataCutiPegawai($data['profil_pegawai']['id_m_user']);
+		$data['nomorsurat'] = "123";
+		$this->load->view('kepegawaian/surat/V_FormulirCuti',$data);	
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'Legal',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+
+		$html = $this->load->view('kepegawaian/surat/V_FormulirCuti', $data, true); 
+		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		
+		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
     }
 
 	public function verifDokumenPdm($id, $status)

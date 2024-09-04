@@ -323,8 +323,9 @@ class C_Kinerja extends CI_Controller
     public function createSkpBulanan()
     {
         $data['periode'] = $this->input->post();
-
+       
         list($data['pegawai'], $data['atasan_pegawai'], $data['rencana_kinerja'], $data['kepala_pd'], $data['nilai_komponen']) = $this->kinerja->createSkpBulanan($this->input->post());
+       
         $this->session->set_userdata(['data_skp' => $data]);
         $id = $this->general_library->getId();
         $dataa = $this->input->post();

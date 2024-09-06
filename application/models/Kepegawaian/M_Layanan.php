@@ -8,6 +8,7 @@ class M_Layanan extends CI_Model
     {
         parent::__construct();
 		$this->load->model('general/M_General', 'general');
+		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
 		$this->load->model('user/M_User', 'user');
         $this->db = $this->load->database('main', true);
@@ -669,7 +670,7 @@ class M_Layanan extends CI_Model
 
     public function cronBulkDs(){
         $data = $this->db->select('a.*, b.request, b.url_image_ds, b.url_file, b.ref_id, b.table_ref,
-                        b.nama_kolom_flag, b.random_string, b.id as id_t_request_ds')
+                        b.nama_kolom_flag, b.random_string, b.id as id_t_request_ds, b.id_m_jenis_ds')
                         ->from('t_cron_request_ds a')
                         ->join('t_request_ds b', 'a.id_t_request_ds = b.id')
                         ->where('a.flag_active', 1)
@@ -723,6 +724,10 @@ class M_Layanan extends CI_Model
                             ]);
 
                     base64ToFile($response['file'][0], $d['url_file']); //simpan ke file
+
+                    if($d['id_m_jenis_ds'] == 4){
+                        $this->kepegawaian->tteCuti($d['id_t_request_ds']);
+                    }
                 }
             }
         }

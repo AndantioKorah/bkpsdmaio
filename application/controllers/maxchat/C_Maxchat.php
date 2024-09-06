@@ -18,7 +18,6 @@ class C_Maxchat extends CI_Controller
             'text' => json_encode($result)
         ]);
         // if($this->general_library->isProgrammer()){
-
         //     $str = '{
         //     "id":"3A87D6FBC4A72A0245D6",
         //     "time":1725520753000,

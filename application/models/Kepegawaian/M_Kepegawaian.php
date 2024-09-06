@@ -6633,6 +6633,10 @@ public function submitEditJabatan(){
                     // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
 
                     base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+                    
+                    if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
+                        $this->tteCuti($selected['id']);
+                    }
 
                     $res['code'] = 0;
                     $res['message'] = "Berhasil";
@@ -6657,6 +6661,89 @@ public function submitEditJabatan(){
         }
 
         return $res;
+    }
+
+    public function tteCuti($id){
+        $selected = $this->db->select('*')
+                            ->from('t_request_ds')
+                            ->where_in('id', $id)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+        $pegawai = $this->db->select('a.*, d.nm_cuti, c.tanggal_mulai, d.id_cuti, c.lama_cuti, c.tanggal_mulai, c.tanggal_akhir, b.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('t_pengajuan_cuti c', 'b.id = c.id_m_user')
+                            ->join('db_pegawai.cuti d', 'c.id_cuti = d.id_cuti')
+                            ->where('a.nipbaru_ws', $selected['nip'])
+                            ->where('c.id', $selected['ref_id'])
+                            ->get()->row_array();
+
+        $caption = "*[SK PENGAJUAN ".strtoupper($pegawai["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawai).",\nBerikut kami lampirkan SK ".$pegawai["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+            'sendTo' => convertPhoneNumber($pegawai['handphone']),
+            'message' => $caption,
+            'filename' => "CUTI_".strtoupper($pegawai["nipbaru_ws"]).'_'.$pegawai['tanggal_mulai'].'.pdf',
+            'fileurl' => $selected['url_file'],
+            'type' => 'document',
+            'jenis_layanan' => 'Cuti'
+        ];
+        // $this->general->saveToCronWa($cronWa);
+        $this->db->insert('t_cron_wa', $cronWa); // insert cron WA untuk krim file
+
+        $explode_url = explode("arsipcuti/", $selected['url_file']);
+
+        $this->db->insert('db_pegawai.pegcuti', [
+            'id_pegawai' => $pegawai['id_peg'],
+            'jeniscuti' => $pegawai['id_cuti'],
+            'lamacuti' => $pegawai['lama_cuti'],
+            'tglmulai' => $pegawai['tanggal_mulai'],
+            'tglselesai' => $pegawai['tanggal_akhir'],
+            'nosttpp' => "",
+            'tglsttpp' => date('Y-m-d'),
+            'gambarsk' => $explode_url[1],
+            'status' => 2
+        ]); // input di arsip cuti
+
+        
+        $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                    ->join('m_user d', 'a.nipbaru_ws = d.username')
+                    ->where('c.kepalaskpd', 1)
+                    ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                    ->get()->row_array();
+
+        $dokumen_pendukung = null;
+        $hariKerja = countHariKerjaDateToDate($pegawai['tanggal_mulai'], $pegawai['tanggal_akhir']);
+        if($hariKerja){
+            $i = 0;
+            foreach($hariKerja[2] as $h){
+                $explode = explode("-", $h);
+                $dokumen_pendukung[$i] = [
+                    'id_m_user' => $pegawai['id_m_user'],
+                    'id_m_jenis_disiplin_kerja' => 17,
+                    'tanggal' => $explode[2],
+                    'bulan' => $explode[1],
+                    'tahun' => $explode[0],
+                    'keterangan' => 'Cuti',
+                    'pengurangan' => 0,
+                    'status' => 2,
+                    'keterangan_verif' => '',
+                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                    'id_m_user_verif' => $kepala_bkpsdm['id_m_user'],
+                    'flag_outside' => 1,
+                    'url_outside' => $selected['url_file'],
+                    'created_by' => $kepala_bkpsdm['id_m_user']
+                ];
+                $i++;
+            }
+        }
+
+        if($dokumen_pendukung){
+            // input di dokumen pendukung
+            $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+        }
     }
 
     public function loadBatchDs(){

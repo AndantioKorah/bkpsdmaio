@@ -437,7 +437,7 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
-		// dd($data['param']['jenisdokumen']);
+		// dd($jd);
 		    if($jd == "jabatan"){
 			$data['path'] = 'arsipjabatan/'.$data['result']['gambarsk'];
             } else if($jd == "pangkat"){
@@ -468,7 +468,9 @@ class C_Kepegawaian extends CI_Controller
 				$data['path'] = 'arsippenghargaan/'.$data['result']['gambarsk'];
             }else if($jd == "inovasi"){
 				$data['path'] = 'arsipinovasi/'.$data['result']['gambarsk'];
-            }       else {
+            } else if($jd == "penugasan"){
+				$data['path'] = 'arsippenugasan/'.$data['result']['gambarsk'];
+            }        else {
 				$data['path'] = null;
 			}
 			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
@@ -2175,12 +2177,12 @@ class C_Kepegawaian extends CI_Controller
         );
 
 		$html = $this->load->view('kepegawaian/surat/V_FormulirCuti', $data, true); 
-		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		$file_pdf = "formulir_cuti_".$data['profil_pegawai']['nipbaru_ws'];  	
 		
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
     }
 
 	public function verifDokumenPdm($id, $status)

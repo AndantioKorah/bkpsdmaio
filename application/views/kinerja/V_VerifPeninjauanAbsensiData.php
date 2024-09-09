@@ -155,7 +155,8 @@
                     // $('#tr_'+id).hide();
                     console.log(tab)
                     if(tab == 0){
-                        openListData(0)
+                        // openListData(0)
+                        $('#tr_'+id).hide();
                     } else if(tab == 3) {
                         openListData(3)
                     } else {

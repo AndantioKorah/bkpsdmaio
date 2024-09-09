@@ -125,7 +125,7 @@
                     </div>
                     <div class="col-lg-6 text-right">
                         <?php if($berkas['data_hukdis']){ ?>
-                            <span style="color: red; font-weight: bold; font-style: italic; font-size: .65rem;">*pegawai sedang dalam masa menjalani hukuman disiplin sedang/berat dalam 1 tahun terakhir. TMT <?=formatDateNamaBulan($berkas['data_hukdis']['tglsurat'])?></span><br>
+                            <span style="color: red; font-weight: bold; font-style: italic; font-size: .65rem;">*pegawai sedang dalam masa menjalani hukuman disiplin sedang/berat mulai <?=formatDateNamaBulan($berkas['data_hukdis']['tglsurat'])?> sampai <?=formatDateNamaBulan($berkas['data_hukdis']['tmt_akhir'])?></span><br>
                         <?php } ?>
                         <?php if($progress['data']['url_file_dpcp'] == null){ ?>
                             <form id="form_create_dpcp">

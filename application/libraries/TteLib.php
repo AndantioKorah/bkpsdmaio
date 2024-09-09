@@ -79,6 +79,7 @@ class TteLib{
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => $method,
         CURLOPT_POSTFIELDS => $request_json,
+        CURLOPT_TIMEOUT => 50,
         // CURLOPT_HTTPAUTH => CURLAUTH_ANY,
         CURLOPT_USERPWD => $hash['username'].":".$hash['password'],
         CURLOPT_HTTPHEADER => array(

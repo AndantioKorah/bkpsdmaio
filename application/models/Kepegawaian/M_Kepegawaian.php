@@ -3234,6 +3234,20 @@ public function getDataKabanBkd()
     return $this->db->get()->row_array(); 
 }
 
+public function getDataCutiPegawai($id)
+{
+    $this->db->select('*,a.alamat as alamat_cuti')
+    ->from('db_efort.t_pengajuan_cuti a')
+    ->join('db_efort.m_user b', 'a.id_m_user = b.id')
+    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+    ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja e', 'c.skpd = e.id_unitkerja')
+    ->where('b.flag_active', 1)
+    ->where('a.id', $id);
+    return $this->db->get()->row_array(); 
+}
+
+
 public function getDataKepalaOpd($unitkerja)
 {
     $this->db->select('*')

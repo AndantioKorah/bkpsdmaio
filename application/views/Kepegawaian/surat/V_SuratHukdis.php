@@ -196,7 +196,6 @@
 			</td>
 			
 		</tr>
-		
 	</table>
 	</div>
 	<div class="footer-sk">

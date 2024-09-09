@@ -2149,12 +2149,15 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
     }
 
-	public function suratFormulirCuti($nip){
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+	public function suratFormulirCuti($id_cuti){
+		$data['cuti'] = $this->kepegawaian->getDataCutiPegawai($id_cuti);
+		$nip = $data['cuti']['nipbaru_ws'];
+		$unitkerja = $data['cuti']['nm_unitkerja'];
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($unitkerja);
 		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
-		// $data['cuti'] = $this->kepegawaian->getDataCutiPegawai($data['profil_pegawai']['id_m_user']);
+		
+		
 		$data['nomorsurat'] = "123";
 		$this->load->view('kepegawaian/surat/V_FormulirCuti',$data);	
 
@@ -2177,12 +2180,12 @@ class C_Kepegawaian extends CI_Controller
         );
 
 		$html = $this->load->view('kepegawaian/surat/V_FormulirCuti', $data, true); 
-		$file_pdf = "formulir_cuti_".$data['profil_pegawai']['nipbaru_ws'];  	
+		$file_pdf = "formulir_cuti_".$data['cuti']['nipbaru_ws'];  	
 		
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
+		$mpdf->Output($file_pdf.'.pdf','d');
     }
 
 	public function verifDokumenPdm($id, $status)

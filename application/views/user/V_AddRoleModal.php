@@ -21,9 +21,9 @@
                         <a class="nav-link" onclick="refreshHakAkses()" href="#hak_akses_tab" data-toggle="tab">Hak Akses</a>
                     </li>
                 <?php } ?>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" onclick="refreshListVerifBidang()" href="#verif_tab" data-toggle="tab">Verifikasi</a>
-                </li> -->
+                </li>
             </ul>
         </div>
         <div class="tab-content col-12" id="myTabContent">
@@ -155,7 +155,7 @@
                             </li>
                         </ul>
                     </div>
-                    <!-- <div class="col-12">
+                    <div class="col-12">
                         <div class="tab-content col-12" id="myTabContent">
                             <div class="tab-pane show active" id="verif_bidang_tab">
                                 <div class="row">
@@ -194,7 +194,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

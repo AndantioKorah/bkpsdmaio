@@ -874,6 +874,8 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
+    let list_anak;
+                                                            
     $(function(){
         $('#sidebar_toggle').click()
         $('#mulai_masuk_pns').datepicker({

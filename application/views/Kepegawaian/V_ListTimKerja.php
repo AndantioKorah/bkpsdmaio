@@ -54,7 +54,7 @@
               <td>
 
               <?php if($rs['status'] == 1) { ?>
-                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <input style="width:100px;" class="form-control " id="ket_verif_<?=$rs['id_pegtimkerja']?>"/>&nbsp;
                 <div class="btn-group" role="group" aria-label="Basic example">
                 <button onclick="verifDokumen(2, '<?=$rs['id_pegtimkerja']?>','db_pegawai.pegtimkerja','<?=$rs['id_peg']?>')"  class="btn_verif_<?=$rs['id_pegtimkerja']?> btn btn-sm btn-success" title="Terima"><i class="  fa fa-check"></i></button>
@@ -70,7 +70,7 @@
                 <button onclick="deleteData('<?=$rs['id_pegtimkerja']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>
               <?php } else { ?>
-              <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <button onclick="verifDokumen(1, '<?=$rs['id_pegtimkerja']?>','db_pegawai.pegtimkerja','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id_pegtimkerja']?> btn btn-sm btn-dark" title="Batal Verif"><i class=" fa fa-times"></i></button>
               <button disabled style="display: none;" id="btn_loading_<?=$rs['id_pegtimkerja']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
              

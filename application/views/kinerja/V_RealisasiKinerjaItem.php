@@ -210,13 +210,14 @@
                         <div class="btn-group" role="group" aria-label="Basic example">
                         <?php if($lp['id_status_verif'] == 2){ ?>
                           <?php } ?>
+                          
                             <span href="#edit_realisasi_kinerja" data-toggle="modal" style="display: inline;">
                             <!-- <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
                              onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button> -->
                             </span>  
-                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
-                           
-                      </div>
+                            <!-- <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>      -->
+                     
+                          </div>
 
                       
                         </td>

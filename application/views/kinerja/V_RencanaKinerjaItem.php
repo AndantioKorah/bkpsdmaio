@@ -65,7 +65,7 @@
                                  </span>
                             <?php if($lp['count'] != 0 ){ ?>
                             <?php } else { ?>
-                                <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
+                                <!-- <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button> -->
                             <?php } ?>
                             
                             

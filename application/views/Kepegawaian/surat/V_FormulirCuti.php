@@ -71,20 +71,20 @@
 		<td colspan="4">I. DATA PEGAWAI</td>
 	</tr>
 	<tr>
-		<td style="width: 15%;">Nama</td>
-		<td style="width: 35%;"></td>
-		<td style="width: 15%;">NIP</td>
-		<td style="width: 35%;"></td>
+		<td style="width: 10%;">Nama</td>
+		<td style="width: 40%;"><?= getNamaPegawaiFull($cuti);?></td>
+		<td style="width: 10%;">NIP</td>
+		<td style="width: 40%;"><?= formatNip($cuti['nipbaru']);?></td>
 	</tr>
 	<tr>
 		<td>Jabatan</td>
-		<td></td>
+		<td><?= $cuti['nama_jabatan'];?></td>
 		<td>Masa Kerja</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td >Unit Kerja </td>
-		<td colspan="3"></td>
+		<td colspan="3"><?= $cuti['nm_unitkerja'];?></td>
 	</tr>
 	
 	</table>
@@ -95,7 +95,8 @@
 	</tr>
 	<tr>
 		<td style="width: 30%;">1. Cuti Tahunan</td>
-		<td style="width: 20%;"></td>
+		<td style="width: 20%;">&nbsp;&#8730;
+		</td>
 		<td style="width: 30%;">2. Cuti Besar</td>
 		<td style="width: 20%;"></td>
 	</tr>
@@ -118,7 +119,7 @@
 		<td colspan="4">III. ALASAN CUTI</td>
 	</tr>
 	<tr>
-		<td td colspan="4">.......</td>
+		<td td colspan="4"> <?=$cuti['alasan'];?> </td>
 	</tr>
 	</table>
 	<br>
@@ -127,12 +128,12 @@
 		<td colspan="8">IV. LAMANYA CUTI</td>
 	</tr>
 	<tr>
-		<td style="width: 10%;"></td>
+		<td style="width: 10%;text-align: center;"><?=$cuti['lama_cuti'];?></td>
 		<td style="width: 20%;text-align: center;" colspan="3">hari</td>
 		<td style="width: 20%;text-align: center;">mulai tanggal</td>
-		<td style="width: 20%;"></td>
+		<td style="width: 20%;text-align: center;"><?=$cuti['tanggal_mulai'];?></td>
 		<td style="width: 10%;text-align: center;">s/d</td>
-		<td style="width: 20%;"></td>
+		<td style="width: 20%;text-align: center;"><?=$cuti['tanggal_akhir'];?></td>
 	</tr>
 	</table>
 	<br>
@@ -183,16 +184,16 @@
 	<tr>
 		<td style="width: 60%;"></td>
 		<td style="width: 10%;">TELP :</td>
-		<td style="width: 30%;"> <?= $profil_pegawai['handphone'];?></td>
+		<td style="width: 30%;"> <?= $cuti['handphone'];?></td>
 	</tr>
 	<tr>
-	<td style="width: 60%;"></td>
+	<td style="width: 60%;"><?=$cuti['alamat_cuti'];?></td>
 	<td colspan="2" style="width: 40%;text-align: center;">
 		Hormat Saya,
 	  	<br><br><br><br>
 
-		<?= getNamaPegawaiFull($profil_pegawai);?><br>
-		NIP.<?= formatNip($profil_pegawai['nipbaru']);?>
+		<?= getNamaPegawaiFull($cuti);?><br>
+		NIP.<?= formatNip($cuti['nipbaru']);?>
 	</td>
 	</tr>
 	</table>
@@ -202,16 +203,16 @@
 		<td colspan="4">VII. PERTIMBANGAN ATASAN LANGSUNG**</td>
 	</tr>
 	<tr>
-		<td style="width: 25%;text-align: center;">DISETUJUI</td>
-		<td style="width: 25%;text-align: center;">PERUBAHAN****</td>
-		<td style="width: 25%;text-align: center;">DITANGGUHKAN****</td>
-		<td style="width: 25%;text-align: center;">TIDAK DISETUJUI****</td>
+		<td style="width: 20%;text-align: center;">DISETUJUI</td>
+		<td style="width: 20%;text-align: center;">PERUBAHAN****</td>
+		<td style="width: 20%;text-align: center;">DITANGGUHKAN****</td>
+		<td style="width: 40%;text-align: center;">TIDAK DISETUJUI****</td>
 	</tr>
 	<tr>
-		<td style="width: 25%;text-align: center;color:#fff;">a</td>
-		<td style="width: 25%;text-align: center;"></td>
-		<td style="width: 25%;text-align: center;"></td>
-		<td style="width: 25%;text-align: center;"></td>
+		<td style="text-align: center;color:#fff;">a</td>
+		<td style="text-align: center;"></td>
+		<td style="text-align: center;"></td>
+		<td style="text-align: center;"></td>
 	</tr>
 	<tr>
 		<td colspan="3"></td>
@@ -229,16 +230,16 @@
 		<td colspan="4">VIII. KEPUTUSAN PEJABAT YANG BERWENANG MEMBERIKAN CUTI****</td>
 	</tr>
 	<tr>
-		<td style="width: 25%;text-align: center;">DISETUJUI</td>
-		<td style="width: 25%;text-align: center;">PERUBAHAN****</td>
-		<td style="width: 25%;text-align: center;">DITANGGUHKAN****</td>
-		<td style="width: 25%;text-align: center;">TIDAK DISETUJUI****</td>
+		<td style="width: 20%;text-align: center;">DISETUJUI</td>
+		<td style="width: 20%;text-align: center;">PERUBAHAN****</td>
+		<td style="width: 20%;text-align: center;">DITANGGUHKAN****</td>
+		<td style="width: 40%;text-align: center;">TIDAK DISETUJUI****</td>
 	</tr>
 	<tr>
-		<td style="width: 25%;text-align: center;color:#fff;">a</td>
-		<td style="width: 25%;text-align: center;"></td>
-		<td style="width: 25%;text-align: center;"></td>
-		<td style="width: 25%;text-align: center;"></td>
+		<td style="text-align: center;color:#fff;">a</td>
+		<td style="text-align: center;"></td>
+		<td style="text-align: center;"></td>
+		<td style="text-align: center;"></td>
 	</tr>
 	<tr>
 		<td colspan="3"></td>

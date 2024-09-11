@@ -80,7 +80,7 @@
 		<td>Jabatan</td>
 		<td><?= $cuti['nama_jabatan'];?></td>
 		<td>Masa Kerja</td>
-		<td></td>
+		<td> <?= countDiffDateLengkap(date('Y-m-d'), $cuti['tmtcpns'], ['tahun', 'bulan'])?></td>
 	</tr>
 	<tr>
 		<td >Unit Kerja </td>
@@ -165,14 +165,14 @@
 		<td>N-1</td>
 		<td> </td>
 		<td></td>
-		<td colspan="4">4. CUTI KARENA ALASAN PENTING</td>
+		<td colspan="4">5. CUTI KARENA ALASAN PENTING</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>N</td>
 		<td> </td>
 		<td></td>
-		<td colspan="4">4. CUTI DI LUAR TANGGUNGAN NEGARA</td>
+		<td colspan="4">6. CUTI DI LUAR TANGGUNGAN NEGARA</td>
 		<td></td>
 	</tr>
 	</table>

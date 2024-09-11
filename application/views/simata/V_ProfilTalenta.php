@@ -203,9 +203,10 @@ $(function(){
 
   function loadListPegawaiPenilaianPotensialJpt(){
    var id = $('#unit_kerja').val()
+   var jenis_pengisian = '<?= $jenis_pengisian;?>'
    $('#list_pegawai_penilaian_kinerja_jpt').html('')
    $('#list_pegawai_penilaian_kinerja_jpt').append(divLoaderNavy)
-   $('#list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/2")?>', function(){
+   $('#list_pegawai_penilaian_kinerja_jpt').load('<?=base_url("simata/C_Simata/loadListProfilTalentaAdm/2/")?>'+jenis_pengisian, function(){
      $('#loader').hide()
    })
   }

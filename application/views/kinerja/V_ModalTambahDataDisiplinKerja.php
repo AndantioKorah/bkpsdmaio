@@ -114,9 +114,13 @@
         today = today.setHours(0, 0, 0, 0)
         batas_waktu_date = batas_waktu_date.setHours(0, 0, 0, 0)
         if((today > batas_waktu_date) && param_lock_upload_dokpen == '1'){
-            $('#btn_tambah').hide()
-            $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
-            $('#error_label').show()
+            <?php if($this->general_library->isProgrammer() || ($this->general_library->isAdminAplikasi() && $this->general_librarry->getBidangUser() == ID_BIDANG_PEKIN)){ ?>
+
+            <?php } else { ?>
+                $('#btn_tambah').hide()
+                $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
+                $('#error_label').show()
+            <?php } ?>
         }
     }
 

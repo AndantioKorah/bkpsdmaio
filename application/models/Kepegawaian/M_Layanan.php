@@ -19,7 +19,7 @@ class M_Layanan extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    public function getKelengkapanBerkas($nip){
+    public function getKelengkapanBerkas($nip, $flag_create_dpcp = 0){
         $result['cpns'] = null;
         $result['pns'] = null;
         $result['akte_nikah'] = null;
@@ -99,15 +99,45 @@ class M_Layanan extends CI_Model
             }
         }
 
-        $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*')
+        if($flag_create_dpcp == 1){
+            $result['akte_anak'] = null;
+
+            $temp_anak = $this->db->select('a.*')
+                        ->from('t_checklist_pensiun_detail a')
+                        ->join('t_checklist_pensiun b', 'a.id_t_checklist_pensiun = b.id')
+                        ->where('b.nip', $nip)
+                        ->where('a.id_m_berkas', 13)
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+            if($temp_anak){
+                foreach($temp_anak as $ta){
+                    $result['akte_anak'][] = json_decode($ta['metadata'], true);
+                }
+            }
+
+            function sortByOrder($a, $b) {
+                if ($a['tgllahir'] > $b['tgllahir']) {
+                    return 1;
+                } elseif ($a['tgllahir'] < $b['tgllahir']) {
+                    return -1;
+                }
+                return 0;
+            }
+            usort($result['akte_anak'], 'sortByOrder');
+
+        } else {
+            $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*, c.nm_keluarga')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegkeluarga b', 'a.id_peg = b.id_pegawai')
+                        ->join('db_pegawai.keluarga c', 'b.hubkel = c.id_keluarga')
                         ->where('a.nipbaru_ws', $nip)
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where('b.hubkel', '40')
-                        ->order_by('b.tgllahir', 'desc')
+                        ->order_by('b.tgllahir', 'asc')
                         ->get()->result_array();
+        }
 
         $result['akte_nikah'] = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
@@ -270,7 +300,27 @@ class M_Layanan extends CI_Model
 		$temp = $this->session->userdata('berkas_pensiun');
 
         if($berkas == 'akte_anak' || $berkas == 'akte_nikah'){
-			$data_berkas = $temp['berkas'][$berkas];
+            $tempAnak = $temp['berkas'][$berkas];
+			$data_berkas = null;
+
+            $selectedAnak = null;
+            $input_post = $this->input->post();
+            if($input_post && isset($input_post['list_anak'])){
+                foreach($input_post['list_anak'] as $ip){
+                    $selectedAnak[$ip] = $ip;
+                }
+            }
+
+            if($selectedAnak){
+                $i = 0;
+                foreach($tempAnak as $ta){
+                    if(isset($selectedAnak[$ta['id']])){
+                        $data_berkas[$i] = $ta;
+                        $data_berkas[$i]['metadata'] = json_encode($ta);
+                    }
+                    $i++;
+                }
+            }
 		} else {
 			$data_berkas[] = $temp['berkas'][$berkas];
 		}
@@ -313,7 +363,8 @@ class M_Layanan extends CI_Model
                     'id_ref' => $d ? $d['id'] : null,
                     'flag_validasi' => 1,
                     'id_m_user_validasi' => $this->general_library->getId(),
-                    'tanggal_validasi' => date('Y-m-d H:i:s')
+                    'tanggal_validasi' => date('Y-m-d H:i:s'),
+                    'metadata' => isset($d['metadata']) ? $d['metadata'] : null
                 ];
 
                 if($d && $d['status'] == 1){ // jika belum diverif

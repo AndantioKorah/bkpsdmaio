@@ -61,6 +61,8 @@ class C_Layanan extends CI_Controller
 						$data['url'][] = base_url()."arsipelektronik/".$dr['gambarsk'];
 					} else if($berkas == 'sk_jabatan') {
 						$data['url'][] = base_url()."arsipjabatan/".$dr['gambarsk'];
+					} else if($berkas == 'akte_anak') {
+						$data['url'][] = base_url()."arsipkeluarga/".$dr['gambarsk'];
 					} else {
 						$data['url'][] = base_url()."arsiplain/".$dr['gambarsk'];
 					}
@@ -84,7 +86,7 @@ class C_Layanan extends CI_Controller
 
 	public function createDpcp($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
-		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip);
+		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip, 1);
 		$data['berkas']['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($data['profil_pegawai']['id_peg']); 
 		$data['berkas']['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiunAdmin($data['profil_pegawai']['id_peg']);
 		$data['nip'] = $nip; 

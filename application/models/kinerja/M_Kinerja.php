@@ -1430,10 +1430,15 @@
         
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
-        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1){
-            $res['code'] = 1;
-            $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
-            return $res;
+        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
+        (!$this->general_library->isProgrammer())){ // bukan role programmer
+            if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
+
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
+                return $res;
+            }
         }
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
@@ -1467,11 +1472,14 @@
                         ->get()->result_array();
         if($exist){
             foreach($exist as $e){
-                $tanggal = $e['tanggal'] > 10 ? $e['tanggal'] : '0'.$e['tanggal'];
-                $bulan = $e['bulan'] > 10 ? $e['bulan'] : '0'.$e['bulan'];
+                $tanggal = $e['tanggal'] >= 10 ? $e['tanggal'] : '0'.$e['tanggal'];
+                $bulan = $e['bulan'] >= 10 ? $e['bulan'] : '0'.$e['bulan'];
                 $list_exist[$e['id_m_user'].$tanggal.$bulan.$e['tahun']] = $e;
             }
         }
+        // if($this->general_library->getId() == 16){
+        //     dd($list_exist);
+        // }
         // dd($list_exist);
         $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
         $insert_data = null;
@@ -1482,13 +1490,41 @@
                 // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
                     // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
-                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]])){ // jika ada dokumen pendukung pada tanggal tersebut
-                        $this->db->trans_rollback();
-                        $res['code'] = 1;
-                        $res['message'] = 'Gagal mengisi dokumen pendukung. Pegawai atas nama '.$d['nama'].' memiliki dokumen pendukung pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
-                        $res['data'] = null;
-                        return $res;                        
+                    
+                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]]) // jika ada dokumen pendukung pada tanggal tersebut
+                    ){  
+                        $tolak = 1;
+                        if($list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 5 ||
+                        $list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 6){ // jika sidak atau kenegaraan, hanya TLP dan TLS yang diterima
+                            if($disiplin[0] != 19 && $disiplin[0] != 20){
+                                $tolak = 1;
+                            } else {
+                                $tolak = 0;
+                            }
+                        } else {
+                            $tolak = 1;
+                        }
+                        
+                        // if($this->general_library->getId() == 16){
+                        //     dd($tolak);
+                        // }
+
+                        if($tolak == 1){
+                            $this->db->trans_rollback();
+                            $res['code'] = 1;
+                            $res['message'] = 'Gagal mengisi Dokumen Pendukung Presensi. Pegawai atas nama '.$d['nama'].' memiliki Dokumen Pendukung Presensi pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
+                            $res['data'] = null;
+                            return $res;                        
+                        }
                     }
+                    // else {
+                    //     $this->db->trans_rollback();
+                    //     $res['code'] = 1;
+                    //     $res['message'] = 'Sistem sedang maintenance. Silahkan dicoba kembali pada beberapa saat lagi. Mohon maaf atas ketidaknyamanannya.';
+                    //     $res['data'] = null;
+                    //     return $res;
+                    // }
+                    
                     $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];

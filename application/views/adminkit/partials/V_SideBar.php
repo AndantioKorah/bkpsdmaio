@@ -210,6 +210,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Announcement
+					</a>
+				</li>
+				
 				<?php } ?>
 			</ul>
 		</li>

@@ -454,6 +454,13 @@ class C_Master extends CI_Controller
         $this->general->insert('m_syarat_layanan', $data);
     }
 
+    public function masterAnnouncement(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+        $data['dokumen'] = $this->master->getAllMasterDokumen();
+        // dd($data['dokumen']);
+        render('master/V_MasterAnnouncement', '', '', $data);
+    }
+
     public function deleteMasterSyaratLayanan($id){
         $this->general->delete('id', $id, 'm_syarat_layanan');
     }
@@ -547,6 +554,11 @@ class C_Master extends CI_Controller
 		$searchTerm = $this->input->post('searchTerm');
 		$response = $this->master->getRefJabatanFungsional($searchTerm);
 		echo json_encode($response);
+	}
+
+    public function doUploadAnnouncement()
+	{ 
+		echo json_encode( $this->master->doUploadAnnouncement());
 	}
 
 }

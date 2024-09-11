@@ -1430,10 +1430,15 @@
         
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
-        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1){
-            $res['code'] = 1;
-            $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
-            return $res;
+        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
+        (!$this->general_library->isProgrammer())){ // bukan role programmer
+            if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
+
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
+                return $res;
+            }
         }
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);

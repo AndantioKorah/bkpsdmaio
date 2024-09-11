@@ -50,6 +50,11 @@
                                     $bobot_rekap_kinerja = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0; 
                                     $capaian_produktivitas_kerja = floatval($bobot_rekap_kinerja) + floatval($nilai_komponen_kinerja);
                                     $total_penilaian_tpp = $capaian_produktivitas_kerja + floatval($rs['rekap']['capaian_bobot_disiplin_kerja']);
+                                    if($rs['rekap']['presentase_kehadiran'] < 25){
+                                        $total_penilaian_tpp = 0;
+                                    } else if($rs['rekap']['presentase_kehadiran'] >= 25 && $rs['rekap']['presentase_kehadiran'] < 50){
+                                        $total_penilaian_tpp *= 0.5;
+                                    }
                                 ?>
                                     <tr>
                                         <td style="text-align: center;"><?=$no++;?></td>

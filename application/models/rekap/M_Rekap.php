@@ -1278,7 +1278,7 @@
                 $data_disiplin['result'][$lk['nipbaru_ws']]['kinerja'] = $kinerja[$lk['nipbaru_ws']];
             }
         }
-        // if($skpd[0] == 5011001){
+        // if($skpd[0] == 5010001){
         //     dd($data_disiplin);
         // }
         return $data_disiplin;
@@ -1739,6 +1739,9 @@
         // }
         $tmp_dokpen = $this->db->get()->result_array();
         $dokpen = null;
+
+        $data['list_dokpen'] = null;
+
         if($tmp_dokpen){
             foreach($tmp_dokpen as $dok){
                
@@ -1749,9 +1752,16 @@
                 $dokpen[$dok['nip']]['nip'] = $dok['nip'];
                 $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
                 $dokpen[$dok['nip']]["ket_".$date_dok]= $dok['keterngn'];
-                
+
+                $data['list_dokpen'][$dok['nip']][] = $dok;
+                $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
             }
         }
+
+        // if($this->general_library->getId() == 16){ // checkpoint
+        //     dd($data['list_dokpen_per_date']);
+        // }
+
         $tempresult = $data['result'];
         $data['result'] = null;
         
@@ -1820,7 +1830,6 @@
                 $lp[$tr['nip']]['rekap']['TK'] = 0;
                 $lp[$tr['nip']]['rekap']['jhk'] = 0;
                 $lp[$tr['nip']]['rekap']['hadir'] = 0;
-                // $lp[$tr['nip']]['rekap']['hadir_mk'] = 0;
                 if($data['disiplin_kerja']){
                     foreach($data['disiplin_kerja'] as $dk){
                         $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
@@ -1841,6 +1850,19 @@
                                     $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = '';
                                     $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLP';
                                     $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                } else if(($data['list_dokpen_per_date'][$tr['nip']][$l])) {
+                                    foreach($data['list_dokpen_per_date'][$tr['nip']][$l] as $dokperdate){
+                                        if($dokperdate['keterangan'] == 'TLP'){
+                                            $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
+                                            $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = '';
+                                            $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLP';
+                                            $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                        } else if ($dokperdate['keterangan'] == 'TLS'){
+                                            $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
+                                            $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLS';
+                                            $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                        }
+                                    }
                                 } else {
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
                                 } 
@@ -1864,7 +1886,7 @@
                                     $dokpen[$tr['nip']][$l] != "TLS" && $dokpen[$tr['nip']][$l] != "TLP"){
                                         $flag_check = 0;
                                         $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
-                                        $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                        $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++; // disini ba tambah dokpen
                                         if($dokpen[$tr['nip']][$l] == "MTTI"){
                                             $flag_check = 1;
                                         } else {
@@ -1992,7 +2014,19 @@
                             }   
                         }
                     }
-                } 
+                }
+                
+                if(isset($data['list_dokpen'][$tr['nip']])){
+                    if($data['disiplin_kerja']){
+                        foreach($data['disiplin_kerja'] as $dk){
+                            $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+                        }
+
+                        foreach($data['list_dokpen'][$tr['nip']] as $ldok){
+                            $lp[$tr['nip']]['rekap'][$ldok['keterangan']]++;
+                        }
+                    }
+                }
             }
         }
         $data['result'] = $lp;
@@ -2009,6 +2043,9 @@
         }
 
         $data['temp_list_nip'] = $temp_list_nip;
+        // if($this->general_library->getId() == 16){ // checkpoint
+        //     dd($data);
+        // }
         return $data;
     }
 
@@ -2174,6 +2211,9 @@
         // $temp = $this->readAbsensiFromDb($param);
         $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
         // dd($temp['temp_list_nip']);
+        // if($this->general_library->getId() == 16){
+        //     dd($temp);
+        // }
         if($temp){
             $result['skpd'] = $temp['skpd'];
             $result['periode'] = $temp['periode'];
@@ -2549,7 +2589,7 @@
         }
         
         $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
-        
+
         $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
 
         $hukdis = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : null;
@@ -2648,6 +2688,13 @@
                     $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
                 }
 
+                // if($this->general_library->getId() == 16){
+                //     dd(json_encode($data_rekap));
+                // }
+                if($l['nipbaru_ws'] == '199502182020121013'){
+                    // dd($result[$l['nipbaru_ws']]);
+                }
+
                 $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['presentase_tpp']);
 
                 $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100;
@@ -2724,8 +2771,8 @@
                 $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'] = 
                     ($result[$l['nipbaru_ws']]['capaian_tpp_kondisi_kerja'] - ($result[$l['nipbaru_ws']]['pph_kondisi_kerja']));
 
-                if($l['nipbaru_ws'] == '198005051999121001'){
-                    // dd($result[$l['nipbaru_ws']]['besaran_tpp']);
+                if($l['nipbaru_ws'] == '198112202010011004'){
+                    // dd($result[$l['nipbaru_ws']]);
                 }
 
                 if(floatval($result[$l['nipbaru_ws']]['besaran_tpp']) + floatval($result[$l['nipbaru_ws']]['besaran_gaji']) >= 12000000){

@@ -2019,7 +2019,9 @@
                 if(isset($data['list_dokpen'][$tr['nip']])){
                     if($data['disiplin_kerja']){
                         foreach($data['disiplin_kerja'] as $dk){
-                            $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+                            if($dk['keterangan'] != 'TK'){
+                                $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
+                            }
                         }
 
                         foreach($data['list_dokpen'][$tr['nip']] as $ldok){

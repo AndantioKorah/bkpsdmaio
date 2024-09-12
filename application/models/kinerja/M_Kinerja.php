@@ -1487,7 +1487,7 @@
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
             foreach($list_tanggal as $l){
-                // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
+                if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
                     // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
                     
@@ -1552,7 +1552,7 @@
                     }
                     $insert_data[$i]['random_string'] = $batchId;
                     $i++;
-                // }
+                }
             }
         }
         $this->db->insert_batch('t_dokumen_pendukung', $insert_data);

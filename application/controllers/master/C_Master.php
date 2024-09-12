@@ -369,6 +369,11 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_MasterAnnouncementItem', $data);
     }
 
+    public function loadAnnouncement($id){
+        $data['announcement'] = $this->master->getAnnoucementById($id);
+        $this->load->view('login/V_Announcement', $data);
+    }
+
     public function editMasterJenisLayanan($id, $state){
         $this->master->editMasterJenisLayanan($id, $state);
     }

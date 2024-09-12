@@ -85,7 +85,7 @@ $(function(){
                 document.getElementById("upload_form_announcement").reset();
                 document.getElementById('btn_upload_announcement').disabled = false;
                $('#btn_upload_announcement').html('Simpan')
-                // loadListArsip()
+                loadListAnouncement()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -106,7 +106,7 @@ $(function(){
         var fileSize = this.files[0].size/1024;
 
         
-          if (extension == "jpg" || extension == "png"){
+          if (extension == "jpeg" ||extension == "jpg" || extension == "png"){
           
           } else {
               errortoast("Harus File Gambar")

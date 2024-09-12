@@ -1252,6 +1252,16 @@
         
 	}
 
+    public function getAnnoucementById($id)
+    {
+        $this->db->select('*')
+        // ->where('id !=', 0)
+        ->from('db_efort.t_announcement')
+        ->where('id', $id)
+        ->where('flag_active', 1);
+        return $this->db->get()->result_array(); 
+    }
+
 
 	}
 ?>

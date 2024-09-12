@@ -664,7 +664,7 @@ $(function(){
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    startDate: fd, 
+    // startDate: fd,  
     endDate: new Date()
   })
   } else {
@@ -673,7 +673,7 @@ $(function(){
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    startDate: firstDay, 
+    // startDate: firstDay,  
     endDate: new Date()
   })
   }

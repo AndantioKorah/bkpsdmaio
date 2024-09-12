@@ -108,6 +108,10 @@ class C_Master extends CI_Controller
         $this->general->delete('id', $id, 'm_bidang');
     }
 
+    public function deleteAnnouncement($id){
+        $this->general->delete('id', $id, 't_announcement');
+    }
+
     public function loadBidangByUnitKerja($id_unitkerja){
         echo json_encode($this->master->loadMasterBidangByUnitKerja($id_unitkerja));
     }
@@ -358,6 +362,11 @@ class C_Master extends CI_Controller
     public function loadJenisLayanan(){
         $data['result'] = $this->general->getAllWithOrderGeneral('db_siladen.jenis_layanan', 'nama', 'asc');
         $this->load->view('master/V_MasterJenisLayananList', $data);
+    }
+
+    public function loadListAnouncement(){
+        $data['list_announcement'] = $this->general->getAllWithOrder('db_efort.t_announcement', 'id', 'desc');
+        $this->load->view('master/V_MasterAnnouncementItem', $data);
     }
 
     public function editMasterJenisLayanan($id, $state){

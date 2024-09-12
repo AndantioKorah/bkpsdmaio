@@ -335,8 +335,9 @@ $(function () {
     if(tanggal <= 3) {
         $('.btndelete').show()
     } else {
-        $('.btndelete').hide()
-    }
+        $('.btndelete').show()
+        // $('.btndelete').hide()
+      }
   } 
 
 

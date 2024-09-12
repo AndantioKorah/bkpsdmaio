@@ -1227,17 +1227,14 @@
 		} else {
 			$dataFile 			= $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
-            
+            $url = "assets/announcement/"."$filename";
+           
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
-            // $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
-            // $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
-            // $dataInsert['gambarsk']         = $filename;
-            // $dataInsert['created_by']      = $this->general_library->getId();
-            // $dataInsert['updated_by']      = $this->general_library->getId();
-            // $dataInsert['status']      = 2;
-            // $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+            $dataInsert['nama_announcement']     = $this->input->post('nama');
+            $dataInsert['url_file']      = $url;
+            $result = $this->db->insert('db_efort.t_announcement', $dataInsert);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 		}
         

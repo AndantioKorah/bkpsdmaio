@@ -126,8 +126,8 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
         </style>
         <?php if($this->general_library->getRole() == 'programmer' || 
         $this->general_library->isAdminAplikasi() || 
-        $this->general_library->isWalikota() ||
-        $this->general_library->isGuest()
+        $this->general_library->isWalikota() 
+        // $this->general_library->isGuest()
         // || $this->general_library->isPegawaiBkpsdm()
         || $this->general_library->isKepalaBkpsdm()
         )
@@ -142,8 +142,12 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
             <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
             </div>
           </div>
+       
         <?php } else { ?>
-          <div class="p-3">
+          <?php if($this->general_library->isGuest()) { ?>
+            
+            <?php } else { ?>  
+           <div class="p-3">
             <h4><?="Selamat ".greeting().","?></h4>
             <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
             <?php
@@ -162,6 +166,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
               <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
             </center> -->
         </div>
+        <?php }  ?>  
         <?php } ?>
       </div>
       <!-- <div class="col-12 text-center">

@@ -2185,7 +2185,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.'.pdf','d');
+		$mpdf->Output($file_pdf.'.pdf');
     }
 
 	public function verifDokumenPdm($id, $status)

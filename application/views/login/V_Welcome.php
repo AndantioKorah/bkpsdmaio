@@ -251,15 +251,15 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     var eselon = $('#eselon').val()
     var subBidang = $('#subBidangPegawai').val()
 
-    // if(bidang == "" || bidang == 0){
-    // $('#btnstatic').click()  
-    // }
+    if(bidang == "" || bidang == 0){
+    $('#btnstatic').click()  
+    }
 
-    // if(eselon == 1){
-    //   if(subBidang == "" || subBidang == 0){
-    // $('#btnstatic').click()  
-    // }
-    // }
+    if(eselon == 1){
+      if(subBidang == "" || subBidang == 0){
+    $('#btnstatic').click()  
+    }
+    }
 
     $(".select2").select2({   
 		width: '100%',

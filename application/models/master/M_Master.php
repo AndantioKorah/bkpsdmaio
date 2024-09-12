@@ -1199,6 +1199,62 @@
             return $data;
         }
 
+        public function doUploadAnnouncement()
+	{
+
+        $this->db->trans_begin();
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
+        $filename = $this->general_library->getId().$random_number.$nama_dok;
+        $target_dir						= './assets/announcement/';
+        		
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = '*';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE;
+        $config['file_name']            = $filename;
+		$this->load->library('upload', $config);
+
+		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());
+			$data['token']    = $this->security->get_csrf_hash();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+            return $res;
+	
+		} else {
+			$dataFile 			= $this->upload->data();
+            $file_tmp = $_FILES['file']['tmp_name'];
+            
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            // $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+            // $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
+            // $dataInsert['gambarsk']         = $filename;
+            // $dataInsert['created_by']      = $this->general_library->getId();
+            // $dataInsert['updated_by']      = $this->general_library->getId();
+            // $dataInsert['status']      = 2;
+            // $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        
+     
+    
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+	}
+
 
 	}
 ?>

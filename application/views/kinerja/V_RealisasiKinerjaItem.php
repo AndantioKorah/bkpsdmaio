@@ -215,7 +215,7 @@
                             <!-- <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
                              onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button> -->
                             </span>  
-                            <!-- <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>      -->
+                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger btndelete" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
                      
                           </div>
 
@@ -318,7 +318,29 @@
 
 <script>
 
+$(function () {
 
+  var bulanSearch = "<?=$bulan;?>"
+  var date = new Date();
+  var tanggal = new Date().getDate();
+  var bulanCurrent = date.getMonth()+1;
+  var tahun = date.getFullYear();
+
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
+
+  if(bulanSearch != bulanCurrent){
+    if(tanggal <= 3) {
+        $('.btndelete').show()
+    } else {
+        $('.btndelete').hide()
+    }
+  } 
+
+
+})
 // Get the modal
 var modal = document.getElementById("myModal");
 

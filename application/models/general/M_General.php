@@ -883,6 +883,7 @@
         public function getOauthToken(){
             $token = null;
             $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_OAUTH_TOKEN');
+           
             if($exists){
                 $now = date('Y-m-d H:i:s');
                 if($now <= $exists['created_date'] && $exists['parameter_value']){

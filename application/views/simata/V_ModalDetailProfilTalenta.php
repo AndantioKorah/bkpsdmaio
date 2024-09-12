@@ -224,7 +224,12 @@
                                             </td>
                                             </tr>
                                             <tr>
-                                            <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-1</span></td>
+                                                <?php
+                                                 $currentYear = date('Y'); 
+                                                 $previous1Year = $currentYear - 1;   
+                                                 $previous2Year = $currentYear - 2; 
+                                                 ?>
+                                            <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-1 <br>(SKP Tahun <?=$previous1Year;?>)</span></td>
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_kinerja['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor1'];?> Point] <?=$nilai_kinerja['kinerja1'];?></span>
@@ -233,7 +238,7 @@
                                             </tr>
 
                                             <tr>
-                                            <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-2</span></td>
+                                            <td style="width:25%"><span class="sp_label">Penilaian Kinerja N-2<br>(SKP Tahun <?=$previous2Year;?>)</span></td>
                                                 <td style="width:25%">
                                                 <?php if(isset($nilai_kinerja['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor2'];?> Point] <?=$nilai_kinerja['kinerja2'];?></span>

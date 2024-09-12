@@ -812,7 +812,7 @@
           <tr>
             <td class="td-lab-dd">Nama Inovasi</td>
             <td  class="td-smc-dd">: </td>
-            <td style="width:60%;"></td>
+            <td style="width:60%;"><?=$result['nm_inovasi']?></td>
             
           </tr>
           <tr>

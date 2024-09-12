@@ -65,7 +65,7 @@
                                  </span>
                             <?php if($lp['count'] != 0 ){ ?>
                             <?php } else { ?>
-                                <!-- <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button> -->
+                                <button onclick="deleteRencanaKinerja('<?=$lp['id']?>','<?=$lp['bulan']?>', '<?=$lp['tahun']?>')" class="btn btn-sm btn-danger btndelete" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash"></i> </button>
                             <?php } ?>
                             
                             
@@ -119,6 +119,27 @@ $('#table_rencana_kinerja').DataTable({
 
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
+
+  var bulanSearch = "<?=$bulan;?>"
+  var date = new Date();
+  var tanggal = new Date().getDate();
+  var bulanCurrent = date.getMonth()+1;
+  var tahun = date.getFullYear();
+
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
+
+  if(bulanSearch != bulanCurrent){
+    if(tanggal <= 3) {
+        $('.btndelete').show()
+    } else {
+        $('.btndelete').hide()
+    }
+  } 
+
+
 })
 
 $('#search_bulan').on('change', function(){

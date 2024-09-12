@@ -665,7 +665,6 @@ $(function(){
     todayHighlight: true,
     todayBtn: true,
     startDate: fd, 
-     startDate:'2024-08-01',
     endDate: new Date()
   })
   } else {
@@ -675,7 +674,6 @@ $(function(){
     todayHighlight: true,
     todayBtn: true,
     startDate: firstDay, 
-    //  startDate:'2024-08-01',
     endDate: new Date()
   })
   }

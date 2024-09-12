@@ -135,6 +135,7 @@ $route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
 $route['dokumen-pendukung-absensi/tinjau'] = 'kinerja/C_Kinerja/tinjauAbsensi';
 $route['dokumen-pendukung-absensi/verifikasi-tinjau'] = 'kinerja/C_Kinerja/verifikasiTinjauAbsensi';
 
+$route['master/announcement'] = 'master/C_Master/masterAnnouncement';
 
 
 

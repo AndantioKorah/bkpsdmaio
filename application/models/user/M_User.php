@@ -2227,9 +2227,12 @@
                     $this->db->where('b.id_unitkerjamaster', '8020000');
                 } else if($data['unitkerja'] == 990){
                     $this->db->where('b.id_unitkerjamaster', '8000000');
-                } else {
+                } else if($data['unitkerja'] == 993){
+                    $this->db->where_in('b.id_unitkerjamaster', ['6000000','7005000']);
+                }  else {
                     $this->db->where('a.skpd', $data['unitkerja']);
                 }
+                
             }
         
             if($data['jft'][0] != '0'){

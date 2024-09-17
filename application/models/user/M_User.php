@@ -2201,7 +2201,7 @@
         }
 
         public function searchAllPegawai($data){
-            
+            // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
             $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
@@ -2236,11 +2236,38 @@
             }
         
             if($data['jft'][0] != '0'){
-                $list_jft = null;
+                if($data['jft'][0] == '991'){
+                    $this->db->like('c.nama_jabatan', 'Utama');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '992') {
+                    $this->db->like('c.nama_jabatan', 'Madya');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '993') {
+                    $this->db->like('c.nama_jabatan', 'Muda');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '994') {
+                    $this->db->like('c.nama_jabatan', 'Pertama');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '995') {
+                    $this->db->like('c.nama_jabatan', 'Penyelia');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '996') {
+                    $this->db->like('c.nama_jabatan', 'Mahir');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '997') {
+                    $this->db->like('c.nama_jabatan', 'Terampil');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else if($data['jft'][0] == '998') {
+                    $this->db->like('c.nama_jabatan', 'Pemula');
+                    $this->db->where('c.jenis_jabatan', 'JFT');
+                } else {
+                    $list_jft = null;
                     foreach($data['jft'] as $jft){
                         $list_jft[] = $jft;
                     }
                 $this->db->where_in('c.id_jabatanpeg', $list_jft);
+                }
+                
             }
             if(isset($data['eselon'])){
                 $this->db->where_in('g.id_eselon', $data['eselon']);

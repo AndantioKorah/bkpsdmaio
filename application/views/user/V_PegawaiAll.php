@@ -113,6 +113,14 @@
                                 <select multiple="multiple" class="form-control select2-navy" 
                                     id="jft" data-dropdown-css-class="select2-navy" name="jft" required>
                                     <option value="0" selected>Semua</option>
+                                    <option value="991">Semua Ahli Utama</option>
+                                    <option value="992">Semua Ahli Madya</option>
+                                    <option value="993">Semua Ahli Muda</option>
+                                    <option value="994">Semua Ahli Pertama</option>
+                                    <option value="995">Semua Penyelia</option>
+                                    <option value="996">Semua Mahir</option>
+                                    <option value="997">Semua Terampil</option>
+                                    <option value="998">Semua Pemula</option>
                                     <?php foreach($jft as $u){ ?>
                                         <option value="<?=$u['id_jabatanpeg']?>"><?=$u['nama_jabatan']?></option>
                                     <?php } ?>
@@ -135,7 +143,7 @@
                                     <option value="990" >Semua TK</option>
                                     <option value="991" >Semua SD</option>
                                     <option value="992" >Semua SMP</option>
-                                    <option value="993" >semua UPTD Dinas kesehatan</option>
+                                    <option value="993" >Semua UPTD Dinas kesehatan</option>
                                 </select>
                             </div>
                         </div>

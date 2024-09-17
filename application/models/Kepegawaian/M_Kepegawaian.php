@@ -5160,7 +5160,7 @@ public function submitEditJabatan(){
         $rs['riwayat_jabatan'] = null;
         $rs['riwayat_keluarga'] = null;
 
-        $rs['data_pegawai'] = $this->db->select('a.*, b.nm_unitkerja, c.nama_jabatan, d.nm_pangkat, e.nm_agama,
+        $rs['data_pegawai'] = $this->db->select('a.*, j.nm_tktpendidikan, b.nm_unitkerja, c.nama_jabatan, d.nm_pangkat, e.nm_agama,
                                 f.nama_kelurahan, g.nama_kecamatan, h.nama_kabupaten_kota, i.nm_sk')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
@@ -5171,6 +5171,7 @@ public function submitEditJabatan(){
                                 ->join('m_kecamatan g', 'a.id_m_kecamatan = g.id', 'left')
                                 ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id', 'left')
                                 ->join('db_pegawai.statuskawin i', 'a.status = i.id_sk')
+                                ->join('db_pegawai.tktpendidikan j', 'a.pendidikan = j.id_tktpendidikan', 'left')
                                 ->where('a.nipbaru_ws', $nip)
                                 ->get()->row_array();
 
@@ -5183,39 +5184,63 @@ public function submitEditJabatan(){
                                             ->order_by('tahunlulus', 'asc')
                                             ->get()->result_array();
 
-            $rs['riwayat_pangkat'] = $this->db->select('a.*, c.nm_pangkat, d.nm_jenispengangkatan')
-                                            ->from('db_pegawai.pegpangkat a')
+           
+        }
+        return $rs;
+    }
+
+    public function loadDataDrhSatyalencana($nip){
+        $rs['riwayat_pendidikan'] = null;
+        $rs['riwayat_pangkat'] = null;
+        $rs['riwayat_diklat'] = null;
+        $rs['riwayat_jabatan'] = null;
+        $rs['riwayat_keluarga'] = null;
+
+        $rs['data_pegawai'] = $this->db->select('a.*, j.nm_tktpendidikan, b.nm_unitkerja, c.nama_jabatan, d.nm_pangkat, e.nm_agama,
+                                f.nama_kelurahan, g.nama_kecamatan, h.nama_kabupaten_kota, i.nm_sk')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                                ->join('db_pegawai.agama e', 'a.agama = e.id_agama')
+                                ->join('m_kelurahan f', 'a.id_m_kelurahan = f.id', 'left')
+                                ->join('m_kecamatan g', 'a.id_m_kecamatan = g.id', 'left')
+                                ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id', 'left')
+                                ->join('db_pegawai.statuskawin i', 'a.status = i.id_sk')
+                                ->join('db_pegawai.tktpendidikan j', 'a.pendidikan = j.id_tktpendidikan', 'left')
+                                ->where('a.nipbaru_ws', $nip)
+                                ->get()->row_array();
+
+        if($rs['data_pegawai']){
+            $rs['riwayat_satyalencana'] = $this->db->select('a.*,c.*')
+                                            ->from('db_pegawai.pegpenghargaan a')
                                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                            ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
-                                            ->join('db_pegawai.jenispengangkatan d', 'a.jenispengangkatan = d.id_jenispengangkatan')
+                                            ->join('db_efort.m_satyalencana c', 'a.id_m_satyalencana = c.id')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
-                                            ->order_by('tmtpangkat', 'asc')
+                                            ->where('a.status', 2)
+                                            ->where('a.flag_active', 1)
+                                            ->order_by('a.tglsk', 'desc')
                                             ->get()->result_array();
 
-            $rs['riwayat_diklat'] = $this->db->select('a.*, c.nm_jdiklat')
-                                            ->from('db_pegawai.pegdiklat a')
+            $rs['riwayat_disiplin'] = $this->db->select('a.*')
+                                            ->from('db_pegawai.pegdisiplin a')
                                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                            ->join('db_pegawai.diklat c', 'a.jenisdiklat = c.id_diklat')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
-                                            ->order_by('tglsttpp', 'asc')
+                                            ->where('a.status', 2)
+                                            ->where('a.flag_active', 1)  
+                                            ->where('a.hd !=', 10)
+                                            ->order_by('a.tglsurat', 'desc')
                                             ->get()->result_array();
-
-            $rs['riwayat_jabatan'] = $this->db->select('a.*')
-                                            ->from('db_pegawai.pegjabatan a')
+            $rs['riwayat_cuti'] = $this->db->select('a.*')
+                                            ->from('db_pegawai.pegcuti a')
                                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                            // ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
-                                            // ->join('db_pegawai.unitkerja d', 'c.id_unitkerja = d.id_unitkerja')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
-                                            ->order_by('tmtjabatan', 'asc')
+                                            ->where('a.status', 2)
+                                            ->where('a.flag_active', 1)  
+                                            ->where('a.jeniscuti', 50)
+                                            ->order_by('a.tglsttpp', 'desc')
                                             ->get()->result_array();
-
-            $rs['riwayat_keluarga'] = $this->db->select('a.*, c.nm_keluarga')
-                                            ->from('db_pegawai.pegkeluarga a')
-                                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                            ->join('db_pegawai.keluarga c', 'a.hubkel = c.id_keluarga')
-                                            ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
-                                            ->order_by('tgllahir', 'asc')
-                                            ->get()->result_array();
+           
         }
         return $rs;
     }

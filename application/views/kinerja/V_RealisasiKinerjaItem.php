@@ -210,13 +210,14 @@
                         <div class="btn-group" role="group" aria-label="Basic example">
                         <?php if($lp['id_status_verif'] == 2){ ?>
                           <?php } ?>
+                          
                             <span href="#edit_realisasi_kinerja" data-toggle="modal" style="display: inline;">
                             <!-- <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
                              onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button> -->
                             </span>  
-                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
-                           
-                      </div>
+                            <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger btndelete" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
+                     
+                          </div>
 
                       
                         </td>
@@ -317,7 +318,30 @@
 
 <script>
 
+$(function () {
 
+  var bulanSearch = "<?=$bulan;?>"
+  var date = new Date();
+  var tanggal = new Date().getDate();
+  var bulanCurrent = date.getMonth()+1;
+  var tahun = date.getFullYear();
+
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
+
+  if(bulanSearch != bulanCurrent){
+    if(tanggal <= 3) {
+        $('.btndelete').show()
+    } else {
+        // $('.btndelete').show()
+        $('.btndelete').hide()
+      }
+  } 
+
+
+})
 // Get the modal
 var modal = document.getElementById("myModal");
 

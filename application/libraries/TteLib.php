@@ -61,7 +61,9 @@ class TteLib{
         
         $table_ref = isset($data['table_ref']) ? $data['table_ref'] : 0;
         unset($data['table_ref']);
-
+        
+        $request_json = json_encode($data, JSON_UNESCAPED_SLASHES); 
+        
         $hash = $this->hash();
         $curl = curl_init();
         $url = $url;
@@ -76,7 +78,8 @@ class TteLib{
         CURLOPT_TIMEOUT => 20,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => $method,
-        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_POSTFIELDS => $request_json,
+        CURLOPT_TIMEOUT => 50,
         // CURLOPT_HTTPAUTH => CURLAUTH_ANY,
         CURLOPT_USERPWD => $hash['username'].":".$hash['password'],
         CURLOPT_HTTPHEADER => array(
@@ -95,7 +98,7 @@ class TteLib{
         $this->saveLog([
             'id_ref' => json_encode($id_ref),
             'table_ref' => $table_ref,
-            'request' => json_encode($data),
+            'request' => $request_json,
             'response' => $response,
             'url' => $url
         ]);

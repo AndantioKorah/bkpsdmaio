@@ -57,8 +57,8 @@
               <label>Status Pengajuan</label>
               <select class="form-control select2-navy" style="width: 100%"
               id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
-                  <option value="" selected>Semua</option>
-                  <option value="0" >Pengajuan</option>
+                  <option value="">Semua</option>
+                  <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
                   <option value="2" >Ditolak</option>
                   

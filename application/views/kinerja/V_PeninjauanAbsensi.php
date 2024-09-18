@@ -26,7 +26,7 @@
     <span>
     <br>
     Keterangan : <br> 
-    - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti.<br>
+    - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
     - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
     - Upload bukti pada hari yang sama. <br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
@@ -66,7 +66,6 @@
          <option value="2" >Screenshot Whatsapp </option>
          </select>
     </div>
-
     <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
          <label class="bmd-label-floating">Nama Teman Pegawai </label>
          <select class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
@@ -88,7 +87,8 @@
   </div>
   <div class="form-group col-lg-12 mt-2">
      <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
- </div>
+      <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
+    </div>
 </form> 
     </div>
     </div>
@@ -182,6 +182,7 @@ $(function(){
 	});
 
         loadListPeninjauan()
+        cekPengajuan()
     })
 
     $('.datepicker2').datepicker({
@@ -202,12 +203,39 @@ function loadListPeninjauan(){
        })
    }
 
+   function cekPengajuan(){
+    var tanggal = $('#tanggal_absensi').val()
+   
+    $.ajax({
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",
+              method : "POST",
+              data : {tanggal: tanggal},
+              async : false,
+              dataType : 'json',
+              success: function(res){
+                total = res[0].total_pengajuan - res[0].total_tolak
+              <?php  if( $this->general_library->getId() != '117'){ ?>
+
+                if(total >= 2) {
+
+                  $('#btn_upload').hide()
+                  $('#ket').show()
+                } else {
+                  $('#btn_upload').show()
+                  $('#ket').hide()
+                }
+                <?php } ?>
+               
+              }
+    });
+ 
+   }
+
 $('#form_tinjau_absen').on('submit', function(e){  
        
         e.preventDefault();
         var tanggal = $('#tanggal_kegiatan').val()
        
-
         var formvalue = $('#form_tinjau_absen');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('image_file').files.length;
@@ -248,6 +276,7 @@ $('#form_tinjau_absen').on('submit', function(e){
                 document.getElementById('btn_upload').disabled = true;
                 successtoast(result.msg)
                 loadListPeninjauan()
+                cekPengajuan()
               } else {
                 errortoast(result.msg)
                 document.getElementById('btn_upload').disabled = false;

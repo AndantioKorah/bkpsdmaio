@@ -251,9 +251,22 @@
                 <button data-toggle="modal"  class="btn btn-block btn-navy mb-2"  data-toggle="modal" data-target="#modalFotoProfil">
                   <i class="fa fa-user"></i> Ubah Foto Profil
                 </button>
-                <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
+                <!-- <button data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')" class="btn btn-block btn-navy mb-2">
                   <i class="fa fa-id-badge"></i> DRH
+                </button> -->
+
+               <!-- Example split danger button -->
+              <div class="btn-group mb-2">
+                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-id-badge"></i> DRH <span class="sr-only">Toggle Dropdown</span>
                 </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Umum</a>
+                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satylencana</a>
+                  </div>
+              </div>
+
+              
             
                 <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'
                 || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
@@ -791,12 +804,13 @@
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
               <?php 
-              if(
+              // if(
                 // $this->general_library->getIdEselon() < 8 && 
               // $this->general_library->getIdEselon() != 1 || 
-              $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+              // $this->general_library->isHakAkses('manajemen_talenta')){ 
+                ?>
               <?php 
-              // if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B" || $profil_pegawai['eselon'] == "II B") {
+              // if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
                 ?>
               <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
@@ -804,7 +818,9 @@
               <?php 
               //  } 
               ?>
-              <?php } ?>
+              <?php 
+              //  }  
+               ?>
             </ul>
           </div>
           <div class="col-lg-12">
@@ -1003,6 +1019,9 @@
      
       </div>
       <div class="modal-footer">
+            <a style="display:none;" id="btn_download_drh_sl" href="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrhSatyalencana/'.$profil_pegawai['nipbaru'])?>" target="_blank">
+            <button class="btn btn-primary mt-2 float-right"> <li class="fa fa-download"></li> Download</button>
+            </a>
         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button> -->
       </div>
@@ -1307,9 +1326,19 @@
 
 
  function loadDrh(nip){
+  $('#btn_download_drh_sl').hide()
   $('#modal_drh_content').html('')
     $('#modal_drh_content').append(divLoaderNavy)
     $('#modal_drh_content').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDataDrh")?>'+'/'+nip, function(){
+      $('#loader').hide()
+    })
+ }
+
+ function loadDrhSatyalencana(nip){
+  $('#btn_download_drh_sl').show()
+  $('#modal_drh_content').html('')
+    $('#modal_drh_content').append(divLoaderNavy)
+    $('#modal_drh_content').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDataDrhSatyalencana")?>'+'/'+nip, function(){
       $('#loader').hide()
     })
  }

@@ -300,6 +300,7 @@ var span = document.getElementsByClassName("close")[0];
                     success: function(){
                         successtoast('Data sudah terhapus')
                         loadListPeninjauan()
+                        cekPengajuan()
                         $('[data-toggle="tooltip"]').tooltip({
                 trigger : 'hover'
             })

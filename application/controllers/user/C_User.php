@@ -624,4 +624,23 @@ class C_User extends CI_Controller
         $result = $this->rekap->buildDataAbsensi($data, 1, 0, 1);
         echo json_encode($result);
     }
+
+    public function tess()
+    {
+        $x= 1;
+       
+        while($x <= 2){
+            $data['tes'] = "nomor".$x;
+            $this->load->view('user/V_tes', $data);
+            $x++;
+        }
+        
+    }
+
+    public function tes2()
+    {
+                                                         
+		// dd($this->input->post('gambar'));
+        
+    }
 }

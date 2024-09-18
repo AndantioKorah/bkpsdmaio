@@ -107,17 +107,21 @@
         let jenis_disiplin = $('#jenis_disiplin').val()
         let explode_jenis_disiplin = jenis_disiplin.split(";")
         let batas_waktu = explode_jenis_disiplin[3]
-        let batas_waktu_date = tanggal_akhir_date.setDate(tanggal_akhir_date.getDate() + parseInt(batas_waktu))
+        let batas_waktu_date = tanggal_akhir_date.setDate(tanggal_akhir_date.getDate() + (parseInt(batas_waktu)))
         let today = new Date()
         batas_waktu_date = new Date(batas_waktu_date)
-
+        
         today = today.setHours(0, 0, 0, 0)
         batas_waktu_date = batas_waktu_date.setHours(0, 0, 0, 0)
-        
         if((today > batas_waktu_date) && param_lock_upload_dokpen == '1'){
-            $('#btn_tambah').hide()
-            $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
-            $('#error_label').show()
+            <?php if($this->general_library->isProgrammer() || ($this->general_library->isAdminAplikasi() && $this->general_library->getBidangUser() == ID_BIDANG_PEKIN)){ ?>
+
+            <?php } else { ?>
+               
+                $('#btn_tambah').hide()
+                $('#error_label').html('Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah ' + batas_waktu + ' hari')
+                $('#error_label').show()
+            <?php } ?>
         }
     }
 

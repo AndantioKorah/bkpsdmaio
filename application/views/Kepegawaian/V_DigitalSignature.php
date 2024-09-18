@@ -19,7 +19,10 @@
                             <label>Jenis Layanan</label>
                             <select class="form-control select2-navy" style="width: 100%;"
                                 id="jenis_layanan" data-dropdown-css-class="select2-navy" name="jenis_layanan">
-                                    <option value="permohonan_cuti">Permohonan Cuti</option>
+                                    <option value="0" selected>Semua</option>
+                                    <?php if($list){ foreach($list as $l){ ?>
+                                        <option value="<?=$l['id']?>"><?=$l['nama_jenis_ds']?></option>
+                                    <?php } } ?>
                             </select>
                         </div>
                         <!-- <div class="col-lg-12 form-group">
@@ -42,6 +45,7 @@
 <script>
     let list_checked = []
     let terpilih
+    let jenis_layanan = $('#jenis_layanan').val()
 
     $(function(){
         $('#jenis_layanan').select2()
@@ -54,6 +58,10 @@
         $('#nav-batch').load('<?=base_url('kepegawaian/C_Kepegawaian/loadBatchDs')?>', function(){
             $('#loader').hide()
         })
+    })
+
+    $('#jenis_layanan').on('change', function(){
+        jenis_layanan = $('#jenis_layanan').val()
     })
 
     $('#form_load_ds').on('submit', function(e){

@@ -210,6 +210,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Announcement
+					</a>
+				</li>
+				
 				<?php } ?>
 			</ul>
 		</li>
@@ -359,7 +365,7 @@
 					</a>
 		</li>
 
-   <?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')) { ?>
+   <?php if($this->general_library->isAdminAplikasi()) { ?>
 		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
@@ -651,11 +657,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
 					</a>
-				</li> -->
+				</li>
 				<?php } ?>
 				<?php
 				if($this->general_library->isProgrammer() 
@@ -795,11 +801,11 @@
 			</a>
 			<ul id="datapkinerja" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
@@ -830,11 +836,11 @@
 			</a>
 			<ul id="datappotensial" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
@@ -1037,8 +1043,24 @@
 			<?php 
 		    // }
 		    ?>
-			<?php } ?>		
-
+			<?php } ?>	
+			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
+			{ 
+			?>	
+			<li class="sidebar-header">
+		    Simponi ASN
+        	</li>
+			<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+				<span class="align-middle">
+				Data Pensiun
+					</span>
+				</a>	
+			</li>
+			<?php 
+		    }
+		    ?>
 		
 
 		

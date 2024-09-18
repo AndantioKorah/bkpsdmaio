@@ -12,7 +12,7 @@
 </button>
 
 
-<?php  if($this->general_library->isProgrammer() == false AND $this->general_library->isHakAkses('akses_profil_pegawai') AND $this->general_library->getUserName() != $nip AND $this->general_library->isAdminAplikasi() == false){ ?>
+<?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() == false AND $this->general_library->isHakAkses('akses_profil_pegawai') AND $this->general_library->getUserName() != $nip AND $this->general_library->isAdminAplikasi() == false){ ?>
   <!-- <button onclick="loadRiwayatUsulJabatan()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModalJabatan">
   Riwayat Usul Jabatan
   </button> -->
@@ -437,6 +437,16 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
     <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+  </div>
+
+  <div class="form-group">
+    <!-- <label>File SK</label> -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" name="flag_upload_siasn" id="flag_upload_siasn">
+      <label class="form-check-label" for="flag_upload_siasn">
+        Upload SIASN
+      </label>
+    </div>
   </div>
 
   <div class="form-group col-lg-12">

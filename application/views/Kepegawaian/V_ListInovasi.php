@@ -32,7 +32,7 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button onclick="deleteData('<?=$rs['id_peginovasi']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </td>
               <?php } ?>
                <?php } ?>
@@ -41,8 +41,23 @@
 
               <td>
               <?php if($rs['status'] == 1) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-               <?php } ?>
+                <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <input style="width:100px;" class="form-control " id="ket_verif_<?=$rs['id_peginovasi']?>"/>&nbsp;
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button onclick="verifDokumen(2, '<?=$rs['id_peginovasi']?>','db_pegawai.peginovasi','<?=$rs['id_peg']?>')"  class="btn_verif_<?=$rs['id_peginovasi']?> btn btn-sm btn-success" title="Terima"><i class="  fa fa-check"></i></button>
+                <button onclick="verifDokumen(3, '<?=$rs['id_peginovasi']?>','db_pegawai.peginovasi','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id_peginovasi']?> btn btn-sm btn-warning" title="Tolak"><i class=" fa fa-times"></i></button>
+                <button disabled style="display: none;" id="btn_loading_<?=$rs['id_peginovasi']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+               
+                <?php } ?>
+                <button onclick="deleteData('<?=$rs['id_peginovasi']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              </div>
+              <?php } else { ?>
+              <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+              <button onclick="verifDokumen(1, '<?=$rs['id_peginovasi']?>','db_pegawai.peginovasi','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id_peginovasi']?> btn btn-sm btn-dark" title="Batal Verif"><i class=" fa fa-times"></i></button>
+              <button disabled style="display: none;" id="btn_loading_<?=$rs['id_peginovasi']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+              
+              <?php } ?>
+              <?php } ?>
               </td>
               <?php } ?>
             </tr>
@@ -116,7 +131,43 @@
                        })
                    }
                }
-
+               function verifDokumen(status, id,tabel,id_peg){
+        
+        if(status == 3){
+          if($('#ket_verif_'+id).val() == "" || $('#ket_verif_'+id).val() == null){
+            errortoast('Alasan Tolak belum diisi')
+            return false;
+          }
+        }
+        $('.btn_verif_'+id).hide()
+        $('.btn_tolak_'+id).hide()
+        $('#btn_loading_'+id).show()
+        $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/verifDokumenPdm")?>'+'/'+id+'/'+status,
+            method: 'post',
+            data: {
+               id_pegawai: id_peg,
+               tabel: tabel,
+               keterangan: $('#ket_verif_'+id).val()
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                  loadListInovasi()
+                  loadRiwayatUsulInovasi()
+                  $('.btn_verif_'+id).show()
+                  $('.btn_tolak_'+id).show()
+                  $('#btn_loading_'+id).hide()
+                } else {
+                    errortoast(rs.message)
+                }
+              
+            }, error: function(e){
+               
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
   
 </script>
 <?php } else { ?>

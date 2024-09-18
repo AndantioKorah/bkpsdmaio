@@ -323,8 +323,9 @@ class C_Kinerja extends CI_Controller
     public function createSkpBulanan()
     {
         $data['periode'] = $this->input->post();
-
+       
         list($data['pegawai'], $data['atasan_pegawai'], $data['rencana_kinerja'], $data['kepala_pd'], $data['nilai_komponen']) = $this->kinerja->createSkpBulanan($this->input->post());
+       
         $this->session->set_userdata(['data_skp' => $data]);
         $id = $this->general_library->getId();
         $dataa = $this->input->post();
@@ -497,6 +498,11 @@ class C_Kinerja extends CI_Controller
         // dd($data['result']);
         $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', $data);
     }
+
+    public function submitPeninjauanKolektif(){
+        echo json_encode($this->kinerja->verifPeninjauanAbsensiKolektif());
+    }
+
 
     public function searchDisiplinKerja()
     {
@@ -1004,5 +1010,11 @@ class C_Kinerja extends CI_Controller
     header('Content-type: application/vnd.ms-excel');
     header('Content-Disposition: attachment; filename='.$filename);
     $objWriter->save('php://output');
+    }
+
+    public function getDataPengajuanAbsensiPegawai()
+    {
+        $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
+        echo json_encode($response);
     }
 }

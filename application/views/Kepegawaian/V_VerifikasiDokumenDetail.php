@@ -473,7 +473,7 @@
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'penugasan') { ?>
       <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-6">
         <table style="width: 100%;" class="table table_dok_detail">
           <tr>
             <td class="td-lab-dd">Jenis Penugasan</td>
@@ -507,8 +507,11 @@
             <td class="td-smc-dd">:</td>
             <td class="td-val-dd"><?=$result['lamanya']?></td>
           </tr>
-      
         </table>
+      </div>
+      <div class="col-lg-6">
+        <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+        <iframe style="display: none; width: 100%; height: 60vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'cuti') { ?>
@@ -809,7 +812,7 @@
           <tr>
             <td class="td-lab-dd">Nama Inovasi</td>
             <td  class="td-smc-dd">: </td>
-            <td style="width:60%;"></td>
+            <td style="width:60%;"><?=$result['nm_inovasi']?></td>
             
           </tr>
           <tr>

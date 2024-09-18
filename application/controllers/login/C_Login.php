@@ -48,11 +48,18 @@ class C_Login extends CI_Controller
         $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
         $data['nip'] = $this->general_library->getUserName();
         $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+        $data['announcement'] = $this->m_general->getAll('t_announcement', 1);
+
         if(isset($data['profil_pegawai']['skpd'])){
          $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
         //  dd($data['mbidang']);
         }
         render('login/V_Welcome', '', '', $data);
+    }
+
+    public function loadAnnouncement(){
+        $data['announcement'] = $this->m_general->getAll('t_announcement', 1);
+        $this->load->view('login/V_Announcement', $data);
     }
 
     public function loadLiveTpp(){

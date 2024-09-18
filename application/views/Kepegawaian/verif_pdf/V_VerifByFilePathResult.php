@@ -147,7 +147,7 @@
     <?php } else { ?>
       <div class="text-center">
         <h2 style="color: red; font-weight: bold;"><i class="fa fa-times"></i> TERJADI KESALAHAN</h2>
-        <?php dd($result); ?>
+        <button onclick="location.reload()" class="btn btn-block btn-navy"><i class="fa fa-refresh"></i> REFRESH</button>
       </div>
     <?php } } ?>
   </div>

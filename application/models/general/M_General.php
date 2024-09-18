@@ -408,7 +408,7 @@
                     ->where('a.statuspeg', 2)
                     // ->where_in('id_m_status_pegawai', [1,2])
                     ->group_by('a.nipbaru_ws')
-                    ->order_by('c.eselon');
+                    ->order_by('a.nipbaru_ws', 'asc');
 
             if($data['tahun'] == date('Y')){
                 $this->db->where_in('id_m_status_pegawai', [1,2,3]);
@@ -459,7 +459,11 @@
                                 $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                                 // $list_selected_madya = ['Madya'];
                                 // $list_selected_utama = ['Utama'];
-        
+                                if((stringStartWith('Kepala Sekolah', $d['nama_jabatan'])) || (stringStartWith('Kepala Taman', $d['nama_jabatan']))){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } else 
                                 if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Madya'])){
                                     $crit = 2;
                                     $temp = $d;
@@ -490,6 +494,10 @@
                                 $crit = 3;
                                 $temp = $d;
                                 $bup = 60;
+                            } else if($d['eselon'] == 'III A' || $d['eselon'] == 'III B'){
+                                $crit = 2;
+                                $temp = $d;
+                                $bup = 58;
                             } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
                                 $crit = 4;
                                 $temp = $d;
@@ -504,7 +512,9 @@
                             }
                             if($temp){
                                 $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
+                               
                                 $explode = explode("-", $temp['tmt_pensiun']);
+                                
                                 // dd($temp['tmt_pensiun']);
                                 $temp['umur'] = $bup;
                                 // if($d['nipbaru_ws'] == '196501271985022001'){
@@ -521,7 +531,15 @@
                                     //         'id_m_status_pegawai' => 1
                                     //     ]);
                                 }
-                                if($explode[0] == $data['tahun']){
+                                // if($explode[0] == $data['tahun']){
+                                //     $result[] = $temp;
+                                // }
+                          
+                                if($explode[0] == $data['tahun'] && $explode[1] != '01'){
+                                    $result[] = $temp;
+                                }
+                                $nextyear = $data['tahun']+1;
+                                if($explode[0] == $nextyear && $explode[1] == '01'){
                                     $result[] = $temp;
                                 }
                             }
@@ -557,6 +575,13 @@
                 }
             }
             return $result;
+        }
+
+        public function logCron($nama_cron){
+            $this->db->where('nama_cron', $nama_cron)
+                    ->update('t_log_cron', [
+                        'last_hit' => date('Y-m-d H:i:s')
+                    ]);
         }
 
         public function getDataChartDashboardAdmin(){
@@ -858,6 +883,7 @@
         public function getOauthToken(){
             $token = null;
             $exists = $this->getOne('m_parameter', 'parameter_name', 'PARAM_OAUTH_TOKEN');
+           
             if($exists){
                 $now = date('Y-m-d H:i:s');
                 if($now <= $exists['created_date'] && $exists['parameter_value']){

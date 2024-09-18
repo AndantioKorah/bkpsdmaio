@@ -4072,11 +4072,11 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                         $id_rekamjjk7 = $this->getHukdisPengawai($rs['id_pegawai']); 
                                             
                                         $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($rs['id_pegawai']);
-                                        // $id_pertimbangan2 = $rs['pertimbangan_pimpinan'];
-                                        // $id_pertimbangan3 = $rs['id_kriteria_penilaian'];
+                                        $id_pertimbangan2 = $rs['pertimbangan_pimpinan'];
+                                        $id_pertimbangan3 = $rs['id_kriteria_penilaian'];
 
-                                        $id_pertimbangan2 = 124;
-                                        $id_pertimbangan3 = 126;
+                                        // $id_pertimbangan2 = 124;
+                                        // $id_pertimbangan3 = 126;
                                         
                                      
                                         // $id_rekamjjk1 = 93; 
@@ -5283,10 +5283,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                     
                                 $id_pertimbangan1 = $this->getPengalamanOrganisasiPengawai($id_pegawai);
                                 // dd($id_pertimbangan1);
-                                // $id_pertimbangan2 = $query[0]['pertimbangan_pimpinan'];
-                                // $id_pertimbangan3 = $query[0]['id_kriteria_penilaian'];
-                                $id_pertimbangan2 = 124;
-                                $id_pertimbangan3 = 126;
+                                $id_pertimbangan2 = $query[0]['pertimbangan_pimpinan'];
+                                $id_pertimbangan3 = $query[0]['id_kriteria_penilaian'];
+                                // $id_pertimbangan2 = 124;
+                                // $id_pertimbangan3 = 126;
                                 
      
                             $skor1 =  $this->getSkor($id_rekamjjk1); 

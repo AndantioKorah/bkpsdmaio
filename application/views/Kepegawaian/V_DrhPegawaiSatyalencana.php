@@ -154,7 +154,7 @@
         </td>
         <td colspan=1 style="width: 50%;">
          
-        <?php if($result['riwayat_satyalencana']){ $no = 1; foreach($result['riwayat_satyalencana'] as $saty){ ?>
+        <?php if($result['riwayat_satyalencana']){  foreach($result['riwayat_satyalencana'] as $saty){ ?>
             <span class="val_drh"><?=$saty['nosk']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsk'])?></span><br>
         <?php } } else { ?>
         <?php } ?>
@@ -170,7 +170,7 @@
         </td>
         <td colspan=1 style="width: 50%;">
           
-        <?php if($result['riwayat_disiplin']){ $no = 1; foreach($result['riwayat_disiplin'] as $saty){ ?>
+        <?php if($result['riwayat_disiplin']){  foreach($result['riwayat_disiplin'] as $saty){ ?>
             <span class="val_drh"><?=$saty['nosurat']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsurat'])?></span><br>
         <?php } } else { ?>
             <span>tidak pernah mendapatkan hukuman disiplin tingkat
@@ -187,7 +187,7 @@
           <span class="label_drh">CLTN</span>
         </td>
         <td colspan=1 style="width: 50%;">
-        <?php if($result['riwayat_cuti']){ $no = 1; foreach($result['riwayat_cuti'] as $saty){ ?>
+        <?php if($result['riwayat_cuti']){ foreach($result['riwayat_cuti'] as $saty){ ?>
             <span class="val_drh"><?=$saty['nosttpp']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsttpp'])?></span>- <span class="val_drh"><?= formatDateNamaBulan($saty['tglselesai'])?></span>
         <?php } } else { ?>
             <span>tidak pernah mengambil Cuti Diluar Tanggungan Negara (CLTN)

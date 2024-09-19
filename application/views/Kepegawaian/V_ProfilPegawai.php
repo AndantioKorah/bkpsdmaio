@@ -262,7 +262,7 @@
                 </button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Umum</a>
-                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satylencana</a>
+                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satyalancana</a>
                   </div>
               </div>
 
@@ -810,13 +810,13 @@
               // $this->general_library->isHakAkses('manajemen_talenta')){ 
                 ?>
               <?php 
-              // if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
+              if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
                 ?>
               <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
               </li>
               <?php 
-              //  } 
+               } 
               ?>
               <?php 
               //  }  

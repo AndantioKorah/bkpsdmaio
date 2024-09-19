@@ -214,7 +214,7 @@ function loadListPeninjauan(){
               dataType : 'json',
               success: function(res){
                 total = res[0].total_pengajuan - res[0].total_tolak
-              <?php  if( $this->general_library->getId() != '117'){ ?>
+              <?php  if( $this->general_library->getId() != '000'){ ?>
 
                 if(total >= 2) {
 

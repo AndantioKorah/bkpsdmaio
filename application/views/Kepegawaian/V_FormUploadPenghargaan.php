@@ -113,9 +113,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <label>Penghargaan</label>
     <select onchange="myFunction()" class="form-control select2"  type="text" id="pegpenghargaan" name="pegpenghargaan" autocomplete="off"  required>
     <option selected disabled value="">Pilih Item</option>
-    <option value="1">Satyalencana Karya Satya 10 tahun</option>
-    <option value="2">Satyalencana Karya Satya 20 tahun</option>           
-    <option value="3">Satyalencana Karya Satya 30 tahun</option>           
+    <option value="1">Satyalancana Karya Satya 10 tahun</option>
+    <option value="2">Satyalancana Karya Satya 20 tahun</option>           
+    <option value="3">Satyalancana Karya Satya 30 tahun</option>           
     <option value="4">Penghargaan Lainnya</option>         
     </select>
   </div>

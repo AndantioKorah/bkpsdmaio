@@ -66,7 +66,6 @@
          <option value="2" >Screenshot Whatsapp </option>
          </select>
     </div>
-
     <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
          <label class="bmd-label-floating">Nama Teman Pegawai </label>
          <select class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
@@ -215,13 +214,17 @@ function loadListPeninjauan(){
               dataType : 'json',
               success: function(res){
                 total = res[0].total_pengajuan - res[0].total_tolak
+              <?php  if( $this->general_library->getId() != '000'){ ?>
+
                 if(total >= 2) {
+
                   $('#btn_upload').hide()
                   $('#ket').show()
                 } else {
                   $('#btn_upload').show()
                   $('#ket').hide()
                 }
+                <?php } ?>
                
               }
     });

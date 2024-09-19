@@ -1712,6 +1712,46 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->kepegawaian->loadDataDrh($nip);
 		$this->load->view('kepegawaian/V_DrhPegawai', $data);
 	}
+
+	public function loadDataDrhSatyalencana($nip){
+		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// $data['result'] = $this->kepegawaian->getProfilPegawai($nip);
+		
+		$this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data);
+	}
+
+	public function downloadDrhSatyalencana($nip){
+		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);	
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+	
+		$html = $this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data, true); 
+		// dd($html);
+		$file_pdf = "DRH_SL_".$nip;  	
+		
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.'.pdf','d');
+    }
+
 	public function getMasterSubBidang()
     {
         $id = $this->input->post('id');

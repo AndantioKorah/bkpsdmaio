@@ -10,10 +10,10 @@
     </div>
     <div class="card-body" style="display: block;">
     <form method="post" id="upload_form_announcement" enctype="multipart/form-data" >
-  <!-- <div class="form-group">
+  <div class="form-group">
     <label for="exampleInputEmail1">Nama</label>
-    <input type="text" class="form-control" id="" name="">
-  </div> -->
+    <input type="text" class="form-control" id="nama" name="nama">
+  </div>
   <div class="form-group mt-2 mb-2">
     <label for="exampleInputPassword1">File Gambar</label>
     <input  class="form-control my-image-field" type="file" id="png_file" name="file"   />
@@ -30,7 +30,8 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-lg-12" id="list_master_syarat_layanan">
+            <div class="col-lg-12" id="list_jenis_anouncement">
+
             </div>
         </div>
     </div>
@@ -38,6 +39,19 @@
 
 
 <script>
+
+$(function(){
+        loadListAnouncement()
+    })
+
+    function loadListAnouncement(){
+        $('#list_jenis_anouncement').html('')
+        $('#list_jenis_anouncement').append(divLoaderNavy)
+        $('#list_jenis_anouncement').load('<?=base_url("master/C_Master/loadListAnouncement")?>', function(){
+            $('#loader').hide()
+        })
+    }
+
      $('#upload_form_announcement').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
@@ -71,7 +85,7 @@
                 document.getElementById("upload_form_announcement").reset();
                 document.getElementById('btn_upload_announcement').disabled = false;
                $('#btn_upload_announcement').html('Simpan')
-                // loadListArsip()
+                loadListAnouncement()
               } else {
                 errortoast(result.msg)
                 return false;
@@ -82,24 +96,26 @@
           
         });
 
-   $("#png_file").change(function (e) {
-   
-   var jenis_arsip = $('#jenis_arsip').val()
-   // var extension = png_file.value.split('.')[1];
-   var doc = png_file.value.split('.')
-   var extension = doc[doc.length - 1]
- 
-   var fileSize = this.files[0].size/1024;
+        $("#png_file").change(function (e) {
+        
+        var jenis_arsip = $('#jenis_arsip').val()
+        // var extension = png_file.value.split('.')[1];
+        var doc = png_file.value.split('.')
+        var extension = doc[doc.length - 1]
+      
+        var fileSize = this.files[0].size/1024;
 
-  
-     if (extension == "jpg" || extension == "png"){
-     
-     } else {
-        errortoast("Harus File Gambar")
-        $(this).val('');
-     }
+        
+          if (extension == "jpeg" ||extension == "jpg" || extension == "png"){
+          
+          } else {
+              errortoast("Harus File Gambar")
+              $(this).val('');
+          }
 
-    
+          
 
-   });
+        });
+
+        
 </script>

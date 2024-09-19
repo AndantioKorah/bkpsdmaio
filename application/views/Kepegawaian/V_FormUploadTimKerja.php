@@ -121,6 +121,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_tk" name="file"   />
+    <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
+
   </div>
 
   <div class="form-group col-lg-12">
@@ -285,9 +287,16 @@ $(function(){
         var extension = doc[doc.length - 1]
       
         var fileSize = this.files[0].size/1024;
+        var MaxSize = 2048;
+        
      
         if (extension != "pdf"){
           errortoast("Harus File PDF")
+          $(this).val('');
+        }
+
+        if (fileSize > MaxSize ){
+          errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
 

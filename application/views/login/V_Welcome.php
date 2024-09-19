@@ -239,7 +239,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 <script>
   $(function(){
     <?php if($announcement){ ?>
-      $('#btnannouncement').click()
+      // $('#btnannouncement').click()
       $('#modal-announcement-content').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
     <?php } ?>
 

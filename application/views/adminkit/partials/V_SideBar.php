@@ -481,7 +481,8 @@
 	
 
 	<li class="sidebar-header">
-		Kinerja
+		<!-- Kinerja -->
+		 BIDIK ASN JUARA
 	</li>
 
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
@@ -737,7 +738,8 @@
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
-		Manajemen Talenta
+		<!-- Manajemen Talenta -->
+		 SIPANTAS
 	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 	

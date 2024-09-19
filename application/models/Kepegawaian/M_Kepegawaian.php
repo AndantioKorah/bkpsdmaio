@@ -522,7 +522,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getDisiplin($nip,$kode){
-            $this->db->select('c.tmt,c.id,d.nama,e.nama_jhd,c.jp,c.status,c.nosurat,c.tglsurat,c.gambarsk')
+            $this->db->select('c.tgl_mulaiberlaku,c.tgl_selesaiberlaku,c.tmt,c.id,d.nama,e.nama_jhd,c.jp,c.status,c.nosurat,c.tglsurat,c.gambarsk')
                            ->from('m_user a')
                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                            ->join('db_pegawai.pegdisiplin c', 'b.id_peg = c.id_pegawai')
@@ -1111,8 +1111,8 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['hd']         = $this->input->post('disiplin_hd');
             $dataInsert['jhd']         = $this->input->post('disiplin_jhd');
             $dataInsert['jp']         = $this->input->post('disiplin_jp');
-            // $dataInsert['tgl_mulai']         = $this->input->post('disiplin_tglmulai');
-            // $dataInsert['tgl_selesai']         = $this->input->post('disiplin_tglselesai');
+            $dataInsert['tgl_mulaiberlaku']         = $this->input->post('disiplin_tglmulai');
+            $dataInsert['tgl_selesaiberlaku']         = $this->input->post('disiplin_tglselesai');
             $dataInsert['nosurat']         = $this->input->post('disiplin_nosurat');
             $dataInsert['tglsurat']         = $this->input->post('disiplin_tglsurat');
             $dataInsert['tmt']         = $this->input->post('disiplin_tmt');
@@ -4595,6 +4595,10 @@ public function submitEditJabatan(){
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
             $data['tmt']         = $this->input->post('edit_disiplin_tmt');
+
+            $data['tgl_mulaiberlaku']         = $this->input->post('edit_disiplin_tgl_mulaiberlaku');
+            $data['tgl_selesaiberlaku']         = $this->input->post('edit_disiplin_tgl_selesaiberlaku');
+            
             $data["gambarsk"]     = $filename;
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
@@ -4613,6 +4617,8 @@ public function submitEditJabatan(){
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
             $data['tmt']         = $this->input->post('edit_disiplin_tmt');
+            $data['tgl_mulaiberlaku']         = $this->input->post('edit_disiplin_tgl_mulaiberlaku');
+            $data['tgl_selesaiberlaku']         = $this->input->post('edit_disiplin_tgl_selesaiberlaku');
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
             $data['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -5197,7 +5203,10 @@ public function submitEditJabatan(){
         $rs['riwayat_keluarga'] = null;
 
         $rs['data_pegawai'] = $this->db->select('a.*, j.nm_tktpendidikan, b.nm_unitkerja, c.nama_jabatan, d.nm_pangkat, e.nm_agama,
-                                f.nama_kelurahan, g.nama_kecamatan, h.nama_kabupaten_kota, i.nm_sk')
+                                f.nama_kelurahan, g.nama_kecamatan, h.nama_kabupaten_kota, i.nm_sk,
+                                (SELECT CONCAT(aa.nm_jabatan,"|",aa.nosk,"|",aa.tglsk) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
+                                (SELECT CONCAT(cc.nm_pangkat,"|",bb.nosk,"|",bb.tglsk) from db_pegawai.pegpangkat as bb
+                                 join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -5222,9 +5231,10 @@ public function submitEditJabatan(){
                                             ->order_by('a.tglsk', 'desc')
                                             ->get()->result_array();
 
-            $rs['riwayat_disiplin'] = $this->db->select('a.*')
+            $rs['riwayat_disiplin'] = $this->db->select('a.*,c.nama, a.tgl_selesaiberlaku')
                                             ->from('db_pegawai.pegdisiplin a')
                                             ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                                            ->join('db_pegawai.hd c', 'a.hd = c.idk')
                                             ->where('b.id_peg', $rs['data_pegawai']['id_peg'])
                                             ->where('a.status', 2)
                                             ->where('a.flag_active', 1)  
@@ -8350,7 +8360,7 @@ public function getFileForKarisKarsu()
         //                     ->where('a.id',$this->general_library->getId())
         //                     ->get()->row_array();
 
-        $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
+        $pegawai = $this->db->select('c.id_asisten_grouping,a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
         a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')

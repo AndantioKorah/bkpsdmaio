@@ -94,3 +94,7 @@ $route['siasn/mapping/jabatan'] = 'master/C_Master/mappingJabatan';
 
 //SIMPONI ASN (Pensiun Otomatis)
 $route['kepegawaian/pensiun/kelengkapan-berkas/(:any)'] = 'kepegawaian/C_Layanan/kelengkapanBerkas/$1';
+
+//BKAD
+$route['bkad/rekapitulasi/tpp/format-bkad'] = 'rekap/C_Rekap/formatTppBkad';
+$route['bkad/upload-gaji'] = 'rekap/C_Rekap/uploadGajiBkad';

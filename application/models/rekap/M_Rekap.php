@@ -869,7 +869,7 @@
         return $result;
     }
 
-    public function lockTpp($param){
+    public function lockTpp($param, $data){
         unset($param['nm_unitkerja']);
         $param['created_by'] = $this->general_library->getId();
 
@@ -880,6 +880,9 @@
         if($date_param >= $date_today){
             return null;
         }
+
+        $param['meta_data'] = json_encode($data);
+        $param['nama_param_unitkerja'] = $data['param']['nm_unitkerja'];
 
         $exists = $this->db->select('*')
                         ->from('t_lock_tpp')
@@ -3350,6 +3353,158 @@
         }
 
         return $result;
+    }
+
+    public function loadFormatTppBkadData(){
+        return $this->db->select('a.id, a.bulan, a.tahun, b.nm_unitkerja, a.nama_param_unitkerja')
+                    ->from('t_lock_tpp a')
+                    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                    ->where('a.flag_active', 1)
+                    ->where('a.meta_data IS NOT NULL')
+                    ->order_by('a.created_date', 'desc')
+                    ->get()->result_array();
+    }
+
+    public function loadGajiPegawai(){
+        $input_post = $this->input->post();
+
+        $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws, a.besaran_gaji, b.nama_jabatan, c.nm_unitkerja, d.created_date')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                    ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                    ->join('t_bkad_upload_gaji d', 'a.id_t_bkad_upload_gaji = d.id', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('a.nipbaru_ws NOT IN ("guest", "walikota", "wakilwalikota")')
+                    ->order_by('b.eselon, a.skpd')
+                    ->group_by('a.nipbaru_ws');
+                    // ->get()->result_array();
+                    
+        if($input_post['skpd'] == 0){
+
+        } else {
+            $this->db->where('a.skpd', $input_post['skpd']);
+        }
+        $data = $this->db->get()->result_array();
+
+        $result = null;
+        if($data){
+            foreach($data as $d){
+                $result[$d['nipbaru_ws']] = $d;
+            }
+        }
+        $this->session->set_userdata('list_gaji_pegawai', $result);
+
+        return $result;
+    }
+
+    public function readUploadGaji(){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+        $rs['flag_not_found'] = 0;
+
+        $temp_not_found = null;
+        $filename = "";
+
+        if($_FILES){
+            $allowed_extension = ['xls', 'csv', 'xlsx'];
+            $file_array = explode(".", $_FILES["file_gaji"]["name"]);
+            $file_extension = end($file_array);
+
+            if(in_array($file_extension, $allowed_extension)){
+                $config['upload_path'] = 'arsipbkad/uploadgaji'; 
+                $config['allowed_types'] = '*';
+                // $config['max_size'] = '5000'; // max_size in kb
+                $config['file_name'] = "LIST_GAJI_BKAD_".generateRandomString(10).'_'.date('dMYHis').'.xls';
+                $filename = $config['file_name'];
+
+                $this->load->library('upload', $config); 
+
+                $uploadfile = $this->upload->do_upload('file_gaji');
+
+                if($uploadfile){
+                    $this->db->trans_begin();
+
+                    $this->db->insert('t_bkad_upload_gaji', [
+                        'url_file' => $config['upload_path'].'/'.$config['file_name'],
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    $last_insert = $this->db->insert_id();
+
+                    $upload_data = $this->upload->data(); 
+                    $file_gaji['name'] = $upload_data['file_name'];
+
+                    libxml_use_internal_errors(true);
+                    // $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES["file_gaji"]["name"]);
+                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($config['upload_path'].'/'.$file_gaji['name']);
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+
+                    $spreadsheet = $reader->load($_FILES["file_gaji"]["tmp_name"]);
+                    // $data = $spreadsheet->getActiveSheet()->toArray();
+
+                    $highestRow = $spreadsheet->getActiveSheet()->getHighestRow();
+                    $highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+                    $list_gaji_exist = $this->session->userdata('list_gaji_pegawai');
+
+                    for($row = 2; $row <= $highestRow; $row++){
+                        $nip = 0;
+                        $gaji = 0;
+                        for($col = 1; $col <= $highestColumnIndex; $col++){
+                            $value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row)->getValue();
+                            if($col == 1){ // nip
+                                $nip = $value;
+                            } else if($col == 2){ // nominal gaji
+                                $gaji = $value;
+                            }
+                        }
+                        if(isset($list_gaji_exist[$nip])){
+                            $this->db->where('nipbaru_ws', $nip)
+                                    ->update('db_pegawai.pegawai', [
+                                        'besaran_gaji' => $gaji,
+                                        'id_t_bkad_upload_gaji' => $last_insert,
+                                    ]);
+                        } else {
+                            $temp_not_found[$nip]['nip'] = $nip;
+                            $temp_not_found[$nip]['gaji'] = $gaji;
+                            $temp_not_found[$nip]['keterangan'] = "Data Tidak Ditemukan";
+                        }
+                    }
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Gagal upload file';
+                }
+            }
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = 'File yang diupload tidak ditemukan';
+        }
+
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+            // $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+            if($temp_not_found){
+                $data_not_found['result'] = $temp_not_found;
+                $data_not_found['filename'] = "NOT_FOUND_".$filename;
+                $rs['flag_not_found'] = 1;
+                $this->session->set_userdata('data_not_found', $data_not_found);
+                // $this->load->view('rekap/V_UploadGajiBkadNotFoundExcel', $data);
+            }
+        }
+        return $rs;
+    }
+
+    public function loadUploadGajiHistory(){
+        return $this->db->select('a.*, b.nama')
+                        ->from('t_bkad_upload_gaji a')
+                        ->join('m_user b', 'a.created_by = b.id')
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.created_date', 'desc')
+                        ->get()->result_array(); 
     }
 }
 ?>

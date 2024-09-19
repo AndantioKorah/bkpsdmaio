@@ -382,7 +382,7 @@ class C_Rekap extends CI_Controller
 
             $data['param']['url_file'] = $folder.'/'.$filename;
             if($id_m_tpp_tambahan == 0){
-                $this->rekap->lockTpp($data['param']);
+                $this->rekap->lockTpp($data['param'], $data);
             }
 
             $this->mpdf->WriteHTML($html);
@@ -687,5 +687,46 @@ class C_Rekap extends CI_Controller
 
     public function cronRekapAbsen(){
         $this->rekap->cronRekapAbsen();
+    }
+
+    public function formatTppBkad(){
+        render('rekap/V_FormatTppBkad', '', '', null);
+    }
+
+    public function loadFormatTppBkadData(){
+        $data['result'] = $this->rekap->loadFormatTppBkadData();
+        $this->load->view('rekap/V_FormatTppBkadData', $data);
+    }
+
+    public function formatTppBkadDownload($id){
+        $rs = $this->general->getOne('t_lock_tpp', 'id', $id);
+        $data = json_decode($rs['meta_data'], true);
+        $data['filename'] = "Berkas TPP Format BKAD - ".$data['param']['nama_param_unitkerja']." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
+        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $data);
+    }
+
+    public function uploadGajiBkad(){
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        render('rekap/V_UploadGajiBkad', '', '', $data);
+    }
+
+    public function loadGajiPegawai(){
+        $data['result'] = $this->rekap->loadGajiPegawai();
+        $this->load->view('rekap/V_UploadGajiBkadListGaji', $data);
+    }
+
+    public function readUploadGaji(){
+        echo json_encode($this->rekap->readUploadGaji());
+    }
+
+    public function downloadDataNotFoundUploadGaji(){
+        $data = $this->session->userdata('data_not_found');
+        $this->load->view('rekap/V_UploadGajiBkadNotFoundExcel', $data);
+    }
+
+    public function loadUploadGajiHistory(){
+        $data['result'] = $this->rekap->loadUploadGajiHistory();
+        $this->load->view('rekap/V_UploadGajiBkadHistory', $data);
     }
 }

@@ -1033,10 +1033,10 @@
 			?>
 			<?php if(!$this->general_library->isWalikota()) { ?>
 			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
-				<span class="align-middle">
-				Penilaian Sejawat
+				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+					<span class="align-middle">
+					Penilaian Sejawat
 					</span>
 				</a>	
 			</li>
@@ -1047,20 +1047,41 @@
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	
-			<li class="sidebar-header">
-		    Simponi ASN
-        	</li>
-			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
-				<span class="align-middle">
-				Data Pensiun
-					</span>
-				</a>	
-			</li>
+				<li class="sidebar-header">
+					Simponi ASN
+				</li>
+				<li class="sidebar-item ">
+					<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+						<span class="align-middle">
+						Data Pensiun
+						</span>
+					</a>	
+				</li>
 			<?php 
 		    }
 		    ?>
+			<?php if($this->general_library->isHakAkses('download_berkas_tpp_bkad') || $this->general_library->isProgrammer()){?>
+				<li class="sidebar-header">
+					Menu BKAD
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/rekapitulasi/tpp/format-bkad" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file"></i> 
+						<span class="align-middle">
+							Format TPP BKAD
+						</span>
+					</a>	
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/upload-gaji" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file-upload"></i> 
+						<span class="align-middle">
+							Upload Gaji
+						</span>
+					</a>	
+				</li>
+			<?php } ?>
 		
 
 		

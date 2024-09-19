@@ -233,10 +233,10 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 
 <script>
   $(function(){
-    <?php // if($this->general_library->isProgrammer()){ if($announcement){ ?>
+    <?php if($announcement){ ?>
       $('#btnannouncement').click()
       $('#modal-announcement-content').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
-    <?php // } } ?>
+    <?php } ?>
 
     <?php if($this->session->userdata('apps_error')){ ?>
 			errortoast("<?=$this->session->userdata('apps_error')?>");

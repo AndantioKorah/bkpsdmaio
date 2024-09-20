@@ -1431,7 +1431,8 @@
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
         if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
-        (!$this->general_library->isProgrammer())){ // bukan role programmer
+        (!$this->general_library->isProgrammer()) && // bukan role programmer
+        $jenis_disiplin[4] == 1){ // flag_lock == 1
             if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
 
             } else {

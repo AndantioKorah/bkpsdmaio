@@ -2160,7 +2160,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->from('db_pegawai.pegdatalain a')
             ->where('a.id_pegawai', $id)
             ->where('a.status', 2)
-            ->where('a.jenispenugasan', 99)
+            ->where_in('a.jenispenugasan', [98,99])
             ->where('a.flag_active', 1);
            $pegpenugasan = $this->db->get()->result_array();
            if($pegpenugasan){

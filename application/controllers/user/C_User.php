@@ -445,6 +445,8 @@ class C_User extends CI_Controller
         if($flag_welcome_view == 0){
             $temp['result'] = $data['result'];
             $temp['param'] = $this->input->post();
+            $data['list_checklist_pensiun'] = $data['result']['list_checklist_pensiun'];
+            unset($data['result']['list_checklist_pensiun']);
             $this->session->set_userdata('data_pensiun', $temp);
             $this->load->view('user/V_PegawaiPensiunItem', $data);
         } else {

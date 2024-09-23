@@ -827,6 +827,7 @@
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
                     && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
+                        // $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                         $result[$i]['kelas_jabatan'] = 7;
                     }
                 } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
@@ -834,8 +835,10 @@
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
-                        // $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
-                        $result[$i]['kelas_jabatan'] = 7;
+                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                        if($d['kelas_jabatan_jft'] > 7){
+                            $result[$i]['kelas_jabatan'] = 7;
+                        }
                     }
                 }
     
@@ -1487,6 +1490,7 @@
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
+        $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
             if($flag_rekap_personal == 1){
@@ -1531,6 +1535,11 @@
                     $tlp[$lpw['nip']]['absen'][$lh]['status_absensi'] = "";
                     $tlp[$lpw['nip']]['absen'][$lh]['ket_masuk'] = "";
                     $tlp[$lpw['nip']]['absen'][$lh]['ket_pulang'] = "";
+
+                    if(getNamaHari($lh) == 'Sabtu' || getNamaHari($lh) == 'Minggu'){
+                        $expl = explode("-", $lh);
+                        $list_tanggal_exclude[$lh] = $expl[2];
+                    }
                 }
             }
 
@@ -1710,6 +1719,9 @@
                     $data['info_libur'][$h['keterangan']]['tanggal_akhir'] = $h['tanggal'];
                 }
                 $hari_libur[$h['tanggal']] = $h;
+
+                $expl = explode("-", $h['tanggal']);
+                $list_tanggal_exclude[$h['tanggal']] = $expl[2];
             }
         }
         $data['hari_libur'] = $hari_libur;
@@ -1730,6 +1742,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where_in('c.nipbaru_ws', $temp_list_nip)
+                ->where_not_in('a.tanggal', $list_tanggal_exclude)
                 // ->where('c.skpd', $uker['id_unitkerja'])
                 ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
@@ -2335,6 +2348,9 @@
                         $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = formatTwoMaxDecimal($result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja']);
                     }
                 }
+                // if($tr['nip'] == '196809261988031001'){
+                //     dd($result['result']['196809261988031001']);
+                // }
             }
         }
 

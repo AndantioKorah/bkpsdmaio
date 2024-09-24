@@ -138,6 +138,9 @@ $route['dokumen-pendukung-absensi/verifikasi-tinjau'] = 'kinerja/C_Kinerja/verif
 $route['master/announcement'] = 'master/C_Master/masterAnnouncement';
 
 
+$route['kepegawaian/plt-plh'] = 'kepegawaian/C_Kepegawaian/pltPlh';
+
+
 
 
 

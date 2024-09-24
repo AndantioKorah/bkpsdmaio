@@ -8385,6 +8385,59 @@ public function getFileForKarisKarsu()
         return $atasan_pegawai;
     }
 
+    public function getPltPlh()
+    {
+        $this->db->select('*')
+        ->from('db_efort.t_plt_plh as a')
+        ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
+        ->join('db_pegawai.jabatan e', 'a.id_jabatan = e.id_jabatanpeg')
+        ->where('a.flag_active', 1)
+        ->order_by('a.id', 'desc');
+     
+        return $this->db->get()->result_array(); 
+    }
+
+    function getNamaJabatanStruktural(){
+        $this->db->select('*')
+        ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+        ->where('flag_active', 1)
+        ->where('jenis_jabatan', 'Struktural')
+        ->group_by('a.nama_jabatan')
+        ->from('db_pegawai.jabatan a');
+        return $this->db->get()->result_array(); 
+    }
+
+    public function submitPltPlh()
+	{
+
+        $this->db->trans_begin();
+        
+            $dataInsert['jenis']     = $this->input->post('pltplh_jenis');
+            $dataInsert['id_unitkerja']     = $this->input->post('pltplh_unitkerja');
+            $dataInsert['id_jabatan']     = $this->input->post('pltplh_jabatan');
+            $dataInsert['tanggal_mulai']     = $this->input->post('pltplh_tgl_mulai');
+            $dataInsert['tanggal_akhir']     = $this->input->post('pltplh_tgl_akhir');
+            $dataInsert['presentasi_tpp']     = $this->input->post('pltplh_presentasi_tpp');
+            $dataInsert['flag_use_bpjs']     = $this->input->post('pltplh_bpjs');
+            $dataInsert['id_m_user']     = $this->input->post('pltplh_id_m_user');
+            
+            $result = $this->db->insert('db_efort.t_plt_plh', $dataInsert);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+	}
+
+
 
 
 

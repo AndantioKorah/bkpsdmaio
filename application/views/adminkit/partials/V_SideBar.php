@@ -215,6 +215,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Announcement
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-plh')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Master PLT/PLH
+					</a>
+				</li>
 				
 				<?php } ?>
 			</ul>

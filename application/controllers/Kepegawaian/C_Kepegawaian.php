@@ -2233,6 +2233,30 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($this->kepegawaian->verifDokumenPdm($id, $status));
     }
 
+
+	public function pltPlh(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        if(!$data['list_pegawai']){
+            $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
+            $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        }
+        render('kepegawaian/V_MasterPltPlh', '', '', $data);
+    }
+
+	public function loadListPltPlh(){
+        $data['list_pltplh'] = $this->kepegawaian->getPltPlh();
+      
+        $this->load->view('kepegawaian/V_MasterPltPlhItem', $data);
+    }
+
+	public function submitPltPlh()
+	{ 
+		echo json_encode( $this->kepegawaian->submitPltPlh());
+	}
+
 	
 
 

@@ -259,6 +259,22 @@ class C_Rekap extends CI_Controller
     public function downloadBerkasTpp($id_m_tpp_tambahan = 0, $flag_excel = 0){
         $param = $this->input->post();
         $param['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+        $data['flag_simplified_format'] = 0;
+
+        $time = strtotime('01-'.$param['bulan'].'-'.$param['tahun']);
+        $dateFormat = date('Y-m-d', $time);
+
+        $newTime = strtotime('01-09-2024');
+        $newDateFormat = date('Y-m-d', $newTime);
+
+        if($time >= $newTime){ // mulai bulan september, di sheets BKAD, dihapuskan untuk PK, BK, KK di BPJS dan PPH
+            $data['flag_simplified_format'] = 1;
+        }
+
+        // if($this->general_library->isProgrammer()){
+        //     echo($dateFormat.' >= '.$newDateFormat);
+        //     dd($data);
+        // }
 
         $flag_sekolah_kecamatan = 0;
         // dd($param);

@@ -11,7 +11,7 @@ class TteLib{
 
     public function __construct()
     {
-        $this->STATE = 'PROD'; //DEV = development, PROD = production
+        $this->STATE = TTE_STATE; //DEV = development, PROD = production
         $this->URL = "103.186.201.237/";
         $this->USERNAME = "esign";
         $this->PASSWORD = "qwerty";
@@ -36,7 +36,7 @@ class TteLib{
     public function signPdfNikPass($data){
         $hash = $this->hash();
         $url = $hash['url'].'api/v2/sign/pdf';
-        if(TTE_STATE == 'DEV'){
+        if($hash['state'] == 'DEV'){
             $data['nik'] = trim(TTE_NIK_DEV);
             $data['passphrase'] = trim(TTE_PASS_DEV);
         }

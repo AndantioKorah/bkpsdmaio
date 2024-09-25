@@ -348,9 +348,12 @@
 
             $list_pensiun = null;
             $pensiun = $this->getListPegawaiPensiunByYear($data);
+            // dd($pensiun);
             if($pensiun){
                 foreach($pensiun as $p){
-                    $list_pensiun[$p['nipbaru_ws']] = $p;
+                    if(isset($p['nipbaru_ws'])){
+                        $list_pensiun[$p['nipbaru_ws']] = $p;
+                    }
                 }
             }
 

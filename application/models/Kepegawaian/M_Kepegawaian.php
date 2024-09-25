@@ -8387,7 +8387,7 @@ public function getFileForKarisKarsu()
 
     public function getPltPlh()
     {
-        $this->db->select('*')
+        $this->db->select('*,a.id as id_pltplh')
         ->from('db_efort.t_plt_plh as a')
         ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -8406,6 +8406,13 @@ public function getFileForKarisKarsu()
         ->where('jenis_jabatan', 'Struktural')
         ->group_by('a.nama_jabatan')
         ->from('db_pegawai.jabatan a');
+        return $this->db->get()->result_array(); 
+    }
+
+    function getUnitKerja(){
+        $this->db->select('*')
+        ->where_not_in('id_unitkerja', [5])
+        ->from('db_pegawai.unitkerja a');
         return $this->db->get()->result_array(); 
     }
 

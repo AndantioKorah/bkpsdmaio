@@ -32,7 +32,7 @@
                         <td class="text-left"><?=$lp['flag_use_bpjs']?></td>
                         
                         <td class="text-center">
-                            <button onclick="deleteAnnouncement('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <button onclick="deleteTpltPlh('<?=$lp['id_pltplh']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -71,21 +71,17 @@ $(document).ready( function () {
             });
         })  
 
-        function loadAnnouncement(id){
-            $('#modal-announcement-content').html('')
-            $('#modal-announcement-content').append(divLoaderNavy)
-            $('#modal-announcement-content').load('<?=base_url('master/C_Master/loadAnnouncement/')?>'+id)
-        }
+       
 
-        function deleteAnnouncement(id){
+        function deleteTpltPlh(id){
             if(confirm('Apakah Anda yakin ingin menghapus data?')){
                 $.ajax({
-                    url: '<?=base_url("master/C_Master/deleteAnnouncement/")?>'+id,
+                    url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteTpltPlh/")?>'+id,
                     method: 'post',
                     data: null,
                     success: function(){
                         successtoast('Data sudah terhapus')
-                        loadListAnouncement()
+                        loadListPltPlh()
                     }, error: function(e){
                         errortoast('Terjadi Kesalahan')
                     }

@@ -3395,9 +3395,7 @@
                     ->group_by('a.nipbaru_ws');
                     // ->get()->result_array();
                     
-        if($input_post['skpd'] == 0){
-
-        } else {
+        if(isset($input_post['skpd']) && $input_post['skpd'] != 0){
             $this->db->where('a.skpd', $input_post['skpd']);
         }
         $data = $this->db->get()->result_array();
@@ -3420,6 +3418,7 @@
 
         $temp_not_found = null;
         $filename = "";
+        $list_exec = null;
 
         if($_FILES){
             $allowed_extension = ['xls', 'csv', 'xlsx'];
@@ -3463,8 +3462,9 @@
                     $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
                     $list_gaji_exist = $this->session->userdata('list_gaji_pegawai');
+                    // dd($list_gaji_exist);
 
-                    for($row = 2; $row <= $highestRow; $row++){
+                    for($row = 1; $row <= $highestRow; $row++){
                         $nip = 0;
                         $gaji = 0;
                         for($col = 1; $col <= $highestColumnIndex; $col++){
@@ -3476,16 +3476,28 @@
                             }
                         }
                         if(isset($list_gaji_exist[$nip])){
-                            $this->db->where('nipbaru_ws', $nip)
-                                    ->update('db_pegawai.pegawai', [
-                                        'besaran_gaji' => $gaji,
-                                        'id_t_bkad_upload_gaji' => $last_insert,
-                                    ]);
+                            $exec = null;
+                            $exec['nip'] = $nip;
+                            $exec['besaran_gaji'] = $gaji;
+                            $exec['id_t_bkad_upload_gaji'] = $last_insert;
+                            $exec['created_by'] = $this->general_library->getId();
+
+                            $list_exec[] = $exec;
+
+                            // $this->db->where('nipbaru_ws', $nip)
+                            //         ->update('db_pegawai.pegawai', [
+                            //             'besaran_gaji' => $gaji,
+                            //             'id_t_bkad_upload_gaji' => $last_insert,
+                            //         ]);
                         } else {
                             $temp_not_found[$nip]['nip'] = $nip;
                             $temp_not_found[$nip]['gaji'] = $gaji;
                             $temp_not_found[$nip]['keterangan'] = "Data Tidak Ditemukan";
                         }
+                    }
+
+                    if($list_exec){
+                        $this->db->insert_batch('t_cron_bkad_upload_gaji', $list_exec);
                     }
                 } else {
                     $rs['code'] = 1;
@@ -3521,6 +3533,31 @@
                         ->where('a.flag_active', 1)
                         ->order_by('a.created_date', 'desc')
                         ->get()->result_array(); 
+    }
+
+    public function cronUpdateGajiBkad(){
+        $data = $this->db->select('*')
+                        ->from('t_cron_bkad_upload_gaji')
+                        ->where('flag_active', 1)
+                        ->where('flag_update', 0)
+                        ->limit(1000)
+                        ->get()->result_array();
+
+        if($data){
+            foreach($data as $d){
+                $this->db->where('nipbaru_ws', $d['nip'])
+                        ->update('db_pegawai.pegawai', [
+                            'besaran_gaji' => $d['besaran_gaji'],
+                            'id_t_bkad_upload_gaji' => $d['id_t_bkad_upload_gaji']
+                        ]);
+                
+                $this->db->where('id', $d['id'])
+                        ->update('t_cron_bkad_upload_gaji', [
+                            'flag_update' => 1,
+                            'exec_time' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
     }
 }
 ?>

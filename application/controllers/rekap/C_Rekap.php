@@ -717,7 +717,7 @@ class C_Rekap extends CI_Controller
     public function formatTppBkadDownload($id){
         $rs = $this->general->getOne('t_lock_tpp', 'id', $id);
         $data = json_decode($rs['meta_data'], true);
-        $data['filename'] = "Berkas TPP Format BKAD - ".$data['param']['nama_param_unitkerja']." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
+        $data['filename'] = "Berkas TPP Format BKAD - ".$data['param']['nm_unitkerja']." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
         $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $data);
     }
 

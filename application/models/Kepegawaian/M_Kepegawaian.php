@@ -8400,11 +8400,13 @@ public function getFileForKarisKarsu()
     }
 
     function getNamaJabatanStruktural(){
-        $this->db->select('*')
+        $this->db->select('*, CONCAT(a.nama_jabatan," | ",b.nm_unitkerja) as jabatan')
+        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
         ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
         ->where('flag_active', 1)
         ->where('jenis_jabatan', 'Struktural')
-        ->group_by('a.nama_jabatan')
+        ->group_by('a.id_jabatanpeg')
+        ->order_by('a.eselon')
         ->from('db_pegawai.jabatan a');
         return $this->db->get()->result_array(); 
     }
@@ -8420,10 +8422,17 @@ public function getFileForKarisKarsu()
 	{
 
         $this->db->trans_begin();
+
+        if($this->input->post('pltplh_jabatan')){
+
+        $jabatan = explode(",", $this->input->post('pltplh_jabatan'));
+        $id_jabatan = $jabatan[0];
+        $id_unitkerja = $jabatan[1];
+
         
             $dataInsert['jenis']     = $this->input->post('pltplh_jenis');
-            $dataInsert['id_unitkerja']     = $this->input->post('pltplh_unitkerja');
-            $dataInsert['id_jabatan']     = $this->input->post('pltplh_jabatan');
+            $dataInsert['id_unitkerja']     = $id_unitkerja;
+            $dataInsert['id_jabatan']     = $id_jabatan;
             $dataInsert['tanggal_mulai']     = $this->input->post('pltplh_tgl_mulai');
             $dataInsert['tanggal_akhir']     = $this->input->post('pltplh_tgl_akhir');
             $dataInsert['presentasi_tpp']     = $this->input->post('pltplh_presentasi_tpp');
@@ -8432,6 +8441,10 @@ public function getFileForKarisKarsu()
             
             $result = $this->db->insert('db_efort.t_plt_plh', $dataInsert);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        } else {
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        }
+        
 		
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();

@@ -3727,6 +3727,14 @@
     return $result;
 }
 
+    public function getStatusLockKinerja($menu){
+        return $this->db->select('a.status')
+                        ->from('t_lock_kinerja as a ')
+                        ->where('a.flag_active', 1)
+                        ->where('a.menu', $menu)
+                        ->get()->result_array();
+    }
+
     
 
     

@@ -120,7 +120,11 @@ $('#table_rencana_kinerja').DataTable({
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 
-  var bulanSearch = "<?=$bulan;?>"
+   var statusLock = "<?=$status_lock[0]['status'];?>"
+   if(statusLock == 0) {
+    $('.btndelete').show()
+   } else {
+    var bulanSearch = "<?=$bulan;?>"
   var date = new Date();
   var tanggal = new Date().getDate();
   var bulanCurrent = date.getMonth()+1;
@@ -138,8 +142,8 @@ $('#table_rencana_kinerja').DataTable({
         $('.btndelete').hide()
     }
   } 
-
-
+   }
+  
 })
 
 $('#search_bulan').on('change', function(){

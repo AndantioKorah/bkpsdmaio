@@ -54,7 +54,7 @@
     <form method="post" id="upload_form" enctype="multipart/form-data" >
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Kegiatan</label>
-    <input  class="form-control customInput datetimepickerthis" id="tanggal_kegiatan" name="tanggal_kegiatan" readonly value="<?= date('Y-m-d H:i:s') ;?>">
+    <input  class="form-control customInput datetimepickerthisRealisasi" id="tanggal_kegiatan" name="tanggal_kegiatan" readonly value="<?= date('Y-m-d H:i:s') ;?>">
     </div>
     <div class="form-group">
          <label class="bmd-label-floating">Uraian Tugas </label>
@@ -143,6 +143,55 @@
         loadListKegiatan(tahun,bulan)
         loadListTugasJabatan()
         checkLockTpp()
+
+        
+  var date = new Date();
+  var tanggal = new Date().getDate();
+  var bulan = date.getMonth();
+  var tahun = date.getFullYear();
+
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
+
+  var fd = tahun+'-'+bulan+'-01';
+
+   var statusLock = "<?=$status_lock[0]['status'];?>"
+
+   if(statusLock == 0){
+    $('.datetimepickerthisRealisasi').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    // startDate: firstDay,  
+    endDate: new Date()
+    })
+    } else {
+      if(tanggal <= 3) {
+    $('.datetimepickerthisRealisasi').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    startDate: fd,  
+    endDate: new Date()
+  })
+  } else {
+    $('.datetimepickerthisRealisasi').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    startDate: firstDay,  
+    endDate: new Date()
+  })
+  }
+    }
+
+  
+
     }) 
     
     function checkLockTpp(){

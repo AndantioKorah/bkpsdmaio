@@ -141,6 +141,8 @@
 
     })
 
+ 
+
     function loadRencanaKinerja(bulan,tahun){
       
 
@@ -185,9 +187,42 @@
     }
 
 
-    // $('#search_bulan').on('change', function(){
-    //     loadRencanaKinerja($('#search_bulan').val(), $('#search_tahun').val())
-    // })
+    $('#bulan').on('change', function(){
+       
+  var bulanSearch = $('#bulan').val()
+  var date = new Date();
+  var tanggal = new Date().getDate();
+  var bulanCurrent = date.getMonth()+1;
+  var tahun = date.getFullYear();
+
+  var firstDay = getFirstDayOfMonth(
+    date.getFullYear(),
+    date.getMonth(),
+  );
+
+  var previousMonth = bulanCurrent - 1;
+  var batasMonth = previousMonth - 1;
+
+  var statusLock = "<?=$status_lock[0]['status'];?>"
+  
+    if(statusLock == 0){
+      $('.customButton').show()
+    } else {
+      if(bulanSearch != bulanCurrent){
+        if(bulanSearch < previousMonth) {
+          $('.customButton').hide()
+        } else {
+          if(tanggal <= 3) {
+            $('.customButton').show()
+        } else {
+            $('.customButton').hide()
+        }
+        }
+      } else {
+        $('.customButton').show()
+      }
+    }
+    })
 
     // $('#search_tahun').on('changeDate', function(){
     //     loadRencanaKinerja($('#search_bulan').val(), $('#search_tahun').val())

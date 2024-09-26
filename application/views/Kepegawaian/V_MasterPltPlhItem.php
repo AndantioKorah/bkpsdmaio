@@ -26,10 +26,10 @@
                         <td class="text-left"><?=$lp['jenis']?></td>
                         <td class="text-left"><?=$lp['nm_unitkerja']?></td>
                         <td class="text-left"><?=$lp['nama_jabatan']?></td>
-                        <td class="text-left"><?=$lp['tanggal_mulai']?></td>
-                        <td class="text-left"><?=$lp['tanggal_akhir']?></td>
+                        <td class="text-left"><?= formatDateNamaBulan($lp['tanggal_mulai'])?></td>
+                        <td class="text-left"><?= formatDateNamaBulan($lp['tanggal_akhir'])?></td>
                         <td class="text-left"><?=$lp['presentasi_tpp']?></td>
-                        <td class="text-left"><?=$lp['flag_use_bpjs']?></td>
+                        <td class="text-left"><?= $lp['flag_use_bpjs'] == '1' ? 'Ya' : 'Tidak';   ?></td>
                         
                         <td class="text-center">
                             <button onclick="deleteTpltPlh('<?=$lp['id_pltplh']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>

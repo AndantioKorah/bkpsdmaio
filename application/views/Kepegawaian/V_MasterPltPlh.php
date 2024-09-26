@@ -15,6 +15,7 @@
     <label for="exampleInputEmail1">Pegawai</label>
     <select class="form-control select2-navy select2" style="width: 100%"
                     id="pltplh_id_m_user" data-dropdown-css-class="select2-navy" name="pltplh_id_m_user">
+                    <option value="" selected disabled>- Pilih Pegawai -</option>
                         <?php if($list_pegawai){
                             foreach($list_pegawai as $lp){
                             ?>
@@ -27,14 +28,14 @@
 
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Jenis</label>
-    <select class="form-control select2-navy select2" name="pltplh_jenis" id="pltplh_jenis"  required>
+    <select class="form-control select2-navy select2" name="pltplh_jenis" id="pltplh_jenis" >
          <option value="" selected disabled>- Pilih Jenis -</option>
          <option value="Plt" >Plt </option>
          <option value="Plh" >Plh </option>
          </select>
   </div>
 
-  <div class="form-group mb-2">
+  <!-- <div class="form-group mb-2">
     <label for="exampleInputEmail1">Unit Kerja</label>
     <select class="form-control select2"  name="pltplh_unitkerja" id="pltplh_unitkerja" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
@@ -42,31 +43,37 @@
                         <option  value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
                     <?php } } ?>
     </select>
-  </div>
+  </div> -->
+
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Jabatan</label>
-     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pltplh_jabatan" id="pltplh_jabatan" >
+     <select class="form-control select2" data-dropdown-css-class="select2-navy" name="pltplh_jabatan" id="pltplh_jabatan">
                     <option value="" disabled selected>Pilih Item</option>
                     <?php if($nama_jabatan){ foreach($nama_jabatan as $r){ ?>
-                        <option value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
+                        <option value="<?=$r['id_jabatanpeg']?>,<?=$r['id_unitkerja']?>"><?=$r['nama_jabatan']?> | <?=$r['nm_unitkerja']?></option>
                     <?php } } ?>
     </select>
   </div>
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Tanggal Mulai</label>
-    <input type="text" class="form-control datepicker2" id="pltplh_tgl_mulai" name="pltplh_tgl_mulai">
+    <input autocomplete="off" type="text" class="form-control datepicker2" id="pltplh_tgl_mulai" name="pltplh_tgl_mulai">
   </div>
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Tanggal Selesai</label>
-    <input type="text" class="form-control datepicker2" id="pltplh_tgl_akhir" name="pltplh_tgl_akhir">
+    <input autocomplete="off" type="text" class="form-control datepicker2" id="pltplh_tgl_akhir" name="pltplh_tgl_akhir">
   </div>
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Presentasi TPP</label>
     <input type="number" class="form-control" id="pltplh_presentasi_tpp" name="pltplh_presentasi_tpp">
   </div>
+  
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Flag BPJS</label>
-    <input type="number" class="form-control" id="pltplh_bpjs" name="pltplh_bpjs">
+    <select class="form-control select2-navy select2" name="pltplh_bpjs" id="pltplh_bpjs">
+         <option value="" selected disabled>- Pilih -</option>
+         <option value="1" > Ya </option>
+         <option value="0" > Tidak </option>
+         </select>
   </div>
  
   
@@ -147,6 +154,9 @@ $(function(){
                loadListPltPlh()
               } else {
                 errortoast(result.msg)
+                document.getElementById("upload_form_pltplh").reset();
+                document.getElementById('btn_upload_pltplh').disabled = false;
+               $('#btn_upload_pltplh').html('Simpan')
                 return false;
               } 
             

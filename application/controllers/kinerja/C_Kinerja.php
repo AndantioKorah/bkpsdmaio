@@ -213,6 +213,7 @@ class C_Kinerja extends CI_Controller
     public function loadKegiatan($tahun, $bulan)
     {
 
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_kegiatan'] = $this->kinerja->loadKegiatan($tahun, $bulan);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;

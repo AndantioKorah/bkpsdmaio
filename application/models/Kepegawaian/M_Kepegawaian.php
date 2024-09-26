@@ -1369,7 +1369,7 @@ class M_Kepegawaian extends CI_Model
         // }
 
 		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-        $filename = $random_number.$create_nama_file;
+        $filename = str_replace(' ', '', $random_number.$create_nama_file);
         $nama_file =  $filename;
 
 		$config['upload_path']          = $target_dir;

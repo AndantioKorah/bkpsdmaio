@@ -18,7 +18,7 @@
                 <?php $no = 1; foreach($result as $rs){ ?>
                     <tr>
                         <td style="text-align: center;"><?=$no++;?></td>
-                        <td style="text-align: left;"><?=($rs['nip'])?></td>
+                        <td style="text-align: left;">`<?=($rs['nip'])?></td>
                         <td style="text-align: left;"><?=formatCurrencyWithoutRp($rs['gaji'])?></td>
                         <td style="text-align: left;"><?=$rs['keterangan']?></td>
                     </tr>

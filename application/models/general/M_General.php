@@ -608,10 +608,22 @@
         }
 
         public function logCron($nama_cron){
-            $this->db->where('nama_cron', $nama_cron)
+            $exists = $this->db->select('*')
+                            ->from('t_log_cron')
+                            ->where('nama_cron', $nama_cron)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exists){
+                $this->db->where('nama_cron', $nama_cron)
                     ->update('t_log_cron', [
                         'last_hit' => date('Y-m-d H:i:s')
                     ]);
+            } else {
+                $this->db->insert('t_log_cron', [
+                    'nama_cron' => $nama_cron,
+                    'last_hit' => date('Y-m-d H:i:s')
+                ]);
+            }
         }
 
         public function getDataChartDashboardAdmin(){

@@ -9,6 +9,7 @@
                 <thead>
                     <th style="width: 5%;text-align: center">No</th>
                     <th style="width: 15%;text-align: center">Nama Pegawai</th>
+                    <th style="width: 15%;text-align: center">NIP</th>
                     <th style="width: 20%;text-align: center">Jumlah TPP</th>
                     <th style="width: 20%;text-align: center">Jumlah Potongan BPJS</th>
                     <th style="width: 20%;text-align: center">Jumlah Pajak</th>
@@ -19,6 +20,7 @@
                         <tr>
                             <td style="text-align: center"><?=$no++;?></td>
                             <td style="text-algign: left"><?=($rs['nama_pegawai'])?></td>
+                            <td style="text-algign: left">`<?=($rs['nip'])?></td>
                             <!-- <td style="text-align: right;"><?=formatCurrency($rs['besaran_tpp'], 0)?></td> -->
                             <!-- <td style="text-align: right;"><?=formatCurrency(pembulatan($rs['nominal_pph']), 0)?></td> -->
                             <!-- <td style="text-align: right;"><?=formatCurrency(pembulatan($rs['bpjs']), 0)?></td> -->

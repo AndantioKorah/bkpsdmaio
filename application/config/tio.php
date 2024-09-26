@@ -69,6 +69,7 @@ $route['cron/absensi/skpd/rekap'] = 'cron/C_Cron/cronRekapAbsen';
 $route['cron/rekap-absensi-pd'] = 'cron/C_Cron/cronRekapAbsenPD';
 $route['cron/send-wa-message'] = 'cron/C_Cron/cronSendWa';
 $route['cron/cron-ds-bulk-tte-cuti'] = 'cron/C_Cron/cronDsBulkTte';
+$route['cron/cron-bkad-update-gaji'] = 'cron/C_Cron/cronUpdateGajiBkad';
 
 //walikota
 $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';

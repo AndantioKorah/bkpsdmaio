@@ -28,18 +28,18 @@
         <div class="col-lg-12">
             <form id="form_load_list_gaji">
                 <div class="row">
-                    <div class="col-lg-9">
+                    <!-- <div class="col-lg-9">
                         <select class="form-control select2-navy" style="width: 100%;"
                         id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                             <option value="0">Semua</option>
-                            <?php $i = 0; foreach($list_skpd as $ls){ ?>
+                            <?php // $i = 0; foreach($list_skpd as $ls){ ?>
                                 <option <?=$i == 1 ? 'selected' : ''?> value="<?=$ls['id_unitkerja']?>"><?=$ls['nm_unitkerja']?></option>
-                            <?php $i++; } ?>
+                            <?php // $i++; } ?>
                         </select>
                     </div>
                     <div class="col-lg-3">
                         <button type="submit" class="btn btm-sm btn-navy"><i class="fa fa-search"></i> Cari</button>
-                    </div>
+                    </div> -->
                     <div class="col-lg-12 mt-3" id="div_result"></div>
                 </div>
             </form>
@@ -64,7 +64,7 @@
 
 <script>
     $(function(){
-        $('#skpd').select2()
+        // $('#skpd').select2()
         loadGajiPegawai()
     })
 

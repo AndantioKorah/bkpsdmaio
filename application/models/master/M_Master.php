@@ -782,7 +782,7 @@
                             ->where('id_unitkerja', $data['id_unitkerja'])
                             ->get()->row_array();
 
-            $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji, c.nm_unitkerja')
+            $this->db->select('a.gelar1, a.nama, a.gelar2, a.nipbaru_ws, b.nama_jabatan, d.nm_pangkat, a.besaran_gaji, c.nm_unitkerja, a.id_t_bkad_upload_gaji')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')

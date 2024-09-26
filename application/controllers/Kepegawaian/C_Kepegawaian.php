@@ -2186,7 +2186,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf','d');
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
     }
 
 	public function suratFormulirCuti($id_cuti){
@@ -2233,6 +2233,34 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($this->kepegawaian->verifDokumenPdm($id, $status));
     }
 
+
+	public function pltPlh(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+		// dd($data['nama_jabatan']);
+		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        if(!$data['list_pegawai']){
+            $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
+            $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        }
+        render('kepegawaian/V_MasterPltPlh', '', '', $data);
+    }
+
+	public function loadListPltPlh(){
+        $data['list_pltplh'] = $this->kepegawaian->getPltPlh();
+      
+        $this->load->view('kepegawaian/V_MasterPltPlhItem', $data);
+    }
+
+	public function submitPltPlh()
+	{ 
+		echo json_encode( $this->kepegawaian->submitPltPlh());
+	}
+
+	public function deleteTpltPlh($id){
+        $this->general->delete('id', $id, 't_plt_plh');
+    }
 	
 
 

@@ -21,6 +21,7 @@ class C_Kinerja extends CI_Controller
 
     public function Kinerja()
     {
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->getRencanaKinerja(date('m'), date('Y'));
         render('kinerja/V_RealisasiKinerja', '', '', $data);
     }
@@ -37,6 +38,7 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->getListRencanaKinerjaTugas();
         $data['list_sasaran_kerja'] = $this->kinerja->getListRencanaKinerjaSasaran();
         $this->simata->updateMasakerja($this->general_library->getIdPegSimpeg());
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         // dd($data['list_rencana_kinerja']);
         // $data['apel-pagi'] = $this->kinerja->cekRencanaKinerjaApelPagi();
         render('kinerja/V_RencanaKinerja', '', '', $data);
@@ -247,6 +249,7 @@ class C_Kinerja extends CI_Controller
         if (!$bulan) {
             $bulan = date('m');
         }
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;

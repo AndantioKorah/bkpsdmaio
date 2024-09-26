@@ -117,7 +117,7 @@
 			<td style="width:22%;">Nama</td>
 			<td style="text-align: center;width:1%;">:</td>
 			<td style="width:70%;">
-				<?= $kaban['gelar1'];?><?= strtoupper($kaban['nama']);?><?= $kaban['gelar2'];?>
+			<?= getNamaPegawaiFull($kaban);?>
 		</td>
 		</tr>
 		<tr>

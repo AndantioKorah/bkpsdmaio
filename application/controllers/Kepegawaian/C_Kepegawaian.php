@@ -437,7 +437,7 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
-		// dd($data['param']['jenisdokumen']);
+		// dd($jd);
 		    if($jd == "jabatan"){
 			$data['path'] = 'arsipjabatan/'.$data['result']['gambarsk'];
             } else if($jd == "pangkat"){
@@ -468,7 +468,9 @@ class C_Kepegawaian extends CI_Controller
 				$data['path'] = 'arsippenghargaan/'.$data['result']['gambarsk'];
             }else if($jd == "inovasi"){
 				$data['path'] = 'arsipinovasi/'.$data['result']['gambarsk'];
-            }       else {
+            } else if($jd == "penugasan"){
+				$data['path'] = 'arsippenugasan/'.$data['result']['gambarsk'];
+            }        else {
 				$data['path'] = null;
 			}
 			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
@@ -1029,12 +1031,8 @@ class C_Kepegawaian extends CI_Controller
 		}
 		if($jenis_layanan == 8){
 			$html = $this->load->view('kepegawaian/surat/V_SuratPidana',$data, true);	    	
-		}
-        
-        
+		} 
         $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
-
-
     }
 
 
@@ -1714,6 +1712,46 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->kepegawaian->loadDataDrh($nip);
 		$this->load->view('kepegawaian/V_DrhPegawai', $data);
 	}
+
+	public function loadDataDrhSatyalencana($nip){
+		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// $data['result'] = $this->kepegawaian->getProfilPegawai($nip);
+		
+		$this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data);
+	}
+
+	public function downloadDrhSatyalencana($nip){
+		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);	
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+	
+		$html = $this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data, true); 
+		// dd($html);
+		$file_pdf = "DRH_SL_".$nip;  	
+		
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.'.pdf','d');
+    }
+
 	public function getMasterSubBidang()
     {
         $id = $this->input->post('id');
@@ -2046,8 +2084,11 @@ class C_Kepegawaian extends CI_Controller
 			} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
 			$id = 2;
 			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			} else {
+			} else if($data['profil_pegawai']['eselon'] == "IV A" || $data['profil_pegawai']['eselon'] == "I B") {
 			$id = 3;
+			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+			} else {
+			$id = 4;
 			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
 			}
 
@@ -2084,6 +2125,142 @@ class C_Kepegawaian extends CI_Controller
 		$this->kepegawaian->automationJabatanFungsional();
 	}
 
+	public function openFileDs($id){
+		$data['result'] = $this->general->getOne('t_request_ds', 'id', $id);
+		$this->load->view('kepegawaian/V_DigitalSignatureShowFile', $data);
+	}
+
+	public function suratPidanaHukdis($nip,$jenis){
+		// $this->load->library('pdf');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		// dd($data['profil_pegawai']);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		// dd($data['profil_pegawai']);
+		$data['nomorsurat'] = "123";
+		$this->load->view('kepegawaian/surat/V_SuratPidana',$data);	
+
+		// $this->load->library('pdfgenerator');
+        // // filename dari pdf ketika didownload
+        // // setting paper
+        // $paper = 'Legal';
+        // //orientasi paper potrait / landscape
+        // $orientation = "portrait";
+		// // $paper = array(0,0,645,820);
+		// if($jenis == 1){
+		// 	$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];
+		// 	$html = $this->load->view('kepegawaian/surat/V_SuratHukdis',$data, true);	    	
+		// }
+		// if($jenis == 2){
+		// 	$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];
+		// 	$html = $this->load->view('kepegawaian/surat/V_SuratPidana',$data, true);	    	
+		// } 
+        // $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
+
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+		if($jenis == 1){
+		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		}
+		if($jenis == 2){
+		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+		$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
+		} 
+		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
+    }
+
+	public function suratFormulirCuti($id_cuti){
+		$data['cuti'] = $this->kepegawaian->getDataCutiPegawai($id_cuti);
+		$nip = $data['cuti']['nipbaru_ws'];
+		$unitkerja = $data['cuti']['nm_unitkerja'];
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($unitkerja);
+		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		
+		
+		$data['nomorsurat'] = "123";
+		$this->load->view('kepegawaian/surat/V_FormulirCuti',$data);	
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'Legal',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+
+		$html = $this->load->view('kepegawaian/surat/V_FormulirCuti', $data, true); 
+		$file_pdf = "formulir_cuti_".$data['cuti']['nipbaru_ws'];  	
+		
+		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.'.pdf');
+    }
+
+	public function verifDokumenPdm($id, $status)
+    {
+        echo json_encode($this->kepegawaian->verifDokumenPdm($id, $status));
+    }
+
+
+	public function pltPlh(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+		// dd($data['nama_jabatan']);
+		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        if(!$data['list_pegawai']){
+            $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
+            $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+        }
+        render('kepegawaian/V_MasterPltPlh', '', '', $data);
+    }
+
+	public function loadListPltPlh(){
+        $data['list_pltplh'] = $this->kepegawaian->getPltPlh();
+      
+        $this->load->view('kepegawaian/V_MasterPltPlhItem', $data);
+    }
+
+	public function submitPltPlh()
+	{ 
+		echo json_encode( $this->kepegawaian->submitPltPlh());
+	}
+
+	public function deleteTpltPlh($id){
+        $this->general->delete('id', $id, 't_plt_plh');
+    }
 	
 
 

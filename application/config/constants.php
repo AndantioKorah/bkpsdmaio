@@ -176,7 +176,7 @@ define('WA_BOT', '62895355011333');
 define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");
 
 define('TTE_STATE', 'PROD'); //DEV = development, PROD = production
-define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = production
+define('TTE_NIK_DEV', '1234567890123456'); //DEV = development, PROD = production
 define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production
 
 define('PERHITUNGAN_TPP_TESTING', 0); //1 = testing, 0 = realtime

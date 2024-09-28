@@ -205,7 +205,12 @@
    
       
 <ul class="nav nav-tabs">
-<?php if($jenis_pengisian == 2) { ?>
+        <?php if($jenis_pengisian == 1 ) { ?>
+        <li class="nav-item" role="presentation">
+            <a onclick="loadListPegawaiPenilaianPotensialJpt(4,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false" href="#pngws">Pelaksana</a>
+        </li>
+        <?php } ?>
+        <?php if($jenis_pengisian == 1 || $jenis_pengisian == 2) { ?>
         <li class="nav-item" role="presentation">
             <a onclick="loadListPegawaiPenilaianPotensialJpt(3,<?=$jenis_pengisian;?>,0,0,0)" class="nav-link nav-link-simata"  id="pengawas-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false" href="#pngws">Pengawas</a>
         </li>

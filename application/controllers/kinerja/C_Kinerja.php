@@ -21,6 +21,7 @@ class C_Kinerja extends CI_Controller
 
     public function Kinerja()
     {
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->getRencanaKinerja(date('m'), date('Y'));
         render('kinerja/V_RealisasiKinerja', '', '', $data);
     }
@@ -37,6 +38,7 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->getListRencanaKinerjaTugas();
         $data['list_sasaran_kerja'] = $this->kinerja->getListRencanaKinerjaSasaran();
         $this->simata->updateMasakerja($this->general_library->getIdPegSimpeg());
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         // dd($data['list_rencana_kinerja']);
         // $data['apel-pagi'] = $this->kinerja->cekRencanaKinerjaApelPagi();
         render('kinerja/V_RencanaKinerja', '', '', $data);
@@ -211,6 +213,7 @@ class C_Kinerja extends CI_Controller
     public function loadKegiatan($tahun, $bulan)
     {
 
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_kegiatan'] = $this->kinerja->loadKegiatan($tahun, $bulan);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
@@ -247,6 +250,7 @@ class C_Kinerja extends CI_Controller
         if (!$bulan) {
             $bulan = date('m');
         }
+        $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
@@ -323,8 +327,9 @@ class C_Kinerja extends CI_Controller
     public function createSkpBulanan()
     {
         $data['periode'] = $this->input->post();
-
+       
         list($data['pegawai'], $data['atasan_pegawai'], $data['rencana_kinerja'], $data['kepala_pd'], $data['nilai_komponen']) = $this->kinerja->createSkpBulanan($this->input->post());
+       
         $this->session->set_userdata(['data_skp' => $data]);
         $id = $this->general_library->getId();
         $dataa = $this->input->post();
@@ -1009,5 +1014,11 @@ class C_Kinerja extends CI_Controller
     header('Content-type: application/vnd.ms-excel');
     header('Content-Disposition: attachment; filename='.$filename);
     $objWriter->save('php://output');
+    }
+
+    public function getDataPengajuanAbsensiPegawai()
+    {
+        $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
+        echo json_encode($response);
     }
 }

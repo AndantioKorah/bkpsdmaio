@@ -551,8 +551,10 @@
                         </select>
                     </div>
 
-
+					<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
                     <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+					 <?php } ?>
+					 
                     </form>
 					</div>
 

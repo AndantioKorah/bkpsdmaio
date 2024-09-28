@@ -18,7 +18,18 @@ class C_Maxchat extends CI_Controller
             'text' => json_encode($result)
         ]);
         // if($this->general_library->isProgrammer()){
-        //     $str = '{"id":"3A1694AEB8FEB133CFCD","time":1719902192000,"type":"text","status":"none","replyId":"BAE511E208F6511F","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","text":"ya"}';
+        //     $str = '{
+        //     "id":"3A87D6FBC4A72A0245D6",
+        //     "time":1725520753000,
+        //     "type":"text",
+        //     "status":"none",
+        //     "replyId":"BAE58DF908C23FF8",
+        //     "chatType":"user",
+        //     "chat":"6282115407812",
+        //     "from":"6282115407812",
+        //     "name":"andantiokorah",
+        //     "text":"ya"
+        //     }';
         //     $result = json_decode($str);
         // } else {
             $this->general->updateCronWa($result);

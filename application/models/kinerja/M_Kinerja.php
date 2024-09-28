@@ -1430,10 +1430,16 @@
         
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
-        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1){
-            $res['code'] = 1;
-            $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
-            return $res;
+        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
+        (!$this->general_library->isProgrammer()) && // bukan role programmer
+        $jenis_disiplin[4] == 1){ // flag_lock == 1
+            if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
+
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Tidak dapat melakukan upload dokumen pendukung karena melebihi batas waktu upload dokumen pendukung. Batas waktu upload adalah '.$jenis_disiplin[3].' hari';
+                return $res;
+            }
         }
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
@@ -1467,11 +1473,14 @@
                         ->get()->result_array();
         if($exist){
             foreach($exist as $e){
-                $tanggal = $e['tanggal'] > 10 ? $e['tanggal'] : '0'.$e['tanggal'];
-                $bulan = $e['bulan'] > 10 ? $e['bulan'] : '0'.$e['bulan'];
+                $tanggal = $e['tanggal'] >= 10 ? $e['tanggal'] : '0'.$e['tanggal'];
+                $bulan = $e['bulan'] >= 10 ? $e['bulan'] : '0'.$e['bulan'];
                 $list_exist[$e['id_m_user'].$tanggal.$bulan.$e['tahun']] = $e;
             }
         }
+        // if($this->general_library->getId() == 16){
+        //     dd($list_exist);
+        // }
         // dd($list_exist);
         $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
         $insert_data = null;
@@ -1479,16 +1488,44 @@
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
             foreach($list_tanggal as $l){
-                // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
+                if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
                     // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
-                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]])){ // jika ada dokumen pendukung pada tanggal tersebut
-                        $this->db->trans_rollback();
-                        $res['code'] = 1;
-                        $res['message'] = 'Gagal mengisi dokumen pendukung. Pegawai atas nama '.$d['nama'].' memiliki dokumen pendukung pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
-                        $res['data'] = null;
-                        return $res;                        
+                    
+                    if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]]) // jika ada dokumen pendukung pada tanggal tersebut
+                    ){  
+                        $tolak = 1;
+                        if($list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 5 ||
+                        $list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 6){ // jika sidak atau kenegaraan, hanya TLP dan TLS yang diterima
+                            if($disiplin[0] != 19 && $disiplin[0] != 20){
+                                $tolak = 1;
+                            } else {
+                                $tolak = 0;
+                            }
+                        } else {
+                            $tolak = 1;
+                        }
+                        
+                        // if($this->general_library->getId() == 16){
+                        //     dd($tolak);
+                        // }
+
+                        if($tolak == 1){
+                            $this->db->trans_rollback();
+                            $res['code'] = 1;
+                            $res['message'] = 'Gagal mengisi Dokumen Pendukung Presensi. Pegawai atas nama '.$d['nama'].' memiliki Dokumen Pendukung Presensi pada tanggal yang sama yaitu '.$date[2].'-'.$date[1].'-'.$date[0];
+                            $res['data'] = null;
+                            return $res;                        
+                        }
                     }
+                    // else {
+                    //     $this->db->trans_rollback();
+                    //     $res['code'] = 1;
+                    //     $res['message'] = 'Sistem sedang maintenance. Silahkan dicoba kembali pada beberapa saat lagi. Mohon maaf atas ketidaknyamanannya.';
+                    //     $res['data'] = null;
+                    //     return $res;
+                    // }
+                    
                     $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
@@ -1516,7 +1553,7 @@
                     }
                     $insert_data[$i]['random_string'] = $batchId;
                     $i++;
-                // }
+                }
             }
         }
         $this->db->insert_batch('t_dokumen_pendukung', $insert_data);
@@ -2037,75 +2074,84 @@
         $rs['message'] = 'OK';        
         $this->db->trans_begin();
 
-        $data_verif['status'] = $status;
-        $data_verif['id_m_user_verif'] = $this->general_library->getId();
-        $data_verif['updated_by'] = $this->general_library->getId();
-        $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
-        if($status == 1 || $status == 2){
-            $data_verif['keterangan_verif'] = $this->input->post('keterangan');
-        }
-        
-        // dd($this->input->post());
+        $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
+        $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
+        $this->db->select('
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_verif')
+        ->from('t_peninjauan_absensi a')
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_user',$this->input->post('id_user'))
+        ->group_by('a.id_m_user')
+        ->order_by('a.tanggal_absensi', 'asc');
+        $result = $this->db->get()->result_array();
 
-        if($this->input->post('jenis_bukti') == 1){
-           $absen = $this->db->select('*')
-                        ->from('db_sip.absen a')
-                        ->where('a.user_id', $this->input->post('teman_absensi'))
-                        ->where('a.tgl', $this->input->post('tanggal_absensi'))
-                        ->get()->row_array();
-                         
-            if($absen){
+        // dd($result[0]['total_verif']);  
+        if($result[0]['total_verif'] >= 2) {
+            $rs['code'] = 1;        
+            $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
+        } else {     
 
-                $absenUser = $this->db->select('*')
-                ->from('db_sip.absen a')
-                ->where('a.user_id', $this->input->post('id_user'))
-                ->where('a.tgl', $this->input->post('tanggal_absensi'))
-                ->get()->row_array();
-               
-                if($absenUser) {
-                    if($this->input->post('jenis_absensi') == 1){
-                        $dataUpdate['masuk'] = $absen['masuk'];
-                        $this->db->where('user_id', $this->input->post('id_user'))
-                        ->where('tgl', $this->input->post('tanggal_absensi'))
-                        ->update('db_sip.absen', $dataUpdate);
+            $data_verif['status'] = $status;
+            $data_verif['id_m_user_verif'] = $this->general_library->getId();
+            $data_verif['updated_by'] = $this->general_library->getId();
+            $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+            if($status == 1 || $status == 2){
+                $data_verif['keterangan_verif'] = $this->input->post('keterangan');
+            }
+            
+            if($this->input->post('jenis_bukti') == 1){
+               $absen = $this->db->select('*')
+                            ->from('db_sip.absen a')
+                            ->where('a.user_id', $this->input->post('teman_absensi'))
+                            ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                            ->get()->row_array();
+                             
+                if($absen){
+    
+                    $absenUser = $this->db->select('*')
+                    ->from('db_sip.absen a')
+                    ->where('a.user_id', $this->input->post('id_user'))
+                    ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                    ->get()->row_array();
+                   
+                    if($absenUser) {
+                        if($this->input->post('jenis_absensi') == 1){
+                            $dataUpdate['masuk'] = $absen['masuk'];
+                            $this->db->where('user_id', $this->input->post('id_user'))
+                            ->where('tgl', $this->input->post('tanggal_absensi'))
+                            ->update('db_sip.absen', $dataUpdate);
+                        } else {
+                            $dataUpdate['pulang'] = $absen['pulang'];
+                            $this->db->where('user_id', $this->input->post('id_user'))
+                            ->where('tgl', $this->input->post('tanggal_absensi'))
+                            ->update('db_sip.absen', $dataUpdate);
+                        }
                     } else {
-                        $dataUpdate['pulang'] = $absen['pulang'];
-                        $this->db->where('user_id', $this->input->post('id_user'))
-                        ->where('tgl', $this->input->post('tanggal_absensi'))
-                        ->update('db_sip.absen', $dataUpdate);
+                    $this->db->insert('db_sip.absen', [
+                                        'user_id' => $this->input->post('id_user'),
+                                        'masuk' => $absen['masuk'],
+                                        'pulang' => $absen['pulang'],
+                                        'lat' => $absen['lat'],
+                                        'lang' => $absen['lang'],
+                                        'tgl' => $absen['tgl'],
+                                        'status' => $absen['status'],
+                                        'aktivitas' => $absen['aktivitas']
+                                    ]);
                     }
-                } else {
-                $this->db->insert('db_sip.absen', [
-                                    'user_id' => $this->input->post('id_user'),
-                                    'masuk' => $absen['masuk'],
-                                    'pulang' => $absen['pulang'],
-                                    'lat' => $absen['lat'],
-                                    'lang' => $absen['lang'],
-                                    'tgl' => $absen['tgl'],
-                                    'status' => $absen['status'],
-                                    'aktivitas' => $absen['aktivitas']
-                                ]);
-                }
+                    $this->db->where_in('id', $id)
+                    ->update('t_peninjauan_absensi', $data_verif);
+                } 
+            } else {
                 $this->db->where_in('id', $id)
                 ->update('t_peninjauan_absensi', $data_verif);
-            } 
-        } else {
-            $this->db->where_in('id', $id)
-            ->update('t_peninjauan_absensi', $data_verif);
+            }
+
         }
 
-        
+       
 
-        // $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
-        //                 ->from('t_peninjauan_absensi a')
-        //                 ->join('m_user b', 'a.id_m_user = b.id')
-        //                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-        //                 ->where('a.id', $id)
-        //                 ->where('id_m_status_pegawai', 1)
-        //                 ->get()->row_array();
-
-        // $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
-
+    
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             $rs['code'] = 1;        
@@ -2520,6 +2566,9 @@
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) && $p['kepalaskpd'] != 1){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                            if($p['kelas_jabatan_jft'] > 7){
+                                $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                            }
                         }
                     }
                     // if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
@@ -2580,13 +2629,17 @@
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                            if($p['kelas_jabatan_jft'] > 7){
+                                $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                            }
                         }
                         
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
                     if($p['skpd'] == 6170000 || // if puskes bunaken
-                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001){ //sekolah di bunaken kepulauan 
+                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001 || // sekolah di bunaken kepulauan
+                    $p['skpd'] == 8020096){  // smp bunaken kepulauan
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
@@ -2628,6 +2681,13 @@
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
+                }
+
+                // if($data['id_unitkerja'] == 1030550){
+                //     // dd($p);
+                // }
+                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
+                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                 }
                 
                 $result[$p['id_m_user']]['nama_jabatan'] = $p['nama_jabatan'];
@@ -3648,6 +3708,31 @@
         ->join('m_user b', 'b.username = a.nipbaru_ws')
         ->from('db_pegawai.pegawai a');
         return $this->db->get()->result_array(); 
+    }
+
+    function getDataPengajuanAbsensiPegawai()
+{        
+    
+    $bulan = date("m",strtotime($this->input->post('tanggal')));
+    $tahun = date("Y",strtotime($this->input->post('tanggal')));
+    $this->db->select('
+    (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
+    (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 2  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_tolak')
+    ->from('t_peninjauan_absensi a')
+    ->where('a.flag_active', 1)
+    ->where('a.id_m_user', $this->general_library->getId())
+    ->group_by('a.id_m_user')
+    ->order_by('a.tanggal_absensi', 'asc');
+    $result = $this->db->get()->result_array();
+    return $result;
+}
+
+    public function getStatusLockKinerja($menu){
+        return $this->db->select('a.status')
+                        ->from('t_lock_kinerja as a ')
+                        ->where('a.flag_active', 1)
+                        ->where('a.menu', $menu)
+                        ->get()->result_array();
     }
 
     

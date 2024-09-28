@@ -33,7 +33,8 @@
         <table border=1 style="width: 100%; border-collapse: collapse; padding: 3px; margin-top: 10px;" id="result_all_pegawai">
             <tr>
                 <td style="font-weight: bold; text-align: center; width: 10%;">No</td>
-                <td style="font-weight: bold; text-align: center; width: 30%;">Pegawai</td>
+                <td style="font-weight: bold; text-align: center; width: 30%;">Nama</td>
+                <td style="font-weight: bold; text-align: center; width: 30%;">NIP</td>
                 <td style="font-weight: bold; text-align: center; width: 30%;">Jabatan</td>
                 <td style="font-weight: bold; text-align: center; width: 5%;">Eselon</td>
                 <td style="font-weight: bold; text-align: center; width: 15%;">Pangkat</td>
@@ -53,13 +54,14 @@
                                 <a target="_blank" style="font-weight: bold; color: black !important;" href="<?=base_url('kepegawaian/profil-pegawai/'.$rs['nipbaru_ws'])?>"><?=getNamaPegawaiFull($rs)?></a>
                             </span><br>
                             <!-- <span><?=($rs['nama_jabatan'])?></span><br> -->
-                            <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br>
+                            <!-- <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br> -->
                             <?php if($rs['id_statuspeg'] == 1){ ?>
-                                <span class="badge badge-cpns"><?=$rs['nm_statuspeg']?></span>
+                                <!-- <span class="badge badge-cpns"><?=$rs['nm_statuspeg']?></span> -->
                             <?php } else if($rs['id_statuspeg'] == 3){ ?>
-                                <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span>
+                                <!-- <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span> -->
                             <?php } ?>
                         </td>
+                        <td style="padding: 10px; text-align: center;"><?= '`'.($rs['nipbaru_ws'])?></td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['nama_jabatan']?></td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>

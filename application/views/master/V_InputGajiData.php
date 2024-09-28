@@ -26,7 +26,9 @@
             <input class="form-control" id="gaji_<?=$rs['nipbaru_ws']?>" type="number" value="<?=$rs['besaran_gaji']?>" />        
           </td>
           <td class="text-center">
-            <button onclick="saveGaji('<?=$rs['nipbaru_ws']?>')" type="button" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
+            <?php if(!$rs['id_t_bkad_upload_gaji'] || $this->general_library->isHakAkses('download_berkas_tpp_bkad') || $this->general_library->isProgrammer()){ ?>
+              <button onclick="saveGaji('<?=$rs['nipbaru_ws']?>')" type="button" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
+            <?php } ?>
           </td>
         </tr>
       </form>

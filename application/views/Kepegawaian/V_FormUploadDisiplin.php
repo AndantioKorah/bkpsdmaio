@@ -102,15 +102,15 @@
     <input class="form-control customInput" type="text" id="disiplin_jp" name="disiplin_jp"  required/>
   </div>
 
-  <!-- <div class="form-group">
+  <div class="form-group">
     <label>Tanggal Mulai Berlaku</label>
-    <input class="form-control customInput datepicker" type="text" id="disiplin_tglmulai" name="disiplin_tglmulai" readonly required/>
+    <input autocomplete="off" class="form-control customInput datepicker" type="text" id="disiplin_tglmulai" name="disiplin_tglmulai" />
   </div>
 
   <div class="form-group">
     <label>Tanggal Selesai Berlaku</label>
-    <input class="form-control customInput datepicker" type="text" id="disiplin_tglselesai" name="disiplin_tglselesai" readonly  required/>
-  </div> -->
+    <input autocomplete="off" class="form-control customInput datepicker" type="text" id="disiplin_tglselesai" name="disiplin_tglselesai" />
+  </div>
 
   <div class="form-group">
     <label>No Surat</label>

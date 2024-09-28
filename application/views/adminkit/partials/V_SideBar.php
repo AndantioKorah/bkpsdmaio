@@ -210,6 +210,18 @@
 						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Announcement
+					</a>
+				</li>
+
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-plh')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Master PLT/PLH
+					</a>
+				</li>
+				
 				<?php } ?>
 			</ul>
 		</li>
@@ -475,7 +487,8 @@
 	
 
 	<li class="sidebar-header">
-		Kinerja
+		<!-- Kinerja -->
+		 BIDIK ASN JUARA
 	</li>
 
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
@@ -651,11 +664,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Rekap Sasaran Kerja
 					</a>
 				</li>
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/skp-bulanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Hasil SKBP
 					</a>
-				</li> -->
+				</li>
 				<?php } ?>
 				<?php
 				if($this->general_library->isProgrammer() 
@@ -731,7 +744,8 @@
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
-		Manajemen Talenta
+		<!-- Manajemen Talenta -->
+		 SIPANTAS
 	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 	
@@ -1027,10 +1041,10 @@
 			?>
 			<?php if(!$this->general_library->isWalikota()) { ?>
 			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
-				<span class="align-middle">
-				Penilaian Sejawat
+				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+					<span class="align-middle">
+					Penilaian Sejawat
 					</span>
 				</a>	
 			</li>
@@ -1041,20 +1055,41 @@
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	
-			<li class="sidebar-header">
-		    Simponi ASN
-        	</li>
-			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
-				<span class="align-middle">
-				Data Pensiun
-					</span>
-				</a>	
-			</li>
+				<li class="sidebar-header">
+					Simponi ASN
+				</li>
+				<li class="sidebar-item ">
+					<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+						<span class="align-middle">
+						Data Pensiun
+						</span>
+					</a>	
+				</li>
 			<?php 
 		    }
 		    ?>
+			<?php if($this->general_library->isHakAkses('download_berkas_tpp_bkad') || $this->general_library->isProgrammer()){?>
+				<li class="sidebar-header">
+					Menu BKAD
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/rekapitulasi/tpp/format-bkad" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file"></i> 
+						<span class="align-middle">
+							Format TPP BKAD
+						</span>
+					</a>	
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/upload-gaji" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file-upload"></i> 
+						<span class="align-middle">
+							Upload Gaji
+						</span>
+					</a>	
+				</li>
+			<?php } ?>
 		
 
 		

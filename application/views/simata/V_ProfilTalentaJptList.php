@@ -22,7 +22,6 @@
 <table id="" class="display table table-bordered table_pt_jpt" style="width:100%">
         <thead>
             <tr>
-                <th>Jabatan Target</th>
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -40,26 +39,28 @@
         </thead>
         <tbody>
 		<?php $no = 1; foreach($result as $rs2){ ?>
-            <?php  if($rs2['fa'] == "" || $rs2['fa'] != 0){ ?>
+            <?php 
+                //  if($rs2['fa'] == "" || $rs2['fa'] != 0){ 
+                    ?>
 			<?php 
-                if($jenis_jabatan == 2){
-                    if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
-                        $keterangan = "Rotasi";
-                    } else {
-                        $keterangan = "Promosi";
-                    }
-                }
+                // if($jenis_jabatan == 2){
+                //     if($rs2['es_jabatan'] == "II A" || $rs2['es_jabatan'] == "II B"){
+                //         $keterangan = "Rotasi";
+                //     } else {
+                //         $keterangan = "Promosi";
+                //     }
+                // }
 
-                if($jenis_jabatan == 1){
-                    if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
-                        $keterangan = "Rotasi";
-                    } else {
-                        $keterangan = "Promosi";
-                    }
-                }
+                // if($jenis_jabatan == 1){
+                //     if($rs2['es_jabatan'] == "III A" || $rs2['es_jabatan'] == "III B"){
+                //         $keterangan = "Rotasi";
+                //     } else {
+                //         $keterangan = "Promosi";
+                //     }
+                // }
                 $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
-            <tr>
-                <td><?=$rs2['jabatan_target'];?></td>
+            <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id']?>" data-kode="1"
+            href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT">
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
@@ -80,13 +81,14 @@
 										<i class="fa fa-search"></i></button>
 				</td>
             </tr>
-			<?php } ?>
+			<?php 
+            // }
+             ?>
             <?php } ?>
             
         </tbody>
         <tfoot>
             <tr>
-            <th>Jabatan Target</th>
                 <th>Nilai Kinerja</th>
                 <th>Nama</th>
                 <th>Pemeringkatan Kinerja</th>
@@ -108,7 +110,7 @@
 </div>
 
 <script>
-	var groupColumn = 2;
+	var groupColumn = 1;
     var table = $('.table_pt_jpt').DataTable({
     columnDefs: [{ visible: false, targets: groupColumn},
     { "searchable": false, "targets": [11] }],

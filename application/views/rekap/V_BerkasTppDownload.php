@@ -271,6 +271,11 @@
                             $bobot_rekap_kinerja = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0; 
                             $capaian_produktivitas_kerja = floatval($bobot_rekap_kinerja) + floatval($nilai_komponen_kinerja);
                             $total_penilaian_tpp = $capaian_produktivitas_kerja + floatval($rs['rekap']['capaian_bobot_disiplin_kerja']);
+                            if($rs['rekap']['presentase_kehadiran'] < 25){
+                                $total_penilaian_tpp = 0;
+                            } else if($rs['rekap']['presentase_kehadiran'] >= 25 && $rs['rekap']['presentase_kehadiran'] < 50){
+                                $total_penilaian_tpp *= 0.5;
+                            }
                         ?>
                             <tr>
                                 <td style="text-align: center;"><?=$no++;?></td>
@@ -522,6 +527,15 @@
                     $data_header['bulan'] = $param['bulan'];
                     $data_header['tahun'] = $param['tahun'];
                     $this->load->view('rekap/V_BerkasTppDownloadHeader', $data_header);
+                    $colspan_pph = 4;
+                    $colspan_bpjs = 3;
+                    $colspan_jumlah_setelah_pph = 3;
+
+                    // if($flag_simplified_format == 1){
+                    //     $colspan_pph = 1;
+                    //     $colspan_bpjs = 1;
+                    //     $colspan_jumlah_setelah_pph = 1;
+                    // }
                 ?>
                 <table border=1 style="border-collapse: collapse;" class="table table-hover table-striped">
                     <thead>
@@ -536,23 +550,27 @@
                             <th rowspan=2 style="text: align: center;">Capaian TPP Prestasi Kerja</th>
                             <th rowspan=2 style="text: align: center;">Capaian TPP Beban Kerja</th>
                             <th rowspan=2 style="text: align: center;">Capaian TPP Kondisi Kerja</th>
-                            <th rowspan=1 colspan=4 style="text: align: center;">Potongan PPh</th>
-                            <th rowspan=1 colspan=3 style="text: align: center;">Jumlah Setelah Dipotong PPh</th>
+                            <th rowspan=1 colspan=<?=$colspan_pph?> style="text: align: center;">Potongan PPh</th>
+                            <th rowspan=1 colspan=<?=$colspan_jumlah_setelah_pph?> style="text: align: center;">Jumlah Setelah Dipotong PPh</th>
                             <th rowspan=2 style="text: align: center;">Gaji (Rp)</th>
-                            <th rowspan=1 colspan=3 style="text: align: center;">BPJS 1% (TPP)</th>
+                            <th rowspan=1 colspan=<?=$colspan_bpjs?> style="text: align: center;">BPJS 1% (TPP)</th>
                             <th rowspan=1 colspan=4 style="text: align: center;">TPP Yang Diterima</th>
                         </tr>
                         <tr>
+                            <!-- pph -->
                             <th rowspan=1 colspan=1 style="text: align: center;">%</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                            <!-- jumlah setelah dipotong pph -->
                             <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                            <!-- bpjs -->
                             <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                            <!-- tpp yang diterima -->
                             <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                             <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>

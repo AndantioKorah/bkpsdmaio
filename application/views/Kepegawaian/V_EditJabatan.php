@@ -12,11 +12,12 @@
         font-style: italic;
     }
 </style>
-
+<?php if($this->general_library->isProgrammer() AND $this->general_library->isAdminAplikasi()){ ?> 
 <div class="col-lg-12 text-right">
   <button id="btn_sync" class="btn btn-success" onclick="syncSiasn()" type="button"><i class="fa fa-sync"></i> Sinkron dengan SIASN</button>
   <button id="btn_sync_loading" disabled class="btn btn-success" type="button" style="display: none;"><i class="fa fa-spin fa-sync"></i> Mohon Menunggu</button>
 </div>
+<?php }?>
 <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
     <li class="nav-item nav-item-profile" role="presentation">
         <button class="nav-link nav-link-profile active" id="nav-edit-jabatan-tab"

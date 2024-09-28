@@ -126,8 +126,8 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
         </style>
         <?php if($this->general_library->getRole() == 'programmer' || 
         $this->general_library->isAdminAplikasi() || 
-        $this->general_library->isWalikota() ||
-        $this->general_library->isGuest()
+        $this->general_library->isWalikota() 
+        // $this->general_library->isGuest()
         // || $this->general_library->isPegawaiBkpsdm()
         || $this->general_library->isKepalaBkpsdm()
         )
@@ -142,8 +142,12 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
             <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
             </div>
           </div>
+       
         <?php } else { ?>
-          <div class="p-3">
+          <?php if($this->general_library->isGuest()) { ?>
+            
+            <?php } else { ?>  
+           <div class="p-3">
             <h4><?="Selamat ".greeting().","?></h4>
             <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
             <?php
@@ -162,6 +166,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
               <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
             </center> -->
         </div>
+        <?php }  ?>  
         <?php } ?>
       </div>
       <!-- <div class="col-12 text-center">
@@ -171,11 +176,26 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   </div>
 </div>
 
-
 <!-- Button trigger modal -->
 <button style="display:none" id="btnstatic" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
   Launch static backdrop modal
 </button>
+
+<button style="display:none" id="btnannouncement" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-announcement">
+  Launch static backdrop modal
+</button>
+
+  <div class="modal fade" id="modal-announcement" tabindex="-1" data-backdrop="static" data-keyboard="false" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="col-lg-12 float-right text-right">
+    <button type="button" class="btn-close btn-close-modal-announcement btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
+  </div>
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div id="modal-announcement-content">
+            <!-- <image id="modal-announcement-image" /> -->
+        </div>
+    </div>
+  </div>
 
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -218,6 +238,11 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 
 <script>
   $(function(){
+    <?php if($announcement){ ?>
+      // $('#btnannouncement').click()
+      $('#modal-announcement-content').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
+    <?php } ?>
+
     <?php if($this->session->userdata('apps_error')){ ?>
 			errortoast("<?=$this->session->userdata('apps_error')?>");
 		//   $('#error_div').show()
@@ -231,15 +256,15 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     var eselon = $('#eselon').val()
     var subBidang = $('#subBidangPegawai').val()
 
-    // if(bidang == "" || bidang == 0){
-    // $('#btnstatic').click()  
-    // }
+    if(bidang == "" || bidang == 0){
+    $('#btnstatic').click()  
+    }
 
-    // if(eselon == 1){
-    //   if(subBidang == "" || subBidang == 0){
-    // $('#btnstatic').click()  
-    // }
-    // }
+    if(eselon == 1){
+      if(subBidang == "" || subBidang == 0){
+    $('#btnstatic').click()  
+    }
+    }
 
     $(".select2").select2({   
 		width: '100%',
@@ -248,6 +273,10 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 	})
 
 
+  })
+
+  $('.btn-close-modal-announcement').on('click', function(){
+    $('#modal-announcement').hide()
   })
 
   function loadDashboardPdmWelcome(){

@@ -8,6 +8,7 @@ class M_Layanan extends CI_Model
     {
         parent::__construct();
 		$this->load->model('general/M_General', 'general');
+		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
 		$this->load->model('user/M_User', 'user');
         $this->db = $this->load->database('main', true);
@@ -18,7 +19,7 @@ class M_Layanan extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    public function getKelengkapanBerkas($nip){
+    public function getKelengkapanBerkas($nip, $flag_create_dpcp = 0){
         $result['cpns'] = null;
         $result['pns'] = null;
         $result['akte_nikah'] = null;
@@ -69,7 +70,9 @@ class M_Layanan extends CI_Model
                     $expl = explode(" ", $diff);
                     // dd($diff[0] < 1)
                     if($expl[0] < 1){ // dibawah 1 tahun
+                        $until_date = date('Y-m-d', strtotime($dh['tmt'].'+ '.$dh['lama_potongan'].' months'));
                         $result['data_hukdis'] = $dh;
+                        $result['data_hukdis']['tmt_akhir'] = $until_date;
                     }
                 }
             }
@@ -96,15 +99,45 @@ class M_Layanan extends CI_Model
             }
         }
 
-        $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*')
+        if($flag_create_dpcp == 1){
+            $result['akte_anak'] = null;
+
+            $temp_anak = $this->db->select('a.*')
+                        ->from('t_checklist_pensiun_detail a')
+                        ->join('t_checklist_pensiun b', 'a.id_t_checklist_pensiun = b.id')
+                        ->where('b.nip', $nip)
+                        ->where('a.id_m_berkas', 13)
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+            if($temp_anak){
+                foreach($temp_anak as $ta){
+                    $result['akte_anak'][] = json_decode($ta['metadata'], true);
+                }
+            }
+
+            function sortByOrder($a, $b) {
+                if ($a['tgllahir'] > $b['tgllahir']) {
+                    return 1;
+                } elseif ($a['tgllahir'] < $b['tgllahir']) {
+                    return -1;
+                }
+                return 0;
+            }
+            usort($result['akte_anak'], 'sortByOrder');
+
+        } else {
+            $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*, c.nm_keluarga')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegkeluarga b', 'a.id_peg = b.id_pegawai')
+                        ->join('db_pegawai.keluarga c', 'b.hubkel = c.id_keluarga')
                         ->where('a.nipbaru_ws', $nip)
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where('b.hubkel', '40')
-                        ->order_by('b.tgllahir', 'desc')
+                        ->order_by('b.tgllahir', 'asc')
                         ->get()->result_array();
+        }
 
         $result['akte_nikah'] = $this->db->select('a.nipbaru_ws, b.*')
                         ->from('db_pegawai.pegawai a')
@@ -267,7 +300,27 @@ class M_Layanan extends CI_Model
 		$temp = $this->session->userdata('berkas_pensiun');
 
         if($berkas == 'akte_anak' || $berkas == 'akte_nikah'){
-			$data_berkas = $temp['berkas'][$berkas];
+            $tempAnak = $temp['berkas'][$berkas];
+			$data_berkas = null;
+
+            $selectedAnak = null;
+            $input_post = $this->input->post();
+            if($input_post && isset($input_post['list_anak'])){
+                foreach($input_post['list_anak'] as $ip){
+                    $selectedAnak[$ip] = $ip;
+                }
+            }
+
+            if($selectedAnak){
+                $i = 0;
+                foreach($tempAnak as $ta){
+                    if(isset($selectedAnak[$ta['id']])){
+                        $data_berkas[$i] = $ta;
+                        $data_berkas[$i]['metadata'] = json_encode($ta);
+                    }
+                    $i++;
+                }
+            }
 		} else {
 			$data_berkas[] = $temp['berkas'][$berkas];
 		}
@@ -310,7 +363,8 @@ class M_Layanan extends CI_Model
                     'id_ref' => $d ? $d['id'] : null,
                     'flag_validasi' => 1,
                     'id_m_user_validasi' => $this->general_library->getId(),
-                    'tanggal_validasi' => date('Y-m-d H:i:s')
+                    'tanggal_validasi' => date('Y-m-d H:i:s'),
+                    'metadata' => isset($d['metadata']) ? $d['metadata'] : null
                 ];
 
                 if($d && $d['status'] == 1){ // jika belum diverif
@@ -433,62 +487,80 @@ class M_Layanan extends CI_Model
                 'nama_kolom_flag' => 'flag_ds_dpcp',
                 'nip' => $data['nip']
             ]);
+            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
             ///////////////////////////////// SP HUKDIS
-            $pathHukdis = 'arsippensiunotomatis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
-            $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
-            // dd($html);
-            $mpdf = new \Mpdf\Mpdf([
-                'format' => 'Legal-L',
-                // 'debug' => true
-            ]);
-            $mpdf->WriteHTML($html);
-            $mpdf->showImageErrors = true;
-            $mpdf->Output($pathHukdis, 'F');
+            if(!$data['berkas']['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
+                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+                // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
+                // dd($html);
+                $mpdf = new \Mpdf\Mpdf([
+                    'format' => 'Legal-L',
+                    // 'debug' => true
+                ]);
+                $mpdf->AddPage(
+                    'P'
+                );
+                $mpdf->WriteHTML($html);
+                $mpdf->showImageErrors = true;
+                $mpdf->Output($pathHukdis, 'F');
 
-            $rs['data'] = $pathHukdis;
+                $rs['data'] = $pathHukdis;
 
-            $this->db->where('id', $data['id_t_checklist_pensiun'])
-                    ->update('t_checklist_pensiun', [
-                        'url_file_hukdis' => $pathHukdis
-                    ]);
+                $this->db->where('id', $data['id_t_checklist_pensiun'])
+                        ->update('t_checklist_pensiun', [
+                            'url_file_hukdis' => $pathHukdis
+                        ]);
 
-            $fileBase64 = convertToBase64(base_url($pathHukdis));
+                $fileBase64 = convertToBase64(base_url($pathHukdis));
 
-            $tteTemplateHukdis = $this->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 100,
-                    "height" => 100,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathHukdis))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 2,
-                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
-                'request' => json_encode($request_ws),
-                'url_file' => $pathHukdis,
-                'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
-                'random_string' => $tteTemplateHukdis['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_hukdis',
-                'nip' => $data['nip']
-            ]);
+                $tteTemplateHukdis = $this->createQrTte();
+                $request_ws = [
+                    'signatureProperties' => [
+                        "tampilan" => "VISIBLE",
+                        "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
+                        "tag" => "^",
+                        "width" => 100,
+                        "height" => 100,
+                        "page" => 1,
+                    ],
+                    // 'file' => convertToBase64(($pathHukdis))
+                ];
+                $this->db->insert('t_request_ds', [
+                    'ref_id' => $data['id_t_checklist_pensiun'],
+                    'table_ref' => 't_checklist_pensiun',
+                    'id_m_jenis_ds' => 2,
+                    'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                    'request' => json_encode($request_ws),
+                    'url_file' => $pathHukdis,
+                    'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
+                    'random_string' => $tteTemplateHukdis['data']['randomString'],
+                    'created_by' => $this->general_library->getId(),
+                    'nama_kolom_flag' => 'flag_ds_hukdis',
+                    'nip' => $data['nip']
+                ]);
+            } else { // jika ada hukdis, masuk di sini
+                
+                $this->db->where('id', $data['id_t_checklist_pensiun'])
+                        ->update('t_checklist_pensiun', [
+                            'url_file_hukdis' => 'arsipdisiplin/'.$data['berkas']['data_hukdis']['gambarsk']
+                        ]);
+            }
+
 
             ///////////////////////////////// SP PIDANA
-            $pathPidana = 'arsippensiunotomatis/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
-            $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
+            $pathPidana = 'arsippensiunotomatis/arsipskpidana/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+    		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+            // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
             $mpdf = new \Mpdf\Mpdf([
                 'format' => 'Legal-L',
                 // 'debug' => true
             ]);
+            $mpdf->AddPage(
+                'P'
+            );
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathPidana, 'F');
@@ -570,6 +642,16 @@ class M_Layanan extends CI_Model
             }
         }
 
+        if(!$result['hukdis']){ // jika data hukdis tidak ada, dikarenakan ybs sedang dalam hukdis. ambil data hukdisnya
+            $result['hukdis'] = $this->db->select('a.*')
+                                        ->from('t_checklist_pensiun a')
+                                        ->where('a.id', $id)
+                                        ->where('a.flag_active', 1)
+                                        ->get()->row_array();
+
+            $result['hukdis']['flag_sedang_hukdis'] = 1;
+        }
+
         return $result;
     }
 
@@ -635,6 +717,71 @@ class M_Layanan extends CI_Model
         }
 
         return $rs;
+    }
+
+    public function cronBulkDs(){
+        $data = $this->db->select('a.*, b.request, b.url_image_ds, b.url_file, b.ref_id, b.table_ref,
+                        b.nama_kolom_flag, b.random_string, b.id as id_t_request_ds, b.id_m_jenis_ds')
+                        ->from('t_cron_request_ds a')
+                        ->join('t_request_ds b', 'a.id_t_request_ds = b.id')
+                        ->where('a.flag_active', 1)
+                        ->where('a.flag_sent', 0)
+                        // ->where('a.flag_send', 0)
+                        // ->where('b.url_sk IS NULL')
+                        ->limit(3)
+                        ->get()->result_array();
+        if($data){
+            foreach($data as $d){
+                $request = json_decode($d['request'], true);
+                $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
+
+                $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
+                $jsonRequest['file'][] = $base64File;
+
+                $credential = json_decode($d['credential'], true);
+                $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+                $jsonRequest['nik'] = $credential['nik'];
+                $jsonRequest['passphrase'] = $credential['passphrase'];
+                // dd(json_encode($jsonRequest));
+
+                $ws = $this->ttelib->signPdfNikPass($jsonRequest);
+                $response = json_decode($ws, true);
+                if($response == null || !isset($response['file'])){ // jika gagal
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_request_ds', [
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s'),
+                                'response' => $ws
+                            ]);    
+                } else {
+                    $this->db->where('id', $d['ref_id'])
+                            ->update($d['table_ref'], [
+                                $d['nama_kolom_flag'] => 1
+                            ]);
+
+                    $this->db->insert('t_file_ds', [
+                        'random_string' => $d['random_string'],
+                        'url' => $d['url_file'],
+                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                    ]);
+
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_request_ds', [
+                                'flag_send' => 1,
+                                'date_send' => date('Y-m-d H:i:s'),
+                                'flag_sent' => 1,
+                                'date_sent' => date('Y-m-d H:i:s'),
+                                'response' => $ws
+                            ]);
+
+                    base64ToFile($response['file'][0], $d['url_file']); //simpan ke file
+
+                    if($d['id_m_jenis_ds'] == 4){
+                        $this->kepegawaian->tteCuti($d['id_t_request_ds']);
+                    }
+                }
+            }
+        }
     }
 
     public function resizeImage($image, $w, $h){

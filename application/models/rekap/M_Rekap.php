@@ -2678,9 +2678,9 @@
                     $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
                 }
 
-                if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
-                    $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
-                }
+                // if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
+                //     $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
+                // }
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                 $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;

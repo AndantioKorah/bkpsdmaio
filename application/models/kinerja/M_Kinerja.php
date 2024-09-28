@@ -2752,9 +2752,9 @@
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
 
-                if(in_array($p['nipbaru_ws'], EXCLUDE_NIP)){
-                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
-                }
+                // if(in_array($p['nipbaru_ws'], EXCLUDE_NIP)){
+                //     $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                // }
                 
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
                     return $result[$p['id_m_user']];

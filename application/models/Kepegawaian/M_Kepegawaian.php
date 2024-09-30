@@ -457,12 +457,13 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
+              $this->db->select('f.nm_unitkerja,b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
               c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.flag_from_siasn, c.meta_data_siasn')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                             // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->join('db_pegawai.unitkerja f','c.id_unitkerja = f.id_unitkerja','left')
                             ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
@@ -3908,9 +3909,15 @@ public function submitEditJabatan(){
                 $nama_jabatan = $this->input->post('teks_jabatan');
             } 
 
+            $skpd = explode("/", $this->input->post('edit_jabatan_unit_kerja'));
+            $id_skpd = $skpd[0];
+            $nama_skpds = $skpd[1];
+               
+
             $id = $datapost['id'];
             // $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
-            $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
+            $data['id_unitkerja']     = $id_skpd;
+            $data['skpd']     = $nama_skpds;
             $data['nm_jabatan']      = $nama_jabatan;
             $data['id_jabatan']      = $id_jabatan;
             $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
@@ -3944,9 +3951,14 @@ public function submitEditJabatan(){
             $nama_jabatan = $this->input->post('teks_jabatan');
         } 
 
+        $skpd = explode("/", $this->input->post('edit_jabatan_unit_kerja'));
+            $id_skpd = $skpd[0];
+            $nama_skpds = $skpd[1];
+
 
         $id = $datapost['id'];
-        $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
+        $data['id_unitkerja']     = $id_skpd;
+        $data['skpd']     = $nama_skpds;
         $data['nm_jabatan']      =  $nama_jabatan;
         $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
         $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');

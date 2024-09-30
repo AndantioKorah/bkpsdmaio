@@ -6698,6 +6698,10 @@ public function submitEditJabatan(){
                     if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
                         $this->tteCuti($selected['id']);
                     }
+                    // dd(json_encode($cronRequest));
+                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
+
+                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
 
                     $res['code'] = 0;
                     $res['message'] = "Berhasil";

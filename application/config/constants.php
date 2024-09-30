@@ -184,3 +184,16 @@ define('REASON_TTE', 'Dokumen ini telah ditandatangani secara elektronik oleh Ke
 
 define('ID_INSTANSI_SIASN', 'A5EB03E23C71F6A0E040640A040252AD');
 define('ID_SATUAN_KERJA_SIASN', 'A5EB03E24281F6A0E040640A040252AD');
+
+define('EXCLUDE_NIP', [
+    // '199502182020121013', // tio
+    '199611292022031012', // bob
+    '199110212022031006', // arun
+    '199608092020122017', // gein
+    '198803162022031004', // hendra
+    '199011042022032007', // monic
+    '198910272022031003', // ronald
+    '198807272022032007', // viona
+    '199401042020121011', // youri
+    '199512262022031007', // david
+]);

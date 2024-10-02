@@ -12,7 +12,9 @@
         font-style: italic;
     }
 </style>
-<?php if($this->general_library->isProgrammer() AND $this->general_library->isAdminAplikasi()){ ?> 
+
+<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?> 
+  
 <div class="col-lg-12 text-right">
   <button id="btn_sync" class="btn btn-success" onclick="syncSiasn()" type="button"><i class="fa fa-sync"></i> Sinkron dengan SIASN</button>
   <button id="btn_sync_loading" disabled class="btn btn-success" type="button" style="display: none;"><i class="fa fa-spin fa-sync"></i> Mohon Menunggu</button>

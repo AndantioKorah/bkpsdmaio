@@ -598,11 +598,12 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
+                  <?= $profil_pegawai['nm_pangkat'];?>
                   <?php if($profil_pegawai['data_pangkat']) {
-                    $data = explode("|", $profil_pegawai['data_pangkat']);
-                    echo $data[0];
+                    // $data = explode("|", $profil_pegawai['data_pangkat']);
+                    // echo $data[0];
                   } else {
-                    echo $profil_pegawai['nm_pangkat'];
+                    // echo $profil_pegawai['nm_pangkat'];
                   }
                     ?>
                 </span>

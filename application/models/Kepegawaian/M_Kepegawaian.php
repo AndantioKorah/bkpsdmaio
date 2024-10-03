@@ -3028,7 +3028,6 @@ public function submitVerifikasiDokumen(){
         $this->updateJabatan($id_peg);
         $this->syncSiasnJabatan($id); 
     }
-
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
     $id = 1;
@@ -3038,8 +3037,8 @@ public function submitVerifikasiDokumen(){
     $id = 2;
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
     } else {
-    $id = 3;
-    $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+    // $id = 3;
+    // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
     }
 
 

@@ -2375,7 +2375,7 @@
                     $umur = $sekarang->diff($tanggal_lahir)->y;
                     $bup = 0;
                     $crit = 0;
-                        if(($d['jenis_jabatan'] == 'JFU' )){ //jika 58 dan JFU
+                        if(($d['jenis_jabatan'] == 'JFU' || $d['jenis_jabatan'] == 'Lainnya')){ //jika 58 dan JFU
                             $bup = 58;
                         } 
                         else if($d['jenis_jabatan'] == 'JFT'){

@@ -87,7 +87,7 @@
                         <td class="text-center"><?=$rs['masa_kerja']?></td>
                     <?php } ?>
                     <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-                    <td class="text-left"><?= formatDateNamaBulan($rs['tmt_pensiun'])?></td>
+                    <td class="text-left"><?= ($rs['bup'])?></td>
 
                 </tr>
             <?php } } ?>

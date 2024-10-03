@@ -4573,6 +4573,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
+                                            // dd($list_pegawai);
                 } else if($data['filter'] == 'eselon_tiga' || $data['filter'] == 'eselon_empat'){
                    
                     $list_bidang = null;

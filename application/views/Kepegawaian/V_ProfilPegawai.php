@@ -73,6 +73,13 @@
       object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
+      <?php if($profil_pegawai['flag_terima_tpp'] == 1) { ?>
+      border-right-style: solid;
+      border-width: 4px;
+      border-color: #222e3c;
+      <?php } ?>
+      /* border-color: green; */
+
     }
     
     .foto_container {
@@ -136,6 +143,7 @@
 }
 
 
+
   </style>
 
 
@@ -180,6 +188,7 @@
               <div class="col-lg-6 col-md-6 col-sm-6 text-right">
                 <h3><span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span></h3>
               </div>
+              
             
 
               <div class="col-lg-12 text-center">

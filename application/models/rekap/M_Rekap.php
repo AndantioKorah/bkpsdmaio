@@ -2678,9 +2678,9 @@
                     $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
                 }
 
-                // if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
-                //     $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
-                // }
+                if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
+                    $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
+                }
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                 $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;
@@ -2740,6 +2740,12 @@
                     floatval($result[$l['nipbaru_ws']]['beban_kerja']) + 
                     floatval($result[$l['nipbaru_ws']]['kondisi_kerja'])
                 );
+
+                if($this->general_library->isProgrammer()){
+                    if($result[$l['nipbaru_ws']]['total_presentase_kriteria'] == 0){
+                        dd($result[$l['nipbaru_ws']]);
+                    }
+                }
 
                 // decimal presentasi kerja
                 $result[$l['nipbaru_ws']]['presentasi_prestasi_kerja'] = ($result[$l['nipbaru_ws']]['prestasi_kerja'] /

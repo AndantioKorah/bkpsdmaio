@@ -35,14 +35,14 @@ header("Content-Disposition: attachment; filename=$filename");
                     <!-- <th style="text-align: center";>TMT Naik Pangkat</th> -->
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach($result as $rs){ ?>
+                    <?php $no = 1; foreach($result as $rs){ if(isset($rs['nama_jabatan'])){ ?>
                         <tr>
                             <td style="text-align: center" class="text-center"><?=$no++;?></td>
                             <td style="text-align: left" class="text-left">
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
                             </td>
                             <td style="text-align: center">
-                                <span class="text-small"><?=formatNip($rs['nipbaru_ws'])?></span><br>
+                                <span class="text-small">`<?=($rs['nipbaru_ws'])?></span><br>
                             </td>
                             <td style="text-align: left">
                                 <span class="text-small"><?=($rs['nm_pangkat'])?></span><br>
@@ -54,7 +54,7 @@ header("Content-Disposition: attachment; filename=$filename");
                             <td style="text-align: center;"><?=formatDateOnly($rs['tmt_pensiun'])?></td>
                             <!-- <td style="text-align: left" class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>
-                    <?php } ?>
+                    <?php } } ?>
                 </tbody>
             </table>
         </div>

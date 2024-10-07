@@ -35,7 +35,7 @@
                 href="#modal_edit_arsip_lain"
                 onclick="loadEditArsipLain('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailCuti btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
-
+                <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
 
               <?php if($kode == 1) { ?>
                 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
@@ -68,7 +68,7 @@
                 <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                
                 <?php } ?>
-                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <!-- <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>  -->
               </div>
               <?php } else { ?>
               <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
@@ -145,6 +145,7 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
+                               loadListArsip()
                                if(kode == 1){
                                 loadListArsip()
                                } else {

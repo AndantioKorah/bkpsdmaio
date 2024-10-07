@@ -748,7 +748,7 @@
 		 SIPANTAS
 	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
-	
+		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
@@ -792,7 +792,7 @@
 				
 			</ul>
 		</li>
-
+			<?php } ?>
 	
 
 		<li class="sidebar-item ">

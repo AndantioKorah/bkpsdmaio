@@ -1483,9 +1483,10 @@
         //     dd($list_exist);
         // }
         // dd($list_exist);
-        $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
+        // $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
         $insert_data = null;
         $i = 0;
+        $batchId = null;
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
             foreach($list_tanggal as $l){
@@ -1526,7 +1527,13 @@
                     //     $res['data'] = null;
                     //     return $res;
                     // }
-                    
+                    // $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
+                    if(!isset($batchId[$d['id']])){
+                    // } else {
+                        $batchId[$d['id']] = generateRandomString(10, 1, 't_dokumen_pendukung');
+                    }
+
+
                     $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
@@ -1552,7 +1559,7 @@
                     || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) {
                         $insert_data[$i]['status'] = 2;
                     }
-                    $insert_data[$i]['random_string'] = $batchId;
+                    $insert_data[$i]['random_string'] = $batchId[$d['id']];
                     $i++;
                 }
             }
@@ -2753,9 +2760,9 @@
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
 
-                // if(in_array($p['nipbaru_ws'], EXCLUDE_NIP)){
-                //     $result[$p['id_m_user']]['pagu_tpp'] = 0;
-                // }
+                if(in_array($p['nipbaru_ws'], EXCLUDE_NIP)){
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                }
                 
                 if($id_pegawai != null && $id_pegawai == $p['id_m_user']){
                     return $result[$p['id_m_user']];

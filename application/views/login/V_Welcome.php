@@ -186,10 +186,10 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 </button>
 
   <div class="modal fade" id="modal-announcement" tabindex="-1" data-backdrop="static" data-keyboard="false" 
-  aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="col-lg-12 float-right text-right">
-    <button type="button" class="btn-close btn-close-modal-announcement btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
-  </div>
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="col-lg-12 float-right text-right">
+      <button type="button" class="btn-close btn-close-modal-announcement btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
+    </div>
     <div id="modal-dialog" class="modal-dialog modal-xl">
         <div id="modal-announcement-content">
             <!-- <image id="modal-announcement-image" /> -->
@@ -239,7 +239,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 <script>
   $(function(){
     <?php if($announcement){ ?>
-      // $('#btnannouncement').click()
+      $('#btnannouncement').click()
       $('#modal-announcement-content').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
     <?php } ?>
 

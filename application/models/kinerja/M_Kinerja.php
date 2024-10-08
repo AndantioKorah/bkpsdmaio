@@ -736,11 +736,32 @@
                     
                 }
             } else if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
-                if(!stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || !stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //bukan kepsek
+                if(stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //jika kepsek
+                    if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 59)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid TK
+                    } else if($pegawai['id_unitkerjamaster'] == 8010000) { //SD
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 57)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid SD
+                    } else if($pegawai['id_unitkerjamaster'] == 8020000) { //SMP
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 58)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid SMP
+                    }
+                    $atasan = $kepala;
+                } else { //jika bukan kepsek
                     $atasan = $this->baseQueryAtasan()
-                                    ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    ->where('d.nama_jabatan LIKE', 'Kepala%')
-                                    ->get()->row_array();
+                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                    ->where('d.nama_jabatan LIKE', 'Kepala%')
+                    ->get()->row_array();
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -769,27 +790,7 @@
                     if(!$atasan){
                         $atasan = $kepala;
                     }
-                } else { //jika kepsek
-                    if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 59)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid TK
-                    } else if($pegawai['id_unitkerjamaster'] == 8010000) { //SD
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 57)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid SD
-                    } else if($pegawai['id_unitkerjamaster'] == 8020000) { //SMP
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 58)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid SMP
-                    }
-                    $atasan = $kepala;   
+                      
                 }
             } else if($pegawai['id_unitkerjamaster'] == 6000000){ //puskesmas
                 $atasan = $this->baseQueryAtasan()
@@ -3498,7 +3499,7 @@
                     'loyal' => $data['loyal'],
                     'adaptif' => $data['adaptif'],
                     'kolaboratif' => $data['kolaboratif'],
-                    'updated_by' => $id
+                    'updated_by' => $this->general_library->getId()
                 ]);
 
         if($this->db->trans_status() == FALSE){

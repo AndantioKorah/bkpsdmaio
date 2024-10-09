@@ -352,7 +352,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -3029,7 +3029,7 @@ public function submitVerifikasiDokumen(){
     }
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
-    $id = 1;
+    $id = 1; 
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
     } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
@@ -3038,6 +3038,7 @@ public function submitVerifikasiDokumen(){
     } else {
     $id = 3;
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+    $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
     }
 
 
@@ -8351,9 +8352,13 @@ public function getFileForKarisKarsu()
         } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
         $id = 2;
         $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
-        } else {
+        } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
         $id = 3;
         $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
+        } else {
+        $id = 4;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         }
         
         return $rs;

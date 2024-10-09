@@ -147,7 +147,7 @@
             <button onclick="loadListPegawaiPenilaianKinerja(2,<?=$jenis_pengisian;?>)" class="nav-link nav-link-simata" id="jpt-tab" data-bs-toggle="tab" data-bs-target="#jpt" type="button" role="tab" aria-controls="profile" aria-selected="false">JPT Pratama</button>
         </li>
        <?php } ?>
-       <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
+       <?php if($this->general_library->isProgrammer()){ ?>	
        <div class="form-check ml-2 mt-2">
         <input class="form-check-input" type="checkbox" value="1" id="flexCheckChecked" >
         <label class="form-check-label" for="flexCheckChecked">

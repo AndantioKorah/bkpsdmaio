@@ -1385,6 +1385,11 @@
         if($tahun == null){
             $tahun = date('Y');
         }
+
+        $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $id_unitkerja)
+                                    ->get()->row_array();
         
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
@@ -1398,9 +1403,24 @@
                                 ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
                                 ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
-                                ->where('a.id_unitkerja', $id_unitkerja)
-                                ->where('a.flag_active', 1)
-                                ->get()->result_array();
+                                // ->where('a.id_unitkerja', $id_unitkerja)
+                                ->where('a.flag_active', 1);
+                                // ->get()->result_array();
+
+        if(in_array($id_unitkerja, LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->where('f.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } 
+        // else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
+        //     $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);
+        // } 
+        else {
+            $this->db->where('a.id_unitkerja', $id_unitkerja);
+        }
+        $pegawai = $this->db->get()->result_array();
+
+        // if($this->general_library->isProgrammer()){
+        //     dd($pegawai);
+        // }
 
         $list_hari_kerja = null;
         $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
@@ -2608,7 +2628,7 @@
         foreach($pagu_tpp as $pt){
             $list_pegawai['result'][$pt['nipbaru_ws']] = $pt;
         }
-        
+
         $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
 
         $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
@@ -2674,6 +2694,9 @@
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
+                // if($l['nipbaru_ws'] == '197801302003122003'){
+                //     dd($param);
+                // }
                 if(isset($param['id_m_tpp_tambahan']) && $param['id_m_tpp_tambahan'] != 0){
                     $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
                 }
@@ -2939,7 +2962,9 @@
                                         ->where('b.kepalaskpd', 1)
                                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                                         ->get()->row_array();
-        // dd($result);
+        if($this->general_library->isProgrammer()){
+            // dd($result);
+        }
         return $result;
     }
 

@@ -2084,7 +2084,7 @@ class C_Kepegawaian extends CI_Controller
 			} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
 			$id = 2;
 			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			} else if($data['profil_pegawai']['eselon'] == "IV A" || $data['profil_pegawai']['eselon'] == "I B") {
+			} else if($data['profil_pegawai']['eselon'] == "IV A" || $data['profil_pegawai']['eselon'] == "IV B") {
 			$id = 3;
 			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
 			} else {

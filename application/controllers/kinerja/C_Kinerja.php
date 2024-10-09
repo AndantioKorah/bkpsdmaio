@@ -38,6 +38,25 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->getListRencanaKinerjaTugas();
         $data['list_sasaran_kerja'] = $this->kinerja->getListRencanaKinerjaSasaran();
         $this->simata->updateMasakerja($this->general_library->getIdPegSimpeg());
+
+        $id_peg = $this->general_library->getIdPegSimpeg();
+        $eselonPeg = $this->general_library->getEselonPegawai($id_peg);  
+        if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
+        $id = 1;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+        } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
+        $id = 2;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+        } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
+        $id = 3;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
+        } else {
+        $id = 3;
+        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
+        }
+
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         // dd($data['list_rencana_kinerja']);
         // $data['apel-pagi'] = $this->kinerja->cekRencanaKinerjaApelPagi();

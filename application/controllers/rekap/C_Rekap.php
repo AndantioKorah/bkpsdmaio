@@ -291,7 +291,7 @@ class C_Rekap extends CI_Controller
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
         $data['param']['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
-        $data['param']['presentasi_tpp_tambahan'] = isset($param['presentasi_tpp_tambahan']) ? $param['presentasi_tpp_tambahan'] : null;;
+        $data['param']['presentasi_tpp_tambahan'] = isset($param['presentasi_tpp_tambahan']) ? $param['presentasi_tpp_tambahan'] : null;
         $data['param']['nama_tpp_tambahan'] = isset($param['nama_tpp_tambahan']) ? $param['nama_tpp_tambahan'] : null;;
         $param['id_unitkerja'] = $skpd[0];
 

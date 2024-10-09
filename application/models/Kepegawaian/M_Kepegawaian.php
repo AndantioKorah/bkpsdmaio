@@ -352,7 +352,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -457,12 +457,13 @@ class M_Kepegawaian extends CI_Model
         }
 
         function getJabatan($nip,$kode){
-              $this->db->select('b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
+              $this->db->select('f.nm_unitkerja,b.id_peg,c.pejabat,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan, c.id_siasn,
               c.tmtjabatan,c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.flag_from_siasn, c.meta_data_siasn')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                             // ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg')
+                            ->join('db_pegawai.unitkerja f','c.id_unitkerja = f.id_unitkerja','left')
                             ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
@@ -3013,7 +3014,6 @@ public function submitVerifikasiDokumen(){
     //     ->update('db_pegawai.pegpenugasan', $data);
     // }
    
-
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $res['code'] = 1;
@@ -3025,9 +3025,8 @@ public function submitVerifikasiDokumen(){
 
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
         $this->updateJabatan($id_peg);
-        $this->syncSiasnJabatan($id); 
+        // $this->syncSiasnJabatan($id); 
     }
-
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
     $id = 1;
@@ -3908,9 +3907,15 @@ public function submitEditJabatan(){
                 $nama_jabatan = $this->input->post('teks_jabatan');
             } 
 
+            $skpd = explode("/", $this->input->post('edit_jabatan_unit_kerja'));
+            $id_skpd = $skpd[0];
+            $nama_skpds = $skpd[1];
+               
+
             $id = $datapost['id'];
             // $data['nm_jabatan']      = $this->input->post('edit_jabatan_nama');
-            $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
+            $data['id_unitkerja']     = $id_skpd;
+            $data['skpd']     = $nama_skpds;
             $data['nm_jabatan']      = $nama_jabatan;
             $data['id_jabatan']      = $id_jabatan;
             $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
@@ -3944,9 +3949,14 @@ public function submitEditJabatan(){
             $nama_jabatan = $this->input->post('teks_jabatan');
         } 
 
+        $skpd = explode("/", $this->input->post('edit_jabatan_unit_kerja'));
+            $id_skpd = $skpd[0];
+            $nama_skpds = $skpd[1];
+
 
         $id = $datapost['id'];
-        $data['id_unitkerja']     = $this->input->post('edit_jabatan_unit_kerja');
+        $data['id_unitkerja']     = $id_skpd;
+        $data['skpd']     = $nama_skpds;
         $data['nm_jabatan']      =  $nama_jabatan;
         $data['tmtjabatan']     = $this->input->post('edit_jabatan_tmt');
         $data['jenisjabatan']      = $this->input->post('edit_jabatan_jenis');

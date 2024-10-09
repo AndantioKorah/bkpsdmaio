@@ -137,6 +137,7 @@
     </script>
 
 
+<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>	
 
         <!-- <form class="form-custom" id="form_penilaian_talenta" method="post"> -->
           <input type="hidden" id="jenis_pengisian"  name="jenis_pengisian" value="<?=$jenis_pengisian;?>">
@@ -201,7 +202,7 @@
           </div>
         </div>
       <!-- </form> -->
-
+      <?php } ?>
    
       
 <ul class="nav nav-tabs">

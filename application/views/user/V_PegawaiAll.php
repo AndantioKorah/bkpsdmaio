@@ -190,6 +190,7 @@
                                     <span id="btn_filter_keteranganpegawai_<?=$kp['id']?>" onclick="filterClicked('keteranganpegawai_<?=$kp['id']?>')"
                                     class="filter-btn filter-unselect"><?=$kp['nama_status_pegawai']?></span>
                                 <?php } ?>
+                               
                             </div>
                         </div>
                     </div>

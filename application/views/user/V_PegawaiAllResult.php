@@ -42,6 +42,7 @@
                 <th class="text-center">Masa Kerja</th>
             <?php } ?>
             <th class="text-center">Unit Kerja</th>
+            <th>TMT BUP</th>
         </thead>
         <tbody>
             <?php if($result){ $no=1; foreach($result as $rs){
@@ -86,6 +87,8 @@
                         <td class="text-center"><?=$rs['masa_kerja']?></td>
                     <?php } ?>
                     <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+                    <td class="text-left"><?= ($rs['bup'])?></td>
+
                 </tr>
             <?php } } ?>
         </tbody>

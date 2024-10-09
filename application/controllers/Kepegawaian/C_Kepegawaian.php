@@ -1351,7 +1351,7 @@ class C_Kepegawaian extends CI_Controller
 	    } else {
 		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEditPelaksana($data['jabatan'][0]['unitkerja_id']);
 		}
-		$data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
+		// $data['nama_jabatan'] = $this->kepegawaian->getSelectJabatanEdit();
 		$data['list_jabatan_siasn'] = $this->kepegawaian->getListJabatanSiasn($jenis_jabatan);
 		
 		// dd($data['nama_jabatan']);

@@ -18,6 +18,9 @@
 		background-color: #2e4963 !important;
 		color: #fff;
 	}
+    .table_pt_adm:hover {
+    cursor: pointer;
+    }
 </style>
 <table id="" class="display table table-bordered table_pt_adm" style="width:100%">
         <thead>

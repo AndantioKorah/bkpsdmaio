@@ -1426,7 +1426,7 @@
                                     ->get()->row_array();
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
@@ -2877,6 +2877,10 @@
                         ($result[$l['nipbaru_ws']]['bpjs'] * $result[$l['nipbaru_ws']]['presentasi_kondisi_kerja']);
                 }
 
+                // if($this->general_library->isProgrammer()){
+                //     dd($l);
+                // }
+
                 // $result[$l['nipbaru_ws']]['bpjs'] = round($result[$l['nipbaru_ws']]['bpjs'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_beban_kerja'], 2);
@@ -2895,6 +2899,8 @@
                             $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = 0;
                             $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = 0;
                             $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'] = 0;
+                        } else {
+                            
                         }
                     }
                 }
@@ -3627,6 +3633,19 @@
                         ]);
             }
         }
+    }
+
+    public function getDataLockTpp($data){
+        // dd($data);
+        $skpd = explode(";", $data['skpd']);
+
+        return $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('bulan', $data['bulan'])
+                        ->where('tahun', $data['tahun'])
+                        ->where('id_unitkerja', $skpd[0])
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
     }
 }
 ?>

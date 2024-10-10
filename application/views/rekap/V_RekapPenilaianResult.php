@@ -63,29 +63,36 @@
                         </thead>
                         <tbody>
                             <?php $no = 1; foreach($result as $rs){
-                                $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
+                                // $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
                                 if(isset($rs['komponen_kinerja'])){
-                                    $bobot_capaian_produktivitas += $rs['komponen_kinerja'][1];
+                                    // $bobot_capaian_produktivitas += $rs['komponen_kinerja']['capaian'];
                                 }
+                                $capaian_pk = (isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0) + (isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0);
+                                // dd($capaian_pk);
+                                $bobot_capaian_produktivitas = ($capaian_pk / 60) * 100;
+                                // $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
                             ?>
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
                                     <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
-                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama']?></span><br>
+                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
                                         NIP. <?=$rs['nip']?>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']) : 0;?>%</td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['berorientasi_pelayanan'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['akuntabel'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kompeten'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['harmonis'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['loyal'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['adaptif'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kolaboratif'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? ($rs['komponen_kinerja'][0]) : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja'][1]) : 0;?>%</td>
+                                    <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td> -->
+                                    <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']) : 0;?>%</td> -->
+                                    <!-- <td style="width: 6%; text-align: center;"><?=$rs['nilai_skp']['capaian'];?>%</td> -->
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['berorientasi_pelayanan'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['akuntabel'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['kompeten'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['harmonis'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['loyal'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['adaptif'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['kolaboratif'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? ($rs['komponen_kinerja']['capaian']) : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0;?>%</td>
                                     <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($bobot_capaian_produktivitas)?>%</td>
                                 </tr>
                             <?php } ?>

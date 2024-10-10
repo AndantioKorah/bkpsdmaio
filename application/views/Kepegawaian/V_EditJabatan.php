@@ -450,7 +450,7 @@ $('#form_edit_jabatann').on('submit', function(e){
                   });
             });
 
-            $("#edit_jabatan_unit_kerja").change(function() {
+            $("#edit_jabatan_unit_kerjax").change(function() {
               var id = $("#edit_jabatan_jenis").val();
                 var skpd = $("#edit_jabatan_unit_kerja").val();
                 var jnsfung = $("#edit_jenis_fungsional").val();

@@ -253,6 +253,7 @@ class C_Rekap extends CI_Controller
         $data = $this->rekap->rekapTppSearch($this->input->post());
         $data['data_search'] = $this->input->post();
         $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
+        $data['data_format_excel'] = $this->rekap->getDataLockTpp($this->input->post());
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
@@ -717,8 +718,16 @@ class C_Rekap extends CI_Controller
     public function formatTppBkadDownload($id){
         $rs = $this->general->getOne('t_lock_tpp', 'id', $id);
         $data = json_decode($rs['meta_data'], true);
-        $data['filename'] = "Berkas TPP Format BKAD - ".$data['param']['nm_unitkerja']." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
-        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $data);
+        $data['filename'] = "Berkas TPP Format BKAD - ".preg_replace('/[^A-Za-z0-9\-]/', '', $data['param']['nm_unitkerja'])." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
+
+        $result['filename'] = $data['filename'];
+        $result['result'] = $data['result'];
+
+        if($this->general_library->isProgrammer()){
+            // dd($result);
+        }
+        
+        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $result);
     }
 
     public function uploadGajiBkad(){

@@ -2719,9 +2719,25 @@
                     // if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
-                            $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
-                            $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
-                            $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp; 
+                        // if(isset($p['flag_timpa_tpp']) && $p['flag_timpa_tpp'] == 1){
+
+                            //ambil TPP plt nya saja
+                            if(isset($p['flag_timpa_tpp']) && $p['flag_timpa_tpp'] == 1){
+                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'];
+                            } else {
+                            // tambahkan dengan tpp plt
+                                $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
+                                $result[$p['id_m_user']]['tambahan_raw'] = $result[$p['id_m_user']]['pagu_tpp'];
+                                $result[$p['id_m_user']]['tambahan'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                $result[$p['id_m_user']]['pagu_sebelum'] = $temp_tpp;
+                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                                // dd(json_encode($result[$p['id_m_user']]));
+                            }
+                            // $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                            // if($this->general_library->isProgrammer()){
+                            //     dd($result[$p['id_m_user']]);
+                            // }
                         }
                     // }
                     else {

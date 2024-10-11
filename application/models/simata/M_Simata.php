@@ -3051,7 +3051,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         ->join('db_simata.t_jabatan_target as f', 'a.id_peg = f.id_peg','left')
         ->join('db_pegawai.jabatan as g', 'f.jabatan_target = g.id_jabatanpeg')
         ->join('db_simata.t_penilaian_kompetensi as h', 'a.id_peg = h.id_peg','left')
-        ->where('a.res_potensial_total >=', 85)
+        ->where('a.res_potensial_total >=', 77)
         ->where('a.res_kinerja >=', 85)
         ->where('a.flag_active', 1)
         ->where('f.flag_active', 1)
@@ -3075,6 +3075,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     if($jenis_jabatan == 1){
         $this->db->where('f.jabatan_target', $jabatan_target_jpt);
         $this->db->where_in('e.eselon', ["III B", "III A"]);
+
     }
 
     $suksesor = $this->db->get()->result_array();

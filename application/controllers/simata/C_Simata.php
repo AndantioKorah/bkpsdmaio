@@ -526,7 +526,7 @@ class C_Simata extends CI_Controller
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
         }
         }
-        render('simata/V_PenilaianKompetensi', '', '', $data);
+    render('simata/V_PenilaianKompetensi', '', '', $data);
     }
 
     public function loadListSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){

@@ -159,10 +159,13 @@ class C_Rekap extends CI_Controller
             $data['result'] = $this->session->userdata('data_penilaian_produktivitas_kerja');
             $data['parameter'] = $this->session->userdata('parameter_data_penilaian_produktivitas_kerja');
         } else {
-            $data['result'] = $this->rekap->rekapPenilaianSearch($this->input->post());
+            // $data['result'] = $this->rekap->rekapPenilaianSearch($this->input->post());
+            $data['result'] = $this->kinerja->rekapPenilaianSearch2($this->input->post());
+
             $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
             $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
         }
+        // dd($data['result']);
 
         $this->load->view('rekap/V_RekapPenilaianResult', $data);
     }
@@ -253,12 +256,29 @@ class C_Rekap extends CI_Controller
         $data = $this->rekap->rekapTppSearch($this->input->post());
         $data['data_search'] = $this->input->post();
         $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
+        $data['data_format_excel'] = $this->rekap->getDataLockTpp($this->input->post());
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
     public function downloadBerkasTpp($id_m_tpp_tambahan = 0, $flag_excel = 0){
         $param = $this->input->post();
         $param['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
+        $data['flag_simplified_format'] = 0;
+
+        $time = strtotime('01-'.$param['bulan'].'-'.$param['tahun']);
+        $dateFormat = date('Y-m-d', $time);
+
+        $newTime = strtotime('01-09-2024');
+        $newDateFormat = date('Y-m-d', $newTime);
+
+        if($time >= $newTime){ // mulai bulan september, di sheets BKAD, dihapuskan untuk PK, BK, KK di BPJS dan PPH
+            $data['flag_simplified_format'] = 1;
+        }
+
+        // if($this->general_library->isProgrammer()){
+        //     echo($dateFormat.' >= '.$newDateFormat);
+        //     dd($data);
+        // }
 
         $flag_sekolah_kecamatan = 0;
         // dd($param);
@@ -275,7 +295,7 @@ class C_Rekap extends CI_Controller
         $data['param']['bulan'] = $param['bulan'];
         $data['param']['tahun'] = $param['tahun'];
         $data['param']['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
-        $data['param']['presentasi_tpp_tambahan'] = isset($param['presentasi_tpp_tambahan']) ? $param['presentasi_tpp_tambahan'] : null;;
+        $data['param']['presentasi_tpp_tambahan'] = isset($param['presentasi_tpp_tambahan']) ? $param['presentasi_tpp_tambahan'] : null;
         $data['param']['nama_tpp_tambahan'] = isset($param['nama_tpp_tambahan']) ? $param['nama_tpp_tambahan'] : null;;
         $param['id_unitkerja'] = $skpd[0];
 
@@ -334,6 +354,9 @@ class C_Rekap extends CI_Controller
 
         // if($flag_excel == 0){
             $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            if($this->general_library->isProgrammer()){
+                dd($html);
+            }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);
             // }
@@ -382,7 +405,7 @@ class C_Rekap extends CI_Controller
 
             $data['param']['url_file'] = $folder.'/'.$filename;
             if($id_m_tpp_tambahan == 0){
-                $this->rekap->lockTpp($data['param']);
+                $this->rekap->lockTpp($data['param'], $data);
             }
 
             $this->mpdf->WriteHTML($html);
@@ -687,5 +710,54 @@ class C_Rekap extends CI_Controller
 
     public function cronRekapAbsen(){
         $this->rekap->cronRekapAbsen();
+    }
+
+    public function formatTppBkad(){
+        render('rekap/V_FormatTppBkad', '', '', null);
+    }
+
+    public function loadFormatTppBkadData(){
+        $data['result'] = $this->rekap->loadFormatTppBkadData();
+        $this->load->view('rekap/V_FormatTppBkadData', $data);
+    }
+
+    public function formatTppBkadDownload($id){
+        $rs = $this->general->getOne('t_lock_tpp', 'id', $id);
+        $data = json_decode($rs['meta_data'], true);
+        $data['filename'] = "Berkas TPP Format BKAD - ".preg_replace('/[^A-Za-z0-9\-]/', '', $data['param']['nm_unitkerja'])." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
+
+        // $result['filename'] = $data['filename'];
+        // $result['result'] = $data['result'];
+
+        if($this->general_library->isProgrammer()){
+            // dd($result);
+        }
+        
+        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $data);
+    }
+
+    public function uploadGajiBkad(){
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        render('rekap/V_UploadGajiBkad', '', '', $data);
+    }
+
+    public function loadGajiPegawai(){
+        $data['result'] = $this->rekap->loadGajiPegawai();
+        $this->load->view('rekap/V_UploadGajiBkadListGaji', $data);
+    }
+
+    public function readUploadGaji(){
+        echo json_encode($this->rekap->readUploadGaji());
+    }
+
+    public function downloadDataNotFoundUploadGaji(){
+        $data = $this->session->userdata('data_not_found');
+        $this->load->view('rekap/V_UploadGajiBkadNotFoundExcel', $data);
+    }
+
+    public function loadUploadGajiHistory(){
+        $data['result'] = $this->rekap->loadUploadGajiHistory();
+        $this->load->view('rekap/V_UploadGajiBkadHistory', $data);
     }
 }

@@ -99,7 +99,7 @@
 		<tr>
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
-			<td style="width:70%;"><?= $kaban['gelar1'];?><?= strtoupper($kaban['nama']);?><?= $kaban['gelar2'];?></td>
+			<td style="width:70%;"><?= $kaban['gelar1'];?><?= getNamaPegawaiFull($kaban);?></td>
 		</tr>
 		<tr>
 			<td>NIP</td>

@@ -203,7 +203,7 @@
         function loadEditPendidikan(id){
               $('#edit_pendidikan_pegawai').html('')
               $('#edit_pendidikan_pegawai').append(divLoaderNavy)
-              $('#edit_pendidikan_pegawai').load('<?=base_url("kepegawaian/kepegawaian/loadEditPendidikan")?>'+'/'+id, function(){
+              $('#edit_pendidikan_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditPendidikan")?>'+'/'+id, function(){
                 $('#loader').hide()
               })
          }

@@ -361,8 +361,10 @@
                 ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
                 ->join('m_status_verif c', 'a.status_verif = c.id')
                 ->where('a.id_m_user', $id)
-                ->where('year(a.tanggal_kegiatan)', $tahun)
-                ->where('month(a.tanggal_kegiatan)', $bulan)
+                // ->where('year(a.tanggal_kegiatan)', $tahun)
+                // ->where('month(a.tanggal_kegiatan)', $bulan)
+                ->where('b.tahun', $tahun)
+                ->where('b.bulan', $bulan)
                 ->where('a.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();
@@ -736,11 +738,32 @@
                     
                 }
             } else if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
-                if(!stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || !stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //bukan kepsek
+                if(stringStartWith('Kepala Sekolah', $pegawai['nama_jabatan']) || stringStartWith('Kepala Taman', $pegawai['nama_jabatan'])){ //jika kepsek
+                    if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 59)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid TK
+                    } else if($pegawai['id_unitkerjamaster'] == 8010000) { //SD
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 57)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid SD
+                    } else if($pegawai['id_unitkerjamaster'] == 8020000) { //SMP
+                        $kepala = $this->baseQueryAtasan()
+                                        ->where('a.id_m_bidang', 58)
+                                        ->where('d.jenis_jabatan', 'Struktural')
+                                        ->where('f.id_eselon', 7)
+                                        ->get()->row_array(); //kabid SMP
+                    }
+                    $atasan = $kepala;
+                } else { //jika bukan kepsek
                     $atasan = $this->baseQueryAtasan()
-                                    ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    ->where('d.nama_jabatan LIKE', 'Kepala%')
-                                    ->get()->row_array();
+                    ->where('b.skpd', $pegawai['id_unitkerja'])
+                    ->where('d.nama_jabatan LIKE', 'Kepala%')
+                    ->get()->row_array();
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -769,27 +792,7 @@
                     if(!$atasan){
                         $atasan = $kepala;
                     }
-                } else { //jika kepsek
-                    if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 59)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid TK
-                    } else if($pegawai['id_unitkerjamaster'] == 8010000) { //SD
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 57)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid SD
-                    } else if($pegawai['id_unitkerjamaster'] == 8020000) { //SMP
-                        $kepala = $this->baseQueryAtasan()
-                                        ->where('a.id_m_bidang', 58)
-                                        ->where('d.jenis_jabatan', 'Struktural')
-                                        ->where('f.id_eselon', 7)
-                                        ->get()->row_array(); //kabid SMP
-                    }
-                    $atasan = $kepala;   
+                      
                 }
             } else if($pegawai['id_unitkerjamaster'] == 6000000){ //puskesmas
                 $atasan = $this->baseQueryAtasan()
@@ -1431,7 +1434,8 @@
         // dd($tanggal_akhir.' - '.$expirydate.'<br>');
         // $tanggal_akhir = '2024-06-27';
         if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
-        (!$this->general_library->isProgrammer())){ // bukan role programmer
+        (!$this->general_library->isProgrammer()) && // bukan role programmer
+        $jenis_disiplin[4] == 1){ // flag_lock == 1
             if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
 
             } else {
@@ -1481,9 +1485,10 @@
         //     dd($list_exist);
         // }
         // dd($list_exist);
-        $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
+        // $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
         $insert_data = null;
         $i = 0;
+        $batchId = null;
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
             foreach($list_tanggal as $l){
@@ -1524,7 +1529,13 @@
                     //     $res['data'] = null;
                     //     return $res;
                     // }
-                    
+                    // $batchId = generateRandomString(10, 1, 't_dokumen_pendukung');
+                    if(!isset($batchId[$d['id']])){
+                    // } else {
+                        $batchId[$d['id']] = generateRandomString(10, 1, 't_dokumen_pendukung');
+                    }
+
+
                     $insert_data[$i]['id_m_user'] = $d['id'];
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
@@ -1550,7 +1561,7 @@
                     || $this->general_library->isAdminAplikasi() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) {
                         $insert_data[$i]['status'] = 2;
                     }
-                    $insert_data[$i]['random_string'] = $batchId;
+                    $insert_data[$i]['random_string'] = $batchId[$d['id']];
                     $i++;
                 }
             }
@@ -2073,75 +2084,84 @@
         $rs['message'] = 'OK';        
         $this->db->trans_begin();
 
-        $data_verif['status'] = $status;
-        $data_verif['id_m_user_verif'] = $this->general_library->getId();
-        $data_verif['updated_by'] = $this->general_library->getId();
-        $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
-        if($status == 1 || $status == 2){
-            $data_verif['keterangan_verif'] = $this->input->post('keterangan');
-        }
-        
-        // dd($this->input->post());
+        $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
+        $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
+        $this->db->select('
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_verif')
+        ->from('t_peninjauan_absensi a')
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_user',$this->input->post('id_user'))
+        ->group_by('a.id_m_user')
+        ->order_by('a.tanggal_absensi', 'asc');
+        $result = $this->db->get()->result_array();
 
-        if($this->input->post('jenis_bukti') == 1){
-           $absen = $this->db->select('*')
-                        ->from('db_sip.absen a')
-                        ->where('a.user_id', $this->input->post('teman_absensi'))
-                        ->where('a.tgl', $this->input->post('tanggal_absensi'))
-                        ->get()->row_array();
-                         
-            if($absen){
+        // dd($result[0]['total_verif']);  
+        if($result[0]['total_verif'] >= 2) {
+            $rs['code'] = 1;        
+            $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
+        } else {     
 
-                $absenUser = $this->db->select('*')
-                ->from('db_sip.absen a')
-                ->where('a.user_id', $this->input->post('id_user'))
-                ->where('a.tgl', $this->input->post('tanggal_absensi'))
-                ->get()->row_array();
-               
-                if($absenUser) {
-                    if($this->input->post('jenis_absensi') == 1){
-                        $dataUpdate['masuk'] = $absen['masuk'];
-                        $this->db->where('user_id', $this->input->post('id_user'))
-                        ->where('tgl', $this->input->post('tanggal_absensi'))
-                        ->update('db_sip.absen', $dataUpdate);
+            $data_verif['status'] = $status;
+            $data_verif['id_m_user_verif'] = $this->general_library->getId();
+            $data_verif['updated_by'] = $this->general_library->getId();
+            $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+            if($status == 1 || $status == 2){
+                $data_verif['keterangan_verif'] = $this->input->post('keterangan');
+            }
+            
+            if($this->input->post('jenis_bukti') == 1){
+               $absen = $this->db->select('*')
+                            ->from('db_sip.absen a')
+                            ->where('a.user_id', $this->input->post('teman_absensi'))
+                            ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                            ->get()->row_array();
+                             
+                if($absen){
+    
+                    $absenUser = $this->db->select('*')
+                    ->from('db_sip.absen a')
+                    ->where('a.user_id', $this->input->post('id_user'))
+                    ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                    ->get()->row_array();
+                   
+                    if($absenUser) {
+                        if($this->input->post('jenis_absensi') == 1){
+                            $dataUpdate['masuk'] = $absen['masuk'];
+                            $this->db->where('user_id', $this->input->post('id_user'))
+                            ->where('tgl', $this->input->post('tanggal_absensi'))
+                            ->update('db_sip.absen', $dataUpdate);
+                        } else {
+                            $dataUpdate['pulang'] = $absen['pulang'];
+                            $this->db->where('user_id', $this->input->post('id_user'))
+                            ->where('tgl', $this->input->post('tanggal_absensi'))
+                            ->update('db_sip.absen', $dataUpdate);
+                        }
                     } else {
-                        $dataUpdate['pulang'] = $absen['pulang'];
-                        $this->db->where('user_id', $this->input->post('id_user'))
-                        ->where('tgl', $this->input->post('tanggal_absensi'))
-                        ->update('db_sip.absen', $dataUpdate);
+                    $this->db->insert('db_sip.absen', [
+                                        'user_id' => $this->input->post('id_user'),
+                                        'masuk' => $absen['masuk'],
+                                        'pulang' => $absen['pulang'],
+                                        'lat' => $absen['lat'],
+                                        'lang' => $absen['lang'],
+                                        'tgl' => $absen['tgl'],
+                                        'status' => $absen['status'],
+                                        'aktivitas' => $absen['aktivitas']
+                                    ]);
                     }
-                } else {
-                $this->db->insert('db_sip.absen', [
-                                    'user_id' => $this->input->post('id_user'),
-                                    'masuk' => $absen['masuk'],
-                                    'pulang' => $absen['pulang'],
-                                    'lat' => $absen['lat'],
-                                    'lang' => $absen['lang'],
-                                    'tgl' => $absen['tgl'],
-                                    'status' => $absen['status'],
-                                    'aktivitas' => $absen['aktivitas']
-                                ]);
-                }
+                    $this->db->where_in('id', $id)
+                    ->update('t_peninjauan_absensi', $data_verif);
+                } 
+            } else {
                 $this->db->where_in('id', $id)
                 ->update('t_peninjauan_absensi', $data_verif);
-            } 
-        } else {
-            $this->db->where_in('id', $id)
-            ->update('t_peninjauan_absensi', $data_verif);
+            }
+
         }
 
-        
+       
 
-        // $temp = $this->db->select('c.skpd, a.bulan, a.tahun')
-        //                 ->from('t_peninjauan_absensi a')
-        //                 ->join('m_user b', 'a.id_m_user = b.id')
-        //                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-        //                 ->where('a.id', $id)
-        //                 ->where('id_m_status_pegawai', 1)
-        //                 ->get()->row_array();
-
-        // $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
-
+    
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             $rs['code'] = 1;        
@@ -2556,6 +2576,9 @@
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) && $p['kepalaskpd'] != 1){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                            if($p['kelas_jabatan_jft'] > 7){
+                                $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                            }
                         }
                     }
                     // if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
@@ -2616,6 +2639,9 @@
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                         if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
+                            if($p['kelas_jabatan_jft'] > 7){
+                                $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                            }
                         }
                         
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
@@ -2695,9 +2721,25 @@
                     // if($uk_asal['skpd'] == $data['id_unitkerja']){
                         // jika pegawai plt / plh di unitkerja yang sama, maka tambah presentasi tambahan
                         if(isset($temp[$p['id_m_user']])){
-                            $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
-                            $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
-                            $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp; 
+                        // if(isset($p['flag_timpa_tpp']) && $p['flag_timpa_tpp'] == 1){
+
+                            //ambil TPP plt nya saja
+                            if(isset($p['flag_timpa_tpp']) && $p['flag_timpa_tpp'] == 1){
+                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'];
+                            } else {
+                            // tambahkan dengan tpp plt
+                                $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
+                                $result[$p['id_m_user']]['tambahan_raw'] = $result[$p['id_m_user']]['pagu_tpp'];
+                                $result[$p['id_m_user']]['tambahan'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                $result[$p['id_m_user']]['pagu_sebelum'] = $temp_tpp;
+                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                                // dd(json_encode($result[$p['id_m_user']]));
+                            }
+                            // $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                            // if($this->general_library->isProgrammer()){
+                            //     dd($result[$p['id_m_user']]);
+                            // }
                         }
                     // }
                     else {
@@ -2733,6 +2775,10 @@
                 }
 
                 if($p['flag_terima_tpp'] == 0){
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                }
+
+                if(in_array($p['nipbaru_ws'], EXCLUDE_NIP)){
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
                 
@@ -3478,7 +3524,7 @@
                     'loyal' => $data['loyal'],
                     'adaptif' => $data['adaptif'],
                     'kolaboratif' => $data['kolaboratif'],
-                    'updated_by' => $id
+                    'updated_by' => $this->general_library->getId()
                 ]);
 
         if($this->db->trans_status() == FALSE){
@@ -3711,6 +3757,110 @@
     return $result;
 }
 
+    public function getStatusLockKinerja($menu){
+        return $this->db->select('a.status')
+                        ->from('t_lock_kinerja as a ')
+                        ->where('a.flag_active', 1)
+                        ->where('a.menu', $menu)
+                        ->get()->result_array();
+    }
+
+
+    public function rekapPenilaianSearch2($data){
+        //    dd($data);
+            $result = null;
+            $skpd = explode(";",$data['skpd']);
+           
+            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                                    ->where('a.skpd', $skpd[0])
+                                    ->where('b.flag_active', 1)
+                                    ->order_by('c.eselon, b.username')
+                                    ->where('id_m_status_pegawai', 1)
+                                    // ->where('b.id', 78)
+                                    ->get()->result_array();
+            $temp_pegawai = null;
+            if($list_pegawai){
+                $i = 0;
+                $j = 0;
+                foreach($list_pegawai as $p){
+                    $temp = $p;
+                    $bobot_komponen_kinerja = 0;
+                    $bobot_skp = 0;
+                    $temp['komponen_kinerja'] = $this->getKomponenKinerja($p['id'], $data['bulan'], $data['tahun']);
+                    if($temp['komponen_kinerja']){
+                        list($temp['komponen_kinerja']['capaian'], $temp['komponen_kinerja']['bobot']) = countNilaiKomponen($temp['komponen_kinerja']);
+                        $bobot_komponen_kinerja = $temp['komponen_kinerja']['bobot'];
+
+                    }
+                    $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
+                    if($temp['kinerja']){
+                        $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
+                        $bobot_skp = $temp['nilai_skp']['bobot'];
+                    }
+                    $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
+                    
+                    if($data['kriteria'] == 2){
+                        if($temp['bobot_capaian_produktivitas_kerja'] == 60){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else if($data['kriteria'] == 3){
+                        if($temp['bobot_capaian_produktivitas_kerja'] >= 48 && $temp['bobot_capaian_produktivitas_kerja'] < 60){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else if($data['kriteria'] == 4){
+                        if($temp['bobot_capaian_produktivitas_kerja'] <= 47){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else {
+                        $result[$i] = $temp;
+                        $i++;
+                    } 
+                   
+                }
+                
+            }
+            // dd($result);
+            return $result;
+        }
+
+        public function getKinerjaPegawai2($id_m_user, $bulan, $tahun){
+            // return $this->db->select('*,
+            //                 (SELECT SUM(b.realisasi_target_kuantitas)
+            //                 FROM t_kegiatan b
+            //                 WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+            //                 AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+            return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
+                            ->from('t_rencana_kinerja')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->group_by('id')
+                            ->get()->result_array();
+        }
+
+
+        public function getKomponenKinerja($id_m_user, $bulan, $tahun){
+            return $this->db->select('*')
+                            ->from('t_komponen_kinerja as a')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+        }
     
 
     

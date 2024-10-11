@@ -27,7 +27,8 @@
     <br>
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
-    - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti.<br>
+    - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
+    <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
     - Upload bukti pada hari yang sama. <br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>
@@ -37,7 +38,7 @@
       <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
     </div>
     <div class="col-lg-6">
-    <b style="color:red">contoh Screenshot Whatsapp</b><br>
+    <b style="color:red">contoh Screenshot Whatsapp Grup</b><br>
     <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
     </div>
     </div>
@@ -63,7 +64,7 @@
          <select class="form-control select2-navy select2" name="jenis_bukti" id="jenis_bukti"  required>
          <option value="" selected disabled>- Pilih Jenis Bukti Absen -</option>
          <option value="1" >Foto Bersama Teman </option>
-         <option value="2" >Screenshot Whatsapp </option>
+         <option value="2" >Screenshot Whatsapp Grup</option>
          </select>
     </div>
     <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
@@ -167,14 +168,42 @@ contoh Screenshot Whatsapp<br>
 <div class="card card-default" id="list_kegiatan">
    
 </div>
+<button style="display:none" id="btnmodal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch static backdrop modal
+</button>
 
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <span>
+    <br>
+    Keterangan : <br> 
+    <b style="font-size:20px;">-</b> Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
+    <b style="font-size:20px;">-</b> Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
+    <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
+    <b style="font-size:20px;">-</b> Upload bukti pada hari yang sama. <br>
+    <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    </span>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
 <script>
 
 
 
 $(function(){
-
+  $('#btnmodal').click()  
   $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
@@ -214,7 +243,7 @@ function loadListPeninjauan(){
               dataType : 'json',
               success: function(res){
                 total = res[0].total_pengajuan - res[0].total_tolak
-              <?php  if( $this->general_library->getId() != '117'){ ?>
+              <?php  if( $this->general_library->getId() != '000'){ ?>
 
                 if(total >= 2) {
 

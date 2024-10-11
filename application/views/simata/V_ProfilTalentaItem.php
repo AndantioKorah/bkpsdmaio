@@ -18,6 +18,9 @@
 		background-color: #2e4963 !important;
 		color: #fff;
 	}
+    .table_pt_adm:hover {
+    cursor: pointer;
+    }
 </style>
 <table id="" class="display table table-bordered table_pt_adm" style="width:100%">
         <thead>
@@ -39,7 +42,8 @@
            
 			<?php 
                 $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
-            <tr>
+            <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian?>" data-kode="1"
+            href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT">
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>

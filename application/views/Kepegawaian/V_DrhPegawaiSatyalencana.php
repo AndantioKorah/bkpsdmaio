@@ -1,4 +1,5 @@
 <?php if($result){ ?>
+  
 <html>
   <style>
     :root{
@@ -47,7 +48,9 @@
           <span class="label_drh">Nama Lengkap</span>
         </td>
         <td colspan=1 style="width: 50%;">
-          <span class="val_drh"><?=getNamaPegawaiFull($result['data_pegawai'])?></span>
+          <!-- <span class="val_drh"><?= ucwords(strtolower(getNamaPegawaiFull($result['data_pegawai'])))?></span> -->
+          <span class="val_drh"> <?=$result['data_pegawai']['gelar1'];?> <?= ucwords(strtolower($result['data_pegawai']['nama']))?> <?=$result['data_pegawai']['gelar2'];?></span>
+
         </td>
       </tr>
       <tr>
@@ -58,7 +61,7 @@
           <span class="label_drh">Tempat/Tgl. Lahir</span>
         </td>
         <td colspan=1 style="width: 50%;">
-          <span class="val_drh"><?=$result['data_pegawai']['tptlahir'].' / '.formatDateNamaBulan($result['data_pegawai']['tgllahir'])?></span>
+          <span class="val_drh"><?=ucwords(strtolower($result['data_pegawai']['tptlahir'])).' / '.formatDateNamaBulan($result['data_pegawai']['tgllahir'])?></span>
         </td>
       </tr>
       <tr>
@@ -99,10 +102,16 @@
           <span class="label_drh"><?=$no++;?></span>
         </td>
         <td colspan=2 style="width: 45%;">
-          <span class="label_drh">Pangkat/Golongan Ruang Terahir (TMT)</span>
+          <span class="label_drh">Pangkat/Golongan Ruang Terakhir (TMT)</span>
         </td>
         <td colspan=1 style="width: 50%;">
-          <span class="val_drh"><?=($result['data_pegawai']['nm_pangkat'])?><br><?= formatDateNamaBulan($result['data_pegawai']['tmtpangkat'])?></span>
+          <span class="val_drh"><?=($result['data_pegawai']['nm_pangkat'])?><br><?= formatDateNamaBulan($result['data_pegawai']['tmtpangkat'])?></span><br>
+          <?php $data = explode("|", $result['data_pegawai']['data_pangkat']);
+                   if(isset($data[1])) echo $data[1];
+        ?>
+         <?php $data = explode("|", $result['data_pegawai']['data_pangkat']);
+                   if(isset($data[1])) echo formatDateNamaBulan($data[2]);
+        ?>
         </td>
       </tr>
       <tr>
@@ -125,7 +134,14 @@
         </td>
         <td colspan=1 style="width: 50%;">
         <span class="val_drh"><?= ($result['data_pegawai']['nama_jabatan'])?></span><br>
-        <span class="val_drh"><?= formatDateNamaBulan($result['data_pegawai']['tmtjabatan'])?></span>
+        <span class="val_drh"><?= formatDateNamaBulan($result['data_pegawai']['tmtjabatan'])?></span><br>
+        <?php $data = explode("|", $result['data_pegawai']['data_jabatan']);
+                   if(isset($data[1])) echo $data[1];
+        ?>
+         <?php $data = explode("|", $result['data_pegawai']['data_jabatan']);
+                   if(isset($data[1])) echo formatDateNamaBulan($data[2]);
+        ?>
+                
         </td>
       </tr>
       
@@ -153,9 +169,9 @@
           <span class="label_drh">Tanda Kehormatan yang sudah dimiliki</span>
         </td>
         <td colspan=1 style="width: 50%;">
-         
-        <?php if($result['riwayat_satyalencana']){ $no = 1; foreach($result['riwayat_satyalencana'] as $saty){ ?>
-            <span class="val_drh"><?=$saty['nosk']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsk'])?></span><br>
+        
+        <?php if($result['riwayat_satyalencana']){  foreach($result['riwayat_satyalencana'] as $saty){ ?>
+          <span class="val_drh"><?=$saty['nama_satya_lencana']?></span>, <span class="val_drh"><?=$saty['nosk']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsk'])?></span><br>
         <?php } } else { ?>
         <?php } ?>
 
@@ -170,8 +186,8 @@
         </td>
         <td colspan=1 style="width: 50%;">
           
-        <?php if($result['riwayat_disiplin']){ $no = 1; foreach($result['riwayat_disiplin'] as $saty){ ?>
-            <span class="val_drh"><?=$saty['nosurat']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsurat'])?></span><br>
+        <?php if($result['riwayat_disiplin']){  foreach($result['riwayat_disiplin'] as $saty){ ?>
+          <span class="val_drh">Hukuman Disiplin <?=$saty['nama']?></span>, <span class="val_drh"><?=$saty['nosurat']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsurat'])?> - <?= formatDateNamaBulan($saty['tgl_selesaiberlaku'])?></span><br>
         <?php } } else { ?>
             <span>tidak pernah mendapatkan hukuman disiplin tingkat
             sedang/berat selama masa kerja yang dijalani</span>
@@ -187,7 +203,7 @@
           <span class="label_drh">CLTN</span>
         </td>
         <td colspan=1 style="width: 50%;">
-        <?php if($result['riwayat_cuti']){ $no = 1; foreach($result['riwayat_cuti'] as $saty){ ?>
+        <?php if($result['riwayat_cuti']){ foreach($result['riwayat_cuti'] as $saty){ ?>
             <span class="val_drh"><?=$saty['nosttpp']?></span> / <span class="val_drh"><?= formatDateNamaBulan($saty['tglsttpp'])?></span>- <span class="val_drh"><?= formatDateNamaBulan($saty['tglselesai'])?></span>
         <?php } } else { ?>
             <span>tidak pernah mengambil Cuti Diluar Tanggungan Negara (CLTN)
@@ -218,7 +234,8 @@
         <tr>
 			<td style="text-align: center;"><u><?= getNamaPegawaiFull($atasan_pegawai);?></u><br>NIP.<?=formatNip($atasan_pegawai['nipbaru_ws'])?></td>
 			<td class="center" style="width:38%;text-align: center;">
-            <u><?= getNamaPegawaiFull($result['data_pegawai']);?></u><br>
+            <!-- <u><?= getNamaPegawaiFull($result['data_pegawai']);?></u><br> -->
+          <u > <?=$result['data_pegawai']['gelar1'];?> <?= ucwords(strtolower($result['data_pegawai']['nama']))?> <?=$result['data_pegawai']['gelar2'];?></u><br>
             NIP.<?= formatNip($result['data_pegawai']['nipbaru']);?>
             </td>
 		</tr>

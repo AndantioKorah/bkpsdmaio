@@ -58,7 +58,18 @@ class C_Login extends CI_Controller
     }
 
     public function loadAnnouncement(){
-        $data['announcement'] = $this->m_general->getAll('t_announcement', 1);
+        $temp = $this->m_general->getAll('t_announcement', 1);
+        $data['announcement'] = null;
+        if($temp){
+            foreach($temp as $t){
+                if($t['flag_show'] == 1){
+                    $data['announcement'][] = $t;
+                }
+            }
+        }
+        // if($this->general_library->isProgrammer()){
+        //     dd($data);
+        // }
         $this->load->view('login/V_Announcement', $data);
     }
 

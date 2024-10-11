@@ -331,14 +331,22 @@ $(function () {
     date.getMonth(),
   );
 
-  if(bulanSearch != bulanCurrent){
+  var statusLock = "<?=$status_lock[0]['status'];?>"
+
+   if(statusLock == 0){
+    $('.btndelete').show()
+   } else {
+    if(bulanSearch != bulanCurrent){
     if(tanggal <= 3) {
         $('.btndelete').show()
     } else {
         // $('.btndelete').show()
         $('.btndelete').hide()
       }
-  } 
+  }
+   }
+
+ 
 
 
 })

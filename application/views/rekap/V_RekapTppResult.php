@@ -23,14 +23,14 @@
                             </button>
                         </form>
                     </div>
-                    <?php if($this->general_library->isProgrammer()){ ?>
+                    <?php if($data_format_excel){ ?>
                         <div class="col-lg-4">
-                            <form action="<?=base_url('rekap/C_Rekap/downloadBerkasTpp/0/1')?>" target="_blank" method="post">
+                            <form action="<?=base_url('rekap/C_Rekap/formatTppBkadDownload/'.$data_format_excel['id'])?>" method="post" target="_blank">
                                 <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                                 <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success">
-                                    <i class="fa fa-download"></i> Download as Excel
+                                    <i class="fa fa-download"></i> Download Format Excel
                                 </button>
                             </form>
                         </div>

@@ -61,7 +61,7 @@
                                 <!-- <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span> -->
                             <?php } ?>
                         </td>
-                        <td style="padding: 10px; text-align: center;"><?= formatNip($rs['nipbaru_ws'])?></td>
+                        <td style="padding: 10px; text-align: center;"><?= '`'.($rs['nipbaru_ws'])?></td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['nama_jabatan']?></td>
                         <td style="padding: 10px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>

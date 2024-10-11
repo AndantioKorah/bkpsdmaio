@@ -2204,7 +2204,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -2294,7 +2294,7 @@
                 $this->db->where_in('a.agama', $data['agama']);
             }
             if(isset($data['keteranganpegawai'])){
-                $this->db->where_in('a.id_m_status_pegawai', $data['keteranganpegawai']);
+                    $this->db->where_in('a.id_m_status_pegawai', $data['keteranganpegawai']);
             }
             if(isset($data['golongan'])){
                 $golongan = [];
@@ -2329,6 +2329,9 @@
 
             $result = $this->db->get()->result_array();
 
+            $id_pangkat_ahli_madya = [41, 42, 43];
+            $id_pangkat_ahli_utama = [44, 45];
+
             if(isset($data['satyalencana'])){
                 $flag_use_masa_kerja = 1;
                 $masa_kerja_satyalencana = $data['satyalencana'][0];
@@ -2354,10 +2357,81 @@
                                 }
                             }
                         }
+                       
                     }
                 }
             }
+            $temp2 = $result;
+           
+                $result = null;              
+                foreach($temp2 as $d){
+                $tahun = date('Y');
+                    
+                $temp = null;
+                if($d['tgllahir'] != null){
+                    $tgl_lahir = explode("-", $d['tgllahir']);
+                    $tanggal_lahir = new DateTime($d['tgllahir']);
+                    $sekarang = new DateTime("today");
+                    $umur = $sekarang->diff($tanggal_lahir)->y;
+                    $bup = 0;
+                    $crit = 0;
+                        if(($d['jenis_jabatan'] == 'JFU' || $d['jenis_jabatan'] == 'Lainnya')){ //jika 58 dan JFU
+                            $bup = 58;
+                        } 
+                        else if($d['jenis_jabatan'] == 'JFT'){
+                            $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                            if((stringStartWith('Kepala Sekolah', $d['nama_jabatan'])) || (stringStartWith('Kepala Taman', $d['nama_jabatan']))){
+                                $bup = 60;
+                            } else 
+                            if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Madya'])){
+                                $bup = 60;
+                            } else 
+                            if(stringStartWith('Guru', $d['nama_jabatan'])){
+                                $bup = 60;
+                            } 
+                            
+                            else if(in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], ['Utama'])){
+                                $bup = 65;
+                            } 
+                            
+                            else {
+                                $bup = 58;
+                            }
+                        } else if($d['eselon'] == 'II A' || $d['eselon'] == 'II B'){
+                            $bup = 60;
+                        } else if($d['eselon'] == 'III A' || $d['eselon'] == 'III B' || $d['eselon'] == 'IV A' || $d['eselon'] == 'IV B'){
+                            $bup = 58;
+                        } else if($umur == 65 && in_array($d['id_pangkat'], $id_pangkat_ahli_utama)){
+                            $bup = 65;
+                        } else if($umur == 58 &&
+                        !in_array($d['id_pangkat'], $id_pangkat_ahli_utama) &&
+                        !in_array($d['id_pangkat'], $id_pangkat_ahli_madya) &&
+                        ($d['eselon'] != 'II A' && $d['eselon'] != 'II B')){
+                            $bup = 58;
+                        }
+                        $temp = $d;
+                        if($temp){
+                            $temp['tmt_pensiun'] = countTmtPensiun($d['nipbaru_ws'], $bup);
+                            $explode = explode("-", $temp['tmt_pensiun']);
+                            $temp['umur'] = $umur;
+                            $temp['bup'] = $bup;
 
+                            if(isset($data['keteranganpegawai'])){
+                            if(in_array("9", $data['keteranganpegawai'])) {
+                                        if($umur >= $bup){
+                                            $result[] = $temp;
+                                     }
+                                } else {
+                                    $result[] = $temp; 
+                                }
+                            } else {
+                                $result[] = $temp; 
+                            }
+                                                      
+                            }
+                            }
+                            }   
+                            
             return [$result, $flag_use_masa_kerja];
         }
 

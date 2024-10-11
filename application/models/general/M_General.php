@@ -348,9 +348,12 @@
 
             $list_pensiun = null;
             $pensiun = $this->getListPegawaiPensiunByYear($data);
+            // dd($pensiun);
             if($pensiun){
                 foreach($pensiun as $p){
-                    $list_pensiun[$p['nipbaru_ws']] = $p;
+                    if(isset($p['nipbaru_ws'])){
+                        $list_pensiun[$p['nipbaru_ws']] = $p;
+                    }
                 }
             }
 
@@ -399,6 +402,33 @@
 
         public function getListPegawaiPensiunByYear($data){
             // dd($data);
+            $list_checklist_pensiun = null;
+            $checklist_pensiun = $this->db->select('a.*, c.nama')
+                                        ->from('t_checklist_pensiun a')
+                                        // ->join('t_checklist_pensiun_detail b', 'a.id = b.id_t_checklist_pensiun')
+                                        ->join('m_user c', 'a.created_by = c.id')
+                                        ->where('a.flag_active', 1)
+                                        ->where('c.flag_active', 1)
+                                        ->get()->result_array();
+            if($checklist_pensiun){
+                foreach($checklist_pensiun as $cp){
+                    $list_checklist_pensiun[$cp['nip']] = $cp;
+                    $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#e79898";
+                    $list_checklist_pensiun[$cp['nip']]['txt-color'] = "black";
+
+                    if($cp['created_by'] == 110){ // bu merry
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#82e4e7";
+                        // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
+                    } else if($cp['created_by'] == 89){ // pak azwar
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#74fdab";
+                        // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
+                    } else if($cp['created_by'] == 77){ // mawar
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#da7ff7";
+                        // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
+                    } 
+                }
+            }
+
             $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
@@ -574,14 +604,29 @@
                     }
                 }
             }
+
+            $result['list_checklist_pensiun'] = $list_checklist_pensiun;
+
             return $result;
         }
 
         public function logCron($nama_cron){
-            $this->db->where('nama_cron', $nama_cron)
+            $exists = $this->db->select('*')
+                            ->from('t_log_cron')
+                            ->where('nama_cron', $nama_cron)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exists){
+                $this->db->where('nama_cron', $nama_cron)
                     ->update('t_log_cron', [
                         'last_hit' => date('Y-m-d H:i:s')
                     ]);
+            } else {
+                $this->db->insert('t_log_cron', [
+                    'nama_cron' => $nama_cron,
+                    'last_hit' => date('Y-m-d H:i:s')
+                ]);
+            }
         }
 
         public function getDataChartDashboardAdmin(){

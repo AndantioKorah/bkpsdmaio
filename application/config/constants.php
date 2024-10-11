@@ -176,7 +176,7 @@ define('WA_BOT', '62895355011333');
 define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");
 
 define('TTE_STATE', 'PROD'); //DEV = development, PROD = production
-define('TTE_NIK_DEV', '0803202100007062 '); //DEV = development, PROD = production
+define('TTE_NIK_DEV', '1234567890123456'); //DEV = development, PROD = production
 define('TTE_PASS_DEV', 'Hantek1234.!'); //DEV = development, PROD = production
 
 define('PERHITUNGAN_TPP_TESTING', 0); //1 = testing, 0 = realtime
@@ -184,3 +184,16 @@ define('REASON_TTE', 'Dokumen ini telah ditandatangani secara elektronik oleh Ke
 
 define('ID_INSTANSI_SIASN', 'A5EB03E23C71F6A0E040640A040252AD');
 define('ID_SATUAN_KERJA_SIASN', 'A5EB03E24281F6A0E040640A040252AD');
+
+define('EXCLUDE_NIP', [
+    // '199502182020121013', // tio
+    '199611292022031012', // bob
+    '199110212022031006', // arun
+    '199608092020122017', // gein
+    '198803162022031004', // hendra
+    '199011042022032007', // monic
+    '198910272022031003', // ronald
+    '198807272022032007', // viona
+    '199401042020121011', // youri
+    '199512262022031007', // david
+]);

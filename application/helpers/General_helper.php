@@ -256,6 +256,43 @@ function countNilaiSkp($data)
     return $result;
 }
 
+function countNilaiSkp2($data)
+{
+    $result['capaian'] = 0;
+    $result['bobot'] = 0;
+    if ($data) {
+        $akumulasi_nilai_capaian = 0;
+        foreach ($data as $d) {
+            $nilai_capaian = 0;
+            if (floatval($d['realisasi']) > 0) {
+                if(floatval($d['target']) == 0){
+                    $d['target'] = $d['realisasi'];
+                    // $nilai_capaian = 0;
+                } 
+                // else {
+                    $nilai_capaian = (floatval($d['realisasi']) / floatval($d['target'])) * 100;
+                    if($nilai_capaian > 100){
+                        $nilai_capaian = 100;
+                    }
+                // }
+            }
+            $akumulasi_nilai_capaian += $nilai_capaian;
+        }
+        
+        if (count($data) != 0) {
+            $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
+        }
+        $result['bobot'] = $result['capaian'] * floatval(BOBOT_NILAI_SKBP);
+        if ($result['bobot'] > 30) {
+            $result['bobot'] = 30;
+        }
+        if ($result['capaian'] > 100) {
+            $result['capaian'] = 100;
+        }
+    }
+    return $result;
+}
+
 function stringStartWith($string, $string_check){
     return substr($string_check, 0, strlen($string)) == $string;
 }
@@ -571,7 +608,7 @@ function formatDateNamaBulanWithTime($data)
 
 function getNamaPegawaiFull($pegawai)
 {
-    return trim(trim($pegawai['gelar1']).' '.trim($pegawai['nama']).' '.trim($pegawai['gelar2']));
+    return trim(trim($pegawai['gelar1']).' '.ucwords(strtolower(trim($pegawai['nama']))).' '.trim($pegawai['gelar2']));
 }
 
 function sortArrayObjectValue($object1, $object2, $value)
@@ -1138,13 +1175,20 @@ function countTmtPensiun($nip, $umur = 0){
 }
 
 function pembulatan($number){
+    // return $number;
+    $CI = &get_instance();
+
     $rounded = floor($number);
     $whole = $number - $rounded;
     if($whole != 0){
-        // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
-        $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+        if($CI->general_library->isProgrammer()){
+            $number = $rounded;
+        } else {
+            // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+            $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+        }
     }
-    return $number; 
+    return $number;
 }
 
 function excelRoundDown($number, $length){

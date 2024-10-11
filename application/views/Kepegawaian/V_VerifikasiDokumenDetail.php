@@ -25,16 +25,29 @@
           <span aria-hidden="true">&times;</span>
         </button>
   </div>
+  <?php
+                $badge_status = 'badge-cpns';
+                if($result['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($result['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                }
+   ?>
   <div class="modal-body">
     <div class="row">
+    
       <div class="col-lg-6 text-left">
-        <span style="color: grey; font-size .8rem; font-style: italic;">Nama</span><br>
-        <span style="font-size: 1rem; font-weight: bold;"><?=getNamaPegawaiFull($result)?></span>
+        <span style="color: grey; font-size .8rem; font-style: italic;">Nama </span><br>
+				<a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result['nipbaru_ws']?>" target="_blank">
+        <span style="font-size: 1rem; font-weight: bold;"><?=getNamaPegawaiFull($result)?>  <span class="badge <?=$badge_status?>"> <?php echo $result['statuspeg'] == 2 ? 'PNS' : 'PPPK';?> </span></span>
+        </a>
       </div>
       <div class="col-lg-6 text-right">
         <span style="color: grey; font-size .8rem; font-style: italic;">NIP</span><br>
         <span style="font-size: 1rem; font-weight: bold;"><?=formatNip($result['nipbaru_ws'])?></span>
       </div>
+     
+
       <div class="col-lg-12"><hr></div>
     </div>
     <!-- HERE -->

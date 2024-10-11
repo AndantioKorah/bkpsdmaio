@@ -813,7 +813,7 @@
                                             <input class="form-control" id="bup" name="bup" value="<?=$data_checklist_pensiun['bup']?>" />
                                         </div>
                                         <div class="col-lg-12">
-                                            <label>GAJI POKOK PENSIUN</label>
+                                            <label>GAJI POKOK TERAKHIR</label>
                                             <input type="number" class="form-control" name="gaji_pokok_pensiun" value="<?=$data_checklist_pensiun['gaji_pokok_pensiun']?>" />
                                         </div>
                                         <div class="col-lg-12 mt-2">

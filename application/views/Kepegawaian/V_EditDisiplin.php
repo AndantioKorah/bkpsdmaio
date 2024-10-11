@@ -36,15 +36,15 @@
   </div>
 
 
-  <!-- <div class="form-group">
+  <div class="form-group">
     <label>Tanggal Mulai Berlaku</label>
-    <input class="form-control customInput" type="text" id="edit_disiplin_nama" name="edit_disiplin_nama" value="<?= $disiplin[0]['tgl_mulai'];?>"  required/>
+    <input class="form-control customInput datepicker" type="text" id="edit_disiplin_tgl_mulaiberlaku" name="edit_disiplin_tgl_mulaiberlaku" value="<?= $disiplin[0]['tgl_mulaiberlaku'];?>"  required/>
   </div>
 
   <div class="form-group">
     <label>Tanggal Selesai Berlaku</label>
-    <input class="form-control customInput" type="text" id="edit_disiplin_tempat" name="edit_disiplin_tempat" value="<?= $disiplin[0]['tgl_selesai'];?>"   required/>
-  </div> -->
+    <input class="form-control customInput datepicker" type="text" id="edit_disiplin_tgl_selesaiberlaku" name="edit_disiplin_tgl_selesaiberlaku" value="<?= $disiplin[0]['tgl_selesaiberlaku'];?>"   required/>
+  </div>
 
   <div class="form-group">
     <label>No Surat</label>

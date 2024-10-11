@@ -73,6 +73,13 @@
       object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
+      <?php if($profil_pegawai['flag_terima_tpp'] == 1) { ?>
+      border-right-style: solid;
+      border-width: 4px;
+      border-color: #222e3c;
+      <?php } ?>
+      /* border-color: green; */
+
     }
     
     .foto_container {
@@ -136,6 +143,7 @@
 }
 
 
+
   </style>
 
 
@@ -180,6 +188,7 @@
               <div class="col-lg-6 col-md-6 col-sm-6 text-right">
                 <h3><span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span></h3>
               </div>
+              
             
 
               <div class="col-lg-12 text-center">
@@ -262,7 +271,7 @@
                 </button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Umum</a>
-                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satylencana</a>
+                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satyalancana</a>
                   </div>
               </div>
 
@@ -598,11 +607,12 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
+                  <?= $profil_pegawai['nm_pangkat'];?>
                   <?php if($profil_pegawai['data_pangkat']) {
-                    $data = explode("|", $profil_pegawai['data_pangkat']);
-                    echo $data[0];
+                    // $data = explode("|", $profil_pegawai['data_pangkat']);
+                    // echo $data[0];
                   } else {
-                    echo $profil_pegawai['nm_pangkat'];
+                    // echo $profil_pegawai['nm_pangkat'];
                   }
                     ?>
                 </span>
@@ -811,12 +821,14 @@
                 ?>
               <?php 
               // if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
+              if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
+
                 ?>
               <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
               </li>
               <?php 
-              //  } 
+               } 
               ?>
               <?php 
               //  }  

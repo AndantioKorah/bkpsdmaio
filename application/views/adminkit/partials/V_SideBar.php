@@ -215,6 +215,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Announcement
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-plh')?>">
+						<i class="align-middle me-2 far fa-circle"></i>PLT/PLH
+					</a>
+				</li>
 				
 				<?php } ?>
 			</ul>
@@ -481,7 +487,8 @@
 	
 
 	<li class="sidebar-header">
-		Kinerja
+		<!-- Kinerja -->
+		 BIDIK ASN JUARA
 	</li>
 
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
@@ -584,11 +591,6 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
-					</a>
-				</li>
-				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
 					</a>
@@ -602,6 +604,12 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
 				){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
+					</a>
+				</li>
+				
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>TPP
@@ -737,10 +745,11 @@
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
 	
     <li class="sidebar-header">
-		Manajemen Talenta
+		<!-- Manajemen Talenta -->
+		 SIPANTAS
 	</li>
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
-	
+		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
 	<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
@@ -784,7 +793,7 @@
 				
 			</ul>
 		</li>
-
+			<?php } ?>
 	
 
 		<li class="sidebar-item ">
@@ -1033,10 +1042,10 @@
 			?>
 			<?php if(!$this->general_library->isWalikota()) { ?>
 			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
-				<span class="align-middle">
-				Penilaian Sejawat
+				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+					<span class="align-middle">
+					Penilaian Sejawat
 					</span>
 				</a>	
 			</li>
@@ -1047,20 +1056,41 @@
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	
-			<li class="sidebar-header">
-		    Simponi ASN
-        	</li>
-			<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
-				<span class="align-middle">
-				Data Pensiun
-					</span>
-				</a>	
-			</li>
+				<li class="sidebar-header">
+					Simponi ASN
+				</li>
+				<li class="sidebar-item ">
+					<a title="Verifikasi" href="<?=base_url();?>list-pegawai/pensiun" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
+						<span class="align-middle">
+						Data Pensiun
+						</span>
+					</a>	
+				</li>
 			<?php 
 		    }
 		    ?>
+			<?php if($this->general_library->isHakAkses('download_berkas_tpp_bkad') || $this->general_library->isProgrammer()){?>
+				<li class="sidebar-header">
+					Menu BKAD
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/rekapitulasi/tpp/format-bkad" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file"></i> 
+						<span class="align-middle">
+							Format TPP BKAD
+						</span>
+					</a>	
+				</li>
+				<li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/upload-gaji" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file-upload"></i> 
+						<span class="align-middle">
+							Upload Gaji
+						</span>
+					</a>	
+				</li>
+			<?php } ?>
 		
 
 		

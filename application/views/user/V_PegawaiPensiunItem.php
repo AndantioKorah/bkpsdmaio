@@ -7,7 +7,7 @@
 
         .text-small{
             font-size: .8rem;
-            color: gray;
+            /* color: gray; */
         }
 
         #table_result, #table_result thead, #table_result th, #table_result tr, #table_result td{
@@ -19,8 +19,6 @@
 <div id="tess">
 
 </div>
-
-
     <div class="row p-3">
         <div class="col-lg-12 pb-3 text-right float-right">
             <!-- <button class="btn btn-sm btn-navy" id="dl-png" data-toggle="modal" data-target="#exampleModalx">PNG</button> -->
@@ -30,7 +28,7 @@
             </form>
         </div>
         <div class="col-lg-12 table-responsive" id="example">
-            <table border=1 id="table_result" class="table table-hover datatable">
+            <table border=1 id="table_result" class="table datatable">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
                     <th style="width: 35%;" class="text-center">Nama Pegawai</th>
@@ -40,15 +38,21 @@
                     <th style="width: 10%;" class="text-center">BUP</th>
                     <th style="width: 10%;" class="text-center">TMT Pensiun</th>
                     <th style="width: 20%;" class="text-center">Detail</th>
+                    <th style="width: 20%;" class="text-center">Verifikator</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
-                        <tr>
+                        <?php if(isset($list_checklist_pensiun[$rs['nipbaru_ws']])){ ?>
+                            <tr style="background-color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['bg-color']?>;
+                                color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['txt-color']?> !important; font-weight: bold;">
+                        <?php } else { ?>
+                            <tr>
+                        <?php } ?>
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-left">
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
-                                <span class="text-small"><?=formatNip($rs['nipbaru_ws'])?></span><br>
-                                <span class="text-small fw-bold" style="color: black !important;"><?=($rs['nama_jabatan'])?></span><br>
+                                <span class="text-small"><?=($rs['nipbaru_ws'])?></span><br>
+                                <span class="text-small fw-bold"><?=($rs['nama_jabatan'])?></span><br>
                                 <span class="text-small"><?=($rs['nm_pangkat'])?></span>
                             </td>
                             <td class="text-center"><?=($rs['eselon'])?></td>
@@ -61,7 +65,18 @@
                                     <i class="fa fa-file"></i> Berkas
                                 </a>
                             </td>
+                            <td class="text-center">
+                                <?=isset($list_checklist_pensiun[$rs['nipbaru_ws']]) ? $list_checklist_pensiun[$rs['nipbaru_ws']]['nama'] : ''?>
+                            </td>
                         </tr>
+                        <!-- <?php if(isset($list_checklist_pensiun[$rs['nipbaru_ws']])){ ?>
+                            <tr style="background-color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['bg-color']?>;
+                            color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['txt-color']?>">
+                                <td colspan=8 class="text-center">
+                                    Verifikator: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['nama']?>
+                                </td>
+                            </tr>
+                        <?php } ?> -->
                     <?php } ?>
                 </tbody>
             </table>

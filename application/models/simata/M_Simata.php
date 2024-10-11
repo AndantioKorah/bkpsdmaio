@@ -476,6 +476,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
                     if($id == 4){
                         $this->db->where_in('c.jenis_jabatan', ["JFU"]);
+                        $this->db->where('c.id_jabatanpeg !=', '9050030JS010');
                     }
                     // dd($jenis_pengisian);
              
@@ -1378,7 +1379,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPangkatGolPengawai($id,$kode,$jenis_pengisian){
-            
+        //   dd($kode);
             
             $id_pangkat = null;
             $this->db->select('a.pangkat,a.tmtpangkat')
@@ -1472,8 +1473,8 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
                 }
             } else if($kode == 3) {
-              
-                if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
+                if($jenis_pengisian == 2){
+                    if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
                         $id_pangkat = 96;
                 } else if($pangkat[0]['pangkat'] =  33) {
                     $sdate = $pangkat[0]['tmtpangkat'];
@@ -1494,12 +1495,10 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
 
                 }
-
-            } else if($kode == 4) {
-              
-                if($pangkat[0]['pangkat'] > 32 && $pangkat[0]['pangkat'] < 45) {
+                } else if($jenis_pengisian == 1) {
+                    if($pangkat[0]['pangkat'] > 31 && $pangkat[0]['pangkat'] < 45) {
                         $id_pangkat = 96;
-                } else if($pangkat[0]['pangkat'] =  32) {
+                } else if($pangkat[0]['pangkat'] ==  31) {
                     $sdate = $pangkat[0]['tmtpangkat'];
                     $edate = date('Y-m-d');
                     $date_diff = abs(strtotime($edate) - strtotime($sdate));
@@ -1516,7 +1515,32 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     } else if($years <= 2){
                         $id_pangkat = 100;
                     }
+                }
+                }
+               
 
+            } else if($kode == 4) {
+            //   dd($pangkat[0]['pangkat']);
+                if($pangkat[0]['pangkat'] > 31 && $pangkat[0]['pangkat'] < 45) {
+                        $id_pangkat = 96;
+                } else if($pangkat[0]['pangkat'] ==  31) {
+                    
+                    $sdate = $pangkat[0]['tmtpangkat'];
+                    $edate = date('Y-m-d');
+                    $date_diff = abs(strtotime($edate) - strtotime($sdate));
+                    $years = floor($date_diff / (365*60*60*24));
+                    $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+                    $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                    if($years >= 5) {
+                        $id_pangkat = 97;
+                    } else if($years == 4){
+                        $id_pangkat = 98;
+                    } else if($years == 3){
+                        $id_pangkat = 99;
+                    } else if($years <= 2){
+                        $id_pangkat = 100;
+                    }
                 }
 
             }
@@ -2038,9 +2062,10 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
 
         $jabatan = $this->db->get()->result_array();
+        
         $bulan = $jabatan[0]['masa_kerja'];
         $years = $bulan / 12;
-        
+       
         
          if(in_array($eselonpegawai, $eselon)){
               
@@ -2084,6 +2109,17 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 $id_masakerja = 131;
             } else if($years < 2){
                 $id_masakerja = 132;
+            }
+           } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 1){
+            // dd($years);
+            if($years > 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years <= 5){
+                $id_masakerja = 102;
+            } else if($years >= 2){
+                $id_masakerja = 103;
+            } else if($years < 2){
+                $id_masakerja = 104;
             }
            }
 
@@ -2160,7 +2196,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->from('db_pegawai.pegdatalain a')
             ->where('a.id_pegawai', $id)
             ->where('a.status', 2)
-            ->where('a.jenispenugasan', 99)
+            ->where_in('a.jenispenugasan', [98,99])
             ->where('a.flag_active', 1);
            $pegpenugasan = $this->db->get()->result_array();
            if($pegpenugasan){
@@ -3039,8 +3075,21 @@ public function searchRumpunJabatan($data){
 function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp){
 
 
+    $this->db->select('*')
+    ->from('db_simata.m_interval_penilaian a')
+    ->where('a.id_m_unsur_penilaian', 2)
+    ->where('a.kriteria', 'Tinggi');
+    $potensialtinggi =  $this->db->get()->row_array(); 
+
+    $this->db->select('*')
+    ->from('db_simata.m_interval_penilaian a')
+    ->where('a.id_m_unsur_penilaian', 1)
+    ->where('a.kriteria', 'Di atas ekspektasi');
+    $kinerjadiatas =  $this->db->get()->row_array(); 
+
+
     $this->db->select('a.*,c.*,f.jabatan_target,g.nama_jabatan,e.eselon as es_jabatan, 
-    (res_kinerja + res_potensial_total + (select res_kompetensi from db_simata.t_penilaian_kompetensi as y where y.id_peg = a.id_peg and y.jabatan_target = f.jabatan_target)) as total,
+    (res_kinerja + res_potensial_total + IFNULL((select res_kompetensi from db_simata.t_penilaian_kompetensi as y where y.id_peg = a.id_peg and y.jabatan_target = f.jabatan_target),0)) as total,
     (res_kinerja + res_potensial_total) as total_talent_pool, h.res_kompetensi as nilai_kompetensi,
     (select res_kompetensi from db_simata.t_penilaian_kompetensi as z where z.id_peg = a.id_peg and z.jabatan_target = f.jabatan_target) as nilai_kompetensi,
     (SELECT d.nama_jabatan from db_pegawai.jabatan as d
@@ -3051,12 +3100,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         ->join('db_simata.t_jabatan_target as f', 'a.id_peg = f.id_peg','left')
         ->join('db_pegawai.jabatan as g', 'f.jabatan_target = g.id_jabatanpeg')
         ->join('db_simata.t_penilaian_kompetensi as h', 'a.id_peg = h.id_peg','left')
-        ->where('a.res_potensial_total >=', 77)
-        ->where('a.res_kinerja >=', 85)
+        ->where('a.res_potensial_total >=', $potensialtinggi['dari'])
+        ->where('a.res_kinerja >=', $kinerjadiatas['dari'])
         ->where('a.flag_active', 1)
         ->where('f.flag_active', 1)
         ->group_by('a.id_peg')
         ->order_by('total', 'desc')
+        // ->order_by('total_talent_pool', 'desc')
         ->limit(3);
 
     // if($jp == 1){
@@ -4560,6 +4610,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
                                             ->get()->result_array();
+                                            // dd($list_pegawai);
                 } else if($data['filter'] == 'eselon_tiga' || $data['filter'] == 'eselon_empat'){
                    
                     $list_bidang = null;
@@ -5135,7 +5186,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
         public function getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id){
-            // dd("tes");
+          
             $this->db->select('*, a.id_peg as id_pegawai, c.nama_jabatan as jabatan_sekarang,
             (select pertimbangan_pimpinan from db_simata.t_penilaian_pimpinan aa where aa.id_peg = a.id_peg and aa.flag_active = 1 limit 1) as pertimbangan_pimpinan,
             (select id_m_kriteria_penilaian from db_simata.t_penilaian_sejawat bb where bb.id_peg = a.id_peg and bb.flag_active = 1 limit 1) as id_kriteria_penilaian')
@@ -5149,7 +5200,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                            ->order_by('c.eselon', 'asc')
                            ->group_by('a.id_peg');
             $query = $this->db->get()->result_array();
-            // dd($query);
+            
             if($query){
 
                 // kinerja 
@@ -5167,9 +5218,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     //   if($id_pegawai == 'PEG0000000eh992'){
                     //     dd($kriteria4);
                     //    }
-
-
-
 
                        $data["id_peg"] = $id_pegawai;
                        $data["kriteria1"] = $kriteria1;
@@ -5202,15 +5250,16 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                        
        
                        $total_kinerja = $total_kinerja1 + $total_kinerja2 + $total_kinerja3 + $total_kinerja4 + $total_kinerja5;
-                   
 
                     $cek =  $this->db->select('*')
                     ->from('db_simata.t_penilaian_kinerja a')
                     ->where('a.id_peg', $id_pegawai)
                     ->where('a.flag_active', 1)
                     ->get()->result_array();
+                  
 
                     if($cek){
+                        // dd(1);
                         $this->db->where('id_peg', $id_pegawai)
                         ->update('db_simata.t_penilaian_kinerja', 
                         ['kriteria1' => $kriteria1,
@@ -5233,7 +5282,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             ->where('a.jenjang_jabatan', $jenis_pengisian)
             ->where('a.flag_active', 1)
             ->get()->result_array();
-            
 
 
             if($cekPenilaian){

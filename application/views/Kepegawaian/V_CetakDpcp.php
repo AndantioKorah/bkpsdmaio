@@ -206,7 +206,7 @@
                                     <td style="text-align: center; width: 10%;">ANGKAT</td>
                                     <td style="text-align: center; width: 30%;">NAMA AYAH/IBU</td>
                                 </tr>
-                                <?php if($berkas['akte_anak']){ $no = 1; foreach($berkas['akte_anak'] as $aa){ if($aa['statusanak'] != 2){ ?>
+                                <?php if($berkas['akte_anak']){ $no = 1; foreach($berkas['akte_anak'] as $aa){ if($aa){ if($aa['statusanak'] != 2){ ?>
                                     <tr>
                                         <td style="text-align: center;"><?=$no++;?></td>
                                         <td><?=$aa['namakel']?></td>
@@ -216,7 +216,7 @@
                                         <td></td>
                                         <td><?=$aa['nama_ortu_anak']?></td>
                                     </tr>
-                                <?php } } } ?>
+                                <?php } } } } ?>
                             </table>
                         </td>
                     </tr>

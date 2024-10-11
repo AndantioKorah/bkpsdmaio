@@ -45,6 +45,35 @@
                             ->where('tahun', $tahun)
                             ->where('flag_active', 1)
                             ->get()->result_array();
+            // return $this->db->select('*')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+        }
+
+        public function getKinerjaPegawai2($id_m_user, $bulan, $tahun){
+            // return $this->db->select('*,
+            //                 (SELECT SUM(b.realisasi_target_kuantitas)
+            //                 FROM t_kegiatan b
+            //                 WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+            //                 AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+            return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
+                            ->from('t_rencana_kinerja')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->group_by('id')
+                            ->get()->result_array();
         }
 
         public function getProduktivitasKerjaPegawai($id, $bulan, $tahun){
@@ -96,17 +125,19 @@
         }
 
         public function rekapPenilaianSearch($data){
-           
+        //    dd($data);
             $result = null;
             $skpd = explode(";",$data['skpd']);
+           
             $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
+                                    // ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
                                     ->where('id_m_status_pegawai', 1)
+                                    ->where('b.id', 78)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -117,24 +148,27 @@
                     $bobot_komponen_kinerja = 0;
                     $bobot_skp = 0;
                     $temp['komponen_kinerja'] = $this->getKomponenKinerja($p['id'], $data['bulan'], $data['tahun']);
-                    // dd($temp['komponen_kinerja']);
                     if($temp['komponen_kinerja']){
                         list($temp['komponen_kinerja']['capaian'], $temp['komponen_kinerja']['bobot']) = countNilaiKomponen($temp['komponen_kinerja']);
                         $bobot_komponen_kinerja = $temp['komponen_kinerja']['bobot'];
+
                     }
-                    $temp['kinerja'] = $this->getKinerjaPegawai($p['id'], $data['bulan'], $data['tahun']);
+                    $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
                     if($temp['kinerja']){
-                        $temp['nilai_skp'] = countNilaiSkp($temp['kinerja']);
+                        $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
+                    
                     if($p['eselon'] != null){
                         $result[$i] = $temp;
                         $i++;
                     } else {
                         $temp_pegawai[$j] = $temp;
+                        $result[$j] = $temp;
                         $j++;
                     }
+                   
                 }
                 if($temp_pegawai){
                     foreach($temp_pegawai as $t){
@@ -143,8 +177,11 @@
                     }
                 }
             }
+            // dd($result);
             return $result;
         }
+
+       
 
         public function rekapDisiplinSearch($data){
             $result = null;
@@ -827,6 +864,7 @@
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
                     && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
+                        // $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                         $result[$i]['kelas_jabatan'] = 7;
                     }
                 } else if(in_array($d['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
@@ -834,8 +872,10 @@
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) ){
-                        // $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
-                        $result[$i]['kelas_jabatan'] = 7;
+                        $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
+                        if($d['kelas_jabatan_jft'] > 7){
+                            $result[$i]['kelas_jabatan'] = 7;
+                        }
                     }
                 }
     
@@ -869,7 +909,7 @@
         return $result;
     }
 
-    public function lockTpp($param){
+    public function lockTpp($param, $data){
         unset($param['nm_unitkerja']);
         $param['created_by'] = $this->general_library->getId();
 
@@ -877,9 +917,13 @@
         $explode = explode('-', $today);
         $date_param = date("Y-m-01", strtotime($param['tahun'].'-'.$param['bulan'].'-01'));
         $date_today = date("Y-m-01", strtotime($explode[0].'-'.$explode[1].'-01'));
+        // dd($date_param.' ; '.$date_today);
         if($date_param >= $date_today){
             return null;
         }
+
+        $param['meta_data'] = json_encode($data);
+        $param['nama_param_unitkerja'] = $data['param']['nm_unitkerja'];
 
         $exists = $this->db->select('*')
                         ->from('t_lock_tpp')
@@ -892,9 +936,11 @@
         if($exists){
             // ganti created_by jadi updated_by supaya dapa tau sapa yang tarek dan yg tarek pertama tetap dapa tau
             $param['updated_by'] = $param['created_by'];
+            $param['flag_active'] = 1;
             unset($param['created_by']);
             $this->db->where('id', $exists['id'])
                     ->update('t_lock_tpp', $param);
+            // dd($param);
         } else {
             $this->db->insert('t_lock_tpp', $param);
         }
@@ -1379,9 +1425,14 @@
         if($tahun == null){
             $tahun = date('Y');
         }
+
+        $uksearch = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', $id_unitkerja)
+                                    ->get()->row_array();
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
@@ -1392,9 +1443,24 @@
                                 ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
                                 ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
-                                ->where('a.id_unitkerja', $id_unitkerja)
-                                ->where('a.flag_active', 1)
-                                ->get()->result_array();
+                                // ->where('a.id_unitkerja', $id_unitkerja)
+                                ->where('a.flag_active', 1);
+                                // ->get()->result_array();
+
+        if(in_array($id_unitkerja, LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->where('f.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } 
+        // else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
+        //     $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);
+        // } 
+        else {
+            $this->db->where('a.id_unitkerja', $id_unitkerja);
+        }
+        $pegawai = $this->db->get()->result_array();
+
+        // if($this->general_library->isProgrammer()){
+        //     dd($pegawai);
+        // }
 
         $list_hari_kerja = null;
         $hari_kerja = getHariKerjaByBulanTahun($bulan, $tahun);
@@ -1484,6 +1550,7 @@
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
+        $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
             if($flag_rekap_personal == 1){
@@ -1528,6 +1595,11 @@
                     $tlp[$lpw['nip']]['absen'][$lh]['status_absensi'] = "";
                     $tlp[$lpw['nip']]['absen'][$lh]['ket_masuk'] = "";
                     $tlp[$lpw['nip']]['absen'][$lh]['ket_pulang'] = "";
+
+                    if(getNamaHari($lh) == 'Sabtu' || getNamaHari($lh) == 'Minggu'){
+                        $expl = explode("-", $lh);
+                        $list_tanggal_exclude[$lh] = $expl[2];
+                    }
                 }
             }
 
@@ -1707,6 +1779,9 @@
                     $data['info_libur'][$h['keterangan']]['tanggal_akhir'] = $h['tanggal'];
                 }
                 $hari_libur[$h['tanggal']] = $h;
+
+                $expl = explode("-", $h['tanggal']);
+                $list_tanggal_exclude[$h['tanggal']] = $expl[2];
             }
         }
         $data['hari_libur'] = $hari_libur;
@@ -1727,6 +1802,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where_in('c.nipbaru_ws', $temp_list_nip)
+                ->where_not_in('a.tanggal', $list_tanggal_exclude)
                 // ->where('c.skpd', $uker['id_unitkerja'])
                 ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
@@ -2237,7 +2313,7 @@
                             ->get()->row_array();
             }
 
-            $this->db->select('a.*, c.nama as nama_hd, b.nipbaru_ws, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat')
+            $this->db->select('a.*, c.nama as nama_hd, b.nipbaru_ws, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat, b.statuspeg')
                     ->from('db_pegawai.pegdisiplin a')
                     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b. id_peg')
                     ->join('db_pegawai.hd c', 'a.hd = c.idk')
@@ -2332,6 +2408,9 @@
                         $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = formatTwoMaxDecimal($result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja']);
                     }
                 }
+                // if($tr['nip'] == '196809261988031001'){
+                //     dd($result['result']['196809261988031001']);
+                // }
             }
         }
 
@@ -2589,7 +2668,7 @@
         foreach($pagu_tpp as $pt){
             $list_pegawai['result'][$pt['nipbaru_ws']] = $pt;
         }
-        
+
         $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
 
         $data_rekap = $this->rekapPenilaianDisiplinSearch($param, $flag_rekap_tpp);
@@ -2655,8 +2734,15 @@
                 $result[$l['nipbaru_ws']]['nomor_golongan'] = getGolonganByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['eselon'] = isset($l['rekap_kehadiran']) ? $l['rekap_kehadiran']['eselon'] : null;
                 $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'];
+                // if($l['nipbaru_ws'] == '197801302003122003'){
+                //     dd($param);
+                // }
                 if(isset($param['id_m_tpp_tambahan']) && $param['id_m_tpp_tambahan'] != 0){
                     $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
+                }
+
+                if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
+                    $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
                 }
 
                 $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
@@ -2718,6 +2804,12 @@
                     floatval($result[$l['nipbaru_ws']]['kondisi_kerja'])
                 );
 
+                if($this->general_library->isProgrammer()){
+                    if($result[$l['nipbaru_ws']]['total_presentase_kriteria'] == 0){
+                        dd($result[$l['nipbaru_ws']]);
+                    }
+                }
+
                 // decimal presentasi kerja
                 $result[$l['nipbaru_ws']]['presentasi_prestasi_kerja'] = ($result[$l['nipbaru_ws']]['prestasi_kerja'] /
                         $result[$l['nipbaru_ws']]['total_presentase_kriteria']);
@@ -2727,8 +2819,8 @@
                         $result[$l['nipbaru_ws']]['total_presentase_kriteria']);
 
                 $result[$l['nipbaru_ws']]['tpp_diterima'] = 
-                    ($result[$l['nipbaru_ws']]['besaran_tpp'] -
-                    $result[$l['nipbaru_ws']]['nominal_pph']);
+                    pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']) -
+                    pembulatan($result[$l['nipbaru_ws']]['nominal_pph']);
                 // if($l['nipbaru_ws'] == '197707042010011005'){
                 //     $result[$l['nipbaru_ws']]['besaran_tpp'] = 5118036;
                 // }
@@ -2791,6 +2883,10 @@
                         ($result[$l['nipbaru_ws']]['bpjs'] * $result[$l['nipbaru_ws']]['presentasi_kondisi_kerja']);
                 }
 
+                // if($this->general_library->isProgrammer()){
+                //     dd($l);
+                // }
+
                 // $result[$l['nipbaru_ws']]['bpjs'] = round($result[$l['nipbaru_ws']]['bpjs'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'], 2);
                 // $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = round($result[$l['nipbaru_ws']]['bpjs_beban_kerja'], 2);
@@ -2809,6 +2905,8 @@
                             $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] = 0;
                             $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] = 0;
                             $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'] = 0;
+                        } else {
+                            
                         }
                     }
                 }
@@ -2848,15 +2946,25 @@
                     $result[$l['nipbaru_ws']]['pph_beban_kerja'] +
                     $result[$l['nipbaru_ws']]['pph_kondisi_kerja'];
                     
-                $result[$l['nipbaru_ws']]['tpp_diterima'] =
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_prestasi_kerja'] +
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_beban_kerja'] +
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'];
+                // $result[$l['nipbaru_ws']]['tpp_diterima'] =
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_prestasi_kerja'] +
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_beban_kerja'] +
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'];
 
                 $result[$l['nipbaru_ws']]['bpjs'] =
                     $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] +
                     $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] +
                     $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'];
+
+                $result[$l['nipbaru_ws']]['tpp_final'] = 
+                    pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']) -
+                    pembulatan($result[$l['nipbaru_ws']]['nominal_pph']) -
+                    pembulatan($result[$l['nipbaru_ws']]['bpjs']);
+
+                if($this->general_library->isProgrammer()){
+                    // dd(pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']).' ; '.pembulatan($result[$l['nipbaru_ws']]['nominal_pph']).' ; '.pembulatan($result[$l['nipbaru_ws']]['bpjs']).' ; '.$result[$l['nipbaru_ws']]['tpp_final']);
+                    // dd($result[$l['nipbaru_ws']]);
+                }
 
                 if($result[$l['nipbaru_ws']]['statuspeg'] == 3){ //jika PPPK
                     if($result[$l['nipbaru_ws']]['flag_terima_tpp'] == 1){ //jika terima TPP
@@ -2867,7 +2975,7 @@
                         $rekap_pppk['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
                         $rekap_pppk['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
                         $rekap_pppk['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                        $rekap_pppk['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap_pppk['bpjs'] += ($result[$l['nipbaru_ws']]['bpjs']);
                         $rekap_pppk['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
 
                         $result['pppk'][$l['nipbaru_ws']] = $result[$l['nipbaru_ws']];
@@ -2882,7 +2990,7 @@
                         $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
                         $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
                         $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                        $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap['bpjs'] += ($result[$l['nipbaru_ws']]['bpjs']);
                         $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
                     }
                 }
@@ -2910,7 +3018,9 @@
                                         ->where('b.kepalaskpd', 1)
                                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                                         ->get()->row_array();
-        // dd($result);
+        if($this->general_library->isProgrammer()){
+            // dd($result);
+        }
         return $result;
     }
 
@@ -3008,7 +3118,7 @@
                 // $result[$p['nipbaru_ws']]['besaran_tpp'] = roundDown($result[$p['nipbaru_ws']]['besaran_tpp'], 3);
                 $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
                 $result[$p['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$p['nipbaru_ws']]['pph']) / 100) * $result[$p['nipbaru_ws']]['besaran_tpp']);
-                $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
+                $result[$p['nipbaru_ws']]['tpp_diterima'] = pembulatan($result[$p['nipbaru_ws']]['besaran_tpp']) - pembulatan($result[$p['nipbaru_ws']]['nominal_pph']);
             
                 // if($result[$p['nipbaru_ws']]['nip'] == "199510092019031001") {
                 //     dd($result[$p['nipbaru_ws']]);
@@ -3350,6 +3460,208 @@
         }
 
         return $result;
+    }
+
+    public function loadFormatTppBkadData(){
+        return $this->db->select('a.id, a.bulan, a.tahun, b.nm_unitkerja, a.nama_param_unitkerja')
+                    ->from('t_lock_tpp a')
+                    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                    ->where('a.flag_active', 1)
+                    ->where('a.meta_data IS NOT NULL')
+                    ->order_by('a.created_date', 'desc')
+                    ->get()->result_array();
+    }
+
+    public function loadGajiPegawai(){
+        $input_post = $this->input->post();
+
+        $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws, a.besaran_gaji, b.nama_jabatan, c.nm_unitkerja, d.created_date')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                    ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                    ->join('t_bkad_upload_gaji d', 'a.id_t_bkad_upload_gaji = d.id', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('a.nipbaru_ws NOT IN ("guest", "walikota", "wakilwalikota")')
+                    ->order_by('b.eselon, a.skpd')
+                    ->group_by('a.nipbaru_ws');
+                    // ->get()->result_array();
+                    
+        if(isset($input_post['skpd']) && $input_post['skpd'] != 0){
+            $this->db->where('a.skpd', $input_post['skpd']);
+        }
+        $data = $this->db->get()->result_array();
+
+        $result = null;
+        if($data){
+            foreach($data as $d){
+                $result[$d['nipbaru_ws']] = $d;
+            }
+        }
+        $this->session->set_userdata('list_gaji_pegawai', $result);
+
+        return $result;
+    }
+
+    public function readUploadGaji(){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+        $rs['flag_not_found'] = 0;
+
+        $temp_not_found = null;
+        $filename = "";
+        $list_exec = null;
+
+        if($_FILES){
+            $allowed_extension = ['xls', 'csv', 'xlsx'];
+            $file_array = explode(".", $_FILES["file_gaji"]["name"]);
+            $file_extension = end($file_array);
+
+            if(in_array($file_extension, $allowed_extension)){
+                $config['upload_path'] = 'arsipbkad/uploadgaji'; 
+                $config['allowed_types'] = '*';
+                // $config['max_size'] = '5000'; // max_size in kb
+                $config['file_name'] = "LIST_GAJI_BKAD_".generateRandomString(10).'_'.date('dMYHis').'.xls';
+                $filename = $config['file_name'];
+
+                $this->load->library('upload', $config); 
+
+                $uploadfile = $this->upload->do_upload('file_gaji');
+
+                if($uploadfile){
+                    $this->db->trans_begin();
+
+                    $this->db->insert('t_bkad_upload_gaji', [
+                        'url_file' => $config['upload_path'].'/'.$config['file_name'],
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    $last_insert = $this->db->insert_id();
+
+                    $upload_data = $this->upload->data(); 
+                    $file_gaji['name'] = $upload_data['file_name'];
+
+                    libxml_use_internal_errors(true);
+                    // $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES["file_gaji"]["name"]);
+                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($config['upload_path'].'/'.$file_gaji['name']);
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+
+                    $spreadsheet = $reader->load($_FILES["file_gaji"]["tmp_name"]);
+                    // $data = $spreadsheet->getActiveSheet()->toArray();
+
+                    $highestRow = $spreadsheet->getActiveSheet()->getHighestRow();
+                    $highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+                    $list_gaji_exist = $this->session->userdata('list_gaji_pegawai');
+                    // dd($list_gaji_exist);
+
+                    for($row = 1; $row <= $highestRow; $row++){
+                        $nip = 0;
+                        $gaji = 0;
+                        for($col = 1; $col <= $highestColumnIndex; $col++){
+                            $value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row)->getValue();
+                            if($col == 1){ // nip
+                                $nip = $value;
+                            } else if($col == 2){ // nominal gaji
+                                $gaji = $value;
+                            }
+                        }
+                        if(isset($list_gaji_exist[$nip])){
+                            $exec = null;
+                            $exec['nip'] = $nip;
+                            $exec['besaran_gaji'] = $gaji;
+                            $exec['id_t_bkad_upload_gaji'] = $last_insert;
+                            $exec['created_by'] = $this->general_library->getId();
+
+                            $list_exec[] = $exec;
+
+                            // $this->db->where('nipbaru_ws', $nip)
+                            //         ->update('db_pegawai.pegawai', [
+                            //             'besaran_gaji' => $gaji,
+                            //             'id_t_bkad_upload_gaji' => $last_insert,
+                            //         ]);
+                        } else {
+                            $temp_not_found[$nip]['nip'] = $nip;
+                            $temp_not_found[$nip]['gaji'] = $gaji;
+                            $temp_not_found[$nip]['keterangan'] = "Data Tidak Ditemukan";
+                        }
+                    }
+
+                    if($list_exec){
+                        $this->db->insert_batch('t_cron_bkad_upload_gaji', $list_exec);
+                    }
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Gagal upload file';
+                }
+            }
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = 'File yang diupload tidak ditemukan';
+        }
+
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+            // $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+            if($temp_not_found){
+                $data_not_found['result'] = $temp_not_found;
+                $data_not_found['filename'] = "NOT_FOUND_".$filename;
+                $rs['flag_not_found'] = 1;
+                $this->session->set_userdata('data_not_found', $data_not_found);
+                // $this->load->view('rekap/V_UploadGajiBkadNotFoundExcel', $data);
+            }
+        }
+        return $rs;
+    }
+
+    public function loadUploadGajiHistory(){
+        return $this->db->select('a.*, b.nama')
+                        ->from('t_bkad_upload_gaji a')
+                        ->join('m_user b', 'a.created_by = b.id')
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.created_date', 'desc')
+                        ->get()->result_array(); 
+    }
+
+    public function cronUpdateGajiBkad(){
+        $data = $this->db->select('*')
+                        ->from('t_cron_bkad_upload_gaji')
+                        ->where('flag_active', 1)
+                        ->where('flag_update', 0)
+                        ->limit(1000)
+                        ->get()->result_array();
+
+        if($data){
+            foreach($data as $d){
+                $this->db->where('nipbaru_ws', $d['nip'])
+                        ->update('db_pegawai.pegawai', [
+                            'besaran_gaji' => $d['besaran_gaji'],
+                            'id_t_bkad_upload_gaji' => $d['id_t_bkad_upload_gaji']
+                        ]);
+                
+                $this->db->where('id', $d['id'])
+                        ->update('t_cron_bkad_upload_gaji', [
+                            'flag_update' => 1,
+                            'exec_time' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
+    }
+
+    public function getDataLockTpp($data){
+        // dd($data);
+        $skpd = explode(";", $data['skpd']);
+
+        return $this->db->select('*')
+                        ->from('t_lock_tpp')
+                        ->where('bulan', $data['bulan'])
+                        ->where('tahun', $data['tahun'])
+                        ->where('id_unitkerja', $skpd[0])
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
     }
 }
 ?>

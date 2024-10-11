@@ -551,8 +551,10 @@
                         </select>
                     </div>
 
-
-                    <!-- <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button> -->
+					<?php if($this->general_library->isProgrammer()){ ?>	
+                    <button type="submit" class="btn btn-primary float-right mb-3">Simpan</button>
+					 <?php } ?>
+					 
                     </form>
 					</div>
 

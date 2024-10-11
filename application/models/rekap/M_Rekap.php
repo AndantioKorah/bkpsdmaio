@@ -133,11 +133,11 @@
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
+                                    // ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
                                     ->where('id_m_status_pegawai', 1)
-                                    // ->where('b.id', 78)
+                                    ->where('b.id', 77)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){

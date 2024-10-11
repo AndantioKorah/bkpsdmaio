@@ -62,15 +62,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach($result as $rs){
+                            <?php $no = 1; 
+                            $diatasekspektasi = 0;
+                            $sesuaisekspektasi = 0;
+                            $dibawahekspektasi = 0;
+                            
+                            $no = 1;
+                            $no = 1;
+                            foreach($result as $rs){
                                 // $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
                                 if(isset($rs['komponen_kinerja'])){
                                     // $bobot_capaian_produktivitas += $rs['komponen_kinerja']['capaian'];
                                 }
                                 $capaian_pk = (isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0) + (isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0);
                                 // dd($capaian_pk);
-                                $bobot_capaian_produktivitas = ($capaian_pk / 60) * 100;
-                                // $result['presentase_pk'] = ($result['capaian_pk'] / $result['pagu_pk']) * 100;
+                                // $bobot_capaian_produktivitas = ($capaian_pk / 60) * 100;
+                                $bobot_capaian_produktivitas = $capaian_pk;
+                                
+
+                                if($bobot_capaian_produktivitas == 60){
+                                    $diatasekspektasi++;
+                                }
+                                if($bobot_capaian_produktivitas >= 48 && $bobot_capaian_produktivitas <= 59){
+                                    $sesuaisekspektasi++;
+                                }
+                                if($bobot_capaian_produktivitas <= 47){
+                                    $dibawahekspektasi++;
+                                }
+
+                               
+
+
+
                             ?>
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
@@ -96,9 +119,33 @@
                                     <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($bobot_capaian_produktivitas)?>%</td>
                                 </tr>
                             <?php } ?>
+                              
+                            </tr>
                         </tbody>
                     </table>
                 </div>
+                <table class="table table-bordered" border="1" >
+                    <?php 
+                    $jumlah = $no-1;
+                    $presentase = ($diatasekspektasi + $sesuaisekspektasi) / $jumlah;
+                    $presentaseFix = $presentase * 100;
+                    ?>
+                <thead style="background-color:#464646;color:#fff;font-size:10px;">
+                                <th style="text-align: center;" rowspan="1" colspan="1">JMLH, PEGAWAI</th>                             </th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI ATAS EKSPEKTASI (NILAI PRODUKTIVITAS 60)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">SESUAI EKSPEKTASI (NILAI PRODUKTIVITAS 48-59)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI BAWAH EKSPEKTASI (NILAI PRODUKTIVITAS 0-47)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">% PEGAWAI BERPREDIKAT SESUAI/DI ATAS EKSPEKTASI</th>
+                                </thead>
+                            <tr>
+                                <tbody>
+                                    <td><?= $no-1;?></td>
+                                    <td><?= $diatasekspektasi;?></td>
+                                    <td><?= $sesuaisekspektasi;?></td>
+                                    <td><?= $dibawahekspektasi;?></td>
+                                    <td><?= formatTwoMaxDecimal($presentaseFix);?></td>
+                                </tbody>
+                </table>
             </form>
         </div>
 <?php } else { ?>

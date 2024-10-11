@@ -35,7 +35,54 @@
                
               </style>
                 <!-- tutup tes -->
+                <table class="table table-bordered" border="1" style="margin-top:-50px;">
+                    <?php 
+                   
+                   $no = 1; 
+                   $diatasekspektasi = 0;
+                   $sesuaisekspektasi = 0;
+                   $dibawahekspektasi = 0;
+                   
+                   foreach($result as $rs){
+                    $no++ ; 
+                       $capaian_pk = (isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0) + (isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0);
+                       $bobot_capaian_produktivitas = $capaian_pk;
+                       
+
+                       if($bobot_capaian_produktivitas == 60){
+                           $diatasekspektasi++;
+                       }
+                       if($bobot_capaian_produktivitas >= 48 && $bobot_capaian_produktivitas < 60){
+                           $sesuaisekspektasi++;
+                       }
+                       if($bobot_capaian_produktivitas <= 47){
+                           $dibawahekspektasi++;
+                       }
+                    }
+
+                    $jumlah = $no-1;
+                    $presentase = ($diatasekspektasi + $sesuaisekspektasi) / $jumlah;
+                    $presentaseFix = $presentase * 100;
+                    ?>
+                <thead style="background-color:#464646;color:#fff;font-size:10px;" >
+                                <th style="text-align: center;" rowspan="1" colspan="1">JMLH, PEGAWAI</th>                             </th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI ATAS EKSPEKTASI <br>(NILAI PRODUKTIVITAS 60)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">SESUAI EKSPEKTASI <br>(NILAI PRODUKTIVITAS 48-59)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI BAWAH EKSPEKTASI <br>(NILAI PRODUKTIVITAS 0-47)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">% PEGAWAI BERPREDIKAT <br>SESUAI/DI ATAS EKSPEKTASI</th>
+                                </thead>
+                            <tr>
+                                <tbody>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $no-1;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $diatasekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $sesuaisekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $dibawahekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= formatTwoMaxDecimal($presentaseFix);?>%</td>
+                                </tbody>
+                </table>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+               
+               
                 <div class="div_maintb">
                     <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
                         <thead>
@@ -63,12 +110,11 @@
                         </thead>
                         <tbody>
                             <?php $no = 1; 
-                            $diatasekspektasi = 0;
-                            $sesuaisekspektasi = 0;
-                            $dibawahekspektasi = 0;
+                            // $diatasekspektasi = 0;
+                            // $sesuaisekspektasi = 0;
+                            // $dibawahekspektasi = 0;
                             
-                            $no = 1;
-                            $no = 1;
+                         
                             foreach($result as $rs){
                                 // $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
                                 if(isset($rs['komponen_kinerja'])){
@@ -80,20 +126,9 @@
                                 $bobot_capaian_produktivitas = $capaian_pk;
                                 
 
-                                if($bobot_capaian_produktivitas == 60){
-                                    $diatasekspektasi++;
-                                }
-                                if($bobot_capaian_produktivitas >= 48 && $bobot_capaian_produktivitas <= 59){
-                                    $sesuaisekspektasi++;
-                                }
-                                if($bobot_capaian_produktivitas <= 47){
-                                    $dibawahekspektasi++;
-                                }
+                              
 
-                               
-
-
-
+                            
                             ?>
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
@@ -124,28 +159,8 @@
                         </tbody>
                     </table>
                 </div>
-                <table class="table table-bordered" border="1" >
-                    <?php 
-                    $jumlah = $no-1;
-                    $presentase = ($diatasekspektasi + $sesuaisekspektasi) / $jumlah;
-                    $presentaseFix = $presentase * 100;
-                    ?>
-                <thead style="background-color:#464646;color:#fff;font-size:10px;">
-                                <th style="text-align: center;" rowspan="1" colspan="1">JMLH, PEGAWAI</th>                             </th>
-                                <th style="text-align: center;" rowspan="1" colspan="1">DI ATAS EKSPEKTASI (NILAI PRODUKTIVITAS 60)</th>
-                                <th style="text-align: center;" rowspan="1" colspan="1">SESUAI EKSPEKTASI (NILAI PRODUKTIVITAS 48-59)</th>
-                                <th style="text-align: center;" rowspan="1" colspan="1">DI BAWAH EKSPEKTASI (NILAI PRODUKTIVITAS 0-47)</th>
-                                <th style="text-align: center;" rowspan="1" colspan="1">% PEGAWAI BERPREDIKAT SESUAI/DI ATAS EKSPEKTASI</th>
-                                </thead>
-                            <tr>
-                                <tbody>
-                                    <td><?= $no-1;?></td>
-                                    <td><?= $diatasekspektasi;?></td>
-                                    <td><?= $sesuaisekspektasi;?></td>
-                                    <td><?= $dibawahekspektasi;?></td>
-                                    <td><?= formatTwoMaxDecimal($presentaseFix);?></td>
-                                </tbody>
-                </table>
+                <br>
+                
             </form>
         </div>
 <?php } else { ?>

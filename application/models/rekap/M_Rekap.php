@@ -72,7 +72,7 @@
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)
                             ->where('flag_active', 1)
-                            ->group_by('id', 1)
+                            ->group_by('id')
                             ->get()->result_array();
         }
 
@@ -125,7 +125,7 @@
         }
 
         public function rekapPenilaianSearch($data){
-           
+        //    dd($data);
             $result = null;
             $skpd = explode(";",$data['skpd']);
            
@@ -133,11 +133,11 @@
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
+                                    // ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
                                     ->where('id_m_status_pegawai', 1)
-                                    // ->where('b.id', 77)
+                                    // ->where('b.id', 78)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -154,29 +154,33 @@
 
                     }
                     $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
-                    // $temp['nilai_skp'] = 0;
                     if($temp['kinerja']){
                         $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
-                        //  dd($bobot_skp);  
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
+                
+
+                
+                  
                     if($p['eselon'] != null){
                         $result[$i] = $temp;
                         $i++;
                     } else {
-                        $temp_pegawai[$j] = $temp;
+                        // $temp_pegawai[$j] = $temp;
+                        $result[$j] = $temp;
                         $j++;
                     }
                    
                 }
-                if($temp_pegawai){
-                    foreach($temp_pegawai as $t){
-                        $result[$i] = $t;
-                        $i++;
-                    }
-                }
+                // if($temp_pegawai){
+                //     foreach($temp_pegawai as $t){
+                //         $result[$i] = $t;
+                //         $i++;
+                //     }
+                // }
             }
+            // dd($result);
             return $result;
         }
 

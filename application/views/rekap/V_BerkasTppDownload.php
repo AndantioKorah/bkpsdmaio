@@ -349,8 +349,8 @@
                         foreach($result as $r){
                             $pagu_keseluruhan += $r['pagu_tpp'];
                             $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
-                            $potongan_pajak_keseluruhan += $r['nominal_pph'];
-                            $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
+                            $potongan_pajak_keseluruhan += pembulatan($r['nominal_pph']);
+                            $jumlah_setelah_pajak_keseluruhan += ($r['tpp_diterima']);
 
                             $jumlah_bobot_produktivitas_kerja += $r['bobot_produktivitas_kerja'];
                             $jumlah_bobot_disiplin_kerja += $r['bobot_disiplin_kerja'];
@@ -377,6 +377,8 @@
                         <?php }
                         $rata_rata_bobot_produktivitas = $jumlah_bobot_produktivitas_kerja / count($result);
                         $rata_rata_bobot_disiplin = $jumlah_bobot_disiplin_kerja / count($result);
+
+                        $jumlah_setelah_pajak_keseluruhan = (pembulatan($jumlah_capaian_keseluruhan) - pembulatan($potongan_pajak_keseluruhan));
                         ?>
                         <tr>
                             <td style="text-align: center;" colspan=2><strong>JUMLAH</strong></td>

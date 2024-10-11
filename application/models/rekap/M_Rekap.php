@@ -2819,8 +2819,8 @@
                         $result[$l['nipbaru_ws']]['total_presentase_kriteria']);
 
                 $result[$l['nipbaru_ws']]['tpp_diterima'] = 
-                    ($result[$l['nipbaru_ws']]['besaran_tpp'] -
-                    $result[$l['nipbaru_ws']]['nominal_pph']);
+                    pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']) -
+                    pembulatan($result[$l['nipbaru_ws']]['nominal_pph']);
                 // if($l['nipbaru_ws'] == '197707042010011005'){
                 //     $result[$l['nipbaru_ws']]['besaran_tpp'] = 5118036;
                 // }
@@ -2946,10 +2946,10 @@
                     $result[$l['nipbaru_ws']]['pph_beban_kerja'] +
                     $result[$l['nipbaru_ws']]['pph_kondisi_kerja'];
                     
-                $result[$l['nipbaru_ws']]['tpp_diterima'] =
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_prestasi_kerja'] +
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_beban_kerja'] +
-                    $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'];
+                // $result[$l['nipbaru_ws']]['tpp_diterima'] =
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_prestasi_kerja'] +
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_beban_kerja'] +
+                //     $result[$l['nipbaru_ws']]['jumlah_setelah_pph_kondisi_kerja'];
 
                 $result[$l['nipbaru_ws']]['bpjs'] =
                     $result[$l['nipbaru_ws']]['bpjs_prestasi_kerja'] +
@@ -3118,7 +3118,7 @@
                 // $result[$p['nipbaru_ws']]['besaran_tpp'] = roundDown($result[$p['nipbaru_ws']]['besaran_tpp'], 3);
                 $result[$p['nipbaru_ws']]['pph'] = getPphByIdPangkat($p['id_pangkat']);
                 $result[$p['nipbaru_ws']]['nominal_pph'] = ((floatval($result[$p['nipbaru_ws']]['pph']) / 100) * $result[$p['nipbaru_ws']]['besaran_tpp']);
-                $result[$p['nipbaru_ws']]['tpp_diterima'] = $result[$p['nipbaru_ws']]['besaran_tpp'] - $result[$p['nipbaru_ws']]['nominal_pph'];
+                $result[$p['nipbaru_ws']]['tpp_diterima'] = pembulatan($result[$p['nipbaru_ws']]['besaran_tpp']) - pembulatan($result[$p['nipbaru_ws']]['nominal_pph']);
             
                 // if($result[$p['nipbaru_ws']]['nip'] == "199510092019031001") {
                 //     dd($result[$p['nipbaru_ws']]);

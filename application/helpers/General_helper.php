@@ -1138,13 +1138,19 @@ function countTmtPensiun($nip, $umur = 0){
 }
 
 function pembulatan($number){
+    $CI = &get_instance();
+
     $rounded = floor($number);
     $whole = $number - $rounded;
     if($whole != 0){
         // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
         $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+
+        if($CI->general_library->isProgrammer()){
+            $number = $rounded;
+        }
     }
-    return $number; 
+    return $number;
 }
 
 function excelRoundDown($number, $length){

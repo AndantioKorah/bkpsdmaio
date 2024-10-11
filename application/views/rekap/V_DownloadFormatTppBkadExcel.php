@@ -1,8 +1,8 @@
 <?php
-    if(!$this->general_library->isProgrammer()){
+    // if(!$this->general_library->isProgrammer()){
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=$filename");
-    }
+    // }
 
 ?>
 <html>
@@ -26,10 +26,10 @@
                     $total_besaran_tpp = 0;
 
                     foreach($result as $rs){
-                        $total_potongan_pph += $rs['nominal_pph'];
-                        $total_bpjs += ($rs['bpjs']);
+                        $total_potongan_pph += pembulatan($rs['nominal_pph']);
+                        $total_bpjs += pembulatan($rs['bpjs']);
                         // $total_jumlah_yang_diterima += $rs['tpp_final'];
-                        $total_besaran_tpp += $rs['besaran_tpp'];
+                        $total_besaran_tpp += pembulatan($rs['besaran_tpp']);
                     ?>
                         <tr>
                             <td style="text-align: center"><?=$no++;?></td>

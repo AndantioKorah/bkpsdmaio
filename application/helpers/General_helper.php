@@ -1175,18 +1175,19 @@ function countTmtPensiun($nip, $umur = 0){
 }
 
 function pembulatan($number){
-    // $CI = &get_instance();
+    // return $number;
+    $CI = &get_instance();
 
-    // $rounded = floor($number);
-    // $whole = $number - $rounded;
-    // if($whole != 0){
-    //     if($CI->general_library->isProgrammer()){
-    //         $number = $rounded;
-    //     } else {
-    //         // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
-    //         $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
-    //     }
-    // }
+    $rounded = floor($number);
+    $whole = $number - $rounded;
+    if($whole != 0){
+        if($CI->general_library->isProgrammer()){
+            $number = $rounded;
+        } else {
+            // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+            $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+        }
+    }
     return $number;
 }
 

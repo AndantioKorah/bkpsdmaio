@@ -1324,10 +1324,10 @@
                                 $total_jumlah_yang_diterima = 0;
 
                                 foreach($result as $r){
-                                    $total_jumlah_yang_dicapai += $r['besaran_tpp'];
-                                    $total_potongan_pph += $r['nominal_pph'];
-                                    $total_bpjs += ($r['bpjs']);
-                                    $total_jumlah_yang_diterima += $r['tpp_final'];
+                                    $total_jumlah_yang_dicapai += pembulatan($r['besaran_tpp']);
+                                    $total_potongan_pph += pembulatan($r['nominal_pph']);
+                                    $total_bpjs += pembulatan($r['bpjs']);
+                                    $total_jumlah_yang_diterima += pembulatan($r['tpp_final']);
                                 ?>
                                     <tr>
                                         <td style="text-align: center"><?=$no++;?></td>
@@ -1348,7 +1348,7 @@
                                         <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                                     </tr>
                                 <?php }
-                                $total_jumlah_yang_diterima = $jumlah_tpp_diterima;
+                                // $total_jumlah_yang_diterima = $jumlah_tpp_diterima;
                                 ?>
                                 <tr>
                                     <td colspan=6 style="text-align: center; font-weight: bold;">JUMLAH</td>

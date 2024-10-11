@@ -2962,7 +2962,8 @@
                     pembulatan($result[$l['nipbaru_ws']]['bpjs']);
 
                 if($this->general_library->isProgrammer()){
-                    dd($result[$l['nipbaru_ws']]);
+                    // dd(pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']).' ; '.pembulatan($result[$l['nipbaru_ws']]['nominal_pph']).' ; '.pembulatan($result[$l['nipbaru_ws']]['bpjs']).' ; '.$result[$l['nipbaru_ws']]['tpp_final']);
+                    // dd($result[$l['nipbaru_ws']]);
                 }
 
                 if($result[$l['nipbaru_ws']]['statuspeg'] == 3){ //jika PPPK

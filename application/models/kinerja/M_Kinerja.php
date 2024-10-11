@@ -3765,6 +3765,102 @@
                         ->get()->result_array();
     }
 
+
+    public function rekapPenilaianSearch2($data){
+        //    dd($data);
+            $result = null;
+            $skpd = explode(";",$data['skpd']);
+           
+            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                                    ->where('a.skpd', $skpd[0])
+                                    ->where('b.flag_active', 1)
+                                    ->order_by('c.eselon, b.username')
+                                    ->where('id_m_status_pegawai', 1)
+                                    // ->where('b.id', 78)
+                                    ->get()->result_array();
+            $temp_pegawai = null;
+            if($list_pegawai){
+                $i = 0;
+                $j = 0;
+                foreach($list_pegawai as $p){
+                    $temp = $p;
+                    $bobot_komponen_kinerja = 0;
+                    $bobot_skp = 0;
+                    $temp['komponen_kinerja'] = $this->getKomponenKinerja($p['id'], $data['bulan'], $data['tahun']);
+                    if($temp['komponen_kinerja']){
+                        list($temp['komponen_kinerja']['capaian'], $temp['komponen_kinerja']['bobot']) = countNilaiKomponen($temp['komponen_kinerja']);
+                        $bobot_komponen_kinerja = $temp['komponen_kinerja']['bobot'];
+
+                    }
+                    $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
+                    if($temp['kinerja']){
+                        $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
+                        $bobot_skp = $temp['nilai_skp']['bobot'];
+                    }
+                    $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
+                    
+                    if($data['kriteria'] == 2){
+                        if($temp['bobot_capaian_produktivitas_kerja'] == 60){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else if($data['kriteria'] == 3){
+                        if($temp['bobot_capaian_produktivitas_kerja'] >= 48 && $temp['bobot_capaian_produktivitas_kerja'] < 60){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else if($data['kriteria'] == 4){
+                        if($temp['bobot_capaian_produktivitas_kerja'] <= 47){
+                            $result[$i] = $temp;
+                            $i++;  
+                        }
+                    } else {
+                        $result[$i] = $temp;
+                        $i++;
+                    } 
+                   
+                }
+                
+            }
+            // dd($result);
+            return $result;
+        }
+
+        public function getKinerjaPegawai2($id_m_user, $bulan, $tahun){
+            // return $this->db->select('*,
+            //                 (SELECT SUM(b.realisasi_target_kuantitas)
+            //                 FROM t_kegiatan b
+            //                 WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+            //                 AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+            return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
+                            ->from('t_rencana_kinerja')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->group_by('id')
+                            ->get()->result_array();
+        }
+
+
+        public function getKomponenKinerja($id_m_user, $bulan, $tahun){
+            return $this->db->select('*')
+                            ->from('t_komponen_kinerja as a')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+        }
     
 
     

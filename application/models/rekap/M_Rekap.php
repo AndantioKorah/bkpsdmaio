@@ -914,6 +914,7 @@
         $explode = explode('-', $today);
         $date_param = date("Y-m-01", strtotime($param['tahun'].'-'.$param['bulan'].'-01'));
         $date_today = date("Y-m-01", strtotime($explode[0].'-'.$explode[1].'-01'));
+        // dd($date_param.' ; '.$date_today);
         if($date_param >= $date_today){
             return null;
         }
@@ -932,6 +933,7 @@
         if($exists){
             // ganti created_by jadi updated_by supaya dapa tau sapa yang tarek dan yg tarek pertama tetap dapa tau
             $param['updated_by'] = $param['created_by'];
+            $param['flag_active'] = 1;
             unset($param['created_by']);
             $this->db->where('id', $exists['id'])
                     ->update('t_lock_tpp', $param);

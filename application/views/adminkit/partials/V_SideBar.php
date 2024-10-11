@@ -591,11 +591,6 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
-					</a>
-				</li>
-				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
 					</a>
@@ -609,6 +604,12 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
 				){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
+					</a>
+				</li>
+				
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>TPP

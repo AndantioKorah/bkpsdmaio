@@ -35,7 +35,54 @@
                
               </style>
                 <!-- tutup tes -->
+                <table class="table table-bordered" border="1" style="margin-top:-50px;">
+                    <?php 
+                   
+                   $no = 1; 
+                   $diatasekspektasi = 0;
+                   $sesuaisekspektasi = 0;
+                   $dibawahekspektasi = 0;
+                   
+                   foreach($result as $rs){
+                    $no++ ; 
+                       $capaian_pk = (isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0) + (isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0);
+                       $bobot_capaian_produktivitas = $capaian_pk;
+                       
+
+                       if($bobot_capaian_produktivitas == 60){
+                           $diatasekspektasi++;
+                       }
+                       if($bobot_capaian_produktivitas >= 48 && $bobot_capaian_produktivitas < 60){
+                           $sesuaisekspektasi++;
+                       }
+                       if($bobot_capaian_produktivitas <= 47){
+                           $dibawahekspektasi++;
+                       }
+                    }
+
+                    $jumlah = $no-1;
+                    $presentase = ($diatasekspektasi + $sesuaisekspektasi) / $jumlah;
+                    $presentaseFix = $presentase * 100;
+                    ?>
+                <thead style="background-color:#464646;color:#fff;font-size:10px;" >
+                                <th style="text-align: center;" rowspan="1" colspan="1">JMLH, PEGAWAI</th>                             </th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI ATAS EKSPEKTASI <br>(NILAI PRODUKTIVITAS 60)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">SESUAI EKSPEKTASI <br>(NILAI PRODUKTIVITAS 48-59)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">DI BAWAH EKSPEKTASI <br>(NILAI PRODUKTIVITAS 0-47)</th>
+                                <th style="text-align: center;" rowspan="1" colspan="1">% PEGAWAI BERPREDIKAT <br>SESUAI/DI ATAS EKSPEKTASI</th>
+                                </thead>
+                            <tr>
+                                <tbody>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $no-1;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $diatasekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $sesuaisekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= $dibawahekspektasi;?></td>
+                                    <td style="text-align: center;" rowspan="1" colspan="1"><?= formatTwoMaxDecimal($presentaseFix);?>%</td>
+                                </tbody>
+                </table>
                 <input type="text" class="cd-search table-filter" data-table="rekap-table" placeholder="Cari Pegawai" />
+               
+               
                 <div class="div_maintb">
                     <table class="cd-table rekap-table table" border="1" id="table_rekap_penilaianx">
                         <thead>
@@ -62,36 +109,58 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach($result as $rs){
-                                $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
+                            <?php $no = 1; 
+                            // $diatasekspektasi = 0;
+                            // $sesuaisekspektasi = 0;
+                            // $dibawahekspektasi = 0;
+                            
+                         
+                            foreach($result as $rs){
+                                // $bobot_capaian_produktivitas = isset($rs['kinerja']) && $rs['kinerja'] ? $rs['kinerja']['rekap_kinerja']['bobot'] : 0;
                                 if(isset($rs['komponen_kinerja'])){
-                                    $bobot_capaian_produktivitas += $rs['komponen_kinerja'][1];
+                                    // $bobot_capaian_produktivitas += $rs['komponen_kinerja']['capaian'];
                                 }
+                                $capaian_pk = (isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0) + (isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0);
+                                // dd($capaian_pk);
+                                // $bobot_capaian_produktivitas = ($capaian_pk / 60) * 100;
+                                $bobot_capaian_produktivitas = $capaian_pk;
+                                
+
+                              
+
+                            
                             ?>
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
                                     <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
-                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama']?></span><br>
+                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
                                         NIP. <?=$rs['nip']?>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']) : 0;?>%</td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['berorientasi_pelayanan'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['akuntabel'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kompeten'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['harmonis'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['loyal'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['adaptif'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['list']['kolaboratif'] : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? ($rs['komponen_kinerja'][0]) : 0;?></td>
-                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja'][1]) : 0;?>%</td>
+                                    <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td> -->
+                                    <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['bobot']) : 0;?>%</td> -->
+                                    <!-- <td style="width: 6%; text-align: center;"><?=$rs['nilai_skp']['capaian'];?>%</td> -->
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['capaian']) : 0;?>%</td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['nilai_skp']) ? formatTwoMaxDecimal($rs['nilai_skp']['bobot']) : 0;?>%</td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['berorientasi_pelayanan'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['akuntabel'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['kompeten'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['harmonis'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['loyal'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['adaptif'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? $rs['komponen_kinerja']['kolaboratif'] : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? ($rs['komponen_kinerja']['capaian']) : 0;?></td>
+                                    <td style="width: 6%; text-align: center;"><?=isset($rs['komponen_kinerja']) ? formatTwoMaxDecimal($rs['komponen_kinerja']['bobot']) : 0;?>%</td>
                                     <td style="width: 6%; text-align: center;"><?=formatTwoMaxDecimal($bobot_capaian_produktivitas)?>%</td>
                                 </tr>
                             <?php } ?>
+                              
+                            </tr>
                         </tbody>
                     </table>
                 </div>
+                <br>
+                
             </form>
         </div>
 <?php } else { ?>

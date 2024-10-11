@@ -3025,7 +3025,7 @@ public function submitVerifikasiDokumen(){
 
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
         $this->updateJabatan($id_peg);
-        // $this->syncSiasnJabatan($id); 
+        $this->syncSiasnJabatan($id); 
     }
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){

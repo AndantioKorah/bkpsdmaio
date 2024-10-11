@@ -361,8 +361,10 @@
                 ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
                 ->join('m_status_verif c', 'a.status_verif = c.id')
                 ->where('a.id_m_user', $id)
-                ->where('year(a.tanggal_kegiatan)', $tahun)
-                ->where('month(a.tanggal_kegiatan)', $bulan)
+                // ->where('year(a.tanggal_kegiatan)', $tahun)
+                // ->where('month(a.tanggal_kegiatan)', $bulan)
+                ->where('b.tahun', $tahun)
+                ->where('b.bulan', $bulan)
                 ->where('a.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();

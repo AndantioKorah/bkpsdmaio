@@ -34,16 +34,45 @@
         }
 
         public function getKinerjaPegawai($id_m_user, $bulan, $tahun){
-            return $this->db->select('*,
-                            (SELECT SUM(b.realisasi_target_kuantitas)
-                            FROM t_kegiatan b
-                            WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
-                            AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            // return $this->db->select('*,
+            //                 (SELECT SUM(b.realisasi_target_kuantitas)
+            //                 FROM t_kegiatan b
+            //                 WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+            //                 AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+            return $this->db->select('*')
                             ->from('t_rencana_kinerja')
                             ->where('id_m_user', $id_m_user)
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)
                             ->where('flag_active', 1)
+                            ->get()->result_array();
+        }
+
+        public function getKinerjaPegawai2($id_m_user, $bulan, $tahun){
+            // return $this->db->select('*,
+            //                 (SELECT SUM(b.realisasi_target_kuantitas)
+            //                 FROM t_kegiatan b
+            //                 WHERE b.id_t_rencana_kinerja = t_rencana_kinerja.id
+            //                 AND b.flag_active = 1 and b.status_verif = 1) as realisasi')
+            //                 ->from('t_rencana_kinerja')
+            //                 ->where('id_m_user', $id_m_user)
+            //                 ->where('bulan', $bulan)
+            //                 ->where('tahun', $tahun)
+            //                 ->where('flag_active', 1)
+            //                 ->get()->result_array();
+            return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
+                            ->from('t_rencana_kinerja')
+                            ->where('id_m_user', $id_m_user)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->group_by('id')
                             ->get()->result_array();
         }
 
@@ -96,17 +125,19 @@
         }
 
         public function rekapPenilaianSearch($data){
-           
+        //    dd($data);
             $result = null;
             $skpd = explode(";",$data['skpd']);
+           
             $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
+                                    // ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
                                     ->where('id_m_status_pegawai', 1)
+                                    // ->where('b.id', 78)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -117,32 +148,39 @@
                     $bobot_komponen_kinerja = 0;
                     $bobot_skp = 0;
                     $temp['komponen_kinerja'] = $this->getKomponenKinerja($p['id'], $data['bulan'], $data['tahun']);
-                    // dd($temp['komponen_kinerja']);
                     if($temp['komponen_kinerja']){
                         list($temp['komponen_kinerja']['capaian'], $temp['komponen_kinerja']['bobot']) = countNilaiKomponen($temp['komponen_kinerja']);
                         $bobot_komponen_kinerja = $temp['komponen_kinerja']['bobot'];
+
                     }
-                    $temp['kinerja'] = $this->getKinerjaPegawai($p['id'], $data['bulan'], $data['tahun']);
+                    $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
                     if($temp['kinerja']){
-                        $temp['nilai_skp'] = countNilaiSkp($temp['kinerja']);
+                        $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
+                
+
+                
+                  
                     if($p['eselon'] != null){
                         $result[$i] = $temp;
                         $i++;
                     } else {
-                        $temp_pegawai[$j] = $temp;
+                        // $temp_pegawai[$j] = $temp;
+                        $result[$j] = $temp;
                         $j++;
                     }
+                   
                 }
-                if($temp_pegawai){
-                    foreach($temp_pegawai as $t){
-                        $result[$i] = $t;
-                        $i++;
-                    }
-                }
+                // if($temp_pegawai){
+                //     foreach($temp_pegawai as $t){
+                //         $result[$i] = $t;
+                //         $i++;
+                //     }
+                // }
             }
+            // dd($result);
             return $result;
         }
 

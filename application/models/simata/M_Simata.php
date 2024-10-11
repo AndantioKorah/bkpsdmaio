@@ -1379,7 +1379,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPangkatGolPengawai($id,$kode,$jenis_pengisian){
-           
+        //   dd($kode);
             
             $id_pangkat = null;
             $this->db->select('a.pangkat,a.tmtpangkat')
@@ -1473,9 +1473,8 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
                 }
             } else if($kode == 3) {
-                
-              
-                if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
+                if($jenis_pengisian == 2){
+                    if($pangkat[0]['pangkat'] > 33 && $pangkat[0]['pangkat'] < 45) {
                         $id_pangkat = 96;
                 } else if($pangkat[0]['pangkat'] =  33) {
                     $sdate = $pangkat[0]['tmtpangkat'];
@@ -1496,6 +1495,29 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
 
                 }
+                } else if($jenis_pengisian == 1) {
+                    if($pangkat[0]['pangkat'] > 31 && $pangkat[0]['pangkat'] < 45) {
+                        $id_pangkat = 96;
+                } else if($pangkat[0]['pangkat'] ==  31) {
+                    $sdate = $pangkat[0]['tmtpangkat'];
+                    $edate = date('Y-m-d');
+                    $date_diff = abs(strtotime($edate) - strtotime($sdate));
+                    $years = floor($date_diff / (365*60*60*24));
+                    $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+                    $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                    if($years >= 5) {
+                        $id_pangkat = 97;
+                    } else if($years == 4){
+                        $id_pangkat = 98;
+                    } else if($years == 3){
+                        $id_pangkat = 99;
+                    } else if($years <= 2){
+                        $id_pangkat = 100;
+                    }
+                }
+                }
+               
 
             } else if($kode == 4) {
             //   dd($pangkat[0]['pangkat']);

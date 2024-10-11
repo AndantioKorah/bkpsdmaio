@@ -53,7 +53,7 @@ class C_Kinerja extends CI_Controller
         // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
         // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         // } else {
-        // $id = 3;
+        // $id = 4;
         // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         // }
 

@@ -159,10 +159,13 @@ class C_Rekap extends CI_Controller
             $data['result'] = $this->session->userdata('data_penilaian_produktivitas_kerja');
             $data['parameter'] = $this->session->userdata('parameter_data_penilaian_produktivitas_kerja');
         } else {
+            // $data['result'] = $this->rekap->rekapPenilaianSearch($this->input->post());
             $data['result'] = $this->rekap->rekapPenilaianSearch($this->input->post());
+
             $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
             $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
         }
+        // dd($data['result']);
 
         $this->load->view('rekap/V_RekapPenilaianResult', $data);
     }

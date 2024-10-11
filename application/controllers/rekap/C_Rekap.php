@@ -355,7 +355,7 @@ class C_Rekap extends CI_Controller
         // if($flag_excel == 0){
             $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
             if($this->general_library->isProgrammer()){
-                dd($html);
+                // dd($html);
             }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);
@@ -726,14 +726,14 @@ class C_Rekap extends CI_Controller
         $data = json_decode($rs['meta_data'], true);
         $data['filename'] = "Berkas TPP Format BKAD - ".preg_replace('/[^A-Za-z0-9\-]/', '', $data['param']['nm_unitkerja'])." Periode ".getNamaBulan($data['param']['bulan'])." ".$data['param']['tahun'].'.xls';
 
-        $result['filename'] = $data['filename'];
-        $result['result'] = $data['result'];
+        // $result['filename'] = $data['filename'];
+        // $result['result'] = $data['result'];
 
         if($this->general_library->isProgrammer()){
             // dd($result);
         }
         
-        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $result);
+        $this->load->view('rekap/V_DownloadFormatTppBkadExcel', $data);
     }
 
     public function uploadGajiBkad(){

@@ -940,6 +940,7 @@
             unset($param['created_by']);
             $this->db->where('id', $exists['id'])
                     ->update('t_lock_tpp', $param);
+            // dd($param);
         } else {
             $this->db->insert('t_lock_tpp', $param);
         }
@@ -2312,7 +2313,7 @@
                             ->get()->row_array();
             }
 
-            $this->db->select('a.*, c.nama as nama_hd, b.nipbaru_ws, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat')
+            $this->db->select('a.*, c.nama as nama_hd, b.nipbaru_ws, d.nama_jhd, b.nipbaru_ws, b.nama, b.gelar1, b.gelar2, f.nama_jabatan, g.nm_pangkat, b.statuspeg')
                     ->from('db_pegawai.pegdisiplin a')
                     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b. id_peg')
                     ->join('db_pegawai.hd c', 'a.hd = c.idk')
@@ -2974,7 +2975,7 @@
                         $rekap_pppk['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
                         $rekap_pppk['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
                         $rekap_pppk['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                        $rekap_pppk['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap_pppk['bpjs'] += ($result[$l['nipbaru_ws']]['bpjs']);
                         $rekap_pppk['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
 
                         $result['pppk'][$l['nipbaru_ws']] = $result[$l['nipbaru_ws']];
@@ -2989,7 +2990,7 @@
                         $rekap['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
                         $rekap['jumlah_yang_diterima'] += $result[$l['nipbaru_ws']]['tpp_final_permintaan_bkad'];
                         $rekap['jumlah_pajak_pph'] += $result[$l['nipbaru_ws']]['nominal_pph'];
-                        $rekap['bpjs'] += excelRoundDown($result[$l['nipbaru_ws']]['bpjs'], 1);
+                        $rekap['bpjs'] += ($result[$l['nipbaru_ws']]['bpjs']);
                         $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
                     }
                 }

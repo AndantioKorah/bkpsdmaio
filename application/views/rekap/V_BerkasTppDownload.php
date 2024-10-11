@@ -453,11 +453,11 @@
                         foreach($result as $r){
                             $pagu_keseluruhan += $r['pagu_tpp'];
                             $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
-                            $potongan_pajak_keseluruhan += $r['nominal_pph'];
+                            $potongan_pajak_keseluruhan += pembulatan($r['nominal_pph']);
                             $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
                             $jumlah_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
-                            $jumlah_bpjs += ($r['bpjs']);
-                            $jumlah_tpp_diterima += $r['tpp_final'];
+                            $jumlah_bpjs += pembulatan($r['bpjs']);
+                            $jumlah_tpp_diterima += pembulatan($r['tpp_final']);
                         ?>
                             <tr>
                                 <td style="text-align: center;"><?=$no++;?></td>
@@ -650,12 +650,12 @@
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_prestasi_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_beban_kerja']), 0)?></td>
                                 <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_kondisi_kerja']), 0)?></td>
-                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_permintaan_bkad']), 0)?></td>
+                                <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                                 <!-- <td style="text-align: right;"><?=$r['tpp_final_permintaan_bkad'] != $r['tpp_final'] ? 'ini' : formatCurrencyWithoutRp($r['tpp_final_permintaan_bkad'], 0)?></td> -->
 
                             </tr>
                         <?php }
-                        $tpp_final_permintaan_bkad = $jumlah_tpp_diterima;
+                        // $tpp_final_permintaan_bkad = $jumlah_tpp_diterima;
                         $total_pph_prestasi_kerja = 
                             pembulatan($potongan_pajak_keseluruhan) -
                             (pembulatan($total_pph_kondisi_kerja) +
@@ -777,9 +777,9 @@
 
                             foreach($result as $r){
                                 $total_jumlah_yang_dicapai += $r['besaran_tpp'];
-                                $total_potongan_pph += $r['nominal_pph'];
-                                $total_bpjs += ($r['bpjs']);
-                                $total_jumlah_yang_diterima += $r['tpp_final'];
+                                $total_potongan_pph += pembulatan($r['nominal_pph']);
+                                $total_bpjs += pembulatan($r['bpjs']);
+                                $total_jumlah_yang_diterima += pembulatan($r['tpp_final']);
                             ?>
                                 <tr>
                                     <td style="text-align: center"><?=$no++;?></td>
@@ -867,7 +867,8 @@
                     $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                 ?>
             </div>
-            <?php if($pppk){ $result = $pppk; ?>
+            <?php if($pppk){ $result = $pppk;
+            ?>
                 <div style="page-break-after: always;" class="div_rekap_perhitungan_tpp">
                     <?php 
                         $data_header['filename'] = 'DAFTAR PERHITUNGAN TAMBAHAN PENGHASILAN PEGAWAI';
@@ -1014,11 +1015,11 @@
                             foreach($result as $r){
                                 $pagu_keseluruhan += $r['pagu_tpp'];
                                 $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
-                                $potongan_pajak_keseluruhan += $r['nominal_pph'];
+                                $potongan_pajak_keseluruhan += pembulatan($r['nominal_pph']);
                                 $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
                                 $jumlah_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
-                                $jumlah_bpjs += ($r['bpjs']);
-                                $jumlah_tpp_diterima += $r['tpp_final'];
+                                $jumlah_bpjs += pembulatan($r['bpjs']);
+                                $jumlah_tpp_diterima += pembulatan($r['tpp_final']);
                             ?>
                                 <tr>
                                     <td style="text-align: center;"><?=$no++;?></td>
@@ -1088,6 +1089,15 @@
                         $data_header['bulan'] = $param['bulan'];
                         $data_header['tahun'] = $param['tahun'];
                         $this->load->view('rekap/V_BerkasTppDownloadHeader', $data_header);
+                        $colspan_pph = 4;
+                        $colspan_bpjs = 3;
+                        $colspan_jumlah_setelah_pph = 3;
+
+                        // if($flag_simplified_format == 1){
+                        //     $colspan_pph = 1;
+                        //     $colspan_bpjs = 1;
+                        //     $colspan_jumlah_setelah_pph = 1;
+                        // }
                     ?>
                     <table border=1 style="border-collapse: collapse;" class="table table-hover table-striped">
                         <thead>
@@ -1102,23 +1112,27 @@
                                 <th rowspan=2 style="text: align: center;">Capaian TPP Prestasi Kerja</th>
                                 <th rowspan=2 style="text: align: center;">Capaian TPP Beban Kerja</th>
                                 <th rowspan=2 style="text: align: center;">Capaian TPP Kondisi Kerja</th>
-                                <th rowspan=1 colspan=4 style="text: align: center;">Potongan PPh</th>
-                                <th rowspan=1 colspan=3 style="text: align: center;">Jumlah Setelah Dipotong PPh</th>
+                                <th rowspan=1 colspan=<?=$colspan_pph?> style="text: align: center;">Potongan PPh</th>
+                                <th rowspan=1 colspan=<?=$colspan_jumlah_setelah_pph?> style="text: align: center;">Jumlah Setelah Dipotong PPh</th>
                                 <th rowspan=2 style="text: align: center;">Gaji (Rp)</th>
-                                <th rowspan=1 colspan=3 style="text: align: center;">BPJS 1% (TPP)</th>
+                                <th rowspan=1 colspan=<?=$colspan_bpjs?> style="text: align: center;">BPJS 1% (TPP)</th>
                                 <th rowspan=1 colspan=4 style="text: align: center;">TPP Yang Diterima</th>
                             </tr>
                             <tr>
+                                <!-- pph -->
                                 <th rowspan=1 colspan=1 style="text: align: center;">%</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                                <!-- jumlah setelah dipotong pph -->
                                 <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                                <!-- bpjs -->
                                 <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
+                                <!-- tpp yang diterima -->
                                 <th rowspan=1 colspan=1 style="text: align: center;">Prestasi Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Beban Kerja</th>
                                 <th rowspan=1 colspan=1 style="text: align: center;">Kondisi Kerja</th>
@@ -1166,7 +1180,7 @@
                                 $tpp_final_beban_kerja += $r['tpp_final_beban_kerja'];
                                 $tpp_final_kondisi_kerja += $r['tpp_final_kondisi_kerja'];
                                 $tpp_final_permintaan_bkad += $r['tpp_final'];
-                                $total_besaran_gaji += ($r['besaran_gaji'] ? $r['besaran_gaji'] : 0);
+                                $total_besaran_gaji += $r['besaran_gaji'] ? $r['besaran_gaji'] : 0;
                             ?>
                                 <tr>
                                     <td style="text: align: center;"><?=$no++;?></td>
@@ -1198,12 +1212,12 @@
                                     <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_prestasi_kerja']), 0)?></td>
                                     <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_beban_kerja']), 0)?></td>
                                     <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_kondisi_kerja']), 0)?></td>
-                                    <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final_permintaan_bkad']), 0)?></td>
+                                    <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                                     <!-- <td style="text-align: right;"><?=$r['tpp_final_permintaan_bkad'] != $r['tpp_final'] ? 'ini' : formatCurrencyWithoutRp($r['tpp_final_permintaan_bkad'], 0)?></td> -->
 
                                 </tr>
                             <?php }
-                            $tpp_final_permintaan_bkad = $jumlah_tpp_diterima;
+                            // $tpp_final_permintaan_bkad = $jumlah_tpp_diterima;
                             $total_pph_prestasi_kerja = 
                                 pembulatan($potongan_pajak_keseluruhan) -
                                 (pembulatan($total_pph_kondisi_kerja) +
@@ -1324,7 +1338,7 @@
                                 $total_jumlah_yang_diterima = 0;
 
                                 foreach($result as $r){
-                                    $total_jumlah_yang_dicapai += pembulatan($r['besaran_tpp']);
+                                    $total_jumlah_yang_dicapai += $r['besaran_tpp'];
                                     $total_potongan_pph += pembulatan($r['nominal_pph']);
                                     $total_bpjs += pembulatan($r['bpjs']);
                                     $total_jumlah_yang_diterima += pembulatan($r['tpp_final']);
@@ -1344,7 +1358,11 @@
                                             <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                                         </td>
                                         <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
-                                        <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
+                                        <?php // if($this->general_library->isProgrammer()){ ?>
+                                            <!-- <td style="text-align: right;"><?=($r['bpjs'])?></td> -->
+                                        <?php // } else { ?>
+                                            <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
+                                        <?php // } ?>
                                         <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                                     </tr>
                                 <?php }
@@ -1380,15 +1398,16 @@
                 </div>
                 <div style="page-break-after: always;" class="div_surat_pengantar">
                     <?php
-                        $rekap['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
-                        $rekap['bpjs'] = $jumlah_bpjs;
-                        $rekap['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
-                        $rekap_pppk['unitkerja'][0] = $rekap['unitkerja'][0];
+                        $rekap_pppk['jumlah_pajak_pph'] = $potongan_pajak_keseluruhan;
+                        $rekap_pppk['bpjs'] = $jumlah_bpjs;
+                        $rekap_pppk['jumlah_yang_diterima'] = $total_jumlah_yang_diterima;
+                        $rekap_pppk['selisih_capaian_pagu'] = $rekap_pppk['pagu_tpp'] - pembulatan($rekap_pppk['jumlah_pajak_pph']) - pembulatan($rekap_pppk['bpjs']) - pembulatan($rekap_pppk['jumlah_yang_diterima']);
+                        $rekap_pppk['unitkerja'] = $rekap['unitkerja'];
+                        $rekap_pppk['flag_pppk'] = 1;
 
-                        $data_rekap['result'] = $pppk;
+                        $data_rekap['result'] = $result;
                         $data_rekap['rekap'] = $rekap_pppk;
                         $data_rekap['hukdis'] = $hukdis;
-                        $data_rekap['flag_pppk'] = 1;
                         $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                         if($pegawai['flag_puskesmas'] == 1){
                             $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
@@ -1400,10 +1419,9 @@
                 </div>
                 <div class="div_salinan_surat_pengantar">
                     <?php
-                        $data_rekap['result'] = $pppk;
+                        $data_rekap['result'] = $result;
                         $data_rekap['rekap'] = $rekap_pppk;
                         $data_rekap['hukdis'] = $hukdis;
-                        $data_rekap['flag_pppk'] = 1;
                         $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
                         if($pegawai['flag_puskesmas'] == 1){
                             $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
@@ -1412,6 +1430,7 @@
                         }
                         $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                     ?>
+                </div>
             </div>
             <?php } ?>
         </div>

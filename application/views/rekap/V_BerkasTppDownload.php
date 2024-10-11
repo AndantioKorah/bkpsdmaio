@@ -796,11 +796,15 @@
                                         <?= $r['pph'] > 0 ? $r['pph'].'%' : ''; ?>
                                     </td>
                                     <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['nominal_pph']), 0)?></td>
-                                    <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
+                                    <?php // if($this->general_library->isProgrammer()){ ?>
+                                        <!-- <td style="text-align: right;"><?=($r['bpjs'])?></td> -->
+                                    <?php // } else { ?>
+                                        <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['bpjs']), 0)?></td>
+                                    <?php // } ?>
                                     <td style="text-align: right;"><?=formatCurrencyWithoutRp(pembulatan($r['tpp_final']), 0)?></td>
                                 </tr>
                             <?php }
-                            $total_jumlah_yang_diterima = $jumlah_tpp_diterima;
+                            // $total_jumlah_yang_diterima = $jumlah_tpp_diterima;
                             ?>
                             <tr>
                                 <td colspan=6 style="text-align: center; font-weight: bold;">JUMLAH</td>

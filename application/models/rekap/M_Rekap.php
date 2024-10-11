@@ -2955,6 +2955,15 @@
                     $result[$l['nipbaru_ws']]['bpjs_beban_kerja'] +
                     $result[$l['nipbaru_ws']]['bpjs_kondisi_kerja'];
 
+                $result[$l['nipbaru_ws']]['tpp_final'] = 
+                    pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']) -
+                    pembulatan($result[$l['nipbaru_ws']]['nominal_pph']) -
+                    pembulatan($result[$l['nipbaru_ws']]['bpjs']);
+
+                if($this->general_library->isProgrammer()){
+                    dd($result[$l['nipbaru_ws']]);
+                }
+
                 if($result[$l['nipbaru_ws']]['statuspeg'] == 3){ //jika PPPK
                     if($result[$l['nipbaru_ws']]['flag_terima_tpp'] == 1){ //jika terima TPP
                         $rekap_pppk['jumlah_pegawai']++;

@@ -3771,16 +3771,34 @@
             $result = null;
             $skpd = explode(";",$data['skpd']);
            
+            if(stringStartWith('sekolah_', $data['skpd'])){
+                $skpd = explode(";",$data['skpd']);
+                $expluk = explode("_",$skpd[0]);
+              
+               
             $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('m_user b', 'a.nipbaru_ws = b.username')
-                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
-                                    ->where('b.flag_active', 1)
-                                    ->order_by('c.eselon, b.username')
-                                    ->where('id_m_status_pegawai', 1)
-                                    // ->where('b.id', 78)
-                                    ->get()->result_array();
+                ->from('db_pegawai.pegawai a')
+                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                ->where('id_unitkerjamaster_kecamatan', $expluk[1])
+                ->where('b.flag_active', 1)
+                ->order_by('c.eselon, b.username')
+                ->where('id_m_status_pegawai', 1)
+                ->get()->result_array();
+            } else {
+                $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
+                ->from('db_pegawai.pegawai a')
+                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                ->where('a.skpd', $skpd[0])
+                ->where('b.flag_active', 1)
+                ->order_by('c.eselon, b.username')
+                ->where('id_m_status_pegawai', 1)
+                // ->where('b.id', 78)
+                ->get()->result_array();
+            }
+            
             $temp_pegawai = null;
             if($list_pegawai){
                 $i = 0;

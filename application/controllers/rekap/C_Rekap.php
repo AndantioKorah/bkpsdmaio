@@ -147,7 +147,8 @@ class C_Rekap extends CI_Controller
 
     public function rekapPenilaian()
     {
-        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['list_skpd'] = $this->user->getAllSkpd2();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('rekap/V_RekapPenilaian', '', '', $data);
     }
 

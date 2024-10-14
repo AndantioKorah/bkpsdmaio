@@ -14,6 +14,13 @@
                             <?php foreach($list_skpd as $s){ ?>
                                 <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
                             <?php } ?>
+                            <?php 
+                                foreach($skpd_diknas as $sd){
+                                ?>
+                                    <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                        <?=$sd['nm_unitkerja']?>
+                                    </option>
+                                <?php }  ?>
                         </select>
                     </div>
                 </div>

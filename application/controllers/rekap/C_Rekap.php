@@ -424,6 +424,7 @@ class C_Rekap extends CI_Controller
             }
 
             $data['param']['url_file'] = $folder.'/'.$filename;
+            $data['orgiginal_id_unitkerja'] = $param['skpd'];
             if($id_m_tpp_tambahan == 0){
                 $this->rekap->lockTpp($data['param'], $data);
             }

@@ -133,11 +133,11 @@
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    // ->where('a.skpd', $skpd[0])
+                                    ->where('a.skpd', $skpd[0])
                                     ->where('b.flag_active', 1)
                                     ->order_by('c.eselon, b.username')
                                     ->where('id_m_status_pegawai', 1)
-                                    ->where('b.id', 78)
+                                    // ->where('b.id', 78)
                                     ->get()->result_array();
             $temp_pegawai = null;
             if($list_pegawai){
@@ -153,9 +153,9 @@
                         $bobot_komponen_kinerja = $temp['komponen_kinerja']['bobot'];
 
                     }
-                    $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
+                    $temp['kinerja'] = $this->getKinerjaPegawai($p['id'], $data['bulan'], $data['tahun']);
                     if($temp['kinerja']){
-                        $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
+                        $temp['nilai_skp'] = countNilaiSkp($temp['kinerja']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);

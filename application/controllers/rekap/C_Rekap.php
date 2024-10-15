@@ -166,7 +166,7 @@ class C_Rekap extends CI_Controller
             $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
             $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
         }
-        // dd($data['result']);
+        dd($data['result']);
 
         $this->load->view('rekap/V_RekapPenilaianResult', $data);
     }
@@ -187,7 +187,7 @@ class C_Rekap extends CI_Controller
         }
         // dd($data['result']);
 
-        $this->load->view('rekap/V_RekapPenilaianResult', $data);
+        $this->load->view('rekap/V_RekapPenilaianResult2', $data);
     }
 
     public function rekapDisiplin()
@@ -485,7 +485,7 @@ class C_Rekap extends CI_Controller
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;
                 // }
-
+               
                 $temp['produktivitas_kerja'] = $data;
                 // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
 

@@ -375,7 +375,7 @@ class C_Rekap extends CI_Controller
         // if($flag_excel == 0){
             $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
             if($this->general_library->isProgrammer()){
-                dd($html);
+                // dd($html);
             }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);

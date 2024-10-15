@@ -3774,9 +3774,7 @@
             if(stringStartWith('sekolah_', $data['skpd'])){
                 $skpd = explode(";",$data['skpd']);
                 $expluk = explode("_",$skpd[0]);
-              
-               
-            $list_pegawai = $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon')
+            $list_pegawai = $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon, c.kelas_jabatan')
                 ->from('db_pegawai.pegawai a')
                 ->join('m_user b', 'a.nipbaru_ws = b.username')
                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -3788,7 +3786,10 @@
                 ->where('a.flag_terima_tpp', 1)
                 // ->where('a.flag_terima_tpp', 1)
                 ->get()->result_array();
-            } else {
+            } else if(in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+                dd(2);  
+                $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            }  else {
                 $list_pegawai = $this->db->select('a.statuspeg,b.username as nip,  a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon')
                 ->from('db_pegawai.pegawai a')
                 ->join('m_user b', 'a.nipbaru_ws = b.username')

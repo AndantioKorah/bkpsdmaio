@@ -21,6 +21,9 @@
                                         <?=$sd['nm_unitkerja']?>
                                     </option>
                                 <?php }  ?>
+                                <option value="8000118">
+                                       TK Negeri Pembina
+                                    </option>
                         </select>
                     </div>
                 </div>
@@ -94,7 +97,7 @@
         $('#div_result').html('')
         $('#div_result').append(divLoaderNavy)
         $.ajax({
-            url: '<?=base_url("rekap/C_Rekap/rekapPenilaianSearch")?>',
+            url: '<?=base_url("rekap/C_Rekap/rekapPenilaianSearch2")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){

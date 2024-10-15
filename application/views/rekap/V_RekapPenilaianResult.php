@@ -9,11 +9,12 @@
 ?>
         <div class="col-lg-12" style="width: 100%;">
             <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank">
-                <?php if(isset($use_header) && $use_header == 1){ ?>
+               
+            <?php if(isset($use_header) && $use_header == 1){ ?>
                     <center><h5><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h5></center>
                 <?php } ?>
                 <br>
-                <?php if($flag_print == 1){ ?>
+                <?php if($flag_print == 0){ ?>
                     <button type="submit" class="text-right float-right btn btn-navy btn-sm"><i class="fa fa-download"></i> Simpan sebagai Excel</button>
                 <?php } ?>
                 <?php if(isset($use_header) && $use_header == 1){ ?>
@@ -30,11 +31,7 @@
                         </tr>
                     </table>
                 <?php } ?>
-                <!-- tes -->
-              <style>
-               
-              </style>
-                <!-- tutup tes -->
+              
                 <table class="table table-bordered" border="1" style="margin-top:-50px;">
                     <?php 
                    
@@ -124,7 +121,15 @@
                                 // dd($capaian_pk);
                                 // $bobot_capaian_produktivitas = ($capaian_pk / 60) * 100;
                                 $bobot_capaian_produktivitas = $capaian_pk;
-                                
+                            
+                              
+                                $badge_status = 'badge-cpns';
+                                if($rs['statuspeg'] == 2){
+                                  $badge_status = 'badge-pns';
+                                } else if($rs['statuspeg'] == 3){
+                                  $badge_status = 'badge-pppk';
+                                }
+                 
 
                               
 
@@ -133,8 +138,9 @@
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
                                     <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
-                                        <span style="font-size: 14px; font-weight: bold;"><?=$rs['nama_pegawai']?></span><br>
-                                        NIP. <?=$rs['nip']?>
+                                        <span style="font-size: 14px; font-weight: bold;"><?= getNamaPegawaiFull($rs)?></span><br>
+                                        NIP. <?=$rs['nip']?> 
+                                            <span class="badge <?=$badge_status?>"> <?php echo $rs['statuspeg'] == 2 ? 'PNS' : 'PPPK';?></span>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                     <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td> -->

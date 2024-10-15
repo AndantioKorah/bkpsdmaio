@@ -910,6 +910,13 @@
     }
 
     public function lockTpp($param, $data){
+        // if($this->general_library->isProgrammer()){
+        //     dd($data);
+        // }
+
+        $skpd = explode(";", $data['orgiginal_id_unitkerja']);
+        $param['id_unitkerja'] = $skpd[0];
+
         unset($param['nm_unitkerja']);
         $param['created_by'] = $this->general_library->getId();
 
@@ -921,7 +928,7 @@
         if($date_param >= $date_today){
             return null;
         }
-
+        
         $param['meta_data'] = json_encode($data);
         $param['nama_param_unitkerja'] = $data['param']['nm_unitkerja'];
 
@@ -2320,7 +2327,7 @@
                     ->join('db_pegawai.jhd d', 'a.jhd = d.id_jhd')
                     ->join('db_pegawai.jabatan f', 'b.jabatan = f.id_jabatanpeg')
                     ->join('db_pegawai.pangkat g', 'b.pangkat = g.id_pangkat')
-                    ->where('b.flag_terima_tpp', 1)
+                    // ->where('b.flag_terima_tpp', 1)
                     ->where('b.id_m_status_pegawai', 1)
                     ->where('a.tmt IS NOT NULL')
                     ->where('a.tmt !=', null)

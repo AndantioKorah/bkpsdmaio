@@ -8,7 +8,7 @@
     }
 ?>
         <div class="col-lg-12" style="width: 100%;">
-            <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch/1')?>" method="post" target="_blank">
+            <form action="<?=base_url('rekap/C_Rekap/rekapPenilaianSearch2/1')?>" method="post" target="_blank">
                
             <?php if(isset($use_header) && $use_header == 1){ ?>
                     <center><h5><strong>REKAPITULASI PENILAIAN PRODUKTIVITAS KERJA</strong></h5></center>
@@ -138,7 +138,8 @@
                                 <tr >
                                     <td  style="text-align: center;"><?=$no++;?></td>
                                     <td scope="row" style="padding-top: 5px; padding-bottom: 5px;">
-                                        <span style="font-size: 14px; font-weight: bold;"><?= getNamaPegawaiFull($rs)?></span><br>
+							        <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$rs['nip']?>" target="_blank">
+                                        <span style="font-size: 14px; font-weight: bold;"><?= getNamaPegawaiFull($rs)?></span></a><br>
                                         NIP. <?=$rs['nip']?> 
                                             <span class="badge <?=$badge_status?>"> <?php echo $rs['statuspeg'] == 2 ? 'PNS' : 'PPPK';?></span>
                                     </td>

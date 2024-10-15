@@ -166,7 +166,7 @@ class C_Rekap extends CI_Controller
             $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
             $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
         }
-        dd($data['result']);
+        // dd($data['result']);
 
         $this->load->view('rekap/V_RekapPenilaianResult', $data);
     }
@@ -478,9 +478,9 @@ class C_Rekap extends CI_Controller
                 // if($data_rekap && isset($data_rekap['produktivitas_kerja'])){
                 //     $data['result'] = $data_rekap['produktivitas_kerja'];
                 // } else {
-                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+                $data['result'] = $this->kinerja->rekapPenilaianSearch2($param);
                 // dd(json_encode($data['result']));
-                $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
+                // $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
                 $data['result'] = $this->fixOrder($data['result']);
                 $data['parameter'] = $param;
                 $data['flag_print'] = 0;

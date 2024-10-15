@@ -129,7 +129,7 @@
             $result = null;
             $skpd = explode(";",$data['skpd']);
            
-            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
+            $list_pegawai = $this->db->select('a.nama,a.gelar1,a.gelar2,b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon,c.kelas_jabatan')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('m_user b', 'a.nipbaru_ws = b.username')
                                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')

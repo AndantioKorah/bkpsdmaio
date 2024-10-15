@@ -147,11 +147,31 @@ class C_Rekap extends CI_Controller
 
     public function rekapPenilaian()
     {
-        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['list_skpd'] = $this->user->getAllSkpd2();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('rekap/V_RekapPenilaian', '', '', $data);
     }
 
     public function rekapPenilaianSearch($flag_print = 0)
+    {
+        $data['parameter'] = $this->input->post();
+        $data['flag_print'] = $flag_print;
+        if ($flag_print == 1) {
+            $data['result'] = $this->session->userdata('data_penilaian_produktivitas_kerja');
+            $data['parameter'] = $this->session->userdata('parameter_data_penilaian_produktivitas_kerja');
+        } else {
+            $data['result'] = $this->rekap->rekapPenilaianSearch($this->input->post());
+            // $data['result'] = $this->kinerja->rekapPenilaianSearch2($this->input->post());
+
+            $this->session->set_userdata('data_penilaian_produktivitas_kerja', $data['result']);
+            $this->session->set_userdata('parameter_data_penilaian_produktivitas_kerja', $data['parameter']);
+        }
+        dd($data['result']);
+
+        $this->load->view('rekap/V_RekapPenilaianResult', $data);
+    }
+
+    public function rekapPenilaianSearch2($flag_print = 0)
     {
         $data['parameter'] = $this->input->post();
         $data['flag_print'] = $flag_print;
@@ -167,7 +187,7 @@ class C_Rekap extends CI_Controller
         }
         // dd($data['result']);
 
-        $this->load->view('rekap/V_RekapPenilaianResult', $data);
+        $this->load->view('rekap/V_RekapPenilaianResult2', $data);
     }
 
     public function rekapDisiplin()
@@ -465,7 +485,7 @@ class C_Rekap extends CI_Controller
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;
                 // }
-
+               
                 $temp['produktivitas_kerja'] = $data;
                 // $this->session->set_userdata('rekap_'.$param['bulan'].'_'.$param['tahun'], $temp);
 

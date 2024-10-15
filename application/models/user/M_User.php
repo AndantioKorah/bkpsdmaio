@@ -26,6 +26,15 @@
                             ->get()->result_array();
         }
 
+        public function getAllSkpd2(){
+            return $this->db->select('id_unitkerja, nm_unitkerja')
+                            ->from('db_pegawai.unitkerja as a')
+                            ->join('db_pegawai.unitkerjamaster b', 'a.id_unitkerjamaster = b.id_unitkerjamaster')
+                            ->order_by('a.nm_unitkerja', 'asc')
+                            ->where_not_in('b.id_unitkerjamaster', ['8000000','8010000'] )
+                            ->get()->result_array();
+        }
+
         public function getAllUsers(){
             return $this->db->select('a.*, a.nama as nama_user, b.nama_sub_bidang')
                             ->from('m_user a')

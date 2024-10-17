@@ -1730,8 +1730,7 @@
                                 $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
                                 $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
                             // }
-                        } 
-                        else {
+                        } else {
                             if(($data_absen[$tga]['masuk'] == '00:00:00' || $data_absen[$tga]['masuk'] == null)){ //cek jika tidak ada data absen masuk
                                 if(!isset($result['dokpen'][$tga])){ //tidak ada dokumen pendukung
                                     $result['pengurangan_dk'] += 10;
@@ -1824,8 +1823,7 @@
                                 }
     
                                 if($data_absen[$tga]['pulang'] == '00:00:00' || $data_absen[$tga]['pulang'] == null){ //cek jika tidak absen pulang
-                                    if(!isset($result['dokpen'][$tga]) || //cek kalo tidak ada dokpen, pksw3
-                                       (isset($result['dokpen'][$tga]) &&
+                                    if((isset($result['dokpen'][$tga]) &&
                                         $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == 19)){ //kalo ada dokpen dan dokpen tugas luar pagi, pksw3
                                             if($tga != date('Y-m-d')){
                                                 $result['pengurangan_dk'] += 3;
@@ -1836,6 +1834,11 @@
                                         && $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 19){ //bukan surat tugas pagi, tambah dokpen
                                             $result['rincian_pengurangan_dk'][$result['dokpen'][$tga]['kode_dokpen']]++;
                                             $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
+                                    } else { // klo tidak ada dokpen
+                                        $result['pengurangan_dk'] += 3;
+                                        $result['rincian_pengurangan_dk']['pksw3']++;
+                                        $keterangan[] = "pksw3";
+                                        // $data_absen['keterangan'][$tga][] = 'pksw3';
                                     }
                                 } else {
                                     if(!isset($result['dokpen'][$tga]) || //cek kalo tidak ada dokpen, cek keterlambatan
@@ -1931,7 +1934,14 @@
                 //     dd($result['pengurangan_dk']);
                 //     // dd($result['']);
                 // }
-                $result['data_absen']['keterangan'][$tga] = $keterangan;
+                // if($this->general_library->isProgrammer()){
+                //     if($tga == '2024-10-15'){
+                //         dd($keterangan);
+                //         // dd($data_absen[$tga]);
+                //     }
+                // }
+                $data_absen['keterangan'][$tga] = $keterangan;
+                // $result['data_absen']['keterangan'][$tga] = $keterangan;
                 // if($tga == '2024-05-10'){
                 //     dd($result['data_absen']['keterangan']);
                 // }
@@ -1939,7 +1949,7 @@
                 // echo $data_absen[$tga]['masuk'].'<br>';
                 // dd($result['pengurangan_dk']);
             }
-
+            
             $result['data_absen'] = $data_absen;
 
             if($result['list_dokpen']){

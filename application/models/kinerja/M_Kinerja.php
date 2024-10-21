@@ -707,7 +707,7 @@
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
                     // $atasan = $kepala;
-                    
+                  
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
@@ -717,11 +717,13 @@
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
                                         ->get()->row_array();
+                                      
                         if(!$atasan){ //cari sek
                             if(stringStartWith('Inspektorat', $pegawai['nm_unitkerja'])){
                                 $atasan = $this->baseQueryAtasan()
                                                 ->where('b.skpd', $pegawai['id_unitkerja'])
-                                                ->where('a.id_m_bidang', 202)
+                                                // ->where('a.id_m_bidang', 202)
+                                                ->where('a.id_m_bidang',$pegawai['id_m_bidang'])
                                                 ->where('f.id_eselon', 6)
                                                 ->get()->row_array();
                             } else {

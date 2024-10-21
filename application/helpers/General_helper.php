@@ -1177,7 +1177,11 @@ function countTmtPensiun($nip, $umur = 0){
 function pembulatan($number){
     // return $number;
 
-    return number_format($number,0,'.','');
+    $temp = explode(".", $number);
+
+    return $temp[0];
+
+    // return number_format($number,0,'.','');
 
     // $CI = &get_instance();
 

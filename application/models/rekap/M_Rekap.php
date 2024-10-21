@@ -2792,8 +2792,14 @@
 
                 $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['presentase_tpp']);
 
-                $result[$l['nipbaru_ws']]['besaran_tpp'] = (floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100;
-                
+                $result[$l['nipbaru_ws']]['besaran_tpp'] = pembulatan((floatval($result[$l['nipbaru_ws']]['presentase_tpp']) * floatval($result[$l['nipbaru_ws']]['pagu_tpp'])) / 100);
+                // $result[$l['nipbaru_ws']]['besaran_tpp'] = pembulatan($result[$l['nipbaru_ws']]['besaran_tpp']);
+                // if($this->general_library->isProgrammer()){
+                //     if($l['nipbaru_ws'] == '198110262009022003'){
+                //         dd($result[$l['nipbaru_ws']]);
+                //     }
+                // }
+
                 $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
                 $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                 // $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);

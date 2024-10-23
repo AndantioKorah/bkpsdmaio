@@ -18,11 +18,11 @@
                             <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
                             <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                             <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
-                            <?php if($this->general_library->isProgrammer()){ ?>
+                            <?php // if($this->general_library->isProgrammer()){ ?>
                                 <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
                                     <i class="fa fa-download"></i> Download as PDF
                                 </button>
-                            <?php } ?>
+                            <?php // } ?>
                         </form>
                     </div>
                     <?php if($data_format_excel){ ?>
@@ -31,11 +31,11 @@
                                 <input style="display: none;" autocomplete="off" class="form-control" id="skpd" name="skpd" value="<?= $data_search['skpd']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
-                                <?php if($this->general_library->isProgrammer()){ ?>
+                                <?php // if($this->general_library->isProgrammer()){ ?>
                                     <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success">
                                         <i class="fa fa-download"></i> Download Format Excel
                                     </button>
-                                <?php } ?>
+                                <?php // } ?>
                             </form>
                         </div>
                     <?php } ?>

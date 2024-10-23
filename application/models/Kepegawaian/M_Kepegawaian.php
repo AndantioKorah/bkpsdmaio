@@ -3495,6 +3495,13 @@ function getdatajab()
         $this->db->where('flag_active', 1);
         $fetched_records = $this->db->get('db_pegawai.jabatan');
         $datajab = $fetched_records->result_array();
+    } else if($id == "40"){
+        $this->db->select('id_jabatanpeg, nama_jabatan');
+        $this->db->where('jenis_jabatan', "Lainnya");
+        $this->db->where('id_unitkerja', $id_skpd);
+        $this->db->where('flag_active', 1);
+        $fetched_records = $this->db->get('db_pegawai.jabatan');
+        $datajab = $fetched_records->result_array();
     } else {
         if($jnsfung == "1"){
             $this->db->select('id_jabatanpeg, nama_jabatan');

@@ -485,9 +485,11 @@ class C_Rekap extends CI_Controller
                 //     $data['result'] = $data_rekap['produktivitas_kerja'];
                 // } else {
                 $data['result'] = $this->kinerja->rekapPenilaianSearch2($param);
+                // $data['result'] = $this->rekap->rekapPenilaianSearch($param);
+
                 // dd(json_encode($data['result']));
                 // $data['result'] = $this->rekap->rekapProduktivitasKerja($param, 1);
-                $data['result'] = $this->fixOrder($data['result']);
+                // $data['result'] = $this->fixOrder($data['result']);
                 $data['parameter'] = $param;
                 $data['flag_print'] = 0;
                 $data['use_header'] = 0;

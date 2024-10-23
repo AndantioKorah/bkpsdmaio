@@ -3821,6 +3821,8 @@
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
                     
+                    if(isset($data['kriteria'])){
+
                     if($data['kriteria'] == 2){
                         if($temp['bobot_capaian_produktivitas_kerja'] == 60){
                             $result[$i] = $temp;
@@ -3840,6 +3842,11 @@
                         $result[$i] = $temp;
                         $i++;
                     } 
+                    } else {
+                        $result[$i] = $temp;
+                        $i++;
+                    }
+
                    
                 }
                 

@@ -154,7 +154,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group" style="margin-bottom:10px !important;">
       <label for="jabatan_unitkerja">Unor SIASN </label>
-      <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"  <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?> >
+      <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"   >
                       <option value="" disabled selected>Pilih Unor SIASN</option>
                       <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
                           <option value="<?=$r['id']?>"><?=$r['nama']?></option>

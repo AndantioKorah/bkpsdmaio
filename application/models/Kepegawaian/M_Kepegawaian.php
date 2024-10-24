@@ -5481,7 +5481,34 @@ public function submitEditJabatan(){
                         'jenis_layanan' => 'Cuti'
                     ];
                     $this->db->insert('t_cron_wa', $cronWaVerifikator);
+                } else {
+                    $pada_tanggal = formatDateNamaBulan($resp['cuti']['tanggal_mulai']);
+                        if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
+                            $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
+                        }
+                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']."hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    
+                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    $cronWaNextVerifikator = [
+                        'sendTo' => convertPhoneNumber($progress['next']['nohp']),
+                        'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                        'type' => 'text',
+                        'ref_id' => $resp['cuti']['id'],
+                        'jenis_layanan' => 'Cuti'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
+                    // update t_pengajuan_cuti
+                    if($progress['next']){
+                        $this->db->where('id', $resp['cuti']['id'])
+                                ->update('t_pengajuan_cuti', [
+                                    'id_t_progress_cuti' => $progress['next']['id'],
+                                    'status_pengajuan_cuti' => $progress['next']['keterangan']
+                                ]);
+                    }
+                }
+
+                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di request untuk DS
                     // $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
                     $nomor_surat = "";
 
@@ -5564,31 +5591,6 @@ public function submitEditJabatan(){
                         'url' => $path_file,
                         'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                     ]);
-                } else {
-                    $pada_tanggal = formatDateNamaBulan($resp['cuti']['tanggal_mulai']);
-                        if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
-                            $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
-                        }
-                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']."hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                    
-                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                    $cronWaNextVerifikator = [
-                        'sendTo' => convertPhoneNumber($progress['next']['nohp']),
-                        'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
-                        'type' => 'text',
-                        'ref_id' => $resp['cuti']['id'],
-                        'jenis_layanan' => 'Cuti'
-                    ];
-                    $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
-
-                    // update t_pengajuan_cuti
-                    if($progress['next']){
-                        $this->db->where('id', $resp['cuti']['id'])
-                                ->update('t_pengajuan_cuti', [
-                                    'id_t_progress_cuti' => $progress['next']['id'],
-                                    'status_pengajuan_cuti' => $progress['next']['keterangan']
-                                ]);
-                    }
                 }
             } else {
                 $reply .= '*DITOLAK*';

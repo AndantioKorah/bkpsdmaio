@@ -2474,7 +2474,11 @@
                                     // if($umur >= $bup){
                                     //         $result[] = $temp;
                                     //  }
-                                    if(date('Y-m-d') > $temp['tmt_pensiun']){
+                                  
+                                    $date_now = date("Y-m-d");
+                                    $tmt_pensiun = date("Y-m-d", strtotime($temp['tmt_pensiun']));
+                                    
+                                    if($date_now > $tmt_pensiun){
                                             $result[] = $temp;
                                     }
                                 } else {

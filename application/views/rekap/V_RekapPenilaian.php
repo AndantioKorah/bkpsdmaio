@@ -14,6 +14,16 @@
                             <?php foreach($list_skpd as $s){ ?>
                                 <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
                             <?php } ?>
+                            <?php 
+                                foreach($skpd_diknas as $sd){
+                                ?>
+                                    <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                        <?=$sd['nm_unitkerja']?>
+                                    </option>
+                                <?php }  ?>
+                                <option value="8000118">
+                                       TK Negeri Pembina
+                                    </option>
                         </select>
                     </div>
                 </div>
@@ -87,7 +97,7 @@
         $('#div_result').html('')
         $('#div_result').append(divLoaderNavy)
         $.ajax({
-            url: '<?=base_url("rekap/C_Rekap/rekapPenilaianSearch")?>',
+            url: '<?=base_url("rekap/C_Rekap/rekapPenilaianSearch2")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){

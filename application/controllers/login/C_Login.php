@@ -48,7 +48,19 @@ class C_Login extends CI_Controller
         $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
         $data['nip'] = $this->general_library->getUserName();
         $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
-        $data['announcement'] = $this->m_general->getAll('t_announcement', 1);
+        
+        $temp = $this->m_general->getAll('t_announcement', 1);
+        $data['announcement'] = null;
+        $data['flag_show_announcement'] = 0;
+
+        if($temp){
+            foreach($temp as $t){
+                if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
+                    $data['announcement'][] = $t;
+                    $data['flag_show_announcement'] = 1;
+                }
+            }
+        }
 
         if(isset($data['profil_pegawai']['skpd'])){
          $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
@@ -60,16 +72,19 @@ class C_Login extends CI_Controller
     public function loadAnnouncement(){
         $temp = $this->m_general->getAll('t_announcement', 1);
         $data['announcement'] = null;
+        $data['flag_show_announcement'] = 0;
         if($temp){
             foreach($temp as $t){
-                if($t['flag_show'] == 1){
+                if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
                     $data['announcement'][] = $t;
+                    $data['flag_show_announcement'] = 1;
                 }
             }
         }
         // if($this->general_library->isProgrammer()){
         //     dd($data);
         // }
+
         $this->load->view('login/V_Announcement', $data);
     }
 

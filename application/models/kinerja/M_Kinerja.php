@@ -3770,17 +3770,34 @@
         //    dd($data);
             $result = null;
             $skpd = explode(";",$data['skpd']);
-           
-            $list_pegawai = $this->db->select('b.username as nip, trim(b.nama) as nama_pegawai, b.id, c.nama_jabatan, c.eselon')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('m_user b', 'a.nipbaru_ws = b.username')
-                                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                                    ->where('a.skpd', $skpd[0])
-                                    ->where('b.flag_active', 1)
-                                    ->order_by('c.eselon, b.username')
-                                    ->where('id_m_status_pegawai', 1)
-                                    // ->where('b.id', 78)
-                                    ->get()->result_array();
+
+            $uksearch = $this->db->select('*')
+            ->from('db_pegawai.unitkerja')
+            ->where('id_unitkerja', $skpd[0])
+            ->get()->row_array();
+            
+            $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon, c.kelas_jabatan')
+            ->from('db_pegawai.pegawai a')
+            ->join('m_user b', 'a.nipbaru_ws = b.username')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+            ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+            ->where('b.flag_active', 1)
+            ->order_by('c.eselon, b.username')
+            ->where('a.id_m_status_pegawai', 1);
+            // ->where('a.flag_terima_tpp', 1);
+            
+            if(stringStartWith('sekolah_', $data['skpd'])){
+                // dd(1);
+                $skpd = explode(";",$data['skpd']);
+                $expluk = explode("_",$skpd[0]);
+            $this->db->where('id_unitkerjamaster_kecamatan', $expluk[1]);
+            } else if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
+            $this->db->where('id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+            }  else {
+                $this->db->where('a.skpd', $skpd[0]);
+            }
+            $list_pegawai =  $this->db->get()->result_array();
+
             $temp_pegawai = null;
             if($list_pegawai){
                 $i = 0;

@@ -194,14 +194,14 @@
                                     $temp['text_pulang'] = formatTimeAbsen($text_pulang);
                                     $temp['tanggal'] = $tanggal;
                                     $temp['dates'] = $dates;
-                                    $temp['keterangan'] = $result['data_absen']['keterangan'][$dates];
+                                    $temp['keterangan'] = isset($result['data_absen']['keterangan'][$dates]) ? $result['data_absen']['keterangan'][$dates] : null;
                                     $temp['hari_libur'] = isset($result['hari_libur'][$dates]) ? $result['hari_libur'][$dates] : null;
                                     $temp['flag_tidak_print'] = $flag_tidak_print;
                                     $temp['dokpen'] = null;
                                     if(isset($result['dokpen'][$dates])){
                                         $temp['dokpen'] = $result['dokpen'][$dates];
                                     }
-                                    $temp['keterangan'] = $result['data_absen']['keterangan'][$dates];
+                                    // $temp['keterangan'] = $result['data_absen']['keterangan'][$dates];
 
                                     $this->load->view('user/V_DetailAbsensiPegawaiItem', $temp);
                                     

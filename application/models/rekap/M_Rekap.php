@@ -1059,7 +1059,12 @@
             }
 
             if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
-                $result['kasubag'] = $lp;
+                if($id_unitkerja == 3014000){
+                    // jika disnaker, kasubag ganti sek krna kasubag sudah pensiun
+                    $result['kasubag'] = null;
+                } else {
+                    $result['kasubag'] = $lp;
+                } 
             }
 
             if(stringStartWith('Sekretaris', $lp['nama_jabatan'])){
@@ -1162,9 +1167,10 @@
                                     ->where('a.nipbaru_ws', '197409262002121007')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
-
             // kasubag ambil sek krna kasubag smntra cuti
-            $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+            if($id_unitkerja != 7005020
+            && $id_unitkerja != 7005010){
+                $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')
                                     ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
@@ -1174,6 +1180,7 @@
                                     ->where('a.nipbaru_ws', '197205032000032006')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
+            } 
         }
 
         if($list_pegawai_unor_induk){
@@ -1188,8 +1195,9 @@
                     if($id_unitkerja == 3012000 
                     || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
                     || $id_unitkerja == 6160000
-                    || $id_unitkerja == 7005020
-                    || $id_unitkerja == 7005010){ 
+                    // || $id_unitkerja == 7005020
+                    // || $id_unitkerja == 7005010
+                    ){ 
 
                     } else {
                         $result['kasubag'] = $lpd;
@@ -1224,9 +1232,9 @@
         //     dd($result);
         // }
 
-        if($this->general_library->isProgrammer()){
-            // dd($result);
-        }
+        // if($this->general_library->isProgrammer()){
+        //     dd($result);
+        // }
         
         return $result;
     }

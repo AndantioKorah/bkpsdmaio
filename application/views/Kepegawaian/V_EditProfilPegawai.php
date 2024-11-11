@@ -91,7 +91,9 @@
     $style ="style='display:none'";
     // $style ="";
     $required ="";
-  } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
+  } else if($profil_pegawai['eselon'] == "II B" 
+  // || $profil_pegawai['eselon'] == "III A"
+  ) {
     $style ="style='display:none'";
     $required ="";
   } else {

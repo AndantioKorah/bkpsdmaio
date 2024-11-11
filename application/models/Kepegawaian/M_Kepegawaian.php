@@ -309,7 +309,7 @@ class M_Kepegawaian extends CI_Model
 
 
         function getProfilPegawaiByAdmin($username){
-            $this->db->select('e.eselon,a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
+            $this->db->select('e.kelas_jabatan,e.eselon,a.*, g.nm_statusjabatan, b.nm_agama, c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja,
             h.nama_kabupaten_kota,i.nama_kecamatan,j.nama_kelurahan, k.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama','left')
@@ -352,7 +352,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -3491,6 +3491,13 @@ function getdatajab()
     if($id == "00"){
         $this->db->select('id_jabatanpeg, nama_jabatan');
         $this->db->where('jenis_jabatan', "Struktural");
+        $this->db->where('id_unitkerja', $id_skpd);
+        $this->db->where('flag_active', 1);
+        $fetched_records = $this->db->get('db_pegawai.jabatan');
+        $datajab = $fetched_records->result_array();
+    } else if($id == "40"){
+        $this->db->select('id_jabatanpeg, nama_jabatan');
+        $this->db->where('jenis_jabatan', "Lainnya");
         $this->db->where('id_unitkerja', $id_skpd);
         $this->db->where('flag_active', 1);
         $fetched_records = $this->db->get('db_pegawai.jabatan');
@@ -7178,16 +7185,18 @@ public function submitEditJabatan(){
                         ->where('id', $data['id_m_jenis_layanan'])
                         ->get()->row_array();
 
-        $last_data = $this->db->select('*')
-                            ->from('t_nomor_surat')
-                            ->where('YEAR(tanggal_surat)', $tahun)
-                            ->order_by('created_date', 'desc')
-                            ->limit(1)
-                            ->get()->row_array();
-        if($last_data){
-            $counter = floatval($last_data['counter'])+1;
-        }
-        $counter = $counter.".".$master['id'];
+        // $last_data = $this->db->select('*')
+        //                     ->from('t_nomor_surat')
+        //                     ->where('YEAR(tanggal_surat)', $tahun)
+        //                     ->order_by('created_date', 'desc')
+        //                     ->limit(1)
+        //                     ->get()->row_array();
+        // if($last_data){
+        //     $counter = floatval($last_data['counter'])+1;
+        // }
+        // $counter = $counter.".".$master['id'];
+        $counter = qounterNomorSurat($tahun);
+
         $data['counter'] = $counter;
         $data['nomor_surat'] = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
         $data['created_by'] = $this->general_library->getId();

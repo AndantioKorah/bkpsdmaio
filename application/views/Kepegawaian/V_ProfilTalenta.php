@@ -63,19 +63,23 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 </style>
 <tab-container  id="tabs-mt">
 	<!-- TAB CONTROLS -->
-	 <?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "IV B") { ?>
-	<!-- <input type="radio" id="tabToggle02" name="tabs" value="1" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Rotasi</label> -->
+	 <?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "IV B" || $profil_pegawai['kelas_jabatan'] == "9") { ?>
+	<?php if($this->general_library->isProgrammer()) { ?>
+	<input type="radio" id="tabToggle02" name="tabs" value="1" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Rotasi</label>
+	<?php } ?>
 	<input type="radio" id="tabToggle022" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi-iv"  onclick="LoadNilaiTalenta(2)" for="tabToggle02">Promosi</label>
 	<?php } else if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") { ?>
-	<!-- <input type="radio" id="tabToggle01" name="tabs" value="1" checked />
-	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label> -->
+	<?php if($this->general_library->isProgrammer()) { ?>
+	<input type="radio" id="tabToggle01" name="tabs" value="1" checked />
+	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label>
+	<?php } ?>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
 	<?php } else { ?>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Promosi</label>
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
 	<?php } ?>
 		
 	<tab-content>

@@ -141,7 +141,7 @@
 							        <a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$rs['nip']?>" target="_blank">
                                         <span style="font-size: 14px; font-weight: bold;"><?= getNamaPegawaiFull($rs)?></span></a><br>
                                         NIP. <?=$rs['nip']?> 
-                                            <span class="badge <?=$badge_status?>"> <?php echo $rs['statuspeg'] == 2 ? 'PNS' : 'PPPK';?></span>
+                                            <span class="badge <?=$badge_status?>"> <?php if($rs['statuspeg'] == 1) echo "CPNS"; else if($rs['statuspeg'] == 2) echo "PNS"; else echo "PPPK"; ?></span>
                                     </td>
                                     <td style="width: 6%; text-align: center;"><?=TARGET_BOBOT_PRODUKTIVITAS_KERJA.'%'?></td>
                                     <!-- <td style="width: 6%; text-align: center;"><?=isset($rs['kinerja']) && $rs['kinerja'] ? formatTwoMaxDecimal($rs['kinerja']['rekap_kinerja']['capaian']) : 0;?>%</td> -->

@@ -154,7 +154,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
     <div class="form-group" style="margin-bottom:10px !important;">
       <label for="jabatan_unitkerja">Unor SIASN </label>
-      <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"  <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?> >
+      <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"   >
                       <option value="" disabled selected>Pilih Unor SIASN</option>
                       <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
                           <option value="<?=$r['id']?>"><?=$r['nama']?></option>
@@ -197,6 +197,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                     <?php if($jenis_jabatan){ foreach($jenis_jabatan as $r){ ?>
                         <option value="<?=$r['id_jenisjab']?>"><?=$r['nm_jenisjab']?></option>
                     <?php } } ?>
+                    <option value="40">Lainnya</option>
     </select>
     </div>
 
@@ -204,8 +205,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <label for="jabatan_jenis">Jenis Fungsional </label>
     <select class="form-control select2" data-dropdown-parent="#modalJabatan" data-dropdown-css-class="select2-navy" name="jenis_fungsional" id="jenis_fungsional" required>
                     <option value="1" selected>JFT</option>
-                    <option value="2" >JFU</option>
-                  
+                    <option value="2" >JFU</option>           
     </select>
     </div>
 
@@ -324,6 +324,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                 var jnsfung = $("#jenis_fungsional").val();
 
                 if(id == "00"){
+                  $("#div_jf").hide('fast');
+                } else if(id == "40") {
                   $("#div_jf").hide('fast');
                 } else {
                   $("#div_jf").show('fast');

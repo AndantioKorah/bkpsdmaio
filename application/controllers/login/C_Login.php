@@ -55,7 +55,8 @@ class C_Login extends CI_Controller
 
         if($temp){
             foreach($temp as $t){
-                if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
+                if($t['flag_show'] == 1){
+                // if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
                     $data['announcement'][] = $t;
                     $data['flag_show_announcement'] = 1;
                 }
@@ -75,7 +76,8 @@ class C_Login extends CI_Controller
         $data['flag_show_announcement'] = 0;
         if($temp){
             foreach($temp as $t){
-                if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
+                if($t['flag_show'] == 1){
+                // if($t['flag_show'] == 1 && in_array($this->general_library->getUserName(), EXCLUDE_NIP)){
                     $data['announcement'][] = $t;
                     $data['flag_show_announcement'] = 1;
                 }

@@ -857,13 +857,18 @@
             $result[$i] = $d;
             $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
             if($d['jenis_jabatan'] == 'JFT'){ // jika JFT
+                if($this->general_library->isProgrammer()){
+                    if(!isset($d['nm_unitkerja'])){
+                        dd($d);
+                    }
+                }
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
                 if(stringStartWith('Puskesmas', $d['nm_unitkerja'])){
                     $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
                     $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
                     $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
                     if(!in_array($explode_nama_jabatan[count($explode_nama_jabatan)-1], $list_selected_jf) 
-                    && !stringStartWith('Kepala Puskesmas', $d['nama_jabatan'])){
+                    && (!stringStartWith('Kepala Puskesmas', $d['nama_jabatan']) && !stringStartWith('Plh. Kepala Puskesmas', $d['nama_jabatan']) && !stringStartWith('Plt. Kepala Puskesmas', $d['nama_jabatan']))){
                         // $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jft'];
                         $result[$i]['kelas_jabatan'] = 7;
                     }
@@ -878,7 +883,7 @@
                         }
                     }
                 }
-    
+
                 if($d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                     if(isset($d['nama_jabatan_tambahan'])){
                         if(stringStartWith("Kepala Puskesmas", $d['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
@@ -904,6 +909,12 @@
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_hardcode'];
             }
             
+            // if($this->general_library->isProgrammer()){
+            //     if($d['nip'] == '198204182011022001'){
+            //         dd($result[$i]);
+            //     }
+            // }
+
             $i++;
         }
         return $result;
@@ -1048,7 +1059,12 @@
             }
 
             if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
-                $result['kasubag'] = $lp;
+                if($id_unitkerja == 3014000){
+                    // jika disnaker, kasubag ganti sek krna kasubag sudah pensiun
+                    $result['kasubag'] = null;
+                } else {
+                    $result['kasubag'] = $lp;
+                } 
             }
 
             if(stringStartWith('Sekretaris', $lp['nama_jabatan'])){
@@ -1140,13 +1156,6 @@
                                     ->get()->row_array(); 
 
             // karena kadis dinkes ada 2, hardcode ambil nip ybs dibawah untuk dinkes dan puskes
-            // $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-            //     f.id as id_m_user, a.flag_bendahara,
-            //     TRIM(
-            //         CONCAT(
-            //         IF( a.statusjabatan = 2, "Plt. ", IF(a.statusjabatan = 3, "Plh. ", "")) 
-            //         ," ", e.nama_jabatan)
-            //     ) AS nama_jabatan, e.kepalaskpd')
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 f.id as id_m_user, a.flag_bendahara,
                 e.nama_jabatan, e.kepalaskpd')
@@ -1155,19 +1164,23 @@
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                                     ->join('m_user f', 'a.nipbaru_ws = f.username')
-                                    ->where('a.nipbaru_ws', '198505302005011001')
+                                    ->where('a.nipbaru_ws', '197409262002121007')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
-            // $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-            //     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
-            //                         ->from('db_pegawai.pegawai a')
-            //                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-            //                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-            //                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-            //                         ->join('m_user e', 'a.nipbaru_ws = e.username')
-            //                         ->where('a.nipbaru_ws', '198505302005011001')
-            //                         ->where('id_m_status_pegawai', 1)
-            //                         ->get()->row_array();
+            // kasubag ambil sek krna kasubag smntra cuti
+            if($id_unitkerja != 7005020
+            && $id_unitkerja != 7005010){
+                $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '197205032000032006')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+            } 
         }
 
         if($list_pegawai_unor_induk){
@@ -1179,7 +1192,16 @@
                     $result['bendahara'] = $lpd;
                 }
                 if(isKasubKepegawaian($lpd['nama_jabatan'])){
-                    $result['kasubag'] = $lpd;
+                    if($id_unitkerja == 3012000 
+                    || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
+                    || $id_unitkerja == 6160000
+                    // || $id_unitkerja == 7005020
+                    // || $id_unitkerja == 7005010
+                    ){ 
+
+                    } else {
+                        $result['kasubag'] = $lpd;
+                    }
                 }
             }
         }
@@ -1210,6 +1232,10 @@
         //     dd($result);
         // }
 
+        // if($this->general_library->isProgrammer()){
+        //     dd($result);
+        // }
+        
         return $result;
     }
 
@@ -1441,9 +1467,9 @@
                                     ->get()->row_array();
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp,
-            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user,
-            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs,
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode,
+            b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')

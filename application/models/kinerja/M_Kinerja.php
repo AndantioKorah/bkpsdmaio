@@ -2649,9 +2649,15 @@
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
-                    if($p['skpd'] == 6170000 || // if puskes bunaken
+                    // if($this->general_library->isProgrammer()){
+                    //     if(!isset($p['skpd'])){
+                    //         dd($p);
+                    //     }
+                    // }
+
+                    if($p['id_unitkerja'] == 6170000 || // if puskes bunaken
                     $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001 || // sekolah di bunaken kepulauan
-                    $p['skpd'] == 8020096){  // smp bunaken kepulauan
+                    $p['id_unitkerja'] == 8020096){  // smp bunaken kepulauan
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
@@ -2660,7 +2666,7 @@
 
                     // }
 
-                    if($p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
+                    if(isset($p['id_jabatan_tambahan']) && $p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                         if(stringStartWith("Kepala Puskesmas", $p['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_tambahan'];
                             $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja_tambahan'];
@@ -2678,7 +2684,7 @@
                         $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                     }
 
-                    if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){
+                    if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                     }
                 } else if($p['jenis_jabatan'] == 'Struktural'){ // jika struktural

@@ -821,14 +821,14 @@
                 ?>
               <?php 
               // if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
-              if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
+              // if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
 
                 ?>
               <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
               </li>
               <?php 
-               } 
+              //  } 
               ?>
               <?php 
               //  }  

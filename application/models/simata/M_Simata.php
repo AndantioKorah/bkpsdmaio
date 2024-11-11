@@ -2041,6 +2041,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where_in('a.flag_active', [1,2])
             ->order_by('a.tmtjabatan', 'asc');
 
+            
             if($kode == 2){
                 $this->db->where_in('c.id_eselon', [4,5]);
             }
@@ -2051,6 +2052,11 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
             if($kode == 3){
                 $this->db->where_in('c.id_eselon', [8,9]);
+                // $this->db->group_start();
+                // $this->db->where_in('c.id_eselon', [8,9]);
+                // $this->db->or_where_in('b.kelas_jabatan', [9]);
+                // $this->db->group_end();
+
             }
             if($kode == 4){
                 $this->db->where_in('b.jenis_jabatan', ["JFU"]);

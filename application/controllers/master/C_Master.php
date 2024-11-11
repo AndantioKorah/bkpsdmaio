@@ -458,7 +458,6 @@ class C_Master extends CI_Controller
     }
 
     public function masterKlasifikasiArsip(){
-      
         $data['layanan'] = $this->master->getAllMasterLayanan();
         $data['dokumen'] = $this->master->getAllMasterDokumen();
         // dd($data['dokumen']);

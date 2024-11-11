@@ -7185,16 +7185,18 @@ public function submitEditJabatan(){
                         ->where('id', $data['id_m_jenis_layanan'])
                         ->get()->row_array();
 
-        $last_data = $this->db->select('*')
-                            ->from('t_nomor_surat')
-                            ->where('YEAR(tanggal_surat)', $tahun)
-                            ->order_by('created_date', 'desc')
-                            ->limit(1)
-                            ->get()->row_array();
-        if($last_data){
-            $counter = floatval($last_data['counter'])+1;
-        }
+        // $last_data = $this->db->select('*')
+        //                     ->from('t_nomor_surat')
+        //                     ->where('YEAR(tanggal_surat)', $tahun)
+        //                     ->order_by('created_date', 'desc')
+        //                     ->limit(1)
+        //                     ->get()->row_array();
+        // if($last_data){
+        //     $counter = floatval($last_data['counter'])+1;
+        // }
         // $counter = $counter.".".$master['id'];
+        $counter = qounterNomorSurat($tahun);
+
         $data['counter'] = $counter;
         $data['nomor_surat'] = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
         $data['created_by'] = $this->general_library->getId();

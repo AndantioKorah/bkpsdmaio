@@ -380,7 +380,7 @@
 					</a>
 		</li>
 
-   <?php if($this->general_library->isAdminAplikasi()) { ?>
+   <?php if($this->general_library->isAdminAplikasi()){ ?>
 		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 

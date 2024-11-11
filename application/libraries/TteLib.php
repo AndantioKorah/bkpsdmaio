@@ -16,7 +16,8 @@ class TteLib{
         $this->USERNAME = "esign";
         $this->PASSWORD = "qwerty";
         if($this->STATE == 'PROD'){
-            $this->USERNAME = "esign";
+            $this->URL = "http://103.178.15.54/";
+            $this->USERNAME = "admin";
             $this->PASSWORD = "qwerty";
         }
         
@@ -65,27 +66,33 @@ class TteLib{
         $request_json = json_encode($data, JSON_UNESCAPED_SLASHES); 
         
         $hash = $this->hash();
-        $curl = curl_init();
-        $url = $url;
-        // dd(json_encode($data));
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_SSL_VERIFYHOST => false,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 20,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => $method,
-        CURLOPT_POSTFIELDS => $request_json,
-        CURLOPT_TIMEOUT => 50,
-        // CURLOPT_HTTPAUTH => CURLAUTH_ANY,
-        CURLOPT_USERPWD => $hash['username'].":".$hash['password'],
-        CURLOPT_HTTPHEADER => array(
-                "Content-Type: application/json; charset=utf-8",
-            ),
-        ));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_USERPWD, $hash['username'].":".$hash['password']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Content-Type: application/json',
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $request_json);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        // $curl = curl_init();
+        // $url = $url;
+        // curl_setopt_array($curl, array(
+        // CURLOPT_URL => $url,
+        // // CURLOPT_RETURNTRANSFER => true,
+        // CURLOPT_CUSTOMREQUEST => $method,
+        // CURLOPT_POSTFIELDS => $request_json,
+        // CURLOPT_TIMEOUT => 50,
+        // CURLOPT_USERPWD => $hash['username'].":".$hash['password'],
+        // CURLOPT_HTTPHEADER => array(
+        //         "Content-Type: application/json; charset=utf-8",
+        //     ),
+        // ));
 
         $response = curl_exec($curl);
         $err = curl_error($curl);

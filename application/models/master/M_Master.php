@@ -1132,6 +1132,14 @@
                             ->get()->result_array();
         }
 
+        public function getAllKlasifikasiArsip(){
+            return $this->db->select('*')
+                            ->from('m_jenis_layanan as a')
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+        }
+
+
         public function loadListNominatifPegawai($data, $id_pegawai = null, $flag_profil = 0){
             $result = null;
     

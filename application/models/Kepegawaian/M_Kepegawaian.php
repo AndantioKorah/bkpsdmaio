@@ -7194,7 +7194,7 @@ public function submitEditJabatan(){
         if($last_data){
             $counter = floatval($last_data['counter'])+1;
         }
-        $counter = $counter.".".$master['id'];
+        // $counter = $counter.".".$master['id'];
         $data['counter'] = $counter;
         $data['nomor_surat'] = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
         $data['created_by'] = $this->general_library->getId();

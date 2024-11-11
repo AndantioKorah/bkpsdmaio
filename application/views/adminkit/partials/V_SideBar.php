@@ -210,6 +210,11 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/klasifikasi-arsip')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Klasifikasi Arsip
+					</a>
+				</li>
+				<li class="sidebar-item ">
 					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Announcement
 					</a>

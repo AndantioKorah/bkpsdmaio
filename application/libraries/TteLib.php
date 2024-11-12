@@ -1,7 +1,7 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class TteLib{
+class Ttelib{
     // ganti dg url api dan token sesuai di admin panel
     public $URL;
     public $USERNAME;
@@ -15,6 +15,7 @@ class TteLib{
         $this->URL = "103.186.201.237/";
         $this->USERNAME = "esign";
         $this->PASSWORD = "qwerty";
+        $this->URL_BRIDGING = 'siladen.manadokota.go.id/bridging/';
         if($this->STATE == 'PROD'){
             $this->URL = "103.178.15.54/";
             $this->USERNAME = "esign";
@@ -56,7 +57,7 @@ class TteLib{
         $this->tte->general->insert('t_log_tte', $data);
     }
 
-    function postCurl($url, $data, $method = "POST") {
+    function postCurlBu($url, $data, $method = "POST") {
         $id_ref = isset($data['id_ref']) ? $data['id_ref'] : 0;
         unset($data['id_ref']);
         
@@ -102,6 +103,72 @@ class TteLib{
             'request' => $request_json,
             'response' => $response,
             'url' => $url
+        ]);
+
+        return $response;
+    }
+
+    function postCurl($url, $data, $method = "POST") {
+        $hash = $this->hash();
+
+        $id_ref = isset($data['id_ref']) ? $data['id_ref'] : 0;
+        unset($data['id_ref']);
+        
+        $table_ref = isset($data['table_ref']) ? $data['table_ref'] : 0;
+        unset($data['table_ref']);
+
+        $body_data['url'] = $url;
+        $body_data['method'] = $method;
+        $body_data['data'] = $data;
+        $body_data['username'] = $hash['username'];
+        $body_data['password'] = $hash['password'];
+        
+        $url_bridging = $this->URL_BRIDGING.'ws/tte';
+
+        $request_json = json_encode($body_data, JSON_UNESCAPED_SLASHES); 
+        // dd($request_json);
+
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json; charset=utf-8",
+        ));
+        curl_setopt($curl, CURLOPT_URL, $url_bridging);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $request_json);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+
+        // curl_setopt_array($curl, array(
+        // CURLOPT_URL => $url_bridging,
+        // CURLOPT_SSL_VERIFYHOST => false,
+        // CURLOPT_SSL_VERIFYPEER => false,
+        // CURLOPT_RETURNTRANSFER => true,
+        // CURLOPT_ENCODING => "",
+        // CURLOPT_MAXREDIRS => 10,
+        // CURLOPT_CUSTOMREQUEST => $method,
+        // CURLOPT_POSTFIELDS => $request_json,
+        // CURLOPT_TIMEOUT => 15,
+        // CURLOPT_HTTPHEADER => array(
+        //         "Content-Type: application/json; charset=utf-8",
+        //     ),
+        // ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        if($err){
+            $response = $err;
+        }
+
+        curl_close($curl);
+
+        $this->saveLog([
+            'id_ref' => json_encode($id_ref),
+            'table_ref' => $table_ref,
+            'request' => $request_json,
+            'response' => $response,
+            'url' => $url,
+            'url_bridging' => $url_bridging
         ]);
 
         return $response;

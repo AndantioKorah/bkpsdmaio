@@ -707,7 +707,7 @@
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
                     // $atasan = $kepala;
-                    
+                  
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
@@ -717,11 +717,13 @@
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_bidang'])
                                         ->get()->row_array();
+                                      
                         if(!$atasan){ //cari sek
                             if(stringStartWith('Inspektorat', $pegawai['nm_unitkerja'])){
                                 $atasan = $this->baseQueryAtasan()
                                                 ->where('b.skpd', $pegawai['id_unitkerja'])
-                                                ->where('a.id_m_bidang', 202)
+                                                // ->where('a.id_m_bidang', 202)
+                                                ->where('a.id_m_bidang',$pegawai['id_m_bidang'])
                                                 ->where('f.id_eselon', 6)
                                                 ->get()->row_array();
                             } else {
@@ -2647,9 +2649,15 @@
                         // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
 
-                    if($p['skpd'] == 6170000 || // if puskes bunaken
+                    // if($this->general_library->isProgrammer()){
+                    //     if(!isset($p['skpd'])){
+                    //         dd($p);
+                    //     }
+                    // }
+
+                    if($p['id_unitkerja'] == 6170000 || // if puskes bunaken
                     $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001 || // sekolah di bunaken kepulauan
-                    $p['skpd'] == 8020096){  // smp bunaken kepulauan
+                    $p['id_unitkerja'] == 8020096){  // smp bunaken kepulauan
                         if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
                             $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
                         }
@@ -2658,7 +2666,7 @@
 
                     // }
 
-                    if($p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
+                    if(isset($p['id_jabatan_tambahan']) && $p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                         if(stringStartWith("Kepala Puskesmas", $p['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
                             $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_tambahan'];
                             $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja_tambahan'];
@@ -2676,7 +2684,7 @@
                         $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                     }
 
-                    if($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0){
+                    if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                     }
                 } else if($p['jenis_jabatan'] == 'Struktural'){ // jika struktural
@@ -3819,6 +3827,8 @@
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
                     
+                    if(isset($data['kriteria'])){
+
                     if($data['kriteria'] == 2){
                         if($temp['bobot_capaian_produktivitas_kerja'] == 60){
                             $result[$i] = $temp;
@@ -3838,6 +3848,11 @@
                         $result[$i] = $temp;
                         $i++;
                     } 
+                    } else {
+                        $result[$i] = $temp;
+                        $i++;
+                    }
+
                    
                 }
                 

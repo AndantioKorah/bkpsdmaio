@@ -153,7 +153,11 @@
 	</li>
 	<?php } ?>
 	<!-- MENU MAIN UNTUK PROGRAMMER -->
-	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() AND !$this->general_library->isWalikota()){ ?>
+	<?php if($this->general_library->isHakAkses('akses_profil_pegawai') ||
+	$this->general_library->isProgrammer() ||
+	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
+	$this->general_library->isAdminAplikasi() &&
+	!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
 			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
@@ -201,13 +205,13 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/lock-tpp')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Lock TPP
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
+					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/klasifikasi-arsip')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Klasifikasi Arsip
 					</a>
 				</li>
 				<li class="sidebar-item ">
@@ -222,6 +226,16 @@
 					</a>
 				</li>
 				
+				<?php } if($this->general_library->isHakAkses('lock_tpp') ||
+				$this->general_library->isProgrammer() ||
+				$this->general_library->isAdminAplikasi() || 
+				$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				){ ?>
+					<li class="sidebar-item ">
+						<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/lock-tpp')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Lock TPP
+						</a>
+					</li>
 				<?php } ?>
 			</ul>
 		</li>
@@ -371,7 +385,7 @@
 					</a>
 		</li>
 
-   <?php if($this->general_library->isAdminAplikasi()) { ?>
+   <?php if($this->general_library->isAdminAplikasi()){ ?>
 		<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 

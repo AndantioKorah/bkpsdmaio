@@ -457,15 +457,33 @@ class C_Master extends CI_Controller
         render('master/V_MasterSyaratLayanan', '', '', $data);
     }
 
+    public function masterKlasifikasiArsip(){
+        $data['layanan'] = $this->master->getAllMasterLayanan();
+        $data['dokumen'] = $this->master->getAllMasterDokumen();
+        // dd($data['dokumen']);
+        render('master/V_MasterKlasifikasiArsip', '', '', $data);
+    }
+
     public function loadMasterSyaratLayanan(){  
         $data['result'] = $this->master->getAllSyaratLayananItem();
         $this->load->view('master/V_MasterSyaratLayananItem', $data);
+    }
+
+    public function loadMasterKlasifikasiArsip(){  
+        $data['result'] = $this->master->getAllKlasifikasiArsip();
+        $this->load->view('master/V_MasterKlasifikasiArsipItem', $data);
     }
 
     public function inputMasterSyaratLayanan(){
         $data = $this->input->post();
         $data['created_by'] = $this->general_library->getId();
         $this->general->insert('m_syarat_layanan', $data);
+    }
+
+    public function inputMasterKlasifikasiArsip(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->general->insert('m_jenis_layanan', $data);
     }
 
     public function masterAnnouncement(){
@@ -477,6 +495,10 @@ class C_Master extends CI_Controller
 
     public function deleteMasterSyaratLayanan($id){
         $this->general->delete('id', $id, 'm_syarat_layanan');
+    }
+
+    public function deleteMasterKlasifikasiArsip($id){
+        $this->general->delete('id', $id, 'm_jenis_layanan');
     }
 
     public function mappingUnor(){

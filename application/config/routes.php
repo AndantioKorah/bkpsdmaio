@@ -130,6 +130,8 @@ $route['kepegawaian/verifikasi-pensiun-detail/(:any)/(:any)'] = 'kepegawaian/C_K
 // master
 $route['master/syarat-layanan'] = 'master/C_Master/masterSyaratLayanan';
 $route['master/nominatif-pegawai'] = 'master/C_Master/nominatifPegawai';
+$route['master/klasifikasi-arsip'] = 'master/C_Master/masterKlasifikasiArsip';
+
 
 
 $route['dokumen-pendukung-absensi/tinjau'] = 'kinerja/C_Kinerja/tinjauAbsensi';

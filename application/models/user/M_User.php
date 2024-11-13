@@ -2423,6 +2423,9 @@
                     $tanggal_lahir = new DateTime($d['tgllahir']);
                     $sekarang = new DateTime("today");
                     $umur = $sekarang->diff($tanggal_lahir)->y;
+                   
+                    $tgl_pensiun = date('Y-m-d', strtotime('+58 year', strtotime( $d['tgllahir'] ))); //tambah tanggal sebanyak 6 tahun
+
                     $bup = 0;
                     $crit = 0;
                         if(($d['jenis_jabatan'] == 'JFU' || $d['jenis_jabatan'] == 'Lainnya')){ //jika 58 dan JFU
@@ -2468,9 +2471,16 @@
 
                             if(isset($data['keteranganpegawai'])){
                             if(in_array("9", $data['keteranganpegawai'])) {
-                                        if($umur >= $bup){
+                                    // if($umur >= $bup){
+                                    //         $result[] = $temp;
+                                    //  }
+                                  
+                                    $date_now = date("Y-m-d");
+                                    $tmt_pensiun = date("Y-m-d", strtotime($temp['tmt_pensiun']));
+                                    
+                                    if($date_now > $tmt_pensiun){
                                             $result[] = $temp;
-                                     }
+                                    }
                                 } else {
                                     $result[] = $temp; 
                                 }

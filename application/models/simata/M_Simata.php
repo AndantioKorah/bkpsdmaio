@@ -2041,6 +2041,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where_in('a.flag_active', [1,2])
             ->order_by('a.tmtjabatan', 'asc');
 
+            
             if($kode == 2){
                 $this->db->where_in('c.id_eselon', [4,5]);
             }
@@ -2051,6 +2052,11 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
             if($kode == 3){
                 $this->db->where_in('c.id_eselon', [8,9]);
+                // $this->db->group_start();
+                // $this->db->where_in('c.id_eselon', [8,9]);
+                // $this->db->or_where_in('b.kelas_jabatan', [9]);
+                // $this->db->group_end();
+
             }
             if($kode == 4){
                 $this->db->where_in('b.jenis_jabatan', ["JFU"]);
@@ -4816,7 +4822,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $list_bidang_tambahan = null;
             $list_pegawai_tambahan = null;
             
-            $this_user = $this->db->select('d.kelas_jabatan,d.jenis_jabatan,a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster, d.nama_jabatan, e.nama_jabatan as nama_jabatan_tambahan')
+            $this_user = $this->db->select('a.id_m_bidang,d.kelas_jabatan,d.jenis_jabatan,a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster, d.nama_jabatan, e.nama_jabatan as nama_jabatan_tambahan')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -4955,7 +4961,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
                 ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
                 ->where('a.id !=', $this->general_library->getId())
-                ->where('b.skpd ', $this_user['skpd'])
+                // ->where('b.skpd ', $this_user['skpd'])
+                ->where('a.id_m_bidang ', $this_user['id_m_bidang'])
                 ->where('a.flag_active', 1)
                 ->where('b.statuspeg', 2);
 

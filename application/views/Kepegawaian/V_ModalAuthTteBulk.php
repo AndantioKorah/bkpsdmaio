@@ -14,6 +14,11 @@
       <button type="submit" class="btn btn-navy" id="btn_submit_auth">SUBMIT</button>
       <button style="display: none;" type="button" disabled class="btn btn-navy" id="btn_submit_auth_loader"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</button>
     </div>
+    <div class="col-lg-12 mt-3" id="div_message">
+      <hr>
+      <span style="font-weight:bold; font-style: italic; color: grey; font-size: .75rem;" class="Pesan:"></span>
+      <span style="font-weight:bold; font-size: 1rem;" class="message_text"></span>
+    </div>
   </form>
 </div>  
 
@@ -22,6 +27,7 @@
     e.preventDefault()
     $('#btn_submit_auth').hide()
     $('#btn_submit_auth_loader').show()
+    $('#div_message').hide()
     // $('#auth_modal_tte').modal('hide')
     // return false
     $.ajax({
@@ -36,15 +42,22 @@
       },
       success: function(res){
         let rs = JSON.parse(res)
+        $('#div_message').show()
         if(rs.code != 0){
           errortoast(rs.message)
           $('#btn_submit_auth').show()
           $('#btn_submit_auth_loader').hide()
+          $('.message_text').html(rs.message)
+          $('.message_text').text(rs.message)
+          $('.message_text').css("color", "red")
         } else {
           $('#form_load_ds').submit()
           successtoast('File sudah berhasil ditambahkan ke dalam antrian untuk dilakukan Digital Signature secara otomatis.')
           $("#auth_modal_tte .close").click()
           $('#auth_modal_tte').modal('hide')
+          $('.message_text').html('File sudah berhasil ditambahkan ke dalam antrian untuk dilakukan Digital Signature secara otomatis.')
+          $('.message_text').text('File sudah berhasil ditambahkan ke dalam antrian untuk dilakukan Digital Signature secara otomatis.')
+          $('.message_text').css("color", "green")
         }
       }, error: function(err){
         errortoast('Terjadi Kesalahan')

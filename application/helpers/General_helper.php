@@ -1633,3 +1633,10 @@ function simpleEncrypt($string){
 function simpleDecrypt($decrypted){
     return base64_decode(strtr($decrypted, '-_,', '+/='));
 }
+
+function qounterNomorSurat($tahun){
+$helper = &get_instance();
+$helper->load->model('general/M_General', 'general');
+$counter = $helper->general->getlastNomorSurat($tahun);
+return $counter;
+}

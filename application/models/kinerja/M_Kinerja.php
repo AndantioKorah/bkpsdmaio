@@ -921,7 +921,15 @@
                         }
                     }
                 }
+            } 
+            if(stringStartWith('Bagian', $pegawai['nm_unitkerja'])){
+                $atasan = $this->baseQueryAtasan()
+                ->where('b.skpd', $pegawai['id_unitkerja'])
+                ->where('d.nama_jabatan', 'Kepala '.$pegawai['nm_unitkerja'])
+                ->get()->row_array();
             }
+            // dd($pegawai['nm_unitkerja']);
+            
         } else if($pegawai['kepalaskpd'] == 1){
             if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika lurah
                 $atasan = $this->baseQueryAtasan()

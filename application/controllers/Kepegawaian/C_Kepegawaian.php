@@ -1716,6 +1716,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadDataDrhSatyalencana($nip){
 		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
 		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// dd($data['atasan_pegawai']);
 		// $data['result'] = $this->kepegawaian->getProfilPegawai($nip);
 		
 		$this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data);

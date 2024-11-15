@@ -80,14 +80,14 @@
                         <?php if($status == 1 || $status == 2){ ?>
                             <span><strong><?=$r['keterangan_verif']?></strong></span><br>
                             <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
-                            
+                            cc
                             <!-- <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span> -->
                             <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         <?php } else if($status == 0) { ?> 
                             
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
                             <?php if($r['jenis_bukti'] == 2) { ?>
-                            <input type="time" class="form-control" id="jam_<?=$r['id']?>"  value="10:05 AM" />
+                            <input type="time" class="form-control" id="jam_<?=$r['id']?>"/>
                             <?php } ?>
 
                             <input type="hidden" class="form-control" id="jenis_bukti_<?=$r['id']?>" value="<?=$r['jenis_bukti']?>"/>

@@ -2262,6 +2262,16 @@ class C_Kepegawaian extends CI_Controller
 	public function deleteTpltPlh($id){
         $this->general->delete('id', $id, 't_plt_plh');
     }
+
+
+	public function rekapVerifPeninjauanAbsensi(){
+        render('rekap/V_RekapVerifikasiPeninjauanAbsensi', '', '', null);
+    }
+
+	public function searchRekapVerifPeninjauanAbsensi(){
+        $data['result'] = $this->kepegawaian->searchRekapVerifPeninjauanAbsensi($this->input->post());
+        $this->load->view('rekap/V_RekapVerifikasiPeninjauanAbsensiResult', $data);
+    }
 	
 
 

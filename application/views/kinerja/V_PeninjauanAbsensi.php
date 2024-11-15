@@ -184,18 +184,33 @@ contoh Screenshot Whatsapp<br>
       </div>
       <div class="modal-body">
       <span>
+        <div class="row">
+    <div class="col-lg-6">
+      <b style="color:red" >contoh Foto Bersama Teman</b><br>
+      <img style="height:300px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
+    </div>
+    <div class="col-lg-6">
+    <b style="color:red">contoh Screenshot Whatsapp Grup</b><br>
+    <img style="height:300px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
+    </div>
+    </div>
+   
     <br>
     Keterangan : <br> 
-    <b style="font-size:20px;">-</b> Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
+    <b style="font-size:20px;">-</b> Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. 
+    <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
     <b style="font-size:20px;">-</b> Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
     <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
     <b style="font-size:20px;">-</b> Upload bukti pada hari yang sama. <br>
     <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>
       </div>
-      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
+ 
 </div>
 
 <script>

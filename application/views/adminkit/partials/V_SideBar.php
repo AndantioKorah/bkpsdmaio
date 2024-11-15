@@ -643,6 +643,11 @@
 							<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM
 						</a>
 					</li>
+					<li class="sidebar-item ">
+						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-peninjauan')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Absensi
+						</a>
+					</li>
 				<?php } ?>
 				
 				

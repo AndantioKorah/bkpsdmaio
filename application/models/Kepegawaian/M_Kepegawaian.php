@@ -8488,6 +8488,30 @@ public function getFileForKarisKarsu()
 	}
 
 
+    public function searchRekapVerifPeninjauanAbsensi($data){
+        $result = null;
+        $tanggal = explodeRangeDateNew($data['tanggal']);
+      
+            $this->db->select('b.nama, (select count(a.id) from db_efort.t_peninjauan_absensi as aa where a.id_m_user_verif = aa.id_m_user_verif limit 1) as total_verif ')
+                    ->from('db_efort.t_peninjauan_absensi a')
+                    ->join('db_efort.m_user b', 'a.id_m_user_verif = b.id')
+                    ->where('a.flag_active', 1)
+                    // ->where('a.status', 2)
+                    ->where('a.id_m_user_verif !=', 0)
+                    ->group_by('a.id_m_user_verif')
+                    ->order_by('total_verif','desc');
+            if(!isset($data['all'])){
+                $this->db->where('DATE(a.tanggal_absensi) >=', $tanggal[0])
+                            ->where('DATE(a.tanggal_absensi) <=', $tanggal[1]);
+            }
+
+            $dataresult = $this->db->get()->result_array();
+
+           
+        return $dataresult;
+    }
+
+
 
 
 

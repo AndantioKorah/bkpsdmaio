@@ -79,10 +79,17 @@
                     <td>
                         <?php if($status == 1 || $status == 2){ ?>
                             <span><strong><?=$r['keterangan_verif']?></strong></span><br>
+                            <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
+                            
                             <!-- <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span> -->
                             <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         <?php } else if($status == 0) { ?> 
+                            
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
+                            <?php if($r['jenis_bukti'] == 2) { ?>
+                            <input type="time" class="form-control" id="jam_<?=$r['id']?>"  value="10:05 AM" />
+                            <?php } ?>
+
                             <input type="hidden" class="form-control" id="jenis_bukti_<?=$r['id']?>" value="<?=$r['jenis_bukti']?>"/>
                             <input type="hidden" class="form-control" id="teman_absensi_<?=$r['id']?>" value="<?=$r['teman_absensi']?>"/>
                             <input type="hidden" class="form-control" id="tanggal_absensi_<?=$r['id']?>" value="<?=$r['tanggal_absensi']?>"/>
@@ -90,7 +97,12 @@
                             <input type="hidden" class="form-control" id="jenis_absensi_<?=$r['id']?>" value="<?=$r['jenis_absensi']?>"/>
                        
                             <?php } else if($status == 3){ ?>
+                            <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
+                            <?php if($r['jenis_bukti'] == 2) { ?>
+                            <input type="time" class="form-control" id="jam_<?=$r['id']?>" />
+                            <?php } ?>
+                            
                             <input type="hidden" class="form-control" id="jenis_bukti_<?=$r['id']?>" value="<?=$r['jenis_bukti']?>"/>
                             <input type="hidden" class="form-control" id="teman_absensi_<?=$r['id']?>" value="<?=$r['teman_absensi']?>"/>
                             <input type="hidden" class="form-control" id="tanggal_absensi_<?=$r['id']?>" value="<?=$r['tanggal_absensi']?>"/>
@@ -104,10 +116,10 @@
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <?php if($r['total_diverif'] < 2) { ?>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
                             <?php } ?>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(3, '<?=$r['id']?>',<?=$status?>)" style="display: <?=$status == 0 || $status == 3 ? 'none' : 'block'?>" class="btn_batal_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>
+                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(3, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'none' : 'block'?>" class="btn_batal_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
                             <button disabled style="display: none;" id="btn_loading_<?=$r['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                         </div>
                     </td>
@@ -116,6 +128,7 @@
         </tbody>
     </table>
     </div>
+
 <?php } else { ?>
     <div class="col-12 text-center">
         <h6>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h6>
@@ -124,11 +137,23 @@
 <script>
     $(function(){
        
-
+        // $("#sidebar_toggle" ).trigger( "click" );
         $('#table_disiplin_kerja_result_data').dataTable()
     })
 
-    function verifDokumen(status, id, tab){
+    function verifDokumen(status, id, tab,jenis_absen){
+
+        if(jenis_absen == 2){
+            if(status == 1){
+           if($('#jam_'+id).val() == "" || $('#jam_'+id).val() == null){
+            errortoast('Jam belum diisi')
+            return false;
+           }
+        }
+
+           
+        }
+
         $('.btn_verif_'+id).hide()
         $('#btn_loading_'+id).show()
         $.ajax({
@@ -141,6 +166,7 @@
                 teman_absensi: $('#teman_absensi_'+id).val(),
                 tanggal_absensi: $('#tanggal_absensi_'+id).val(),
                 jenis_absensi: $('#jenis_absensi_'+id).val(),
+                jam_absen : $('#jam_'+id).val(),
                 id_user: $('#id_user_'+id).val()
             },
             success: function(data){

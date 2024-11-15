@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 table-responsive">
-        <table id="result_table" class="table table-striped table-hover">
+        <table id="result_table" class="table table-striped">
             <thead>
                 <th class="text-center">No</th>
                 <th class="text-left">Verifikator</th>

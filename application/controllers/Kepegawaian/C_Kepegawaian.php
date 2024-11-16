@@ -1638,9 +1638,23 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->saveNomorSurat());
 	}
 
+	public function saveNomorSuratManual($id){
+		echo json_encode($this->kepegawaian->saveNomorSuratManual($id));
+	}
+
 	public function loadNomorSurat(){
 		$data['result'] = $this->kepegawaian->loadNomorSurat();
 		$this->load->view('kepegawaian/V_NomorSuratRiwayat', $data);
+	}
+
+	public function loadListFileInputManualNomorSurat(){
+		$data['result'] = $this->kepegawaian->loadListFileInputManualNomorSurat();
+		$this->load->view('kepegawaian/V_NomorSuratInputManual', $data);
+	}
+
+	public function openModalNomorSuratManual($id){
+		$data['result'] = $this->kepegawaian->loadListFileInputManualNomorSuratById($id);
+		$this->load->view('kepegawaian/V_NomorSuratManualModal', $data);
 	}
 
 	public function submitEditJabatan()

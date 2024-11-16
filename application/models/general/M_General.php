@@ -1381,22 +1381,22 @@
             return $flag_cari_rekap_tpp;
         }
 
-        public function getlastNomorSurat($tahun)
-        {
-        $qounter = null;
-        $last_data = $this->db->select('*')
-                            ->from('t_nomor_surat')
-                            ->where('YEAR(tanggal_surat)', $tahun)
-                            ->order_by('created_date', 'desc')
-                            ->limit(1)
-                            ->get()->row_array();
+        public function getlastNomorSurat($tahun){
+            $qounter = null;
+            $last_data = $this->db->select('*')
+                                ->from('t_nomor_surat')
+                                ->where('YEAR(tanggal_surat)', $tahun)
+                                ->order_by('created_date', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
 
-         if($last_data){
-            $counter = floatval($last_data['counter'])+1;
-         } else {
-            $counter = 1;
+            if($last_data){
+                $counter = floatval($last_data['counter'])+1;
+            } else {
+                $counter = 1;
             }
-        return $counter;
+            
+            return $counter;
         }
 
 	}

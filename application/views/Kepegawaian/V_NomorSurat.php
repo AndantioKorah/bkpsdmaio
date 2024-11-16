@@ -2,7 +2,17 @@
   <div class="col-lg-12">
     <div class="card card-default">
       <div class="card-header">
-        <div class="card-title"><h5>INPUT SURAT KELUAR</h5></div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card-title"><h5>INPUT NOMOR SURAT</h5></div>
+          </div>
+          <div class="col-lg-3 text-right">
+            <button id="btn_input_manual" class="btn btn-navy"><i class="fa fa-edit"></i> Input Manual</button>
+          </div>
+          <div class="col-lg-3 text-right">
+            <button style="display: block;" id="btn_riwayat_nomor_surat" onclick="loadRiwayat()" class="btn btn-navy"><i class="fa fa-clock"></i> Riwayat Nomor Surat</button>
+          </div>
+        </div>
         <hr>
       </div>
       <div class="card-body">
@@ -38,7 +48,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-12">
+  <div id="div_riwayat_nomor_surat" class="col-lg-12">
     <div class="card card-default">
       <div class="card-header">
         <div class="card-title">
@@ -47,7 +57,19 @@
         <hr>
       </div>
       <div class="card-body" id="div_riwayat" style="margin-top: -40px;">
-        
+      </div>
+    </div>
+  </div>
+
+  <div id="div_input_manual_nomor_surat" style="display: none;" class="col-lg-12">
+    <div class="card card-default">
+      <div class="card-header">
+        <div class="card-title">
+          <h5>INPUT MANUAL NOMOR SURAT FILE</h5>
+        </div>
+        <hr>
+      </div>
+      <div class="card-body" id="div_list_manual_nomor_surat" style="margin-top: -40px;">
       </div>
     </div>
   </div>
@@ -58,7 +80,27 @@
     loadRiwayat()
   })
 
+  $('#btn_input_manual').on('click', function(){
+    // loadRiwayat()
+    // $('#btn_riwayat_nomor_surat').show()
+    $('#div_input_manual_nomor_surat').show()
+    $('#div_riwayat_nomor_surat').hide()
+    loadListFileInputManualNomorSurat()
+  })
+
+  function loadListFileInputManualNomorSurat(){
+    $('#div_input_manual_nomor_surat').html('')
+    $('#div_input_manual_nomor_surat').append(divLoaderNavy)
+    $('#div_input_manual_nomor_surat').load('<?=base_url('kepegawaian/C_Kepegawaian/loadListFileInputManualNomorSurat')?>', function(){
+      $('#loader').hide()
+    })
+  }
+
   function loadRiwayat(){
+    // $('#btn_riwayat_nomor_surat').hide()
+    $('#div_input_manual_nomor_surat').hide()
+    $('#div_riwayat_nomor_surat').show()
+
     $('#div_riwayat').html('')
     $('#div_riwayat').append(divLoaderNavy)
     $('#div_riwayat').load('<?=base_url('kepegawaian/C_Kepegawaian/loadNomorSurat')?>', function(){

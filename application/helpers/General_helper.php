@@ -1635,8 +1635,8 @@ function simpleDecrypt($decrypted){
 }
 
 function qounterNomorSurat($tahun){
-$helper = &get_instance();
-$helper->load->model('general/M_General', 'general');
-$counter = $helper->general->getlastNomorSurat($tahun);
-return $counter;
+    $helper = &get_instance();
+    $helper->load->model('general/M_General', 'general');
+    $counter = $helper->general->getlastNomorSurat($tahun);
+    return $counter;
 }

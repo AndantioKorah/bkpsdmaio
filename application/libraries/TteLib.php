@@ -131,12 +131,13 @@ class Ttelib{
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json; charset=utf-8",
-        ));
+                "Content-Type: application/json; charset=utf-8",
+            )
+        );
         curl_setopt($curl, CURLOPT_URL, $url_bridging);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $request_json);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 
         // curl_setopt_array($curl, array(

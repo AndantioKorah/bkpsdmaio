@@ -5509,9 +5509,6 @@ public function submitEditJabatan(){
                 }
 
                 if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di request untuk DS
-                    // $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
-                    $nomor_surat = "";
-
                     $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
                             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
                             ->from('t_pengajuan_cuti a')
@@ -5524,9 +5521,22 @@ public function submitEditJabatan(){
                             ->where('a.id', $resp['cuti']['id'])
                             ->get()->row_array();
 
+                    $master = $this->db->select('*')
+                            ->from('m_jenis_layanan')
+                            ->where('integrated_id', $dataCuti['id_cuti'])
+                            ->get()->row_array();
+
                     $resCuti['data'] = $dataCuti;
                     $resCuti['data']['ds'] = 1;
                     $resCuti['data']['nomor_surat'] = $nomor_surat;
+
+                    $nomor_surat = "";
+                    if(FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI == 0){
+                        $tahun = date('Y');
+                        $counter = qounterNomorSurat($tahun);
+                        $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
+                        $resCuti['data']['nomor_surat'] = $nomor_surat;
+                    }
 
                     $filename = 'CUTI_'.$resCuti['data']['nipbaru_ws'].'_'.date("Y", strtotime($resCuti['data']['created_date']))."_".date("m", strtotime($resCuti['data']['created_date'])).'_'.date("d", strtotime($resCuti['data']['created_date'])).'.pdf';
                     $path_file = 'arsipcuti/'.$filename;
@@ -5556,6 +5566,20 @@ public function submitEditJabatan(){
                         ]
                     ];
 
+                    $perihal = 'SURAT IZIN '.strtoupper($dataCuti['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($dataCuti);
+
+                    if(FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI == 0){
+                        $this->db->insert('t_nomor_surat', [
+                            'perihal' => $perihal,
+                            'counter' => $counter,
+                            'nomor_surat' => $nomor_surat,
+                            // 'created_by' => $kepala_bkpsdm['id_m_user'],
+                            'tanggal_surat' => $dataCuti['created_date'],
+                            'id_m_jenis_layanan' => $master['id']
+                        ]);
+                        $last_insert_nomor_surat = $this->db->insert_id();
+                    }
+
                     $this->db->insert('t_request_ds', [
                         'ref_id' => $dataCuti['id'],
                         'table_ref' => 't_pengajuan_cuti',
@@ -5567,7 +5591,11 @@ public function submitEditJabatan(){
                         'random_string' => $randomString,
                         'created_by' => $this->general_library->getId(),
                         'nama_kolom_flag' => 'flag_ds_cuti',
-                        'nip' => $dataCuti['nipbaru_ws']
+                        'nip' => $dataCuti['nipbaru_ws'],
+                        'id_t_nomor_surat' => $last_insert_nomor_surat,
+                        'meta_data' => json_encode($resCuti),
+                        'meta_view' => 'kepegawaian/V_SKPermohonanCuti',
+                        'perihal' => $perihal,
                     ]);
 
                     $request_tte = [
@@ -7160,6 +7188,7 @@ public function submitEditJabatan(){
                             ->join('m_jenis_ds d', 'a.id_m_jenis_ds = d.id')
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
+                            ->where('a.id_t_nomor_surat !=', 0)
                             // ->where('id_m_jenis_ds', $data['jenis_layanan'])
                             ->order_by('a.created_date', 'desc');
                             // ->get()->result_array();
@@ -7204,6 +7233,66 @@ public function submitEditJabatan(){
         $this->db->insert('t_nomor_surat', $data);
     }
 
+    public function saveNomorSuratManual($id){
+        $res['code'] = 0;
+        $res['message'] = '';
+
+        $data = $this->input->post();
+
+        $exists = $this->db->select('*')
+                        ->from('t_nomor_surat')
+                        ->where('counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'"')
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+        $request_ds = $this->db->select('a.*')
+                        ->from('t_request_ds a')
+                        ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+
+        if($exists && $exists['id'] != $request_ds['id_t_nomor_surat']){
+            $res['code'] = 1;
+            $res['message'] = 'Nomor Surat atau Counter Nomor Surat telah digunakan';
+        } else {
+
+            //insert nomor surat manual
+            $data_input['counter'] = $data['counter_nomor_surat'];
+            $data_input['nomor_surat'] = $data['nomor_surat'];
+            $data_input['id_m_jenis_layanan'] = $request_ds['id_m_jenis_layanan'];
+            $data_input['perihal'] = $request_ds['perihal'];
+            $data_input['tanggal_surat'] = formatDateOnlyForEdit($request_ds['created_date']);
+            $data_input['created_by'] = $this->general_library->getId();
+
+            $this->db->insert('t_nomor_surat', $data_input);
+            $last_insert = $this->db->insert_id();
+
+
+            //buat file baru dengan nomor surat manual
+            $meta_data = json_decode($request_ds['meta_data'], true);
+            $meta_data['nomor_surat'] = $data_input['nomor_surat'];
+            
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                // 'debug' => true
+            ]);
+            $html = $this->load->view($request_ds['meta_view'], $meta_data, true);
+            dd($html);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output($request_ds['url_file'], 'F');
+
+            $this->db->where('id', $id)
+                    ->update('t_request_ds', [
+                        'id_t_nomor_surat' => $last_insert,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        return $res;
+    }
+
     public function loadNomorSurat(){
         return $this->db->select('a.*, c.gelar1, c.nama, c.gelar2')
                         ->from('t_nomor_surat a')
@@ -7213,6 +7302,27 @@ public function submitEditJabatan(){
                         ->order_by('a.tanggal_surat', 'desc')
                         ->order_by('a.created_date', 'desc')
                         ->get()->result_array();
+    }
+
+    public function loadListFileInputManualNomorSurat(){
+        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds')
+                    ->from('t_request_ds a')
+                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.created_date', 'desc')
+                    ->group_by('a.id')
+                    ->get()->result_array();
+    }
+
+    public function loadListFileInputManualNomorSuratById($id){
+        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter')
+                    ->from('t_request_ds a')
+                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    ->where('a.flag_active', 1)
+                    ->where('a.id', $id)
+                    ->get()->row_array();
     }
 
     public function updateJabatan($id_peg){

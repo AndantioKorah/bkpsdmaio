@@ -330,7 +330,7 @@
 		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Nomor Surat</span>
+				<i class="fa fa-file-alt"></i> <span class="align-middle">Nomor Surat</span>
 			</a>
 		</li>
 		<?php } ?>

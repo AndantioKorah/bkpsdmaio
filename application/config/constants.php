@@ -185,6 +185,8 @@ define('REASON_TTE', 'Dokumen ini telah ditandatangani secara elektronik oleh Ke
 define('ID_INSTANSI_SIASN', 'A5EB03E23C71F6A0E040640A040252AD');
 define('ID_SATUAN_KERJA_SIASN', 'A5EB03E24281F6A0E040640A040252AD');
 
+define('FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI', 1); // 1: YA, 0: TIDAK
+
 define('EXCLUDE_NIP', [
     // '199502182020121013', // tio
     '199611292022031012', // bob

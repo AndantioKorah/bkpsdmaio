@@ -3131,6 +3131,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     if($jenis_jabatan == 1){
         $this->db->where('f.jabatan_target', $jabatan_target_jpt);
         $this->db->where_in('e.eselon', ["III B", "III A"]);
+
     }
 
     $suksesor = $this->db->get()->result_array();

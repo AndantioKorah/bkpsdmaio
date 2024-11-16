@@ -4038,22 +4038,22 @@ public function submitEditJabatan(){
                         "unorId" => $input_post['id_unor_siasn']
                     ];
 
-                    $reqWs = $this->siasnlib->saveJabatan($update);
-                    if($reqWs['code'] == 1){
-                        $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
-                        $this->db->trans_rollback();
-                        return $res;    
-                    } else {
-                        if($_FILES['file']['name'] != ""){
-                            $url = ('arsipjabatan/'.$filename);
-                            $request = [
-                                'id_riwayat' => $pegjabatan['id_siasn'],
-                                'id_ref_dokumen' => 872,
-                                'file' => new CURLFile ($url)
-                            ];
-                            $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
-                        }
-                    }
+                    // $reqWs = $this->siasnlib->saveJabatan($update);
+                    // if($reqWs['code'] == 1){
+                    //     $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
+                    //     $this->db->trans_rollback();
+                    //     return $res;    
+                    // } else {
+                    //     if($_FILES['file']['name'] != ""){
+                    //         $url = ('arsipjabatan/'.$filename);
+                    //         $request = [
+                    //             'id_riwayat' => $pegjabatan['id_siasn'],
+                    //             'id_ref_dokumen' => 872,
+                    //             'file' => new CURLFile ($url)
+                    //         ];
+                    //         $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                    //     }
+                    // }
                     
                     $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($pegjabatan['id_siasn']);
                     if($updatedJabatan['code'] == 0){
@@ -8596,6 +8596,30 @@ public function getFileForKarisKarsu()
     return $res;
         
 	}
+
+
+    public function searchRekapVerifPeninjauanAbsensi($data){
+        $result = null;
+        $tanggal = explodeRangeDateNew($data['tanggal']);
+      
+            $this->db->select('b.nama, (select count(a.id) from db_efort.t_peninjauan_absensi as aa where a.id_m_user_verif = aa.id_m_user_verif limit 1) as total_verif ')
+                    ->from('db_efort.t_peninjauan_absensi a')
+                    ->join('db_efort.m_user b', 'a.id_m_user_verif = b.id')
+                    ->where('a.flag_active', 1)
+                    // ->where('a.status', 2)
+                    ->where('a.id_m_user_verif !=', 0)
+                    ->group_by('a.id_m_user_verif')
+                    ->order_by('total_verif','desc');
+            if(!isset($data['all'])){
+                $this->db->where('DATE(a.tanggal_absensi) >=', $tanggal[0])
+                            ->where('DATE(a.tanggal_absensi) <=', $tanggal[1]);
+            }
+
+            $dataresult = $this->db->get()->result_array();
+
+           
+        return $dataresult;
+    }
 
 
 

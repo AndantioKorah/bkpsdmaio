@@ -243,8 +243,8 @@ $('#table_list_pegawai').DataTable({
         success:function(res){ 
           //  location.reload()
                 
-        }  
-        });  
+        // }  
+        // });  
           
         });
 

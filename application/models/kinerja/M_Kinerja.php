@@ -921,7 +921,15 @@
                         }
                     }
                 }
+            } 
+            if(stringStartWith('Bagian', $pegawai['nm_unitkerja'])){
+                $atasan = $this->baseQueryAtasan()
+                ->where('b.skpd', $pegawai['id_unitkerja'])
+                ->where('d.nama_jabatan', 'Kepala '.$pegawai['nm_unitkerja'])
+                ->get()->row_array();
             }
+            // dd($pegawai['nm_unitkerja']);
+            
         } else if($pegawai['kepalaskpd'] == 1){
             if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika lurah
                 $atasan = $this->baseQueryAtasan()
@@ -2097,8 +2105,18 @@
         ->group_by('a.id_m_user')
         ->order_by('a.tanggal_absensi', 'asc');
         $result = $this->db->get()->result_array();
+        
+        if($status == 3){
+            $data_verif['status'] = $status;
+            $data_verif['id_m_user_verif'] = $this->general_library->getId();
+            $data_verif['updated_by'] = $this->general_library->getId();
+            $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
+            
+            $this->db->where_in('id', $id)
+            ->update('t_peninjauan_absensi', $data_verif);
+        } else {
 
-        // dd($result[0]['total_verif']);  
+        
         if($result[0]['total_verif'] >= 2) {
             $rs['code'] = 1;        
             $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
@@ -2111,6 +2129,7 @@
             if($status == 1 || $status == 2){
                 $data_verif['keterangan_verif'] = $this->input->post('keterangan');
             }
+
             
             if($this->input->post('jenis_bukti') == 1){
                $absen = $this->db->select('*')
@@ -2155,11 +2174,55 @@
                     ->update('t_peninjauan_absensi', $data_verif);
                 } 
             } else {
-                $this->db->where_in('id', $id)
-                ->update('t_peninjauan_absensi', $data_verif);
-            }
+               
+
+                    $absenUser = $this->db->select('*')
+                    ->from('db_sip.absen a')
+                    ->where('a.user_id', $this->input->post('id_user'))
+                    ->where('a.tgl', $this->input->post('tanggal_absensi'))
+                    ->get()->row_array();
+
+                    // dd($absenUser);
+                
+                    if($absenUser) {
+                    if($status == 1){
+                    if($this->input->post('jenis_absensi') == 1){
+                                $dataUpdate['masuk'] = $this->input->post('jam_absen');
+                                $this->db->where('user_id', $this->input->post('id_user'))
+                                ->where('tgl', $this->input->post('tanggal_absensi'))
+                                ->update('db_sip.absen', $dataUpdate);
+                            } else {
+                                $dataUpdate['pulang'] = $this->input->post('jam_absen');
+                                $this->db->where('user_id', $this->input->post('id_user'))
+                                ->where('tgl', $this->input->post('tanggal_absensi'))
+                                ->update('db_sip.absen', $dataUpdate);
+                            }
+                        }
+                    } else {
+                        if($this->input->post('jenis_absensi') == 1){
+                            $this->db->insert('db_sip.absen', [
+                                'user_id' => $this->input->post('id_user'),
+                                'masuk' => $this->input->post('jam_absen'),
+                                'tgl' => $this->input->post('tanggal_absensi')
+                            ]);
+                        } else {
+                            $this->db->insert('db_sip.absen', [
+                                'user_id' => $this->input->post('id_user'),
+                                'pulang' => $this->input->post('jam_absen'),
+                                'tgl' => $this->input->post('tanggal_absensi')
+                            ]);
+                        }
+
+                    
+                    }
+
+
+                    $this->db->where_in('id', $id)
+                    ->update('t_peninjauan_absensi', $data_verif);
+        }
 
         }
+    }
 
        
 

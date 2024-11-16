@@ -1730,6 +1730,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadDataDrhSatyalencana($nip){
 		$data['result'] = $this->kepegawaian->loadDataDrhSatyalencana($nip);
 		$data['atasan_pegawai'] = $this->kepegawaian->getDataAtasanPegawai($nip);
+		// dd($data['atasan_pegawai']);
 		// $data['result'] = $this->kepegawaian->getProfilPegawai($nip);
 		
 		$this->load->view('kepegawaian/V_DrhPegawaiSatyalencana', $data);
@@ -2274,6 +2275,16 @@ class C_Kepegawaian extends CI_Controller
 
 	public function deleteTpltPlh($id){
         $this->general->delete('id', $id, 't_plt_plh');
+    }
+
+
+	public function rekapVerifPeninjauanAbsensi(){
+        render('rekap/V_RekapVerifikasiPeninjauanAbsensi', '', '', null);
+    }
+
+	public function searchRekapVerifPeninjauanAbsensi(){
+        $data['result'] = $this->kepegawaian->searchRekapVerifPeninjauanAbsensi($this->input->post());
+        $this->load->view('rekap/V_RekapVerifikasiPeninjauanAbsensiResult', $data);
     }
 	
 

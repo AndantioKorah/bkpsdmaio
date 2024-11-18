@@ -1528,35 +1528,35 @@ animation06
               $ix++;
               
              } 
-             if($nilaix >= $tinggi['dari'] && $nilaiy >= $sesuaiekspektasi['dari'] && $nilaiy < $diatasekspektasi['dari']) {
+             if($nilaix >= $tinggi['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
              $data['talenta'][8][$rs->id_pegawai] = 0;
               $viii++;
              }
-             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= $diatasekspektasi['dari']) {
+             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= 85) {
              $data['talenta'][7][$rs->id_pegawai] = 0;
               $vii++;
              } 
-            if($nilaix >= $tinggi['dari'] && $nilaiy < $sesuaiekspektasi['dari']) {
+            if($nilaix >= $tinggi['dari'] && $nilaiy < 70) {
              $data['talenta'][6][$rs->id_pegawai] = 0;
               $vi++;
              } 
-             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= $sesuaiekspektasi['dari'] && $nilaiy < $diatasekspektasi['dari']) {
+             if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
              $data['talenta'][5][$rs->id_pegawai] = 0;
               $v++;
             } 
-            if($nilaix < $menengah['dari'] && $nilaiy >= $diatasekspektasi['dari']) {
+            if($nilaix < $menengah['dari'] && $nilaiy >= 85) {
              $data['talenta'][4][$rs->id_pegawai] = 0;
               $iv++;
             } 
-            if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy < $sesuaiekspektasi['dari']) {
+            if($nilaix >= $menengah['dari'] && $nilaix < $tinggi['dari'] && $nilaiy < 70) {
              $data['talenta'][3][$rs->id_pegawai] = 0;
               $iii++;
             }
-            if($nilaix < $menengah['dari'] && $nilaiy >= $sesuaiekspektasi['dari'] && $nilaiy < $diatasekspektasi['dari']) {
+            if($nilaix < $menengah['dari'] && $nilaiy >= 70 && $nilaiy < 85) {
               $data['talenta'][2][$rs->id_pegawai] = 0;
               $ii++;
             }
-            if($nilaix < $menengah['dari'] && $nilaiy < $sesuaiekspektasi['dari']) {
+            if($nilaix < $menengah['dari'] && $nilaiy < 70) {
              $data['talenta'][1][$rs->id_pegawai] = 0;
           
              $i++;
@@ -2017,31 +2017,31 @@ $(function(){
           }
 
         //   if(nilaiy > 0) {
-          if(nilaix < <?=$menengah['dari'];?> && nilaiy < <?=$sesuaiekspektasi['dari'];?>) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy < 70) {
             point.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= <?=$sesuaiekspektasi['dari'];?> && nilaiy < <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point2.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy < <?=$sesuaiekspektasi['dari'];?>) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy < 70) {
             point3.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix < <?=$menengah['dari'];?> && nilaiy >= 85) {
             point4.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= <?=$sesuaiekspektasi['dari'];?> && nilaiy < <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point5.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy < <?=$sesuaiekspektasi['dari'];?>) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy < 70) {
             point6.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix >= <?=$menengah['dari'];?> && nilaix < <?=$tinggi['dari'];?> && nilaiy >= 85) {
             point7.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= <?=$sesuaiekspektasi['dari'];?> && nilaiy < <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= 70 && nilaiy < 85) {
             point8.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
-          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= <?=$diatasekspektasi['dari'];?>) {
+          if(nilaix >= <?=$tinggi['dari'];?> && nilaiy >= 85) {
             point9.push({ x: nilaix, y: nilaiy, nama:dx.result[i].nama })
           }
         // }
@@ -2155,8 +2155,8 @@ options: {
 
     },
     y: {
-     min: <?=$dibawahekspektasi['dari'];?>,
-     max: <?=$dibawahekspektasi['sampai'];?>,
+     min: 0,
+     max: 69,
      afterTickToLabelConversion: (ctx) => {
       ctx.ticks = [];
      },
@@ -2241,8 +2241,8 @@ options: {
 
     },
     y: {
-     min: <?=$sesuaiekspektasi['dari'];?>,
-     max: <?=$sesuaiekspektasi['sampai'];?>,
+     min: 70,
+     max: 84.99,
      afterTickToLabelConversion: (ctx) => {
       ctx.ticks = [];
      },
@@ -2324,8 +2324,8 @@ options: {
 
     },
     y: {
-     min: <?=$dibawahekspektasi['dari'];?>,
-     max: <?=$dibawahekspektasi['sampai'];?>,
+     min: 0,
+     max: 69,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2408,8 +2408,8 @@ options: {
 
     },
     y: {
-     min: <?=$diatasekspektasi['dari'];?> ,
-     max: <?=$diatasekspektasi['sampai'];?>,
+     min: 85    ,
+     max: 100,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2493,8 +2493,8 @@ options: {
 
     },
     y: {
-     min: <?=$sesuaiekspektasi['dari'];?>,
-     max: <?=$sesuaiekspektasi['sampai'];?>,
+     min: 70,
+     max: 84.99,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2578,8 +2578,8 @@ options: {
 
     },
     y: {
-     min: <?=$dibawahekspektasi['dari'];?>,
-     max: <?=$dibawahekspektasi['sampai'];?>,
+     min: 0,
+     max: 69.99,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2663,8 +2663,8 @@ options: {
 
     },
     y: {
-     min: <?=$diatasekspektasi['dari'];?>,
-     max: <?=$diatasekspektasi['sampai'];?>,
+     min: 85,
+     max: 100,
      afterTickToLabelConversion: (ctx) => {
       console.log(ctx)
       ctx.ticks = [];
@@ -2749,8 +2749,8 @@ options: {
 
     },
     y: {
-     min: <?=$sesuaiekspektasi['dari'];?>,
-     max: <?=$sesuaiekspektasi['sampai'];?>,
+     min: 70,
+     max: 84.99,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];
@@ -2834,8 +2834,8 @@ options: {
 
     },
     y: {
-     min: <?=$diatasekspektasi['dari'];?>,
-     max: <?=$diatasekspektasi['sampai'];?>,
+     min: 85,
+     max: 100,
      afterTickToLabelConversion: (ctx) => {
       // console.log(ctx)
       ctx.ticks = [];

@@ -890,6 +890,23 @@
                                         'log' => json_encode($req),
                                         'status' => $req['status']
                                     ]);
+                            
+                            // if($req['id']){
+                                // set chat id di column_state agar reply harus sesuai dengan pesan yang dikirim
+                                $cronWa = $this->db->select('*')
+                                            ->from('t_cron_wa')
+                                            ->where('id', $l['id'])
+                                            ->get()->row_array();
+
+                                if($cronWa && $cronWa['id_state']){
+                                    $this->db->where('id', $cronWa['id_state'])
+                                            ->update($cronWa['table_state'],
+                                                [
+                                                    $cronWa['column_state'] => $req['id']
+                                                ] 
+                                            );
+                                }
+                            // }
                         }
                     } else {
                         $this->db->where('id', $l['id'])

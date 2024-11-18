@@ -1520,12 +1520,12 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiPermohonanCuti(){
 		// $data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
 		$data['unitkerja'] = null;
-		if($this->general_library->isKepalaBkpsdm() 
-        	|| $this->general_library->isAdminAplikasi() 
-            || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
-            || $this->general_library->isProgrammer()){
+		// if($this->general_library->isKepalaBkpsdm() 
+        // 	|| $this->general_library->isAdminAplikasi() 
+        //     || $this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+        //     || $this->general_library->isProgrammer()){
 			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
-		}
+		// }
         render('kepegawaian/V_VerifPermohonanCuti', '', '', $data);
 	}
 

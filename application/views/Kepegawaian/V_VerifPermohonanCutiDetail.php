@@ -16,7 +16,7 @@
   <div class="row">
     <?php if($result){ ?>
       <div class="col-lg-12 text-left mb-3">
-        <?php foreach($progress as $p){ ?>
+        <?php foreach($progress as $p){ dd(json_encode($p)); ?>
           <span style="
             background-color: <?=$p['bg-color']?>;
             padding: 2px;

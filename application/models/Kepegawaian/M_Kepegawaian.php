@@ -5425,12 +5425,17 @@ public function submitEditJabatan(){
 
     public function verifPermohonanCutiFromWa($resp, $chat){
         $this->db->trans_begin();
+        $dataCuti = $this->db->select('*')
+                            ->from('t_pengajuan_cuti')
+                            ->where('id', $resp['cuti']['id'])
+                            ->get()->row_array();
+
         $progress = $this->getProgressCutiAktif($resp['cuti']['id']);
         $flag_reply_thankyou = 1;
 
         $nomor_sender = '0'.substr($chat->from, 2, strlen($chat->from)-1);
-        // cek jika pengirim adalah progress yang aktif
 
+        // cek jika pengirim adalah progress yang aktif
         if($progress['indexAktif'] == 0){ // verifikasi sudah selesai
             $exists = $this->db->select('*')
                             ->from('t_pengajuan_cuti')
@@ -5454,8 +5459,28 @@ public function submitEditJabatan(){
                 'jenis_layanan' => 'Cuti'
             ];
             $this->db->insert('t_cron_wa', $cronWaVerifikator);
-        } else if($progress['current']['nohp'] != $nomor_sender){
+        } else if($progress['current']['nohp'] != $nomor_sender){ // nomor hp tidak sesuai
             $replyToVerifikator = 'Mohon maaf, Anda tidak memiliki akses untuk melakukan verifikasi pada tahapan ini. Progress Cuti saat ini: "'.$progress['current']['keterangan'].'"';
+            $cronWaVerifikator = [
+                'sendTo' => ($chat->from),
+                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'type' => 'text',
+                'ref_id' => $resp['cuti']['id'],
+                'jenis_layanan' => 'Cuti'
+            ];
+            $this->db->insert('t_cron_wa', $cronWaVerifikator);
+        } else if($progress['current']['chatId'] != $chat->replyId){ // salah reply pesan
+            $replyToVerifikator = 'Mohon maaf, pesan ini tidak dapat direply untuk verifikasi cuti. Silahkan mereply pesan yang benar untuk verifikasi.';
+            $cronWaVerifikator = [
+                'sendTo' => ($chat->from),
+                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'type' => 'text',
+                'ref_id' => $resp['cuti']['id'],
+                'jenis_layanan' => 'Cuti'
+            ];
+            $this->db->insert('t_cron_wa', $cronWaVerifikator);
+        } else if(!$progress){
+            $replyToVerifikator = 'Mohon maaf, progress cuti ini tidak dapat dilakukan verifikasi.';
             $cronWaVerifikator = [
                 'sendTo' => ($chat->from),
                 'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
@@ -5466,13 +5491,13 @@ public function submitEditJabatan(){
             $this->db->insert('t_cron_wa', $cronWaVerifikator);
         } else {
             //kirim pemberitahuan kepada pegawai
-            $reply = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($resp['cuti']).", permohonan ".$resp['cuti']['nm_cuti']." Anda telah ";
+            $reply = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($resp['cuti']).", permohonan ".$resp['cuti']['nm_cuti']." Anda telah ";
             if($resp['response']['flag_diterima'] == 1){
                 $reply .= '*DITERIMA*';
 
                 if(!$progress['next']){ // jika kaban melakukan verif, kirim pesan harus melakukan DS
                     $flag_reply_thankyou = 0;
-                    $replyToVerifikator = "*[PERMOHONAN CUTI]* \n\nTerima Kasih, balasan Anda sudah kami terima. Silahkan melakukan *_Digital Signature (DS)_* melalui aplikasi Siladen.";
+                    $replyToVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nTerima Kasih, balasan Anda sudah kami terima. Silahkan melakukan *_Digital Signature (DS)_* melalui aplikasi Siladen.";
                     $cronWaVerifikator = [
                         'sendTo' => ($chat->from),
                         'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
@@ -5486,15 +5511,18 @@ public function submitEditJabatan(){
                         if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
                             $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
                         }
-                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']."hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     
-                    $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     $cronWaNextVerifikator = [
                         'sendTo' => convertPhoneNumber($progress['next']['nohp']),
                         'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
                         'type' => 'text',
                         'ref_id' => $resp['cuti']['id'],
-                        'jenis_layanan' => 'Cuti'
+                        'jenis_layanan' => 'Cuti',
+                        'table_state' => 't_progress_cuti',
+                        'column_state' => 'chatId',
+                        'id_state' => $progress['next']['id']
                     ];
                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
@@ -5640,7 +5668,7 @@ public function submitEditJabatan(){
 
             if($flag_reply_thankyou == 1){
                // balasan ucapan terima kasih
-                $replyToVerifikator = "*[PERMOHONAN CUTI]* \n\nTerima Kasih, balasan Anda sudah kami terima.";
+                $replyToVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]* \n\nTerima Kasih, balasan Anda sudah kami terima.";
                 $cronWaVerifikator = [
                     'sendTo' => ($chat->from),
                     'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
@@ -5796,12 +5824,15 @@ public function submitEditJabatan(){
                 }
             }
             if($res['code'] == 0){
+                $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
+
                 $data['surat_pendukung'] = $filename;
                 $data['created_by'] = $this->general_library->getId();
                 $data['id_m_user'] = $this->general_library->getId();
                 $data['tanggal_mulai'] = date('Y-m-d', strtotime($data['tanggal_mulai']));
                 $data['tanggal_akhir'] = date('Y-m-d', strtotime($data['tanggal_akhir']));
                 $data['lama_cuti'] = floatval($data['lama_cuti']);
+                $data['random_string'] = $randomString;
                 $keterangan_cuti = $data['keterangan_cuti'];
                 unset($data['keterangan_cuti']);
                 unset($data['sisa_cuti']);
@@ -5837,30 +5868,6 @@ public function submitEditJabatan(){
                 // kirim pesan yang bisa langsung direply untuk persetujuan
                 // simpan dpe messageId untuk reply
                 if($progressCuti){
-                    $master = $this->db->select('*')
-                                    ->from('db_pegawai.cuti')
-                                    ->where('id_cuti', $data['id_cuti'])
-                                    ->get()->row_array();
-
-                    // $encrypt = simpleEncrypt($progressCuti['nipbaru_ws'].'-'.$insert_id);
-                    // $link = base_url('whatsapp-verification/cuti/'.$encrypt);
-                    // $message = "*[PENGAJUAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti'].". Mohon segera diverifikasi dengan klik link dibawah ini. \n\n".$link;
-                    $pada_tanggal = formatDateNamaBulan($data['tanggal_mulai']);
-                    if($data['tanggal_mulai'] != $data['tanggal_akhir']){
-                        $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
-                    }
-                    $message = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                    $sendTo = convertPhoneNumber($progressCuti[0]['nohp']);
-                    // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
-                    $cronWa = [
-                        'sendTo' => $sendTo,
-                        'message' => $message.FOOTER_MESSAGE_CUTI,
-                        'type' => 'text',
-                        'ref_id' => $insert_id,
-                        'jenis_layanan' => 'Cuti'
-                    ];
-                    // dd($cronWa);
-                    $this->db->insert('t_cron_wa', $cronWa);
                     foreach($progressCuti as $pc){
                         $this->db->insert('t_progress_cuti', $pc);
                         if($pc['urutan'] == '1'){
@@ -5870,6 +5877,30 @@ public function submitEditJabatan(){
                                 'status_pengajuan_cuti' => 'Verifikasi '.$pc['nama_jabatan'],
                                 'id_t_progress_cuti' => $last_id
                             ]);
+
+                            $master = $this->db->select('*')
+                                            ->from('db_pegawai.cuti')
+                                            ->where('id_cuti', $data['id_cuti'])
+                                            ->get()->row_array();
+
+                            $pada_tanggal = formatDateNamaBulan($data['tanggal_mulai']);
+                            if($data['tanggal_mulai'] != $data['tanggal_akhir']){
+                                $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
+                            }
+                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                            $sendTo = convertPhoneNumber($progressCuti[0]['nohp']);
+                            // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
+                            $cronWa = [
+                                'sendTo' => $sendTo,
+                                'message' => $message.FOOTER_MESSAGE_CUTI,
+                                'type' => 'text',
+                                'ref_id' => $insert_id,
+                                'jenis_layanan' => 'Cuti',
+                                'table_state' => 't_progress_cuti',
+                                'column_state' => 'chatId', 
+                                'id_state' => $last_id
+                            ];
+                            $this->db->insert('t_cron_wa', $cronWa);
                         }
                     }
                 } else {
@@ -6195,6 +6226,8 @@ public function submitEditJabatan(){
                 ->join('t_progress_cuti g', 'a.id = g.id_t_pengajuan_cuti', 'left')
                 ->join('t_progress_cuti h', 'a.id_t_progress_cuti = h.id', 'left')
                 ->where('a.flag_active', 1)
+                ->where('MONTH(a.created_date)', $data['bulan'])
+                ->where('YEAR(a.created_date)', $data['tahun'])
                 ->group_by('a.id')
                 ->order_by('created_date', 'asc');
 
@@ -6225,6 +6258,26 @@ public function submitEditJabatan(){
         // if($this->general_library->isKepalaPd() && !$this->general_library->isKepalaBkpsdm()){
         //     $this->db->where('e.skpd', $this->general_library->getUnitKerjaPegawai());
         // }
+
+        if($this->general_library->isProgrammer()){ // jika programmer, kirim semua data
+            return $result;
+        }
+
+        if($result){
+            $temp = $result;
+            $result = null;
+            $result['list_bisa_verif'] = null;
+            $result['list_tidak_bisa_verif'] = null;
+
+            foreach($temp as $t){
+                if($t['id_m_user_verifikasi'] == $this->general_library->getId()){
+                    $result['list_bisa_verif'][] = $t;
+                } else {
+                    $result['list_tidak_bisa_verif'][] = $t;
+                }
+            }
+        }
+
         return $result;
     }
 
@@ -6351,7 +6404,7 @@ public function submitEditJabatan(){
                 $res['code'] = 1;
                 $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
             } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
-                $reply = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
+                $reply = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
                 if($status == 1){ // jika diterima
                     $reply .= "*DITERIMA*";
                     $update_data_pengajuan = [
@@ -6364,8 +6417,8 @@ public function submitEditJabatan(){
                         if($data['tanggal_mulai'] != $data['tanggal_akhir']){
                             $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
                         }
-                        $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                        // $replyToNextVerifikator = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                         if($res['progress']['next']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){ // jika next kaban, buat nods SK Cuti
                             $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
                             $update['url_sk_temp'] = $path_file;
@@ -6458,7 +6511,7 @@ public function submitEditJabatan(){
                         ->where('a.id', $id)
                         ->get()->row_array();
                         
-        $message_to_pegawai = "*[PERMOHONAN CUTI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($result)."\nVerifikasi Permohonan Pengajuan ".$result['nm_cuti']." Anda telah dibatalkan oleh ";
+        $message_to_pegawai = "*[PERMOHONAN CUTI - ".$result['random_string']."]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($result)."\nVerifikasi Permohonan Pengajuan ".$result['nm_cuti']." Anda telah dibatalkan oleh ";
 
         // $result = $this->db->select('*')
         //                 ->from('t_pengajuan_cuti')

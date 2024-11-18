@@ -10,7 +10,7 @@
             <button id="btn_input_manual" class="btn btn-navy"><i class="fa fa-edit"></i> Input Manual</button>
           </div>
           <div class="col-lg-3 text-right">
-            <button style="display: block;" id="btn_riwayat_nomor_surat" onclick="loadRiwayat()" class="btn btn-navy"><i class="fa fa-clock"></i> Riwayat Nomor Surat</button>
+            <button style="display: block; float: right;" id="btn_riwayat_nomor_surat" onclick="loadRiwayat()" class="btn btn-navy"><i class="fa fa-clock"></i> Riwayat Nomor Surat</button>
           </div>
         </div>
         <hr>

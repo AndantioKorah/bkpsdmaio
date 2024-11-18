@@ -1642,6 +1642,10 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->saveNomorSuratManual($id));
 	}
 
+	public function deleteNomorSuratManual($id){
+		echo json_encode($this->kepegawaian->deleteNomorSuratManual($id));
+	}
+
 	public function loadNomorSurat(){
 		$data['result'] = $this->kepegawaian->loadNomorSurat();
 		$this->load->view('kepegawaian/V_NomorSuratRiwayat', $data);

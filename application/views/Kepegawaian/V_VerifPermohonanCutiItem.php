@@ -1,56 +1,83 @@
-<div class="card-body table-responsive">
-  <table style="border: 1px solid grey;" class="table table-hover table-striped" id="table_riwayat_cuti">
-    <thead>
-      <th style="border: 1px solid grey;" class="text-center">No</th>
-      <th style="border: 1px solid grey;" class="text-left">Pegawai</th>
-      <?php if(isset($param['id_unitkerja']) && $param['id_unitkerja'] == "0"){ ?>
-        <th style="border: 1px solid grey;" class="text-center">Unit Kerja</th>
+<style>
+  .nav-link-profile{
+    padding: 5px !important;
+    font-size: .7rem;
+    color: black;
+    border: .5px solid var(--primary-color) !important;
+    border-bottom-left-radius: 0px;
+  }
+
+  .nav-item-profile:hover, .nav-link-profile:hover{
+    color: white !important;
+    background-color: #222e3c91;
+  }
+
+  .nav-tabs .nav-link.active, .nav-tabs .show>.nav-link{
+    /* border-radius: 3px; */
+    background-color: var(--primary-color);
+    color: white;
+  }
+</style>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card card-body">
+      <?php if($this->general_library->isProgrammer()){ ?>
+        <div class="row">
+          <div class="col-lg-12">
+            <?php
+              $list_data['item'] = $result ? $result : null;
+              $this->load->view('kepegawaian/V_VerifPermohonanCutiItemTabel', $list_data)
+            ?>
+          </div>
+        </div>
+      <?php } else { ?>
+      <div class="row">
+        <div class="col-lg-12">
+          <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item nav-item-profile" role="presentation">
+              <button class="nav-link nav-link-profile active" id="pills-bisa_verif-tab" data-bs-toggle="pill" data-bs-target="#pills-bisa_verif" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Bisa Verif</button>
+            </li>
+            <li class="nav-item nav-item-profile" role="presentation">
+              <button class="nav-link nav-link-profile" id="pills-tidak_bisa_verif-tab" data-bs-toggle="pill" data-bs-target="#pills-tidak_bisa_verif" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Tidak Bisa Verif</button>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-12">
+          <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane show active" id="pills-bisa_verif" role="tabpanel" aria-labelledby="pills-bisa_verif-tab">
+              <div class="table-responsive" style="width: 100%;">
+                <?php
+                  $list_data['item'] = isset($result['list_bisa_verif']) ? $result['list_bisa_verif'] : null;
+                  $this->load->view('kepegawaian/V_VerifPermohonanCutiItemTabel', $list_data)
+                ?>
+              </div>
+            </div>
+            <div class="tab-pane show" id="pills-tidak_bisa_verif" role="tabpanel" aria-labelledby="pills-tidak_bisa_verif-tab">
+              <div class="table-responsive" style="width: 100%;">
+                <?php
+                  $list_data['item'] = isset($result['list_tidak_bisa_verif']) ? $result['list_tidak_bisa_verif'] : null;
+                  $this->load->view('kepegawaian/V_VerifPermohonanCutiItemTabel', $list_data)
+                ?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <?php } ?>
-      <th style="border: 1px solid grey;" class="text-center">Jenis Cuti</th>
-      <th style="border: 1px solid grey;" class="text-center">Tanggal Pengajuan</th>
-      <th style="border: 1px solid grey;" class="text-center">Tanggal Cuti</th>
-      <th style="border: 1px solid grey;" class="text-center">Lama Cuti</th>
-      <th style="border: 1px solid grey;" class="text-center">Status</th>
-      <th style="border: 1px solid grey;" class="text-center">Pilihan</th>
-    </thead>
-    <tbody>
-      <?php if($result){
-        $no = 1;
-        foreach($result as $rs){
-      ?>
-        <tr>
-          <td style="border: 1px solid grey;" class="text-center"><?=$no++;?></td>
-          <td style="border: 1px solid grey;" class="text-left">
-            <span class="fw-bold"><?=getNamaPegawaiFull($rs)?></span><br>
-            <span style="font-size: .7rem; font-weight: bold;">NIP. <?=$rs['nipbaru_ws']?></span>
-          </td>
-          <?php if(isset($param['id_unitkerja']) && $param['id_unitkerja'] == "0"){ ?>
-            <td style="border: 1px solid grey;" class="text-left"><?=($rs['nm_unitkerja'])?></td>
-          <?php } ?>
-          <td style="border: 1px solid grey;" class="text-center"><?=($rs['nm_cuti'])?></td>
-          <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
-          <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
-          <td style="border: 1px solid grey;" class="text-center"><?=$rs['lama_cuti'].' hari'?></td>
-          <td style="border: 1px solid grey;" class="text-center"><span><?=($rs['status_pengajuan_cuti'])?></span></td>
-          <td style="border: 1px solid grey;" class="text-center">
-            <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"
-            data-toggle="modal" class="btn btn-navy">Detail</button> -->
-            <button type="button"onclick="loadDetailCutiVerif('<?=$rs['id']?>')" class="btn btn-navy">Detail</button>
-          </td>
-        </tr>
-      <?php } } ?>
-    </tbody>
-  </table>
+    </div>
+  </div>
 </div>
+
 <div class="modal fade" id="modal_detail_cuti" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<div id="modal-dialog" class="modal-dialog modal-xl">
 		<div class="modal-content" id="content_modal_detail_cuti">
 		</div>
 	</div>
 </div>
+
 <script>
   $(function(){
-    $('#table_riwayat_cuti').dataTable()
   })
 
   function loadDetailCutiVerif(id){

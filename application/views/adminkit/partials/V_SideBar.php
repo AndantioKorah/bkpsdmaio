@@ -461,13 +461,11 @@
 				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti()){ ?>
-					<?php if($this->general_library->isProgrammer()){ ?>
-						<li class="sidebar-item ">
-							<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
-								<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
-							</a>
-						</li>
-					<?php } ?>
+					<li class="sidebar-item ">
+						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+						</a>
+					</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">

@@ -4,9 +4,89 @@
 <div class="card card-default">
 
     <div class="card-body" style="display: block;">
+        <table>
+          <tr>
+          <td>
+          <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="checkBoxID">
+      <label class="form-check-label" for="checkBoxID">
+      Ikut Sasaran Kerja Bulan Sebelumnya    
+      </label> 
+    </div>
+          </td>
+          <td>
+          <button id="buttonID" onclick="inputSasaranPrevMonth()" class="btn btn-primary mb-2" disabled>Simpan</button>
+          </td>
+          </tr>
+        </table>
+       
+<script>
+
+$("#checkBoxID").click(function() {
+  $("#buttonID").attr("disabled", !this.checked);
+});
+
+  function inputSasaranPrevMonth() {
+
+    document.getElementById('buttonID').disabled = true;
+    $('#buttonID').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
     
+    const d = new Date();
+    let month = d.getMonth();
+    let year = new Date().getFullYear()
+
+    if(month == 0){
+      month = 12;
+      year = year-1;
+    }
+
+    $.ajax({  
+        url:"<?=base_url("kinerja/C_Kinerja/inputSasaranPrevMonth")?>",
+        method: 'post',
+            data: {
+                bulan: month,
+                tahun: year
+            },
+        
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+              $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+               successtoast('Data berhasil ditambahkan')
+                loadRencanaKinerja($('#bulan').val(), $('#tahun').val())
+                $("html, body").animate({ scrollTop: $(document).height() }, 500);
+                $('#buttonID').html('Simpan')
+                $("#buttonID").attr("disabled", false);
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+            
+        }  
+        });
+
+    // $.ajax({
+    //         url: '<?=base_url("kinerja/C_Kinerja/inputSasaranPrevMonth")?>',
+    //         method: 'post',
+    //         data: {
+    //             bulan: month,
+    //             tahun: year
+    //         },
+    //         success: function(data){
+            
+    //         }, error: function(e){
+    //             $('.class_form').show()
+    //             errortoast('Terjadi Kesalahan')
+    //         }
+    //     })
+
+}
+</script>
+
     <form method="post" id="form_tambah_rencana_kinerja">
-    
+   
   <div class="form-group" >
     <label for="exampleFormControlInput1">Uraian Tugas</label>
     <!-- <input required class="form-control " id="tugas_jabatan" name="tugas_jabatan" autocomplete="off"> -->
@@ -248,10 +328,10 @@
 
 
 
-    function openModalEditRencanaKinerja(id = 0){
+    function openModalEditRencanaKinerja(id = 0, jumlahRealisasi){
     $('#edit_rencana_kinerja_content').html('')
     $('#edit_rencana_kinerja_content').append(divLoaderNavy)
-    $('#edit_rencana_kinerja_content').load('<?=base_url("kinerja/C_Kinerja/loadEditRencanaKinerja")?>'+'/'+id, function(){
+    $('#edit_rencana_kinerja_content').load('<?=base_url("kinerja/C_Kinerja/loadEditRencanaKinerja")?>'+'/'+id+'/'+jumlahRealisasi, function(){
       $('#loader').hide()
     })
   }

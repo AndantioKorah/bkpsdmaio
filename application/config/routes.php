@@ -143,6 +143,8 @@ $route['master/announcement'] = 'master/C_Master/masterAnnouncement';
 $route['kepegawaian/plt-plh'] = 'kepegawaian/C_Kepegawaian/pltPlh';
 
 
+$route['rekap/verif-peninjauan'] = 'kepegawaian/C_Kepegawaian/rekapVerifPeninjauanAbsensi';
+
 
 
 

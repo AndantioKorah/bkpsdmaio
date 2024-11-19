@@ -27,6 +27,10 @@ $("#checkBoxID").click(function() {
 });
 
   function inputSasaranPrevMonth() {
+
+    document.getElementById('buttonID').disabled = true;
+    $('#buttonID').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+    
     const d = new Date();
     let month = d.getMonth();
     let year = new Date().getFullYear()
@@ -53,6 +57,8 @@ $("#checkBoxID").click(function() {
                successtoast('Data berhasil ditambahkan')
                 loadRencanaKinerja($('#bulan').val(), $('#tahun').val())
                 $("html, body").animate({ scrollTop: $(document).height() }, 500);
+                $('#buttonID').html('Simpan')
+                $("#buttonID").attr("disabled", false);
               } else {
                 errortoast(result.msg)
                 return false;

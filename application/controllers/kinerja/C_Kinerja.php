@@ -326,9 +326,10 @@ class C_Kinerja extends CI_Controller
 
 
 
-    public function loadEditRencanaKinerja($id)
+    public function loadEditRencanaKinerja($id,$jlmhrealisasi)
     {
         $data['rencana'] = $this->kinerja->getRencanaKinerjaEdit($id);
+        $data['jumlah_realisasi'] = $jlmhrealisasi;
         // dd($data['realisasi']);
         $this->load->view('kinerja/V_EditRencanaKinerja', $data);
     }
@@ -1040,4 +1041,9 @@ class C_Kinerja extends CI_Controller
         $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
         echo json_encode($response);
     }
+
+    public function inputSasaranPrevMonth(){
+        echo json_encode($this->kinerja->inputSasaranPrevMonth());
+    }
+
 }

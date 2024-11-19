@@ -3956,7 +3956,73 @@
                             ->where('flag_active', 1)
                             ->get()->row_array();
         }
+
+
+        public function inputSasaranPrevMonth()
+        {
     
+            $this->db->trans_begin();
+                
+         
+            $currentMonth = date('m');
+            $bulan = $this->input->post('bulan');
+            $tahun = $this->input->post('tahun');
+
+                // $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+                // $dataInsert['nilai_assesment']      = $this->input->post('nilai_assesment');
+                // $dataInsert['tahun']      = $this->input->post('tahun');
+                // $dataInsert['created_by']      = $this->general_library->getId();
+                // $dataInsert['updated_by']      = $this->general_library->getId();
+                // if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                //     $dataInsert['status']      = 2;
+                //     $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                //     $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+                //     }
+                // $result = $this->db->insert('db_pegawai.pegassesment', $dataInsert);
+
+                $sasaranLM = $this->db->select('*')
+                            ->from('t_rencana_kinerja')
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+              
+                // dd($sasaranLM);
+                $sasaran = null;
+                foreach($sasaranLM as $h){
+                    $i = 0;
+                    $sasaran[] = [
+                        'id_m_user' => $h['id_m_user'],
+                        'tugas_jabatan' => $h['tugas_jabatan'],
+                        'bulan' => $currentMonth,
+                        'tahun' => $tahun,
+                        'target_kuantitas' => $h['target_kuantitas'],
+                        'satuan' => $h['satuan'],
+                        'sasaran_kerja' => $h['sasaran_kerja'],
+                        'target_kualitas' => $h['target_kualitas'],
+                        'created_by' => $h['id_m_user']
+                    ];
+                    $i++;
+                }
+                if($sasaran){
+                    $this->db->insert_batch('t_rencana_kinerja', $sasaran);
+                }
+
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            
+            
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+            
+        }
 
     
 }

@@ -1,5 +1,6 @@
 <?php if($rencana){ ?>
     <form id="form_edit_rencana_kinerja">
+        <input type="hidden" id="jumlahrealisasi" value="<?=$jumlah_realisasi;?>">
         <input style="display: none;" id="id_kegiatan" name="id_rencana_kinerja" value="<?=$rencana['id']?>" />
         <div class="row p-3">
             <div class="col-md-12">
@@ -81,13 +82,18 @@
             var tahun = $('#edit_tahun').val()
             var targetAwal = parseInt($('#edit_target_kuantitas_awal').val());
             var targetBaru = parseInt($('#edit_target_kuantitas').val());
-
+            var jumlahRealisasi = parseInt($('#jumlahrealisasi').val());
+           
             <?php if(!$this->general_library->isProgrammer()) { ?>
+
+            if(jumlahRealisasi != 0){
             if(targetBaru < targetAwal){
             errortoast('Tidak bisa kurang dari target sebelumnya');
             $('#edit_target_kuantitas').val(targetAwal);
             return false;
             } 
+            }
+            
             <?php } ?>
             
             e.preventDefault()

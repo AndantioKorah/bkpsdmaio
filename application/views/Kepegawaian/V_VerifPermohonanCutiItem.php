@@ -24,7 +24,7 @@
     <div class="card card-body">
       <?php if($this->general_library->isProgrammer()){ ?>
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-12 table-responsive">
             <?php
               $list_data['item'] = $result ? $result : null;
               $this->load->view('kepegawaian/V_VerifPermohonanCutiItemTabel', $list_data)

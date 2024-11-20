@@ -3,28 +3,28 @@
     <div class="col-lg-12 table-responsive">
       <table class="table table-hover datatable">
         <thead>
-          <th class="text-left">No</th>
-          <th class="text-left">Tahun</th>
-          <th class="text-left">Nilai Assesment</th>
-          <th class="text-left">Tanggal Mulai Berlaku</th>
-          <th class="text-left">Tanggal Selesai Berlaku</th>
+          <th class="text-center">No</th>
+          <th class="text-center">Tahun</th>
+          <th class="text-center">Nilai Assesment</th>
+          <th class="text-center">Tanggal Mulai Berlaku</th>
+          <th class="text-center">Tanggal Selesai Berlaku</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
           <?php if($kode == 2) { ?>
-          <th class="text-left">Keterangan</th>
-          <th class="text-left">  </th>
+          <th class="text-center">Keterangan</th>
+          <th class="text-center">  </th>
           <?php } ?>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
 
-              <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['tahun']?></td>
-              <td class="text-left"><?=$rs['nilai_assesment']?></td>
-              <td class="text-left"><?=$rs['tgl_mulaiberlaku']?></td>
-              <td class="text-left"><?=$rs['tgl_selesaiberlaku']?></td>
+              <td class="text-center"><?=$no++;?></td>
+              <td class="text-center"><?=$rs['tahun']?></td>
+              <td class="text-center"><?=$rs['nilai_assesment']?></td>
+              <td class="text-center"><?=$rs['tgl_mulaiberlaku']?></td>
+              <td class="text-center"><?=$rs['tgl_selesaiberlaku']?></td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>

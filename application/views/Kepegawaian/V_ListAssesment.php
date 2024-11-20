@@ -6,6 +6,8 @@
           <th class="text-left">No</th>
           <th class="text-left">Tahun</th>
           <th class="text-left">Nilai Assesment</th>
+          <th class="text-left">Tanggal Mulai Berlaku</th>
+          <th class="text-left">Tanggal Selesai Berlaku</th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
             <?php } ?>
@@ -21,7 +23,8 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?=$rs['tahun']?></td>
               <td class="text-left"><?=$rs['nilai_assesment']?></td>
-           
+              <td class="text-left"><?=$rs['tgl_mulaiberlaku']?></td>
+              <td class="text-left"><?=$rs['tgl_selesaiberlaku']?></td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>

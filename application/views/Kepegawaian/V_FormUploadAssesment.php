@@ -105,15 +105,28 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <form method="post" id="upload_form_assesment" enctype="multipart/form-data" >
       <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg']?>">
  
-      <div class="form-group">
-    <label>Tahun</label>
-    <input min=0 step=0.01 class="form-control yearpicker" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
-  </div>
+      <!-- <div class="form-group">
+        <label>Tahun</label>
+        <input min=0 step=0.01 class="form-control yearpicker" type="text" id="tahun" name="tahun" autocomplete="off"  required/>
+      </div> -->
+
+   
 
   <div class="form-group">
     <label>Nilai Assesment Manajerial dan Sosial Kultural</label>
     <input min=0 step=0.01 class="form-control" type="number" id="nilai_assesment" name="nilai_assesment" autocomplete="off"  required/>
   </div>
+
+
+  <div class="form-group">
+    <label>Tanggal Mulai Berlaku</label>
+    <input autocomplete="off" class="form-control customInput datepicker" type="text" id="assesment_tglmulai" name="assesment_tglmulai" />
+    </div>
+
+    <div class="form-group">
+      <label>Tanggal Selesai Berlaku</label>
+      <input readonly autocomplete="off" class="form-control customInput " type="text" id="assesment_tglselesai" name="assesment_tglselesai" />
+    </div>
 
 
   <!-- <div class="form-group">
@@ -145,6 +158,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 
 $(function(){
+
+      
+
   $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,
@@ -154,7 +170,7 @@ $(function(){
     })
 
     $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -249,4 +265,18 @@ $(function(){
      
 
         });
+
+        $('#assesment_tglmulai').on('change', function() {
+        var result = this.value.split('-');
+        console.log(result[0])
+
+        var year  = result[0]
+        var month  = result[1]
+        var date = result[2]
+      
+        let tgl_selesai = parseInt(year) + 3 + "-" + month + "-" + date;
+        $('#assesment_tglselesai').val(tgl_selesai)
+
+
+      });
 </script>

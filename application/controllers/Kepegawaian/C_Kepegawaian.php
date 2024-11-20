@@ -1535,6 +1535,19 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_VerifPermohonanCutiItem', $data);
 	}
 
+	public function saveNohpVerifikatorCuti($id){
+		echo json_encode($this->kepegawaian->saveNohpVerifikatorCuti($id));
+	}
+
+	public function loadDetailStatusPengajuanCuti($id){
+		$data['progress'] = $this->kepegawaian->getProgressCutiAktif($id);
+		$this->load->view('kepegawaian/V_DetailStatusPermohonanCuti', $data);
+	}
+
+	public function resendMessage($id){
+		echo json_encode($this->kepegawaian->resendMessage($id));
+	}
+
 	public function loadDetailCutiVerif($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
 		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);

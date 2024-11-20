@@ -5618,6 +5618,7 @@ public function submitEditJabatan(){
                         'table_ref' => 't_pengajuan_cuti',
                         'id_m_jenis_ds' => 4,
                         'nama_jenis_ds' => 'PERMOHONAN CUTI',
+                        'id_m_jenis_layanan' => $master['id'],
                         'request' => json_encode($signatureProperties),
                         'url_file' => $path_file,
                         'url_image_ds' => null,
@@ -5717,12 +5718,79 @@ public function submitEditJabatan(){
         return $result;
     }
 
+    public function saveNohpVerifikatorCuti($id){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $data = $this->input->post();
+        $this->db->where('id', $id)
+                ->update('t_progress_cuti', [
+                    'nohp' => $data['nohp']
+                ]);
+
+        return $rs;
+    }
+
+    public function resendMessage($id){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $this->db->trans_begin();
+
+        $data = $this->db->select('a.*, b.id as id_t_cron_wa, b.message')
+                        ->from('t_progress_cuti a')
+                        ->join('t_cron_wa b', 'a.chatId = b.chatId')
+                        ->join('t_pengajuan_cuti c', 'a.id_t_pengajuan_cuti = c.id')
+                        ->where('a.id', $id)
+                        ->get()->row_array();
+        if($data){
+            // $this->db->where('id', $data['id_t_cron_wa'])
+            //         ->update('t_cron_wa', [
+            //             'sendTo' => convertPhoneNumber($data['nohp']),
+            //             'status' => null,
+            //             'date_sending' => null,
+            //             'date_sent' => null,
+            //             'flag_sending' => 0,
+            //             'flag_sent' => 0,
+            //         ]);
+
+            $this->db->where('id', $data['id'])
+                    ->update('t_progress_cuti', [
+                        'chatId' => null
+                    ]);
+
+            $this->db->insert('t_cron_wa', [
+                'ref_id' => $data['id_t_pengajuan_cuti'],
+                'type' => 'text',
+                'sendTo' => convertPhoneNumber($data['nohp']),
+                'message' => ($data['message']),
+                'jenis_layanan' => 'Cuti',
+                'table_state' => 't_progress_cuti',
+                'column_state' => 'chatId',
+                'id_state' => $data['id'],
+            ]);
+
+        } else {
+            $rs['code'] = 0;
+            $rs['message'] = "";
+        }
+
+        if($rs['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $rs;
+    }
+
     public function loadProgressCuti($id){
         $result = null;
-        $progress = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.jabatan, c.id_jabatan_tambahan')
+        $progress = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.jabatan, c.id_jabatan_tambahan, d.date_sending, d.date_sent')
                         ->from('t_progress_cuti a')
                         ->join('m_user b', 'a.id_m_user_verifikasi = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('t_cron_wa d', 'a.chatId = d.chatId', 'left')
                         ->where('a.flag_active', 1)
                         ->where('a.id_t_pengajuan_cuti', $id)
                         ->order_by('a.urutan')
@@ -5739,6 +5807,9 @@ public function submitEditJabatan(){
                 //     $result[$i]['keterangan'] = 'Menunggu ';
                 // }
                 $result[$i]['keterangan'] = 'Verifikasi '.$p['nama_jabatan'];
+                if($p['flag_diterima'] == 2){ //diterima
+                    $result[$i]['keterangan'] = 'Ditolak oleh '.$p['nama_jabatan'];
+                }
                 if($i == count($progress)-1){
                     $result[$i]['keterangan'] = 'Digital Signature oleh '.$p['nama_jabatan'];
                 }
@@ -5756,6 +5827,7 @@ public function submitEditJabatan(){
                     $result[$i]['icon'] = 'fa-check';
                 } else if($p['flag_diterima'] == 2){ //ditolak
                     $flag_ditolak = 1;
+                    $result[$i]['keterangan'] .= '<br>(Keterangan: "'.$p['keterangan_verif'].'")';
                     $result[$i]['bg-color'] = 'red';
                     $result[$i]['font-color'] = 'white';
                     $result[$i]['icon'] = 'fa-times';
@@ -7353,11 +7425,11 @@ public function submitEditJabatan(){
 
         $request_ds = $this->db->select('a.*')
                         ->from('t_request_ds a')
-                        ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                        // ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
                         ->where('a.id', $id)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
-        
+
         if($exists){
             if($exists['id'] == $request_ds['id_t_nomor_surat']){
                 $res['code'] = 1;

@@ -48,6 +48,7 @@
       </div>
     </div>
   </div>
+  
   <div id="div_riwayat_nomor_surat" class="col-lg-12">
     <div class="card card-default">
       <div class="card-header">

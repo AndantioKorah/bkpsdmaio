@@ -15,17 +15,52 @@
 <div class="modal-body">
   <div class="row">
     <?php if($result){ ?>
-      <div class="col-lg-12 text-left mb-3">
-        <?php foreach($progress as $p){ dd(json_encode($p)); ?>
-          <span style="
-            background-color: <?=$p['bg-color']?>;
-            padding: 2px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: .9rem;
-            color: <?=$p['font-color']?>
-          "><i class="fa <?=$p['icon']?>"></i> <?=$p['keterangan']?></span><br>
+      <div class="col-lg-8 text-left mb-3">
+        <table>
+          <?php foreach($progress as $p){ ?>
+            <tr valign="top">
+              <td>
+                <span style="
+                  background-color: <?=$p['bg-color']?>;
+                  padding: 5px;
+                  border-radius: 1000px;
+                  font-weight: bold;
+                  margin-bottom: 5px;
+                  font-size: .8rem;
+                  color: <?=$p['font-color']?>
+                "><i class="fa <?=$p['icon']?>"></i></span>
+              </td>
+              <td>
+                <span style="font-size: .85rem; color: black; font-weight: bold;"><?=$p['keterangan']?></span><br>
+                  <span style="
+                    margin-top: 5px;
+                    padding: 2px;
+                    border-radius: 5px;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                    font-size: .75rem;
+                    color: #0092a4;
+                  "> <?=$p['date_sent'] ? '<i class="fa fa-paper-plane"></i> '.formatDateNamaBulanWT($p['date_sent']) : 'pesan belum terkirim'?>
+                </span>
+              </td>
+            </tr> 
+          <?php } ?>
+        </table>
+        <br>
+      </div>
+      <div class="col-lg-4 text-right">
+        <?php if($this->general_library->isProgrammer() && $p['flag_verif'] == 0){ ?>
+          <button class="btn btn-sm btn-info" type="button" data-toggle="modal" href="#modal_detail_status"
+            onclick="openModalDetailStatus('<?=$result['id']?>')">
+              <i class="fa fa-edit"></i> DETAIL STATUS
+          </button>
+
+          <!-- <button id="btn_resend_<?=$p['id']?>" class="btn btn-sm btn-danger" type="button" onclick="resendMessage('<?=$p['id']?>','<?=$p['handphone']?>')">
+            <i class="fa fa-bell"></i> Resend
+          </button>
+          <button style="display: none;" disabled id="btn_resend_loading_<?=$p['id']?>" class="btn btn-sm btn-danger" type="button">
+            <i class="fa fa-bell"></i> Loading...
+          </button> -->
         <?php } ?>
       </div>
       <div class="col-lg-6">
@@ -218,6 +253,22 @@
     <?php } ?>
   </div>
 </div>
+
+<div class="modal fade" id="modal_detail_status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">STATUS PERMOHONAN CUTI</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="modal_detail_status_content">
+          </div>
+      </div>
+  </div>
+</div>
+
 <script>
   $(function(){
     $('#id_verif_pengajuan').select2()
@@ -225,6 +276,14 @@
 
   function backButton(){
     $('#form_search').submit()
+  }
+
+  function openModalDetailStatus(id){
+    $('#modal_detail_status_content').html('')  
+    $('#modal_detail_status_content').append(divLoaderNavy)  
+    $('#modal_detail_status_content').load('<?=base_url("kepegawaian/C_Kepegawaian/loadDetailStatusPengajuanCuti/")?>'+id, function(){
+      $('#loader').hide()
+    })  
   }
 
   function digitalSign(){

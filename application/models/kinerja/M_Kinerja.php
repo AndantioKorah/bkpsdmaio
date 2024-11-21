@@ -251,6 +251,74 @@
             return $res;
             }
 
+            public function pengajuanKembaliPeninjauanAbsensi(){
+           
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+              
+                $this->db->trans_begin();
+
+                $tanggal_absensi = $this->input->post('p_tanggal_absensi');
+                $explode = explode("-", $tanggal_absensi);
+                
+                $tahun = $explode[0];
+                $bulan = $explode[1];
+
+                $target_dir = './assets/peninjauan_absen/'.$tahun.'/'.$bulan; 
+                $filename = str_replace(' ', '', $_FILES['file']['name']); 
+               
+            
+                    $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+                    $filename = $random_number.$filename;
+                   
+                    $config['upload_path']          = $target_dir;
+                    $config['allowed_types']        = '*';
+                    $config['encrypt_name']			= FALSE;
+                    $config['overwrite']			= TRUE;
+                    $config['detect_mime']			= TRUE; 
+                    $config['file_name']            = "$filename"; 
+        
+                $this->load->library('upload', $config);
+                if (!$this->upload->do_upload('file')) {
+        
+                    $data['error']    = strip_tags($this->upload->display_errors());            
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+                    return $res;
+        
+                } else {
+                    $dataFile = $this->upload->data();
+                    $nama_file[] = $filename;
+                    $image = json_encode($nama_file);
+                    $id = $this->input->post('id_peninjauan');
+                    $data["status"] = 0;
+                    $data["bukti_kegiatan"] = $image;
+
+                    
+
+                    $this->db->where('id', $id)
+                            ->update('db_efort.t_peninjauan_absensi', $data);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+                
+        
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+        
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Terjadi Kesalahan';
+                } else {
+                    $this->db->trans_commit();
+                }
+        
+                return $res;
+                }
+
         public function createLaporanKegiatan($dataPost,$image){
   
         $this->db->trans_begin();

@@ -196,6 +196,11 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->insertPeninjauanAbsensi());
     }
 
+    public function pengajuanKembaliPeninjauanAbsensi()
+    {
+        echo json_encode($this->kinerja->pengajuanKembaliPeninjauanAbsensi());
+    }
+
 
     public function createLaporanKegiatan()
     {

@@ -81,7 +81,7 @@
 
   <div class="form-group mt-2">
     <label>Dokumen Bukti  (Format PNG/JPG)</label>
-    <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  multiple="multiple" />
+    <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  />
 
     <div id="uploadPreview"></div>
 

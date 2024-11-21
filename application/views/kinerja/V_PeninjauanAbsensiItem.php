@@ -97,8 +97,16 @@
                         <div class="btn-group" role="group" aria-label="Basic example">
                         <?php if($lp['status'] != 1){ ?>
                           <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_absensi']?>')" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
+                          <?php } ?>
+                          <?php if($lp['status'] == 2){ ?>
+                          <button 
+                          data-toggle="modal" 
+                          data-id="<?=$lp['id']?>"
+                           data-jenis_absensi="<?=$lp['jenis_absensi']?>"
+                            data-tanggal_absensi="<?=$lp['tanggal_absensi']?>"
+                          href="#exampleModalz"
+                          title="Ubah Data" class="open-ModalAjukanKembali btn btn-sm btn-primary"> Ajukan Kembali</button>
                           <?php } ?> 
-                           
                       </div>
 
                       
@@ -114,7 +122,43 @@
 
 
     
+<!-- Modal -->
+<div class="modal fade" id="exampleModalz" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Pengajuan Kembali</h5>
+        <button id="btncm" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <form method="post" id="form_pengajuan_kembali" enctype="multipart/form-data" >
+   
+  <input autocomplete="off" type="hidden" class="form-control" id="id_peninjauan" name="id_peninjauan">
 
+  <div class="mb-3">
+    <label class="form-label">Tanggal Absensi</label>
+    <input autocomplete="off" type="text" class="form-control" id="p_tanggal_absensi" name="p_tanggal_absensi"  readonly>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Jenis Absensi</label>
+    <input autocomplete="off" type="text" class="form-control" id="p_jenis_absensi"  readonly>
+  </div>
+  
+  <div class="mb-3">
+    <label class="form-label">Dokumen Bukti Baru</label>
+    <input autocomplete="off" type="file" class="form-control" id="p_image_file" name="file"  required>
+  </div>
+
+  <button id="btn_pengajuan_kembali" class="btn btn-primary float-right">Simpan</button>
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
    
 <?php } else { ?>
@@ -312,5 +356,92 @@ var span = document.getElementsByClassName("close")[0];
             }
         }
 
+
+        $(document).on("click", ".open-ModalAjukanKembali", function () {
+        var id = $(this).data('id');
+        var tanggal_absensi = $(this).data('tanggal_absensi');
+        var jenis_absensi = $(this).data('jenis_absensi');
+
+        if(jenis_absensi == 1){
+         jns_absen = "Pagi";
+        } else {
+          jns_absen = "Sore";
+        }
+     
+     
+        $(".modal-body #id_peninjauan").val( id );
+        $(".modal-body #p_tanggal_absensi").val( tanggal_absensi );
+        $(".modal-body #p_jenis_absensi").val( jns_absen );
+    });
+
+
+    $("#p_image_file").change(function (e) {
+    
+    var fileSize = this.files[0].size/1024;
+    
+    var doc = image_file.value.split('.')
+    var extension = doc[doc.length - 1]
+    const  fileType = this.files[0].type;
+    
+    
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    
+    if (!validImageTypes.includes(fileType)) {
+        errortoast("Harus File Gambar")
+        $(this).val('');
+    }
+    
+    if (extension == "jfif"){
+      errortoast("Harus File Gambar")
+      $(this).val('');
+    }
+    
+    });
+
+
+    $('#form_pengajuan_kembali').on('submit', function(e){  
+       
+       e.preventDefault();
+       
+       var formvalue = $('#form_pengajuan_kembali');
+       var form_data = new FormData(formvalue[0]);
+       var ins = document.getElementById('p_image_file').files.length;
+
+
+       if(ins == 0){
+       errortoast("Silahkan upload bukti kegiatan terlebih dahulu");
+      //  document.getElementById('btn_pengajuan_kembali').disabled = false;
+      //  $('#btn_pengajuan_kembali').html('<i class="fa fa-save"></i>  SIMPAN')
+       return false;
+       }
+      
+      
+       $.ajax({  
+       url:"<?=base_url("kinerja/C_Kinerja/pengajuanKembaliPeninjauanAbsensi")?>",
+       method:"POST",  
+       data:form_data,  
+       contentType: false,  
+       cache: false,  
+       processData:false,  
+       // dataType: "json",
+       success:function(res){ 
+           var result = JSON.parse(res); 
+           console.log(result);
+           // console.log(result.msg);
+           // return false;
+           
+             if(result.success == true){
+              $('#btncm').click()
+              const myTimeout = setTimeout(loadListPeninjauan, 500);
+             } else {
+               errortoast(result.msg)
+               return false;
+             }
+               document.getElementById("form_tinjau_absen").reset();
+               document.getElementById('btn_upload').disabled = false;
+       }  
+       });  
+         
+       });
         
     </script>

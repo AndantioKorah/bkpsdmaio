@@ -377,12 +377,24 @@
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
 			</li>
-		
+		<?php } ?>
+		<?php 
+			if(
+				$this->general_library->isProgrammer()
+				// || $this->general_library->isPegawaiBkpsdm()
+			)
+			{ ?>
+				
+			<li class="sidebar-item ">
+				<a title="Upload Berkas TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Upload Berkas TPP
+				</a>
+			</li>
 		<?php } ?>
 		<li class="sidebar-item ">
-					<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
-					</a>
+			<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
+				<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
+			</a>
 		</li>
 
    <?php if($this->general_library->isAdminAplikasi()){ ?>
@@ -428,6 +440,9 @@
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
+	$this->general_library->isHakAkses('menu_bidang_pekin') ||
+	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
+	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
@@ -469,20 +484,29 @@
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">
-						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
-							<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
-				</a>
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
+					</a>
 				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
-
 				<li class="sidebar-item ">
-						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
-							<i class="align-middle me-2 far fa-circle"></i>Pensiun
-				</a>
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pensiun
+					</a>
 				</li>
 				<?php } ?>
-				
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi')
+				){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Keterangan Presensi
+					</a>
+				</li>
+				<?php } ?>
 			</ul>
 		</li>
 		<?php if($this->general_library->isKepalaBkpsdm() || $this->general_library->isProgrammer()){ ?>
@@ -545,16 +569,6 @@
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
-					</a>
-				</li>
-				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ){ ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Verifikasi
 					</a>
 				</li>
 				<?php } ?>

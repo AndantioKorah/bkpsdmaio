@@ -101,3 +101,6 @@ $route['kepegawaian/pensiun/kelengkapan-berkas/(:any)'] = 'kepegawaian/C_Layanan
 //BKAD
 $route['bkad/rekapitulasi/tpp/format-bkad'] = 'rekap/C_Rekap/formatTppBkad';
 $route['bkad/upload-gaji'] = 'rekap/C_Rekap/uploadGajiBkad';
+
+//TPP
+$route['tpp/upload-berkas'] = 'rekap/C_Rekap/uploadBerkasTpp';

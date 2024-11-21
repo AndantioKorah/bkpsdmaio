@@ -52,7 +52,7 @@
 
     <div class="form-group mt-2">
          <label class="bmd-label-floating">Jenis Absensi </label>
-         <select class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
+         <select onchange="cekAbsenTeman()" class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
          <option value="" selected disabled>- Pilih Jenis Absen -</option>
          <option value="1" >Absen Pagi </option>
          <option value="2" >Absen Pulang </option>
@@ -69,7 +69,7 @@
     </div>
     <div class="form-group mt-2" style="display:none;" id="teman_pegawai">
          <label class="bmd-label-floating">Nama Teman Pegawai </label>
-         <select class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
+         <select onchange="cekAbsenTeman()" class="form-control select2-navy select2" name="teman_absensi" id="teman_absensi" >
          <option value="" selected>- Pilih Pegawai -</option>
          <?php if($pegawai){ foreach($pegawai as $r){ ?>
                         <option value="<?=$r['id']?>"><?=$r['gelar1']?><?=$r['nama']?><?=$r['gelar2']?></option>
@@ -77,11 +77,52 @@
          </select>
     </div>
 
+
+    <script>
+
+
+      // $('#teman_absensi').on('change', function() {
+      function cekAbsenTeman() {
+       
+
+      var id_user =  $('#teman_absensi').val()
+      var tanggal_absensi = $('#tanggal_absensi').val()
+      var jenis_absensi = $('#jenis_absensi').val()
+      var jenis_bukti = $('#jenis_bukti').val()
+
+
+      if(jenis_bukti == null || jenis_bukti == 2){
+        return false;
+      }
+
+      $.ajax({
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiTemanPegawai",
+              method : "POST",
+              data : {tanggal_absensi: tanggal_absensi,
+                id_user : id_user,
+                jenis_absensi : jenis_absensi
+              },
+              async : false,
+              dataType : 'json',
+              success: function(res){
+                console.log(res.success);
+              if(res.success == false){
+                // $('#teman_absensi').prop('selectedIndex',0);
+                // $('#teman_absensi').val("");   
+                // $('#teman_absensi option:selected').val()
+                // errortoast(res.msg)
+                // return false;
+              } 
+              }
+              });
+              };
+
+    </script>
    
 
   <div class="form-group mt-2">
     <label>Dokumen Bukti  (Format PNG/JPG)</label>
-    <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  multiple="multiple" />
+    <input class="form-control my-image-field" type="file" id="image_file" name="files[]"  />
 
     <div id="uploadPreview"></div>
 
@@ -217,8 +258,9 @@ contoh Screenshot Whatsapp<br>
 
 
 
+
 $(function(){
-  $('#btnmodal').click()  
+  // $('#btnmodal').click()  
   $(".select2").select2({   
 		width: '100%',
 		dropdownAutoWidth: true,

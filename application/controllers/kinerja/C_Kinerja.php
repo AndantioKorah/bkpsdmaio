@@ -196,6 +196,11 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->insertPeninjauanAbsensi());
     }
 
+    public function pengajuanKembaliPeninjauanAbsensi()
+    {
+        echo json_encode($this->kinerja->pengajuanKembaliPeninjauanAbsensi());
+    }
+
 
     public function createLaporanKegiatan()
     {
@@ -1044,6 +1049,12 @@ class C_Kinerja extends CI_Controller
 
     public function inputSasaranPrevMonth(){
         echo json_encode($this->kinerja->inputSasaranPrevMonth());
+    }
+
+    public function getDataPengajuanAbsensiTemanPegawai()
+    {
+        $response   = $this->kinerja->getDataPengajuanAbsensiTemanPegawai();
+        echo json_encode($response);
     }
 
 }

@@ -614,8 +614,8 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.pegassesment c', 'b.id_peg = c.id_pegawai')
                             ->where('a.username', $nip)
                             ->where('c.flag_active', 1)
-                            ->where('a.flag_active', 1);
-                            // ->order_by('c.tglsk','desc')
+                            ->where('a.flag_active', 1)
+                            ->order_by('c.id','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
                             }
@@ -1585,9 +1585,14 @@ class M_Kepegawaian extends CI_Model
    
 		// }
 
+            $tahun = explode('-', $this->input->post('assesment_tglmulai'));
+            $tahun = $tahun[0];
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nilai_assesment']      = $this->input->post('nilai_assesment');
-            $dataInsert['tahun']      = $this->input->post('tahun');
+            $dataInsert['tahun']      = $tahun;
+            $dataInsert['tgl_mulaiberlaku']      = $this->input->post('assesment_tglmulai');
+            $dataInsert['tgl_selesaiberlaku']      = $this->input->post('assesment_tglselesai');
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){

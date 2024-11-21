@@ -137,14 +137,15 @@
    
   <input autocomplete="off" type="hidden" class="form-control" id="id_peninjauan" name="id_peninjauan">
 
+  
   <div class="mb-3">
     <label class="form-label">Tanggal Absensi</label>
-    <input autocomplete="off" type="text" class="form-control" id="p_tanggal_absensi" name="p_tanggal_absensi"  readonly>
+    <input style="background-color:#c9cdd0;" autocomplete="off" type="text" class="form-control" id="p_tanggal_absensi" name="p_tanggal_absensi"  readonly>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Jenis Absensi</label>
-    <input autocomplete="off" type="text" class="form-control" id="p_jenis_absensi"  readonly>
+    <input style="background-color:#c9cdd0;" autocomplete="off" type="text" class="form-control" id="p_jenis_absensi"  readonly>
   </div>
   
   <div class="mb-3">

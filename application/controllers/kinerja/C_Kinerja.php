@@ -1051,4 +1051,10 @@ class C_Kinerja extends CI_Controller
         echo json_encode($this->kinerja->inputSasaranPrevMonth());
     }
 
+    public function getDataPengajuanAbsensiTemanPegawai()
+    {
+        $response   = $this->kinerja->getDataPengajuanAbsensiTemanPegawai();
+        echo json_encode($response);
+    }
+
 }

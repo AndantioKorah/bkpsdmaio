@@ -4092,5 +4092,31 @@
             
         }
 
+        function getDataPengajuanAbsensiTemanPegawai()
+        {        
+            $res = null;
+            $this->db->select('*')
+            ->from('db_sip.absen a')
+            ->where('a.tgl', $this->input->post('tanggal_absensi'))
+            ->where('a.user_id', $this->input->post('id_user'));
+            $result = $this->db->get()->result_array();
+
+            
+            if($result){
+                if($this->input->post('jenis_absensi') == 2){
+                    if($result[0]['pulang']){
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                    } else {
+                    $res = array('msg' => 'Pegawai yang bersangkutan belum melakukan presensi', 'success' => false);
+                    }
+                } else {
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+            } else {
+                $res = array('msg' => 'Pegawai yang bersangkutan belum melakukan presensi', 'success' => false);
+            }
+            return $res;
+        }
+
     
 }

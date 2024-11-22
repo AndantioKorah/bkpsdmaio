@@ -4100,8 +4100,7 @@
             ->where('a.tgl', $this->input->post('tanggal_absensi'))
             ->where('a.user_id', $this->input->post('id_user'));
             $result = $this->db->get()->result_array();
-
-            
+            // print_r($this->input->post());
             if($result){
                 if($this->input->post('jenis_absensi') == 2){
                     if($result[0]['pulang']){

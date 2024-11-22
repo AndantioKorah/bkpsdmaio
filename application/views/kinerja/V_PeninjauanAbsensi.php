@@ -45,6 +45,7 @@
     </div>
     <div class="col-lg-6 mt-3">
     <form method="post" id="form_tinjau_absen" enctype="multipart/form-data" >
+    <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
     <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" readonly value="<?= date('Y-m-d') ;?>">
@@ -83,8 +84,9 @@
 
       // $('#teman_absensi').on('change', function() {
       function cekAbsenTeman() {
-       
 
+      var id_user = null;
+       
       var id_user =  $('#teman_absensi').val()
       var tanggal_absensi = $('#tanggal_absensi').val()
       var jenis_absensi = $('#jenis_absensi').val()
@@ -106,13 +108,18 @@
               dataType : 'json',
               success: function(res){
                 console.log(res.success);
-              if(res.success == false){
+              if(res.success == true){
+                $('#temp').val(1)
                 // $('#teman_absensi').prop('selectedIndex',0);
                 // $('#teman_absensi').val("");   
                 // $('#teman_absensi option:selected').val()
                 // errortoast(res.msg)
                 // return false;
-              } 
+              } else {
+                $('#temp').val('')
+                errortoast(res.msg)
+                res = null
+              }
               }
               });
               };
@@ -326,7 +333,7 @@ $('#form_tinjau_absen').on('submit', function(e){
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('image_file').files.length;
         var jenis_bukti = $('#jenis_bukti').val()
-        var teman_absensi = $('#teman_absensi').val()
+        var teman_absensi = $('#temp').val()
 
         if(jenis_bukti == 1) {
           if(teman_absensi == ""){

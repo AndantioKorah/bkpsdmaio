@@ -2,6 +2,7 @@
     <table class="table table-hover table-striped" id="tabel_riwayat_upload_berkas_tpp">
     <thead>
         <th class="text-center">No</th>
+        <th class="text-left">Perangkat Daerah</th>
         <th class="text-center">Periode</th>
         <th class="text-left">Uploader</th>
         <th class="text-left">Verifikator</th>
@@ -12,6 +13,7 @@
         <?php if($result){ $no = 1; foreach($result as $rs){ ?>
             <tr>
                 <td class="text-center"><?=$no++;?></td>
+                <td class="text-left"><?=$rs['nm_unitkerja']?></td>
                 <td class="text-center">
                     <?=getNamaBulan($rs['bulan']).' '.$rs['tahun']?>
                 </td>

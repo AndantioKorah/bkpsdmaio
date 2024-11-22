@@ -852,6 +852,7 @@
                             // ->where('flag_sending', 0)
                             ->where('flag_sent', 0)
                             ->where('flag_active', 1)
+                            // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('created_date', 'desc')
                             ->limit(5)
                             ->get()->result_array();
@@ -868,7 +869,7 @@
                     }
                     $req = json_decode($req, true);
                     if(!isset($req['error'])){
-                        if($l['sendTo'] == '120363161928273333'){
+                        if($l['sendTo'] == GROUP_CHAT_HELPDESK || $l['sendTo'] == GROUP_CHAT_PRAKOM){
                             $this->db->where('id', $l['id'])
                                     ->update('t_cron_wa', 
                                     [

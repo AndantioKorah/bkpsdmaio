@@ -6,14 +6,18 @@
                 <hr>
             </div>
             <div class="card-body">
-                <form id="form_upload_berkas_tpp">
+                <form id="form_search_verif_upload">
                     <div class="row" style="margin-top: -30px;">
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="bmd-label-floating">Pilih SKPD</label>
                                     <select class="form-control select2-navy" style="width: 100%;"
                                     id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
-                                        <?php if($list_skpd){
+                                        <?php if($this->general_library->isProgrammer() 
+                                            || $this->general_library->isAdminAplikasi() 
+                                            || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+                                            <option selected value="0">Semua</option>
+                                        <?php } if($list_skpd){
                                             foreach($list_skpd as $uk){ if($uk['id_unitkerja'] != 0 && $uk['id_unitkerja'] != 5){
                                             ?>
                                             <?php if($this->general_library->isProgrammer() 
@@ -106,143 +110,29 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal_upload_tpp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h6 class="modal-title">UPLOAD BERKAS TPP</h6>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div id="modal_upload_tpp_content">
-          </div>
-      </div>
-  </div>
-</div>
-
 <script>
     $(function(){
         $('#bulan').select2()
         $('#skpd').select2()
         // $('#tahun').select2()
-        checkStatusUploadBerkasTpp()
-        loadRiwayatUpload()
+        $('#form_search_verif_upload').submit()
     })
 
-    function loadRiwayatUpload(){
-        
-        // $('#div_riwayat_upload').load('<?=base_url('rekap/C_Rekap/loadRiwayatUploadBerkasTpp')?>', function(){
-        //     $('#loader').hide()
-        // })
-
+    $('#form_search_verif_upload').on('submit', function(e){
+        e.preventDefault()
         $('#div_riwayat_upload').html('')
         $('#div_riwayat_upload').append(divLoaderNavy)
-
         $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/loadRiwayatUploadBerkasTpp')?>',
+            url: '<?=base_url('rekap/C_Rekap/loadRiwayatVerifBerkasTpp/')?>'+id,
             method: 'POST',
-            data: {
-                bulan: $('#bulan').val(),
-                tahun: $('#tahun').val(),
-                skpd: $('#skpd').val()
-            },
+            data: null,
             success: function(rs){
-                // let res = JSON.parse(rs)
                 $('#div_riwayat_upload').html('')
                 $('#div_riwayat_upload').html(rs)
             }, error: function(e){
-                $('#div_upload_button').hide()
                 errortoast('Terjadi Kesalahan')
                 console.log(e)
             }
         })
-    }
-
-    $('#skpd').on('change', function(){
-        checkStatusUploadBerkasTpp()
     })
-
-    $('#bulan').on('change', function(){
-        checkStatusUploadBerkasTpp()
-    })
-
-    $('#tahun').on('change', function(){
-        checkStatusUploadBerkasTpp()
-    })
-
-    $('#form_upload_berkas_tpp').on('submit', function(e){
-        e.preventDefault()
-        
-        $('#btn_upload').hide()
-        $('#btn_upload_loading').show()
-
-        var formvalue = $('#form_upload_berkas_tpp');
-        var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('input_tpp').files.length;
-        
-        if(ins == 0){
-            $('#btn_upload').show()
-            $('#btn_upload_loading').hide()
-            errortoast("Silahkan upload file terlebih dahulu");
-            return false;
-        }
-
-        $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/saveUploadBerkasTpp')?>',
-            method: 'POST',
-            data: form_data,  
-            contentType: false,  
-            cache: false,  
-            processData:false,
-            success: function(rs){
-                let res = JSON.parse(rs)
-                if(res.code == 0){
-                    successtoast('Upload berhasil, silahkan menunggu proses verifikasi oleh bidang terkait.')                    
-                    document.getElementById("form_upload_berkas_tpp").reset();
-                    loadRiwayatUpload()
-                } else {
-                    errortoast(res.message)
-                }
-                $('#btn_upload').show()
-                $('#btn_upload_loading').hide()
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-                console.log(e)
-                $('#btn_upload').show()
-                $('#btn_upload_loading').hide()
-            }
-        })
-    })
-
-    function checkStatusUploadBerkasTpp(){
-        $('#div_upload_check').html('')
-        $('#div_upload_check').append(divLoaderNavy)
-        $('#div_upload_button').hide()
-
-        $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/checkStatusUploadBerkasTpp')?>',
-            method: 'POST',
-            data: {
-                bulan: $('#bulan').val(),
-                tahun: $('#tahun').val(),
-                skpd: $('#skpd').val()
-            },
-            success: function(rs){
-                let res = JSON.parse(rs)
-                if(res.code == 0){
-                    $('#div_upload_check').html('')
-                    $('#div_upload_check').hide('')
-                    $('#div_upload_button').show()
-                } else {
-                    $('#div_upload_button').hide()
-                    $('#div_upload_check').html('<h3 style="color: red;">'+res.message+'</h3>')
-                }
-            }, error: function(e){
-                $('#div_upload_button').hide()
-                errortoast('Terjadi Kesalahan')
-                console.log(e)
-            }
-        })
-    }
 </script>

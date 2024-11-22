@@ -3726,10 +3726,12 @@
         // $this->db->trans_begin();
 
         $data = $this->input->post();
+        $skpd = explode(";", $data['skpd']);
+        
         
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
-                            ->where('id_unitkerja', $this->general_library->getIdUnitKerjaPegawai())
+                            ->where('id_unitkerja', $skpd[0])
                             ->get()->row_array();
 
         $berkas = $this->db->select('a.*, b.nm_unitkerja')
@@ -3737,7 +3739,7 @@
                         ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
                         ->where('a.bulan', $data['bulan'])
                         ->where('a.tahun', $data['tahun'])
-                        ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai())
+                        ->where('a.id_unitkerja', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
 
@@ -3763,10 +3765,11 @@
         $this->db->trans_begin();
 
         $input_post = $this->input->post();
+        $skpd = explode(";", $input_post['skpd']);
 
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
-                            ->where('id_unitkerja', $this->general_library->getIdUnitKerjaPegawai())
+                            ->where('id_unitkerja', $skpd[0])
                             ->get()->row_array();
 
         $lockTpp = $this->db->select('a.*, b.nm_unitkerja')
@@ -3774,7 +3777,7 @@
                         ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
                         ->where('a.bulan', $input_post['bulan'])
                         ->where('a.tahun', $input_post['tahun'])
-                        ->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai())
+                        ->where('a.id_unitkerja', $skpd[0])
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
 
@@ -3814,7 +3817,7 @@
                     umask($oldmask);
                 }
 
-                $file_name = 'Pengajuan TPP '.($unitkerja['nm_unitkerja']).' '.getNamaBulan($input_post['bulan']).' '.$input_post['tahun'].'.pdf';
+                $file_name = 'Pengajuan TPP '.($lockTpp['nama_param_unitkerja']).' '.getNamaBulan($input_post['bulan']).' '.$input_post['tahun'].'.pdf';
                 $file_name = str_replace(' ', '_', $file_name);
 
                 $config['upload_path'] = $uploadPath;
@@ -3839,6 +3842,12 @@
                                 'flag_upload_berkas_tpp' => 1
                             ]);
 
+                    $this->db->insert('t_cron_wa', [
+                        'type' => 'text',
+                        'sendTo' => GROUP_CHAT_PRAKOM,
+                        'message' => "Selamat ".greeting()." \n*".$lockTpp['nama_param_unitkerja']."* telah mengupload berkas untuk pengajuan TPP periode *".getNamaBulan($input_post['bulan'])." ".$input_post['tahun']."*."
+                     ]);
+
                 } else {
                     $rs['code'] = 1;
                     $rs['message'] = 'Gagal upload file';
@@ -3860,7 +3869,15 @@
     }
 
     public function loadRiwayatUploadBerkasTpp(){
-        $this->db->select('a.*, b.bulan, b.tahun, c.nm_unitkerja, trim(d.nama) as nama_verifikator, e.nama as nama_uploader')
+        $data = $this->input->post();
+        
+        $skpd = explode(";", $data['skpd']);
+        $uksearch = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $skpd[0])
+                                ->get()->row_array();
+
+        $this->db->select('a.*, b.bulan, b.tahun, b.nama_param_unitkerja as nm_unitkerja, trim(d.nama) as nama_verifikator, e.nama as nama_uploader')
                 ->from('t_upload_berkas_tpp a')
                 ->join('t_lock_tpp b', 'a.id_t_lock_tpp = b.id')
                 ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
@@ -3872,6 +3889,10 @@
 
         if($this->general_library->isProgrammer()){
             
+        } else if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)) { // jika kecamatan
+            $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        } else if($this->general_library->getIdUnitKerjaPegawai() == '3010000') { // jika diknas
+            $this->db->where('(b.id_unitkerja = "3010000" OR substring(b.id_unitkerja, 1, 8) = "sekolah_")');
         } else {
             $this->db->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
         }

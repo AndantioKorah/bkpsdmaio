@@ -379,12 +379,16 @@
 			</li>
 		<?php } ?>
 		<?php 
-			if(
-				$this->general_library->isProgrammer()
-				// || $this->general_library->isPegawaiBkpsdm()
-			)
-			{ ?>
-				
+			if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+			|| $this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi()
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
+			){ ?>
+			
 			<li class="sidebar-item ">
 				<a title="Upload Berkas TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Upload Berkas TPP
@@ -502,8 +506,13 @@
 				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi')
 				){ ?>
 				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
+					<a title="Keterangan Presensi" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Keterangan Presensi
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Berkas TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/verifikasi-berkas')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Berkas TPP
 					</a>
 				</li>
 				<?php } ?>

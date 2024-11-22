@@ -790,8 +790,16 @@ class C_Rekap extends CI_Controller
         $this->load->view('rekap/V_UploadGajiBkadHistory', $data);
     }
 
+    public function verifikasiBerkasTpp(){
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        render('rekap/V_VerifUploadTpp', '', '', $data);
+    }
+
     public function uploadBerkasTpp(){
-        render('rekap/V_UploadTpp', '', '', null);
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        render('rekap/V_UploadTpp', '', '', $data);
     }
 
     public function checkStatusUploadBerkasTpp(){

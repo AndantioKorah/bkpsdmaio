@@ -104,3 +104,4 @@ $route['bkad/upload-gaji'] = 'rekap/C_Rekap/uploadGajiBkad';
 
 //TPP
 $route['tpp/upload-berkas'] = 'rekap/C_Rekap/uploadBerkasTpp';
+$route['tpp/verifikasi-berkas'] = 'rekap/C_Rekap/verifikasiBerkasTpp';

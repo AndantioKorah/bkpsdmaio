@@ -789,4 +789,30 @@ class C_Rekap extends CI_Controller
         $data['result'] = $this->rekap->loadUploadGajiHistory();
         $this->load->view('rekap/V_UploadGajiBkadHistory', $data);
     }
+
+    public function uploadBerkasTpp(){
+        render('rekap/V_UploadTpp', '', '', null);
+    }
+
+    public function checkStatusUploadBerkasTpp(){
+        echo json_encode($this->rekap->checkStatusUploadBerkasTpp());
+    }
+
+    public function saveUploadBerkasTpp(){
+        echo json_encode($this->rekap->saveUploadBerkasTpp());
+    }
+
+    public function loadRiwayatUploadBerkasTpp(){
+        $data['result'] = $this->rekap->loadRiwayatUploadBerkasTpp();
+        $this->load->view('rekap/V_UploadTppRiwayat', $data);
+    }
+
+    public function deleteRiwayatUploadBerkasTpp($id){
+        echo json_encode($this->rekap->deleteRiwayatUploadBerkasTpp($id));
+    }
+
+    public function openFileUploadBerkasTpp($id){
+        $data = $this->input->post();
+        $this->load->view('rekap/V_UploadTppOpenFile', $data);
+    }
 }

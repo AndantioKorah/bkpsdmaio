@@ -5771,8 +5771,8 @@ public function submitEditJabatan(){
             ]);
 
         } else {
-            $rs['code'] = 0;
-            $rs['message'] = "";
+            $rs['code'] = 1;
+            $rs['message'] = "Data Tidak Ditemukan";
         }
 
         if($rs['code'] == 0){

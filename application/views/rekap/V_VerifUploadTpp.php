@@ -2,7 +2,7 @@
     <div class="col-lg-12">
         <div class="card card-default">
             <div class="card-header">
-                <h3 class="card-title">UPLOAD BERKAS TPP</h3>
+                <h3 class="card-title">VERIFIKASI UPLOAD BERKAS TPP</h3>
                 <hr>
             </div>
             <div class="card-body">
@@ -81,17 +81,8 @@
                                 <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
                             </div>
                         </div>
-                        <div style="display: none;" id="div_upload_button">
-                            <div class="col-lg-12 mt-3">
-                                <label>Pilih Berkas</label>
-                                <input class="form-control" type="file" id="input_tpp" name="input_tpp" />
-                            </div>
-                            <div class="col-lg-12 mt-3 text-right">
-                                <button id="btn_upload" class="btn btn-navy" type="submit"><i class="fa fa-upload"></i> Upload</button>
-                                <button style="display: none;" id="btn_upload_loading" class="btn btn-navy" disabled><i class="fa fa-spin fa-spinner"></i> Uploading...</button>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 text-center mt-3" id="div_upload_check">
+                        <div class="col-lg-12 text-right mt-2">
+                            <button class="btn btn-navy" type="submit"><i class="fa fa-search"></i> Cari</button>
                         </div>
                     </div>
                 </form>
@@ -111,6 +102,8 @@
 </div>
 
 <script>
+    let active_status = 0;
+
     $(function(){
         $('#bulan').select2()
         $('#skpd').select2()
@@ -123,9 +116,9 @@
         $('#div_riwayat_upload').html('')
         $('#div_riwayat_upload').append(divLoaderNavy)
         $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/loadRiwayatVerifBerkasTpp/')?>'+id,
+            url: '<?=base_url('rekap/C_Rekap/loadRiwayatVerifBerkasTpp')?>',
             method: 'POST',
-            data: null,
+            data: $(this).serialize(),
             success: function(rs){
                 $('#div_riwayat_upload').html('')
                 $('#div_riwayat_upload').html(rs)

@@ -337,7 +337,7 @@ $('#form_tinjau_absen').on('submit', function(e){
 
         if(jenis_bukti == 1) {
           if(teman_absensi == ""){
-            errortoast('Pegawai belum diisi')
+            errortoast('Teman Pegawai belum diisi')
             return false;
           }
         }

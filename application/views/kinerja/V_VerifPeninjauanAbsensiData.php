@@ -1,9 +1,17 @@
 <?php if($result){ ?>
+    <style>
+    .zoom:hover {
+    transform: scale(1.2);
+    cursor: pointer; /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+</style>
+
     <div class="table-responsive">
-    <table border=1 class="table table-hover" id="table_disiplin_kerja_result_data">
+    <table border=1 class="table table-hover" id="table_list_peninjauan">
         <thead>
             <th class="text-center">No</th>
             <th class="text-left">Nama Pegawai</th>
+            <th class="text-left">Foto Pegawai</th>
             <th class="text-left">Unit Kerja</th>
             <th class="text-center">Tanggal Absensi</th>
             <th class="text-center">Jenis Absensi</th>
@@ -19,6 +27,9 @@
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
                     <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
+                   <td class="text-left">
+                    <img onclick="loadFotoPeg('<?=$r['fotopeg']?>')" data-toggle="modal" data-target="#exampleModal" style="height:80px;width:50px" src="<?=base_url('assets/fotopeg/')?><?=$r['fotopeg'];?>" alt="">
+                   </td>
                     <td class="text-left"><?=($r['nm_unitkerja'])?> </td>
                     <?php
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
@@ -129,6 +140,26 @@
     </table>
     </div>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1"  data-keyboard="false" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="col-lg-12 float-right text-right">
+    <button type="button" class="btn-close btn-close-modal-announcement btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
+  </div>
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div id="modal-announcement-content">
+        <div class="col-lg-12" style="margin: auto;">
+  <center>
+
+    <img id="pegawai_image" style="max-height: 75vh; max-width: 90vw;"  />
+  </center>
+</div>
+        <!-- <img  data-toggle="modal" data-target="#exampleModal" style="height:80px;width:50px" src="<?=base_url('assets/fotopeg/199401042020121011_profile_pict_241120100015_PhotoRoom-20231103_1254142.png')?>" alt=""> -->
+            
+        </div>
+    </div>
+  </div>
+
+
 <?php } else { ?>
     <div class="col-12 text-center">
         <h6>Data Tidak Ditemukan <i class="fa fa-exclamation"></i></h6>
@@ -136,9 +167,20 @@
 <?php } ?>
 <script>
     $(function(){
+        var table = $('#table_list_peninjauan').DataTable({
+                columnDefs: [
+                {
+                    targets: 2,
+                    className: 'zoom'
+                }
+                ]
+            });
        
+            // sidebar
+        // $("#sidebar").hide();
+        // $(".sidebar-content").hide();
         // $("#sidebar_toggle" ).trigger( "click" );
-        $('#table_disiplin_kerja_result_data').dataTable()
+        $('#table_list_peninjauan').dataTable()
     })
 
     function verifDokumen(status, id, tab,jenis_absen){
@@ -202,4 +244,13 @@
             }
         })
     }
+
+    function loadFotoPeg(src){
+        // alert(src)
+            // $('#modal-announcement-content').html('')
+            // $('#modal-announcement-content').append(divLoaderNavy)
+            // $('#modal-announcement-content').load('<?=base_url('master/C_Master/loadAnnouncement/')?>'+id)
+            imgsrc = "<?=base_url('assets/fotopeg/')?>"+src;
+            $('#pegawai_image').attr('src',imgsrc);
+        }
 </script>

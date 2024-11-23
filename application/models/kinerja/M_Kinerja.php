@@ -2074,7 +2074,7 @@
     }
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
-        $this->db->select('g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
+        $this->db->select('c.fotopeg,g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
         (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_diverif')
         ->from('t_peninjauan_absensi a')
         ->join('m_user b', 'a.id_m_user = b.id')

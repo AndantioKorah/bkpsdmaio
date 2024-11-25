@@ -19,7 +19,8 @@
         </thead>
         <tbody>
             <?php $no = 1; foreach($result as $r){
-               $nama_peg = getNamaPegawaiFull($r); ?>
+               $nama_peg = getNamaPegawaiFull($r);
+                ?>
                 <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] >= 2) echo 'background-color:#f0a095'; }?>">
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
@@ -67,7 +68,7 @@
                                     } else {
                                       if($ekstension == "png" || $ekstension == "jpg" || $ekstension == "jpeg"){
                                         // echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
-                                        echo "<a class='dropdown-item'   href='javascript:;' data-id='".$r['id']."' data-nama='".$nama_peg."' data-fotopeg='".$r['fotopeg']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#exampleModalb'>Dokumen ".$nodok."</a>";
+                                        echo "<a class='dropdown-item'   href='javascript:;' data-id='".$r['id']."' data-jenis_bukti='".$r['jenis_bukti']."' data-jenis_absen='".$r['jenis_absensi']."' data-nama='".$nama_peg."' data-tgl_absen='".formatDateNamaBulan($r['tanggal_absensi'])."' data-nip='".$r['nipbaru']."' data-fotopeg='".$r['fotopeg']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#exampleModalb'>Dokumen ".$nodok."</a>";
 
                                       } else {
                                         echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
@@ -88,7 +89,7 @@
                         <?php if($status == 1 || $status == 2){ ?>
                             <span><strong><?=$r['keterangan_verif']?></strong></span><br>
                             <input type="hidden" class="form-control" id="id_user_<?=$r['id']?>" value="<?=$r['id_m_user']?>"/>
-                            cc
+                            
                             <!-- <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span> -->
                             <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                         <?php } else if($status == 0) { ?> 
@@ -165,9 +166,13 @@
    </style>
 <div  class="modal fade " id="exampleModalb" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div style="width:100%;" class="modal-dialog modal-xl" role="document">
-    <div class="modal-content ">
-      <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel"> <span class="badge badge-pns" id="nma_peg"></span> </h4>
+    <div class="modal-content " >
+      <div class="modal-header " >
+        <h4 class="modal-title col-lg-11" id="exampleModalLabel"> 
+            <div class="row" >
+            <div style="width:65%;"   id="nama_peg"></div>  <div  style="width:35%"   id="input_jam"> </div> 
+            </div>
+       </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -405,8 +410,13 @@
             var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
             var modal          = $(this)
 
-          
-
+            if(div.data('jenis_absen') == 1){
+                var jenis_absen = "Pagi"
+            } else {
+                var jenis_absen = "Sore"
+            }
+            $('#nama_peg').html('');
+            $('#input_jam').html('');
             modal.find("figure img").css({
                   width: "auto",
                   height: "510px",
@@ -419,8 +429,27 @@
             modal.find('#foto_pegawai').attr("src","<?=base_url('assets/fotopeg/')?>"+div.data('fotopeg'));
             modal.find('#bukti_absen').attr("src","<?=base_url('assets/peninjauan_absen/')?>"+div.data('tahun')+'/'+div.data('bulan')+'/'+div.data('gambar'));
            
+            $('#nama_peg').append('<a href="<?= base_url()?>kepegawaian/profil-pegawai/'+div.data('nip')+'" target="_blank"><span class="badge badge-pns">'+div.data('nama')+'</span></a> Absen '+jenis_absen+' Tanggal '+div.data('tgl_absen'));
+            if(div.data('jenis_bukti') == 2){
+
+            // $('#input_jam').append('<input type="time" onchange="myFunction('+div.data('id')+')" style="width:30%" class="form-control col-lg-4" id="verifjam_'+div.data('id')+'"/> ');
+            $('#input_jam').append('<div style="width:65%" class="input-group col-lg-2">'+
+            '<input type="time" onchange="myFunction('+div.data('id')+')" style="width:30%" class="form-control col-lg-4" id="verifjam_'+div.data('id')+'"/>'+
+                '<div class="input-group-append">'+
+                '<span class="input-group-text">Input Jam</span>'+
+            '</div>'+
+            '</div>');
+        }
             
-            src="<?=base_url('assets/peninjauan_absen/2024/11/199401042020121011_Screenshot_(1).png')?>"
         });
+
+       
+        
+
+
+        function myFunction(id) {
+            var verif_jam = $('#verifjam_'+id).val();
+            $('#jam_'+id).val(verif_jam);
+            }
 </script>
 

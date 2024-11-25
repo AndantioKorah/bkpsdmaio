@@ -280,7 +280,7 @@ $(function(){
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    startDate: '-0d',
+    startDate: '-3d',
     // todayBtn: true,
     todayHighlight: true,
     autoclose: true,

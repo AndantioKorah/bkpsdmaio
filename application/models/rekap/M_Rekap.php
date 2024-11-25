@@ -3758,6 +3758,106 @@
         return $rs;
     }
 
+    public function saveUploadBerkasTppBalasan($id){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+
+        $this->db->trans_begin();
+
+        $input_post = $this->input->post();
+        $data = $this->db->select('a.*, b.bulan, b.tahun, b.nama_param_unitkerja as nm_unitkerja, trim(d.nama) as nama_verifikator, d.id as id_m_user_verifikator,
+                        e.nama as nama_uploader, f.handphone')
+                        ->from('t_upload_berkas_tpp a')
+                        ->join('t_lock_tpp b', 'a.id_t_lock_tpp = b.id')
+                        ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                        ->join('m_user d', 'a.id_m_user_verif = d.id', 'left')
+                        ->join('m_user e', 'a.created_by = e.id')
+                        ->join('db_pegawai.pegawai f', 'e.username = f.nipbaru_ws')
+                        ->where('a.flag_active', 1)
+                        ->where('a.id', $id)
+                        ->get()->row_array();
+
+        if($_FILES && $data){
+            $allowed_extension = ['pdf'];
+            $file_array = explode(".", $_FILES["file_balasan"]["name"]);
+            $file_extension = end($file_array);
+
+            if(in_array($file_extension, $allowed_extension)){
+                $fullPath = $data['url_upload_file'];
+                $explFullPath = explode("/", $fullPath);
+                $fileName = $explFullPath[count($explFullPath) - 1];
+                
+                $uploadPath = 'arsiptpp/usultpp/'.$data['tahun'].'/'.getNamaBulan($data['bulan']);
+                if(!file_exists('arsiptpp/usultpp/'.$data['tahun'])){ //create if not exists
+                    $oldmask = umask(0);
+                    mkdir('arsiptpp/usultpp/'.$data['tahun'], 0777);
+                    umask($oldmask);
+                }
+
+                if(!file_exists($uploadPath)){ //create if not exists
+                    $oldmask = umask(0);
+                    mkdir($uploadPath, 0777);
+                    umask($oldmask);
+                }
+
+                $file_name = "Balasan_".$fileName;
+
+                $config['upload_path'] = $uploadPath;
+                $config['allowed_types'] = '*';
+                $config['file_name'] = ($file_name);
+                $this->load->library('upload', $config); 
+                $uploadfile = $this->upload->do_upload('file_balasan');
+                
+                if($uploadfile){
+                    $this->db->where('id', $data['id'])
+                            ->update('t_upload_berkas_tpp', [
+                                'url_file_balasan' => $config['upload_path'].'/'.$config['file_name'],
+                                'tanggal_balasan' => date('Y-m-d H:i:s'),
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Gagal upload file';
+                }
+            }
+        } else {
+            $rs['code'] = 1;
+            // $rs['message'] = 'File yang diupload tidak ditemukan';
+        }
+
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+            // $rs['code'] = 1;
+            $rs['message'] = $rs['message'] == "" ? 'Terjadi Kesalahan' : $rs['message'];
+        } else {
+            $this->db->trans_commit();
+        }
+        return $rs;
+    }
+
+    public function deleteBerkasTppBalasan($id){
+        $rs['code'] = 0;
+        $rs['message'] = '';
+
+        $this->db->trans_begin();
+
+        $this->db->where('id', $id)
+                ->update('t_upload_berkas_tpp', [
+                    'tanggal_balasan' => null,
+                    'url_file_balasan' => null
+                ]);
+
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+            // $rs['code'] = 1;
+            $rs['message'] = $rs['message'] == "" ? 'Terjadi Kesalahan' : $rs['message'];
+        } else {
+            $this->db->trans_commit();
+        }
+        return $rs;
+    }
+
     public function saveUploadBerkasTpp(){
         $rs['code'] = 0;
         $rs['message'] = '';
@@ -3790,7 +3890,7 @@
                         ->from('t_upload_berkas_tpp')
                         ->where('id_t_lock_tpp', $lockTpp['id'])
                         ->where('flag_active', 1)
-                        ->where('flag_verif != ', 1)
+                        ->where('flag_verif != ', 2)
                         ->get()->row_array();
             if($exists){
                 $rs['code'] = 1;
@@ -3898,6 +3998,122 @@
         }
 
         return $this->db->get()->result_array();
+    }
+
+    public function loadRiwayatVerifBerkasTppByStatus($status){
+        $data = json_decode($this->input->post()['params'], true);
+        $skpd = explode(";", $data['skpd']);
+        $uksearch = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('id_unitkerja', $skpd[0])
+                                ->get()->row_array();
+
+        $this->db->select('a.*, b.bulan, b.tahun, b.nama_param_unitkerja as nm_unitkerja, trim(d.nama) as nama_verifikator, d.id as id_m_user_verifikator, e.nama as nama_uploader')
+                ->from('t_upload_berkas_tpp a')
+                ->join('t_lock_tpp b', 'a.id_t_lock_tpp = b.id')
+                ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                ->join('m_user d', 'a.id_m_user_verif = d.id', 'left')
+                ->join('m_user e', 'a.created_by = e.id')
+                ->where('a.flag_active', 1)
+                ->where('a.flag_verif', $status)
+                ->group_by('a.id')
+                ->order_by('created_date', 'desc');
+
+        if($data['skpd'] != 0){
+            $this->db->where('b.id_unitkerja', $skpd[0]);
+        }
+
+        // if($this->general_library->isProgrammer()){
+            
+        // } else if(in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)) { // jika kecamatan
+        //     $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
+        // } else if($this->general_library->getIdUnitKerjaPegawai() == '3010000') { // jika diknas
+        //     $this->db->where('(b.id_unitkerja = "3010000" OR substring(b.id_unitkerja, 1, 8) = "sekolah_")');
+        // } else {
+        //     $this->db->where('a.id_unitkerja', $this->general_library->getIdUnitKerjaPegawai());
+        // }
+
+        return $this->db->get()->result_array();
+    }
+
+    public function loadModalVerifUploadBerkasTpp($id){
+        return $this->db->select('a.*, b.bulan, b.tahun, b.nama_param_unitkerja as nm_unitkerja, trim(d.nama) as nama_verifikator, d.id as id_m_user_verifikator, e.nama as nama_uploader')
+                        ->from('t_upload_berkas_tpp a')
+                        ->join('t_lock_tpp b', 'a.id_t_lock_tpp = b.id')
+                        ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                        ->join('m_user d', 'a.id_m_user_verif = d.id', 'left')
+                        ->join('m_user e', 'a.created_by = e.id')
+                        ->where('a.flag_active', 1)
+                        ->where('a.id', $id)
+                        ->get()->row_array();
+    }
+    
+    public function saveVerifUploadBerkasTpp(){
+        $param = $this->input->post();
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $this->db->trans_begin();
+
+        $data = $this->db->select('a.*, b.bulan, b.tahun, b.nama_param_unitkerja as nm_unitkerja, trim(d.nama) as nama_verifikator, d.id as id_m_user_verifikator,
+                        e.nama as nama_uploader, f.handphone')
+                        ->from('t_upload_berkas_tpp a')
+                        ->join('t_lock_tpp b', 'a.id_t_lock_tpp = b.id')
+                        ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                        ->join('m_user d', 'a.id_m_user_verif = d.id', 'left')
+                        ->join('m_user e', 'a.created_by = e.id')
+                        ->join('db_pegawai.pegawai f', 'e.username = f.nipbaru_ws')
+                        ->where('a.flag_active', 1)
+                        ->where('a.id', $param['id'])
+                        ->get()->row_array();
+    
+        if($data){
+            $exists = $this->db->select('*')
+                                    ->from('t_upload_berkas_tpp')
+                                    ->where('id_t_lock_tpp', $data['id_t_lock_tpp'])
+                                    ->where('id !=', $data['id'])
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+            if($exists) {
+                $rs['code'] = 1;
+                $rs['message'] = "Ada berkas baru yang sudah diupload. Verifikasi tidak dapat dilanjutkan.";
+            } else {
+                if($data['flag_verif'] != $param['flag_verif']){
+                    $keterangan = $param['keterangan'];
+                    if($param['flag_verif'] == 0){
+                        $keterangan = 'Menunggu Verifikasi';
+
+                        if($data['flag_verif'] != 0){
+                            $keterangan = 'Verifikasi Dibatalkan, '.$param['keterangan'];
+                        }
+                    }
+
+                    $this->db->where('id', $param['id'])
+                            ->update('t_upload_berkas_tpp', [
+                                'keterangan' => $keterangan,
+                                'tanggal_verif' => date('Y-m-d H:i:s'),
+                                'id_m_user_verif' => $this->general_library->getId(),
+                                'flag_verif' => $param['flag_verif'],
+                                'tanggal_balasan' => null,
+                                'url_file_balasan' => null
+                            ]);
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = "Tidak ada perubahan status";
+                }
+            }
+        } else {
+            $rs['code'] = 1;
+        }
+        
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+            // $rs['code'] = 1;
+            $rs['message'] = $rs['message'] == "" ? 'Terjadi Kesalahan' : $rs['message'];
+        } else {
+            $this->db->trans_commit();
+        }
+        return $rs;
     }
     
     public function deleteRiwayatUploadBerkasTpp($id){

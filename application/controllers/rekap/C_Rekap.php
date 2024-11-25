@@ -796,6 +796,39 @@ class C_Rekap extends CI_Controller
         render('rekap/V_VerifUploadTpp', '', '', $data);
     }
 
+    public function loadRiwayatVerifBerkasTpp(){
+        // $data['result'] = $this->rekap->loadRiwayatUploadBerkasTpp();
+        $data['params'] = json_encode($this->input->post());
+        $this->load->view('rekap/V_VerifUploadTppList', $data);
+    }
+
+    public function loadRiwayatVerifBerkasTppByStatus($status){
+        $data['result'] = $this->rekap->loadRiwayatVerifBerkasTppByStatus($status);
+        $this->load->view('rekap/V_VerifUploadTppListData', $data);
+    }
+
+    public function loadModalVerifUploadBerkasTpp($id){
+        $data['result'] = $this->rekap->loadModalVerifUploadBerkasTpp($id);
+        $this->load->view('rekap/V_VerifUploadTppModal', $data);
+    }
+
+    public function loadModalBalasanVerifTpp($id){
+        $data['result'] = $this->rekap->loadModalVerifUploadBerkasTpp($id);
+        $this->load->view('rekap/V_VerifUploadTppModalBalasan', $data);
+    }
+
+    public function saveVerifUploadBerkasTpp(){
+        echo json_encode($this->rekap->saveVerifUploadBerkasTpp());
+    }
+
+    public function saveUploadBerkasTppBalasan($id){
+        echo json_encode($this->rekap->saveUploadBerkasTppBalasan($id));
+    }
+
+    public function deleteBerkasTppBalasan($id){
+        echo json_encode($this->rekap->deleteBerkasTppBalasan($id));
+    }
+
     public function uploadBerkasTpp(){
         $data['list_skpd'] = $this->user->getAllSkpd();
         $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();

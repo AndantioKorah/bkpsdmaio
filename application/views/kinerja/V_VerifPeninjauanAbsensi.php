@@ -2,10 +2,11 @@
 
 
 
-    <div class="card-header">
+    <div class="card-header" style="margin-bottom:-40px">
         <h4>Verifikasi Peninjauan Absensi</h4>
     </div>
-    <div class="card-body">
+    <div class="card-body" >
+    <?php if($this->general_library->isProgrammer()) { ?>
     Verifikasi Kolektif
         <form id="form_verifikasi_kolektif">
         <div class="row">
@@ -13,17 +14,12 @@
                     <label>Pilih Tanggal</label>  
                 <input class="form-control customInput datepicker3" type="text" id="tanggal_kolektif" name="tanggal_kolektif" readonly  required/>
                 </div>
-
-
-
-               
-                
                 <div class="col-lg col-md-12" style="margin-top: 20px;">
                     <button class="btn btn-block btn-navy" id="btn_verif_kolektif"> Verifikasi</button>
                 </div>
             </div>
-            
         </form>
+        <?php } ?>
         <form id="form_search_verif_dokumen" class="mt-4">
             <div class="row">
                 <div class="col-lg col-md-12">

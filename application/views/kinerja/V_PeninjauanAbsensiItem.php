@@ -150,7 +150,7 @@
   
   <div class="mb-3">
     <label class="form-label">Dokumen Bukti Baru</label>
-    <input autocomplete="off" type="file" class="form-control" id="p_image_file" name="file"  required>
+    <input autocomplete="off" type="file" class="form-control my-image-field" id="p_image_file" name="file"  required>
   </div>
 
   <button id="btn_pengajuan_kembali" class="btn btn-primary float-right">Simpan</button>
@@ -444,5 +444,8 @@ var span = document.getElementsByClassName("close")[0];
        });  
          
        });
-        
+    
+
+      
+
     </script>

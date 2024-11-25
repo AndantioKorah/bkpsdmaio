@@ -1,4 +1,7 @@
 <div class="card card-default">
+
+
+
     <div class="card-header">
         <h4>Verifikasi Peninjauan Absensi</h4>
     </div>
@@ -10,7 +13,8 @@
                     <label>Pilih Tanggal</label>  
                 <input class="form-control customInput datepicker3" type="text" id="tanggal_kolektif" name="tanggal_kolektif" readonly  required/>
                 </div>
-                
+
+
 
                
                 
@@ -95,6 +99,8 @@
             // orientation: 'bottom',
             autoclose: true
         });
+
+        // $("#sidebar_toggle" ).trigger( "click" );
     })
 
     $('#form_verifikasi_kolektif').submit(function(e){

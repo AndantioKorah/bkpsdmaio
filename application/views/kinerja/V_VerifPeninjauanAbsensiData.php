@@ -1,17 +1,13 @@
 <?php if($result){ ?>
-    <style>
-    .zoom:hover {
-    transform: scale(1.2);
-    cursor: pointer; /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-}
-</style>
+
+
 
     <div class="table-responsive">
     <table border=1 class="table table-hover" id="table_list_peninjauan">
         <thead>
             <th class="text-center">No</th>
             <th class="text-left">Nama Pegawai</th>
-            <th class="text-left">Foto Pegawai</th>
+            <!-- <th class="text-left">Foto Pegawai</th> -->
             <th class="text-left">Unit Kerja</th>
             <th class="text-center">Tanggal Absensi</th>
             <th class="text-center">Jenis Absensi</th>
@@ -22,14 +18,15 @@
             <th></th>
         </thead>
         <tbody>
-            <?php $no = 1; foreach($result as $r){ ?>
+            <?php $no = 1; foreach($result as $r){
+               $nama_peg = getNamaPegawaiFull($r); ?>
                 <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] >= 2) echo 'background-color:#f0a095'; }?>">
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
                     <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
-                   <td class="text-left">
+                   <!-- <td class="text-left">
                     <img onclick="loadFotoPeg('<?=$r['fotopeg']?>')" data-toggle="modal" data-target="#exampleModal" style="height:80px;width:50px" src="<?=base_url('assets/fotopeg/')?><?=$r['fotopeg'];?>" alt="">
-                   </td>
+                   </td> -->
                     <td class="text-left"><?=($r['nm_unitkerja'])?> </td>
                     <?php
                         // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
@@ -69,8 +66,8 @@
                                         echo "<a class='dropdown-item' >Tidak Ada File</a>";
                                     } else {
                                       if($ekstension == "png" || $ekstension == "jpg" || $ekstension == "jpeg"){
-                                        echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
-                                        // echo "<a class='dropdown-item'  href='javascript:;' data-id='".$r['id']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#edit-data'>Dokumen ".$nodok."</a>";
+                                        // echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
+                                        echo "<a class='dropdown-item'   href='javascript:;' data-id='".$r['id']."' data-nama='".$nama_peg."' data-fotopeg='".$r['fotopeg']."' data-bulan='".$bulan."' data-tahun='".$tahun."'  data-gambar='".$file_name."' data-toggle='modal' data-target='#exampleModalb'>Dokumen ".$nodok."</a>";
 
                                       } else {
                                         echo "<a class='dropdown-item' href=".base_url('assets/peninjauan_absen/'.$tahun.'/'.$bulan.'/'.$file_name.'')." target='_blank'>Dokumen ".$nodok."</a>";
@@ -158,6 +155,156 @@
         </div>
     </div>
   </div>
+
+  <!-- Modal -->
+   <style>
+    .modal-ku {
+  width: 1200px;
+  /* margin: auto; */
+}
+   </style>
+<div  class="modal fade " id="exampleModalb" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div style="width:100%;" class="modal-dialog modal-xl" role="document">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel"> <span class="badge badge-pns" id="nma_peg"></span> </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    
+      <div class="row">
+      <div class="col-lg-4">
+        <b >Foto Pegawai</b>
+        <img  id="foto_pegawai" class="mt-3" style="width:375px;height:510px;"  alt="">
+      </div>
+      <div class="col-lg-8">
+      <style>
+    .popup figure {
+  width: 100%;
+  height: 510px;
+  overflow: hidden;
+}
+
+.popup img {
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  overflow: scroll;
+}
+
+.btnZoom {
+  /* z-index: 99999; */
+  cursor: pointer;
+  font-size: 14px;
+  /* font-weight: 200; */
+  background: #222e3c;
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+  color:#fff;
+  margin-top:-13px;
+  margin-bottom:-10px;
+
+}
+</style>
+      <b class="mb-2">Bukti Peninjauan </b>
+      <button class="btn btn-sm btnZoom plus" title="ZoomIn"> <i class="fas fa-search-plus"></i></button>
+      <button class="btn btn-sm btnZoom minus" title="ZoomOut"><i class="fas fa-search-minus"></i></button>
+      <button class="btn btn-sm btnZoom reset" title="Reset"><i class="fa fa-sync"></i></button> 
+
+
+<div class="popup mt-3">
+    
+    <figure>
+      <img id="bukti_absen" class="workspace"        alt="">
+    </figure>
+  </div>
+      </div>
+     
+
+
+
+  <script>
+    $(function () {
+  $(".plus").on("click", function () {
+    const ximg = $(this).parent().find("figure img").width();
+    let img_widht = $(this).parent().find("figure img").width();
+    let new_widht = img_widht + 50;
+    $(this).parent().find("figure img").width(new_widht);
+    $(this).parent().find("figure img").height("auto");
+  });
+  $(".minus").on("click", function () {
+    let img_widht = $(this).parent().find("figure img").width();
+    let new_widht = img_widht - 50;
+    if (new_widht < 200) {
+      new_widht = 200;
+    }
+    $(this).parent().find("figure img").width(new_widht);
+    $(this).parent().find("figure img").height("auto");
+  });
+
+  $(".reset").on("click", function () {
+
+    var myImg = document.querySelector("#bukti_absen");
+    var realWidth = myImg.naturalWidth;
+
+    // $(this).parent().find("figure img").width(ximg);
+    // $(this).parent().find("figure img").height("auto");
+
+    $(this).parent().find("figure img").css({
+      width: "auto",
+      height: "100%",
+      top: "0",
+      left: "0"
+    });
+  });
+
+  // let ovrflow_width
+  $("figure img").each(function () {
+    $(this).draggable({
+      scroll: true,
+      stop: function () {},
+      drag: function (e, ui) {
+        let popup_img_width = $(this).width();
+        let popup_width = $(this).parent("figure").width();
+        // let new_img_width = popup_width - popup_img_width;
+        let new_img_width = "100%";
+
+        let popup_img_height = $(this).height();
+        let popup_height = $(this).parent("figure").height();
+        // let new_img_height = popup_height - popup_img_height;
+        let new_img_height = "100%";
+
+        if (ui.position.left > 0) {
+          ui.position.left = 0;
+        }
+        if (ui.position.left < new_img_width) {
+          ui.position.left = new_img_width;
+        }
+
+        if (ui.position.top > 0) {
+          ui.position.top = 0;
+        }
+        if (ui.position.top < new_img_height) {
+          ui.position.top = new_img_height;
+        }
+      }
+    });
+  });
+});
+
+
+  </script>
+
+      
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <?php } else { ?>
@@ -253,4 +400,27 @@
             imgsrc = "<?=base_url('assets/fotopeg/')?>"+src;
             $('#pegawai_image').attr('src',imgsrc);
         }
+
+        $('#exampleModalb').on('show.bs.modal', function (event) {
+            var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
+            var modal          = $(this)
+
+          
+
+            modal.find("figure img").css({
+                  width: "auto",
+                  height: "510px",
+                  top: "0",
+                  left: "0"
+                });
+
+            modal.find('#nma_peg').html(div.data('nama'));
+            modal.find('#id').attr("value",div.data('id'));
+            modal.find('#foto_pegawai').attr("src","<?=base_url('assets/fotopeg/')?>"+div.data('fotopeg'));
+            modal.find('#bukti_absen').attr("src","<?=base_url('assets/peninjauan_absen/')?>"+div.data('tahun')+'/'+div.data('bulan')+'/'+div.data('gambar'));
+           
+            
+            src="<?=base_url('assets/peninjauan_absen/2024/11/199401042020121011_Screenshot_(1).png')?>"
+        });
 </script>
+

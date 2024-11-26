@@ -146,9 +146,18 @@
     $('#form_layanan').html('')
     $('#form_layanan').append(divLoaderNavy)
 
-    $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadFormLayanan/")?>'+val, function(){
+    if(val == 0){
+      var id = 8
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+id, function(){
       $('#loader').hide()
     })
+    } else {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadFormLayanan/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }
+
+ 
   }
 
   // function loadListUsulLayanan(val){

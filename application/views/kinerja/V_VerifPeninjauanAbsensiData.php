@@ -6,7 +6,7 @@
     <table border=1 class="table table-hover" id="table_list_peninjauan">
         <thead>
             <th class="text-center">No</th>
-            <th class="text-left">Nama Pegawai</th>
+            <th class="text-left">Pegawai</th>
             <!-- <th class="text-left">Foto Pegawai</th> -->
             <th class="text-left">Unit Kerja</th>
             <th class="text-center">Tanggal Absensi</th>
@@ -45,9 +45,32 @@
                         <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['teman_nip'];?>" style="color:#495057"><?=$r['teman_gelar1']?><?=$r['teman_nama']?><?=$r['teman_gelar2']?></a></td>
 
                     <td class="text-center">  
-                        <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                         <i class="fa fa-file"></i> Dokumen
-                            </button>
+                    <?php 
+                            $file = json_decode($r['bukti_kegiatan']);
+                            $nodok = 1;
+                            $tanggal = new DateTime($r['tanggal_absensi']);
+                            $tahun = $tanggal->format("Y");
+                            $bulan = $tanggal->format("m");
+                            $file_name =$file[0];
+                            ?>
+                        <button 
+                        data-id="<?=$r['id'];?>" 
+                        data-jenis_bukti="<?=$r['jenis_bukti'];?>" 
+                        data-jenis_absen="<?=$r['jenis_absensi'];?>" 
+                        data-nama="<?=$nama_peg;?>" 
+                        data-tgl_absen="<?=formatDateNamaBulan($r['tanggal_absensi']);?>" 
+                        data-nip="<?=$r['nipbaru'];?>" 
+                        data-fotopeg="<?=$r['fotopeg'];?>" 
+                        data-bulan="<?=$bulan;?>" 
+                        data-tahun="<?=$tahun;?>"  
+                        data-gambar="<?=$file_name;?>" 
+                        data-toggle="modal" 
+                        data-target="#exampleModalb"
+                        class="btn btn-info btn-sm " type="button" id="dropdownMenuButton"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-file"></i> Dokumen</button>
+
+                             <!-- <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-file"></i> Dokumen
+                            </button> -->
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <?php 
                             

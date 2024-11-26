@@ -2136,15 +2136,45 @@
                         ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
 
-        if($temp['random_string']){
-            $this->db->where('random_string', $temp['random_string'])
-                ->update('t_dokumen_pendukung', $data_verif);
-        } else {
-            $this->db->where_in('id', $this->input->post('list_id'))
-                ->update('t_dokumen_pendukung', $data_verif);
+        $id_unitkerja = $temp['skpd'];
+        $uksearch = $this->db->select('*')
+                        ->from('db_pegawai.unitkerja')
+                        ->where('id_unitkerja', $temp['skpd'])
+                        ->get()->row_array();
+                        
+        if(in_array($uksearch['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){ // jika kelurahan atau kecamatan
+            $uker = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster', $temp['id_unitkerjamaster'])
+                            ->where('nm_unitkerja LIKE ', '"Kecamatan%"')
+                            ->get()->row_array();
+            $id_unitkerja = $uker['id_unitkerja'];
+        } else if($uksearch['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan
+            $id_unitkerja = 'sekolah_'.$uksearch['id_unitkerjamaster_kecamatan'];
         }
 
-        $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
+        $lockTpp = $this->db->select('*')
+                            ->from('t_lock_tpp')
+                            ->where('flag_active', 1)
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->where('bulan', $temp['bulan'])
+                            ->where('tahun', $temp['tahun'])
+                            ->get()->row_array();
+
+        if($lockTpp){
+            $rs['code'] = 1;        
+            $rs['message'] = 'Berkas TPP '.$lockTpp['nama_param_unitkerja'].' periode '.getNamaBulan($lockTpp['bulan']).' '.$lockTpp['tahun'].' telah direkap. Verifikasi tidak dapat dilanjutkan.';
+        } else {
+            if($temp['random_string']){
+                $this->db->where('random_string', $temp['random_string'])
+                    ->update('t_dokumen_pendukung', $data_verif);
+            } else {
+                $this->db->where_in('id', $this->input->post('list_id'))
+                    ->update('t_dokumen_pendukung', $data_verif);
+            }
+    
+            $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
+        }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

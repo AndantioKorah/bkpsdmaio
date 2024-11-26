@@ -3518,11 +3518,15 @@
     }
 
     public function loadFormatTppBkadData(){
+        $data = $this->input->post();
+
         return $this->db->select('a.id, a.bulan, a.tahun, b.nm_unitkerja, a.nama_param_unitkerja')
                     ->from('t_lock_tpp a')
                     ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
                     ->where('a.flag_active', 1)
                     ->where('a.meta_data IS NOT NULL')
+                    ->where('bulan', $data['bulan'])
+                    ->where('tahun', $data['tahun'])
                     ->order_by('a.created_date', 'desc')
                     ->get()->result_array();
     }
@@ -3890,11 +3894,19 @@
                         ->from('t_upload_berkas_tpp')
                         ->where('id_t_lock_tpp', $lockTpp['id'])
                         ->where('flag_active', 1)
-                        ->where('flag_verif != ', 2)
+                        // ->where('flag_verif != ', 2)
                         ->get()->row_array();
             if($exists){
-                $rs['code'] = 1;
-                $rs['message'] = 'Berkas sudah diajukan sebelumnya. Silahkan melihat kembali riwayat di bagian bawah.';
+                if($exists['flag_verif'] == 2){ // jika ditolak, hapus data yang ditolak
+                    $this->db->where('id', $exists['id'])
+                            ->update('t_upload_berkas_tpp',[
+                                'flag_active' => 0,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Berkas sudah diajukan sebelumnya. Silahkan melihat kembali riwayat di bagian bawah.';
+                }
             }
         }
 
@@ -4016,6 +4028,8 @@
                 ->join('m_user e', 'a.created_by = e.id')
                 ->where('a.flag_active', 1)
                 ->where('a.flag_verif', $status)
+                ->where('b.bulan', $data['bulan'])
+                ->where('b.tahun', $data['tahun'])
                 ->group_by('a.id')
                 ->order_by('created_date', 'desc');
 
@@ -4063,43 +4077,48 @@
                         ->join('m_user d', 'a.id_m_user_verif = d.id', 'left')
                         ->join('m_user e', 'a.created_by = e.id')
                         ->join('db_pegawai.pegawai f', 'e.username = f.nipbaru_ws')
-                        ->where('a.flag_active', 1)
+                        // ->where('a.flag_active', 1)
                         ->where('a.id', $param['id'])
                         ->get()->row_array();
     
         if($data){
-            $exists = $this->db->select('*')
+            if($data['flag_active'] == 0){
+                $rs['code'] = 1;
+                $rs['message'] = "Verifikasi tidak dapat dilanjutkan, data telah dihapus";
+            } else {
+                $exists = $this->db->select('*')
                                     ->from('t_upload_berkas_tpp')
                                     ->where('id_t_lock_tpp', $data['id_t_lock_tpp'])
                                     ->where('id !=', $data['id'])
                                     ->where('flag_active', 1)
                                     ->get()->row_array();
-            if($exists) {
-                $rs['code'] = 1;
-                $rs['message'] = "Ada berkas baru yang sudah diupload. Verifikasi tidak dapat dilanjutkan.";
-            } else {
-                if($data['flag_verif'] != $param['flag_verif']){
-                    $keterangan = $param['keterangan'];
-                    if($param['flag_verif'] == 0){
-                        $keterangan = 'Menunggu Verifikasi';
-
-                        if($data['flag_verif'] != 0){
-                            $keterangan = 'Verifikasi Dibatalkan, '.$param['keterangan'];
-                        }
-                    }
-
-                    $this->db->where('id', $param['id'])
-                            ->update('t_upload_berkas_tpp', [
-                                'keterangan' => $keterangan,
-                                'tanggal_verif' => date('Y-m-d H:i:s'),
-                                'id_m_user_verif' => $this->general_library->getId(),
-                                'flag_verif' => $param['flag_verif'],
-                                'tanggal_balasan' => null,
-                                'url_file_balasan' => null
-                            ]);
-                } else {
+                if($exists) {
                     $rs['code'] = 1;
-                    $rs['message'] = "Tidak ada perubahan status";
+                    $rs['message'] = "Ada berkas baru yang sudah diupload. Verifikasi tidak dapat dilanjutkan.";
+                } else {
+                    if($data['flag_verif'] != $param['flag_verif']){
+                        $keterangan = $param['keterangan'];
+                        if($param['flag_verif'] == 0){
+                            $keterangan = 'Menunggu Verifikasi';
+
+                            if($data['flag_verif'] != 0){
+                                $keterangan = 'Verifikasi Dibatalkan, '.$param['keterangan'];
+                            }
+                        }
+
+                        $this->db->where('id', $param['id'])
+                                ->update('t_upload_berkas_tpp', [
+                                    'keterangan' => $keterangan,
+                                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                                    'id_m_user_verif' => $this->general_library->getId(),
+                                    'flag_verif' => $param['flag_verif'],
+                                    'tanggal_balasan' => null,
+                                    'url_file_balasan' => null
+                                ]);
+                    } else {
+                        $rs['code'] = 1;
+                        $rs['message'] = "Tidak ada perubahan status";
+                    }
                 }
             }
         } else {

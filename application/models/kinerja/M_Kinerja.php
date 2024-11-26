@@ -2128,7 +2128,7 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string')
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone')
                         ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2168,11 +2168,57 @@
             if($temp['random_string']){
                 $this->db->where('random_string', $temp['random_string'])
                     ->update('t_dokumen_pendukung', $data_verif);
+
+                $list_dokumen = $this->db->select('c.skpd, a.tanggal, a.bulan, a.tahun, a.random_string, c.handphone, d.nama_jenis_disiplin_kerja, c.gelar1, c.nama, c.gelar2')
+                                    ->from('t_dokumen_pendukung a')
+                                    ->join('m_user b', 'a.id_m_user = b.id')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                    ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                                    ->where('a.random_string', $temp['random_string'])
+                                    ->order_by('a.id', 'asc')
+                                    ->get()->result_array();
+
+                if($list_dokumen){
+                    $bulan_awal = $list_dokumen[0]['bulan'] < 10 ? '0'.$list_dokumen[0]['bulan'] : $list_dokumen[0]['bulan'];
+                    $tanggal_awal = $list_dokumen[0]['tanggal'] < 10 ? '0'.$list_dokumen[0]['tanggal'] : $list_dokumen[0]['tanggal'];
+                    $tanggal_awal = $list_dokumen[0]['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal;
+
+                    $bulan_akhir = $list_dokumen[count($list_dokumen)-1]['bulan'] < 10 ? '0'.$list_dokumen[count($list_dokumen)-1]['bulan'] : $list_dokumen[count($list_dokumen)-1]['bulan'];
+                    $tanggal_akhir = $list_dokumen[count($list_dokumen)-1]['tanggal'] < 10 ? '0'.$list_dokumen[count($list_dokumen)-1]['tanggal'] : $list_dokumen[count($list_dokumen)-1]['tanggal'];
+                    $tanggal_akhir = $list_dokumen[count($list_dokumen)-1]['tahun'].'-'.$bulan_akhir.'-'.$tanggal_akhir;
+
+                    $tanggal = formatDateNamaBulan($tanggal_awal);
+                    if($tanggal_awal != $tanggal_akhir){
+                        $tanggal .= " sampai ".formatDateNamaBulan($tanggal_akhir);
+                    }
+
+                    $hasil_verif = "DITERIMA";
+                    $kata_verifikasi = "";
+
+                    if($status == 3){
+                        $hasil_verif = "DITOLAK (".$this->input->post('keterangan').")";
+                    } else if($status == 4){
+                        $hasil_verif = "DIBATALKAN";
+                        $kata_verifikasi = " verifikasi ";
+                    }
+
+                    $message = "*[DOKUMEN PENDUKUNG ABSENSI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($list_dokumen[0]).$kata_verifikasi." dokumen *".$list_dokumen[0]['nama_jenis_disiplin_kerja']."* Anda pada tanggal ".$tanggal." telah *".$hasil_verif."*";
+
+                    $this->db->insert('t_cron_wa', [
+                        'type' => 'text',
+                        'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
+                        'message' => $message.FOOTER_MESSAGE_CUTI,
+                        'jenis_layanan' => 'Dokumen Pendukung Absensi'   
+                    ]);
+                }
+
             } else {
                 $this->db->where_in('id', $this->input->post('list_id'))
                     ->update('t_dokumen_pendukung', $data_verif);
             }
-    
+            
+
+
             $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
         }
 

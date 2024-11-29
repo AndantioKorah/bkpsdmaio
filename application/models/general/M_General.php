@@ -71,7 +71,7 @@
         {
             $exclude_username = ['prog', 'walikota'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon, f.nama_jabatan as nama_jabatan_tambahan')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon, f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -80,23 +80,28 @@
                         ->join('db_pegawai.jabatan f', 'b.id_jabatan_tambahan = f.id_jabatanpeg', 'left')
                         ->where('a.username', $username)
                         ->where('a.password', $password)
-                        ->where('id_m_status_pegawai', 1)
+                        // ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1);
             $result = $this->db->get()->result_array();
             if(!$result){
                 $this->session->set_flashdata('message', 'Kombinasi Username dan Password tidak ditemukan');
                 return null;
             } else {
-                if($result[0]['username'] == 'prog'){
-                    return $result;
-                } else {
-                    if($this->validateApps() == 1){
-                        $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
-                                ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+                if($result[0]['id_m_status_pegawai'] == '1'){
+                    if($result[0]['username'] == 'prog'){
                         return $result;
                     } else {
-                        return null;
+                        if($this->validateApps() == 1){
+                            $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
+                                    ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+                            return $result;
+                        } else {
+                            return null;
+                        }
                     }
+                } else {
+                    $this->session->set_flashdata('message', 'Akun Anda telah dinonaktifkan oleh BKPSDM');
+                    return null;
                 }
             }
         }

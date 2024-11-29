@@ -2178,7 +2178,7 @@
                                     ->order_by('a.id', 'asc')
                                     ->get()->result_array();
 
-                if($list_dokumen){
+                if($list_dokumen && $list_dokumen['handphone'] != null){
                     $bulan_awal = $list_dokumen[0]['bulan'] < 10 ? '0'.$list_dokumen[0]['bulan'] : $list_dokumen[0]['bulan'];
                     $tanggal_awal = $list_dokumen[0]['tanggal'] < 10 ? '0'.$list_dokumen[0]['tanggal'] : $list_dokumen[0]['tanggal'];
                     $tanggal_awal = $list_dokumen[0]['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal;
@@ -2192,7 +2192,7 @@
                         $tanggal .= " sampai ".formatDateNamaBulan($tanggal_akhir);
                     }
 
-                    $hasil_verif = "DITERIMA";
+                    $hasil_verif = "DISETUJUI";
                     $kata_verifikasi = "";
 
                     if($status == 3){

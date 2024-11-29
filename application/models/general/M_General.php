@@ -852,10 +852,13 @@
                             // ->where('flag_sending', 0)
                             ->where('flag_sent', 0)
                             ->where('flag_active', 1)
+                            ->where('temp_count <=', 2)
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
-                            ->order_by('created_date', 'desc')
+                            ->order_by('created_date', 'asc')
                             ->limit(5)
                             ->get()->result_array();
+            // dd($list);
+
             if($list){
                 foreach($list as $l){
                     if($l['type'] == 'text'){
@@ -868,6 +871,7 @@
                         $req = $this->maxchatlibrary->sendDocument($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
                     }
                     $req = json_decode($req, true);
+                    $temp_count = $l['temp_count'] == null ? 0 : $l['temp_count']+1;
                     if(!isset($req['error'])){
                         if($l['sendTo'] == GROUP_CHAT_HELPDESK || $l['sendTo'] == GROUP_CHAT_PRAKOM){
                             $this->db->where('id', $l['id'])
@@ -882,15 +886,25 @@
                                         'status' => 'sent'
                                     ]);
                         } else {
+                            $make_sent = 0;
+                            if($temp_count >=3 && $req['status'] == 'pending'){
+                                $make_sent = 1;
+                            }
+
+                            $updateCronWa['chatId'] = $req['id'];
+                            $updateCronWa['flag_sending'] = 1;
+                            $updateCronWa['date_sending'] = date('Y-m-d H:i:s');
+                            $updateCronWa['log'] = json_encode($req);
+                            $updateCronWa['status'] = $req['status'];
+                            $updateCronWa['temp_count'] = $temp_count;
+                            if($make_sent == 1){
+                                $updateCronWa['flag_sent'] = 1;
+                                $updateCronWa['date_sent'] = date('Y-m-d H:i:s');
+                                $updateCronWa['status'] = 'pending, consider its done';
+                            }
+
                             $this->db->where('id', $l['id'])
-                                    ->update('t_cron_wa', 
-                                    [
-                                        'chatId' => $req['id'],
-                                        'flag_sending' => 1,
-                                        'date_sending' => date('Y-m-d H:i:s'),
-                                        'log' => json_encode($req),
-                                        'status' => $req['status']
-                                    ]);
+                                    ->update('t_cron_wa', $updateCronWa);
                             
                             // if($req['id']){
                                 // set chat id di column_state agar reply harus sesuai dengan pesan yang dikirim
@@ -916,7 +930,8 @@
                                     'flag_sending' => 1,
                                     'date_sending' => date('Y-m-d H:i:s'),
                                     'log' => json_encode($req),
-                                    'status' => $req['message']
+                                    'status' => $req['message'],
+                                    // 'temp_count' => $temp_count
                                 ]);
                     }
                 }
@@ -930,10 +945,15 @@
                             ->get()->row_array();
             if($data){
                 $update = [];
-                if($resp->status == 'delivered' || $resp->status == 'read'){
+                if($resp->status == 'delivered' || $resp->status == 'read' || $resp->status == 'pending'){
                     $update['flag_sent'] = 1;
                     $update['date_sent'] = date('Y-m-d H:i:s');
                 }
+                
+                // else if($resp->status == 'pending' && $data['temp_count'] >= 3){
+                //     $update['flag_sent'] = 1;
+                //     $update['date_sent'] = date('Y-m-d H:i:s');
+                // }
 
                 $update['status'] = $resp->status;
                 $update['log'] = json_encode($resp);

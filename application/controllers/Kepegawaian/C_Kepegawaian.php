@@ -2059,8 +2059,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['nama_layanan'] = "TEWAS	";
 		}
 		// $data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
-		// $this->load->view('kepegawaian/layanan/V_LayananPensiun', $data);
-		render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);
+		$this->load->view('kepegawaian/layanan/V_LayananPensiun', $data);
+		// render('kepegawaian/layanan/V_LayananPensiun', '', '', $data);
 	}
 
 	public function getFileLayanan()

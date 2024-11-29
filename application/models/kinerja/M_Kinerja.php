@@ -2303,9 +2303,32 @@
                             ->update('db_sip.absen', $dataUpdate);
                         }
                     } else {
-                    $this->db->insert('db_sip.absen', [
+                    // $this->db->insert('db_sip.absen', [
+                    //                     'user_id' => $this->input->post('id_user'),
+                    //                     'masuk' => $absen['masuk'],
+                    //                     'pulang' => $absen['pulang'],
+                    //                     'lat' => $absen['lat'],
+                    //                     'lang' => $absen['lang'],
+                    //                     'tgl' => $absen['tgl'],
+                    //                     'status' => $absen['status'],
+                    //                     'aktivitas' => $absen['aktivitas']
+                    //                 ]);
+
+                    if($this->input->post('jenis_absensi') == 1){
+                       $this->db->insert('db_sip.absen', [
                                         'user_id' => $this->input->post('id_user'),
                                         'masuk' => $absen['masuk'],
+                                        // 'pulang' => $absen['pulang'],
+                                        'lat' => $absen['lat'],
+                                        'lang' => $absen['lang'],
+                                        'tgl' => $absen['tgl'],
+                                        'status' => $absen['status'],
+                                        'aktivitas' => $absen['aktivitas']
+                                    ]);
+                    } else {
+                       $this->db->insert('db_sip.absen', [
+                                        'user_id' => $this->input->post('id_user'),
+                                        // 'masuk' => $absen['masuk'],
                                         'pulang' => $absen['pulang'],
                                         'lat' => $absen['lat'],
                                         'lang' => $absen['lang'],
@@ -2313,6 +2336,8 @@
                                         'status' => $absen['status'],
                                         'aktivitas' => $absen['aktivitas']
                                     ]);
+                    }
+
                     }
                     $this->db->where_in('id', $id)
                     ->update('t_peninjauan_absensi', $data_verif);

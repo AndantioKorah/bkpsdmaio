@@ -2178,7 +2178,7 @@
                                     ->order_by('a.id', 'asc')
                                     ->get()->result_array();
 
-                if($list_dokumen && $list_dokumen['handphone'] != null){
+                if($list_dokumen && $list_dokumen[0]['handphone'] != null){
                     $bulan_awal = $list_dokumen[0]['bulan'] < 10 ? '0'.$list_dokumen[0]['bulan'] : $list_dokumen[0]['bulan'];
                     $tanggal_awal = $list_dokumen[0]['tanggal'] < 10 ? '0'.$list_dokumen[0]['tanggal'] : $list_dokumen[0]['tanggal'];
                     $tanggal_awal = $list_dokumen[0]['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal;
@@ -2208,7 +2208,8 @@
                         'type' => 'text',
                         'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
                         'message' => $message.FOOTER_MESSAGE_CUTI,
-                        'jenis_layanan' => 'Dokumen Pendukung Absensi'   
+                        'jenis_layanan' => 'Dokumen Pendukung Absensi',
+                        'created_by' => $this->general_library->getId()
                     ]);
                 }
 

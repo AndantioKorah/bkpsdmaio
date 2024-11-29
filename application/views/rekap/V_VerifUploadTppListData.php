@@ -65,7 +65,8 @@
                             <?php
                                 // jika belum verif, munculkan tombol verif
                                 if($rs['flag_verif'] == 0 
-                                || ($rs['flag_verif'] != 0 && $rs['id_m_user_verifikator'] == $this->general_library->getId())){ // jika belum verif atau verifikator adalah yang login
+                                || ($this->general_library->isProgrammer() || ($rs['flag_verif'] != 0 
+                                && $rs['id_m_user_verifikator'] == $this->general_library->getId()))){ // jika belum verif atau verifikator adalah yang login
                             ?>
                                     <button class="btn btn-sm btn-info" data-toggle="modal" href="#modal_verif_upload_berkas_tpp" onclick="openVerifDialog('<?=$rs['id']?>')">
                                         <i class="fa fa-edit"></i> Verif
@@ -74,7 +75,8 @@
                                     <!-- <button style="display: none;" id="btn_delete_loading" disabled class="btn btn-sm btn-danger"><i class="fa fa-spin fa-spinner"></i> Menghapus...</button> -->
                             <?php
                                 }
-                                if($rs['flag_verif'] == 1 && $rs['id_m_user_verifikator'] == $this->general_library->getId()){ // jika diterima dan verifikator adalah yang login
+                                if($rs['flag_verif'] == 1 
+                                && ($this->general_library->isProgrammer() || $rs['id_m_user_verifikator'] == $this->general_library->getId())){ // jika diterima dan verifikator adalah yang login
                             ?>
                                     <button class="btn btn-sm btn-warning" data-toggle="modal" href="#modal_upload_balasan" onclick="uploadFileBalasan('<?=$rs['id']?>')">
                                         <i class="fa fa-upload"></i> Upload File Balasan

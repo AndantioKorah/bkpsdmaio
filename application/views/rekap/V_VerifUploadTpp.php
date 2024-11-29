@@ -111,6 +111,18 @@
         $('#form_search_verif_upload').submit()
     })
 
+    $('#skpd').on('change', function(){
+        $('#form_search_verif_upload').submit()
+    })
+
+    $('#bulan').on('change', function(){
+        $('#form_search_verif_upload').submit()
+    })
+
+    $('#tahun').on('change', function(){
+        $('#form_search_verif_upload').submit()
+    })
+
     $('#form_search_verif_upload').on('submit', function(e){
         e.preventDefault()
         $('#div_riwayat_upload').html('')

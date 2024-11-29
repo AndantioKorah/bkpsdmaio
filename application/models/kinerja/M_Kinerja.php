@@ -2128,7 +2128,7 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string')
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone')
                         ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2136,15 +2136,92 @@
                         ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
 
-        if($temp['random_string']){
-            $this->db->where('random_string', $temp['random_string'])
-                ->update('t_dokumen_pendukung', $data_verif);
-        } else {
-            $this->db->where_in('id', $this->input->post('list_id'))
-                ->update('t_dokumen_pendukung', $data_verif);
+        $id_unitkerja = $temp['skpd'];
+        $uksearch = $this->db->select('*')
+                        ->from('db_pegawai.unitkerja')
+                        ->where('id_unitkerja', $temp['skpd'])
+                        ->get()->row_array();
+                        
+        if(in_array($uksearch['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_KECAMATAN)){ // jika kelurahan atau kecamatan
+            $uker = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerjamaster', $temp['id_unitkerjamaster'])
+                            ->where('nm_unitkerja LIKE ', '"Kecamatan%"')
+                            ->get()->row_array();
+            $id_unitkerja = $uker['id_unitkerja'];
+        } else if($uksearch['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan
+            $id_unitkerja = 'sekolah_'.$uksearch['id_unitkerjamaster_kecamatan'];
         }
 
-        $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
+        $lockTpp = $this->db->select('*')
+                            ->from('t_lock_tpp')
+                            ->where('flag_active', 1)
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->where('bulan', $temp['bulan'])
+                            ->where('tahun', $temp['tahun'])
+                            ->get()->row_array();
+
+        if($lockTpp){
+            $rs['code'] = 1;        
+            $rs['message'] = 'Berkas TPP '.$lockTpp['nama_param_unitkerja'].' periode '.getNamaBulan($lockTpp['bulan']).' '.$lockTpp['tahun'].' telah direkap. Verifikasi tidak dapat dilanjutkan.';
+        } else {
+            if($temp['random_string']){
+                $this->db->where('random_string', $temp['random_string'])
+                    ->update('t_dokumen_pendukung', $data_verif);
+
+                $list_dokumen = $this->db->select('c.skpd, a.tanggal, a.bulan, a.tahun, a.random_string, c.handphone, d.nama_jenis_disiplin_kerja, c.gelar1, c.nama, c.gelar2')
+                                    ->from('t_dokumen_pendukung a')
+                                    ->join('m_user b', 'a.id_m_user = b.id')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                    ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                                    ->where('a.random_string', $temp['random_string'])
+                                    ->order_by('a.id', 'asc')
+                                    ->get()->result_array();
+
+                if($list_dokumen && $list_dokumen[0]['handphone'] != null){
+                    $bulan_awal = $list_dokumen[0]['bulan'] < 10 ? '0'.$list_dokumen[0]['bulan'] : $list_dokumen[0]['bulan'];
+                    $tanggal_awal = $list_dokumen[0]['tanggal'] < 10 ? '0'.$list_dokumen[0]['tanggal'] : $list_dokumen[0]['tanggal'];
+                    $tanggal_awal = $list_dokumen[0]['tahun'].'-'.$bulan_awal.'-'.$tanggal_awal;
+
+                    $bulan_akhir = $list_dokumen[count($list_dokumen)-1]['bulan'] < 10 ? '0'.$list_dokumen[count($list_dokumen)-1]['bulan'] : $list_dokumen[count($list_dokumen)-1]['bulan'];
+                    $tanggal_akhir = $list_dokumen[count($list_dokumen)-1]['tanggal'] < 10 ? '0'.$list_dokumen[count($list_dokumen)-1]['tanggal'] : $list_dokumen[count($list_dokumen)-1]['tanggal'];
+                    $tanggal_akhir = $list_dokumen[count($list_dokumen)-1]['tahun'].'-'.$bulan_akhir.'-'.$tanggal_akhir;
+
+                    $tanggal = formatDateNamaBulan($tanggal_awal);
+                    if($tanggal_awal != $tanggal_akhir){
+                        $tanggal .= " sampai ".formatDateNamaBulan($tanggal_akhir);
+                    }
+
+                    $hasil_verif = "DISETUJUI";
+                    $kata_verifikasi = "";
+
+                    if($status == 3){
+                        $hasil_verif = "DITOLAK (".$this->input->post('keterangan').")";
+                    } else if($status == 4){
+                        $hasil_verif = "DIBATALKAN";
+                        $kata_verifikasi = " verifikasi ";
+                    }
+
+                    $message = "*[DOKUMEN PENDUKUNG ABSENSI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($list_dokumen[0]).$kata_verifikasi." dokumen *".$list_dokumen[0]['nama_jenis_disiplin_kerja']."* Anda pada tanggal ".$tanggal." telah *".$hasil_verif."*";
+
+                    $this->db->insert('t_cron_wa', [
+                        'type' => 'text',
+                        'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
+                        'message' => $message.FOOTER_MESSAGE_CUTI,
+                        'jenis_layanan' => 'Dokumen Pendukung Absensi',
+                        'created_by' => $this->general_library->getId()
+                    ]);
+                }
+
+            } else {
+                $this->db->where_in('id', $this->input->post('list_id'))
+                    ->update('t_dokumen_pendukung', $data_verif);
+            }
+            
+
+
+            $rs['data'] = $this->countTotalDataPendukung($temp['skpd'], $temp['bulan'], $temp['tahun'], 1);
+        }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -2227,9 +2304,32 @@
                             ->update('db_sip.absen', $dataUpdate);
                         }
                     } else {
-                    $this->db->insert('db_sip.absen', [
+                    // $this->db->insert('db_sip.absen', [
+                    //                     'user_id' => $this->input->post('id_user'),
+                    //                     'masuk' => $absen['masuk'],
+                    //                     'pulang' => $absen['pulang'],
+                    //                     'lat' => $absen['lat'],
+                    //                     'lang' => $absen['lang'],
+                    //                     'tgl' => $absen['tgl'],
+                    //                     'status' => $absen['status'],
+                    //                     'aktivitas' => $absen['aktivitas']
+                    //                 ]);
+
+                    if($this->input->post('jenis_absensi') == 1){
+                       $this->db->insert('db_sip.absen', [
                                         'user_id' => $this->input->post('id_user'),
                                         'masuk' => $absen['masuk'],
+                                        // 'pulang' => $absen['pulang'],
+                                        'lat' => $absen['lat'],
+                                        'lang' => $absen['lang'],
+                                        'tgl' => $absen['tgl'],
+                                        'status' => $absen['status'],
+                                        'aktivitas' => $absen['aktivitas']
+                                    ]);
+                    } else {
+                       $this->db->insert('db_sip.absen', [
+                                        'user_id' => $this->input->post('id_user'),
+                                        // 'masuk' => $absen['masuk'],
                                         'pulang' => $absen['pulang'],
                                         'lat' => $absen['lat'],
                                         'lang' => $absen['lang'],
@@ -2237,6 +2337,8 @@
                                         'status' => $absen['status'],
                                         'aktivitas' => $absen['aktivitas']
                                     ]);
+                    }
+
                     }
                     $this->db->where_in('id', $id)
                     ->update('t_peninjauan_absensi', $data_verif);

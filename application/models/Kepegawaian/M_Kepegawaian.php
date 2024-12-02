@@ -2179,7 +2179,7 @@ class M_Kepegawaian extends CI_Model
     {
         $this->db->select('*')
         ->where('flag_active', 1)
-        ->from('db_siladen.m_layanan');
+        ->from('m_layanan');
         return $this->db->get()->result_array(); 
     }
 
@@ -2447,7 +2447,7 @@ class M_Kepegawaian extends CI_Model
         // ->from('m_user a')
         // ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
         // ->join('t_layanan c', 'a.id = c.id_m_user')
-        // ->join('db_siladen.m_layanan d', 'c.id_m_layanan = d.id')
+        // ->join('m_layanan d', 'c.id_m_layanan = d.id')
         // ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
         // ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
         // ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
@@ -2681,7 +2681,7 @@ class M_Kepegawaian extends CI_Model
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
             ->join('t_layanan c', 'a.id = c.id_m_user')
-            ->join('db_siladen.m_layanan e', 'c.id_m_layanan = e.id')
+            ->join('m_layanan e', 'c.id_m_layanan = e.id')
             ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
             ->where('c.status', $id)
             ->where('c.flag_active', 1)
@@ -7858,7 +7858,7 @@ function getPengajuanLayananKarisKarsu($id){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-    return $this->db->select('c.*, c.id as id_pengajuan,
+    return $this->db->select('c.*, c.id as id_pengajuan,b.nama,
     b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
     h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
     a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
@@ -8903,11 +8903,15 @@ public function searchPengajuanLayanan(){
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
-    
-            if($this->general_library->isHakAkses('manajemen_talenta')){
-                $this->db ->where('a.id_m_layanan', 6);
+
+            if($this->general_library->isAdminAplikasi()){
+
+            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
+                $this->db->where('a.id_m_layanan', 6);
+            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ 
+                $this->db->where('a.id_m_layanan', 1);
             } else {
-                $this->db ->where('a.id_m_layanan', 99);
+                $this->db->where('a.id_m_layanan', 99);
             }
 
     if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -9028,6 +9032,18 @@ public function getFileForVerifLayanan()
         $data["keterangan"] = $datapost['keterangan'];
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
+
+
+        $nohp = '085757158193';
+        $message = 'Tes wa';
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($nohp),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' => 'Kenaikan Pangkat',
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

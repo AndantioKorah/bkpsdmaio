@@ -229,7 +229,7 @@
           </div>
           <div class="col-lg-12 text-center">
             <span class="sp_profil">
-              <?=$result[0]['gelar1'] != '' ? $result[0]['gelar1'].' ' : ''.$result[0]['nama_pegawai'].$result[0]['gelar2']?>
+            <?=getNamaPegawaiFull($result[0])?>
             </span>
           </div>
           <div class="col-lg-12 text-center" >

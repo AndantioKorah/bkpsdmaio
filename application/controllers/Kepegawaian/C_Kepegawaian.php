@@ -2355,7 +2355,11 @@ class C_Kepegawaian extends CI_Controller
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 
-		if($layanan == 6){
+		// $data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
+	
+		if($layanan == 1){
+			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
+		} else if($layanan == 6){
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkat', '', '', $data);
 		}
 	}

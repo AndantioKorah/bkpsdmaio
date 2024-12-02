@@ -9058,6 +9058,33 @@ public function getFileForVerifLayanan()
     }
 
 
+    public function batalVerifikasiPengajuanLayanan(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $id_usul = $datapost['id_batal'];
+        $data["status"] = 0; 
+        $data["keterangan"] = "";
+        $this->db->where('id', $id_usul)
+                ->update('t_layanan', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+
 
 
 

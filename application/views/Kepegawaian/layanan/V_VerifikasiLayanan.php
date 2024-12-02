@@ -67,7 +67,7 @@
           </div>
           <div class="row mt-3">
             <div class="col-lg-12 text-right">
-              <button class="btn btn-navy" type="submit"><i class="fa fa-search"></i> Submit Pencarian</button>
+              <button class="btn btn-navy" type="submit"><i class="fa fa-search"></i> Cari</button>
             </div>
           </div>
         </form>

@@ -411,6 +411,8 @@
 <script>
 
 
+var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
+var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
@@ -538,7 +540,7 @@ function openPresensiTab(){
             e.preventDefault()
             if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanKarisKarsu")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

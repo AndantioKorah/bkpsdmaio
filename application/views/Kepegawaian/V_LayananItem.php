@@ -8,7 +8,7 @@
           <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Nama Pegawai</th>
           <th class="text-left">Unit Organisasi</th>
-          <th class="text-left">Pengantar </th>
+         
           <th></th>
         </thead>
         <tbody>
@@ -19,21 +19,7 @@
               <td class=""><?=formatDateNamaBulan($rs['tanggal_usul'])?></td>
               <td class="text-left"> <?=getNamaPegawaiFull($rs)?> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-              <td class="">
-              <?php if ($rs['jenis_layanan'] == 3) { ?> 
-              <!-- <a onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')" 
-              data-toggle="modal" 
-              data-nama_pegawai="<?=getNamaPegawaiFull($rs)?>" 
-              data-nip="<?=$rs['nip']?>" title="Input Nomor dan Tanggal Surat" class="open-DetailCuti btn btn-sm btn-info" href="#modal_detail_cuti"><i class="fa fa-search"></i> Lihat</a> -->
-              <button href="#modal_view_file" 
-                onclick="openFile('<?=$rs['file_pengantar']?>')" 
-                data-toggle="modal" class="btn btn-sm btn-info"><i class="fa fa-search"></i> Lihat </button>
-              <?php } else { ?>
-                <button href="#modal_view_file" 
-                onclick="openFile('<?=$rs['file_pengantar']?>')" 
-                data-toggle="modal" class="btn btn-sm btn-info"><i class="fa fa-search"></i> Lihat </button>
-                <?php } ?>
-              </td>
+             
              
               <td>
 
@@ -41,7 +27,7 @@
               &nbsp;
              
               <?php if($rs['status'] == 0) { ?> 
-              <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id_usul']?>/<?=$rs['jenis_layanan']?>">
+              <a href="<?= base_url();?>kepegawaian/verifikasi/<?=$rs['id']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>
@@ -55,7 +41,7 @@
                 <?php } ?>
                
               
-              <?php if($rs['jenis_layanan'] == 3) { ?>
+              <!-- <?php if($rs['jenis_layanan'] == 3) { ?>
               <?php if($rs['status'] == 1) { ?> 
                 <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
                 data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
@@ -66,9 +52,9 @@
                <i class="fa fa-file-pdf"></i></button></a>
                
              <?php } ?>
-             <?php } ?>
+             <?php } ?> -->
 
-             <?php if($rs['jenis_layanan'] == 8) { ?>
+             <!-- <?php if($rs['jenis_layanan'] == 8) { ?>
               <?php if($rs['status'] == 1) { ?> 
                 <button title="Input Nomor dan Tanggal Surat" onclick="openDetailLayanan('<?=$rs['file_pengantar']?>','<?=$rs['nip']?>','<?=$rs['nama_layanan']?>','<?=$rs['id_usul']?>')"   
                 data-toggle="modal" class="btn btn-sm btn-info" href="#modal_input_nomor_surat"><i class="fa fa-edit"></i> </button>
@@ -83,7 +69,7 @@
                <i class="fa fa-file-pdf"></i></button></a>
                
              <?php } ?>
-             <?php } ?>
+             <?php } ?> -->
             
              </div>
 

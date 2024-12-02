@@ -396,8 +396,8 @@
 			</li>
 		<?php } ?>
 		<li class="sidebar-item ">
-			<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-karis-karsu')?>">
-				<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
+			<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan')?>">
+				<i class="align-middle me-2 far fa-circle"></i>Administrasi Kepegawaian
 			</a>
 		</li>
 

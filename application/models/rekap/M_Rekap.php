@@ -3956,7 +3956,8 @@
 
                     $this->db->insert('t_cron_wa', [
                         'type' => 'text',
-                        'sendTo' => GROUP_CHAT_PRAKOM,
+                        // 'sendTo' => GROUP_CHAT_PRAKOM,
+                        'sendTo' => GROUP_CHAT_TPP_HARDWORKER,
                         'message' => "Selamat ".greeting()." \n*".$lockTpp['nama_param_unitkerja']."* telah mengupload berkas untuk pengajuan TPP periode *".getNamaBulan($input_post['bulan'])." ".$input_post['tahun']."*."
                      ]);
 

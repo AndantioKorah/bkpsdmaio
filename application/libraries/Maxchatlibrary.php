@@ -210,7 +210,15 @@ class Maxchatlibrary{
 
     function postCurl($url, $data, $method = "POST") {
         $curl = curl_init();
+
         $url = $url."?skipBusy=true";
+        if(isset($data['to'])){
+            $explode = explode("-", $data['to']);
+            if(count($explode) > 1){
+                $url = $this->API_URL."/queue";
+            }
+        }
+        // $url = $url."?skipBusy=true";
 
         curl_setopt_array($curl, array(
         CURLOPT_URL => $url,

@@ -2382,6 +2382,24 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanLayanan());
 	}
 
+	public function loadModalUploadSK($id_usul,$id_m_layanan)
+    {
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
+		$data['id_usul']= $id_usul;
+		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul);
+        if($id_m_layanan == 6){
+			$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
+		}
+    }
+
+	public function uploadSKLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSKLayanan());
+	}
+
+
 	
 
 

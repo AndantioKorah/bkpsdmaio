@@ -8896,7 +8896,7 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan(){
     $data = $this->input->post();
-    $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+    $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_layanan a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
@@ -9027,17 +9027,36 @@ public function getFileForVerifLayanan()
         $datapost = $this->input->post();
         
         $this->db->trans_begin();
+
+          
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
+
+
+       
+
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
 
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('t_layanan c', 'a.id = c.id_m_user')
+                ->where('c.id', $id_pengajuan)
+                ->get()->result_array();
 
-        $nohp = '085757158193';
-        $message = 'Tes wa';
+
+        if($dataPengajuan[0]['status'] == 1){
+            $status = "ACC";
+        } else if($dataPengajuan[0]['status'] == 2){
+            $status = "Ditolak";
+        }
+
+        $message = "Selamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah disetujui.\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+       
         $cronWaNextVerifikator = [
-                    'sendTo' => convertPhoneNumber($nohp),
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
                     'message' => trim($message.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
                     'jenis_layanan' => 'Kenaikan Pangkat',
@@ -9085,6 +9104,117 @@ public function getFileForVerifLayanan()
     }
 
 
+    public function uploadSKLayanan()
+	{
+
+        $this->db->trans_begin();
+        $id_dok = $this->input->post('id_dokumen');
+        $create_nama_file =  $this->prosesName($id_dok);
+        $target_dir = null;
+        if($this->input->post('id_dokumen') == 4){
+            $target_dir						= './arsipelektronik/';
+        } else if($this->input->post('id_dokumen') == 7){
+            $target_dir						= './arsipgjberkala/';
+        } else if($this->input->post('id_dokumen') == 5){
+            $target_dir						= './arsipskp/';
+        } else if($this->input->post('id_dokumen') == 20){
+            $target_dir						= './arsipdiklat/';
+        } else if($this->input->post('id_dokumen') == 8){
+            $target_dir						= './arsipjabatan/';
+        } else if($this->input->post('id_dokumen') == 17){
+            $target_dir						= './arsipcuti/';
+        } else if($this->input->post('id_dokumen') == 6){
+            $target_dir						= './arsippendidikan/';
+        } else if($this->input->post('id_dokumen') == 2){
+            $target_dir						= './arsipberkaspns/';
+        } else if($this->input->post('id_dokumen') == 41){
+            $target_dir						= './arsipsumpah/';
+        } else if($this->input->post('id_dokumen') == 18){
+            $target_dir						= './arsipdisiplin/';
+        } else if($this->input->post('jenis_organisasi')){
+            $target_dir						= './arsiporganisasi/';
+        } else if($this->input->post('pegpenghargaan')){
+            $target_dir						= './arsippenghargaan/';
+        } else if($this->input->post('jenispenugasan')){
+            $target_dir						= './arsippenugasan/';
+        }     
+
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = str_replace(' ', '', $random_number.$create_nama_file);
+        $nama_file =  $filename;
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = '*';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+        $config['file_name']            = "$nama_file.pdf";
+
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload('file')) {
+			$data['error']    = strip_tags($this->upload->display_errors());
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'eror' => $data['error']);
+            return $res;
+		} else {
+			$dataFile 			= $this->upload->data();
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $dataFile['nama_file'] =  "$nama_file.pdf";
+            $dataFile['base64'] =  $base64;
+			$result		        = $this->insertUploadSkLayanan($dataFile);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+    
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+    return $res;
+        
+	}
+
+    function insertUploadSkLayanan($data)
+    {
+          
+        $id_peg =  $this->input->post('id_pegawai');
+        $id_dok  = $this->input->post('id_dokumen');
+        $id_usul  = $this->input->post('id_usul');
+        if($id_dok == 4){
+             //PANGKAT   
+        $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
+        $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
+        $dataInsert['id_pegawai']     = $id_peg;
+        $dataInsert['jenispengangkatan']      = $this->input->post('jenis_pengangkatan');
+        $dataInsert['pangkat']      = $this->input->post('pangkat');
+        $dataInsert['masakerjapangkat']     =$this->input->post('masa_kerja');
+        $dataInsert['pejabat']      = $this->input->post('pejabat');
+        $dataInsert['nosk']      = $this->input->post('no_sk');
+        $dataInsert['tglsk']      = $tgl_sk;
+        $dataInsert['gambarsk']      = $data['nama_file'];
+        $dataInsert['tmtpangkat']      = $tmt_pangkat;
+        $dataInsert['created_by']      = $this->general_library->getId();
+        $dataInsert['status']      = 2;
+        $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+        $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
+        $id_insert_dok = $this->db->insert_id();
+        $this->updatePangkat($id_peg);
+
+        $dataUpdate['status'] = 1;
+        $dataUpdate['reference_id_dok'] = $id_insert_dok;
+        
+
+        $this->db->where('id', $id_usul)
+                ->update('t_layanan', $dataUpdate);
+
+          // PANGKAT
+        } 
+        return $result;
+    }
+    
 
 
 

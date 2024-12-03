@@ -145,6 +145,8 @@ $route['kepegawaian/plt-plh'] = 'kepegawaian/C_Kepegawaian/pltPlh';
 
 $route['rekap/verif-peninjauan'] = 'kepegawaian/C_Kepegawaian/rekapVerifPeninjauanAbsensi';
 
+$route['kepegawaian/verifikasi-layanan'] = 'kepegawaian/C_Kepegawaian/verifikasiLayananNew';
+$route['kepegawaian/verifikasi-layanan-detail/(:any)/(:any)'] = 'kepegawaian/C_Kepegawaian/verifikasiLayananDetail/$1/$2';
 
 
 

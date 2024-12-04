@@ -61,7 +61,9 @@
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
    <div class="12">
-   <a href="<?= base_url('kepegawaian/verifikasi-karis-karsu');?>">
+   <!-- <a href="<?= base_url('kepegawaian/verifikasi-karis-karsu');?>"> -->
+   <a href="<?= base_url('kepegawaian/verifikasi-layanan/');?><?=$id_m_layanan;?>">
+
     <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
   <!-- <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div> -->
@@ -420,7 +422,7 @@ Batal Verif
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
+      <form method="post" id="form_verifikasi_layanan_karis_karsu" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
@@ -459,7 +461,7 @@ Batal Verif
 		
 <script>
 
-var nip = "<?= $result[0]['nip'];?>"; 
+var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
@@ -551,7 +553,7 @@ function openPresensiTab(){
 
 
 
-        $('#form_verifikasi_layanan').on('submit', function(e){
+        $('#form_verifikasi_layanan_karis_karsu').on('submit', function(e){
           var status = $('#status').val()
           var catatan = $('#keterangan').val()
           if(status == "--"){
@@ -565,7 +567,6 @@ function openPresensiTab(){
             return false;
            }
            }
-
 
             e.preventDefault()
             $.ajax({

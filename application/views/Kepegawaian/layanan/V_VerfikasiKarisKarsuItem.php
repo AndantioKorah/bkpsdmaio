@@ -24,7 +24,7 @@
             </td>
             <td class="text-left"><?=$rs['keterangan']?></td>
              <td>
-             <a href="<?= base_url();?>kepegawaian/verifikasi-detail/<?=$rs['id_pengajuan']?>">
+             <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>

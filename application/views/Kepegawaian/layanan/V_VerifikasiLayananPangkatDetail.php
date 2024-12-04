@@ -61,7 +61,7 @@
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
    <div class="12">
-   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>">
+   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>">
     <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
  

@@ -1113,7 +1113,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function deletePengajuanKarisKarsu($id){
-        $this->general->delete('id', $id, 't_karis_karsu');
+        $this->general->delete('id', $id, 't_layanan');
     }
 
 
@@ -1837,9 +1837,9 @@ class C_Kepegawaian extends CI_Controller
 		force_download('./dokumen_layanan/Lap Perkawinan I Daftar Keluarga Mengetahui Atasan Langsung - Karis Karsu.docx',NULL);
 	}  
 	
-	public function insertUsulLayananKarisKarsu()
+	public function insertUsulLayananKarisKarsu($id_m_layanan)
 	{ 
-		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu());
+		echo json_encode( $this->kepegawaian->insertUsulLayananKarisKarsu($id_m_layanan));
 	}
 
 	public function insertUsulLayananPensiun()
@@ -2340,15 +2340,21 @@ class C_Kepegawaian extends CI_Controller
 
 	
 
-	public function verifikasiLayananNew(){
+	public function verifikasiLayananNew($id_m_layanan){
 		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		$data['id_m_layanan'] = $id_m_layanan;
 		render('kepegawaian/layanan/V_VerifikasiLayanan', '', '', $data);
 	}
 
-	public function searchPengajuanLayanan(){
-		$data['result'] = $this->kepegawaian->searchPengajuanLayanan();
+	public function searchPengajuanLayanan($id_m_layanan){
+		$data['result'] = $this->kepegawaian->searchPengajuanLayanan($id_m_layanan);
 		$data['param'] = $this->input->post();
-		$this->load->view('kepegawaian/layanan/V_VerfikasiLayananItem', $data);
+		$data['id_m_layanan'] = $id_m_layanan;
+		if($id_m_layanan == 1){
+			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
+		} else if($id_m_layanan == 6){
+			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
+		}
 	}
 
 	public function verifikasiLayananDetail($id,$layanan){
@@ -2358,13 +2364,13 @@ class C_Kepegawaian extends CI_Controller
 		$previous2Year = $currentYear - 2; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
-
+		$data['id_m_layanan'] = $layanan;
 		// $data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
 	
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 		} else if($layanan == 6){
-			render('kepegawaian/layanan/V_VerifikasiLayananPangkat', '', '', $data);
+			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		}
 	}
 

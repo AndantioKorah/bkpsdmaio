@@ -7741,15 +7741,37 @@ public function submitEditJabatan(){
 
     }
 
-    public function insertUsulLayananKarisKarsu(){
+    public function insertUsulLayananKarisKarsu($id_m_layanan){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
         $this->db->trans_begin();
-            $dataUsul['id_m_user']      = $this->general_library->getId();
-            $dataUsul['created_by']      = $this->general_library->getId();
-            $this->db->insert('db_efort.t_karis_karsu', $dataUsul);
-            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            // $dataUsul['id_m_user']      = $this->general_library->getId();
+            // $dataUsul['created_by']      = $this->general_library->getId();
+            // $dataUsul['id_m_layanan']      = 1;
+            // $this->db->insert('db_efort.t_layanan', $dataUsul);
+            // $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            $cek =  $this->db->select('*')
+            ->from('t_layanan a')
+            ->where('a.id_m_user', $this->general_library->getId())
+            ->where('a.flag_active', 1)
+            ->where('a.id_m_layanan', $id_m_layanan)
+            ->where('a.status', 0)
+            ->get()->result_array();
+        
+            if($cek){
+                $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['id_m_layanan']      = $id_m_layanan;
+                $this->db->insert('db_efort.t_layanan', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+
+
         if ($this->db->trans_status() === FALSE)
         {
                 $this->db->trans_rollback();
@@ -7789,11 +7811,11 @@ public function submitEditJabatan(){
 
     function getRiwayatKarisKarsu(){
         $this->db->select('*')
-                       ->from('t_karis_karsu a')
+                       ->from('t_layanan a')
                        ->where('a.id_m_user', $this->general_library->getId())
                        ->where('a.flag_active', 1)
+                       ->where('a.id_m_layanan', 1)
                        ->order_by('a.id','desc');
-    
                        $query = $this->db->get()->result_array();
                        return $query;
    }
@@ -7985,7 +8007,7 @@ public function getFileForKarisKarsu()
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
         $this->db->where('id', $id_pengajuan)
-                ->update('t_karis_karsu', $data);
+                ->update('t_layanan', $data);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -8910,23 +8932,24 @@ public function getFileForKarisKarsu()
    
 }
 
-public function searchPengajuanLayanan(){
+public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
     $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_layanan a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
-            
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
-            if($this->general_library->isAdminAplikasi()){
-
-            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
+            // if($this->general_library->isAdminAplikasi()){
+            //     $this->db->where_in('a.id_m_layanan', [1,6,7]);
+            //     $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
+            // } else 
+            if($id_m_layanan == 6){
                 $this->db->where_in('a.id_m_layanan', [6,7]);
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
-            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ 
+            } else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
             } else {
                 $this->db->where('a.id_m_layanan', 99);

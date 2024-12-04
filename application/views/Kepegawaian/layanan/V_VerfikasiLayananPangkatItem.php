@@ -10,7 +10,7 @@
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
             <th class="text-center">Upload SK</th>
-          <?php }?>
+          <?php } ?>
           <th></th>
           
         </thead>
@@ -47,7 +47,7 @@
                 <?php } ?>
             <?php } ?>
               </td>
-            <?php }?>
+            <?php } ?>
              <td>
              <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">

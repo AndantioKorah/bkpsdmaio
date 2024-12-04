@@ -458,7 +458,7 @@ $(function(){
         }
 
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu/1")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

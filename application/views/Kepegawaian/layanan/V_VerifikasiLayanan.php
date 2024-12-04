@@ -86,11 +86,13 @@
   })
 
   $('#form_search').on('submit', function(e){
+
+    var id_m_layanan = "<?=$id_m_layanan;?>"
     $('#result_search').html('')
     $('#result_search').append(divLoaderNavy)
     e.preventDefault()
     $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/searchPengajuanLayanan")?>',
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/searchPengajuanLayanan/")?>'+id_m_layanan,
       method:"POST",  
       data: $(this).serialize(),
       success: function(res){

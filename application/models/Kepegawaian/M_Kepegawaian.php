@@ -8915,8 +8915,7 @@ public function searchPengajuanLayanan(){
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
-            ->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left')
-
+            
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
@@ -8924,6 +8923,7 @@ public function searchPengajuanLayanan(){
 
             } else if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
                 $this->db->where_in('a.id_m_layanan', [6,7]);
+                $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             } else if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ 
                 $this->db->where('a.id_m_layanan', 1);
             } else {
@@ -9065,11 +9065,13 @@ public function getFileForVerifLayanan()
 
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";
+            $statusForMessage = "disetujui";
         } else if($dataPengajuan[0]['status'] == 2){
             $status = "Ditolak";
+            $statusForMessage = "ditolak";
         }
 
-        $message = "Selamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah disetujui.\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
        
         $cronWaNextVerifikator = [
                     'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
@@ -9199,8 +9201,18 @@ public function getFileForVerifLayanan()
         $id_peg =  $this->input->post('id_pegawai');
         $id_dok  = $this->input->post('id_dokumen');
         $id_usul  = $this->input->post('id_usul');
+
+
+       
+
+        // $pegawai = $this->db->select('*')
+        //         ->from('db_pegawai.pegawai a')
+        //         ->where('a.id_peg', $id_peg)
+        //         ->get()->row_array();
+        
+
         if($id_dok == 4){
-             //PANGKAT   
+        //PANGKAT   
         $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
         $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
         $dataInsert['id_pegawai']     = $id_peg;
@@ -9221,12 +9233,33 @@ public function getFileForVerifLayanan()
 
         $dataUpdate['status'] = 1;
         $dataUpdate['reference_id_dok'] = $id_insert_dok;
-        
+        $url_file = "arsipelektronik/".$data['nama_file'];
 
         $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
-          // PANGKAT
+        $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                // ->join('db_pegawai.pegpangkat d', 'a.reference_id_dok = d.id')
+                // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+        dd($dataLayanan);
+
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawai).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+                    'sendTo' => convertPhoneNumber($pegawai['handphone']),
+                    'message' => $caption,
+                    'filename' => "SK KENAIKAN PANGKAT.pdf",
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Pangkat'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+        // PANGKAT
         } 
         return $result;
     }

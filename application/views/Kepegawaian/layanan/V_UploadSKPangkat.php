@@ -1,7 +1,7 @@
 <form method="post" id="upload_form" enctype="multipart/form-data" >
     <input type="hidden" id="id_dokumen" name="id_dokumen" value="4">
     <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $result[0]['id_peg'];?>">
-    <input type="text" id="id_usul" name="id_usul" value="<?= $id_usul;?>">
+    <input type="hidden" id="id_usul" name="id_usul" value="<?= $id_usul;?>">
 
     <div class="form-group " style="margin-bottom:10px !important;">
     <label >Jenis Pengangkatan</label>

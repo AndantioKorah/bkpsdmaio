@@ -8871,16 +8871,30 @@ public function getFileForKarisKarsu()
    }
 
 
-   public function insertUsulLayananNew(){
+   public function insertUsulLayananNew($id_m_layanan){
     $res['code'] = 0;
     $res['message'] = 'ok';
     $res['data'] = null;
     $this->db->trans_begin();
+
+    $cek =  $this->db->select('*')
+    ->from('t_layanan a')
+    ->where('a.id_m_user', $this->general_library->getId())
+    ->where('a.flag_active', 1)
+    ->where('a.id_m_layanan', $id_m_layanan)
+    ->where('a.status', 0)
+    ->get()->result_array();
+
+    if($cek){
+        $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+    } else {
         $dataUsul['id_m_user']      = $this->general_library->getId();
         $dataUsul['created_by']      = $this->general_library->getId();
-        $dataUsul['id_m_layanan']      = 6;
+        $dataUsul['id_m_layanan']      = $id_m_layanan;
         $this->db->insert('db_efort.t_layanan', $dataUsul);
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    }
+
     if ($this->db->trans_status() === FALSE)
     {
             $this->db->trans_rollback();
@@ -8901,13 +8915,15 @@ public function searchPengajuanLayanan(){
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left')
+
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
             if($this->general_library->isAdminAplikasi()){
 
             } else if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
-                $this->db->where('a.id_m_layanan', 6);
+                $this->db->where_in('a.id_m_layanan', [6,7]);
             } else if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ 
                 $this->db->where('a.id_m_layanan', 1);
             } else {

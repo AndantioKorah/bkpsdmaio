@@ -173,6 +173,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 7) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
+      $('#loader').hide()
+    })
     }
 
  

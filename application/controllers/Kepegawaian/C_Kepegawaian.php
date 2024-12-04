@@ -2301,26 +2301,30 @@ class C_Kepegawaian extends CI_Controller
     }
 
 
-	public function layananPangkat($id_peg){
+	public function layananPangkat($id_layanan){
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
-
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
 		$previous2Year = $currentYear - 2; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
-
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
-		
 
-        $this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
+		if($id_layanan == 6){
+			$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
+		} else if($id_layanan == 7){
+		$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');
+			$this->load->view('kepegawaian/layanan/V_LayananPangkatFungsional', $data);
+		}
 	}
 
 	public function loadListRiwayatLayanan($id){
 		$data['result'] = $this->kepegawaian->getRiwayatLayanan($id);
 		$data['m_layanan'] = $id;
+		
+
 		$this->load->view('kepegawaian/layanan/V_RiwayatLayananItem', $data);
 	}
 

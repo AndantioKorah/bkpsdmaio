@@ -8,6 +8,7 @@
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
+            <th class="text-center">Jenis Kenaikan Pangkat</th>
             <th class="text-center">Upload SK</th>
           <?php }?>
           <th></th>
@@ -28,15 +29,23 @@
             <td class="text-left"><?=$rs['keterangan']?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
+            <td class="text-left">
+            <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else echo "3";?>  
+            </td>
             <td class="text-center">
             <?php if($rs['status_layanan'] == 1) { ?>
-            <button 
+              <?php if($rs['reference_id_dok'] != null) { ?>
+                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                <i class="fa fa-file-pdf"></i></button>
+                <?php } else { ?>
+                  <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id_pengajuan']?>"
                 href="#modal_upload_sk"
                 onclick="loadModalUploadSK('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
                 <i class="fa fa-upload" aria-hidden="true"></i></button>
                 <?php } ?>
+            <?php } ?>
               </td>
             <?php }?>
              <td>
@@ -77,6 +86,23 @@
 </div>
 
 
+<div class="modal fade" id="modal_view_file" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
+
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
 <script>
   $(function(){
     $('.datatable').dataTable()
@@ -98,6 +124,21 @@
     $('#loader').hide()
   })
   }
+
+  async function openFilePangkat(filename){
+
+$('#iframe_view_file').hide()
+$('.iframe_loader').show()  
+
+var number = Math.floor(Math.random() * 1000);
+$link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
+
+$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').on('load', function(){
+  $('.iframe_loader').hide()
+  $(this).show()
+})
+}
 
   
 </script>

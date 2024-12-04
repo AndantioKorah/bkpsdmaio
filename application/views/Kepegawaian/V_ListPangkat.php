@@ -43,7 +43,6 @@
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button> 
-                
                 <?php } ?>
               </td>
            

@@ -2178,8 +2178,8 @@ class M_Kepegawaian extends CI_Model
     public function getJenisLayanan()
     {
         $this->db->select('*')
-        ->where('aktif', 'YA')
-        ->from('db_siladen.jenis_layanan');
+        ->where('flag_active', 1)
+        ->from('m_layanan');
         return $this->db->get()->result_array(); 
     }
 
@@ -2375,37 +2375,32 @@ class M_Kepegawaian extends CI_Model
     }
 
 
-    function getAllUsulLayanan(){
-        // return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
-        return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+    // function getAllUsulLayanan(){
+    //     // return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+    //     return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
 
+    //                     ->from('m_user a')
+    //                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    //                     ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+    //                     // ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+    //                     ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+    //                     ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
+    //                     ->where('c.jenis_layanan', 3)
+    //                     ->order_by('c.id_usul', 'desc')
+    //                     ->get()->result_array();
+    // }
+
+    function getAllUsulLayanan(){
+        return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.*')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                        ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-                        // ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
-                        ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+                        ->join('t_layanan c', 'a.id = c.id_m_user')
                         ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
-                        ->where('c.jenis_layanan', 3)
-                        ->order_by('c.id_usul', 'desc')
+                        ->order_by('c.id', 'desc')
                         ->get()->result_array();
     }
 
-    // function getDataUsulLayanan($id_usul,$jenis_layanan){
-    //     if($jenis_layanan == 3){
-    //         return $this->db->select('j.nm_cuti,d.jenis_lama_cuti,d.jenis_cuti,d.nomor_surat,d.tanggal_surat,j.nm_cuti,b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan,h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
-    //         ->from('m_user a')
-    //         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-    //         ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-    //         ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
-    //         ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-    //         ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
-    //         ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
-    //         ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
-    //         ->join('db_siladen.m_cuti j', 'd.jenis_cuti = j.id_cuti')
-    //         ->where('c.id_usul', $id_usul)
-    //         ->get()->result_array();
-    //     }
-    // }
+    
         
     function getDataUsulLayanan($id_usul,$jenis_layanan){
         // if($jenis_layanan == 3){
@@ -2447,6 +2442,19 @@ class M_Kepegawaian extends CI_Model
         //     ->where('c.id_usul', $id_usul)
         //     ->get()->result_array();
         // }
+
+        // return $this->db->select('*,c.id as id_usul')
+        // ->from('m_user a')
+        // ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        // ->join('t_layanan c', 'a.id = c.id_m_user')
+        // ->join('m_layanan d', 'c.id_m_layanan = d.id')
+        // ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+        // ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+        // ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+        // ->join('db_pegawai.agama i', 'b.agama = id_agama')
+        // ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+        // ->where('c.id', $id_usul)
+        // ->get()->result_array();
 
         return $this->db->select('c.surat_keterangan,
         b.gelar1,b.gelar2,c.status,b.id_peg,c.jenis_layanan, b.nik, i.nm_agama,
@@ -2647,36 +2655,44 @@ class M_Kepegawaian extends CI_Model
         
     }
 
+    
+
     // function getAllUsulLayananAdmin($id){
-    //     return $this->db->select('d.*,g.nm_cuti,d.nomor_surat,d.tanggal_surat,c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+    //     $this->db->select('c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
     //                     ->from('m_user a')
     //                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     //                     ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-    //                     ->join('db_siladen.t_cuti d', 'c.id_usul = d.id_usul')
     //                     ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
     //                     ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
-    //                     ->join('db_siladen.m_cuti g', 'd.jenis_cuti = g.id_cuti')
-    //                     ->where('c.jenis_layanan', 3)
+    //                     // ->where('c.jenis_layanan', 3)
     //                     ->where('c.status', $id)
-    //                     ->order_by('c.id_usul', 'desc')
-    //                     ->get()->result_array();
+    //                     ->where('c.flag_active', 1)
+    //                     ->order_by('c.id_usul', 'desc');
+
+    //     // if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
+    //     //     $this->db->where_in('e.kode', $this->general_library->listHakAkses());
+    //     // }
+
+    //     return $this->db->get()->result_array();
     // }
 
     function getAllUsulLayananAdmin($id){
-        $this->db->select('c.jenis_layanan,c.status,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
-                        ->from('m_user a')
-                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                        ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-                        ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-                        ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
-                        // ->where('c.jenis_layanan', 3)
-                        ->where('c.status', $id)
-                        ->where('c.flag_active', 1)
-                        ->order_by('c.id_usul', 'desc');
+            $this->db->select('c.*,f.nm_unitkerja,b.nama,b.gelar1,b.gelar2,e.nama_layanan, c.created_date as tanggal_usul')
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+            ->join('t_layanan c', 'a.id = c.id_m_user')
+            ->join('m_layanan e', 'c.id_m_layanan = e.id')
+            ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
+            ->where('c.status', $id)
+            ->where('c.flag_active', 1)
+            ->order_by('c.id', 'desc');
+    
 
-        // if(!$this->general_library->isProgrammer() && !$this->general_library->isAdminAplikasi()){
-        //     $this->db->where_in('e.kode', $this->general_library->listHakAkses());
-        // }
+        if($this->general_library->isHakAkses('manajemen_talenta')){
+            $this->db ->where('c.id_m_layanan', 6);
+        } else {
+            $this->db ->where('c.id_m_layanan', 99);
+        }
 
         return $this->db->get()->result_array();
     }
@@ -7842,7 +7858,7 @@ function getPengajuanLayananKarisKarsu($id){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-    return $this->db->select('c.*, c.id as id_pengajuan,
+    return $this->db->select('c.*, c.id as id_pengajuan,b.nama,
     b.gelar1,b.gelar2,b.id_peg, b.nik, i.nm_agama, b.handphone,
     h.nm_unitkerja,g.nama_jabatan,f.nm_pangkat,b.nama as nama_pegawai, b.tptlahir, b.tgllahir,
     a.username as nip, b.statuspeg, b.fotopeg, b.nipbaru_ws, b.tmtpangkat, b.tmtjabatan,
@@ -8814,6 +8830,442 @@ public function getFileForKarisKarsu()
   
 
 
+    public function getPersyaratanLayanan()
+    {
+        $this->db->select('*')
+        ->from('db_siladen.m_dokumen_layanan');
+        return $this->db->get()->result_array(); 
+    }
+
+
+    public function getDokumenForLayananPangkat($table,$tahun)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->from($table);
+
+
+
+        if($table == "db_pegawai.pegskp"){
+            $this->db->where('tahun', $tahun); 
+        }
+    
+    
+        $query = $this->db->get()->row_array();
+    
+        return $query;  
+
+    }
+
+
+    function getRiwayatLayanan($id){
+        $this->db->select('*')
+                       ->from('t_layanan a')
+                       ->where('a.id_m_user', $this->general_library->getId())
+                       ->where('a.id_m_layanan', $id)
+                       ->where('a.flag_active', 1)
+                       ->order_by('a.id','desc');
+    
+                       $query = $this->db->get()->result_array();
+                       return $query;
+   }
+
+
+   public function insertUsulLayananNew($id_m_layanan){
+    $res['code'] = 0;
+    $res['message'] = 'ok';
+    $res['data'] = null;
+    $this->db->trans_begin();
+
+    $cek =  $this->db->select('*')
+    ->from('t_layanan a')
+    ->where('a.id_m_user', $this->general_library->getId())
+    ->where('a.flag_active', 1)
+    ->where('a.id_m_layanan', $id_m_layanan)
+    ->where('a.status', 0)
+    ->get()->result_array();
+
+    if($cek){
+        $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+    } else {
+        $dataUsul['id_m_user']      = $this->general_library->getId();
+        $dataUsul['created_by']      = $this->general_library->getId();
+        $dataUsul['id_m_layanan']      = $id_m_layanan;
+        $this->db->insert('db_efort.t_layanan', $dataUsul);
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    }
+
+    if ($this->db->trans_status() === FALSE)
+    {
+            $this->db->trans_rollback();
+    }
+    else
+    {
+            $this->db->trans_commit();
+    }
+    return $res;
+
+   
+}
+
+public function searchPengajuanLayanan(){
+    $data = $this->input->post();
+    $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+            ->from('t_layanan a')
+            ->join('m_user d', 'a.id_m_user = d.id')
+            ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+
+            if($this->general_library->isAdminAplikasi()){
+
+            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
+                $this->db->where_in('a.id_m_layanan', [6,7]);
+                $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
+            } else if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ 
+                $this->db->where('a.id_m_layanan', 1);
+            } else {
+                $this->db->where('a.id_m_layanan', 99);
+            }
+
+    if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+        $this->db->where('e.skpd', $data['id_unitkerja']);
+    }
+
+    if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+        $this->db->where('a.status', $data['status_pengajuan']);
+    }
+
+    return $this->db->get()->result_array();
+}
+
+function getPengajuanLayanan($id){
+    // $this->db->select('*')
+    //                 ->from('t_karis_karsu a')
+    //                 ->where('a.id', $id)
+    //                 ->where('a.flag_active', 1);
+    // return $this->db->get()->result_array();
+    return $this->db->select('*, c.id as id_pengajuan')
+    ->from('m_user a')
+    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    ->join('t_layanan c', 'a.id = c.id_m_user')
+    ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+    ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+    ->join('db_pegawai.agama i', 'b.agama = id_agama')
+    ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+    ->where('c.id', $id)
+    ->get()->result_array();
+}
+
+
+public function getFileForVerifLayanan()
+    {      
+        $id_peg = $this->input->post('id_peg');
+        $currentYear = date('Y'); 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
+
+        if($this->input->post('file') == "skcpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 1)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 2)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "laporan_perkawinan"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 52)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skpangkat"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpangkat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skp1"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegskp as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.tahun', $previous1Year)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skp2"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegskp as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.tahun', $previous2Year)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }   else {
+         return [''];
+        }
+        
+        
+    }
+
+
+    public function submitVerifikasiPengajuanLayanan(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+
+          
+        $id_pengajuan = $datapost['id_pengajuan'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+
+
+       
+
+        $this->db->where('id', $id_pengajuan)
+                ->update('t_layanan', $data);
+
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('t_layanan c', 'a.id = c.id_m_user')
+                ->where('c.id', $id_pengajuan)
+                ->get()->result_array();
+
+
+        if($dataPengajuan[0]['status'] == 1){
+            $status = "ACC";
+            $statusForMessage = "disetujui";
+        } else if($dataPengajuan[0]['status'] == 2){
+            $status = "Ditolak";
+            $statusForMessage = "ditolak";
+        }
+
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+       
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' => 'Kenaikan Pangkat',
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+
+    public function batalVerifikasiPengajuanLayanan(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $id_usul = $datapost['id_batal'];
+        $data["status"] = 0; 
+        $data["keterangan"] = "";
+        $this->db->where('id', $id_usul)
+                ->update('t_layanan', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+
+    public function uploadSKLayanan()
+	{
+
+        $this->db->trans_begin();
+        $id_dok = $this->input->post('id_dokumen');
+        $create_nama_file =  $this->prosesName($id_dok);
+        $target_dir = null;
+        if($this->input->post('id_dokumen') == 4){
+            $target_dir						= './arsipelektronik/';
+        } else if($this->input->post('id_dokumen') == 7){
+            $target_dir						= './arsipgjberkala/';
+        } else if($this->input->post('id_dokumen') == 5){
+            $target_dir						= './arsipskp/';
+        } else if($this->input->post('id_dokumen') == 20){
+            $target_dir						= './arsipdiklat/';
+        } else if($this->input->post('id_dokumen') == 8){
+            $target_dir						= './arsipjabatan/';
+        } else if($this->input->post('id_dokumen') == 17){
+            $target_dir						= './arsipcuti/';
+        } else if($this->input->post('id_dokumen') == 6){
+            $target_dir						= './arsippendidikan/';
+        } else if($this->input->post('id_dokumen') == 2){
+            $target_dir						= './arsipberkaspns/';
+        } else if($this->input->post('id_dokumen') == 41){
+            $target_dir						= './arsipsumpah/';
+        } else if($this->input->post('id_dokumen') == 18){
+            $target_dir						= './arsipdisiplin/';
+        } else if($this->input->post('jenis_organisasi')){
+            $target_dir						= './arsiporganisasi/';
+        } else if($this->input->post('pegpenghargaan')){
+            $target_dir						= './arsippenghargaan/';
+        } else if($this->input->post('jenispenugasan')){
+            $target_dir						= './arsippenugasan/';
+        }     
+
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = str_replace(' ', '', $random_number.$create_nama_file);
+        $nama_file =  $filename;
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = '*';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE; 
+        $config['file_name']            = "$nama_file.pdf";
+
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload('file')) {
+			$data['error']    = strip_tags($this->upload->display_errors());
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'eror' => $data['error']);
+            return $res;
+		} else {
+			$dataFile 			= $this->upload->data();
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+            $dataFile['nama_file'] =  "$nama_file.pdf";
+            $dataFile['base64'] =  $base64;
+			$result		        = $this->insertUploadSkLayanan($dataFile);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+    
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+    return $res;
+        
+	}
+
+    function insertUploadSkLayanan($data)
+    {
+          
+        $id_peg =  $this->input->post('id_pegawai');
+        $id_dok  = $this->input->post('id_dokumen');
+        $id_usul  = $this->input->post('id_usul');
+
+
+       
+
+        // $pegawai = $this->db->select('*')
+        //         ->from('db_pegawai.pegawai a')
+        //         ->where('a.id_peg', $id_peg)
+        //         ->get()->row_array();
+        
+
+        if($id_dok == 4){
+        //PANGKAT   
+        $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
+        $tmt_pangkat = date("Y-m-d", strtotime($this->input->post('tmt_pangkat')));
+        $dataInsert['id_pegawai']     = $id_peg;
+        $dataInsert['jenispengangkatan']      = $this->input->post('jenis_pengangkatan');
+        $dataInsert['pangkat']      = $this->input->post('pangkat');
+        $dataInsert['masakerjapangkat']     =$this->input->post('masa_kerja');
+        $dataInsert['pejabat']      = $this->input->post('pejabat');
+        $dataInsert['nosk']      = $this->input->post('no_sk');
+        $dataInsert['tglsk']      = $tgl_sk;
+        $dataInsert['gambarsk']      = $data['nama_file'];
+        $dataInsert['tmtpangkat']      = $tmt_pangkat;
+        $dataInsert['created_by']      = $this->general_library->getId();
+        $dataInsert['status']      = 2;
+        $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+        $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
+        $id_insert_dok = $this->db->insert_id();
+        $this->updatePangkat($id_peg);
+
+        $dataUpdate['status'] = 1;
+        $dataUpdate['reference_id_dok'] = $id_insert_dok;
+        $url_file = "arsipelektronik/".$data['nama_file'];
+
+        $this->db->where('id', $id_usul)
+                ->update('t_layanan', $dataUpdate);
+
+        $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                // ->join('db_pegawai.pegpangkat d', 'a.reference_id_dok = d.id')
+                // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+        dd($dataLayanan);
+
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawai).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+                    'sendTo' => convertPhoneNumber($pegawai['handphone']),
+                    'message' => $caption,
+                    'filename' => "SK KENAIKAN PANGKAT.pdf",
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Pangkat'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+        // PANGKAT
+        } 
+        return $result;
+    }
+    
 
 
 

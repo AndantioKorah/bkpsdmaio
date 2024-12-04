@@ -52,7 +52,7 @@
        
             <div class="card-body">
 
-  <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
+  <!-- <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
   <li class="nav-item nav-item-layanan " role="presentation">
   <li class="nav-item nav-item-layanan" role="presentation">
     <button class="nav-link nav-link-layanan active" id="pills-usul-tab" data-bs-toggle="pill" data-bs-target="#pills-usul" type="button" role="tab" aria-controls="pills-usul" aria-selected="false">Usul Layanan</button>
@@ -60,9 +60,8 @@
   </li>
   <li class="nav-item nav-item-layanan " role="presentation">
   <button onclick="loadListUsulLayanan()" class="nav-link nav-link-layanan" id="pills-monitor-tab" data-bs-toggle="pill" data-bs-target="#pills-monitor" type="button" role="tab" aria-controls="pills-monitor" aria-selected="false">Monitor Usul Layanan</button>
-
   </li>
-  </ul>
+  </ul> -->
       <hr style="margin-top: 10px;">
       
   <div class="tab-content" id="pills-tabContent">
@@ -74,7 +73,7 @@
     <select onchange="formdetaillayanan(this.value)"   class="form-control select2" data-dropdown-css-class="select2-navy" name="jenis_layanan" id="jenis_layanan" required>
     <option value="0" selected>- Pilih Layanan - </option>
                     <?php if($jenis_layanan){ foreach($jenis_layanan as $r){ ?>
-                        <option value="<?=$r['kode']?>"><?=$r['nama']?></option>
+                        <option value="<?=$r['id']?>"><?=$r['nama_layanan']?></option>
                     <?php } } ?>
   </select>
   </div>
@@ -146,13 +145,36 @@
     $('#form_layanan').html('')
     $('#form_layanan').append(divLoaderNavy)
 
-    if(val == 0){
-      var id = 8
-      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+id, function(){
+    if(val == 1){
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-karis-karsu/")?>', function(){
       $('#loader').hide()
     })
-    } else {
-      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadFormLayanan/")?>'+val, function(){
+    } else if(val == 2){
+      var id = 8
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 3){
+      var id = 9
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 4){
+      var id = 10
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 5){
+      var id = 11
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 6) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 7) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
       $('#loader').hide()
     })
     }

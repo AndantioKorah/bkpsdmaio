@@ -61,73 +61,36 @@
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
    <div class="12">
-   <a href="<?= base_url('kepegawaian/verifikasi-karis-karsu');?>">
+   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>">
     <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
-  <!-- <div style="margin-top:8px;margin-bottom:8px;background-color:#deb887;" class="col-lg-12 badge  text-dark"> <h5 style="margin-top:5px;"> Verifikasi Layanan <?=$result[0]['nama_layanan'];?> </h5></div> -->
-  
-  <!-- <?php if($jenis_layanan == 3) { ?>
-   <table style="width: 100%;" class="table table_dok_detail">
-          <tr>
-            <td class="td-lab-dd">Jenis Cuti</td>
-            <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"> <?=$result[0]['nm_cuti'];?></td>
-          </tr>
-          <tr>
-            <td class="td-lab-dd">Tanggal Mulai</td>
-            <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result[0]['tanggal_mulai'];?></td>
-          </tr>
-          <tr>
-            <td class="td-lab-dd">Tanggal Selesai</td>
-            <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result[0]['tanggal_selesai'];?></td>
-          </tr>
-        </table>
-        <?php } ?> -->
+ 
    </div>
 
 
 <div class="row">
-	
-				<div class="col-md-12">
-
-
-
+<div class="col-md-12">
   <ul class="nav nav-pills pt-2" id="pills-tab" role="tablist">
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="openPresensiTab()" class="nav-link nav-link-layanan" id="pills-presensi-tab"
-    data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-presensi" aria-selected="false">Presensi</button>
-  </li> -->
  
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
 
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
+    <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat</button>
   <li>
 
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='laporan_perkawinan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Laporan Perkawinan Pertama</button>
+    <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
   <li>
-
+  
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='daftar_keluarga')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Daftar Keluarga</button>
+    <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
   <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='akte_nikah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Bukuh Nikah / Akte Perkawinan</button>
-  <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pas_foto')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pas Foto Suami/Istri</button>
-  <li>
-
 
 
         <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
@@ -387,23 +350,11 @@
 <div id="divloader" class="col-lg-12 text-center">
   
 </div>
-<!-- <iframe id="view_file_verif" style="width: 100%; height: 100vh;"></iframe> -->
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
 				</div>
 			</div>
-      
-	
-
-<!-- <button id="btn_verifikasi" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelVerif">
-Verifikasi
-</button>
-<form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
-<input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_pengajuan'];?>">
-<button  id="btn_tolak_verifikasi"  class="btn btn-danger" >
-Batal Verif
-</button>
-</form> -->
+    
 <style>
 </style>
 
@@ -459,7 +410,8 @@ Batal Verif
 		
 <script>
 
-var nip = "<?= $result[0]['nip'];?>"; 
+
+var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
 var status = "<?= $result[0]['status'];?>"; 
 
 $(function(){
@@ -499,10 +451,10 @@ function openPresensiTab(){
    
     if(file == "skcpns"){
           dir = "arsipberkaspns/";
-        } else if(file == "skpns"){
-          dir = "arsipberkaspns/";
-        } else if(file == "laporan_perkawinan" || file == "daftar_keluarga" || file == "pas_foto" || file == "akte_nikah"){
-          dir = "arsiplain/";
+        } else if(file == "skpangkat"){
+          dir = "arsipelektronik/";
+        } else if(file == "skp1" || file == "skp2"){
+          dir = "arsipskp/";
         }  else {
           dir = "uploads/";
         }
@@ -518,7 +470,7 @@ function openPresensiTab(){
    var id_peg = "<?=$result[0]['id_peg'];?>";
    $.ajax({
         type : "POST",
-        url  : "<?=base_url();?>" + '/kepegawaian/C_Kepegawaian/getFileForKarisKarsu',
+        url  : "<?=base_url();?>" + '/kepegawaian/C_Kepegawaian/getFileForVerifLayanan',
         dataType : "JSON",
         data : {id_peg:id_peg,file:file},
         success: function(data){
@@ -559,17 +511,17 @@ function openPresensiTab(){
             return false;
            }
 
-           if(status == "2"){
+          //  if(status == "2"){
            if(catatan == ""){
             errortoast('Silahkan mengisi catatan')
             return false;
            }
-           }
+          //  }
 
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanKarisKarsu")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){
@@ -588,7 +540,7 @@ function openPresensiTab(){
             e.preventDefault()
             if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanKarisKarsu")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

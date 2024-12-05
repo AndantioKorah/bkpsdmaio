@@ -24,7 +24,11 @@
                             font-size: .8rem;
                             font-weight: bold;
                         ">pada: <?=formatDateNamaBulanWT($rs['created_date'])?></span><br>
-                        <button class="btn btn-sm btn-outline-danger" href="#modal_upload_tpp" data-toggle="modal"
+                        <!-- <button class="btn btn-sm btn-outline-danger" href="#modal_upload_tpp" data-toggle="modal"
+                            onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_upload_file']?>')">
+                            <i class="fa fa-file-pdf"></i> Lihat File Upload
+                        </button> -->
+                        <button class="btn btn-sm btn-outline-danger"
                             onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_upload_file']?>')">
                             <i class="fa fa-file-pdf"></i> Lihat File Upload
                         </button>
@@ -66,10 +70,15 @@
                             <button style="display: none;" id="btn_delete_loading" disabled class="btn btn-sm btn-danger"><i class="fa fa-spin fa-spinner"></i> Menghapus...</button>
                         <?php } else { ?>
                             <?php if($rs['url_file_balasan']){ ?>
-                                <button class="btn btn-sm btn-outline-success" href="#modal_upload_tpp" data-toggle="modal"
+                                <!-- <button class="btn btn-sm btn-outline-success" href="#modal_upload_tpp" data-toggle="modal"
                                     onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_file_balasan']?>')">
                                     <i class="fa fa-file-pdf"></i> Lihat File Balasan
-                                </button><br>
+                                </button> -->
+                                <button class="btn btn-sm btn-outline-success"
+                                    onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_file_balasan']?>')">
+                                    <i class="fa fa-file-pdf"></i> Lihat File Balasan
+                                </button>
+                                <br>
                                 <span style="
                                     font-size: .8rem;
                                     color: green;
@@ -101,21 +110,23 @@
     })
 
     function detailUploadBerkasTpp(id, url){
-        $('#modal_upload_tpp_content').html('')
-        $('#modal_upload_tpp_content').append(divLoaderNavy)
-        $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/openFileUploadBerkasTpp/')?>'+id,
-            method: 'POST',
-            data: {
-                url: url
-            },
-            success: function(rs){
-                $('#modal_upload_tpp_content').html(rs)
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-                console.log(e)
-            }
-        })
+        window.open('<?=base_url()?>/'+url)
+
+        // $('#modal_upload_tpp_content').html('')
+        // $('#modal_upload_tpp_content').append(divLoaderNavy)
+        // $.ajax({
+        //     url: '<?=base_url('rekap/C_Rekap/openFileUploadBerkasTpp/')?>'+id,
+        //     method: 'POST',
+        //     data: {
+        //         url: url
+        //     },
+        //     success: function(rs){
+        //         $('#modal_upload_tpp_content').html(rs)
+        //     }, error: function(e){
+        //         errortoast('Terjadi Kesalahan')
+        //         console.log(e)
+        //     }
+        // })
     }
 
     function hapusUploadTpp(id){

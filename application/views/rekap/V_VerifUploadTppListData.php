@@ -55,7 +55,11 @@
                             <?php } ?>
                             <?php if($rs['url_file_balasan']){ ?>
                                 <br>
-                                <button class="btn btn-sm btn-outline-success" href="#modal_file_balasan" data-toggle="modal"
+                                <!-- <button class="btn btn-sm btn-outline-success" href="#modal_file_balasan" data-toggle="modal"
+                                    onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_file_balasan']?>')">
+                                    <i class="fa fa-file-pdf"></i> File Balasan Sudah Diupload
+                                </button> -->
+                                <button class="btn btn-sm btn-outline-success"
                                     onclick="detailUploadBerkasTpp('<?=$rs['id']?>', '<?=$rs['url_file_balasan']?>')">
                                     <i class="fa fa-file-pdf"></i> File Balasan Sudah Diupload
                                 </button>
@@ -96,21 +100,23 @@
     })
 
     function detailUploadBerkasTpp(id, url){
-        $('#modal_file_balasan_content').html('')
-        $('#modal_file_balasan_content').append(divLoaderNavy)
-        $.ajax({
-            url: '<?=base_url('rekap/C_Rekap/openFileUploadBerkasTpp/')?>'+id,
-            method: 'POST',
-            data: {
-                url: url
-            },
-            success: function(rs){
-                $('#modal_file_balasan_content').html(rs)
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-                console.log(e)
-            }
-        })
+        window.open('<?=base_url()?>/'+url)
+
+        // $('#modal_file_balasan_content').html('')
+        // $('#modal_file_balasan_content').append(divLoaderNavy)
+        // $.ajax({
+        //     url: '<?=base_url('rekap/C_Rekap/openFileUploadBerkasTpp/')?>'+id,
+        //     method: 'POST',
+        //     data: {
+        //         url: url
+        //     },
+        //     success: function(rs){
+        //         $('#modal_file_balasan_content').html(rs)
+        //     }, error: function(e){
+        //         errortoast('Terjadi Kesalahan')
+        //         console.log(e)
+        //     }
+        // })
     }
 
     function uploadFileBalasan(id){
@@ -126,6 +132,7 @@
         $('#modal_verif_upload_berkas_tpp_content').append(divLoaderNavy)
         $('#modal_verif_upload_berkas_tpp_content').load('<?=base_url("rekap/C_Rekap/loadModalVerifUploadBerkasTpp/")?>'+id, function(){
             $('#loader').hide()
+            $('#iframe_verif_upload_tpp_modal')[0].contentWindow.location.reload(true);
         })
     }
 </script>

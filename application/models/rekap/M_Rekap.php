@@ -3808,8 +3808,12 @@
 
                 $config['upload_path'] = $uploadPath;
                 $config['allowed_types'] = '*';
-                $config['file_name'] = ($file_name);
-                $this->load->library('upload', $config); 
+                $config['file_name'] = date('Ymdhis')."_".($file_name);
+                $this->load->library('upload', $config);
+                // if(file_exists($config['upload_path'])."/".$file_name){
+                //     move_uploaded_file('overwrited_file', ($config['upload_path']."/".$file_name));
+                //     unlink(($config['upload_path'])."/".$file_name);
+                // }
                 $uploadfile = $this->upload->do_upload('file_balasan');
                 
                 if($uploadfile){
@@ -3869,6 +3873,11 @@
         $this->db->trans_begin();
 
         $input_post = $this->input->post();
+        if(!$input_post){
+            $rs['code'] = 2;
+            $rs['message'] = 'Terjadi Kesalahan';
+            return $rs;
+        }
         $skpd = explode(";", $input_post['skpd']);
 
         $unitkerja = $this->db->select('*')
@@ -3934,10 +3943,14 @@
 
                 $config['upload_path'] = $uploadPath;
                 $config['allowed_types'] = '*';
-                // $config['max_size'] = '5000'; // max_size in kb
-                $config['file_name'] = ($file_name);
+                // $config['max_size'] = '10000'; // max_size in kb
+                $config['file_name'] = date('Ymdhis')."_".($file_name);
                 // $filename = $config['file_name'];
                 $this->load->library('upload', $config); 
+                // if(file_exists($config['upload_path'])."/".$file_name){
+                //     move_uploaded_file('overwrited_file', ($config['upload_path']."/".$file_name));
+                //     unlink(($config['upload_path'])."/".$file_name);
+                // }
                 $uploadfile = $this->upload->do_upload('input_tpp');
                 
                 if($uploadfile){
@@ -3962,8 +3975,12 @@
                      ]);
 
                 } else {
+                    $this->upload->display_errors();
+                    if($this->general_library->isProgrammer()){
+                        // dd($this->upload->data());
+                    }
                     $rs['code'] = 1;
-                    $rs['message'] = 'Gagal upload file';
+                    $rs['message'] = isset($this->upload->error_msg[0]) ? $this->upload->error_msg[0] : 'Gagal upload file';
                 }
             }
         } else {

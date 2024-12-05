@@ -862,7 +862,6 @@
                             ->order_by('created_date', 'asc')
                             ->limit(5)
                             ->get()->result_array();
-            // dd($list);
 
             if($list){
                 foreach($list as $l){
@@ -892,20 +891,24 @@
                                     ]);
                         } else {
                             $make_sent = 0;
-                            if($temp_count >=3 && $req['status'] == 'pending'){
+                            if($temp_count >=2 && $req['status'] == 'pending'){
                                 $make_sent = 1;
                             }
 
-                            $updateCronWa['chatId'] = $req['id'];
+                            $updateCronWa['chatId'] = isset($req['id']) ? $req['id'] : null;
                             $updateCronWa['flag_sending'] = 1;
                             $updateCronWa['date_sending'] = date('Y-m-d H:i:s');
                             $updateCronWa['log'] = json_encode($req);
-                            $updateCronWa['status'] = $req['status'];
+                            $updateCronWa['status'] = isset($req['status']) ? $req['status'] : null;
                             $updateCronWa['temp_count'] = $temp_count;
                             if($make_sent == 1){
                                 $updateCronWa['flag_sent'] = 1;
                                 $updateCronWa['date_sent'] = date('Y-m-d H:i:s');
                                 $updateCronWa['status'] = 'pending, consider its done';
+                            } else if(isset($req['success']) && $req['success'] == true){
+                                $updateCronWa['flag_sent'] = 1;
+                                $updateCronWa['date_sent'] = date('Y-m-d H:i:s');
+                                $updateCronWa['status'] = $req['success'];
                             }
 
                             $this->db->where('id', $l['id'])

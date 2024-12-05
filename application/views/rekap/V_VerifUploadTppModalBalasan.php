@@ -25,7 +25,8 @@
                     <label class="lbl_nm_verif_balasan">Pilih File</label><br>
                     <input class="form-control" type="file" name="file_balasan" id="file_balasan" /><br>
                     <?php if($result['url_file_balasan']){ ?>
-                        <iframe style="width: 100%; height: 55vh; margin-top: 10px;" src="<?=base_url($result['url_file_balasan'])?>"></iframe>
+                        <!-- <iframe id="iframe_file_balasan" style="width: 100%; height: 55vh; margin-top: 10px;" src="<?=base_url($result['url_file_balasan'])?>"></iframe> -->
+                        <!-- <iframe id="iframe_file_balasan" style="width: 100%; height: 55vh; margin-top: 10px;"></iframe> -->
                     <?php } else { ?>
                     <?php } ?>
                 </div>
@@ -44,6 +45,9 @@
     <script>
         $(function(){
             $('#flag_verif').select2()
+            // $('#iframe_file_balasan')[0].contentWindow.location.reload(true);
+            $('#iframe_file_balasan').attr('src', "<?=base_url($result['url_file_balasan'])?>")
+            console.log('asdasdsa')
         })
 
         $('#form_upload_balasan').on('submit', function(e){

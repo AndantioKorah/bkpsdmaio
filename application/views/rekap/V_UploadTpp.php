@@ -6,7 +6,7 @@
                 <hr>
             </div>
             <div class="card-body">
-                <form id="form_upload_berkas_tpp">
+                <form method="post" id="form_upload_berkas_tpp" enctype="multipart/form-data">
                     <div class="row" style="margin-top: -30px;">
                         <div class="col-lg-4">
                             <div class="form-group">
@@ -245,4 +245,24 @@
             }
         })
     }
+
+    $("#input_tpp").change(function (e) {
+
+        var doc = input_tpp.value.split('.')
+        var extension = doc[doc.length - 1]
+
+        var fileSize = this.files[0].size/1024;
+        var MaxSize = '10000'
+
+        if (extension != "pdf"){
+            errortoast("Harus File PDF")
+            $(this).val('');
+        }
+
+        if (fileSize > MaxSize ){
+            errortoast("Maksimal Ukuran File 10 MB")
+            $(this).val('');
+        }
+
+    });
 </script>

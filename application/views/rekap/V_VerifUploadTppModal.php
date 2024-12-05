@@ -15,7 +15,8 @@
     </style>
     <div class="row p-3">
         <div class="col-lg-6">
-            <iframe style="width: 100%; height: 75vh;" src="<?=base_url($result['url_upload_file'])?>"></iframe>
+            <!-- <iframe id="iframe_verif_upload_tpp_modal" style="width: 100%; height: 75vh;" src="<?=base_url($result['url_upload_file'])?>"></iframe> -->
+            <iframe id="iframe_verif_upload_tpp_modal" style="width: 100%; height: 75vh;"></iframe>
         </div>
         <div class="col-lg-6">
             <div class="row">
@@ -58,6 +59,8 @@
     <script>
         $(function(){
             $('#flag_verif').select2()
+            $('#iframe_verif_upload_tpp_modal')[0].contentWindow.location.reload(true)
+            $('#iframe_verif_upload_tpp_modal').attr('src', "<?=base_url($result['url_upload_file'])?>")
         })
 
         $('#btn_save_verif').on('click', function(){

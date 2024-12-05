@@ -533,4 +533,5 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         // }
         // }
         });
+
 </script>

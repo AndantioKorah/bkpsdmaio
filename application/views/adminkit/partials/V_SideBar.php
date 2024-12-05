@@ -488,14 +488,14 @@
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">
-					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-karis-karsu')?>">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Karis/Karsu
 					</a>
 				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){ ?>
 				<li class="sidebar-item ">
-					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan')?>">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/6')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Kenaikan Pangkat
 					</a>
 				</li>

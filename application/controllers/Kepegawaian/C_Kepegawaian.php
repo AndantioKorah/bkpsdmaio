@@ -2415,6 +2415,35 @@ class C_Kepegawaian extends CI_Controller
         $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan);
     }
 
+	
+
+	public function downloadDrafSKPangkat($id_usul,$id_m_layanan){
+		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);	
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($data['result'][0]['nipbaru_ws']);
+		$data['nomorsurat'] = $this->input->post('nomor_sk');
+		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
+		$data['tanggal_pertek'] = $this->input->post('tanggal_pertek');
+		$data['nomor_urut'] = $this->input->post('nomor_urut');
+        $this->load->view('kepegawaian/layanan/V_DrafSkPangkat', $data);
+            // $mpdf = new \Mpdf\Mpdf([
+            //     'format' => 'Legal-P',
+			// 	// 'format' => [215, 330],
+			// 	'default_font_size' => 9,
+			// 	'default_font' => 'times',
+            //     'debug' => true
+            // ]);
+            // $html = $this->load->view('kepegawaian/layanan/V_DrafSkPangkat', $data, true);
+            // $mpdf->WriteHTML($html);
+            // $mpdf->showImageErrors = true;
+            // $mpdf->Output('Draf SK Pangkat.pdf', 'D');
+
+			
+
+        } 
+    
+
 
 	
 

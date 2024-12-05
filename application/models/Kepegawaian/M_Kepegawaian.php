@@ -8972,7 +8972,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-     $this->db->select('*, c.id as id_pengajuan, c.status as status_layanan')
+     $this->db->select('*,b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -9318,6 +9318,7 @@ public function getFileForVerifLayanan()
         if($id_m_layanan == 6){
             $this->db->where('id', $reference_id_dok)
                     ->update('db_pegawai.pegpangkat', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        $this->updatePangkat($dataLayanan['id_peg']);
         }
 
         // $message = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n. Terima kasih.".FOOTER_MESSAGE_CUTI;

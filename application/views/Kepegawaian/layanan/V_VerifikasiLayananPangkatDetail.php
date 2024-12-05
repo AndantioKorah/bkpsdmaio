@@ -120,58 +120,11 @@
 </ul>
 <hr style="margin-top: 10px;">
 <div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
-  <div style="margin-left:10px;"></div>
+  <div class="tab-pane fade show " id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+  <!-- <div style="margin-left:10px;" class="col-lg-12">
+  </div> -->
   </div>
-  <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-organisasi" role="tabpanel" aria-labelledby="pills-organisasi-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-penghargaan" role="tabpanel" aria-labelledby="pills-penghargaan-tab">
-  <div id="form_penghargaan"></div>
-  </div>
-  <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">...</div>
-  <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
-  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
-  <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
-  <div class="tab-pane fade" id="pills-skcpns" role="tabpanel" aria-labelledby="pills-skcpns-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-skpns" role="tabpanel" aria-labelledby="pills-skpns-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-drp" role="tabpanel" aria-labelledby="pills-drp-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-honor" role="tabpanel" aria-labelledby="pills-honor-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-suket_lain" role="tabpanel" aria-labelledby="pills-suket_lain-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-ibel" role="tabpanel" aria-labelledby="pills-ibel-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-tubel" role="tabpanel" aria-labelledby="pills-tubel-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-forlap" role="tabpanel" aria-labelledby="pills-forlap-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-karya_tulis" role="tabpanel" aria-labelledby="pills-karya_tulis-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-mutasi" role="tabpanel" aria-labelledby="pills-mutasi-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-serkom" role="tabpanel" aria-labelledby="pills-serkom-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-pak" role="tabpanel" aria-labelledby="pills-pak-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab"></div>
+  
   <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
     <div class="row">
       <div class="col-lg-12">
@@ -199,8 +152,6 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" /> 
-
-           
           </div>
           <div class="col-lg-12 text-center">
             <span class="sp_profil">
@@ -250,7 +201,7 @@
               </div>
               <div class="col-lg-12 text-right" >
                 <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
+                  <?=formatDateNamaBulan($result[0]['tmt_pangkat'])?>
                 </span>
               </div>
             </div>
@@ -360,11 +311,12 @@
 </div>
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
-  
 </div>
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
-				</div>
+            <!-- <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	 -->
+            <iframe style="display: none; width: 100%;height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+				
+          </div>
 			</div>
     
 <style>
@@ -447,7 +399,6 @@
            <div id="modal_view_file_content">
             <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-
           </div>
         </div>
       </div>
@@ -461,8 +412,8 @@
 
 
 var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
-var status = "<?= $result[0]['status_layanan'];?>"; 
-var reference_id_dok = $result[0]['reference_id_dok'];
+var status = "<?= $result[0]['status_layanan'];?>";
+
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
@@ -644,8 +595,12 @@ function deleteFile(id,reference_id_dok,id_m_layanan){
                            method: 'post',
                            data: null,
                            success: function(){
+
                                successtoast('Data sudah terhapus')
-                               const myTimeout = setTimeout(location.reload(), 1000);
+                               setTimeout(window.location.reload.bind(window.location), 1000);
+                               
+                              //  const myTimeout = setTimeout(location.reload(), 2000);
+                            
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

@@ -62,9 +62,21 @@
 		<div class="col-12">
    <div class="12">
    <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>">
-    <button  class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
+    <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
- 
+  <?php if($result[0]['reference_id_dok'] == null) { ;?>
+  <button 
+  id="btn_upload_sk"
+  data-toggle="modal" 
+  href="#modal_upload_sk"
+  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
+  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <?php } else { ?>
+    <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+    <i class="fa fa-file-pdf"></i> File Pangkat</button>
+    <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger">
+    <i class="fa fa-file-trash"></i> Hapus File</button>
+  <?php } ?>
    </div>
 
 
@@ -404,6 +416,43 @@
 	</div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_upload_sk" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        ...
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modal_view_file" >
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
+
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
     
 
 
@@ -412,19 +461,25 @@
 
 
 var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
-var status = "<?= $result[0]['status'];?>"; 
-
+var status = "<?= $result[0]['status_layanan'];?>"; 
+var reference_id_dok = $result[0]['reference_id_dok'];
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
+  
+ 
+
 
    if(status == 0){
+    $('#btn_upload_sk').hide()
     $('#btn_tolak_verifikasi').hide()
     $('#btn_verifikasi').show()
    } else if(status == 1) {
+    $('#btn_upload_sk').show()
     $('#btn_tolak_verifikasi').show()
     $('#btn_verifikasi').hide()
    } else if(status == 2) {
     $('#btn_tolak_verifikasi').show()
+    $('#btn_upload_sk').show()
     $('#btn_verifikasi').hide()
    }
   })
@@ -528,6 +583,7 @@ function openPresensiTab(){
                   successtoast('Data Berhasil Diverifikasi')
                   // loadListUsulLayanan(1)
                   $('#btn_tolak_verifikasi').show()
+                  $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
@@ -546,6 +602,7 @@ function openPresensiTab(){
                 success: function(datares){
                   successtoast('Berhasil batal verifikasi ')
                   $('#btn_tolak_verifikasi').hide()
+                  $('#btn_upload_sk').hide()
                   $('#btn_verifikasi').show()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
@@ -555,7 +612,48 @@ function openPresensiTab(){
         })
 
 
+function loadModalUploadSK(id,id_m_layanan){
+  $('#modal_body').html('')
+  $('#modal_body').append(divLoaderNavy)
+  $('#modal_body').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalUploadSK")?>'+'/'+id+'/'+id_m_layanan, function(){
+    $('#loader').hide()
+  })
+  }
+
+  async function openFilePangkat(filename){
+
+$('#iframe_view_file').hide()
+$('.iframe_loader').show()  
+
+var number = Math.floor(Math.random() * 1000);
+$link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
+
+$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').on('load', function(){
+  $('.iframe_loader').hide()
+  $(this).show()
+})
+}
+
+
+function deleteFile(id,reference_id_dok,id_m_layanan){
+                   
+                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileLayanan/")?>'+id+'/'+reference_id_dok+'/'+id_m_layanan,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data sudah terhapus')
+                               const myTimeout = setTimeout(location.reload(), 1000);
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
   
+
 
 
 </script>

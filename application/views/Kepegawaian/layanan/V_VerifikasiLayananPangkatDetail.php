@@ -61,22 +61,75 @@
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
    <div class="12">
-   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>">
+   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>" >
     <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
+  
   <button 
   id="btn_upload_sk"
   data-toggle="modal" 
   href="#modal_upload_sk"
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
   <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <!-- Button trigger modal -->
+<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+Download Draf SK
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKPangkat/'.$id_usul.'/'.$id_m_layanan.'')?>" target="_blank">
+          <div class="form-group">
+          <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_sk" name="nomor_sk" >
+          </div>
+          <div class="form-group">
+          <label >Nomor Pertek BKN</label>
+          <input type="text" class="form-control" id="nomor_pertek" name="nomor_pertek" >
+          </div>
+          <div class="form-group">
+          <label >Nomor Urut</label>
+          <input type="text" class="form-control" id="nomor_urut" name="nomor_urut" >
+          </div>
+          <div class="form-group">
+          <label >TMT Pangkat</label>
+          <input type="text" class="form-control datepickerr"  id="tmtpangkat" name="tmtpangkat" >
+          </div>
+          <div class="form-group">
+          <label >Gaji</label>
+          <input type="text" class="form-control" id="gaji" name="gaji" >
+          </div>
+          <div class="form-group">
+          <label >Angka Kredit</label>
+          <input type="number" class="form-control" id="ak" name="ak" >
+          </div>
+          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <?php } else { ?>
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
     <i class="fa fa-file-pdf"></i> File Pangkat</button>
     <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger">
     <i class="fa fa-file-trash"></i> Hapus File</button>
   <?php } ?>
+
+
+
    </div>
 
 
@@ -416,7 +469,13 @@ var status = "<?= $result[0]['status_layanan'];?>";
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
- 
+  $('.datepickerr').datepicker({
+     format: 'dd-mm-yyyy',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+    });
 
 
    if(status == 0){

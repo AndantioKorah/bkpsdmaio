@@ -391,7 +391,7 @@
 </div>
 <!-- <iframe id="view_file_verif" style="width: 100%; height: 100vh;"></iframe> -->
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
 				</div>
 			</div>
       

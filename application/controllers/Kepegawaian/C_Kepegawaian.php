@@ -2427,17 +2427,18 @@ class C_Kepegawaian extends CI_Controller
 		$data['tanggal_pertek'] = $this->input->post('tanggal_pertek');
 		$data['nomor_urut'] = $this->input->post('nomor_urut');
         $this->load->view('kepegawaian/layanan/V_DrafSkPangkat', $data);
-            // $mpdf = new \Mpdf\Mpdf([
-            //     'format' => 'Legal-P',
-			// 	// 'format' => [215, 330],
-			// 	'default_font_size' => 9,
-			// 	'default_font' => 'times',
-            //     'debug' => true
-            // ]);
-            // $html = $this->load->view('kepegawaian/layanan/V_DrafSkPangkat', $data, true);
-            // $mpdf->WriteHTML($html);
-            // $mpdf->showImageErrors = true;
-            // $mpdf->Output('Draf SK Pangkat.pdf', 'D');
+		
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+				// 'format' => [215, 330],
+				'default_font_size' => 9,
+				'default_font' => 'times',
+                'debug' => true
+            ]);
+            $html = $this->load->view('kepegawaian/layanan/V_DrafSkPangkat', $data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output('Draf SK Pangkat.pdf', 'D');
 
 			
 

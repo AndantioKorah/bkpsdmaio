@@ -133,6 +133,9 @@ $(function(){
                 document.getElementById("upload_form").reset();
                 document.getElementById('btn_upload_pangkat').disabled = false;
                 $('#btn_upload_pangkat').hide()
+                const myTimeout = setTimeout(location.reload(), 1000);
+                
+                  
             //    $('#btn_upload_pangkat').html('Simpan')
                
               } else {

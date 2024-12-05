@@ -8966,13 +8966,13 @@ public function searchPengajuanLayanan($id_m_layanan){
     return $this->db->get()->result_array();
 }
 
-function getPengajuanLayanan($id){
+function getPengajuanLayanan($id,$id_m_layanan){
     // $this->db->select('*')
     //                 ->from('t_karis_karsu a')
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-    return $this->db->select('*, c.id as id_pengajuan')
+     $this->db->select('*, c.id as id_pengajuan, c.status as status_layanan')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -8981,8 +8981,13 @@ function getPengajuanLayanan($id){
     ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
     ->join('db_pegawai.agama i', 'b.agama = id_agama')
     ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
-    ->where('c.id', $id)
-    ->get()->result_array();
+    ->where('c.id', $id);
+
+    if($id_m_layanan == 6){
+        $this->db->join('db_pegawai.pegpangkat k', 'k.id = c.reference_id_dok','left');
+    }
+    
+    return $this->db->get()->result_array();
 }
 
 
@@ -9102,7 +9107,7 @@ public function getFileForVerifLayanan()
                     'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
                     'message' => trim($message.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
-                    'jenis_layanan' => 'Kenaikan Pangkat',
+                    'jenis_layanan' => 'Pangkat',
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
@@ -9272,11 +9277,11 @@ public function getFileForVerifLayanan()
                 ->where('a.id', $id_usul)
                 ->get()->row_array();
         
-        dd($dataLayanan);
+        
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawai).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
         $cronWa = [
-                    'sendTo' => convertPhoneNumber($pegawai['handphone']),
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
                     'filename' => "SK KENAIKAN PANGKAT.pdf",
                     'fileurl' => $url_file,
@@ -9287,6 +9292,55 @@ public function getFileForVerifLayanan()
         // PANGKAT
         } 
         return $result;
+    }
+
+
+    public function deleteFileLayanan($id_usul,$reference_id_dok,$id_m_layanan){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $this->db->trans_begin();
+
+        $dataLayanan = $this->db->select('c.*,a.*')
+        ->from('t_layanan a')
+        ->join('m_user b', 'a.id_m_user = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->where('a.id', $id_usul)
+        ->get()->row_array();
+
+
+            $data["reference_id_dok"] = null; 
+            $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+                  
+        // PANGKAT 
+        if($id_m_layanan == 6){
+            $this->db->where('id', $reference_id_dok)
+                    ->update('db_pegawai.pegpangkat', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        }
+
+        // $message = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        // $cronWa = [
+        //     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+        //     'message' => $message,
+        //     'type' => 'text',
+        //     'jenis_layanan' => 'Pangkat',
+        //     'created_by' => $this->general_library->getId()
+        // ];
+        // $this->db->insert('t_cron_wa', $cronWa);
+
+         // PANGKAT
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
     }
     
 

@@ -2358,15 +2358,16 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function verifikasiLayananDetail($id,$layanan){
-		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id);
+		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
 		$previous2Year = $currentYear - 2; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['id_m_layanan'] = $layanan;
+		$data['id_usul'] = $id;
 		// $data['result'] = $this->kepegawaian->getPengajuanLayananKarisKarsu($id);
-	
+		// dd($data['result']);
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 		} else if($layanan == 6){
@@ -2398,7 +2399,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['id_usul']= $id_usul;
-		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul);
+		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
         if($id_m_layanan == 6){
 			$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
 		}
@@ -2408,6 +2409,11 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->uploadSKLayanan());
 	}
+
+	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan)
+    {
+        $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan);
+    }
 
 
 	

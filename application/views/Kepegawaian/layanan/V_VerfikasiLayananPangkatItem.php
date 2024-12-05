@@ -9,7 +9,7 @@
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
-            <th class="text-center">Upload SK</th>
+            <th class="text-center"></th>
           <?php } ?>
           <th></th>
           
@@ -38,12 +38,12 @@
                 <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button>
                 <?php } else { ?>
-                  <button 
+                  <!-- <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id_pengajuan']?>"
                 href="#modal_upload_sk"
                 onclick="loadModalUploadSK('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
-                <i class="fa fa-upload" aria-hidden="true"></i></button>
+                <i class="fa fa-upload" aria-hidden="true"></i></button> -->
                 <?php } ?>
             <?php } ?>
               </td>
@@ -125,7 +125,7 @@
   })
   }
 
-  async function openFilePangkat(filename){
+async function openFilePangkat(filename){
 
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  

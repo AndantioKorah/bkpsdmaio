@@ -1,24 +1,4 @@
-<!-- <style>
-  @media print {
 
-    
-@page {
-  size: F4;
-}
-
-	p {
-		font-size: 16pt;
-        font-family: "Bookman Old Style";
-        color:#000;
-	}
-
-    table {
-        font-size: 14;
-        font-family: "Bookman Old Style";
-        color:#000;
-    }
-}
-</style> -->
 <html>
 <style>
 	#bodysurat {
@@ -294,18 +274,6 @@ peraturan perundang-undangan yang berlaku.
 	<img src="<?=base_url();?>assets/images/footer.png" alt="">
 	</div>
 
-	<?php
-        // $this->load->view('adminkit/partials/V_FooterBsre');
-    ?>
-	<!-- <img style="width: 100%;margin-top: 90px;" src="<?=base_url();?>assets/images/footer.png" alt=""> -->
-	<!-- <span >
 
-Tembusan Yth.:<br>
-1. Wali Kota Manado;<br>
-2. Wakil Wali Kota Manado;<br>
-3. Sekretaris Daerah Kota Manado;<br>
-4. <?= $this->general_library->getTembusanHukdis($profil_pegawai['id_unitkerjamaster'],$profil_pegawai['nm_unitkerjamaster'],$profil_pegawai['nm_unitkerja']);?>;<br>
-5. Arsip.
-</span> -->
 	</body>
 	</html>

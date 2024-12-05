@@ -36,6 +36,9 @@
   <link href="<?=base_url('assets/css/select2.min.css')?>" rel="stylesheet" />
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 
+  <link href="<?=base_url('assets/css/dropzone.css')?>" rel="stylesheet" />
+  <script src="<?=base_url('assets/js/dropzone-min.js')?>"></script>
+
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
   <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
 

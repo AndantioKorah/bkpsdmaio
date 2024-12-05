@@ -209,9 +209,9 @@ function countNilaiKomponen($data)
     // floatval($data['perilaku_6']) +
     // floatval($data['perilaku_7']);
     $bobot = 30;
-    if ($capaian < 350) {
+    if ($capaian <= 209) {
         $bobot = 0;
-    } else if ($capaian > 350 && $capaian < 679) {
+    } else if ($capaian > 209 && $capaian <= 678) {
         $bobot = ($capaian / 700) * floatval(BOBOT_NILAI_KOMPONEN_KINERJA);
         $bobot = $bobot * 100;
     }

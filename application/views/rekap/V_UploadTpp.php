@@ -252,7 +252,7 @@
         var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
-        var MaxSize = '10000'
+        var MaxSize = '20000'
 
         if (extension != "pdf"){
             errortoast("Harus File PDF")
@@ -260,7 +260,7 @@
         }
 
         if (fileSize > MaxSize ){
-            errortoast("Maksimal Ukuran File 10 MB")
+            errortoast("Maksimal Ukuran File 20 MB")
             $(this).val('');
         }
 

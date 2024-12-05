@@ -856,4 +856,8 @@ class C_Rekap extends CI_Controller
         $data = $this->input->post();
         $this->load->view('rekap/V_UploadTppOpenFile', $data);
     }
+
+    public function testDropzone(){
+        dd($_FILES);
+    }
 }

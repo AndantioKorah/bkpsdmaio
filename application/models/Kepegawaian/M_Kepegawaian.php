@@ -8947,10 +8947,10 @@ public function searchPengajuanLayanan($id_m_layanan){
             //     $this->db->where_in('a.id_m_layanan', [1,6,7]);
             //     $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             // } else 
-            if($id_m_layanan == 6){
+            if($id_m_layanan == 6 || $id_m_layanan == 7){
                 $this->db->where_in('a.id_m_layanan', [6,7]);
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
-            } else if($id_m_layanan == 1){ 
+            }  else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
             } else {
                 $this->db->where('a.id_m_layanan', 99);
@@ -9019,12 +9019,12 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "laporan_perkawinan"){
+        } else if($this->input->post('file') == "pak"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->where('a.id_dokumen', 52)
+                ->where('a.id_dokumen', 11)
                 ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -9058,7 +9058,37 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }   else {
+        } else if($this->input->post('file') == "ibel"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 13)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sertiukom"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 65)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "forlap"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 12)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }      else {
          return [''];
         }
         

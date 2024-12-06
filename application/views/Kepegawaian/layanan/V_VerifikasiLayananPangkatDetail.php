@@ -70,13 +70,21 @@
   id="btn_upload_sk"
   data-toggle="modal" 
   href="#modal_upload_sk"
-  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
+  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
   <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
   <!-- Button trigger modal -->
-<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
-Download Draf SK
-</button>
+  <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+  Download Draf SK
+  </button> -->
 
+  <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+        Verifikasi
+        </button>
+
+        <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Verif
+        </button>
+  
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -140,7 +148,7 @@ Download Draf SK
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
- 
+ <?php if($id_m_layanan == 6 || $id_m_layanan == 7) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
@@ -156,17 +164,22 @@ Download Draf SK
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
   <li>
-
-
-        <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
-        Verifikasi
-        </button>
-        <form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_pengajuan'];?>">
-        <button  id="btn_tolak_verifikasi"  class="btn btn-danger ml-2" style="display:none;">
-        Batal Verif
-        </button>
-        </form>
+<?php } ?>
+<?php if($id_m_layanan == 7) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
+  <li>
+  
+ <?php } ?>
         </li>
 
 
@@ -406,10 +419,6 @@ Download Draf SK
       <button id="btn_verif" class="btn btn-primary" style="float: right;">Simpan</button>
     </form>
       </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
     </div>
   </div>
 </div>
@@ -519,17 +528,11 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
+        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap"){
+          dir = "arsiplain/";
         }  else {
           dir = "uploads/";
         }
-
-    //     var number = Math.floor(Math.random() * 1000);
-    //     var link = "<?=base_url();?>/arsipberkaspns/11250SK_PNS_199401042020121011.pdf?v="+number;
-    //     $('#view_file_verif').attr('src', link)
-    //        $('#view_file_verif').on('load', function(){
-    //      $('.iframe_loader').hide()
-    //      $(this).show()
-    //    })
 
    var id_peg = "<?=$result[0]['id_peg'];?>";
    $.ajax({
@@ -600,15 +603,27 @@ function openPresensiTab(){
             })
         })
 
-        $('#form_batal_verifikasi_layanan').on('submit', function(e){
+
+        function loadModalUploadSK(id_usul,id_m_layanan){
+        $('#modal_body').html('')
+        $('#modal_body').append(divLoaderNavy)
+        $('#modal_body').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalUploadSK")?>'+'/'+id_usul+'/'+id_m_layanan, function(){
+          $('#loader').hide()
+        })
+        }
+
+
+          function batalVerifLayanan(id_usul){
           
-            e.preventDefault()
             if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
             $.ajax({
                 url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
                 method: 'post',
-                data: $(this).serialize(),
-                success: function(datares){
+                // data: $(this).serialize(),
+                data: {
+                id_batal: id_usul
+            },
+                success: function(data){
                   successtoast('Berhasil batal verifikasi ')
                   $('#btn_tolak_verifikasi').hide()
                   $('#btn_upload_sk').hide()
@@ -617,16 +632,9 @@ function openPresensiTab(){
                     errortoast('Terjadi Kesalahan')
                 }
             })
+
+            
           }
-        })
-
-
-function loadModalUploadSK(id,id_m_layanan){
-  $('#modal_body').html('')
-  $('#modal_body').append(divLoaderNavy)
-  $('#modal_body').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalUploadSK")?>'+'/'+id+'/'+id_m_layanan, function(){
-    $('#loader').hide()
-  })
   }
 
   async function openFilePangkat(filename){

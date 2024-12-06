@@ -2311,13 +2311,22 @@ class C_Kepegawaian extends CI_Controller
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['id_m_layanan'] = $id_layanan;
 
-		if($id_layanan == 6){
-			$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
-		} else if($id_layanan == 7){
-		$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');
-			$this->load->view('kepegawaian/layanan/V_LayananPangkatFungsional', $data);
-		}
+		if($id_layanan == 6 || $id_layanan == 7){
+			if($id_layanan == 7){
+				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
+				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+
+			}
+		$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
+		} 
+		// else if($id_layanan == 7){
+		// $data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');
+		// $this->load->view('kepegawaian/layanan/V_LayananPangkatFungsional', $data);
+		// }
 	}
 
 	public function loadListRiwayatLayanan($id){
@@ -2352,7 +2361,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $id_m_layanan;
 		if($id_m_layanan == 1){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
-		} else if($id_m_layanan == 6){
+		} else if($id_m_layanan == 6 || $id_m_layanan == 7){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
 		}
 	}
@@ -2370,7 +2379,7 @@ class C_Kepegawaian extends CI_Controller
 		// dd($data['result']);
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
-		} else if($layanan == 6){
+		} else if($layanan == 6 || $layanan == 7){
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		}
 	}

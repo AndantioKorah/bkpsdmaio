@@ -1222,7 +1222,10 @@
             if($result['flag_puskesmas'] == 1){
                 $result['kapus'] = $tempresult['kepalaskpd'];
                 $result['kapus']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
-            } else {
+            } else if($result['flag_sekolah'] == 1){
+                $result['kepsek'] = $tempresult['kepalaskpd'];
+                $result['kepsek']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+            }else {
                 $result['kepalaskpd'] = $tempresult['kepalaskpd'];
                 $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
             }

@@ -953,11 +953,11 @@
 			</a>
 			<ul id="talentpool" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator

@@ -226,7 +226,7 @@ ol {
 
 				<form id="form_karis_karsu" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
-          <?php if($id_m_layanan == 6 || $id_m_layanan == 7) { ?>
+          <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
 					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
 					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
@@ -235,10 +235,16 @@ ol {
           <?php if($id_m_layanan == 7) { ?>
 					<input type="hidden" id="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
           <?php } ?>
+          <?php if($id_m_layanan == 8) { ?>
+					<input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
+					<input type="hidden" id="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
+					<input type="hidden" id="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
+
+          <?php } ?>
 					<span>Berkas Persyaratan :</span>
 					<div class="list-type1x">
 						<ol class="rectangle-list">
-              <?php if($id_m_layanan == 6 || $id_m_layanan == 7) { ?>
+              <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
 							<li>
 								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
 									onclick="viewBerkasPangkat('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
@@ -291,6 +297,39 @@ ol {
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
+              <?php if($id_m_layanan == 8) { ?>
+                <li>
+								<a class="<?php if($skjabterusmenerus) echo 'select'; else echo 'unselect';?>" <?php if($skjabterusmenerus) { ?>
+									onclick="viewBerkasPangkat('<?=$skjabterusmenerus['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural*<i
+											class="fas fa-<?php if($skjabterusmenerus) echo ''; else echo '';?>"></i></a>
+							</li>
+                <li>
+								<a class="<?php if($stlud) echo 'select'; else echo 'unselect';?>" <?php if($stlud) { ?>
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah dari golongan III ke IV) <i
+											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($diklat) echo 'select'; else echo 'unselect';?>" <?php if($diklat) { ?>
+									onclick="viewBerkasPangkat('<?=$diklat['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Diklat PIM III (bagi PNS yang pindah dari golongan III ke IV) <i
+											class="fas fa-<?php if($diklat) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
+									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijin Belajar (apabila terjadi peningkatan pendidikan) <i
+											class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
+									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti (bagi PNS yang memiliki Ijazah/gelar pendidikan baru atau apabila terjadi peningkatan pendidikan)<i
+											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
+							</li>
+             
+              <?php } ?>
 						</ol>
 					</div>
 
@@ -304,9 +343,27 @@ ol {
 					Berkas Sudah diupload<br>
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
+
 					Berkas diupload Pada Menu Profil <br>
-					
+          <?php if($id_m_layanan == 7) { ?>
+          Untuk Berkas : <br>
+					<i class="fa fa-file-pdf"></i> PAK<br>
+					<i class="fa fa-file-pdf"></i> Ijin Belajar<br>
+					<i class="fa fa-file-pdf"></i> Sertifikat Uji Kompetensi <br>
+					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti
+					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
+        <?php } ?>
+        <?php if($id_m_layanan == 8) { ?>
+          Untuk Berkas : <br>
+					<i class="fa fa-file-pdf"></i> SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural<br>
+					<i class="fa fa-file-pdf"></i> Sertifikat Ujian Dinas (STLUD) <br>
+					<i class="fa fa-file-pdf"></i> Ijin Belajar (apabila terjadi peningkatan pendidikan) <br>
+					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti 
+
+					<br>di upload pada pilihan Arsip Lainnya.
+				</p>
+        <?php } ?>
 				
 			</div>
 		</div>
@@ -352,7 +409,7 @@ ol {
 </div>
 
 <script>
-var id_m_layanan = "<?=$id_m_layanan;?>S"
+var id_m_layanan = "<?=$id_m_layanan;?>"
 $(function(){
   $(".select2").select2({   
 		width: '100%',
@@ -372,10 +429,11 @@ $(function(){
         var skp1 = $('#skp1').val()
         var skp2 = $('#skp2').val()
         var pak = $('#pak').val()
+        var skjabterusmenerus = $('#skjabterusmenerus').val()
         var ibel = $('#ibel').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
-
-        if(id_m_layanan == 6 || id_m_layanan == 7){
+        
+        if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -402,9 +460,14 @@ $(function(){
             return false;
         }
         }
+        if(id_m_layanan == 8){
+        if(skjabterusmenerus == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
 
         
-
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananPangkat/")?>"+id_m_layanan,
         method:"POST",  
@@ -445,6 +508,8 @@ $(function(){
 
     } else if(id == 3){
         $link = "<?=base_url();?>/arsipskp/"+filename+"?v="+number;
+    } else if(id == 4){
+        $link = "<?=base_url();?>/arsipdiklat/"+filename+"?v="+number;
     }
    
    
@@ -474,7 +539,6 @@ $(function(){
   }
 
   function loadListRiwayatLayananPangkat(){
-  
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

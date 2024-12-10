@@ -1215,6 +1215,26 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
            return  $this->db->get()->result();
    }
 
+   public function getPenilaianPegawaiPelaksana($jenis_pengisian){
+    // $this->db->select('a.*,c.res_kinerja,c.res_potensial_cerdas,c.res_potensial_rj,c.res_potensial_lainnya')
+    $this->db->select('a.id_peg as id_pegawai,c.*')
+                  
+    ->from('db_pegawai.pegawai a')
+                //    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                   ->join('db_simata.t_penilaian c', 'a.id_peg = c.id_peg','left')
+                   ->join('db_pegawai.jabatan d', 'a.jabatan = d.id_jabatanpeg')
+                   ->join('db_simata.t_jabatan_target d', 'c.id_peg = d.id_peg','left')
+                   // ->where("FIND_IN_SET(c.eselon,'II B')!=",0)
+                   ->where('d.jenis_jabatan', "JFU")
+                   ->where('a.id_m_status_pegawai', 1)
+                   ->where('c.jenjang_jabatan', $jenis_pengisian)
+                   ->group_by('a.id_peg');
+                   if($_POST['jabatan_target_jpt'] != ""){
+                       $this->db->where('d.jabatan_target', $_POST['jabatan_target_jpt']);
+                   }
+       return  $this->db->get()->result();
+}
+
 
    
         // public function getPenilaianPegawaiJpt(){
@@ -2831,6 +2851,10 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                            }
                            if($jenis_jab == 3){
                             $this->db->where_in('e.eselon', ["IV A", "IV B"]);
+                           }
+                           if($jenis_jab == 4){
+                            $this->db->where_in('e.jenis_jabatan', "JFU");
+
                            }
 
                            
@@ -5036,9 +5060,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
                 $id = 2;
                 $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
-                } else {
+                } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
                 $id = 3;
-                $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
+                } else {
+                $id = 4;
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
                 }
 
                
@@ -5165,7 +5193,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                     }
             
-             $eselonPeg = $this->general_library->getEselonPegawai($id_pegawai);
+                $eselonPeg = $this->general_library->getEselonPegawai($id_pegawai);
                 
                 if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
                 $id = 1;
@@ -5174,9 +5202,19 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
                 $id = 2;
                 $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
-                } else {
+                } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
                 $id = 3;
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
+                } else {
+                $id = 4;
+                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
                 }
+                
+                
+                // else {
+                // $id = 3;
+                // }
         
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();

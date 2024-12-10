@@ -2376,20 +2376,20 @@ class M_Kepegawaian extends CI_Model
     }
 
 
-    // function getAllUsulLayanan(){
-    //     // return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
-    //     return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,c.file_pengantar,a.username as nip')
+    function getAllUsulLayananOld(){
+        // return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.id_usul,e.nama as nama_layanan,c.tanggal_usul,d.lama_cuti,d.tanggal_mulai,d.tanggal_selesai,c.file_pengantar,a.username as nip')
+        return $this->db->select('*')
 
-    //                     ->from('m_user a')
-    //                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-    //                     ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
-    //                     // ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
-    //                     ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
-    //                     ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
-    //                     ->where('c.jenis_layanan', 3)
-    //                     ->order_by('c.id_usul', 'desc')
-    //                     ->get()->result_array();
-    // }
+                        ->from('m_user a')
+                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                        ->join('db_siladen.usul_layanan c', 'a.id = c.usul_by')
+                        // ->join('db_siladen.nominatif_usul d', 'c.id_usul = d.id_usul')
+                        // ->join('db_siladen.jenis_layanan e', 'c.jenis_layanan = e.kode')
+                        ->join('db_pegawai.unitkerja f', 'b.skpd = f.id_unitkerja')
+                        ->where('c.jenis_layanan', 3)
+                        ->order_by('c.id_usul', 'desc')
+                        ->get()->result_array();
+    }
 
     function getAllUsulLayanan(){
         return $this->db->select('f.nm_unitkerja,b.nama as nama_pegawai,c.*')
@@ -8890,7 +8890,6 @@ public function getFileForKarisKarsu()
                        ->where('a.id_m_layanan', $id)
                        ->where('a.flag_active', 1)
                        ->order_by('a.id','desc');
-    
                        $query = $this->db->get()->result_array();
                        return $query;
    }
@@ -8947,8 +8946,8 @@ public function searchPengajuanLayanan($id_m_layanan){
             //     $this->db->where_in('a.id_m_layanan', [1,6,7]);
             //     $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             // } else 
-            if($id_m_layanan == 6 || $id_m_layanan == 7){
-                $this->db->where_in('a.id_m_layanan', [6,7]);
+            if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
+                $this->db->where_in('a.id_m_layanan', [6,7,8,9]);
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             }  else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
@@ -9088,7 +9087,18 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }      else {
+        } else if($this->input->post('file') == "diklat"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegdiklat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenisdiklat', "00")
+                ->where('a.jenjang_diklat', 2)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else {
          return [''];
         }
         
@@ -9310,7 +9320,7 @@ public function getFileForVerifLayanan()
         
         
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
@@ -9374,7 +9384,44 @@ public function getFileForVerifLayanan()
 
         return $res;
     }
+
+    public function getDokumenDiklatForVerifLayanan()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('jenisdiklat', "00")
+        ->where('jenjang_diklat', 2)
+        ->where('flag_active', 1)
+        ->where('status', 2)
+        ->order_by('id', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegdiklat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
     
+
+    public function kirimBkad($id_usul,$status){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $this->db->trans_begin();
+
+            $data["status"] = $status; 
+            $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
 
 
 

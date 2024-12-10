@@ -358,6 +358,7 @@ class M_Kepegawaian extends CI_Model
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
             (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
+             (SELECT jurusan from db_pegawai.pegpendidikan as dd where a.id_peg = dd.id_pegawai and dd.flag_active in (1,2) and dd.status = 2  ORDER BY dd.id desc limit 1) as jurusan,
             r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan, a.flag_sertifikasi, a.flag_terima_tpp')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
@@ -8946,10 +8947,10 @@ public function searchPengajuanLayanan($id_m_layanan){
             //     $this->db->where_in('a.id_m_layanan', [1,6,7]);
             //     $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             // } else 
-            if($id_m_layanan == 6){
+            if($id_m_layanan == 6 || $id_m_layanan == 7){
                 $this->db->where_in('a.id_m_layanan', [6,7]);
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
-            } else if($id_m_layanan == 1){ 
+            }  else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
             } else {
                 $this->db->where('a.id_m_layanan', 99);
@@ -8972,7 +8973,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-     $this->db->select('*, c.id as id_pengajuan, c.status as status_layanan')
+     $this->db->select('*,b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -9018,12 +9019,12 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "laporan_perkawinan"){
+        } else if($this->input->post('file') == "pak"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->where('a.id_dokumen', 52)
+                ->where('a.id_dokumen', 11)
                 ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -9057,7 +9058,37 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }   else {
+        } else if($this->input->post('file') == "ibel"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 13)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sertiukom"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 65)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "forlap"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 12)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }      else {
          return [''];
         }
         
@@ -9318,6 +9349,7 @@ public function getFileForVerifLayanan()
         if($id_m_layanan == 6){
             $this->db->where('id', $reference_id_dok)
                     ->update('db_pegawai.pegpangkat', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        $this->updatePangkat($dataLayanan['id_peg']);
         }
 
         // $message = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n. Terima kasih.".FOOTER_MESSAGE_CUTI;

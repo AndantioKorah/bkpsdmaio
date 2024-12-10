@@ -130,7 +130,7 @@ async function openFilePangkat(filename){
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
-var number = Math.floor(Math.random() * 1000);
+var number = Math.floor(Math.random() * 2000);
 $link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)

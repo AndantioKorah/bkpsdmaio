@@ -39,9 +39,9 @@
     }
 </style>
 <div class="col-lg-12 text-right mb-2">
-            <!-- <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
+            <form action="<?=base_url('simata/C_Simata/downloadDataSearch')?>" target="_blank">
                 <button type="submit" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Download as Pdf</button>
-            </form> -->
+            </form>
         </div>
 <table id="kinerja_adm" class="display table table-bordered" style="width:100%">
         <thead>

@@ -61,22 +61,83 @@
 	<div class="row" style="background-color:#fff;">
 		<div class="col-12">
    <div class="12">
-   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>">
+   <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>" >
     <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
+  
   <button 
   id="btn_upload_sk"
   data-toggle="modal" 
   href="#modal_upload_sk"
-  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
+  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
   <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <!-- Button trigger modal -->
+  <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+  Download Draf SK
+  </button> -->
+
+  <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+        Verifikasi
+        </button>
+
+        <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Verif
+        </button>
+  
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKPangkat/'.$id_usul.'/'.$id_m_layanan.'')?>" target="_blank">
+          <div class="form-group">
+          <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_sk" name="nomor_sk" >
+          </div>
+          <div class="form-group">
+          <label >Nomor Pertek BKN</label>
+          <input type="text" class="form-control" id="nomor_pertek" name="nomor_pertek" >
+          </div>
+          <div class="form-group">
+          <label >Nomor Urut</label>
+          <input type="text" class="form-control" id="nomor_urut" name="nomor_urut" >
+          </div>
+          <div class="form-group">
+          <label >TMT Pangkat</label>
+          <input type="text" class="form-control datepickerr"  id="tmtpangkat" name="tmtpangkat" >
+          </div>
+          <div class="form-group">
+          <label >Gaji</label>
+          <input type="text" class="form-control" id="gaji" name="gaji" >
+          </div>
+          <div class="form-group">
+          <label >Angka Kredit</label>
+          <input type="number" class="form-control" id="ak" name="ak" >
+          </div>
+          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <?php } else { ?>
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
     <i class="fa fa-file-pdf"></i> File Pangkat</button>
     <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger">
     <i class="fa fa-file-trash"></i> Hapus File</button>
   <?php } ?>
+
+
+
    </div>
 
 
@@ -87,7 +148,7 @@
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
- 
+ <?php if($id_m_layanan == 6 || $id_m_layanan == 7) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
@@ -103,75 +164,33 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
   <li>
-
-
-        <button id="btn_verifikasi" type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
-        Verifikasi
-        </button>
-        <form method="post" id="form_batal_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="hidden" name="id_batal" id="id_batal" value="<?= $result[0]['id_pengajuan'];?>">
-        <button  id="btn_tolak_verifikasi"  class="btn btn-danger ml-2" style="display:none;">
-        Batal Verif
-        </button>
-        </form>
+<?php } ?>
+<?php if($id_m_layanan == 7) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
+  <li>
+  
+ <?php } ?>
         </li>
 
 
 </ul>
 <hr style="margin-top: 10px;">
 <div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade show active" id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
-  <div style="margin-left:10px;"></div>
+  <div class="tab-pane fade show " id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
+  <!-- <div style="margin-left:10px;" class="col-lg-12">
+  </div> -->
   </div>
-  <div class="tab-pane fade" id="pills-berkala" role="tabpanel" aria-labelledby="pills-berkala-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-pendidikan" role="tabpanel" aria-labelledby="pills-pendidikan-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-jabatan" role="tabpanel" aria-labelledby="pills-jabatan-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-diklat" role="tabpanel" aria-labelledby="pills-diklat-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-organisasi" role="tabpanel" aria-labelledby="pills-organisasi-tab">
-  <div id=""></div>
-  </div>
-  <div class="tab-pane fade" id="pills-penghargaan" role="tabpanel" aria-labelledby="pills-penghargaan-tab">
-  <div id="form_penghargaan"></div>
-  </div>
-  <div class="tab-pane fade" id="pills-sj" role="tabpanel" aria-labelledby="pills-sj-tab">...</div>
-  <div class="tab-pane fade" id="pills-keluarga" role="tabpanel" aria-labelledby="pills-keluarga-tab">...</div>
-  <div class="tab-pane fade" id="pills-penugasan" role="tabpanel" aria-labelledby="pills-penugasan-tab">...</div>
-  <div class="tab-pane fade" id="pills-cuti" role="tabpanel" aria-labelledby="pills-cuti-tab">...</div>
-  <div class="tab-pane fade" id="pills-skcpns" role="tabpanel" aria-labelledby="pills-skcpns-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-skpns" role="tabpanel" aria-labelledby="pills-skpns-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-drp" role="tabpanel" aria-labelledby="pills-drp-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-honor" role="tabpanel" aria-labelledby="pills-honor-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-suket_lain" role="tabpanel" aria-labelledby="pills-suket_lain-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-ibel" role="tabpanel" aria-labelledby="pills-ibel-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-tubel" role="tabpanel" aria-labelledby="pills-tubel-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-forlap" role="tabpanel" aria-labelledby="pills-forlap-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-karya_tulis" role="tabpanel" aria-labelledby="pills-karya_tulis-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-mutasi" role="tabpanel" aria-labelledby="pills-mutasi-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-serkom" role="tabpanel" aria-labelledby="pills-serkom-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-pak" role="tabpanel" aria-labelledby="pills-pak-tab">
-  </div>
-  <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab"></div>
+  
   <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
     <div class="row">
       <div class="col-lg-12">
@@ -199,8 +218,6 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" /> 
-
-           
           </div>
           <div class="col-lg-12 text-center">
             <span class="sp_profil">
@@ -250,7 +267,7 @@
               </div>
               <div class="col-lg-12 text-right" >
                 <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
+                  <?=formatDateNamaBulan($result[0]['tmt_pangkat'])?>
                 </span>
               </div>
             </div>
@@ -360,11 +377,11 @@
 </div>
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
-  
 </div>
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
-				</div>
+            <!-- <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	 -->
+            <iframe style="display: none; width: 100%;height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+          </div>
 			</div>
     
 <style>
@@ -402,10 +419,6 @@
       <button id="btn_verif" class="btn btn-primary" style="float: right;">Simpan</button>
     </form>
       </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
     </div>
   </div>
 </div>
@@ -447,7 +460,6 @@
            <div id="modal_view_file_content">
             <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-
           </div>
         </div>
       </div>
@@ -461,12 +473,18 @@
 
 
 var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
-var status = "<?= $result[0]['status_layanan'];?>"; 
-var reference_id_dok = $result[0]['reference_id_dok'];
+var status = "<?= $result[0]['status_layanan'];?>";
+
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
- 
+  $('.datepickerr').datepicker({
+     format: 'dd-mm-yyyy',
+    // viewMode: "years", 
+    // minViewMode: "years",
+    // orientation: 'bottom',
+    autoclose: true
+    });
 
 
    if(status == 0){
@@ -510,17 +528,11 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
+        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap"){
+          dir = "arsiplain/";
         }  else {
           dir = "uploads/";
         }
-
-    //     var number = Math.floor(Math.random() * 1000);
-    //     var link = "<?=base_url();?>/arsipberkaspns/11250SK_PNS_199401042020121011.pdf?v="+number;
-    //     $('#view_file_verif').attr('src', link)
-    //        $('#view_file_verif').on('load', function(){
-    //      $('.iframe_loader').hide()
-    //      $(this).show()
-    //    })
 
    var id_peg = "<?=$result[0]['id_peg'];?>";
    $.ajax({
@@ -591,15 +603,27 @@ function openPresensiTab(){
             })
         })
 
-        $('#form_batal_verifikasi_layanan').on('submit', function(e){
+
+        function loadModalUploadSK(id_usul,id_m_layanan){
+        $('#modal_body').html('')
+        $('#modal_body').append(divLoaderNavy)
+        $('#modal_body').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalUploadSK")?>'+'/'+id_usul+'/'+id_m_layanan, function(){
+          $('#loader').hide()
+        })
+        }
+
+
+          function batalVerifLayanan(id_usul){
           
-            e.preventDefault()
             if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
             $.ajax({
                 url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
                 method: 'post',
-                data: $(this).serialize(),
-                success: function(datares){
+                // data: $(this).serialize(),
+                data: {
+                id_batal: id_usul
+            },
+                success: function(data){
                   successtoast('Berhasil batal verifikasi ')
                   $('#btn_tolak_verifikasi').hide()
                   $('#btn_upload_sk').hide()
@@ -608,16 +632,9 @@ function openPresensiTab(){
                     errortoast('Terjadi Kesalahan')
                 }
             })
+
+            
           }
-        })
-
-
-function loadModalUploadSK(id,id_m_layanan){
-  $('#modal_body').html('')
-  $('#modal_body').append(divLoaderNavy)
-  $('#modal_body').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalUploadSK")?>'+'/'+id+'/'+id_m_layanan, function(){
-    $('#loader').hide()
-  })
   }
 
   async function openFilePangkat(filename){
@@ -644,8 +661,12 @@ function deleteFile(id,reference_id_dok,id_m_layanan){
                            method: 'post',
                            data: null,
                            success: function(){
+
                                successtoast('Data sudah terhapus')
-                               const myTimeout = setTimeout(location.reload(), 1000);
+                               setTimeout(window.location.reload.bind(window.location), 1000);
+                               
+                              //  const myTimeout = setTimeout(location.reload(), 2000);
+                            
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

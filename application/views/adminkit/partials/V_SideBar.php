@@ -444,6 +444,7 @@
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
+	$this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') ||
 	$this->general_library->isHakAkses('menu_bidang_pekin') ||
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||

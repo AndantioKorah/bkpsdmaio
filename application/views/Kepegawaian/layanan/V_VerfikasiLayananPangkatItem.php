@@ -86,7 +86,7 @@
 </div>
 
 
-<div class="modal fade" id="modal_view_file" data-backdrop="static">
+<div class="modal fade" id="modal_view_file" >
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">

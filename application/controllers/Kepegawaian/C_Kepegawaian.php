@@ -2416,7 +2416,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['id_usul']= $id_usul;
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
-        if($id_m_layanan == 6 || $id_m_layanan == 7){
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
 			$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
 		}
     }
@@ -2460,13 +2460,24 @@ class C_Kepegawaian extends CI_Controller
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output('Draf SK Pangkat.pdf', 'D');
-
-
 		
-
         } 
-    
 
+		public function verifikasiPangkatBkad(){
+			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+			render('kepegawaian/layanan/V_VerifikasiPangkatBkad', '', '', $data);
+		}
+    
+		public function searchUsulPangkatBkad(){
+			$data['result'] = $this->kepegawaian->searchUsulPangkatBkad();
+			$data['param'] = $this->input->post();
+			$this->load->view('kepegawaian/layanan/V_VerifikasiPangkatBkadItem', $data);
+		}
+	
+		public function submitVerifikasiPangkatBkad()
+		{ 
+			echo json_encode( $this->kepegawaian->submitVerifikasiPangkatBkad());
+		}
 
 	
 

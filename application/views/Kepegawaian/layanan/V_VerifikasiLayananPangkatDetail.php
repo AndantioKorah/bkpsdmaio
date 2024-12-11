@@ -132,8 +132,10 @@
   <?php } else { ?>
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
     <i class="fa fa-file-pdf"></i> File Pangkat</button>
+    <?php if($result[0]['status_layanan'] <= 3) { ?>
     <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
     <i class="fa fa-file-trash"></i> Hapus File</button>
+    <?php } ?>
     <?php if($result[0]['status_layanan'] == 1) { ?>
     <button onclick="kirimBkad('<?=$id_usul;?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
     Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>

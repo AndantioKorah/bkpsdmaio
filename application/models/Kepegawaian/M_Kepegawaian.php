@@ -8983,7 +8983,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
     ->where('c.id', $id);
 
-    if($id_m_layanan == 6){
+    if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $this->db->join('db_pegawai.pegpangkat k', 'k.id = c.reference_id_dok','left');
     }
     
@@ -9409,8 +9409,60 @@ public function getFileForVerifLayanan()
         $this->db->trans_begin();
 
             $data["status"] = $status; 
+            $data["tanggal_usul_bkad"] =  date("Y-m-d");
             $this->db->where('id', $id_usul)
                     ->update('t_layanan', $data);
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function searchUsulPangkatBkad(){
+        $data = $this->input->post();
+        $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+                ->from('t_layanan a')
+                ->join('m_user d', 'a.id_m_user = d.id')
+                ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+                ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+                ->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left')
+                ->where('a.flag_active', 1)
+                // ->where('a.status', 3)
+                ->where_in('a.id_m_layanan', [6,7,8,9])
+                ->order_by('a.created_date', 'desc');
+                if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+                    $this->db->where('a.status', $data['status_pengajuan']);
+                } else {
+                    $this->db->where_in('a.status', [3,4,5]);
+                }
+               
+        return $this->db->get()->result_array();
+    }
+
+
+    public function submitVerifikasiPangkatBkad(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+
+          
+        $id_pengajuan = $datapost['id_pengajuan'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+        $this->db->where('id', $id_pengajuan)
+                ->update('t_layanan', $data);
+
+
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;

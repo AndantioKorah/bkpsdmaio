@@ -501,6 +501,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
+				<li class="sidebar-item ">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pangkat-bkad')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">
 					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">

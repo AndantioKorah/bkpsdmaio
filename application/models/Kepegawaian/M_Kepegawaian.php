@@ -3191,6 +3191,7 @@ public function submitEditProfil(){
     $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
+    $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
 
     $data["id_m_provinsi"] = 71;
     if(isset($datapost['edit_kab_kota'])){

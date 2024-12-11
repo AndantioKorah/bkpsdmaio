@@ -366,17 +366,28 @@
         <input type="text" id="edit_email" name="edit_email" class="form-control" value="<?= $profil_pegawai['email'];?>">
       </div>
 
-      
-      <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Status Pegawai </label>
-      </div>
-      <div class="col-lg-10">
-        <select class="form-control" name="edit_id_m_status_pegawai" id="id_m_status_pegawai">
-          <?php foreach($list_status_pegawai as $lsp){ ?>
-            <option value="<?=$lsp['id']?>" <?=$lsp['id'] == $profil_pegawai['id_m_status_pegawai'] ? 'selected' : ''?>><?=$lsp['nama_status_pegawai']?></option>
-          <?php } ?>
-        </select>
-      </div>
+      <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+        <div class="col-lg-2">
+          <label for="inputPassword6" class="col-form-label"> Status Pegawai </label>
+        </div>
+        <div class="col-lg-10">
+          <select class="form-control" name="edit_id_m_status_pegawai" id="id_m_status_pegawai">
+            <?php foreach($list_status_pegawai as $lsp){ ?>
+              <option value="<?=$lsp['id']?>" <?=$lsp['id'] == $profil_pegawai['id_m_status_pegawai'] ? 'selected' : ''?>><?=$lsp['nama_status_pegawai']?></option>
+            <?php } ?>
+          </select>
+        </div>
+
+        <div class="col-lg-2">
+          <label for="inputPassword6" class="col-form-label"> Terima TPP </label>
+        </div>
+        <div class="col-lg-10">
+          <select class="form-control" name="edit_flag_terima_tpp" id="flag_terima_tpp">
+              <option value="0" <?=$profil_pegawai['flag_terima_tpp'] == 0 ? 'selected' : ''?>>TIDAK</option>
+              <option value="1" <?=$profil_pegawai['flag_terima_tpp'] == 1 ? 'selected' : ''?>>YA</option>
+          </select>
+        </div>
+      <?php } ?>
          
     </div>
    

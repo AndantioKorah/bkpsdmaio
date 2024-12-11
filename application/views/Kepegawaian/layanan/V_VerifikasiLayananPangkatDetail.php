@@ -132,9 +132,18 @@
   <?php } else { ?>
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
     <i class="fa fa-file-pdf"></i> File Pangkat</button>
-    <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger">
+    <?php if($result[0]['status_layanan'] <= 3) { ?>
+    <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
     <i class="fa fa-file-trash"></i> Hapus File</button>
-  <?php } ?>
+    <?php } ?>
+    <?php if($result[0]['status_layanan'] == 1) { ?>
+    <button onclick="kirimBkad('<?=$id_usul;?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
+    Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
+    <?php } else if($result[0]['status_layanan'] == 3) { ?>
+    <button onclick="kirimBkad('<?=$id_usul;?>',1)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
+    Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
+    <?php } ?>
+    <?php } ?>
 
 
 
@@ -148,7 +157,7 @@
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
- <?php if($id_m_layanan == 6 || $id_m_layanan == 7) { ?>
+ <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 ||  $id_m_layanan == 9) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
@@ -175,6 +184,25 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
   <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
+  <li>
+  
+ <?php } ?>
+ <?php if($id_m_layanan == 8) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skjabterusmenerus')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='diklat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Diklat PIM III </button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
+  <li>
+ 
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
   <li>
@@ -528,8 +556,10 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap"){
+        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud"){
           dir = "arsiplain/";
+        } else if(file == "diklat"){
+          dir = "arsipdiklat/";
         }  else {
           dir = "uploads/";
         }
@@ -673,7 +703,28 @@ function deleteFile(id,reference_id_dok,id_m_layanan){
                        })
                    }
                }
-  
+
+function kirimBkad(id,status){
+                   if(status == 3){
+                    var pesan = "kirim Data ke BKAD ?";
+                   } else {
+                    var pesan = "Batal kirim Data ke BKAD ?";
+                   }
+                   if(confirm(pesan)){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/kirimBkad/")?>'+id+'/'+status,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data berhasil terkirim')
+                               setTimeout(window.location.reload.bind(window.location), 1000);
+                              //  const myTimeout = setTimeout(location.reload(), 2000);
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
 
 
 

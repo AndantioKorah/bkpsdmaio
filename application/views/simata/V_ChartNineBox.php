@@ -1637,6 +1637,7 @@ animation06
         <select class="form-select select2" name="jenis_jabatan" id="jenis_jabatan"  required>
         <option value=""  selected>Pilih Jenis Jabatan</option>
         <?php if($jenis_pengisian == 1) { ?>
+            <option <?php if($post) { if($post['jenis_jabatan'] == 4) echo "selected"; else echo "";}?> value="4">Pelaksana</option>
             <option <?php if($post) { if($post['jenis_jabatan'] == 3) echo "selected"; else echo "";}?> value="3">Pengawas</option>
         <?php } ?>
         <?php if($jenis_pengisian == 2) { ?>

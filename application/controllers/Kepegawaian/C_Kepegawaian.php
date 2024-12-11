@@ -970,7 +970,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function Adminlayanan(){
-		$data['result'] = $this->kepegawaian->getAllUsulLayanan();
+		$data['result'] = $this->kepegawaian->getAllUsulLayananOld();
         render('kepegawaian/V_AllUsulLayanan', '', '', $data);
     }
 
@@ -2313,13 +2313,20 @@ class C_Kepegawaian extends CI_Controller
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
 		$data['id_m_layanan'] = $id_layanan;
 
-		if($id_layanan == 6 || $id_layanan == 7){
+		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
 			if($id_layanan == 7){
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
-
+			}
+			if($id_layanan == 8){
+				$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
+				$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();	
+				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+				
 			}
 		$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
 		} 
@@ -2361,7 +2368,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $id_m_layanan;
 		if($id_m_layanan == 1){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
-		} else if($id_m_layanan == 6 || $id_m_layanan == 7){
+		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
 		}
 	}
@@ -2379,7 +2386,7 @@ class C_Kepegawaian extends CI_Controller
 		// dd($data['result']);
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
-		} else if($layanan == 6 || $layanan == 7){
+		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9){
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		}
 	}
@@ -2409,7 +2416,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['id_usul']= $id_usul;
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
-        if($id_m_layanan == 6){
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
 			$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
 		}
     }
@@ -2422,6 +2429,11 @@ class C_Kepegawaian extends CI_Controller
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan)
     {
         $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan);
+    }
+
+	public function kirimBkad($id,$status)
+    {
+        $this->kepegawaian->kirimBkad($id,$status);
     }
 
 	
@@ -2448,13 +2460,24 @@ class C_Kepegawaian extends CI_Controller
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output('Draf SK Pangkat.pdf', 'D');
-
-
 		
-
         } 
-    
 
+		public function verifikasiPangkatBkad(){
+			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+			render('kepegawaian/layanan/V_VerifikasiPangkatBkad', '', '', $data);
+		}
+    
+		public function searchUsulPangkatBkad(){
+			$data['result'] = $this->kepegawaian->searchUsulPangkatBkad();
+			$data['param'] = $this->input->post();
+			$this->load->view('kepegawaian/layanan/V_VerifikasiPangkatBkadItem', $data);
+		}
+	
+		public function submitVerifikasiPangkatBkad()
+		{ 
+			echo json_encode( $this->kepegawaian->submitVerifikasiPangkatBkad());
+		}
 
 	
 

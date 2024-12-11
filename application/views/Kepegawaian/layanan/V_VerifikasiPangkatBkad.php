@@ -58,12 +58,9 @@
               <select class="form-control select2-navy" style="width: 100%"
               id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
                   <option value="" >Semua</option>
-                  <option value="0" selected>Pengajuan</option>
-                  <option value="1" >Diterima</option>
-                  <option value="2" >Ditolak</option>
-                  <option value="3" >Usul BKAD</option>
-                  <option value="4" >Diterima BKAD</option>
-                  <option value="5" >Ditolak BKAD</option>
+                  <option value="3" selected>Usul BKPSDM</option>
+                  <option value="4" >Diterima</option>
+                  <option value="5" >Ditolak</option>
                 
               </select>
             </div>
@@ -90,12 +87,11 @@
 
   $('#form_search').on('submit', function(e){
 
-    var id_m_layanan = "<?=$id_m_layanan;?>"
     $('#result_search').html('')
     $('#result_search').append(divLoaderNavy)
     e.preventDefault()
     $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/searchPengajuanLayanan/")?>'+id_m_layanan,
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/searchUsulPangkatBkad/")?>',
       method:"POST",  
       data: $(this).serialize(),
       success: function(res){

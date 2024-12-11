@@ -501,6 +501,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
+				<li class="sidebar-item ">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pangkat-bkad')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">
 					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">
@@ -953,11 +960,11 @@
 			</a>
 			<ul id="talentpool" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<!-- <li class="sidebar-item ">
+				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
-				</li> -->
+				</li>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator

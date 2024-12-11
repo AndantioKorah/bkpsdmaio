@@ -50,7 +50,7 @@
                            data: null,
                            success: function(){
                                successtoast('Data sudah terhapus')
-                               if(id_layanan == 6){
+                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
                                loadListRiwayatLayananPangkat()
                                }
                            }, error: function(e){

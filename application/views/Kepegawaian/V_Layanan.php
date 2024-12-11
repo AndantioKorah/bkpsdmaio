@@ -177,6 +177,16 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
       $('#loader').hide()
     })
+    }  else if(val == 8) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }  else if(val == 9) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else {
+      $('#form_layanan').html('')
     }
 
  

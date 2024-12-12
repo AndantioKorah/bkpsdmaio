@@ -30,7 +30,7 @@
     - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
     <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
     - Upload bukti pada hari yang sama. <br>
-    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    - Maksimal Peninjauan Absensi per pegawai hanya 5 kali dalam sebulan.
     </span>
     <div class="row ml-2">
     <div class="col-lg-6">
@@ -250,7 +250,7 @@ contoh Screenshot Whatsapp<br>
     <b style="font-size:20px;">-</b> Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
     <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
     <b style="font-size:20px;">-</b> Upload bukti pada hari yang sama. <br>
-    <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 5 kali dalam sebulan.
     </span>
       </div>
       <div class="modal-footer">
@@ -280,7 +280,8 @@ $(function(){
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    startDate: '-0d',
+    // startDate: '-0d',
+    startDate : '2024-12-11',
     endDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,
@@ -310,7 +311,7 @@ function loadListPeninjauan(){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
 
-                if(total >= 2) {
+                if(total >= 5) {
 
                   $('#btn_upload').hide()
                   $('#ket').show()

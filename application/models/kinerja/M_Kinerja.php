@@ -775,7 +775,7 @@
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
                     // $atasan = $kepala;
-                    if($pegawai['nama_jabatan'] == "Pengawas TK/SD"){
+                    if($pegawai['nama_jabatan'] == "Pengawas TK/SD" || $pegawai['nama_jabatan'] == "Pengawas SMP" || $pegawai['nama_jabatan'] == "Pengawas SMA" ||  $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Muda" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Madya" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Utama"){
                         $atasan = $this->baseQueryAtasan()
                         ->where('b.skpd', 3010000)
                         ->where('d.nama_jabatan', 'Kepala '.$pegawai['nm_unitkerja'])

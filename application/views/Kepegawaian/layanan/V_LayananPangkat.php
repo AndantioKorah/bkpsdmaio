@@ -220,14 +220,21 @@ ol {
 					<h5>FORM LAYANAN KARIS/KARSU</h5>
 				</div>
 				<hr>
+      <span><b>Berkas Persyaratan :</b></span>
+  
 			</div>
+			<div class="card-body mt-2">
 
-			<div class="card-body">
-
-				<form id="form_karis_karsu" method="post" enctype="multipart/form-data" id="form_cuti"
-					style="margin-top: -45px;">
+				<form id="form_layanan_pangkat" method="post" enctype="multipart/form-data" id="form_cuti"
+					style="margin-top: -35px;">
           <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
-					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+          <div class="form-group">
+            <label>Surat Pengantar</label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
+            <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
+          </div>
+          <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+          <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
 					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
 					<input type="hidden" id="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
@@ -239,9 +246,13 @@ ol {
 					<input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
 					<input type="hidden" id="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
 					<input type="hidden" id="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
-
+          <?php } else if($id_m_layanan == 9) { ?>
+          <input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
+					<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
+					<input type="hidden" id="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
+					<input type="hidden" id="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
           <?php } ?>
-					<span>Berkas Persyaratan :</span>
+				
 					<div class="list-type1x">
 						<ol class="rectangle-list">
               <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
@@ -330,6 +341,33 @@ ol {
 							</li>
              
               <?php } ?>
+              <?php if($id_m_layanan == 9) { ?>
+                <li>
+								<a class="<?php if($uraiantugas) echo 'select'; else echo 'unselect';?>" <?php if($uraiantugas) { ?>
+									onclick="viewBerkasPangkat('<?=$uraiantugas['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif*<i
+											class="fas fa-<?php if($uraiantugas) echo ''; else echo '';?>"></i></a>
+							</li>
+                <li>
+								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
+									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i>  Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti*<i
+											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
+									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar*<i
+											class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($stlud) echo 'select'; else echo 'unselect';?>" <?php if($stlud) { ?>
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah*<i
+											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
+							</li>
+              
+              <?php } ?>
 						</ol>
 					</div>
 
@@ -360,6 +398,16 @@ ol {
 					<i class="fa fa-file-pdf"></i> Sertifikat Ujian Dinas (STLUD) <br>
 					<i class="fa fa-file-pdf"></i> Ijin Belajar (apabila terjadi peningkatan pendidikan) <br>
 					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti 
+
+					<br>di upload pada pilihan Arsip Lainnya.
+				</p>
+        <?php } ?>
+        <?php if($id_m_layanan == 9) { ?>
+          Untuk Berkas : <br>
+					<i class="fa fa-file-pdf"></i> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif<br>
+					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti <br>
+					<i class="fa fa-file-pdf"></i> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar <br>
+					<i class="fa fa-file-pdf"></i> Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah 
 
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
@@ -418,12 +466,16 @@ $(function(){
 	});
   loadListRiwayatLayananPangkat()
     })
-    $('#form_karis_karsu').on('submit', function(e){  
+    $('#form_layanan_pangkat').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#form_karis_karsu');
+        var formvalue = $('#form_layanan_pangkat');
         var form_data = new FormData(formvalue[0]);
+
+        var ins = document.getElementById('pdf_surat_pengantar').files.length;
+
+
         var sk_cpns = $('#sk_cpns').val()
         var sk_pangkat = $('#sk_pangkat').val()
         var skp1 = $('#skp1').val()
@@ -431,8 +483,11 @@ $(function(){
         var pak = $('#pak').val()
         var skjabterusmenerus = $('#skjabterusmenerus').val()
         var ibel = $('#ibel').val()
+        var stlud = $('#stlud').val()
+        var uraiantugas = $('#uraiantugas').val()
+        var pangkalandata = $('#pangkalandata').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
-        
+       
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
@@ -462,6 +517,24 @@ $(function(){
         }
         if(id_m_layanan == 8){
         if(skjabterusmenerus == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+        if(id_m_layanan == 9){
+        if(stlud == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(ibel == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(uraiantugas == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(pangkalandata == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
@@ -546,4 +619,25 @@ $(function(){
     })
     }
 
+
+    $("#pdf_surat_pengantar").change(function (e) {
+
+    // var extension = pdf_surat_pengantar.value.split('.')[1];
+    var doc = pdf_surat_pengantar.value.split('.')
+    var extension = doc[doc.length - 1]
+    var fileSize = this.files[0].size/1024;
+    var MaxSize = 2048;
+
+    if (extension != "pdf"){
+      errortoast("Harus File PDF")
+      $(this).val('');
+    }
+
+    if (fileSize > MaxSize ){
+      errortoast("Maksimal Ukuran File 2 MB")
+      $(this).val('');
+    }
+
+
+    });
 </script>

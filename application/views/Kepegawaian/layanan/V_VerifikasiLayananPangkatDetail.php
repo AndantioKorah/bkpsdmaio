@@ -159,6 +159,9 @@
   </li>
  <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 ||  $id_m_layanan == 9) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
 
@@ -206,7 +209,21 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
   <li>
-  
+ <?php } ?>
+ <?php if($id_m_layanan == 9) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='uraiantugas')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti </button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar </button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah</button>
+  <li>
+
  <?php } ?>
         </li>
 
@@ -408,7 +425,7 @@
 </div>
 <h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
             <!-- <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	 -->
-            <iframe style="display: none; width: 100%;height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
+            <iframe style="display: none; width: 100%;height: 90vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
           </div>
 			</div>
     
@@ -556,27 +573,37 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud"){
+        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
+        } else if(file == "suratpengantar"){
+          dir = "./dokumen_layanan/pangkat/";
         }  else {
           dir = "uploads/";
         }
 
+  var id_usul = "<?=$id_usul;?>";
    var id_peg = "<?=$result[0]['id_peg'];?>";
    $.ajax({
         type : "POST",
         url  : "<?=base_url();?>" + '/kepegawaian/C_Kepegawaian/getFileForVerifLayanan',
         dataType : "JSON",
-        data : {id_peg:id_peg,file:file},
+        data : {id_peg:id_peg,file:file,id_usul:id_usul},
         success: function(data){
         $('#divloader').html('')
       
         if(data != ""){
           if(data[0].gambarsk != ""){
             var number = Math.floor(Math.random() * 1000);
-            var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
+
+            if(file == "suratpengantar"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].file_pengantar+"?v="+number;
+            } else {
+              var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
+
+            }
+
             // var link = "<?=base_url();?>/arsipberkaspns/tes.jpg?v="+number;
             $('#view_file_verif').attr('src', link)
            $('#view_file_verif').on('load', function(){

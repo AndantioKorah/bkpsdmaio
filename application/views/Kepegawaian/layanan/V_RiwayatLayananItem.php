@@ -8,7 +8,7 @@
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
-
+          <th class="text-left">Surat Pengantar</th>
           <th></th>
         </thead>
         <tbody>
@@ -21,12 +21,16 @@
 
             </td>
               <td class="text-left"><?=$rs['keterangan']?></td>
-            
+            <td>
+            <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+            <i class="fa fa-file-pdf"></i></button>
+            </td>
               <td>
               <?php if($rs['status'] == 0) { ?>
               <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
             </td>
+           
             </tr>
           <?php } ?>
         </tbody>
@@ -36,6 +40,23 @@
 
   
  
+<div class="modal fade" id="modal_view_file" >
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
+
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
 <script>
   $(function(){
     $('.datatable').dataTable()
@@ -60,7 +81,20 @@
                    }
                }
 
-  
+async function openFilePengantar(filename){
+
+$('#iframe_view_file').hide()
+$('.iframe_loader').show()  
+
+var number = Math.floor(Math.random() * 2000);
+$link = "<?=base_url();?>dokumen_layanan/pangkat/"+filename+"?v="+number;
+
+$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').on('load', function(){
+  $('.iframe_loader').hide()
+  $(this).show()
+})
+}
 </script>
 <?php } else { ?>
   <div class="row">

@@ -512,15 +512,15 @@ ol {
    <!-- berkas -->
    <div class="col-md-8">
     <!-- berkas persyaratan -->
-<span>Berkas Persyaratan  <?php if($jenis_layanan == 7) { ?>
+<span>Berkas Persyaratan  <?php if($jenis_layanan == 1) { ?>
    <b>Pensiun BUP</b>
-    <?php } else if($jenis_layanan == 8) { ?>
+    <?php } else if($jenis_layanan == 2) { ?>
      <b>Pensiun Janda/Duda</b>
-      <?php } else if($jenis_layanan == 9) { ?>
+      <?php } else if($jenis_layanan == 3) { ?>
        <b>Pensiun Atas Permintaan Sendiri</b>
-      <?php } else if($jenis_layanan == 10) { ?>
+      <?php } else if($jenis_layanan == 4) { ?>
         <b>Pensiun Sakit/Uzur</b>
-        <?php } else if($jenis_layanan == 11) { ?>
+        <?php } else if($jenis_layanan == 5) { ?>
           <b>Pensiun Tewas</b>
           <?php } ?></span>
         <div class="list-type1x">

@@ -1,8 +1,9 @@
 <?php if($list_announcement){ ?>
 <style>
     .zoom:hover {
-    transform: scale(1.2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-}
+        transform: scale(1.2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+        cursor: pointer;
+    }
 </style>
     <div class="col-12">
         <table class="table table-hover" id="table_announcement">
@@ -21,7 +22,20 @@
                             <img onclick="loadAnnouncement('<?=$lp['id']?>')" data-toggle="modal" data-target="#exampleModal" style="height: 100px; width: 100px" src="<?=base_url();?><?=$lp['url_file']?>" alt="">
                         </td>
                         <td class="text-center">
-                            <button onclick="deleteAnnouncement('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <button onclick="deleteAnnouncement('<?=$lp['id']?>')" class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button id="btn_hide_<?=$lp['id']?>" onclick="showAnnouncement('<?=$lp['id']?>', 'hide')" style="display: <?=$lp['flag_show'] == 0 ? 'none' : 'block'?>"
+                                    class="btn btn-secondary"><i class="fa fa-eye-slash"></i> Hide</button>
+
+                                    <button id="btn_show_<?=$lp['id']?>" onclick="showAnnouncement('<?=$lp['id']?>', 'show')" style="display: <?=$lp['flag_show'] == 1 ? 'none' : 'block'?>"
+                                    class="btn btn-success"><i class="fa fa-eye"></i> Show</button>
+
+                                    <button id="btn_loading_show_<?=$lp['id']?>" style="display: none;" disabled class="btn btn-warning"><i class="fa fa-spin fa-spinner"></i> Loading....</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 <?php } ?>
@@ -80,6 +94,28 @@ $(document).ready( function () {
                     }
                 })
             }
+        }
+        
+        function showAnnouncement(id, status){
+            $('#btn_hide_'+id).hide()
+            $('#btn_show_'+id).hide()
+            $('#btn_loading_show_'+id).show()
+            $.ajax({
+                url: '<?=base_url("master/C_Master/toggleShowAnnouncement/")?>'+id,
+                method: 'post',
+                data: null,
+                success: function(){
+                    successtoast('Data berhasil disimpan')
+                    $('#btn_loading_show_'+id).hide()
+                    if(status == 'hide'){
+                        $('#btn_show_'+id).show()
+                    } else {
+                        $('#btn_hide_'+id).show()
+                    }
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
         }
     </script>
 <?php } else { ?>

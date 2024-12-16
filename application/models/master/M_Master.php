@@ -725,8 +725,23 @@
                     ]);
         }
 
+        public function toggleShowAnnouncement($id){
+            $data = $this->db->select('*')
+                            ->from('t_announcement')
+                            ->where('id', $id)
+                            ->get()->row_array();
+
+            if($data){
+                $this->db->where('id', $id)
+                        ->update('t_announcement', [
+                            'updated_by' => $this->general_library->getId(),
+                            'flag_show' => $data['flag_show'] == 1 ? 0 : 1
+                        ]);
+            }
+        }
+
         public function loadLockTppData(){
-            return $this->db->select('a.*, b.nm_unitkerja, d.gelar1, d.gelar2, d.nama, d.nipbaru_ws')
+            return $this->db->select('a.*, a.nama_param_unitkerja as nm_unitkerja, d.gelar1, d.gelar2, d.nama, d.nipbaru_ws')
                             ->from('t_lock_tpp a')
                             ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
                             ->join('m_user c', 'a.created_by = c.id')

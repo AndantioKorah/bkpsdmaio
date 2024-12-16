@@ -21,7 +21,7 @@
             <?php $no = 1; foreach($result as $r){
                $nama_peg = getNamaPegawaiFull($r);
                 ?>
-                <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] >= 2) echo 'background-color:#f0a095'; }?>">
+                <tr id="tr_<?=$r['id']?>" style="<?php if($status == 0) { if($r['total_diverif'] >= 5) echo 'background-color:#f0a095'; }?>">
                     <td class="text-center"><?=$no?></td>
                     <td class="text-left">
                     <a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$r['nipbaru'];?>" style="color:#495057"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></a></td>
@@ -147,7 +147,7 @@
                     </td>
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <?php if($r['total_diverif'] < 2) { ?>
+                            <?php if($r['total_diverif'] < 5) { ?>
                             <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
                             <?php } ?>
                             <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>

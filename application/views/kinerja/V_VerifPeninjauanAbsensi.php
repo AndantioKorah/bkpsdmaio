@@ -14,10 +14,24 @@
                     <label>Pilih Tanggal</label>  
                 <input class="form-control customInput datepicker3" type="text" id="tanggal_kolektif" name="tanggal_kolektif" readonly  required/>
                 </div>
+
+                <div class="form-group mt-2">
+         <label class="bmd-label-floating">Jenis Absensi </label>
+         <select onchange="cekAbsenTeman()" class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
+         <option value="" selected disabled>- Pilih Jenis Absen -</option>
+         <option value="1" >Absen Pagi </option>
+         <option value="2" >Absen Pulang </option>
+         </select>
+         </div>
+
                 <div class="col-lg col-md-12" style="margin-top: 20px;">
                     <button class="btn btn-block btn-navy" id="btn_verif_kolektif"> Verifikasi</button>
                 </div>
+
+                
             </div>
+
+            
         </form>
         <?php } ?>
         <form id="form_search_verif_dokumen" class="mt-4">

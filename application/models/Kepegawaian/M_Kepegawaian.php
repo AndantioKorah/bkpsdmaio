@@ -9629,6 +9629,53 @@ public function getFileForVerifLayanan()
                     ->update($tableName, ['status' => 0, 'updated_by' => $this->general_library->getId()]);
     }
 
+    public function submitEditSPLayanan(){
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $target_dir = './dokumen_layanan/pangkat/';
+        $filename = str_replace(' ', '', $this->input->post('file_pengantar')); 
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $id = $datapost['id_pengajuan'];
+            $data["file_pengantar"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('t_layanan', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
 
 
 }

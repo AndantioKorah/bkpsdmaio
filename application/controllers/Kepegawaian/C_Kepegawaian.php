@@ -2350,8 +2350,6 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListRiwayatLayanan($id){
 		$data['result'] = $this->kepegawaian->getRiwayatLayanan($id);
 		$data['m_layanan'] = $id;
-		
-
 		$this->load->view('kepegawaian/layanan/V_RiwayatLayananItem', $data);
 	}
 
@@ -2493,6 +2491,12 @@ class C_Kepegawaian extends CI_Controller
 		{ 
 			echo json_encode( $this->kepegawaian->submitVerifikasiPangkatBkad());
 		}
+
+
+		public function submitEditSPLayanan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditSPLayanan());
+	}
 
 	
 

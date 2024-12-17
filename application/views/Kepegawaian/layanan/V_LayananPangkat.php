@@ -721,7 +721,7 @@ $(function(){
     var doc = pdf_surat_pengantar.value.split('.')
     var extension = doc[doc.length - 1]
     var fileSize = this.files[0].size/1024;
-    var MaxSize = 2048;
+    var MaxSize = 1024;
 
     if (extension != "pdf"){
       errortoast("Harus File PDF")
@@ -729,7 +729,7 @@ $(function(){
     }
 
     if (fileSize > MaxSize ){
-      errortoast("Maksimal Ukuran File 2 MB")
+      errortoast("Maksimal Ukuran File 1 MB")
       $(this).val('');
     }
 

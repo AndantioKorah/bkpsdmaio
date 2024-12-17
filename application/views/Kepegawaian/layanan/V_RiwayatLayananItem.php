@@ -27,9 +27,10 @@
             </td>
               <td>
               <?php if($rs['status'] == 0) { ?>
-              <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
               <?php if($rs['status'] == 2) { ?>
+              <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> Ubah Surat Pengantar </button> 
               <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
               <?php } ?>
             </td>

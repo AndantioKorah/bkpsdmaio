@@ -52,6 +52,19 @@
 	color: #fff;
 }
 
+.filter-warning {
+	/* border: 1px solid #222e3c;
+        color: white;
+        font-weight: bold;
+        background-color: #0a7129; */
+	position: relative;
+	background-color:rgb(239, 255, 8);
+	/* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025); */
+	/* transition: 0.5s ease-in-out; */
+	/* border: 3px solid #0a7129; */
+	color: #fff;
+}
+
 /* .filter-select:hover{
         cursor: pointer;
         background-color: #222e3c;
@@ -147,6 +160,18 @@ ol {
     transition: all .3s ease-out;
   }
 
+  .rectangle-list .warning{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em .8em;
+    *padding: .4em;
+    margin: .5em 0 .5em 2.5em;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: all .3s ease-out;
+  }
+
   .rectangle-list .unselect{
     position: relative;
     display: block;
@@ -193,6 +218,21 @@ ol {
     font-weight: bold;
   }
 
+  .rectangle-list .warning:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background-color:rgb(239, 255, 8);
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+  }
+
   .rectangle-list a:after{
     position: absolute;
     content: '';
@@ -207,6 +247,12 @@ ol {
     left: -.5em;
     border-left-color: #0ed095;
   }
+
+  .rectangle-list .warning:hover:after{
+    left: -.5em;
+    border-left-color:rgb(187, 255, 14);
+  }
+
   .rectangle-list .unselect:hover:after{
     left: -.5em;
     border-left-color: #fa8072;
@@ -229,7 +275,7 @@ ol {
 					style="margin-top: -35px;">
           <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
           <div class="form-group">
-            <label>Surat Pengantar</label>
+            <label>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
@@ -241,6 +287,8 @@ ol {
 					<?php } ?>
           <?php if($id_m_layanan == 7) { ?>
 					<input type="hidden" id="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
+					<input type="hidden" id="sk_jabatan" value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
+
           <?php } ?>
           <?php if($id_m_layanan == 8) { ?>
 					<input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
@@ -257,32 +305,55 @@ ol {
 						<ol class="rectangle-list">
               <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
 							<li>
-								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
+								<a class="<?php if($sk_cpns){ if($sk_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_cpns) { ?>
 									onclick="viewBerkasPangkat('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS* <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
+              <li>
+								<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pns) { ?>
+									onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK PNS* <i
+											class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
+							</li>
                             <li>
-								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pangkat) { ?>
+								<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pangkat) { ?>
 									onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat* <i
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Akhir* <i
 											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 							</li>
-
                             <li>
-								<a class="<?php if($skp1) echo 'select'; else echo 'unselect';?>" <?php if($skp1) { ?>
+								<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
 									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
 											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
-								<a class="<?php if($skp2) echo 'select'; else echo 'unselect';?>" <?php if($skp2) { ?>
+								<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
 									onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_2_lalu;?>* <i
 											class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
 							</li>
+              <li>
+								<a class="<?php if($pmk){ if($pmk['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($pmk) { ?>
+									onclick="viewBerkasPangkat('<?=$pmk['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Peninjauan Masa Kerja (jika ada) <i
+											class="fas fa-<?php if($pmk) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($stlud){ if($stlud['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($stlud) { ?>
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah dari golongan) <i
+											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
+							</li>
               <?php } ?>
               <?php if($id_m_layanan == 7) { ?>
+                <li>
+								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan) { ?>
+									onclick="viewBerkasPangkat('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional* <i
+											class="fas fa-<?php if($sk_jabatan) echo ''; else echo '';?>"></i></a>
+							</li>
               <li>
 								<a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
 									onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
@@ -381,8 +452,17 @@ ol {
 					Berkas Sudah diupload<br>
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
+          <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
+					</button> Menunggu Verifikasi BKPSDM<br><br>
 
 					Berkas diupload Pada Menu Profil <br>
+          <?php if($id_m_layanan == 6) { ?>
+          Untuk Berkas : <br>
+					<i class="fa fa-file-pdf"></i> Sertifikat Ujian Dinas (STLUD)<br>
+					<i class="fa fa-file-pdf"></i> SK Peninjauan Masa Kerja 
+					<br>di upload pada pilihan Arsip Lainnya.
+				</p>
+        <?php } ?>
           <?php if($id_m_layanan == 7) { ?>
           Untuk Berkas : <br>
 					<i class="fa fa-file-pdf"></i> PAK<br>
@@ -481,6 +561,7 @@ $(function(){
         var skp1 = $('#skp1').val()
         var skp2 = $('#skp2').val()
         var pak = $('#pak').val()
+        var sk_jabatan = $('#sk_jabatan').val()
         var skjabterusmenerus = $('#skjabterusmenerus').val()
         var ibel = $('#ibel').val()
         var stlud = $('#stlud').val()

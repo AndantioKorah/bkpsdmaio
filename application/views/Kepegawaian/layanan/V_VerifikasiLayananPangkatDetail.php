@@ -176,6 +176,12 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
   <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pmk')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peninjauan Masa Kerja </button>
+  <li>
 <?php } ?>
 <?php if($id_m_layanan == 7) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
@@ -573,7 +579,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas"){
+        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

@@ -7690,7 +7690,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->from($table);
 
         if($table == "db_pegawai.pegarsip"){
@@ -8530,10 +8530,23 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->order_by('tmtpangkat', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegpangkat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getDokumenJabatanForLayanan()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        // ->where('status', 2)
+        ->order_by('tmtjabatan', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegjabatan');
         $query = $this->db->get()->row_array();
         return $query;  
     }
@@ -8867,7 +8880,7 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->from($table);
 
 
@@ -8997,8 +9010,8 @@ public function getFileForVerifLayanan()
         $id_peg = $this->input->post('id_peg');
         $id_usul = $this->input->post('id_usul');
         $currentYear = date('Y'); 
-		$previous1Year = $currentYear - 1;   
-		$previous2Year = $currentYear - 2; 
+		$previous1Year = $currentYear - 0;   
+		$previous2Year = $currentYear - 1; 
 
         if($this->input->post('file') == "skcpns"){
             $this->db->select('a.gambarsk')
@@ -9006,7 +9019,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 1)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9016,7 +9029,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 2)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9026,7 +9039,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 11)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9035,7 +9048,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpangkat as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9045,7 +9058,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.tahun', $previous1Year)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9055,7 +9068,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.tahun', $previous2Year)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9065,7 +9078,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 13)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9075,7 +9088,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 65)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9085,7 +9098,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 12)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9096,7 +9109,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.jenisdiklat', "00")
                 ->where('a.jenjang_diklat', 2)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9114,7 +9127,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 10)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -9124,7 +9137,17 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 15)
-                ->where('a.status', 2)
+                // ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pmk"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 29)
+                // ->where('a.status', 2)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();

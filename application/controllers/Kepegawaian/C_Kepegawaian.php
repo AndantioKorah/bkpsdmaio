@@ -2303,14 +2303,18 @@ class C_Kepegawaian extends CI_Controller
 
 	public function layananPangkat($id_layanan){
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 1;   
-		$previous2Year = $currentYear - 2; 
+		$previous1Year = $currentYear - 0;   
+		$previous2Year = $currentYear - 1; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+		// dd($data['skp1']);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
+		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
 
 		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
@@ -2319,9 +2323,10 @@ class C_Kepegawaian extends CI_Controller
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+				$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForLayanan(); 
+			
 			}
 			if($id_layanan == 8){
-				$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 				$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
@@ -2381,8 +2386,8 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayananDetail($id,$layanan){
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 1;   
-		$previous2Year = $currentYear - 2; 
+		$previous1Year = $currentYear - 0;   
+		$previous2Year = $currentYear - 1; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['id_m_layanan'] = $layanan;

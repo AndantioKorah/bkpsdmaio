@@ -2324,13 +2324,14 @@ class C_Kepegawaian extends CI_Controller
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
 				$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForLayanan(); 
+				$data['petajabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
 			
 			}
 			if($id_layanan == 8){
 				$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
-				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','67','0');	
 			}
 			if($id_layanan == 9){
 				$data['uraiantugas'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','15','0');	
@@ -2361,6 +2362,10 @@ class C_Kepegawaian extends CI_Controller
 
 	public function deleteRiwayatLayanan($id){
         $this->general->delete('id', $id, 't_layanan');
+    }
+
+	public function ajukanKembaliLayananPangkat($id){
+        $this->kepegawaian->ajukanKembaliLayananPangkat('id', $id, 't_layanan');
     }
 	
 

@@ -322,7 +322,7 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Akhir* <i
 											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 							</li>
-                            <li>
+                <li>
 								<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
 									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
@@ -336,13 +336,15 @@ ol {
 							</li>
               <li>
 								<a class="<?php if($pmk){ if($pmk['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($pmk) { ?>
-									onclick="viewBerkasPangkat('<?=$pmk['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$pmk['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Peninjauan Masa Kerja (jika ada) <i
 											class="fas fa-<?php if($pmk) echo ''; else echo '';?>"></i></a>
 							</li>
-              <li>
+              <?php } ?>
+              <?php if($id_m_layanan == 6) { ?>
+                <li>
 								<a class="<?php if($stlud){ if($stlud['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($stlud) { ?>
-									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah dari golongan) <i
 											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -350,45 +352,51 @@ ol {
               <?php if($id_m_layanan == 7) { ?>
                 <li>
 								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan) { ?>
-									onclick="viewBerkasPangkat('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$sk_jabatan['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional* <i
 											class="fas fa-<?php if($sk_jabatan) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
 								<a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
-									onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> PAK* <i
 											class="fas fa-<?php if($pak) echo ''; else echo '';?>"></i></a>
 							</li>
-              <li>
+              <!-- <li>
 								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
 									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijin Belajar (apabila terjadi peningkatan pendidikan) <i
 											class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
-							</li>
+							</li> -->
               <li>
 								<a class="<?php if($sertiukom) echo 'select'; else echo 'unselect';?>" <?php if($sertiukom) { ?>
-									onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Uji Kompetensi (bagi PNS yang pindah jenjang jabatan fungsional) <i
 											class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
 							</li>
-              <li>
+              <!-- <li>
 								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
 									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti (bagi PNS yang memiliki Ijazah/gelar pendidikan baru atau apabila terjadi peningkatan pendidikan)<i
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
+							</li> -->
+              <li>
+								<a class="<?php if($petajabatan) echo 'select'; else echo 'unselect';?>" <?php if($petajabatan) { ?>
+									onclick="viewBerkasPangkat('<?=$petajabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Asli/Fotokopi legalisir peta jabatan (khusus bagi pejabat fungsional yang tidak dapat diangkat dalam jenjang jabatan setingkat lebih tinggi karena tidak tersedia kebutuhan jabatan)<i
+											class="fas fa-<?php if($petajabatan) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
               <?php if($id_m_layanan == 8) { ?>
                 <li>
 								<a class="<?php if($skjabterusmenerus) echo 'select'; else echo 'unselect';?>" <?php if($skjabterusmenerus) { ?>
-									onclick="viewBerkasPangkat('<?=$skjabterusmenerus['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$skjabterusmenerus['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural*<i
 											class="fas fa-<?php if($skjabterusmenerus) echo ''; else echo '';?>"></i></a>
 							</li>
                 <li>
 								<a class="<?php if($stlud) echo 'select'; else echo 'unselect';?>" <?php if($stlud) { ?>
-									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah dari golongan III ke IV) <i
 											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -398,42 +406,42 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Diklat PIM III (bagi PNS yang pindah dari golongan III ke IV) <i
 											class="fas fa-<?php if($diklat) echo ''; else echo '';?>"></i></a>
 							</li>
-              <li>
+              <!-- <li>
 								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
 									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijin Belajar (apabila terjadi peningkatan pendidikan) <i
 											class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
-							</li>
-              <li>
+							</li> -->
+              <!-- <li>
 								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
 									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti (bagi PNS yang memiliki Ijazah/gelar pendidikan baru atau apabila terjadi peningkatan pendidikan)<i
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
-							</li>
+							</li> -->
              
               <?php } ?>
               <?php if($id_m_layanan == 9) { ?>
                 <li>
 								<a class="<?php if($uraiantugas) echo 'select'; else echo 'unselect';?>" <?php if($uraiantugas) { ?>
-									onclick="viewBerkasPangkat('<?=$uraiantugas['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$uraiantugas['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif*<i
 											class="fas fa-<?php if($uraiantugas) echo ''; else echo '';?>"></i></a>
 							</li>
                 <li>
 								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
-									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i>  Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti*<i
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
 								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
-									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar*<i
 											class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
 								<a class="<?php if($stlud) echo 'select'; else echo 'unselect';?>" <?php if($stlud) { ?>
-									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah*<i
 											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -468,6 +476,8 @@ ol {
 					<i class="fa fa-file-pdf"></i> PAK<br>
 					<i class="fa fa-file-pdf"></i> Ijin Belajar<br>
 					<i class="fa fa-file-pdf"></i> Sertifikat Uji Kompetensi <br>
+					<i class="fa fa-file-pdf"></i> SK Peninjauan Masa Kerja <br>
+					<i class="fa fa-file-pdf"></i> Peta Jabatan <br>
 					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
@@ -664,6 +674,10 @@ $(function(){
         $link = "<?=base_url();?>/arsipskp/"+filename+"?v="+number;
     } else if(id == 4){
         $link = "<?=base_url();?>/arsipdiklat/"+filename+"?v="+number;
+    } else if(id == 5){
+        $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
+    } else if(id == 6){
+        $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
     }
    
    

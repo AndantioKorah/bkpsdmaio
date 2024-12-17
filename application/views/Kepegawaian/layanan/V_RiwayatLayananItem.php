@@ -17,7 +17,7 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['created_date'])?></td>
               <td class="text-left">
-              <span class="badge badge-<?php if($rs['status'] == '1') echo "success"; else if($rs['status'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>
+             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "Ditolak BKAD"; else echo "Menunggu Verifikasi BKPSDM" ?>
 
             </td>
               <td class="text-left"><?=$rs['keterangan']?></td>
@@ -28,6 +28,9 @@
               <td>
               <?php if($rs['status'] == 0) { ?>
               <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <?php } ?>
+              <?php if($rs['status'] == 2) { ?>
+              <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
               <?php } ?>
             </td>
            
@@ -95,6 +98,25 @@ $('#iframe_view_file').on('load', function(){
   $(this).show()
 })
 }
+
+function ajukanKembali(id){
+                  var id_layanan = "<?=$m_layanan;?>"
+                   if(confirm('Ajukan kembali layanan pangkat ?')){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/ajukanKembaliLayananPangkat/")?>'+id,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Data sudah terhapus')
+                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+                               loadListRiwayatLayananPangkat()
+                               }
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
 </script>
 <?php } else { ?>
   <div class="row">

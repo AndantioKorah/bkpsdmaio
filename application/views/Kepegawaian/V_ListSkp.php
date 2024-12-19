@@ -14,7 +14,9 @@
           <th class="text-left">Keterangan</th>
          
           <th class="text-left">  </th>
-          <?php } ?>
+          <?php } else { ?>
+            <th></th>
+            <?php } ?>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -33,7 +35,7 @@
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <td>
-              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <!-- <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>  -->
               </td>
               <?php } ?>
                <?php } ?>
@@ -50,7 +52,7 @@
                 <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                
                 <?php } ?>
-                <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <button onclick="deleteDataSKP('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>
               <?php } else { ?>
               <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
@@ -59,7 +61,11 @@
               <?php } ?>
               <?php } ?>
               </td>
-              <?php } ?>
+              <?php } else { ?>
+                <td>
+                <button onclick="deleteDataSKP('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                </td>
+                <?php } ?>
             </tr>
           <?php } ?>
         </tbody>
@@ -125,7 +131,7 @@ $('#iframe_view_file_skp').attr('src', $link)
 
  }
 
-  function deleteData(id,file,kode){
+  function deleteDataSKP(id,file,kode){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
@@ -137,6 +143,7 @@ $('#iframe_view_file_skp').attr('src', $link)
                                if(kode == 1){
                                 loadListSkp()
                                } else {
+                                loadListSkp()
                                 loadRiwayatUsulSkp()
                                }
                               

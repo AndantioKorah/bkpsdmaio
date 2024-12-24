@@ -3191,7 +3191,9 @@ public function submitEditProfil(){
     $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
-    $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
+    if(isset($datapost["edit_flag_terima_tpp"])){
+        $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
+    }
 
     $data["id_m_provinsi"] = 71;
     if(isset($datapost['edit_kab_kota'])){
@@ -3199,7 +3201,10 @@ public function submitEditProfil(){
     $data["id_m_kecamatan"] = $datapost["edit_kecamatan"];
     $data["id_m_kelurahan"] = $datapost["edit_kelurahan"];
     }
-    $data["id_m_status_pegawai"] = $datapost["edit_id_m_status_pegawai"];
+
+    if(isset($datapost["edit_id_m_status_pegawai"])){
+        $data["id_m_status_pegawai"] = $datapost["edit_id_m_status_pegawai"];
+    }
     $idUser = $datapost["edit_id_m_user"];
     $dataUser["id_m_bidang"] = $datapost["edit_id_m_bidang"];
     $dataUser["id_m_sub_bidang"] = $datapost["edit_id_m_sub_bidang"];

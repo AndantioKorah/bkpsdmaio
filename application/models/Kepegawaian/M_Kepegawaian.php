@@ -8532,6 +8532,7 @@ public function getFileForKarisKarsu()
         ->where('flag_active', 1)
         // ->where('status', 2)
         ->order_by('tmtpangkat', 'desc')
+        ->order_by('id', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegpangkat');
         $query = $this->db->get()->row_array();
@@ -8546,6 +8547,7 @@ public function getFileForKarisKarsu()
         ->where('jenisjabatan', 10)
         // ->where('status', 2)
         ->order_by('tmtjabatan', 'desc')
+        ->order_by('id', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegjabatan');
         $query = $this->db->get()->row_array();
@@ -8882,17 +8884,13 @@ public function getFileForKarisKarsu()
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
         // ->where('status', 2)
+        ->order_by('id', 'desc')
         ->from($table);
-
-
 
         if($table == "db_pegawai.pegskp"){
             $this->db->where('tahun', $tahun); 
         }
-    
-    
         $query = $this->db->get()->row_array();
-    
         return $query;  
 
     }

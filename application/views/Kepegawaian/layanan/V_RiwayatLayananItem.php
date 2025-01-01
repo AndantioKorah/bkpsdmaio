@@ -1,15 +1,15 @@
 <?php if($result){ ?>
   <div class="row">
-    <div class="col-lg-12 table-responsive">
+    <div class="card-body table-responsive">
         
-      <table class="table table-hover datatable">
+      <table class="table table-hover datatable" style="width:100%;">
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">Surat Pengantar</th>
-          <th></th>
+          <th style="width:40%;"></th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -30,14 +30,23 @@
               <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
               <?php if($rs['status'] == 2) { ?>
-              
-              <button
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+  <button
                 data-id="<?=$rs['id'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
                 <i class="fa fa-edit"></i> Ubah Surat Pengantar 
                 </button>
-              <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="Second group">
+  <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+
+  </div>
+  
+</div>
+              
+               
               <?php } ?>
             </td>
            

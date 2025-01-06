@@ -8947,11 +8947,13 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
-    $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+    $this->db->select('*, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+     (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
@@ -8985,7 +8987,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-     $this->db->select('*,b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
+     $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -9201,6 +9203,7 @@ public function getFileForVerifLayanan()
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
 
        
         $this->db->where('id', $id_pengajuan)
@@ -9260,6 +9263,34 @@ public function getFileForVerifLayanan()
         $this->db->where('id', $id_usul)
                 ->update('t_layanan', $data);
 
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function kerjakanPengajuanLayanan(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+        $id_usul = $datapost['id_usul'];
+        $id = $datapost['id'];
+        if($id == 1){
+            $data["id_m_user_verif"] = $this->general_library->getId();
+        } else {
+            $data["id_m_user_verif"] = 0;
+        }
+        $this->db->where('id', $id_usul)
+                ->update('t_layanan', $data);
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;

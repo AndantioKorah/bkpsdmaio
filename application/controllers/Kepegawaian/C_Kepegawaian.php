@@ -2389,8 +2389,8 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayananDetail($id,$layanan){
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 0;   
-		$previous2Year = $currentYear - 1; 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['id_m_layanan'] = $layanan;

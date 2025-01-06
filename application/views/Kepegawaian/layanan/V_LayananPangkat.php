@@ -263,7 +263,7 @@ ol {
 		<div class="card card-default">
 			<div class="card-header">
 				<div class="card-title">
-					<h5>FORM LAYANAN KARIS/KARSU</h5>
+					<h5>FORM LAYANAN KENAIKAN PANGKAT</h5>
 				</div>
 				<hr>
       <span><b>Berkas Persyaratan :</b></span>

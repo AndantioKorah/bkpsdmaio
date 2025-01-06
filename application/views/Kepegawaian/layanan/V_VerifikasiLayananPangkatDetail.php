@@ -75,6 +75,16 @@
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
   </button> -->
+
+  <?php if($result[0]['verifikator'] == 0) { ;?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
+        Kerjakan Pengajuan ini
+        </button>
+<?php } else { ?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Kerjakan Pengajuan ini
+        </button>
+<?php } ?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
@@ -718,6 +728,33 @@ function openPresensiTab(){
             
           }
   }
+
+  function kerjakanPengajuan(id_usul,id){
+
+    if(id == 1){
+      var pesan = "Kerjakan Pengajuan Pangkat ini ?";
+    } else {
+      var pesan = "Batal Kerjakan Pengajuan Pangkat ini ?";
+    }
+          
+          if(confirm(pesan)){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/kerjakanPengajuanLayanan")?>',
+              method: 'post',
+              // data: $(this).serialize(),
+              data: {
+                id_usul: id_usul, id : id
+          },
+              success: function(data){
+                location.reload()
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+
+          
+        }
+}
 
   async function openFilePangkat(filename){
 

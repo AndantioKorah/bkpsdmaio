@@ -2316,8 +2316,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 0;   
-		$previous2Year = $currentYear - 1; 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
@@ -2430,6 +2430,11 @@ class C_Kepegawaian extends CI_Controller
 	public function batalVerifikasiPengajuanLayanan()
 	{ 
 		echo json_encode( $this->kepegawaian->batalVerifikasiPengajuanLayanan());
+	}
+
+	public function kerjakanPengajuanLayanan()
+	{ 
+		echo json_encode( $this->kepegawaian->kerjakanPengajuanLayanan());
 	}
 
 	public function loadModalUploadSK($id_usul,$id_m_layanan)

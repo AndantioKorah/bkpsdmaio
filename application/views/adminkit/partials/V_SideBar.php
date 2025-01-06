@@ -452,6 +452,7 @@
 	$this->general_library->isAdminAplikasi() ||
 	$this->general_library->isHakAksesVerifLayanan() ||
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
+	$this->general_library->isHakAkses('verifikasi_pangkat_bkad') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') ||

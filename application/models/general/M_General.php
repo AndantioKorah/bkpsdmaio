@@ -290,7 +290,7 @@
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
-            ->where('c.jenis_jabatan !=', 'JFT')
+            // ->where('c.jenis_jabatan !=', 'JFT')
             ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 
@@ -314,7 +314,7 @@
                         $explode = explode("-", $q['tmtgjberkala']);
                         $tahuntmtgajiberkala = $explode[0];
                         $diff = $data['tahun'] - $tahuntmtgajiberkala;
-                        if($diff >= 2){
+                        if($diff == 2){
                             $result[] = $q;
                         }
                     }

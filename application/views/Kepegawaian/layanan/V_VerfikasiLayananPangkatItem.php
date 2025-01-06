@@ -12,6 +12,7 @@
             <th class="text-center"></th>
           <?php } ?>
           <th></th>
+          <th>Verifikator</th>
           
         </thead>
         <tbody>
@@ -26,7 +27,7 @@
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '1' || $rs['status_pengajuan'] == '4') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else if($rs['status_pengajuan'] == '3') echo "Usul BKAD"; else if($rs['status_pengajuan'] == '4')  echo "Diterima BKAD"; else if($rs['status_pengajuan'] == '5') echo "Ditolak BKAD"; else echo "Menunggu Verifikasi BKPSDM" ?>
               </span>
             </td>
-            <td class="text-left"><?=$rs['keterangan']?></td>
+            <td class="text-left"><?=$rs['ket_layanan']?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">
@@ -49,12 +50,18 @@
               </td>
             <?php } ?>
              <td>
+
+             <!-- <a id="btn_tolak_verifikasi" onclick="kerjakanBerkas('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" type="button" class="btn btn-sm btn-primary ml-2">
+             Verifikasi
+                </a> -->
              <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>
              </td>
-              
+              <td>
+              <?=$rs['verifikator']?> 
+              </td>
             </tr>
           <?php } ?>
         </tbody>
@@ -140,5 +147,26 @@ $('#iframe_view_file').on('load', function(){
 })
 }
 
+
+function kerjakanBerkas(id_usul){
+          
+          if(confirm('Kerjakan pengajuan layanan pangkat ini ?')){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
+              method: 'post',
+              // data: $(this).serialize(),
+              data: {
+              id_batal: id_usul
+          },
+              success: function(data){
+               
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+
+          
+        }
+}
   
 </script>

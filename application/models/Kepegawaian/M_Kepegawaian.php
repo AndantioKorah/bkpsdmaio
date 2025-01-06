@@ -7748,6 +7748,23 @@ public function submitEditJabatan(){
 
     }
 
+    public function searchPenomoranSkCuti($data){
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws')
+                ->from('t_pengajuan_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.flag_active', 1)
+                ->where('MONTH(a.created_date)', $data['bulan'])
+                ->where('YEAR(a.created_date)', $data['tahun'])
+                ->order_by('a.created_date', 'asc');
+
+        if($data['id_unitkerja'] != 0){
+            $this->db->where('c.skpd', $data['id_unitkerja']);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
     public function insertUsulLayananKarisKarsu($id_m_layanan){
         $res['code'] = 0;
         $res['message'] = 'ok';

@@ -1512,6 +1512,16 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_PermohonanCutiDetail', $data);
 	}
 
+	public function penomoranSkCuti(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('kepegawaian/V_PenomoranSkCuti', '', '', $data);
+	}
+
+	public function searchPenomoranSkCuti(){
+		$data['result'] = $this->kepegawaian->searchPenomoranSkCuti($this->input->post());
+		$this->load->view('kepegawaian/V_PenomoranSkCutiData', $data);
+	}
+
 	public function deletePermohonanCuti($id){
 		$this->kepegawaian->deletePermohonanCuti($id);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');

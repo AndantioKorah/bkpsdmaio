@@ -2273,9 +2273,9 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 2) {
+        if($result[0]['total_verif'] >= 5) {
             $rs['code'] = 1;        
-            $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
+            $rs['message'] = 'Sudah ada 5 Pengajuan yang diterima';        
         } else {     
 
             $data_verif['status'] = $status;
@@ -2433,6 +2433,7 @@
         $peninjauan = $this->db->select('*')
                         ->from('db_efort.t_peninjauan_absensi a')
                         ->where('a.tanggal_absensi', $this->input->post('tanggal_kolektif'))
+                        ->where('a.jenis_absensi', $this->input->post('jenis_absensi'))
                         ->where('a.status', 0)
                         ->get()->result_array();
         foreach ($peninjauan as $rs) {
@@ -2443,12 +2444,12 @@
             ->get()->row_array();
             if($absen){
                 if($rs['jenis_absensi'] == 1){
-                    // $dataUpdate['masuk'] = "07:00:00";
-                    // $this->db->where('user_id', $rs['id_m_user'])
-                    // ->where('tgl', $this->input->post('tanggal_kolektif'))
-                    // ->update('db_sip.absen', $dataUpdate);
+                    $dataUpdate['masuk'] = "07:00:00";
+                    $this->db->where('user_id', $rs['id_m_user'])
+                    ->where('tgl', $this->input->post('tanggal_kolektif'))
+                    ->update('db_sip.absen', $dataUpdate);
                 } else {
-                    $dataUpdate['pulang'] = "16:30:01";
+                    $dataUpdate['pulang'] = "17:00:01";
                     $this->db->where('user_id', $rs['id_m_user'])
                     ->where('tgl', $this->input->post('tanggal_kolektif'))
                     ->update('db_sip.absen', $dataUpdate);
@@ -2456,20 +2457,35 @@
                 $this->db->where('id', $rs['id'])
                 ->update('t_peninjauan_absensi', $data_verif);
             } 
-            // else {
-            //     $this->db->insert('db_sip.absen', [
-            //         'user_id' => $rs['id_m_user'],
-            //         'masuk' => "07:00:00",
-            //         // 'pulang' => $absen['pulang'],
-            //         // 'lat' => $absen['lat'],
-            //         // 'lang' => $absen['lang'],
-            //         'tgl' => $this->input->post('tanggal_kolektif'),
-            //         'status' => "1",
-            //         'aktivitas' => 0,
-            //         'created_at' => $this->input->post('tanggal_kolektif'),
-            //         'updated_at' => $this->input->post('tanggal_kolektif')
-            //     ]);
-            // }
+            else {
+                if($this->input->post('jenis_absensi') == 1){
+                    $this->db->insert('db_sip.absen', [
+                        'user_id' => $rs['id_m_user'],
+                        'masuk' => "07:00:00",
+                        // 'pulang' => $absen['pulang'],
+                        // 'lat' => $absen['lat'],
+                        // 'lang' => $absen['lang'],
+                        'tgl' => $this->input->post('tanggal_kolektif'),
+                        'status' => "1",
+                        'aktivitas' => 0,
+                        'created_at' => $this->input->post('tanggal_kolektif'),
+                        'updated_at' => $this->input->post('tanggal_kolektif')
+                    ]);
+                } else {
+                    $this->db->insert('db_sip.absen', [
+                        'user_id' => $rs['id_m_user'],
+                        // 'masuk' => "07:00:00",
+                        'pulang' => "17:00:00",
+                        // 'lat' => $absen['lat'],
+                        // 'lang' => $absen['lang'],
+                        'tgl' => $this->input->post('tanggal_kolektif'),
+                        'status' => "1",
+                        'aktivitas' => 0,
+                        'created_at' => $this->input->post('tanggal_kolektif'),
+                        'updated_at' => $this->input->post('tanggal_kolektif')
+                    ]);
+                }
+            }
         }
        
 

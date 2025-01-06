@@ -30,7 +30,7 @@
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">
-            <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "3"?>  
+            <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "Kenaikan Pangkat Penyesuaian Ijazah"?>  
             </td>
             <td class="text-center">
             <?php if($rs['status_layanan'] == 1 || $rs['status_layanan'] == 3 || $rs['status_layanan'] == 4 || $rs['status_layanan'] == 5) { ?>

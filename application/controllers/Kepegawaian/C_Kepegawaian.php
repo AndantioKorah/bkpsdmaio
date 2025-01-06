@@ -1920,41 +1920,41 @@ class C_Kepegawaian extends CI_Controller
 		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','39','0',$id_peg);
 
 
-		$data['list_layanan_skcpns'] = array(7,8,9,10,11);
-		$data['list_layanan_skpns'] = array(7,8,9,10,11);
-		$data['list_layanan_skpangak'] = array(7,8,9,10,11);
+		$data['list_layanan_skcpns'] = array(1,2,3,4,5);
+		$data['list_layanan_skpns'] = array(1,2,3,4,5);
+		$data['list_layanan_skpangak'] = array(1,2,3,4,5);
 		$data['list_layanan_skjabatan'] = array(7,8,9,10);
-		$data['list_layanan_aktenikah'] = array(7,8,9,10,11);
-		$data['list_layanan_hd'] = array(7,8,9,10,11);
-		$data['list_layanan_pidana'] = array(7,8,9,10,11);
-		$data['list_layanan_dpcp'] = array(7,8,9,10,11);
-		$data['list_layanan_pmk'] = array(7,8,9,10);
-		$data['list_layanan_skp'] = array(7,8,9,10);
-		$data['list_layanan_surat_ket_kematian'] = array(11);
-		$data['list_layanan_surat_laporan_kronologis'] = array(11);
-		$data['list_layanan_aktercerai'] = array(7,8,9,10,11);
-		$data['list_layanan_aktekematian'] = array(7,8,9,10,11);
-		$data['list_layanan_akteanak'] = array(7,8,9,10,11);
-		$data['list_layanan_kk'] = array(7,8,9,10,11);
-		$data['list_layanan_ket_janda_duda'] = array(8,11);
-		$data['list_layanan_spt'] = array(11);
-		$data['list_layanan_visum'] = array(11);
-		$data['list_layanan_berita_acara'] = array(11);
-		$data['list_layanan_ktp'] = array(7,8,9,10,11);
-		$data['list_layanan_npwp'] = array(7,8,9,10,11);
-		$data['list_layanan_buku_rek'] = array(7,8,9,10,11);
-		$data['list_layanan_surat_rekom_sakit'] = array(10);
-		$data['list_layanan_surat_berhenti'] = array(9,10);
+		$data['list_layanan_aktenikah'] = array(1,2,3,4,5);
+		$data['list_layanan_hd'] = array(1,2,3,4,5);
+		$data['list_layanan_pidana'] = array(1,2,3,4,5);
+		$data['list_layanan_dpcp'] = array(1,2,3,4,5);
+		$data['list_layanan_pmk'] = array(1,2,3,4);
+		$data['list_layanan_skp'] = array(1,2,3,4);
+		$data['list_layanan_surat_ket_kematian'] = array(5);
+		$data['list_layanan_surat_laporan_kronologis'] = array(5);
+		$data['list_layanan_aktercerai'] = array(1,2,3,4,5);
+		$data['list_layanan_aktekematian'] = array(1,2,3,4,5);
+		$data['list_layanan_akteanak'] = array(1,2,3,4,5);
+		$data['list_layanan_kk'] = array(1,2,3,4,5);
+		$data['list_layanan_ket_janda_duda'] = array(2,5);
+		$data['list_layanan_spt'] = array(5);
+		$data['list_layanan_visum'] = array(5);
+		$data['list_layanan_berita_acara'] = array(5);
+		$data['list_layanan_ktp'] = array(1,2,3,4,5);
+		$data['list_layanan_npwp'] = array(1,2,3,4,5);
+		$data['list_layanan_buku_rek'] = array(1,2,3,4,5);
+		$data['list_layanan_surat_rekom_sakit'] = array(4);
+		$data['list_layanan_surat_berhenti'] = array(3,4);
 		
 		if($jenis_pensiun == 7){
 		$data['nama_layanan'] = "BUP";
-		} else if($jenis_pensiun == 8){
+		} else if($jenis_pensiun == 2){
 		$data['nama_layanan'] = "JANDA/DUDA";
-		} else if($jenis_pensiun == 9){
+		} else if($jenis_pensiun == 3){
 		$data['nama_layanan'] = "ATAS PERMINTAAN SENDIRI";
-		} else if($jenis_pensiun == 10){
+		} else if($jenis_pensiun == 4){
 		$data['nama_layanan'] = "SAKIT/UZUR";
-		} else if($jenis_pensiun == 11){
+		} else if($jenis_pensiun == 5){
 		$data['nama_layanan'] = "TEWAS	";
 		}
 
@@ -2303,14 +2303,18 @@ class C_Kepegawaian extends CI_Controller
 
 	public function layananPangkat($id_layanan){
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 1;   
-		$previous2Year = $currentYear - 2; 
+		$previous1Year = $currentYear - 0;   
+		$previous2Year = $currentYear - 1; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+		// dd($data['skp1']);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
+		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
 
 		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
@@ -2319,14 +2323,21 @@ class C_Kepegawaian extends CI_Controller
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+				$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForLayanan(); 
+				$data['petajabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+			
 			}
 			if($id_layanan == 8){
-				$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 				$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
-				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
-				
+				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','67','0');	
+			}
+			if($id_layanan == 9){
+				$data['uraiantugas'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','15','0');	
+				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+				$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 			}
 		$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
 		} 
@@ -2339,18 +2350,20 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListRiwayatLayanan($id){
 		$data['result'] = $this->kepegawaian->getRiwayatLayanan($id);
 		$data['m_layanan'] = $id;
-		
-
 		$this->load->view('kepegawaian/layanan/V_RiwayatLayananItem', $data);
 	}
 
 	public function insertUsulLayananPangkat($id)
 	{ 
-		echo json_encode( $this->kepegawaian->insertUsulLayananNew($id));
+		echo json_encode( $this->kepegawaian->insertUsulLayananNew2($id));
 	}
 
 	public function deleteRiwayatLayanan($id){
         $this->general->delete('id', $id, 't_layanan');
+    }
+
+	public function ajukanKembaliLayananPangkat($id){
+        $this->kepegawaian->ajukanKembaliLayananPangkat('id', $id, 't_layanan');
     }
 	
 
@@ -2376,8 +2389,8 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayananDetail($id,$layanan){
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
 		$currentYear = date('Y'); 
-		$previous1Year = $currentYear - 1;   
-		$previous2Year = $currentYear - 2; 
+		$previous1Year = $currentYear - 0;   
+		$previous2Year = $currentYear - 1; 
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['id_m_layanan'] = $layanan;
@@ -2478,6 +2491,12 @@ class C_Kepegawaian extends CI_Controller
 		{ 
 			echo json_encode( $this->kepegawaian->submitVerifikasiPangkatBkad());
 		}
+
+
+		public function submitEditSPLayanan()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditSPLayanan());
+	}
 
 	
 

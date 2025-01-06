@@ -155,6 +155,8 @@
     date.getMonth(),
   );
 
+  alert(firstDay)
+
   var fd = tahun+'-'+bulan+'-01';
 
    var statusLock = "<?=$status_lock[0]['status'];?>"
@@ -165,17 +167,20 @@
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    // startDate: firstDay,  
+    startDate: firstDay,  
     endDate: new Date()
     })
     } else {
-      if(tanggal <= 3) {
+    if(tanggal <= 3) {
     $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
+    changeMonth: true,
+    changeYear: true,
     todayHighlight: true,
     todayBtn: true,
-    startDate: fd,  
+    // startDate: fd, 
+    startDate : '2024-12-01', 
     endDate: new Date()
   })
   } else {
@@ -185,6 +190,7 @@
     todayHighlight: true,
     todayBtn: true,
     startDate: firstDay,  
+    // startDate : '2024-12-01', 
     endDate: new Date()
   })
   }

@@ -136,7 +136,7 @@
   </div>
   <div class="form-group col-lg-12 mt-2">
      <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
-      <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
+      <span id="ket" style="display:none;color:red"><b>Sudah ada 5 kali Pengajuan Absensi untuk bulan ini</b></span>
     </div>
 </form> 
     </div>
@@ -280,8 +280,8 @@ $(function(){
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    // startDate: '-0d',
-    startDate : '2024-12-11',
+    startDate: '-0d',
+    // startDate : '2024-12-11',
     endDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,

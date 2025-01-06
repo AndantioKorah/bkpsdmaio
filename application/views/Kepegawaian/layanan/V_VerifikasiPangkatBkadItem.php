@@ -5,11 +5,12 @@
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-center">Tanggal Usul Ke BKAD</th>
+          <th class="text-center">Surat Pengantar</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
-            <th class="text-center"></th>
+            <th class="text-center">File Pangkat</th>
           <?php } ?>
           <th></th>
           
@@ -22,6 +23,10 @@
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td>
+              <td class="text-center">
+              <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+              <i class="fa fa-file-pdf"></i></button>
+              </td>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '3') echo "success"; else if($rs['status_pengajuan'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '3') echo "Usul BKPSDM"; else if($rs['status_pengajuan'] == '4') echo "Diterima"; else if($rs['status_pengajuan'] == '5') echo "ditolak"; ?>
               </span>
@@ -191,4 +196,21 @@ $('#form_verifikasi_layanan').on('submit', function(e){
         $('#modelVerifBkad').on('hidden.bs.modal', function () {
             $('#form_search').submit()
         });
+
+
+        async function openFilePengantar(filename){
+
+        $('#iframe_view_file').hide()
+        $('.iframe_loader').show()  
+
+        var number = Math.floor(Math.random() * 2000);
+        $link = "<?=base_url();?>dokumen_layanan/pangkat/"+filename+"?v="+number;
+
+        $('#iframe_view_file').attr('src', $link)
+        $('#iframe_view_file').on('load', function(){
+          $('.iframe_loader').hide()
+          $(this).show()
+        })
+        }
+
 </script>

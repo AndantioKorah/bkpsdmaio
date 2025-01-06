@@ -524,7 +524,7 @@ ol {
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -587,7 +587,7 @@ $(function(){
 
         var jenis_layanan = "<?=$jenis_layanan;?>"
 
-        if(jenis_layanan == 7 || jenis_layanan == 8 || jenis_layanan == 9){
+        if(jenis_layanan == 1 || jenis_layanan == 2 || jenis_layanan == 3){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -662,7 +662,7 @@ $(function(){
       
         }
 
-        if(jenis_layanan == 8){
+        if(jenis_layanan == 2){
           if(jandaduda == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -677,14 +677,14 @@ $(function(){
         }
         }
 
-        if(jenis_layanan == 9 || jenis_layanan == 10){
+        if(jenis_layanan == 3 || jenis_layanan == 4){
           if(surat_berhenti == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
         }
 
-        if(jenis_layanan == 11){
+        if(jenis_layanan == 5){
           if(surat_ket_kematian == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

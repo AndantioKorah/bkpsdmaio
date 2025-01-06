@@ -9382,7 +9382,7 @@ public function getFileForVerifLayanan()
         $id_insert_dok = $this->db->insert_id();
         $this->updatePangkat($id_peg);
 
-        $dataUpdate['status'] = 1;
+        $dataUpdate['status'] = 3;
         $dataUpdate['reference_id_dok'] = $id_insert_dok;
         $url_file = "arsipelektronik/".$data['nama_file'];
 

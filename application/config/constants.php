@@ -174,6 +174,7 @@ define('GROUP_CHAT_HELPDESK', '120363161928273333');
 define('GROUP_CHAT_PRAKOM', '120363151299794225');
 define('GROUP_CHAT_TPP_HARDWORKER', '628114319222-1609731398');
 define('WA_BOT', '62895355011333');
+define('FLAG_CUTI_USE_DS', 0);
 
 define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n _*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");
 

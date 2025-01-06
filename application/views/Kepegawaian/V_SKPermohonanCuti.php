@@ -171,7 +171,7 @@
                   a.n. WALI KOTA MANADO
                   <?php
                   $padding_top_content_footer = "100px";
-                  if(isset($rs['ds']) && $rs['ds'] == 1){
+                  if(isset($rs['ds']) && $rs['ds'] == 1 && FLAG_CUTI_USE_DS == 1){
                     $rs['width'] = 100;
                     $padding_top_content_footer = "30px";
                   ?>

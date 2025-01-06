@@ -79,6 +79,7 @@ $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';
 //cuti
 $route['kepegawaian/permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/permohonanCuti';
 $route['kepegawaian/verifikasi-permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/verifikasiPermohonanCuti';
+$route['kepegawaian/penomoran-sk-cuti'] = 'kepegawaian/C_Kepegawaian/penomoranSkCuti';
 $route['whatsapp-verification/cuti/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/verifWhatsapp/$1';
 
 //rating layanan

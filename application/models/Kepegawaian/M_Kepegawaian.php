@@ -3191,7 +3191,9 @@ public function submitEditProfil(){
     $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
-    $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
+    if(isset($datapost["edit_flag_terima_tpp"])){
+        $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
+    }
 
     $data["id_m_provinsi"] = 71;
     if(isset($datapost['edit_kab_kota'])){
@@ -3199,7 +3201,10 @@ public function submitEditProfil(){
     $data["id_m_kecamatan"] = $datapost["edit_kecamatan"];
     $data["id_m_kelurahan"] = $datapost["edit_kelurahan"];
     }
-    $data["id_m_status_pegawai"] = $datapost["edit_id_m_status_pegawai"];
+
+    if(isset($datapost["edit_id_m_status_pegawai"])){
+        $data["id_m_status_pegawai"] = $datapost["edit_id_m_status_pegawai"];
+    }
     $idUser = $datapost["edit_id_m_user"];
     $dataUser["id_m_bidang"] = $datapost["edit_id_m_bidang"];
     $dataUser["id_m_sub_bidang"] = $datapost["edit_id_m_sub_bidang"];
@@ -7741,6 +7746,23 @@ public function submitEditJabatan(){
     
         return $query;  
 
+    }
+
+    public function searchPenomoranSkCuti($data){
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws')
+                ->from('t_pengajuan_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.flag_active', 1)
+                ->where('MONTH(a.created_date)', $data['bulan'])
+                ->where('YEAR(a.created_date)', $data['tahun'])
+                ->order_by('a.created_date', 'asc');
+
+        if($data['id_unitkerja'] != 0){
+            $this->db->where('c.skpd', $data['id_unitkerja']);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function insertUsulLayananKarisKarsu($id_m_layanan){

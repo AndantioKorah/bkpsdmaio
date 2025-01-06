@@ -378,6 +378,16 @@
 				</a>
 			</li>
 		<?php } ?>
+		<?php
+			if($this->general_library->isProgrammer() ||
+			$this->general_library->isHakAkses('admin_pengajuan_cuti')){
+		?>
+			<li class="sidebar-item ">
+				<a title="Penomoran SK Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/penomoran-sk-cuti')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Penomoran SK Cuti
+				</a>
+			</li>
+		<?php } ?>
 		<?php 
 			if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
 			|| $this->general_library->isProgrammer() 

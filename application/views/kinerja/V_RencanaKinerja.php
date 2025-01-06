@@ -40,6 +40,8 @@ $("#checkBoxID").click(function() {
       year = year-1;
     }
 
+    
+
     $.ajax({  
         url:"<?=base_url("kinerja/C_Kinerja/inputSasaranPrevMonth")?>",
         method: 'post',

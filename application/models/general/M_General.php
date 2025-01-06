@@ -262,7 +262,7 @@
         }
 
         public function logErrorTelegram($data){
-            dd($data);
+            // dd($data);
             $data_telegram['message'] = '';
             $req = $this->telegramlib->send_curl_exec('GET', 'sendMessage', '713399901', $data_telegram);
         }
@@ -284,7 +284,7 @@
             $result = null;
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala')
-            ->from('db_pegawai.pegawaix a')
+            ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')

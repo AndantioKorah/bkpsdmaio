@@ -4176,6 +4176,8 @@
                 
          
             $currentMonth = date('m');
+            $currentYear = date('Y');
+           
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
 
@@ -4199,7 +4201,7 @@
                             ->where('flag_active', 1)
                             ->get()->result_array();
               
-                // dd($sasaranLM);
+                
                 $sasaran = null;
                 foreach($sasaranLM as $h){
                     $i = 0;
@@ -4207,7 +4209,7 @@
                         'id_m_user' => $h['id_m_user'],
                         'tugas_jabatan' => $h['tugas_jabatan'],
                         'bulan' => $currentMonth,
-                        'tahun' => $tahun,
+                        'tahun' => $currentYear,
                         'target_kuantitas' => $h['target_kuantitas'],
                         'satuan' => $h['satuan'],
                         'sasaran_kerja' => $h['sasaran_kerja'],
@@ -4216,6 +4218,7 @@
                     ];
                     $i++;
                 }
+                // dd($sasaran);
                 if($sasaran){
                     $this->db->insert_batch('t_rencana_kinerja', $sasaran);
                 }

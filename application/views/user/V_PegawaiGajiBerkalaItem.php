@@ -29,7 +29,7 @@
                     <th style="width: 35%;" class="text-center">Nama Pegawai</th>
                     <th style="width: 20%;" class="text-center">Jabatan</th>
                     <th style="width: 20%;" class="text-center">Unit Kerja</th>
-                    <th style="width: 10%;" class="text-center">TMT Gaji Berkala</th>
+                    <th style="width: 10%;" class="text-center">TMT Gaji Berkala Terakhir</th>
                     <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
                 </thead>
                 <tbody>

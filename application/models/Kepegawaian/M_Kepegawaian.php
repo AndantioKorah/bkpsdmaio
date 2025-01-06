@@ -8947,7 +8947,7 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
-    $this->db->select('*, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+    $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
             ->join('m_user d', 'a.id_m_user = d.id')

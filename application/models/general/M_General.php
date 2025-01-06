@@ -284,13 +284,14 @@
             $result = null;
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala')
-            ->from('db_pegawai.pegawai a')
+            ->from('db_pegawai.pegawaix a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
             // ->where('c.jenis_jabatan !=', 'JFT')
+            ->where('year(a.tmtgjberkala)', '2023')
             ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 
@@ -307,21 +308,21 @@
             }
             $query = $this->db->get()->result_array();
 
-            if($query){
-                foreach($query as $q){
-                    if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
-                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
-                        $explode = explode("-", $q['tmtgjberkala']);
-                        $tahuntmtgajiberkala = $explode[0];
-                        $diff = $data['tahun'] - $tahuntmtgajiberkala;
-                        if($diff == 2){
-                            $result[] = $q;
-                        }
-                    }
-                }
-            }
-            
-            return $result;
+            // if($query){
+            //     foreach($query as $q){
+            //         if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
+            //             // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
+            //             $explode = explode("-", $q['tmtgjberkala']);
+            //             $tahuntmtgajiberkala = $explode[0];
+            //             $diff = $data['tahun'] - $tahuntmtgajiberkala;
+            //             if($diff == 2){
+            //                 $result[] = $q;
+            //             }
+            //         }
+            //     }
+            // }
+            return $query;
+            // return $result;
         }
 
         public function getListPegawaiNaikPangkatByYear($data){

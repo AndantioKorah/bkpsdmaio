@@ -37,10 +37,12 @@
                         <tr>
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-left">
+                            <a style="color:#000" target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs['nipbaru_ws'];?>" style="color:#fff">
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
                                 <span class="text-small"><?=formatNip($rs['nipbaru_ws'])?></span><br>
                                 <!-- <span class="text-small"><?=($rs['nama_jabatan'])?></span><br> -->
                                 <span class="text-small"><?=($rs['nm_pangkat'])?></span>
+                                </a>
                             </td>
                             <td class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>

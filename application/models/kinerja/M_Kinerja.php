@@ -890,10 +890,23 @@
                                         ->get()->row_array(); //kapus
                 $kepala = $atasan;
             } else if(stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])){ // kecamatan
+              
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
+                if($kepala == null){
+                     $kepala = $this->db->select('c.*, CONCAT(a.jenis," ",d.nama_jabatan) as nama_jabatan')
+                                ->from('t_plt_plh a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->join('db_pegawai.jabatan d', 'a.id_jabatan = d.id_jabatanpeg', 'left')
+                                ->where('a.id_unitkerja', $pegawai['id_unitkerja'])
+                                ->order_by('a.tanggal_akhir', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
+                }
+                // dd($kepala);
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
                     $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])

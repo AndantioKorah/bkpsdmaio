@@ -34,6 +34,7 @@
 if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
   if($this->general_library->getUserName() == $nip){
     $nm_jab = substr($profil_pegawai['nama_jabatan'], 0, 6);
+    // dd($nm_jab);
     $eselon = 0;
     $idSubBidang = 0;
     // dd($bidang);
@@ -42,7 +43,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "II B" || $profil_pegawai['eselon'] == "III A") {
         $idBidang = 99;
-      }else if($nm_jab == "walikota"){
+      }else if($nm_jab == "Waliko"){
         $idBidang = 99;
       } else if($profil_pegawai['eselon'] == "IV A"){
         $idBidang = 99;
@@ -76,14 +77,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     }
   } else {
     $idBidang = 99;
+   
   }
-
   if($bidang){
     // dd($eselon);
     if($bidang['id_unitkerja'] != NULL){
-      if($profil_pegawai['skpd'] != $bidang['id_unitkerja']){
-        $idBidang = 0;
+      if(!$this->general_library->isWalikota()){
+        if($profil_pegawai['skpd'] != $bidang['id_unitkerja']){
+          $idBidang = 0;
+        }
       }
+    
     }  else {
       $idBidang = $idBidang;
     }

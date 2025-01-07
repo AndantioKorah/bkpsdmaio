@@ -1522,6 +1522,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_PenomoranSkCutiData', $data);
 	}
 
+	public function openModalPenomoranSkCuti($id){
+		$data['result'] = $this->kepegawaian->loadListFileInputManualNomorSuratById($id);
+		$this->load->view('kepegawaian/V_PenomoranSkCutiDetail', $data);
+	}
+
 	public function deletePermohonanCuti($id){
 		$this->kepegawaian->deletePermohonanCuti($id);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');

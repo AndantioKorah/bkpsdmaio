@@ -7538,6 +7538,17 @@ public function submitEditJabatan(){
                     ->get()->row_array();
     }
 
+    public function loadDetailCutiForPenomoranSkCuti($id){
+        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter')
+                    ->from('t_request_ds a')
+                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    ->where('a.flag_active', 1)
+                    ->where('a.ref_id', $id)
+                    ->where('a.table_ref', 't_pengajuan_cuti')
+                    ->get()->row_array();
+    }
+
     public function updateJabatan($id_peg){
         $res['code'] = 0;
         $res['message'] = 'ok';

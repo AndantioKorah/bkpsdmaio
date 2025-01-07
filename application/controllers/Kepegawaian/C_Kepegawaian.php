@@ -1523,7 +1523,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function openModalPenomoranSkCuti($id){
-		$data['result'] = $this->kepegawaian->loadListFileInputManualNomorSuratById($id);
+		$data['result'] = $this->kepegawaian->loadDetailCutiForPenomoranSkCuti($id);
 		$this->load->view('kepegawaian/V_PenomoranSkCutiDetail', $data);
 	}
 

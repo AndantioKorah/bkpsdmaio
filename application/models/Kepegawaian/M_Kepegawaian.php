@@ -7420,6 +7420,12 @@ public function submitEditJabatan(){
                     'updated_by' => $this->general_library->getId()
                 ]);
 
+        $this->db->where('id', $request_ds['id_t_nomor_surat'])
+                ->update('t_nomor_surat', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -7439,11 +7445,14 @@ public function submitEditJabatan(){
         $this->db->trans_begin();
 
         $data = $this->input->post();
+        $explode_data = explode("/", $data['nomor_surat']);
+        $tahun = $explode_data[count($explode_data)-1];
 
         $exists = $this->db->select('*')
                         ->from('t_nomor_surat')
-                        ->where('counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'"')
+                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
                         ->where('flag_active', 1)
+                        ->where('YEAR(tanggal_surat)', $tahun)
                         ->get()->row_array();
 
         $request_ds = $this->db->select('a.*')

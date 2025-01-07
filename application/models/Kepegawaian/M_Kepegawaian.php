@@ -9225,14 +9225,25 @@ public function getFileForVerifLayanan()
         } else if($this->input->post('file') == "skjabatan"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegjabatan as a')
+                ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenisjabatan', "10")
-                // ->where('a.status', 2)
+                ->where('b.jenis_jabatan', "JFT")
                 ->order_by('a.tmtjabatan', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else {
+        } else if($this->input->post('file') == "akreditasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 68)
+                // ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else {
          return [''];
         }
         

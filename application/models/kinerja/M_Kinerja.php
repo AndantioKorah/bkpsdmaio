@@ -890,10 +890,23 @@
                                         ->get()->row_array(); //kapus
                 $kepala = $atasan;
             } else if(stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])){ // kecamatan
+              
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
+                if($kepala == null){
+                     $kepala = $this->db->select('c.*, CONCAT(a.jenis," ",d.nama_jabatan) as nama_jabatan')
+                                ->from('t_plt_plh a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->join('db_pegawai.jabatan d', 'a.id_jabatan = d.id_jabatanpeg', 'left')
+                                ->where('a.id_unitkerja', $pegawai['id_unitkerja'])
+                                ->order_by('a.tanggal_akhir', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
+                }
+                // dd($kepala);
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
                     $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -4163,6 +4176,8 @@
                 
          
             $currentMonth = date('m');
+            $currentYear = date('Y');
+           
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
 
@@ -4186,7 +4201,7 @@
                             ->where('flag_active', 1)
                             ->get()->result_array();
               
-                // dd($sasaranLM);
+                
                 $sasaran = null;
                 foreach($sasaranLM as $h){
                     $i = 0;
@@ -4194,7 +4209,7 @@
                         'id_m_user' => $h['id_m_user'],
                         'tugas_jabatan' => $h['tugas_jabatan'],
                         'bulan' => $currentMonth,
-                        'tahun' => $tahun,
+                        'tahun' => $currentYear,
                         'target_kuantitas' => $h['target_kuantitas'],
                         'satuan' => $h['satuan'],
                         'sasaran_kerja' => $h['sasaran_kerja'],
@@ -4203,6 +4218,7 @@
                     ];
                     $i++;
                 }
+                // dd($sasaran);
                 if($sasaran){
                     $this->db->insert_batch('t_rencana_kinerja', $sasaran);
                 }

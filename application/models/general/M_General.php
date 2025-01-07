@@ -262,7 +262,7 @@
         }
 
         public function logErrorTelegram($data){
-            dd($data);
+            // dd($data);
             $data_telegram['message'] = '';
             $req = $this->telegramlib->send_curl_exec('GET', 'sendMessage', '713399901', $data_telegram);
         }
@@ -291,6 +291,7 @@
             ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
             // ->where('c.jenis_jabatan !=', 'JFT')
+            ->where('year(a.tmtgjberkala)', '2023')
             ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 
@@ -307,21 +308,21 @@
             }
             $query = $this->db->get()->result_array();
 
-            if($query){
-                foreach($query as $q){
-                    if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
-                        // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
-                        $explode = explode("-", $q['tmtgjberkala']);
-                        $tahuntmtgajiberkala = $explode[0];
-                        $diff = $data['tahun'] - $tahuntmtgajiberkala;
-                        if($diff == 2){
-                            $result[] = $q;
-                        }
-                    }
-                }
-            }
-            
-            return $result;
+            // if($query){
+            //     foreach($query as $q){
+            //         if($q['tmtgjberkala'] && $q['tmtgjberkala'] != '0000-00-00'){
+            //             // $diff = countDiffDateLengkap($data['tahun'], $q['tmtgjberkala'], ['tahun']);
+            //             $explode = explode("-", $q['tmtgjberkala']);
+            //             $tahuntmtgajiberkala = $explode[0];
+            //             $diff = $data['tahun'] - $tahuntmtgajiberkala;
+            //             if($diff == 2){
+            //                 $result[] = $q;
+            //             }
+            //         }
+            //     }
+            // }
+            return $query;
+            // return $result;
         }
 
         public function getListPegawaiNaikPangkatByYear($data){

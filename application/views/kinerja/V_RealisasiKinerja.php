@@ -155,7 +155,7 @@
     date.getMonth(),
   );
 
-  alert(firstDay)
+
 
   var fd = tahun+'-'+bulan+'-01';
 
@@ -167,7 +167,6 @@
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
-    startDate: firstDay,  
     endDate: new Date()
     })
     } else {
@@ -179,8 +178,8 @@
     changeYear: true,
     todayHighlight: true,
     todayBtn: true,
-    // startDate: fd, 
-    startDate : '2024-12-01', 
+    startDate: fd, 
+    // startDate : '2024-12-01', 
     endDate: new Date()
   })
   } else {

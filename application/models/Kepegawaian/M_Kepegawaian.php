@@ -9044,8 +9044,8 @@ public function getFileForVerifLayanan()
         $id_peg = $this->input->post('id_peg');
         $id_usul = $this->input->post('id_usul');
         $currentYear = date('Y'); 
-		$previous1Year = $currentYear - 0;   
-		$previous2Year = $currentYear - 1; 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
 
         if($this->input->post('file') == "skcpns"){
             $this->db->select('a.gambarsk')

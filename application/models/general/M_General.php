@@ -69,7 +69,7 @@
 
         public function authenticate($username, $password)
         {
-            $exclude_username = ['prog', 'walikota'];
+            $exclude_username = ['prog', '001'];
 
             $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon, f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai')
                         ->from('m_user a')

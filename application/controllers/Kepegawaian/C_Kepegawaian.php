@@ -1526,6 +1526,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->kepegawaian->loadDetailCutiForPenomoranSkCuti($id);
 		$this->load->view('kepegawaian/V_PenomoranSkCutiDetail', $data);
 	}
+	
+	public function saveUploadFileDsPenomoranSkCuti($id){
+        echo json_encode($this->kepegawaian->saveUploadFileDsPenomoranSkCuti($id));
+	}
 
 	public function deletePermohonanCuti($id){
 		$this->kepegawaian->deletePermohonanCuti($id);

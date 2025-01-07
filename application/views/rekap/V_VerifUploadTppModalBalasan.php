@@ -47,7 +47,6 @@
             $('#flag_verif').select2()
             // $('#iframe_file_balasan')[0].contentWindow.location.reload(true);
             $('#iframe_file_balasan').attr('src', "<?=base_url($result['url_file_balasan'])?>")
-            console.log('asdasdsa')
         })
 
         $('#form_upload_balasan').on('submit', function(e){

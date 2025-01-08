@@ -31,7 +31,7 @@
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '3') echo "success"; else if($rs['status_pengajuan'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '3') echo "Usul BKPSDM"; else if($rs['status_pengajuan'] == '4') echo "Diterima"; else if($rs['status_pengajuan'] == '5') echo "ditolak"; ?>
               </span>
             </td>
-            <td class="text-left"><?=$rs['keterangan']?></td>
+            <td class="text-left"><?=$rs['keterangan_bkad']?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">
@@ -178,7 +178,7 @@ $('#form_verifikasi_layanan').on('submit', function(e){
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPangkatBkad")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

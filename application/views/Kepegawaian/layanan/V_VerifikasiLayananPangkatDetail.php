@@ -75,15 +75,16 @@
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
   </button> -->
-
   <?php if($result[0]['verifikator'] == 0) { ;?>
   <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
         Kerjakan Pengajuan ini
         </button>
 <?php } else { ?>
+  <?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Kerjakan Pengajuan ini
         </button>
+  <?php } ?>
 <?php } ?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
@@ -701,6 +702,7 @@ function openPresensiTab(){
                   $('#btn_tolak_verifikasi').show()
                   // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
+                  location.reload()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }
@@ -729,9 +731,10 @@ function openPresensiTab(){
             },
                 success: function(data){
                   successtoast('Berhasil batal verifikasi ')
-                  $('#btn_tolak_verifikasi').hide()
-                  $('#btn_upload_sk').hide()
-                  $('#btn_verifikasi').show()
+                  location.reload()
+                  // $('#btn_tolak_verifikasi').hide()
+                  //$('#btn_upload_sk').hide()
+                  //$('#btn_verifikasi').show()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

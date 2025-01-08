@@ -647,10 +647,7 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(uraiantugas == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+     
         if(pangkalandata == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

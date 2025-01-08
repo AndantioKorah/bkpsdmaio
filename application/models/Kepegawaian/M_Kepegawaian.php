@@ -7548,7 +7548,7 @@ public function submitEditJabatan(){
     }
 
     public function loadDetailCutiForPenomoranSkCuti($id){
-        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.flag_ds_cuti, d.flag_ds_manual')
+        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.flag_ds_cuti, d.flag_ds_manual, d.id as id_t_pengajuan_cuti')
                     ->from('t_request_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
                     ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
@@ -7566,18 +7566,18 @@ public function submitEditJabatan(){
        
         $this->db->trans_begin();
 
+        $data = $this->db->select('a.*, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti')
+                            ->from('t_pengajuan_cuti a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
         if($_FILES && $data){
             $allowed_extension = ['pdf'];
             $file_array = explode(".", $_FILES["file_ds_manual"]["name"]);
             $file_extension = end($file_array);
-
-            $data = $this->db->select('a.*, c.nipbaru_ws')
-                            ->from('t_pengajuan_cuti a')
-                            ->join('m_user b', 'a.id_m_user = b.id')
-                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                            ->where('a.id', $id)
-                            ->where('a.flag_active', 1)
-                            ->get()->row_array();
 
             $filename = 'CUTI_DSM_'.$data['nipbaru_ws'].'_'.date("Y", strtotime($data['tanggal_mulai']))."_".date("m", strtotime($data['tanggal_mulai'])).'_'.date("d", strtotime($data['tanggal_mulai'])).'.pdf';
 
@@ -7592,10 +7592,11 @@ public function submitEditJabatan(){
                 // }
                 $uploadfile = $this->upload->do_upload('file_ds_manual');
                 
+                $filepath = 'arsipcuti/'.$filename;
                 if($uploadfile){
                     $this->db->where('id', $id)
                             ->update('t_pengajuan_cuti', [
-                                'url_sk_manual' => 'arsipcuti/'.$filename,
+                                'url_sk_manual' => $filepath,
                                 'flag_ds_cuti' => 1,
                                 'flag_ds_manual' => 1,
                                 'updated_by' => $this->general_library->getId(),
@@ -7609,8 +7610,73 @@ public function submitEditJabatan(){
                             ->where('a.skpd', ID_UNITKERJA_BKPSDM)
                             ->get()->row_array();
 
-                    // upload di pegcuti, upload di dokumen pendukung, update t_progress, send dokumen CUTI by WA        
-                    
+                    //upload di dokumen pendukung
+                    $dokumen_pendukung = null;
+                    $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+                    if($hariKerja){
+                        $i = 0;
+                        foreach($hariKerja[2] as $h){
+                            $explode = explode("-", $h);
+                            $dokumen_pendukung[$i] = [
+                                'id_m_user' => $data['id_m_user'],
+                                'id_m_jenis_disiplin_kerja' => 17,
+                                'tanggal' => $explode[2],
+                                'bulan' => $explode[1],
+                                'tahun' => $explode[0],
+                                'keterangan' => 'Cuti',
+                                'pengurangan' => 0,
+                                'status' => 2,
+                                'keterangan_verif' => '',
+                                'tanggal_verif' => date('Y-m-d H:i:s'),
+                                // 'id_m_user_verif' => $kepala_bkpsdm['id_m_user'],
+                                'id_m_user_verif' => $this->general_library->getId(),
+                                'flag_outside' => 1,
+                                'url_outside' => $filepath,
+                                // 'created_by' => $kepala_bkpsdm['id_m_user'],
+                                'created_by' => $this->general_library->getId()
+                            ];
+                            $i++;
+                        }
+                    }
+                    if($dokumen_pendukung){
+                        $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                    }
+
+                    // upload pegcuti
+                    $this->db->insert('db_pegawai.pegcuti', [
+                        'id_pegawai' => $data['id_peg'],
+                        'jeniscuti' => $data['id_cuti'],
+                        'lamacuti' => $data['lama_cuti'],
+                        'tglmulai' => $data['tanggal_mulai'],
+                        'tglselesai' => $data['tanggal_akhir'],
+                        'nosttpp' => $nomor_surat,
+                        'tglsttpp' => date('Y-m-d'),
+                        'gambarsk' => $filename,
+                        'status' => 2,
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    //update t_progress_cuti
+                    $this->db->where('id_t_pengajuan_cuti', $data['id'])
+                            ->where('id_m_user_verifikasi', $kepala_bkpsdm['id_m_user'])
+                            ->update('t_progress_cuti', [
+                                'flag_diterima' => 1,
+                                'flag_verif' => 1,
+                                'tanggal_verif' => date('Y-m-d H:i:s'),
+                                'updated_by', $this->general_library->getId()
+                            ]);
+
+                    //send WA dokumen ke pegawai
+                    $caption = "*[SK PENGAJUAN ".strtoupper($data["nm_cuti"])." - ".$data['random_string']."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($data).",\nBerikut kami lampirkan SK ".$data["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+                    $cronWa = [
+                        'sendTo' => convertPhoneNumber($data['handphone']),
+                        'message' => $caption,
+                        'filename' => $file_name,
+                        'fileurl' => $filepath,
+                        'type' => 'document',
+                        'jenis_layanan' => 'Cuti'
+                    ];
+
                 } else {
                     $rs['code'] = 1;
                     $rs['message'] = 'Gagal upload file';

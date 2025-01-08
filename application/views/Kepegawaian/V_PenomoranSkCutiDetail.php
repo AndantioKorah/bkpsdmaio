@@ -40,7 +40,7 @@
               <div class="col-lg-12">
                 <div class="row">
                   <div class="col-lg-6"></div>
-                  <div class="col-lg-6">
+                  <div class="col-lg-6 text-right mt-2">
                     <button id="btn_upload_file" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
                     <button id="btn_upload_file_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                   </div>
@@ -53,12 +53,13 @@
 
     <script>
         $('#form_upload_dokumen_ds').on('submit', function(e){
+          e.preventDefault()
           $('#btn_upload_file').hide()
           $('#btn_upload_file_loading').show()
 
-          var formvalue = $('#form_upload_balasan');
+          var formvalue = $('#form_upload_dokumen_ds');
           var form_data = new FormData(formvalue[0]);
-          var ins = document.getElementById('file_balasan').files.length;
+          var ins = document.getElementById('file_ds_manual').files.length;
           
           if(ins == 0){
               $('#btn_upload_file').show()
@@ -81,8 +82,6 @@
                   if(res.code == 0){
                       successtoast('Upload file balasan berhasil')    
                       // $('#btn_modal_balasan_close').click()
-                      loadListData(1)
-                      uploadFileBalasan('<?=$result['id']?>')
                   } else {
                       errortoast(res.message)
                   }

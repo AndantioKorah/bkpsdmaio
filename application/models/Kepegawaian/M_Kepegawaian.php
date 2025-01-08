@@ -5594,7 +5594,7 @@ public function submitEditJabatan(){
                         $resCuti['data']['nomor_surat'] = $nomor_surat;
                     }
 
-                    $filename = 'CUTI_'.$resCuti['data']['nipbaru_ws'].'_'.date("Y", strtotime($resCuti['data']['created_date']))."_".date("m", strtotime($resCuti['data']['created_date'])).'_'.date("d", strtotime($resCuti['data']['created_date'])).'.pdf';
+                    $filename = 'CUTI_'.$resCuti['data']['nipbaru_ws'].'_'.date("Y", strtotime($resCuti['data']['tanggal_mulai']))."_".date("m", strtotime($resCuti['data']['tanggal_mulai'])).'_'.date("d", strtotime($resCuti['data']['tanggal_mulai'])).'.pdf';
                     $path_file = 'arsipcuti/'.$filename;
 
                     // $encUrl = simpleEncrypt($path_file);
@@ -7123,11 +7123,11 @@ public function submitEditJabatan(){
             }
             $counter = $counter.'.'.$master['id'];
 
-            $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
+            // $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
 
             $res['data'] = $data;
             $res['data']['ds'] = 1;
-            $res['data']['nomor_surat'] = $nomor_surat;
+            // $res['data']['nomor_surat'] = $nomor_surat;
 
             $filename = 'CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date']))."_".date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'_signed.pdf';
             $path_file = 'arsipcuti/'.$filename;
@@ -7420,6 +7420,12 @@ public function submitEditJabatan(){
                     'updated_by' => $this->general_library->getId()
                 ]);
 
+        $this->db->where('id', $request_ds['id_t_nomor_surat'])
+                ->update('t_nomor_surat', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -7439,11 +7445,14 @@ public function submitEditJabatan(){
         $this->db->trans_begin();
 
         $data = $this->input->post();
+        $explode_data = explode("/", $data['nomor_surat']);
+        $tahun = $explode_data[count($explode_data)-1];
 
         $exists = $this->db->select('*')
                         ->from('t_nomor_surat')
-                        ->where('counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'"')
+                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
                         ->where('flag_active', 1)
+                        ->where('YEAR(tanggal_surat)', $tahun)
                         ->get()->row_array();
 
         $request_ds = $this->db->select('a.*')
@@ -7539,14 +7548,89 @@ public function submitEditJabatan(){
     }
 
     public function loadDetailCutiForPenomoranSkCuti($id){
-        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter')
+        return $this->db->select('a.*, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.flag_ds_cuti, d.flag_ds_manual')
                     ->from('t_request_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
                     ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
                     ->where('a.flag_active', 1)
                     ->where('a.ref_id', $id)
                     ->where('a.table_ref', 't_pengajuan_cuti')
                     ->get()->row_array();
+    }
+
+    public function saveUploadFileDsPenomoranSkCuti($id){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+       
+        $this->db->trans_begin();
+
+        if($_FILES && $data){
+            $allowed_extension = ['pdf'];
+            $file_array = explode(".", $_FILES["file_ds_manual"]["name"]);
+            $file_extension = end($file_array);
+
+            $data = $this->db->select('a.*, c.nipbaru_ws')
+                            ->from('t_pengajuan_cuti a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            $filename = 'CUTI_DSM_'.$data['nipbaru_ws'].'_'.date("Y", strtotime($data['tanggal_mulai']))."_".date("m", strtotime($data['tanggal_mulai'])).'_'.date("d", strtotime($data['tanggal_mulai'])).'.pdf';
+
+            if(in_array($file_extension, $allowed_extension)){
+                $config['upload_path'] = 'arsipcuti';
+                $config['allowed_types'] = '*';
+                $config['file_name'] = date('Ymdhis')."_".($filename);
+                $this->load->library('upload', $config);
+                // if(file_exists($config['upload_path'])."/".$file_name){
+                //     move_uploaded_file('overwrited_file', ($config['upload_path']."/".$file_name));
+                //     unlink(($config['upload_path'])."/".$file_name);
+                // }
+                $uploadfile = $this->upload->do_upload('file_ds_manual');
+                
+                if($uploadfile){
+                    $this->db->where('id', $id)
+                            ->update('t_pengajuan_cuti', [
+                                'url_sk_manual' => 'arsipcuti/'.$filename,
+                                'flag_ds_cuti' => 1,
+                                'flag_ds_manual' => 1,
+                                'updated_by' => $this->general_library->getId(),
+                            ]);
+
+                    $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                            ->join('m_user d', 'a.nipbaru_ws = d.username')
+                            ->where('c.kepalaskpd', 1)
+                            ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                            ->get()->row_array();
+
+                    // upload di pegcuti, upload di dokumen pendukung, update t_progress, send dokumen CUTI by WA        
+                    
+                } else {
+                    $rs['code'] = 1;
+                    $rs['message'] = 'Gagal upload file';
+                }
+            }
+        } else {
+            $rs['code'] = 1;
+            // $rs['message'] = 'File yang diupload tidak ditemukan';
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
     }
 
     public function updateJabatan($id_peg){

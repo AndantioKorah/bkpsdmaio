@@ -286,7 +286,7 @@
             </div>
           <?php } ?>
           <div class="col-lg-12 text-center">
-    
+          <a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result[0]['nipbaru_ws']?>" target="_blank">
           <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
                             data-src="<?php
                                 $path = './assets/fotopeg/'. $result[0]['fotopeg'];
@@ -303,11 +303,14 @@
                                   $src = './assets/img/user.png';
                                 }
                                 echo base_url().$src;?>" /> 
+                                </a>
           </div>
           <div class="col-lg-12 text-center">
+          <a style="color:#495057;" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result[0]['nipbaru_ws']?>" target="_blank">
             <span class="sp_profil">
             <?=getNamaPegawaiFull($result[0])?>
             </span>
+          </a>
           </div>
           <div class="col-lg-12 text-center" >
             <span class="sp_profil">

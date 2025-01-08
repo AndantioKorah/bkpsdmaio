@@ -9309,6 +9309,8 @@ public function getFileForVerifLayanan()
         return $res;
     }
 
+   
+
 
     public function batalVerifikasiPengajuanLayanan(){
         $res['code'] = 0;
@@ -9528,7 +9530,7 @@ public function getFileForVerifLayanan()
                     ->update('t_layanan', $data);
                   
         // PANGKAT 
-        if($id_m_layanan == 6){
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 0){
             $this->db->where('id', $reference_id_dok)
                     ->update('db_pegawai.pegpangkat', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         $this->updatePangkat($dataLayanan['id_peg']);
@@ -9630,7 +9632,7 @@ public function getFileForVerifLayanan()
           
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
-        $data["keterangan"] = $datapost['keterangan'];
+        $data["keterangan_bkad"] = $datapost['keterangan'];
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
 

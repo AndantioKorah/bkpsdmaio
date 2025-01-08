@@ -1531,6 +1531,10 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($this->kepegawaian->saveUploadFileDsPenomoranSkCuti($id));
 	}
 
+	public function deleteFileDsManual($id){
+        echo json_encode($this->kepegawaian->deleteFileDsManual($id));
+	}
+
 	public function deletePermohonanCuti($id){
 		$this->kepegawaian->deletePermohonanCuti($id);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');

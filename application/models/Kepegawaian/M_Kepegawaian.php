@@ -7712,6 +7712,7 @@ public function submitEditJabatan(){
                             $i++;
                         }
                     }
+                    
                     if($dokumen_pendukung){
                         $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
                     }

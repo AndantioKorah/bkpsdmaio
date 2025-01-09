@@ -1525,15 +1525,16 @@
         $tanggal = explodeRangeDateNew($data['range_periode']);
         $jenis_disiplin = explode(';', $data['jenis_disiplin']);
         $tanggal_akhir = $tanggal[1];
+
+        $batasHari = countMaxDateUpload(formatDateOnlyForEdit($tanggal_akhir), $jenis_disiplin[3], "plus");
+
+        // $batas_waktu = date('Y-m-d');
+        // $date = new DateTime($batas_waktu);
+        // $date->sub(new DateInterval('P3D'));
+        // $expirydate = $date->format('Y-m-d');
+        // if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
         
-        $batas_waktu = date('Y-m-d');
-        $date = new DateTime($batas_waktu);
-        $date->sub(new DateInterval('P3D'));
-        $expirydate = $date->format('Y-m-d');
-        
-        // dd($tanggal_akhir.' - '.$expirydate.'<br>');
-        // $tanggal_akhir = '2024-06-27';
-        if(($tanggal_akhir < $expirydate) && $param_lock_upload_dokpen == 1 &&
+        if(($tanggal_akhir > $batasHari['max_date']) && $param_lock_upload_dokpen == 1 &&
         (!$this->general_library->isProgrammer()) && // bukan role programmer
         $jenis_disiplin[4] == 1){ // flag_lock == 1
             if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin

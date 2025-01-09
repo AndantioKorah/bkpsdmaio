@@ -716,11 +716,21 @@ class C_Kinerja extends CI_Controller
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['jenis_disiplin'] = $this->general->getAllWithOrder('m_jenis_disiplin_kerja', 'nama_jenis_disiplin_kerja', 'asc');
         $data['meta_jenis_disiplin'] = null;
-        foreach($data['jenis_disiplin'] as $jd){
-            $data['meta_jenis_disiplin'][$jd['id']] = $jd;
-        }
         $data['param_lock_upload_dokpen'] = $this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_UPLOAD_DOKPEN', 1)['parameter_value'];
+        // $data['hari_kerja'] = countMaxDateUpload(date('Y-m-d'), 3, "minus");
+        
         $this->load->view('kinerja/V_ModalTambahDataDisiplinKerja', $data);
+    }
+
+    public function checkMaxDate(){
+        $data = $this->input->post();
+        $res = countMaxDateUpload(formatDateOnlyForEdit($data['date']), $data['max'], $data['operand']);
+        echo json_encode($res);
+    }
+    
+    public function tesMaxDate($date, $max, $operand){
+        $res = countMaxDateUpload(formatDateOnlyForEdit($date), $max, $operand);
+        dd($res);
     }
 
     public function reuploadDataDisiplinKerja($random_string)

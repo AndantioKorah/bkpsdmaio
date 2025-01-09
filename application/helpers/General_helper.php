@@ -138,6 +138,42 @@ function getHariKerjaByBulanTahun($bulan, $tahun){
     return countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
 }
 
+function countMaxDateUpload($date, $max = 0, $operand = "minus"){
+    $res = null;
+    $untillDate = null;
+    $tempMax = $max + 30;
+    if($operand == 'plus'){
+        $untillDate = date('Y-m-d', strtotime($date. ' +'.$tempMax.' days'));
+        $res = countHariKerjaDateToDate($date, $untillDate);
+    } else {
+        $untillDate = date('Y-m-d', strtotime($date. ' -'.$tempMax.' days'));
+        $res = countHariKerjaDateToDate($untillDate, $date);
+    }
+    $res['max_date'] = null;
+
+    $lhk = null;
+    $i = 0;
+    $pointer = null;
+    
+    foreach($res[3] as $rs){
+        $lhk[$i] = $rs;
+        if($rs >= $date && $pointer != null){
+        // if((strtotime($rs) >= strtotime($date)) && $pointer == 0){
+            // echo $rs.'  '.$date;
+            $pointer = $i;
+            // dd($pointer+$max);
+        }
+        $i++;
+    }
+    if($operand == 'plus'){
+        $res['max_date'] = $lhk[$pointer+$max];
+    } else {
+        $res['max_date'] = $lhk[$pointer-$max];
+    }
+    
+    return $res;
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');

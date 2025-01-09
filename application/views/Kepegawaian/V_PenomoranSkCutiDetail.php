@@ -31,6 +31,7 @@
         </div>
         <div class="col-lg-12">
           <hr>
+          <?php if($result['flag_ds_manual'] == 0 && $result['flag_ds_cuti'] == 0){ ?>
           <form id="form_upload_dokumen_ds">
             <div class="row">
               <div class="col-lg-12">
@@ -47,12 +48,62 @@
                 </div>
               </div>
           </form>
+          <?php } else {
+            $fileUrl = $result['url_sk'];
+            $keterangan = "File sudah dilakukan Digital Signature oleh Kepala BKPSDM";
+            if($result['flag_ds_manual'] == 1){
+              $fileUrl = $result['url_sk_manual'];
+            }  
+          ?>
+            <div class="row">
+              <div class="col-lg-12 text-center">
+                <span style="font-weight: bold; color: green; size: .8rem;"><?=$keterangan?></span>
+              </div>
+              <div class="col-lg-6">
+                <?php if($result['flag_ds_manual'] == 1){ ?>
+                  <button id="btn_delete_file" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                  <button id="btn_delete_file_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                <?php } ?>
+              </div>
+              <div class="col-lg-6 text-right">
+                <a class="btn btn-sm btn-success" target="_blank" href="<?=base_url().$fileUrl?>"><i class="fa fa-file"></i> LIHAT SK CUTI</a>
+              </div>
+            </div>
+          <?php } ?>
         </div>
       </div>
     </div>
 
     <script>
-        $('#form_upload_dokumen_ds').on('submit', function(e){
+      $('#btn_delete_file').on('click', function(){
+        if(confirm('Apakah Anda yakin ingin menghapus data?')){
+          $('#btn_delete_file').hide()
+          $('#btn_delete_file_loading').show()
+          $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileDsManual/".$result['id_t_pengajuan_cuti'])?>',
+            method:"POST",  
+            data: $(this).serialize(),
+            success: function(res){
+              $('#btn_delete_file').show()
+              $('#btn_delete_file_loading').hide()
+
+              let rs = JSON.parse(res)
+              if(rs.code == 1){
+                errortoast(rs.message)
+              } else {
+                openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
+                successtoast('Data berhasil dihapus')
+              }
+            }, error: function(err){
+              errortoast('Terjadi Kesalahan')
+              $('#btn_delete_file').show()
+              $('#btn_delete_file_loading').hide()
+            }
+          })
+        }
+      })
+
+      $('#form_upload_dokumen_ds').on('submit', function(e){
           e.preventDefault()
           $('#btn_upload_file').hide()
           $('#btn_upload_file_loading').show()
@@ -71,7 +122,7 @@
 
           e.preventDefault()
               $.ajax({
-              url: '<?=base_url('kepegawaian/C_Kepegawaian/saveUploadFileDsPenomoranSkCuti/'.$result['id'])?>',
+              url: '<?=base_url('kepegawaian/C_Kepegawaian/saveUploadFileDsPenomoranSkCuti/'.$result['id_t_pengajuan_cuti'])?>',
               method: 'POST',
               data: form_data,  
               contentType: false,  
@@ -80,7 +131,8 @@
               success: function(rs){
                   let res = JSON.parse(rs)
                   if(res.code == 0){
-                      successtoast('Upload file balasan berhasil')    
+                      successtoast('Upload Dokumen DS Berhasil')    
+                      openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
                       // $('#btn_modal_balasan_close').click()
                   } else {
                       errortoast(res.message)
@@ -111,7 +163,7 @@
             } else {
               successtoast('Data berhasil disimpan')
               $('#iframe_view_file')[0].contentWindow.location.reload(true);
-              // openModalNomorSuratManual('<?=$result['id']?>')
+              // openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
             }
             $('#btn_save').show()
             $('#btn_save_loading').hide()
@@ -136,6 +188,7 @@
               if(rs.code == 1){
                 errortoast(rs.message)
               } else {
+                // openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
                 successtoast('Data berhasil dihapus')
                 $('#nomor_surat_input').val("")
                 $('#counter_nomor_surat_input').val("")

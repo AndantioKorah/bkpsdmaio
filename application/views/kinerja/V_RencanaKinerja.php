@@ -129,7 +129,7 @@ $("#checkBoxID").click(function() {
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
                  <option selected>- Pilih Bulan -</option>
                  <option <?=date('m') == 1 ? 'selected' : '';?> value="1">Januari</option>
-                 <option <?=date('m') == 2 ? 'selected' : '';?> value="2">Feburari</option>
+                 <option <?=date('m') == 2 ? 'selected' : '';?> value="2">Februari</option>
                  <option <?=date('m') == 3 ? 'selected' : '';?> value="3">Maret</option>
                  <option <?=date('m') == 4 ? 'selected' : '';?> value="4">April</option>
                  <option <?=date('m') == 5 ? 'selected' : '';?> value="5">Mei</option>

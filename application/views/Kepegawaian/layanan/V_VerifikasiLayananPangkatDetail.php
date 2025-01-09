@@ -72,9 +72,9 @@
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
   <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
   <!-- Button trigger modal -->
-  <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+  <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
-  </button> -->
+  </button>
   <?php if($result[0]['verifikator'] == 0) { ;?>
   <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
         Kerjakan Pengajuan ini

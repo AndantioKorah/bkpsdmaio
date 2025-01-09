@@ -6,11 +6,11 @@
     <div class="card-body" style="margin-top: -30px;">
         <form id="form_search">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <label>Pilih Tahun</label>
                     <input autocomplete="off" value="<?=date('Y')?>" class="form-control tahunpicker" name="tahun" id="tahun" />
                 </div>
-                <div class="col-lg-3">
+                <!-- <div class="col-lg-3">
                     <label>Pilih Bulan</label>
                     <select class="form-control select2-navy customInput" style="width: 100%"
                         id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
@@ -28,8 +28,8 @@
                         <option <?=date('m') == 11 ? '' : '';?> value="11">November</option>
                         <option <?=date('m') == 12 ? '' : '';?> value="12">Desember</option>
                         </select>
-                </div>
-                <div class="col-lg-3">
+                </div> -->
+                <div class="col-lg-4">
                     <label>Eselon</label>
                     <select class="form-control select2-navy" 
                         id="eselon" data-dropdown-css-class="select2-navy" name="eselon" required>
@@ -39,7 +39,7 @@
                         <?php } ?>
                     </select>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <label>Pangkat</label>
                     <select class="form-control select2-navy" 
                         id="pangkat" data-dropdown-css-class="select2-navy" name="pangkat" required>

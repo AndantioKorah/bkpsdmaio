@@ -9079,6 +9079,14 @@ public function getFileForKarisKarsu()
             $this->updateJabatan($id_peg);
         }
 
+        if($tabel == "db_pegawai.pegpangkat"){
+            $this->updatePangkat($id_peg);
+        }
+
+        if($tabel == "db_pegawai.peggajiberkala"){
+            $this->updateBerkala($id_peg);
+        }
+
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             $rs['code'] = 1;        

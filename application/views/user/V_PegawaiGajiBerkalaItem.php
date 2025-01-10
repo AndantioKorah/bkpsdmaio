@@ -17,19 +17,21 @@
     </style>
     <div class="row p-3">
         <div class="col-lg-12 pb-3 text-right float-right">
-            <form target="_blank" action="<?=base_url('user/C_User/cetakNaikPangkat')?>">
+            <!-- <form target="_blank" action="<?=base_url('user/C_User/cetakNaikPangkat')?>">
                 <button type='submit' class="btn btn-sm btn-navy"><i class="fa fa-download"></i> Download File</button>
-                <!-- <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button> -->
-            </form>
+                <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button>
+            </form> -->
         </div>
         <div class="col-lg-12">
             <table border=1 id="table_result" class="table table-hover datatable">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
                     <th style="width: 35%;" class="text-center">Nama Pegawai</th>
+                    <th style="width: 35%;" class="text-center">Pangkat</th>
                     <th style="width: 20%;" class="text-center">Jabatan</th>
                     <th style="width: 20%;" class="text-center">Unit Kerja</th>
-                    <th style="width: 10%;" class="text-center">TMT Gaji Berkala Terakhir</th>
+                    <th style="width: 10%;" class="text-center">TMT Gaji Berkala</th>
+                    <th style="width: 10%;" class="text-center"></th>
                     <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
                 </thead>
                 <tbody>
@@ -41,12 +43,19 @@
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
                                 <span class="text-small"><?=formatNip($rs['nipbaru_ws'])?></span><br>
                                 <!-- <span class="text-small"><?=($rs['nama_jabatan'])?></span><br> -->
-                                <span class="text-small"><?=($rs['nm_pangkat'])?></span>
+                                <!-- <span class="text-small"><?=($rs['nm_pangkat'])?></span> -->
                                 </a>
                             </td>
+                            <td class="text-center"><?=($rs['nm_pangkat'])?> <br> <?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
                             <td class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                            <td class="text-center"><?=formatDateOnly($rs['tmtgjberkala'])?></td>
+                            <td class="text-center">
+                                <?= formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
+                                <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-primary btn-sm">Proses</button>
+                            </td>
                             <!-- <td class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>
                     <?php } ?>

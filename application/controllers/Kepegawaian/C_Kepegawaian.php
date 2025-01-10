@@ -1129,6 +1129,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitVerifikasiLayanan());
 	}
 
+	public function updateTmBerkala()
+	{ 
+		echo json_encode( $this->kepegawaian->updateTmBerkala());
+	}
+
 
 	
 

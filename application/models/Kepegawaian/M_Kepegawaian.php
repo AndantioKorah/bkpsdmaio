@@ -893,6 +893,7 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
             }
             $result = $this->db->insert('db_pegawai.peggajiberkala', $dataInsert);
+            $this->updateBerkala($id_peg);
         } else if($id_dok == 6){
             $tgl_ijazah = date("Y-m-d", strtotime($this->input->post('pendidikan_tanggal_ijazah')));
             $dataInsert['id_pegawai']     = $id_peg;
@@ -2960,6 +2961,16 @@ public function delete($fieldName, $fieldValue, $tableName,$file)
            
     }
 
+    if($tableName == "db_pegawai.peggajiberkala"){
+        $getBerkala = $this->db->select('*')
+        ->from('db_pegawai.peggajiberkala a')
+        ->where('a.id', $fieldValue)
+        ->limit(1)
+        ->get()->row_array();
+        $id_peg = $getBerkala['id_pegawai'];
+        $this->updateBerkala($id_peg);
+    }
+
     if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -3045,10 +3056,15 @@ public function submitVerifikasiDokumen(){
         $this->db->trans_commit();
     }
 
-    if(trim($datapost["jenis_dokumen"]) == "jabatan"){
-        $this->updateJabatan($id_peg);
-        $this->syncSiasnJabatan($id); 
+    if(trim($datapost["jenis_dokumen"]) == "pangkat"){
+        $this->updatePangkat($id_peg);
     }
+
+    if(trim($datapost["jenis_dokumen"]) == "gajiberkala"){
+        $this->updateBerkala($id_peg);
+    }
+
+
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
     $id = 1; 
@@ -3092,9 +3108,19 @@ public function batalSubmitVerifikasiDokumen(){
     } else {
         $this->db->trans_commit();
     }
+
     if(trim($datapost["jenis_dokumen_batal"]) == "jabatan"){
         $this->updateJabatan($id_peg);
     }
+
+    if(trim($datapost["jenis_dokumen_batal"]) == "pangkat"){
+        $this->updatePangkat($id_peg);
+    }
+
+    if(trim($datapost["jenis_dokumen_batal"]) == "gajiberkala"){
+        $this->updateBerkala($id_peg);
+    }
+
 
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
@@ -3146,6 +3172,44 @@ public function getJenisArsip()
     ->where_not_in('id_dokumen', $ignore)
     ->from('m_dokumen');
     return $this->db->get()->result_array(); 
+}
+
+public function updateTmBerkala()
+{
+  
+
+
+    // // $this->db->select('a.id_peg,a.tmtgjberkala,
+    // // (SELECT bb.tmtgajiberkala from db_pegawai.peggajiberkala as bb
+    // //   where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2 ORDER BY bb.tmtgajiberkala desc limit 1) as tmt_peggajiberkala')
+    // $this->db->select('a.id_peg,a.tmtgjberkala')
+    // ->from('db_pegawai.pegawaix as a')
+    // ->join('db_pegawa.peggajiberkala b', 'b.id_pegawai = a.id_peg')
+    // ->where('a.id_m_status_pegawai', 1)
+    // ->order_by('b.tmtgajiberkala', 'desc')
+    // ->where('a.skpd', '5006004')
+    // ->where('a.statuspeg', 2)
+    // ->group_by('a.id_peg');
+    // $result = $this->db->get()->result_array(); 
+
+        $this->db->select('a.id_pegawai,
+                            b.tmtgjberkala as kgbprofil,
+	                        max(a.tmtgajiberkala) as kgbpeg')
+    ->from('db_pegawai.peggajiberkala as a')
+    ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+    ->where('a.status', 2)
+    ->order_by('a.id', 'desc')
+    ->group_by('a.id_pegawai');
+    $result = $this->db->get()->result_array(); 
+    foreach($result as $res){
+        if($res['kgbpeg'] > $res['kgbprofil']){
+            $data["tmtgjberkala"] = $res['kgbpeg'];
+            $this->db->where('id_peg', $res['id_pegawai'])
+            ->update('db_pegawai.pegawai', $data);
+        }
+    }
+    
+
 }
 
 
@@ -7858,6 +7922,43 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function updateBerkala($id_peg){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        
+       
+        $this->db->trans_begin();
+        
+            $getBerkala = $this->db->select('*')
+            ->from('db_pegawai.peggajiberkala a')
+            ->where('a.id_pegawai', $id_peg)
+            ->where_in('a.flag_active', [1,2])
+            ->where('a.status', 2)
+            ->where('a.flag_active', 1)
+            ->order_by('a.tmtgajiberkala', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+        
+            if($getBerkala) {
+  
+                $dataUpdate["tmtgjberkala"] =  $getBerkala['tmtgajiberkala'];
+                $this->db->where('id_peg', $id_peg)
+                        ->update('db_pegawai.pegawai', $dataUpdate);
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
+
     function getListJabatanSiasn($id = null){
         $jenis = 'JFU';
         if($id != null){
@@ -8978,6 +9079,14 @@ public function getFileForKarisKarsu()
         
         if($tabel == "db_pegawai.pegjabatan"){
             $this->updateJabatan($id_peg);
+        }
+
+        if($tabel == "db_pegawai.pegpangkat"){
+            $this->updatePangkat($id_peg);
+        }
+
+        if($tabel == "db_pegawai.peggajiberkala"){
+            $this->updateBerkala($id_peg);
         }
 
         if ($this->db->trans_status() === FALSE){

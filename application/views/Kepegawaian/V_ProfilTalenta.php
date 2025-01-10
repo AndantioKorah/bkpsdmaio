@@ -77,11 +77,13 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 	<?php } ?>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
-	<?php } else { ?>
+	<?php } else if($profil_pegawai['eselon'] == "II A" || $profil_pegawai['eselon'] == "II B") { ?>
 	<input type="radio" id="tabToggle02" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Rotasi</label>
+	<?php } else { ?>
+		<input type="radio" id="tabToggle02" name="tabs" value="2" />
 	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Promosi</label>
 	<?php } ?>
-		
 	<tab-content>
 		<!-- <p>TAB [ <tab-number>01</tab-number> ] content</p>
 		<p>CSS...</p>

@@ -21,6 +21,10 @@ class C_Kinerja extends CI_Controller
 
     public function Kinerja()
     {
+        $date = new DateTime();
+        $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->getRencanaKinerja(date('m'), date('Y'));
         render('kinerja/V_RealisasiKinerja', '', '', $data);
@@ -236,7 +240,10 @@ class C_Kinerja extends CI_Controller
 
     public function loadKegiatan($tahun, $bulan)
     {
-
+        $date = new DateTime();
+        $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_kegiatan'] = $this->kinerja->loadKegiatan($tahun, $bulan);
         $data['tahun'] = $tahun;
@@ -729,6 +736,7 @@ class C_Kinerja extends CI_Controller
     }
     
     public function tesMaxDate($date, $max, $operand){
+        dd($date);
         $res = countMaxDateUpload(formatDateOnlyForEdit($date), $max, $operand);
         dd($res);
     }

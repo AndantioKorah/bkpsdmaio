@@ -7989,9 +7989,11 @@ public function submitEditJabatan(){
                 ->from('t_pengajuan_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('t_request_ds d', 'a.id = d.ref_id')
                 ->where('a.flag_active', 1)
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
+                ->where('d.id_m_jenis_layanan', 3)
                 ->order_by('a.created_date', 'asc');
 
         if($data['id_unitkerja'] != 0){

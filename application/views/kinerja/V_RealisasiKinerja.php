@@ -160,6 +160,9 @@
   var fd = tahun+'-'+bulan+'-01';
 
    var statusLock = "<?=$status_lock[0]['status'];?>"
+   
+  //  var tes = "<?=countMaxDateUpload(formatDateOnlyForEdit('2024-12-01'), 5, '+');?>"
+  //  alert(tes);
 
    if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({

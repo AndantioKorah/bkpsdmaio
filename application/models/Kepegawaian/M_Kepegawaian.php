@@ -3197,7 +3197,8 @@ public function updateTmBerkala()
 	                        max(a.tmtgajiberkala) as kgbpeg')
     ->from('db_pegawai.peggajiberkala as a')
     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-    ->where('a.status', 2)
+    // ->where('a.status', 2)
+    ->where('a.flag_active', 1)
     ->order_by('a.id', 'desc')
     ->group_by('a.id_pegawai');
     $result = $this->db->get()->result_array(); 

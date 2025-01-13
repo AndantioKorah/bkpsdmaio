@@ -331,13 +331,15 @@ $(function () {
     date.getMonth(),
   );
 
+  var maxDate = "<?= $maxDate['max_date'];?>";
+  var currentDate = "<?= $current_date;?>";
   var statusLock = "<?=$status_lock[0]['status'];?>"
 
    if(statusLock == 0){
     $('.btndelete').show()
    } else {
     if(bulanSearch != bulanCurrent){
-    if(tanggal <= 3) {
+    if(currentDate <= maxDate) {
         $('.btndelete').show()
     } else {
         // $('.btndelete').show()

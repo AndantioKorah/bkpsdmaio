@@ -155,11 +155,15 @@
     date.getMonth(),
   );
 
-
-
+  if(bulan == 0){
+    bulan = 12;
+    tahun = tahun - 1;
+  }
+  
   var fd = tahun+'-'+bulan+'-01';
-
    var statusLock = "<?=$status_lock[0]['status'];?>"
+   var maxDate = "<?= $maxDate['max_date'];?>";
+   var currentDate = "<?= $current_date;?>";
 
    if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({
@@ -170,7 +174,7 @@
     endDate: new Date()
     })
     } else {
-    if(tanggal <= 3) {
+    if(currentDate <= maxDate) {
     $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,

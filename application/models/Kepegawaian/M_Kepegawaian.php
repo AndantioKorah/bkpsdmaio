@@ -356,7 +356,7 @@ class M_Kepegawaian extends CI_Model
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
-            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status,"|",bb.pejabat) from db_pegawai.pegpangkat as bb
+            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status,"|",bb.pejabat,"|",bb.nosk,"|",bb.masakerjapangkat) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
              (SELECT jurusan from db_pegawai.pegpendidikan as dd where a.id_peg = dd.id_pegawai and dd.flag_active in (1,2) and dd.status = 2  ORDER BY dd.id desc limit 1) as jurusan,
             r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan, a.flag_sertifikasi, a.flag_terima_tpp')
@@ -10117,6 +10117,108 @@ public function getFileForVerifLayanan()
         return $res;
 
        }
+
+       public function submitProsesKenaikanGajiBerkala(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+
+          
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
+
+       
+    
+        // $dataKgb = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+        //         ->from('m_user a')
+        //         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        //         ->join('t_gajiberkala c', 'b.id_pg = c.id_pegawai')
+        //         ->where('year(c.tmtgajiberkala)', $datapost["tahun"])
+        //         ->get()->result_array();
+
+        $dataKgb = [
+            'id_pegawai' => $datapost["id_pegawai"],
+            // 'masakerja' => "6",
+            // 'pejabat' => 'text',
+            // 'nosk' => 'Pangkat',
+            // 'tglsk' => 'Pangkat',
+            // 'gajilama' => 'Pangkat',
+            // 'gajibaru' => 'Pangkat',
+            // 'tmtgajiberkala' => 'Pangkat',
+            'status' =>$datapost["status"],
+            'keterangan' =>$datapost["keterangan"],
+            'tahun' =>$datapost["tahun"],
+            'created_by' => $this->general_library->getId(),
+            'id_m_user_verif' => $this->general_library->getId(),
+            'nm_m_user_verif' => $this->general_library->getNamaUser()
+        ];
+    $this->db->insert('t_gajiberkala', $dataKgb);
+
+
+       
+        // $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nSK Kenaikan Gaji Berkala anda telah diproses""\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        // $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().".\n\nSK Kenaikan Gaji Berkala anda telah diproses""\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+       
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' => 'Pangkat',
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function cekProsesKenaikanBerkala($id_pegawai,$tahun){
+        $this->db->select('*')
+                ->from('t_gajiberkala a')
+                ->where('a.tahun', $tahun)
+                ->where('a.id_pegawai', $id_pegawai)
+                ->where('a.flag_active', 1);
+        return $this->db->get()->result_array();
+    }
+
+    public function batalVerifikasiProsesKgb(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $id_usul = $datapost['id_batal'];
+        $data["flag_active"] = 0; 
+        $data["keterangan"] = "";
+        $this->db->where('id', $id_usul)
+                ->update('t_gajiberkala', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
 
 
 

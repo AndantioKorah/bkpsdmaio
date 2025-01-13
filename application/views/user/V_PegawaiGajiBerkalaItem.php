@@ -32,6 +32,7 @@
                     <th style="width: 20%;" class="text-center">Unit Kerja</th>
                     <th style="width: 10%;" class="text-center">TMT Gaji Berkala</th>
                     <th style="width: 10%;" class="text-center"></th>
+                    <th>Verifikator</th>
                     <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
                 </thead>
                 <tbody>
@@ -59,6 +60,9 @@
                             </a>
                             </td>
                             <!-- <td class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
+                             <td>
+                             <?=($rs['verifikator'])?>
+                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>

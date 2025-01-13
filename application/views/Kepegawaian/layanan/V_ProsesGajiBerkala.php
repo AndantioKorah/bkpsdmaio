@@ -56,26 +56,34 @@
   }
 
   input[readonly] {
-    background-color: #f6f6f6;
+    background-color:rgb(204, 204, 207);
 }
+
+    input[readonly]:focus{
+    outline: 2px solid grey;
+    background-color : rgb(204, 204, 207);   /* oranges! yey */
+    }
 </style>
 
 
 <div class="container-fluid pt-2" style="background-color:#fff;">
 	<div class="row" style="background-color:#fff;">
 	<div class="col-12">
-    <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modelVerif">
+    <?php if(!$result){ ?>
+        <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
-
-        <button id="btn_tolak_verifikasi" type="button" class="btn btn-sm btn-danger">
+    <?php } else { ?>
+        <button id="btn_tolak_verifikasi" onclick="batalVerifProsesKgb('<?=$result[0]['id'];?>')" type="button" class="btn btn-sm btn-danger">
         Batal Verif
         </button>
-
-
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
         Download Draf SK
         </button>
+    <?php } ?>
+   
+
+      
 
 </div>
 
@@ -332,7 +340,7 @@
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
         <option value="1">ACC</option>
-        <option value="2">TOLAK</option>
+        <option value="0">TOLAK</option>
         <!-- <option value="3">TMS</option> -->
       </select>
       </div>
@@ -403,8 +411,11 @@
         </button>
       </div>
       <div class="modal-body">
-         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKPangkat/')?>" target="_blank">
+         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" target="_blank">
          <div class="form-group">
+          <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
+          <input type="text" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
+
           <label for="exampleInputEmail1">Nama Lengkap</label>
           <input type="text" class="form-control" id="" name="" value="<?=getNamaPegawaiFull($profil_pegawai)?>" readonly>
           </div> 
@@ -416,56 +427,75 @@
           <label for="exampleInputEmail1">Pangkat Gol/Ruang</label>
           <input type="text" class="form-control" id="" name="" value="<?=($profil_pegawai['nm_pangkat'])?>" readonly>
           </div> 
+        
+          <div class="form-group">
+          <label for="exampleInputEmail1">Nomor SK Pangkat</label>
+          <input type="text" class="form-control" id="" name="" value="<?php 
+                    $data = explode("|", $profil_pegawai['data_pangkat']);
+                    echo $data[4];
+                    ?>" readonly>
+          </div> 
+          <div class="form-group">
+          <label for="exampleInputEmail1">TMT SK Pangkat</label>
+          <input type="text" class="form-control" id="" name="" value="<?=$profil_pegawai['tmtpangkat'];?>" readonly>
+          </div> 
+          <div class="form-group">
+          <label for="exampleInputEmail1">Masa Kerja</label>
+          <input type="text" class="form-control" id="" name="" value="<?php 
+                    $data = explode("|", $profil_pegawai['data_pangkat']);
+                    echo $data[5];
+                    ?>" readonly>
+          </div>
           <div class="form-group">
           <label for="exampleInputEmail1">Pejabat</label>
-          <input type="text" class="form-control" id="" name="" value=" <?php 
+          <input type="text" class="form-control" id="" name="" value="<?php 
                     $data = explode("|", $profil_pegawai['data_pangkat']);
                     echo $data[3];
                     ?>" >
           </div> 
-          <div class="form-group">
-          <label for="exampleInputEmail1">Nomor SK Pangkat</label>
-          <input type="text" class="form-control" id="" name="" readonly>
-          </div> 
-          <div class="form-group">
-          <label for="exampleInputEmail1">TMT SK Pangkat</label>
-          <input type="text" class="form-control" id="" name="" readonly>
-          </div> 
-          <div class="form-group">
-          <label for="exampleInputEmail1">Masa Kerja</label>
-          <input type="text" class="form-control" id="" name="" readonly>
-          </div> 
-          <div class="form-group">
+
+          <!-- <div class="form-group">
           <label for="exampleInputEmail1">Golongan Awal</label>
           <input type="text" class="form-control" id="" name="" readonly>
-          </div> 
+          </div>  -->
 
           
          
          <div class="form-group">
           <label for="exampleInputEmail1">Gaji Pokok Lama</label>
-          <input type="text" class="form-control" id="" name="" >
+          <input  type="text" class="form-control rupiah"  id="gajilama" name="gajilama" value="<?=$result[0]['gajilama'];?>" >
           </div>
           <div class="form-group">
           <label >Gaji Pokok Baru</label>
-          <input type="text" class="form-control" id="" name="" >
+          <input type="text" class="form-control rupiah" id="gajibaru" name="gajibaru" value="<?=$result[0]['gajibaru'];?>">
           </div>
           <div class="form-group">
           <label >Masa Kerja PNS</label>
-          <input type="text" class="form-control" id="" name="" >
+          <input type="text" class="form-control" id="masakerja" name="masakerja" value="<?=$result[0]['masakerja'];?>">
           </div>
           <div class="form-group">
           <label >TMT Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="" name="" >
+          <input type="text" class="form-control datepickerr"  id="tmtgajiberkala" name="tmtgajiberkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>">
           </div>
           <div class="form-group">
           <label >Nomor SK Gaji Berkala</label>
-          <input type="text" class="form-control" id="" name="" value="800.1.11.13/BKPSDM/SK/XXXX/2025">
-          </div>
+          <input type="text" class="form-control" id="nosk" name="nosk"  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "800.1.11.13/BKPSDM/SK/xxxx/2025";?>">
+        <!-- <div class="row">
+            <div class="col-sm-4">
+          <input type="text" class="form-control" id="" name=""  value="800.1.11.13/BKPSDM/SK/" readonly>
+            </div>
+            <div class="col-sm-4">
+            <input type="text" class="form-control" id="" name=""  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "";?>">
+            </div>
+            <div class="col-sm-4">
+            <input type="text" class="form-control" id="" name=""  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "";?>">
+            </div> -->
+        <!-- </div>  -->
+        </div>
          
           <div class="form-group">
           <label >Tgl SK Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="" name="" >
+          <input type="text" class="form-control datepickerr"  id="tglsk" name="tglsk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>">
           </div>
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
@@ -480,7 +510,6 @@
 
 var nip = "<?= $profil_pegawai['nipbaru_ws'];?>"; 
 
-
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
@@ -491,10 +520,33 @@ $(function(){
     // orientation: 'bottom',
     autoclose: true
     });
+    
+  
+  })
 
+
+    $('.rupiah').on('keyup', function(){
+        $(this).val(formatRupiah(this.value));
+    });
 
  
-  })
+		/* Fungsi formatRupiah */
+		function formatRupiah(angka, prefix){
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
 
 function openProfileTab(){
   $('#view_file_verif_kgb').hide()
@@ -593,7 +645,7 @@ function openPresensiTab(){
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitProsesKenaikanGajiBerkala")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){
@@ -625,11 +677,11 @@ function openPresensiTab(){
         }
 
 
-          function batalVerifLayanan(id_usul){
+          function batalVerifProsesKgb(id_usul){
           
             if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/batalVerifikasiProsesKgb")?>',
                 method: 'post',
                 // data: $(this).serialize(),
                 data: {
@@ -735,6 +787,7 @@ function kirimBkad(id,status){
                        })
                    }
                }
+
 
 
 

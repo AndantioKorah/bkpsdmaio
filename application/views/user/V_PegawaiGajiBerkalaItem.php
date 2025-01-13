@@ -54,7 +54,9 @@
                                 <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->
                             </td>
                             <td class="text-center">
+                            <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/prosesGajiBerkala/<?=$rs['nipbaru_ws']?>/<?=$tahun;?>">
                                 <button class="btn btn-primary btn-sm">Proses</button>
+                            </a>
                             </td>
                             <!-- <td class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                         </tr>

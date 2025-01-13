@@ -579,6 +579,7 @@ class C_User extends CI_Controller
         if($flag_welcome_view == 0){
             $temp['result'] = $data['result'];
             $temp['param'] = $this->input->post();
+            $data['tahun'] = $this->input->post('tahun');
             $this->session->set_userdata('data_gaji_berkala', $temp);
             $this->load->view('user/V_PegawaiGajiBerkalaItem', $data);
         } else {

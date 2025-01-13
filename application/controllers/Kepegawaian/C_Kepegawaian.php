@@ -2537,6 +2537,19 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->submitEditSPLayanan());
 	}
 
+	public function prosesGajiBerkala($nip,$tahun){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$id_pegawai = $data['profil_pegawai']['id_peg'];
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
+		$data['tahun'] = $tahun;
+		render('kepegawaian/layanan/V_ProsesGajiBerkala', '', '', $data);
+	}
+
+	public function submitProsesKenaikanGajiBerkala()
+	{ 
+		echo json_encode( $this->kepegawaian->submitProsesKenaikanGajiBerkala());
+	}
+
 	
 
 

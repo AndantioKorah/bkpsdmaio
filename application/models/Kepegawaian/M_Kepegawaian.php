@@ -5594,7 +5594,7 @@ public function submitEditJabatan(){
                         'sendTo' => ($chat->from),
                         'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
                         'type' => 'text',
-                        'ref_id' => $resp['cuti']['id'],
+                        // 'ref_id' => $resp['cuti']['id'],
                         'jenis_layanan' => 'Cuti'
                     ];
                     $this->db->insert('t_cron_wa', $cronWaVerifikator);
@@ -5766,7 +5766,7 @@ public function submitEditJabatan(){
                     'sendTo' => ($chat->from),
                     'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
-                    'ref_id' => $resp['cuti']['id'],
+                    // 'ref_id' => $resp['cuti']['id'],
                     'jenis_layanan' => 'Cuti'
                 ];
                 $this->db->insert('t_cron_wa', $cronWaVerifikator);
@@ -6604,7 +6604,10 @@ public function submitEditJabatan(){
                             'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
                             'type' => 'text',
                             'ref_id' => $data['id'],
-                            'jenis_layanan' => 'Cuti'
+                            'jenis_layanan' => 'Cuti',
+                            'table_state' => 't_progress_cuti',
+                            'column_state' => 'chatId',
+                            'id_state' => $res['progress']['next']['id']
                         ];
                         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }

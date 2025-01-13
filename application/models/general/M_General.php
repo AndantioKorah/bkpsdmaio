@@ -1458,5 +1458,8 @@
             return $counter;
         }
 
+        public function cronSyncJabatanSiasn(){
+            
+        }
 	}
 ?>

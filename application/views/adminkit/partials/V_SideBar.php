@@ -368,7 +368,7 @@
 		<?php 
 			if(
 				$this->general_library->isProgrammer()
-				// || $this->general_library->isPegawaiBkpsdm()
+				|| $this->general_library->isPegawaiBkpsdm()
 			)
 			{ ?>
 				

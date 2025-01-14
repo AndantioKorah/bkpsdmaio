@@ -2537,6 +2537,52 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->submitEditSPLayanan());
 	}
 
+	public function prosesGajiBerkala($nip,$tahun){
+		
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$id_pegawai = $data['profil_pegawai']['id_peg'];
+		$data['result'] = $this->kepegawaian->cekProsesKenaikanBerkala($id_pegawai,$tahun);
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
+		$data['tahun'] = $tahun;
+		// dd($data['result']);
+		render('kepegawaian/layanan/V_ProsesGajiBerkala', '', '', $data);
+	}
+
+	public function submitProsesKenaikanGajiBerkala()
+	{ 
+		echo json_encode( $this->kepegawaian->submitProsesKenaikanGajiBerkala());
+	}
+
+	public function batalVerifikasiProsesKgb()
+	{ 
+		echo json_encode( $this->kepegawaian->batalVerifikasiProsesKgb());
+	}
+
+	public function downloadDrafSKKgb(){
+		// $data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);	
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$nip = $this->input->post('nipbaru_ws');
+		
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['nomorsurat'] = $this->input->post('nomor_sk');
+		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
+		$data['tanggal_pertek'] = $this->input->post('tanggal_pertek');
+		$data['nomor_urut'] = $this->input->post('nomor_urut');
+        // $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
+
+				$mpdf = new \Mpdf\Mpdf([
+					'format' => 'Legal-P',
+					// 'format' => [215, 330],
+					'default_font_size' => 10,
+					'default_font' => 'times',
+					'debug' => true
+				]);
+				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
+				$mpdf->WriteHTML($html);
+				$mpdf->showImageErrors = true;
+				$mpdf->Output('Draf SK Pangkat.pdf', 'D');
+		
+        }
 	
 
 

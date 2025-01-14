@@ -32,6 +32,7 @@
                     <th style="width: 20%;" class="text-center">Unit Kerja</th>
                     <th style="width: 10%;" class="text-center">TMT Gaji Berkala</th>
                     <th style="width: 10%;" class="text-center"></th>
+                    <th>Verifikator</th>
                     <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
                 </thead>
                 <tbody>
@@ -54,9 +55,14 @@
                                 <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->
                             </td>
                             <td class="text-center">
+                            <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/prosesGajiBerkala/<?=$rs['nipbaru_ws']?>/<?=$tahun;?>">
                                 <button class="btn btn-primary btn-sm">Proses</button>
+                            </a>
                             </td>
                             <!-- <td class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
+                             <td>
+                             <?=($rs['verifikator'])?>
+                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>

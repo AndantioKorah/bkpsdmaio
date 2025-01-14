@@ -1,13 +1,13 @@
 <!-- <h1 class="h3 mb-3">Penetapan Sasaran Kerja</h1> -->
 <h1 class="h3 mb-3">Sasaran Kerja Bulanan Pegawai</h1>
 
-<div class="card card-default">
-
-    <div class="card-body" style="display: block;">
+<div class="card card-default" >
+    <div class="card-body" style="display: block;" >
+<?php if(!$cek_skbp) { ?>
         <table>
           <tr>
           <td>
-          <div class="form-check">
+          <div class="form-check" id="div_lm">
       <input class="form-check-input" type="checkbox" value="" id="checkBoxID">
       <label class="form-check-label" for="checkBoxID">
       Ikut Sasaran Kerja Bulan Sebelumnya    
@@ -19,6 +19,7 @@
           </td>
           </tr>
         </table>
+<?php } ?>
        
 <script>
 
@@ -60,7 +61,9 @@ $("#checkBoxID").click(function() {
                 loadRencanaKinerja($('#bulan').val(), $('#tahun').val())
                 $("html, body").animate({ scrollTop: $(document).height() }, 500);
                 $('#buttonID').html('Simpan')
-                $("#buttonID").attr("disabled", false);
+                $("#buttonID").attr("disabled", false)
+                $('#div_lm').hide('')
+                $("#buttonID").hide()
               } else {
                 errortoast(result.msg)
                 return false;

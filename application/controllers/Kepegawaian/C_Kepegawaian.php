@@ -2568,9 +2568,12 @@ class C_Kepegawaian extends CI_Controller
 		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
 		$data['tanggal_pertek'] = $this->input->post('tanggal_pertek');
 		$data['nomor_urut'] = $this->input->post('nomor_urut');
-        // $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
+		$data['gaji_lama'] = $this->input->post('gajilama');
+		$data['gaji_baru'] = $this->input->post('gajibaru');
+		$data['masa_kerja'] = $this->input->post('masakerja');
+        $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
 
-				$mpdf = new \Mpdf\Mpdf([
+				 $mpdf = new \Mpdf\Mpdf([
 					'format' => 'Legal-P',
 					// 'format' => [215, 330],
 					'default_font_size' => 10,

@@ -42,7 +42,8 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->getListRencanaKinerjaTugas();
         $data['list_sasaran_kerja'] = $this->kinerja->getListRencanaKinerjaSasaran();
         $this->simata->updateMasakerja($this->general_library->getIdPegSimpeg());
-
+        $data['cek_skbp'] = $this->kinerja->cekSkbpBulanSekarang();
+       
         $id_peg = $this->general_library->getIdPegSimpeg();
         $eselonPeg = $this->general_library->getEselonPegawai($id_peg);  
         if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){

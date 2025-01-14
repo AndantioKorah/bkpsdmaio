@@ -139,35 +139,15 @@
     lainnya kepada :
     </p>
 
-	<p class="judul"><b>M E M U T U S K A N</b></p>
 	<table style="width:100%;" border="0">
-	<tr valign="top">
-			<td valign="top" style="width:15%;">Menetapkan</td>
-			<td valign="top" style="text-align: center;width:4%;">:</td>
-			<td valign="top" style="width:86%;">
-			<p>KEPUTUSAN WALI KOTA MANADO TENTANG KENAIKAN PANGKAT PEGAWAI NEGERI SIPIL</p><br>
-		   </td>
-		</tr>
-	</table>
-	<table style="width:100%;" border="0">
+	
 		<tr valign="top">
-			<td style="width:15%;">KESATU</td>
-			<td style="width:4%;text-align: center;">:</td>
-			<td style="width:34%;">Pegawai Negeri Sipil, nomor urut : <?=$nomor_urut;?></td>
-			<td style="width:4%;text-align: center;"></td>
-			<td style="width:48%;"></td>
-		</tr>
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>1. Nama Pegawai </td>
+			<td style="width:25%;">1. Nama Pegawai </td>
 			<td style="text-align: center;">:</td>
 			<td><?= getNamaPegawaiFull($profil_pegawai);?></td>
 		</tr>
 
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
+		<!-- <tr valign="top">
 			<td>2. Tempat/Tanggal Lahir </td>
 			<td style="text-align: center;">:</td>
 			<td> <?=$profil_pegawai['tptlahir'];?> / 
@@ -175,79 +155,97 @@
 				$date=date_create($profil_pegawai['tgllahir']);
 				echo date_format($date,"d-m-Y");?>
 			</td>
-		</tr>
+		</tr> -->
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>3. NIP </td>
+			<td>2. NIP </td>
 			<td style="text-align: center;">:</td>
 			<td><?=$profil_pegawai['nipbaru_ws'];?></td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>4. Pendidikan </td>
-			<td style="text-align: center;">:</td>
-			<td><?=$profil_pegawai['nm_tktpendidikan'];?> <?=$profil_pegawai['jurusan'];?></td>
-		</tr>
-
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>5. Pangkat Lama / Gol. Ruang/TMT </td>
+			<td>3. Pangkat </td>
 			<td style="text-align: center;">:</td>
 			<td>
-			<?= $profil_pegawai['nm_pangkat'];?> / 
-			<?php
-				$date=date_create($profil_pegawai['tmtpangkat']);
-				echo date_format($date,"d-m-Y");?>
+			<?= $profil_pegawai['nm_pangkat'];?> 
 			</td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>6. Jabatan </td>
+			<td>4. Jabatan </td>
 			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nama_jabatan'];?></td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>7. Unit Kerja </td>
+			<td>5. Unit Kerja </td>
 			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
 		</tr>
-	</table>
-	<br>
-	
-	
-	
-<div class="row">
-	<div style="width: 19%; float:left;">
-</div>
-<div style="width: 81%; float:right;text-align: justify">
-Terhitung mulai tanggal <b>01-12-2024</b> dinaikkan pangkatnya menjadi <b>Penata Muda Tingkat I</b> golongan
-ruang <b>III/b</b>, <b>Pranata Komputer Ahli Pertama / 50</b> dengan masa kerja golongan <b>4 Tahun 0 Bulan</b>, dan
-diberikan gaji pokok sebesar <b>Rp. 3.089.300</b> ditambah dengan penghasilan lain berdasarkan ketentuan
-peraturan perundang-undangan yang berlaku. 
-</div>
-</div>
-<br>
-<table style="width:100%;" border="0">
-	<tr valign="top">
-			<td valign="top" style="width:15%;">KEDUA</td>
-			<td valign="top" style="text-align: center;width:4%;">:</td>
-			<td valign="top" style="width:86%;text-align: justify">
-			<p>Apabila dikemudian hari ternyata terdapat kekeliruan dalam keputusan ini, akan diadakan perbaikan
-			dan penghitungan kembali sebagaimana mestinya</p><br>
-		   </td>
+		<tr valign="top">
+			<td>6. Gaji Pokok Lama </td>
+			<td style="text-align: center;">:</td>
+			<td>Rp. <?= $gaji_lama;?>,-</td>
+		</tr>
+		<tr valign="top">
+			<td></td>
+			<td ></td>
+			<td>
+			(Atas dasar Surat Keputusan terakhir tentang Gaji/Pangkat yang ditetapkan)
+			<table border="0">
+				<tr>
+					<td>a. Oleh Pejabat</td>
+					<td>: Wali Kota</td>
+				</tr>
+				<tr>
+					<td>b. Tanggal/Nomor</td>
+					<td>: 12 Februari 2021 / 813.23/BKPSDM/SK/01/2021</td>
+				</tr>
+				<tr>
+					<td>c. Tanggal mulai berlaku<br>&nbsp; &nbsp; gaji tersebut</td>
+					<td valign="top">: 01 Desember 2020</td>
+				</tr>
+				<tr>
+					<td>d. Masa Kerja Golongan<br>&nbsp; &nbsp; pada tanggal tersebut</td>
+					<td valign="top">:  00 TAHUN 00 BULAN</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td colspan="3">&nbsp;&nbsp;&nbsp;Diberikan Kenaikan Gaji Berkala hingga memperoleh :</td>
+		</tr>
+		<tr valign="top">
+			<td>7. Gaji Pokok Baru </td>
+			<td style="text-align: center;">:</td>
+			<td>Rp. <?= $gaji_baru;?>,-<br>
+			(Dua Juta Sembilan Ratus Enam Puluh Empat Ribu Rupiah)</td>
+		</tr>
+		<tr valign="top">
+			<td>8. Berdasarkan Masa Kerja </td>
+			<td style="text-align: center;">:</td>
+			<td>4 Tahun</td>
+		</tr>
+		<tr valign="top">
+			<td>9. Dalam Golongan Ruang </td>
+			<td style="text-align: center;">:</td>
+			<td>III/a</td>
+		</tr>
+		<tr valign="top">
+			<td>10. Terhitung Mulai Tanggal</td>
+			<td style="text-align: center;">:</td>
+			<td>01 Desember 2024</td>
+		</tr>
+		<tr valign="top">
+			<td>11. Berkala Berikutnya</td>
+			<td style="text-align: center;">:</td>
+			<td>01 Desember 2026</td>
 		</tr>
 	</table>
+
+	
 	<br>
+	
 	<br>
 	<table border="0" style="width:100%;">
 		<tr>

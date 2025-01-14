@@ -2561,10 +2561,8 @@ class C_Kepegawaian extends CI_Controller
 	public function downloadDrafSKKgb(){
 		// $data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);	
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-		$nip = $this->input->post('nipbaru_ws');
-		
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
-		
+		$nip = $this->input->post('nip');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);
 		$data['gaji_lama'] = $this->input->post('gajilama');
 		$data['gaji_baru'] = $this->input->post('gajibaru');
 		$data['masa_kerja'] = $this->input->post('edit_gb_masa_kerja');

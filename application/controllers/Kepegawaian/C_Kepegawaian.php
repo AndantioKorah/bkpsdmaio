@@ -2564,13 +2564,17 @@ class C_Kepegawaian extends CI_Controller
 		$nip = $this->input->post('nipbaru_ws');
 		
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
-		$data['nomorsurat'] = $this->input->post('nomor_sk');
-		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
-		$data['tanggal_pertek'] = $this->input->post('tanggal_pertek');
-		$data['nomor_urut'] = $this->input->post('nomor_urut');
+		
 		$data['gaji_lama'] = $this->input->post('gajilama');
 		$data['gaji_baru'] = $this->input->post('gajibaru');
-		$data['masa_kerja'] = $this->input->post('masakerja');
+		$data['masa_kerja'] = $this->input->post('edit_gb_masa_kerja');
+		$data['tmt_kgb_baru'] = $this->input->post('edit_tmt_gaji_berkala');
+		$data['nosk'] = $this->input->post('edit_gb_no_sk');
+		$data['tglsk'] = $this->input->post('edit_gb_tanggal_sk');
+
+		$this->kepegawaian->simpanDataDrafKgb();
+
+
         $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
 
 				 $mpdf = new \Mpdf\Mpdf([

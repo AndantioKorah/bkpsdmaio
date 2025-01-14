@@ -434,7 +434,7 @@
                 ->where('b.tahun', $tahun)
                 ->where('b.bulan', $bulan)
                 ->where('a.flag_active', 1)
-                ->where('b.flag_active', b)
+                ->where('b.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();
            

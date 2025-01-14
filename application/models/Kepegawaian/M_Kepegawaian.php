@@ -2104,9 +2104,14 @@ class M_Kepegawaian extends CI_Model
             $name = str_replace("NIP",$nip,$format);
             $name = str_replace("KODE",$pangkat,$name);
         } else if($id_dok == 7){
-            $date = $this->input->post('tmt_gaji_berkala');
-            $tahun = explode('-', $date);
-            $tahun = $tahun[2];
+            if($this->input->post('tmt_gaji_berkala')){
+                $date = $this->input->post('tmt_gaji_berkala');
+                $tahun = explode('-', $date);
+                $tahun = $tahun[2];
+            } else {
+                $tahun = date('Y');
+            }
+          
             $name = str_replace("NIP",$nip,$format);
             $name = str_replace("TAHUN",$tahun,$name);
         } else if($id_dok == 6){
@@ -4365,7 +4370,7 @@ public function submitEditJabatan(){
             $id = $datapost['id'];
             $data["pangkat"] = $datapost["edit_gb_pangkat"];
             $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
-            $data["pejabat"] = $datapost["edit_gb_pejabat"];
+            $data["pejabat"] = "WALI KOTA";
             $data["nosk"] = $datapost["edit_gb_no_sk"];
             $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
             $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];
@@ -9805,7 +9810,6 @@ public function getFileForVerifLayanan()
         //         ->where('a.id_peg', $id_peg)
         //         ->get()->row_array();
         
-
         if($id_dok == 4){
         //PANGKAT   
         $tgl_sk = date("Y-m-d", strtotime($this->input->post('tanggal_sk')));
@@ -9855,7 +9859,31 @@ public function getFileForVerifLayanan()
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
         // PANGKAT
-        } 
+        // GAJI BERKALA
+        } else if($id_dok == 7){
+            $id  = $this->input->post('id_tkgb');
+            $dataKgb = $this->db->select('*')
+                ->from('t_gajiberkala a')
+                ->where('a.id', $id)
+                ->get()->result_array();
+            
+            $datainsKgb["id_pegawai"] = $dataKgb[0]['id_pegawai'];
+            $datainsKgb["pangkat"] = $dataKgb[0]['pangkat'];
+            $datainsKgb["masakerja"] =$dataKgb[0]['masakerja'];
+            $datainsKgb["pejabat"] = "WALI KOTA";
+            $datainsKgb["nosk"] = $dataKgb[0]['nosk'];
+            $datainsKgb["tglsk"] = $dataKgb[0]['tglsk'];
+            $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
+            $datainsKgb["status"] = 2;
+            $datainsKgb["gambarsk"] = $data['file_name'];
+            $this->db->where('id', $id)
+            ->update('t_gajiberkala', $datainsKgb);
+            
+            $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
+
+            $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        }
+        // GAJI BERKALA
         return $result;
     }
 
@@ -10219,6 +10247,38 @@ public function getFileForVerifLayanan()
 
         return $res;
     }
+
+    public function simpanDataDrafKgb(){
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+      
+        // dd($datapost);
+            $id = $datapost['id'];
+            $data["pangkat"] = $datapost["edit_gb_pangkat"];
+            $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
+            $data["pejabat"] = "WALI KOTA";
+            $data["nosk"] = $datapost["edit_gb_no_sk"];
+            $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
+            $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];
+            $data["gajilama"] = $datapost["gajilama"];
+            $data["gajibaru"] = $datapost["gajibaru"];
+            $this->db->where('id', $id)
+                    ->update('t_gajiberkala', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+        
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
 
 
 

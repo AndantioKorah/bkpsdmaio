@@ -100,11 +100,11 @@
         <td></td>
             <td style="width:55%;"> </td>
             <td> </td>
-            <td>Manado,16 Oktober 2024</td> 
+            <td>Manado, <?= formatDateNamaBulan($tglsk);?></td> 
         </tr>
         <tr>
             <td>Nomor</td>
-            <td>: 800.1.11.13/BKPSDM/SK/5428/2024      </td>
+            <td>: <?= $nosk;?> </td>
             <td></td>
             <td>Kepada</td>
         </tr>
@@ -134,7 +134,7 @@
         </tr>
     </table>
 	
-	<p>
+	<p style="text-align: justify">
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dengan ini diberitahukan bahwa berhubung dengan telah dipenuhinya masa kerja dan syarat-syarat
     lainnya kepada :
     </p>
@@ -216,9 +216,9 @@
 			<td colspan="3">&nbsp;&nbsp;&nbsp;Diberikan Kenaikan Gaji Berkala hingga memperoleh :</td>
 		</tr>
 		<tr valign="top">
-			<td>7. Gaji Pokok Baru </td>
+			<td valign="top">7. Gaji Pokok Baru </td>
 			<td style="text-align: center;">:</td>
-			<td>Rp. <?= $gaji_baru;?>,-<br>
+			<td valign="top">Rp. <?= $gaji_baru;?>,-<br>
 			(Dua Juta Sembilan Ratus Enam Puluh Empat Ribu Rupiah)</td>
 		</tr>
 		<tr valign="top">
@@ -229,45 +229,70 @@
 		<tr valign="top">
 			<td>9. Dalam Golongan Ruang </td>
 			<td style="text-align: center;">:</td>
-			<td>III/a</td>
+			<td>
+				<?php
+				$data = explode(",",$profil_pegawai['nm_pangkat']);
+				echo $data[1];?>
+			 </td>
 		</tr>
 		<tr valign="top">
 			<td>10. Terhitung Mulai Tanggal</td>
 			<td style="text-align: center;">:</td>
-			<td>01 Desember 2024</td>
+			<td><?= formatDateNamaBulan($tmt_kgb_baru);?></td>
 		</tr>
 		<tr valign="top">
 			<td>11. Berkala Berikutnya</td>
 			<td style="text-align: center;">:</td>
-			<td>01 Desember 2026</td>
+			<td>
+			<?php
+			$new_date = date('Y-m-d H:i:s', strtotime('+2 years', strtotime($tmt_kgb_baru)));
+			echo formatDateNamaBulan($new_date); ?>
+			</td>
 		</tr>
 	</table>
-
+	<p style="text-align: justify">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diharapkan agar sesuai dengan pasal 11 dan 23 Peraturan Pemerintah Nomor 7 Tahun 1977 yo
+Peraturan Pemerintah Nomor 05 Tahun 2024 kepada Pegawai tersebut dapat dibayarkan penghasilannya berdasarkan
+Gaji Pokok yang baru
+    </p>
 	
-	<br>
 	
-	<br>
 	<table border="0" style="width:100%;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td  style="width:38%;">
 
 			<table style="width:100%;">
-				<tr><td>Ditetapkan di Manado</td></tr>
-				<tr><td>Pada tanggal <?= formatDateNamaBulan(date('Y-m-d'));?></td></tr>
-				<tr><td  style="text-align: center;">WALI KOTA MANADO</td></tr>
+				<tr><td></td></tr>
+				<tr><td></td></tr>
+				<tr><td  style="text-align: center;">a.n. WALI KOTA MANADO</td></tr>
 			</table>
 			</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:100px;text-align: center;">ttd</td>
+			<td class="center" style="width:38%;height:100px;text-align: center;"></td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="text-align: center;">Andrei Angouw</td>
+			<td class="center" style="text-align: center;"></td>
 		</tr>
 	</table>
+
+	<p>
+	Tembusan :<br>
+1. Menteri Dalam Negeri (Biro Kepegawaian Bagian Pegawai Daerah) di Jakarta,<br>
+2. Kepala Badan Kepegawaian Negara di Jakarta,<br>
+3. Gubernur Sulawesi Utara di Manado,<br>
+4. Kepala Kantor Pembendaharaan dan Kas Negara Manado di Manado,<br>
+5. Kepala Tata Usaha Anggaran Manado di Manado,<br>
+6. Kepala Kantor Cabang Utama PT. Taspen (Persero) Manado di Manado,<br>
+7. Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado di Manado,<br>
+8. Bendaharawan Pembuat Daftar Gaji yang bersangkutan,<br>
+9. Pegawai yang bersangkutan,<br>
+10.Untuk Berkas.
+
+	</p>
 	<div class="footer-sk-2">
 	
 	</div>

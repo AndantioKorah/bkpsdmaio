@@ -72,4 +72,10 @@ class C_Cron extends CI_Controller
     public function downloadRekapAbsenRequest(){
         $this->general->downloadRekapAbsenRequest();
     }
+
+    public function testWsSiasn($nip){
+        $data = $this->siasnlib->getRiwayatSkp22($nip);
+        // $data = $this->siasnlib->getJabatanByNip($nip);
+        dd($data);
+    }
 }

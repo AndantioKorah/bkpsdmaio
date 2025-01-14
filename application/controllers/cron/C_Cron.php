@@ -19,6 +19,7 @@ class C_Cron extends CI_Controller
         $this->load->model('general/M_General', 'general');
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('kepegawaian/M_Layanan', 'layanan');
+		$this->load->model('siasn/M_Siasn', 'siasn');
         $this->load->helper('url_helper');
         $this->load->helper('form');
     }
@@ -45,7 +46,12 @@ class C_Cron extends CI_Controller
 	}
 
     public function cronSyncJabatanSiasn(){
-        
+        $this->general->logCron('cronSyncJabatanSiasn');
+    }
+
+    public function cronSyncSkpSiasn(){
+        $this->general->logCron('cronSyncSkpSiasn');
+        $this->siasn->cronRiwayatSkpSiasn();
     }
 
     public function cronUpdateGajiBkad(){

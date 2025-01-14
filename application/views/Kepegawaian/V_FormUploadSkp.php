@@ -45,15 +45,48 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php }  ?>
+<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+  <button onclick="syncRiwayatSkpSiasn('<?=$profil_pegawai['id_m_user']?>')" class="btn btn-block text-right float-right btn-info ml-2">
+    <i class="fa fa-file-download"></i> Sinkron Riwayat Jabatan SIASN
+  </button>
+  <!-- <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
+    <i class="fa fa-users-cog"></i> SIASN
+  </button> -->
+<?php } ?>
 
 
 <script>
-    function openModalStatusPmd(jenisberkas){
-      var jumlahskp = $('#jumlahdokskp').val()
-      if(jumlahskp == 0){
-        jenisberkas = null 
+  function syncRiwayatSkpSiasn(id_m_user){
+    $('#list_skp').html('')
+    $('#list_skp').append(divLoaderNavy)
+    $.ajax({
+      url: '<?=base_url("siasn/C_Siasn/syncRiwayatSkpSiasn/")?>'+id_m_user,
+      method: 'POST',
+      data: null,
+      success: function(data){
+        $('#list_skp').html('')
+        let rs = JSON.parse(data)
+        if(rs.code == 0){
+          successtoast(rs.message)
+        } else {
+          errortoast(rs.message)
+        }
+        loadListSkp()
+      }, error: function(err){
+        $('#list_skp').html('')
+        loadListSkp()
       }
-      $(".modal-body #jenis_berkas").val( jenisberkas );
+    })
+
+    loadListSkp()
+  }
+
+  function openModalStatusPmd(jenisberkas){
+    var jumlahskp = $('#jumlahdokskp').val()
+    if(jumlahskp == 0){
+      jenisberkas = null 
+    }
+    $(".modal-body #jenis_berkas").val( jenisberkas );
   }
 </script>
 

@@ -73,6 +73,7 @@ $route['cron/send-wa-message'] = 'cron/C_Cron/cronSendWa';
 $route['cron/cron-ds-bulk-tte-cuti'] = 'cron/C_Cron/cronDsBulkTte';
 $route['cron/cron-bkad-update-gaji'] = 'cron/C_Cron/cronUpdateGajiBkad';
 $route['cron/sync-jabatan-siasn'] = 'cron/C_Cron/cronSyncJabatanSiasn';
+$route['cron/sync-skp-siasn'] = 'cron/C_Cron/cronSyncSkpSiasn';
 
 //walikota
 $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';

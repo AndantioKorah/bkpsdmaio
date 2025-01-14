@@ -13,7 +13,7 @@
             <th class="text-left">Tanggal Usul</th>
           <th class="text-left">Keterangan</th>
          
-          <th class="text-left">  </th>
+          <th class="text-left"> Pilihan </th>
           <?php } else { ?>
             <th></th>
             <?php } ?>
@@ -23,14 +23,26 @@
             <tr  style="background-color:<?php if($rs['status'] == 1) echo '#e3ab3b'; else if($rs['status'] == 3) echo '#f98080'; else echo '';?>"  class="">
 
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['tahun']?></td>
+              <td class="text-left">
+                <?=$rs['tahun']?><br>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                  <?php if($rs['flag_from_siasn'] == 1){ ?> 
+                    <span class="badge badge-info" title="Data yang disinkronisasi dari SIASN">SIASN</span><br>
+                  <?php } ?>
+                  <?php if($rs['id_siasn']){ ?> 
+                    <span class="badge badge-success" title="Data ini sudah tersinkronisasi dengan SIASN"><i class="fa fa-check"></i> Sinkron SIASN</span>
+                  <?php } else { ?>
+                    <span class="badge badge-danger" title="Data ini belum tersinkronisasi dengan SIASN"><i class="fa fa-times"></i> Belum Sinkron SIASN</span>
+                  <?php } ?>
+                <?php } ?>
+              </td>
               <td class="text-left"><?= $rs['nilai']?></td>          
               <td class="text-left"><?= $rs['predikat']?></td>   
               <td class="text-left">
-              <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_skp" onclick="openFileSKP('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                <i class="fa fa-file-pdf"></i></button>
-              <?php } ?>
+                <?php if($rs['gambarsk'] != "") { ?>
+                  <button href="#modal_view_file_skp" onclick="openFileSKP('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                  <i class="fa fa-file-pdf"></i></button>
+                <?php } ?>
               </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>

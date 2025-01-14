@@ -117,5 +117,9 @@ class C_Siasn extends CI_Controller
     public function syncRiwayatJabatanSiasn($id_m_user){
         echo json_encode($this->siasn->syncRiwayatJabatanSiasn($id_m_user));
     }
+
+    public function syncRiwayatSkpSiasn($id_m_user){
+        echo json_encode($this->siasn->syncRiwayatSkpSiasn($id_m_user));
+    }
     
 }

@@ -155,6 +155,140 @@
             }
         }
 
+        public function cronRiwayatSkpSiasn(){
+            $listPegawai = $this->db->select('a.*, b.id as id_m_user')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                ->where('b.flag_active', 1)
+                                ->where('b.id NOT IN (
+                                    SELECT aa.id_m_user
+                                    FROM t_cron_sync_skp_siasn aa
+                                    WHERE aa.flag_active = 1
+                                )')
+                                // ->where('a.nipbaru_ws', '199502182020121013')
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->limit(100)
+                                // ->limit(1)
+                                ->get()->result_array();
+            // dd($listPegawai);
+            if($listPegawai){
+                foreach($listPegawai as $lp){
+                    $this->db->insert('t_cron_sync_skp_siasn', [
+                        'id_m_user' => $lp['id_m_user']
+                    ]);
+                }
+            }
+
+            $data = $this->db->select('*')
+                            ->from('t_cron_sync_skp_siasn')
+                            ->where('flag_active', 1)
+                            ->where('flag_done', 0)
+                            ->where('temp_count <', 3)
+                            ->limit(10)
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $cron = $this->syncRiwayatSkpSiasn($d['id_m_user']);
+                    
+                    $udpate = [
+                        'temp_count' => $d['temp_count'] += 1,
+                        'last_try_date' => date('Y-m-d H:i:s'),
+                        'log' => $cron['data'],
+                        'flag_done' => 0
+                    ];
+
+                    if($cron['code'] == 0){
+                        $udpate['flag_done'] = 1;
+                        $udpate['done_date'] = date('Y-m-d H:i:s');
+                    }
+
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_sync_skp_siasn', $udpate);
+                }
+            }
+        }
+
+        public function syncRiwayatSkpSiasn($id_m_user){
+            $rs['code'] = 0;
+            $rs['message'] = 'Sinkronisasi Riwayat SKP dengan SIASN sudah berhasil';
+            $rs['data'] = null;
+
+            $user = $this->db->select('b.*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->where('a.id', $id_m_user)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            $this->db->trans_begin();
+
+            if($user){
+                $reqSiasn = $this->siasnlib->getRiwayatSkp22($user['nipbaru_ws']);
+                $rs['data'] = json_encode($reqSiasn);
+                if($reqSiasn && $reqSiasn['code'] == 0){
+                    $resSiasn = json_decode($reqSiasn['data'], true);
+                    if(isset($resSiasn['data'])){
+                        $listSkpPegawai = $this->db->select('*')
+                                                ->from('db_pegawai.pegskp')
+                                                ->where('id_pegawai', $user['id_peg'])
+                                                ->where('flag_active', 1)
+                                                ->get()->result_array();
+                        $dataSkpPegawai = null;
+                        if($listSkpPegawai){
+                            foreach($listSkpPegawai as $lsp){
+                                $dataSkpPegawai[$lsp['tahun']] = $lsp;
+                            }
+                        }
+
+                        foreach($resSiasn['data'] as $rsd){
+                            if(isset($dataSkpPegawai[$rsd['tahun']])){
+                                $dataSkpPegawai[$rsd['tahun']]['id_siasn'] = $rsd['id'];
+                                $dataSkpPegawai[$rsd['tahun']]['meta_data_siasn'] = json_encode($rsd);
+                                $dataSkpPegawai[$rsd['tahun']]['predikat'] = strtoupper(getPredikatSkp($rsd));
+                                $dataSkpPegawai[$rsd['tahun']]['nilai'] = intval($rsd['hasilKinerjaNilai']).''.intval($rsd['PerilakuKerjaNilai']);
+                                
+                                $this->db->where('id', $dataSkpPegawai[$rsd['tahun']]['id'])
+                                        ->update('db_pegawai.pegskp', $dataSkpPegawai[$rsd['tahun']]);
+                            } else {
+                                $pegskp = [
+                                    'id_pegawai' => $user['id_peg'],
+                                    'tahun' => $rsd['tahun'],
+                                    'predikat' => strtoupper(getPredikatSkp($rsd)),
+                                    'nilai' => intval($rsd['hasilKinerjaNilai']).''.intval($rsd['PerilakuKerjaNilai']),
+                                    'status' => 2,
+                                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                                    'id_siasn' => $rsd['id'],
+                                    'flag_from_siasn' => 1,
+                                    'meta_data_siasn' => json_encode($rsd),
+                                ];
+                                $this->db->insert('db_pegawai.pegskp', $pegskp);
+                            }
+                        }                        
+                    } else {
+                        $rs['code'] = 1;
+                        $rs['message'] = json_encode($resSiasn);    
+                    }
+                } else {
+                    $rs['code'] = $reqSiasn['code'];
+                    $rs['message'] = isset($reqSiasn['message']) ? $reqSiasn['message'] : json_encode($reqSiasn);
+                }
+            }
+
+            if($rs['code'] != 0){
+                $this->db->trans_rollback();
+                return $rs;
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = "Terjadi Kesalahan";
+            } else {
+                $this->db->trans_commit();
+                return $rs;
+            }
+        }
+
         public function syncRiwayatJabatanSiasn($id_m_user){
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';

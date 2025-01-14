@@ -174,6 +174,35 @@ function countMaxDateUpload($date, $max = 0, $operand = "minus"){
     return $res;
 }
 
+function getPredikatSkp($data){
+    if(isset($data['hasilKinerja']) && isset($data['perilakuKerja'])){
+        $predikatAngka = [
+            '33' => 'Sangat Kurang',
+            '32' => 'Butuh Perbaikan',
+            '31' => 'Butuh Perbaikan',
+            '23' => 'Kurang / Misonduct',
+            '13' => 'Kurang / Misconduct',
+            '22' => 'Baik',
+            '21' => 'Baik',
+            '12' => 'Baik',
+            '11' => 'Sangat Baik',
+        ];
+
+        $predikatKata = [
+            'DIBAWAH' => 3,
+            'SESUAI' => 2,
+            'DIATAS' => 1,
+        ];
+
+        $explKinerja = explode(" ", $data['hasilKinerja']);
+        $explPerilaku = explode(" ", $data['perilakuKerja']);
+
+        return $predikatAngka[$predikatKata[$explPerilaku[0]].''.$predikatKata[$explKinerja[0]]];
+    } else {
+        return null;
+    }
+}
+
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');

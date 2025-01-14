@@ -434,6 +434,7 @@
                 ->where('b.tahun', $tahun)
                 ->where('b.bulan', $bulan)
                 ->where('a.flag_active', 1)
+                ->where('b.flag_active', 1)
                 ->order_by('a.id', 'desc')
                 ->get()->result_array();
            
@@ -1232,6 +1233,16 @@
                         ->where('a.id_m_user',$this->general_library->getId())
                         ->where('a.flag_active', 1)
                         ->group_by('a.tugas_jabatan')
+                        ->get()->result_array();
+    }
+
+    public function cekSkbpBulanSekarang(){
+        return $this->db->select('a.tugas_jabatan')
+                        ->from('t_rencana_kinerja as a ')
+                        ->where('a.id_m_user',$this->general_library->getId())
+                        ->where('a.flag_active', 1)
+                        ->where('a.tahun', date('Y'))
+                        ->where('a.bulan', date('m'))
                         ->get()->result_array();
     }
 
@@ -4201,7 +4212,7 @@
                             ->where('tahun', $tahun)
                             ->where('flag_active', 1)
                             ->get()->result_array();
-              
+            //    dd($sasaranLM);
                 
                 $sasaran = null;
                 foreach($sasaranLM as $h){

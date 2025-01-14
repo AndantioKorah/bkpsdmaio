@@ -74,12 +74,27 @@
         Verifikasi
         </button>
     <?php } else { ?>
+      <?php if($result[0]['status'] < 2){ ?>
         <button id="btn_tolak_verifikasi" onclick="batalVerifProsesKgb('<?=$result[0]['id'];?>')" type="button" class="btn btn-sm btn-danger">
         Batal Verif
         </button>
+       
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
         Download Draf SK
         </button>
+       
+        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadSKKgb">
+        Upload SK 
+        </button>
+       <?php } ?>
+       <?php if($result[0]['status'] == 2){ ?>
+       
+       <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+       <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
+       <button onclick="deleteFile('')"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+       <i class="fa fa-file-trash"></i> Hapus File</button>
+
+       <?php } ?>
     <?php } ?>
    
 
@@ -358,6 +373,8 @@
 
 
 
+
+
 		</div>
 	</div>
 </div>
@@ -399,9 +416,9 @@
     </div>
 </div>
     
-
+<?php if($result){ ?>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div style="display:none" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -413,9 +430,11 @@
       <div class="modal-body">
          <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" target="_blank">
          <div class="form-group">
-          <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
-          <input type="text" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="id" name="id" value="<?=$result[0]['id'];?>" readonly>
 
+          
           <label for="exampleInputEmail1">Nama Lengkap</label>
           <input type="text" class="form-control" id="" name="" value="<?=getNamaPegawaiFull($profil_pegawai)?>" readonly>
           </div> 
@@ -426,7 +445,9 @@
           <div class="form-group">
           <label for="exampleInputEmail1">Pangkat Gol/Ruang</label>
           <input type="text" class="form-control" id="" name="" value="<?=($profil_pegawai['nm_pangkat'])?>" readonly>
-          </div> 
+          <input type="hidden" class="form-control" id="edit_gb_pangkat" name="edit_gb_pangkat" value="<?=($profil_pegawai['pangkat'])?>" readonly>
+          
+        </div> 
         
           <div class="form-group">
           <label for="exampleInputEmail1">Nomor SK Pangkat</label>
@@ -471,15 +492,15 @@
           </div>
           <div class="form-group">
           <label >Masa Kerja PNS</label>
-          <input type="text" class="form-control" id="masakerja" name="masakerja" value="<?=$result[0]['masakerja'];?>">
+          <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>">
           </div>
           <div class="form-group">
           <label >TMT Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="tmtgajiberkala" name="tmtgajiberkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>">
+          <input type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>">
           </div>
           <div class="form-group">
           <label >Nomor SK Gaji Berkala</label>
-          <input type="text" class="form-control" id="nosk" name="nosk"  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "800.1.11.13/BKPSDM/SK/xxxx/2025";?>">
+          <input type="text" class="form-control" id="edit_gb_no_sk" name="edit_gb_no_sk"  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "800.1.11.13/BKPSDM/SK/xxxx/2025";?>">
         <!-- <div class="row">
             <div class="col-sm-4">
           <input type="text" class="form-control" id="" name=""  value="800.1.11.13/BKPSDM/SK/" readonly>
@@ -495,9 +516,40 @@
          
           <div class="form-group">
           <label >Tgl SK Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="tglsk" name="tglsk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>">
+          <input type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>">
           </div>
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<?php } ?>
+
+<!-- Modal -->
+<div class="modal fade" id="modalUploadSKKgb" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form id="upload_sk_kgb_form" method="post" enctype="multipart/form-data">
+         <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="7" readonly>
+          <input type="hidden" class="form-control" id="id_tkgb" name="id_tkgb" value="<?=$result[0]['id'];?>" readonly>
+
+        
+          <div class="form-group">
+          <label >File SK</label>
+          <input type="file" class="form-control"  id="pdf_file_berkala" name="file">
+          </div>
+          <button class="btn btn-primary float-right"  id=""><i class="fa fa-save"></i> SIMPAN</button>
         </form>
       </div>
     </div>
@@ -514,7 +566,7 @@ $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
   $('.datepickerr').datepicker({
-     format: 'dd-mm-yyyy',
+     format: 'yyyy-mm-dd',
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
@@ -702,40 +754,13 @@ function openPresensiTab(){
           }
   }
 
-  function kerjakanPengajuan(id_usul,id){
-
-    if(id == 1){
-      var pesan = "Kerjakan Pengajuan Pangkat ini ?";
-    } else {
-      var pesan = "Batal Kerjakan Pengajuan Pangkat ini ?";
-    }
-          
-          if(confirm(pesan)){
-          $.ajax({
-              url: '<?=base_url("kepegawaian/C_Kepegawaian/kerjakanPengajuanLayanan")?>',
-              method: 'post',
-              // data: $(this).serialize(),
-              data: {
-                id_usul: id_usul, id : id
-          },
-              success: function(data){
-                location.reload()
-              }, error: function(e){
-                  errortoast('Terjadi Kesalahan')
-              }
-          })
-
-          
-        }
-}
-
-  async function openFilePangkat(filename){
+  async function openFileKgb(filename){
 
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
+$link = "<?=base_url();?>/arsipgjberkala/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
@@ -788,7 +813,68 @@ function kirimBkad(id,status){
                    }
                }
 
+    $('#upload_sk_kgb_form').on('submit', function(e){  
+        //     document.getElementById('btn_upload').disabled = true;
+        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        e.preventDefault();
+        var formvalue = $('#upload_sk_kgb_form');
+        var form_data = new FormData(formvalue[0]);
+        var ins = document.getElementById('pdf_file_berkala').files.length;
+       
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
 
+      
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSKLayanan")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+                successtoast(result.msg)
+                document.getElementById("upload_sk_kgb_form").reset();
+                setTimeout(window.location.reload.bind(window.location), 1000);
+                
+                  
+            //    $('#btn_upload_pangkat').html('Simpan')
+               
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+            
+        }  
+        });  
+          
+        }); 
 
+               $("#pdf_file_berkala").change(function (e) {
 
+                // var extension = pdf_file_berkala.value.split('.')[1];
+                var doc = pdf_file_berkala.value.split('.')
+                var extension = doc[doc.length - 1]
+
+                var fileSize = this.files[0].size/1024;
+                var MaxSize = 1024;
+
+                if (extension != "pdf"){
+                  errortoast("Harus File PDF")
+                  $(this).val('');
+                }
+
+                if (fileSize > MaxSize ){
+                  errortoast("Maksimal Ukuran File 2 MB")
+                  $(this).val('');
+                }
+
+                });
 </script>

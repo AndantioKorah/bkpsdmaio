@@ -100,11 +100,11 @@
         <td></td>
             <td style="width:55%;"> </td>
             <td> </td>
-            <td>Manado,16 Oktober 2024</td> 
+            <td>Manado, <?= formatDateNamaBulan($tglsk);?></td> 
         </tr>
         <tr>
             <td>Nomor</td>
-            <td>: 800.1.11.13/BKPSDM/SK/5428/2024      </td>
+            <td>: <?= $nosk;?> </td>
             <td></td>
             <td>Kepada</td>
         </tr>
@@ -134,40 +134,20 @@
         </tr>
     </table>
 	
-	<p>
+	<p style="text-align: justify">
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dengan ini diberitahukan bahwa berhubung dengan telah dipenuhinya masa kerja dan syarat-syarat
     lainnya kepada :
     </p>
 
-	<p class="judul"><b>M E M U T U S K A N</b></p>
 	<table style="width:100%;" border="0">
-	<tr valign="top">
-			<td valign="top" style="width:15%;">Menetapkan</td>
-			<td valign="top" style="text-align: center;width:4%;">:</td>
-			<td valign="top" style="width:86%;">
-			<p>KEPUTUSAN WALI KOTA MANADO TENTANG KENAIKAN PANGKAT PEGAWAI NEGERI SIPIL</p><br>
-		   </td>
-		</tr>
-	</table>
-	<table style="width:100%;" border="0">
+	
 		<tr valign="top">
-			<td style="width:15%;">KESATU</td>
-			<td style="width:4%;text-align: center;">:</td>
-			<td style="width:34%;">Pegawai Negeri Sipil, nomor urut : <?=$nomor_urut;?></td>
-			<td style="width:4%;text-align: center;"></td>
-			<td style="width:48%;"></td>
-		</tr>
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>1. Nama Pegawai </td>
+			<td style="width:25%;">1. Nama Pegawai </td>
 			<td style="text-align: center;">:</td>
 			<td><?= getNamaPegawaiFull($profil_pegawai);?></td>
 		</tr>
 
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
+		<!-- <tr valign="top">
 			<td>2. Tempat/Tanggal Lahir </td>
 			<td style="text-align: center;">:</td>
 			<td> <?=$profil_pegawai['tptlahir'];?> / 
@@ -175,101 +155,144 @@
 				$date=date_create($profil_pegawai['tgllahir']);
 				echo date_format($date,"d-m-Y");?>
 			</td>
-		</tr>
+		</tr> -->
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>3. NIP </td>
+			<td>2. NIP </td>
 			<td style="text-align: center;">:</td>
 			<td><?=$profil_pegawai['nipbaru_ws'];?></td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>4. Pendidikan </td>
-			<td style="text-align: center;">:</td>
-			<td><?=$profil_pegawai['nm_tktpendidikan'];?> <?=$profil_pegawai['jurusan'];?></td>
-		</tr>
-
-		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>5. Pangkat Lama / Gol. Ruang/TMT </td>
+			<td>3. Pangkat </td>
 			<td style="text-align: center;">:</td>
 			<td>
-			<?= $profil_pegawai['nm_pangkat'];?> / 
-			<?php
-				$date=date_create($profil_pegawai['tmtpangkat']);
-				echo date_format($date,"d-m-Y");?>
+			<?= $profil_pegawai['nm_pangkat'];?> 
 			</td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>6. Jabatan </td>
+			<td>4. Jabatan </td>
 			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nama_jabatan'];?></td>
 		</tr>
 
 		<tr valign="top">
-			<td></td>
-			<td style="text-align: center;"></td>
-			<td>7. Unit Kerja </td>
+			<td>5. Unit Kerja </td>
 			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
 		</tr>
-	</table>
-	<br>
-	
-	
-	
-<div class="row">
-	<div style="width: 19%; float:left;">
-</div>
-<div style="width: 81%; float:right;text-align: justify">
-Terhitung mulai tanggal <b>01-12-2024</b> dinaikkan pangkatnya menjadi <b>Penata Muda Tingkat I</b> golongan
-ruang <b>III/b</b>, <b>Pranata Komputer Ahli Pertama / 50</b> dengan masa kerja golongan <b>4 Tahun 0 Bulan</b>, dan
-diberikan gaji pokok sebesar <b>Rp. 3.089.300</b> ditambah dengan penghasilan lain berdasarkan ketentuan
-peraturan perundang-undangan yang berlaku. 
-</div>
-</div>
-<br>
-<table style="width:100%;" border="0">
-	<tr valign="top">
-			<td valign="top" style="width:15%;">KEDUA</td>
-			<td valign="top" style="text-align: center;width:4%;">:</td>
-			<td valign="top" style="width:86%;text-align: justify">
-			<p>Apabila dikemudian hari ternyata terdapat kekeliruan dalam keputusan ini, akan diadakan perbaikan
-			dan penghitungan kembali sebagaimana mestinya</p><br>
-		   </td>
+		<tr valign="top">
+			<td>6. Gaji Pokok Lama </td>
+			<td style="text-align: center;">:</td>
+			<td>Rp. <?= $gaji_lama;?>,-</td>
+		</tr>
+		<tr valign="top">
+			<td></td>
+			<td ></td>
+			<td>
+			(Atas dasar Surat Keputusan terakhir tentang Gaji/Pangkat yang ditetapkan)
+			<table border="0">
+				<tr>
+					<td>a. Oleh Pejabat</td>
+					<td>: Wali Kota</td>
+				</tr>
+				<tr>
+					<td>b. Tanggal/Nomor</td>
+					<td>: 12 Februari 2021 / 813.23/BKPSDM/SK/01/2021</td>
+				</tr>
+				<tr>
+					<td>c. Tanggal mulai berlaku<br>&nbsp; &nbsp; gaji tersebut</td>
+					<td valign="top">: 01 Desember 2020</td>
+				</tr>
+				<tr>
+					<td>d. Masa Kerja Golongan<br>&nbsp; &nbsp; pada tanggal tersebut</td>
+					<td valign="top">:  00 TAHUN 00 BULAN</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td colspan="3">&nbsp;&nbsp;&nbsp;Diberikan Kenaikan Gaji Berkala hingga memperoleh :</td>
+		</tr>
+		<tr valign="top">
+			<td valign="top">7. Gaji Pokok Baru </td>
+			<td style="text-align: center;">:</td>
+			<td valign="top">Rp. <?= $gaji_baru;?>,-<br>
+			(Dua Juta Sembilan Ratus Enam Puluh Empat Ribu Rupiah)</td>
+		</tr>
+		<tr valign="top">
+			<td>8. Berdasarkan Masa Kerja </td>
+			<td style="text-align: center;">:</td>
+			<td>4 Tahun</td>
+		</tr>
+		<tr valign="top">
+			<td>9. Dalam Golongan Ruang </td>
+			<td style="text-align: center;">:</td>
+			<td>
+				<?php
+				$data = explode(",",$profil_pegawai['nm_pangkat']);
+				echo $data[1];?>
+			 </td>
+		</tr>
+		<tr valign="top">
+			<td>10. Terhitung Mulai Tanggal</td>
+			<td style="text-align: center;">:</td>
+			<td><?= formatDateNamaBulan($tmt_kgb_baru);?></td>
+		</tr>
+		<tr valign="top">
+			<td>11. Berkala Berikutnya</td>
+			<td style="text-align: center;">:</td>
+			<td>
+			<?php
+			$new_date = date('Y-m-d H:i:s', strtotime('+2 years', strtotime($tmt_kgb_baru)));
+			echo formatDateNamaBulan($new_date); ?>
+			</td>
 		</tr>
 	</table>
-	<br>
-	<br>
+	<p style="text-align: justify">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diharapkan agar sesuai dengan pasal 11 dan 23 Peraturan Pemerintah Nomor 7 Tahun 1977 yo
+Peraturan Pemerintah Nomor 05 Tahun 2024 kepada Pegawai tersebut dapat dibayarkan penghasilannya berdasarkan
+Gaji Pokok yang baru
+    </p>
+	
+	
 	<table border="0" style="width:100%;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td  style="width:38%;">
 
 			<table style="width:100%;">
-				<tr><td>Ditetapkan di Manado</td></tr>
-				<tr><td>Pada tanggal <?= formatDateNamaBulan(date('Y-m-d'));?></td></tr>
-				<tr><td  style="text-align: center;">WALI KOTA MANADO</td></tr>
+				<tr><td></td></tr>
+				<tr><td></td></tr>
+				<tr><td  style="text-align: center;">a.n. WALI KOTA MANADO</td></tr>
 			</table>
 			</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:100px;text-align: center;">ttd</td>
+			<td class="center" style="width:38%;height:100px;text-align: center;"></td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="text-align: center;">Andrei Angouw</td>
+			<td class="center" style="text-align: center;"></td>
 		</tr>
 	</table>
+
+	<p>
+	Tembusan :<br>
+1. Menteri Dalam Negeri (Biro Kepegawaian Bagian Pegawai Daerah) di Jakarta,<br>
+2. Kepala Badan Kepegawaian Negara di Jakarta,<br>
+3. Gubernur Sulawesi Utara di Manado,<br>
+4. Kepala Kantor Pembendaharaan dan Kas Negara Manado di Manado,<br>
+5. Kepala Tata Usaha Anggaran Manado di Manado,<br>
+6. Kepala Kantor Cabang Utama PT. Taspen (Persero) Manado di Manado,<br>
+7. Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado di Manado,<br>
+8. Bendaharawan Pembuat Daftar Gaji yang bersangkutan,<br>
+9. Pegawai yang bersangkutan,<br>
+10.Untuk Berkas.
+
+	</p>
 	<div class="footer-sk-2">
 	
 	</div>

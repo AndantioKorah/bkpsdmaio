@@ -799,14 +799,16 @@ class C_Kepegawaian extends CI_Controller
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'skp_tahunan');
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['dok'] = $this->kepegawaian->getDataDok('db_pegawai.pegskp', $id_peg );
-	
+
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
-			
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
-        $this->load->view('kepegawaian/V_FormUploadSkp', $data);
+
+		$data['sinkronSiasn'] = $this->kepegawaian->getDataSinkronWsSiasn('t_cron_sync_skp_siasn', $data['profil_pegawai']['id_m_user']);
+        
+		$this->load->view('kepegawaian/V_FormUploadSkp', $data);
     }
 
 	public function loadFormBerkasPns($nip){

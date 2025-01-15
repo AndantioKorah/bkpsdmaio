@@ -15,6 +15,13 @@ class M_Kepegawaian extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
+    public function getDataSinkronWsSiasn($tableName, $id_m_user){
+        return $this->db->select('*')
+                    ->from($tableName)
+                    ->where('id_m_user', $id_m_user)
+                    ->get()->row_array();
+    }
+
     public function get_datatables_lihat_dokumen_pns($cariBy,$cariName,$unor)
         {
             

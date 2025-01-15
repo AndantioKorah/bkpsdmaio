@@ -725,6 +725,8 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
+		$data['sinkronSiasn'] = $this->kepegawaian->getDataSinkronWsSiasn('t_cron_sync_jabatan_siasn', $data['profil_pegawai']['id_m_user']);
+
         $this->load->view('kepegawaian/V_FormUploadJabatan', $data);
     }
 

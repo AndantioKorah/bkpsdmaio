@@ -72,7 +72,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     }
   ?>
   <div class="row">
-    <div class="col-lg-12 text-right">
+    <div class="col-lg-12 text-right" style="margin-bottom: 15px;">
       <span style="color: <?=$txtcolor?>; font-size: .7rem; font-weight: bold; font-style: italic;"><?=$messageSinkron?></span>
     </div>
   </div>

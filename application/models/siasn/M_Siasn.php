@@ -193,7 +193,7 @@
                     $udpate = [
                         'temp_count' => $d['temp_count'] += 1,
                         'last_try_date' => date('Y-m-d H:i:s'),
-                        'log' => $cron['data'],
+                        'log' => isset($cron['data']) ? $cron['data'] : json_encode($cron['data']),
                         'flag_done' => 0
                     ];
 
@@ -327,7 +327,7 @@
                     $udpate = [
                         'temp_count' => $d['temp_count'] += 1,
                         'last_try_date' => date('Y-m-d H:i:s'),
-                        'log' => $cron['data'],
+                        'log' => isset($cron['data']) ? $cron['data'] : json_encode($cron['data']),
                         'flag_done' => 0
                     ];
 
@@ -401,13 +401,13 @@
                                 $id_jabatan_siasn = '';
                                 $nama_jabatan_siasn = '';
 
-                                if($d['jabatanFungsionalId'] != null && $d['jabatanFungsionalId'] != ""){
+                                if(isset($d['jabatanFungsionalId']) && $d['jabatanFungsionalId'] != null && $d['jabatanFungsionalId'] != ""){
                                     $id_jabatan_siasn = $d['jabatanFungsionalId'];
                                     $nama_jabatan_siasn = $d['jabatanFungsionalNama'];
-                                } else if($d['jabatanFungsionalUmumId'] != null && $d['jabatanFungsionalUmumId'] != ""){
+                                } else if(isset($d['jabatanFungsionalUmumId']) && $d['jabatanFungsionalUmumId'] != null && $d['jabatanFungsionalUmumId'] != ""){
                                     $id_jabatan_siasn = $d['jabatanFungsionalId'];
                                     $nama_jabatan_siasn = $d['jabatanFungsionalUmumNama'];
-                                } else if($d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != ""){
+                                } else if(isset($d['jabatanStrukturalId']) && $d['jabatanStrukturalId'] != null && $d['jabatanStrukturalId'] != ""){
                                     $id_jabatan_siasn = $d['jabatanFungsionalId'];
                                     $nama_jabatan_siasn = $d['jabatanStrukturalNama'];
                                 }

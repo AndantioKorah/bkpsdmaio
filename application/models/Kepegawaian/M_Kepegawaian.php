@@ -397,7 +397,7 @@ class M_Kepegawaian extends CI_Model
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
-            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status,"|",bb.pejabat,"|",bb.nosk,"|",bb.masakerjapangkat) from db_pegawai.pegpangkat as bb
+            (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status,"|",bb.pejabat,"|",bb.nosk,"|",bb.masakerjapangkat,"|",bb.tglsk) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
              (SELECT jurusan from db_pegawai.pegpendidikan as dd where a.id_peg = dd.id_pegawai and dd.flag_active in (1,2) and dd.status = 2  ORDER BY dd.id desc limit 1) as jurusan,
             r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan, a.flag_sertifikasi, a.flag_terima_tpp')

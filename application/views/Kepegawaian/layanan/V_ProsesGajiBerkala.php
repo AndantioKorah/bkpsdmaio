@@ -459,7 +459,12 @@
           <div class="form-group">
           <label for="exampleInputEmail1">TMT SK Pangkat</label>
           <input type="text" class="form-control" id="pangkat_tmt" name="pangkat_tmt" value="<?=$profil_pegawai['tmtpangkat'];?>" readonly>
-          </div> 
+          <input type="hidden" class="form-control" id="pangkat_tglsk" name="pangkat_tglsk" value="<?php 
+                    $data = explode("|", $profil_pegawai['data_pangkat']);
+                    echo $data[6];
+                    ?>" readonly>
+          
+        </div> 
           <div class="form-group">
           <label for="exampleInputEmail1">Masa Kerja</label>
           <input type="text" class="form-control" id="pangkat_mkg" name="pangkat_mkg" value="<?php 

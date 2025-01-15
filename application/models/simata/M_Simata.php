@@ -2250,27 +2250,27 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             if($pk){
             $id_predikat = $pk['predikat'];
             if($x == 1){
-                if($id_predikat == "Sangat Baik"){
+                if($id_predikat == "Sangat Baik" || $id_predikat == "SANGAT BAIK"){
                     $predikat = "66";
-                } else if($id_predikat == "Baik"){
+                } else if($id_predikat == "Baik" || $id_predikat == "BAIK"){
                     $predikat = "67";
-                } else if($id_predikat == "Butuh Perbaikan"){
+                } else if($id_predikat == "Butuh Perbaikan" || $id_predikat == "BUTUH PERBAIKAN"){
                     $predikat = "68";
-                } else if($id_predikat == "Kurang"){
+                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG"){
                     $predikat = "69";
-                } else if($id_predikat == "Sangat Kurang"){
+                } else if($id_predikat == "Sangat Kurang" || $id_predikat == "SANGAT KURANG"){
                     $predikat = "70";
                 } 
             } else {
-                if($id_predikat == "Sangat Baik"){
+                if($id_predikat == "Sangat Baik" || $id_predikat == "SANGAT BAIK"){
                     $predikat = "71";
-                } else if($id_predikat == "Baik"){
+                } else if($id_predikat == "Baik" || $id_predikat == "BAIK"){
                     $predikat = "72";
-                } else if($id_predikat == "Butuh Perbaikan"){
+                } else if($id_predikat == "Butuh Perbaikan" || $id_predikat == "BUTUH PERBAIKAN"){
                     $predikat = "73";
-                } else if($id_predikat == "Kurang"){
+                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG"){
                     $predikat = "74";
-                } else if($id_predikat == "Sangat Kurang"){
+                } else if($id_predikat == "Sangat Kurang" || $id_predikat == "SANGAT KURANG"){
                     $predikat = "75";
                 } 
             }

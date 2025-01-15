@@ -203,7 +203,7 @@
 				</tr>
 				<tr>
 					<td>c. Tanggal mulai berlaku<br>&nbsp; &nbsp; gaji tersebut</td>
-					<td valign="top">: 01 Desember 2020</td>
+					<td valign="top">: <?= formatDateNamaBulan($pangkat_tglsk);?></td>
 				</tr>
 				<tr>
 					<td>d. Masa Kerja Golongan<br>&nbsp; &nbsp; pada tanggal tersebut</td>
@@ -213,7 +213,7 @@
 			</td>
 		</tr>
 		<tr valign="top">
-			<td colspan="3">&nbsp;&nbsp;&nbsp;Diberikan Kenaikan Gaji Berkala hingga memperoleh :</td>
+			<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;Diberikan Kenaikan Gaji Berkala hingga memperoleh :</td>
 		</tr>
 		<tr valign="top">
 			<td valign="top">7. Gaji Pokok Baru </td>

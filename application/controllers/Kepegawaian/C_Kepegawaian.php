@@ -2545,7 +2545,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function prosesGajiBerkala($nip,$tahun){
 		
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);
 		$id_pegawai = $data['profil_pegawai']['id_peg'];
 		$data['result'] = $this->kepegawaian->cekProsesKenaikanBerkala($id_pegawai,$tahun);
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
@@ -2579,9 +2579,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat_tmt'] = formatDateNamaBulan($this->input->post('pangkat_tmt'));
 		$data['pangkat_nosk'] = $this->input->post('pangkat_nosk');
 		$data['pangkat_mkg'] = $this->input->post('pangkat_mkg');
+		$data['pangkat_tglsk'] = $this->input->post('pangkat_tglsk');
 
-		// $nominal = str_replace('.', '', $this->input->post('gajibaru'));
-		$nominal = 50;
+		$nominal = str_replace('.', '', $this->input->post('gajibaru'));
+		// $nominal = 50;
 
 		$data['terbilang']= terbilang($nominal);
 
@@ -2591,17 +2592,17 @@ class C_Kepegawaian extends CI_Controller
 
         $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
 
-				//  $mpdf = new \Mpdf\Mpdf([
-				// 	'format' => 'Legal-P',
-				// 	// 'format' => [215, 330],
-				// 	'default_font_size' => 10,
-				// 	'default_font' => 'times',
-				// 	'debug' => true
-				// ]);
-				// $html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
-				// $mpdf->WriteHTML($html);
-				// $mpdf->showImageErrors = true;
-				// $mpdf->Output('Draf SK Pangkat.pdf', 'D');
+				 $mpdf = new \Mpdf\Mpdf([
+					'format' => 'Legal-P',
+					// 'format' => [215, 330],
+					'default_font_size' => 10,
+					'default_font' => 'times',
+					'debug' => true
+				]);
+				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
+				$mpdf->WriteHTML($html);
+				$mpdf->showImageErrors = true;
+				$mpdf->Output('Draf SK Pangkat.pdf', 'D');
 		
         }
 	

@@ -2279,7 +2279,9 @@
                     $this->db->where('b.id_unitkerjamaster', '8000000');
                 } else if($data['unitkerja'] == 993){
                     $this->db->where_in('b.id_unitkerjamaster', ['6000000','7005000']);
-                }  else {
+                } else if($data['unitkerja'] == 994){
+                    $this->db->where_not_in('b.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                }   else {
                     $this->db->where('a.skpd', $data['unitkerja']);
                 }
                 

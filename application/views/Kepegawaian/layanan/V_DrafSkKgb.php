@@ -128,7 +128,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><b>&nbsp;&nbsp;YOURI JANUARDY BASSELO TOREH, S.Kom</b></td>
+            <td><b>&nbsp;&nbsp;<?= getNamaPegawaiFull($profil_pegawai);?></b></td>
             <td></td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;MANADO</td>
         </tr>
@@ -195,11 +195,11 @@
 			<table border="0">
 				<tr>
 					<td>a. Oleh Pejabat</td>
-					<td>: Wali Kota</td>
+					<td>: <?=$pangkat_pejabat;?></td>
 				</tr>
 				<tr>
 					<td>b. Tanggal/Nomor</td>
-					<td>: 12 Februari 2021 / 813.23/BKPSDM/SK/01/2021</td>
+					<td>: <?=$pangkat_tmt;?> / <?=$pangkat_nosk;?></td>
 				</tr>
 				<tr>
 					<td>c. Tanggal mulai berlaku<br>&nbsp; &nbsp; gaji tersebut</td>
@@ -207,7 +207,7 @@
 				</tr>
 				<tr>
 					<td>d. Masa Kerja Golongan<br>&nbsp; &nbsp; pada tanggal tersebut</td>
-					<td valign="top">:  00 TAHUN 00 BULAN</td>
+					<td valign="top">:  <?=$pangkat_mkg;?></td>
 				</tr>
 			</table>
 			</td>
@@ -219,7 +219,7 @@
 			<td valign="top">7. Gaji Pokok Baru </td>
 			<td style="text-align: center;">:</td>
 			<td valign="top">Rp. <?= $gaji_baru;?>,-<br>
-			(Dua Juta Sembilan Ratus Enam Puluh Empat Ribu Rupiah)</td>
+			<?=$terbilang;?> Rupiah</td>
 		</tr>
 		<tr valign="top">
 			<td>8. Berdasarkan Masa Kerja </td>
@@ -302,4 +302,65 @@ Gaji Pokok yang baru
 
 
 	</body>
+	<script>
+
+	function terbilang(nilai) {
+      // deklarasi variabel nilai sebagai angka matemarika
+      // Objek Math bertujuan agar kita bisa melakukan tugas matemarika dengan javascript
+      nilai = Math.floor(Math.abs(nilai));
+ 
+      // deklarasi nama angka dalam bahasa indonesia
+      var huruf = [
+        '',
+        'Satu',
+        'Dua',
+        'Tiga',
+        'Empat',
+        'Lima',
+        'Enam',
+        'Tujuh',
+        'Delapan',
+        'Sembilan',
+        'Sepuluh',
+        'Sebelas',
+        ];
+ 
+      // menyimpan nilai default untuk pembagian
+      var bagi = 0;
+      // deklarasi variabel penyimpanan untuk menyimpan proses rumus terbilang
+      var penyimpanan = '';
+ 
+      // rumus terbilang
+      if (nilai < 12) {
+        penyimpanan = ' ' + huruf[nilai];
+      } else if (nilai < 20) {
+        penyimpanan = terbilang(Math.floor(nilai - 10)) + ' Belas';
+      } else if (nilai < 100) {
+        bagi = Math.floor(nilai / 10);
+        penyimpanan = terbilang(bagi) + ' Puluh' + terbilang(nilai % 10);
+      } else if (nilai < 200) {
+        penyimpanan = ' Seratus' + terbilang(nilai - 100);
+      } else if (nilai < 1000) {
+        bagi = Math.floor(nilai / 100);
+        penyimpanan = terbilang(bagi) + ' Ratus' + terbilang(nilai % 100);
+      } else if (nilai < 2000) {
+        penyimpanan = ' Seribu' + terbilang(nilai - 1000);
+      } else if (nilai < 1000000) {
+        bagi = Math.floor(nilai / 1000);
+        penyimpanan = terbilang(bagi) + ' Ribu' + terbilang(nilai % 1000);
+      } else if (nilai < 1000000000) {
+        bagi = Math.floor(nilai / 1000000);
+        penyimpanan = terbilang(bagi) + ' Juta' + terbilang(nilai % 1000000);
+      } else if (nilai < 1000000000000) {
+        bagi = Math.floor(nilai / 1000000000);
+        penyimpanan = terbilang(bagi) + ' Miliar' + terbilang(nilai % 1000000000);
+      } else if (nilai < 1000000000000000) {
+        bagi = Math.floor(nilai / 1000000000000);
+        penyimpanan = terbilang(nilai / 1000000000000) + ' Triliun' + terbilang(nilai % 1000000000000);
+      }
+ 
+      // mengambalikan nilai yang ada dalam variabel penyimpanan
+      return penyimpanan;
+    }
+	</script>
 	</html>

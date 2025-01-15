@@ -10314,6 +10314,15 @@ public function getFileForVerifLayanan()
 
        }
 
+       function getStatusLayananPangkat($id){
+        $this->db->select('a.status')
+                       ->from('m_layanan a')
+                       ->where('a.id', $id)
+                       ->where('a.flag_active', 1);
+                       $query = $this->db->get()->row_array();
+                       return $query;
+   }
+
 
 
 }

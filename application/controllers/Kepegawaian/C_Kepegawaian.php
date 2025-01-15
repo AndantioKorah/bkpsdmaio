@@ -2344,6 +2344,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
 		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
+		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+	
 
 		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
 			if($id_layanan == 7){
@@ -2569,23 +2571,33 @@ class C_Kepegawaian extends CI_Controller
 		$data['tmt_kgb_baru'] = $this->input->post('edit_tmt_gaji_berkala');
 		$data['nosk'] = $this->input->post('edit_gb_no_sk');
 		$data['tglsk'] = $this->input->post('edit_gb_tanggal_sk');
+		$data['pangkat_pejabat'] = $this->input->post('pangkat_pejabat');
+		$data['pangkat_tmt'] = formatDateNamaBulan($this->input->post('pangkat_tmt'));
+		$data['pangkat_nosk'] = $this->input->post('pangkat_nosk');
+		$data['pangkat_mkg'] = $this->input->post('pangkat_mkg');
+
+		// $nominal = str_replace('.', '', $this->input->post('gajibaru'));
+		$nominal = 50;
+
+		$data['terbilang']= terbilang($nominal);
+
 
 		$this->kepegawaian->simpanDataDrafKgb();
 
 
         $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
 
-				 $mpdf = new \Mpdf\Mpdf([
-					'format' => 'Legal-P',
-					// 'format' => [215, 330],
-					'default_font_size' => 10,
-					'default_font' => 'times',
-					'debug' => true
-				]);
-				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
-				$mpdf->WriteHTML($html);
-				$mpdf->showImageErrors = true;
-				$mpdf->Output('Draf SK Pangkat.pdf', 'D');
+				//  $mpdf = new \Mpdf\Mpdf([
+				// 	'format' => 'Legal-P',
+				// 	// 'format' => [215, 330],
+				// 	'default_font_size' => 10,
+				// 	'default_font' => 'times',
+				// 	'debug' => true
+				// ]);
+				// $html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
+				// $mpdf->WriteHTML($html);
+				// $mpdf->showImageErrors = true;
+				// $mpdf->Output('Draf SK Pangkat.pdf', 'D');
 		
         }
 	

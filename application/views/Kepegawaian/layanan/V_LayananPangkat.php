@@ -258,6 +258,8 @@ ol {
     border-left-color: #fa8072;
   }
 </style>
+
+<?php if($status_layanan['status'] == 1) { ;?>
 <div class="row">
 	<div class="col-lg-12">
 		<div class="card card-default">
@@ -570,6 +572,13 @@ ol {
 		</div>
 	</div>
 </div>
+<?php } else { ;?>
+  <p>
+    <b style="color:red;">
+      Layanan Kenaikan Pangkat Sudah ditutup dan akan dibuka kembali pada periode Kenaikan Pangkat berikutnya.
+    </b>
+  </p>
+<?php } ;?>
 
 <script>
 var id_m_layanan = "<?=$id_m_layanan;?>"

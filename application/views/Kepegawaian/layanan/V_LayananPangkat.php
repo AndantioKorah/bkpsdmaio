@@ -259,7 +259,6 @@ ol {
   }
 </style>
 
-<?php if($status_layanan['status'] == 1) { ;?>
 <div class="row">
 	<div class="col-lg-12">
 		<div class="card card-default">
@@ -478,8 +477,18 @@ ol {
 					</div>
 
 
-				
+          <?php if($status_layanan['status'] == 1) { ;?>
 					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
+          <?php } else { ?>
+            <p>
+              <h4>
+            <b style="color:red;">
+              Layanan kenaikan pangkat sudah ditutup dan akan dibuka kembali pada periode kenaikan pangkat berikutnya.<br>
+              periode kenaikan pangkat april 2025 (dibuka pada tanggal 22 januari - 19 februari 2025)
+            </b>
+          </h4>
+          </p>
+          <?php }  ?>
 				</form>
 				<p class="mt-5">
 					Keterangan :<br>
@@ -572,13 +581,7 @@ ol {
 		</div>
 	</div>
 </div>
-<?php } else { ;?>
-  <p>
-    <b style="color:red;">
-      Layanan Kenaikan Pangkat Sudah ditutup dan akan dibuka kembali pada periode Kenaikan Pangkat berikutnya.
-    </b>
-  </p>
-<?php } ;?>
+
 
 <script>
 var id_m_layanan = "<?=$id_m_layanan;?>"

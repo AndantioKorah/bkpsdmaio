@@ -9915,13 +9915,15 @@ public function getFileForVerifLayanan()
             $datainsKgb["nosk"] = $dataKgb[0]['nosk'];
             $datainsKgb["tglsk"] = $dataKgb[0]['tglsk'];
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
+            $datainsKgb["gajilama"] = $dataKgb[0]['gajilama'];
+            $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
             $datainsKgb["status"] = 2;
             $datainsKgb["gambarsk"] = $data['file_name'];
             $this->db->where('id', $id)
             ->update('t_gajiberkala', $datainsKgb);
             
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
-
+            $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
         }
         // GAJI BERKALA
@@ -10201,14 +10203,12 @@ public function getFileForVerifLayanan()
         $data["keterangan"] = $datapost['keterangan'];
         $data["id_m_user_verif"] = $this->general_library->getId();
 
-       
+       $nama = $this->general_library->getNamaUser();
     
-        // $dataKgb = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
-        //         ->from('m_user a')
-        //         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-        //         ->join('t_gajiberkala c', 'b.id_pg = c.id_pegawai')
-        //         ->where('year(c.tmtgajiberkala)', $datapost["tahun"])
-        //         ->get()->result_array();
+        $dataPegawai = $this->db->select('*')
+                ->from('db_pegawai.pegawai a')
+                ->where('id_peg', $datapost["id_pegawai"])
+                ->get()->row_array();
 
         $dataKgb = [
             'id_pegawai' => $datapost["id_pegawai"],
@@ -10226,18 +10226,20 @@ public function getFileForVerifLayanan()
             'id_m_user_verif' => $this->general_library->getId(),
             'nm_m_user_verif' => $this->general_library->getNamaUser()
         ];
-    $this->db->insert('t_gajiberkala', $dataKgb);
+         $this->db->insert('t_gajiberkala', $dataKgb);
 
+         if($datapost["status"] == 1){
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses. \n\nTerima kasih.";
 
-       
-        // $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nSK Kenaikan Gaji Berkala anda telah diproses""\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-        // $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().".\n\nSK Kenaikan Gaji Berkala anda telah diproses""\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-       
+         } else {
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan'].". \n\nTerima kasih.";
+            
+         }
         $cronWaNextVerifikator = [
-                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'sendTo' => convertPhoneNumber($dataPegawai['handphone']),
                     'message' => trim($message.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
-                    'jenis_layanan' => 'Pangkat',
+                    'jenis_layanan' => 'Gaji Berkala',
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
@@ -10298,7 +10300,7 @@ public function getFileForVerifLayanan()
             $id = $datapost['id'];
             $data["pangkat"] = $datapost["edit_gb_pangkat"];
             $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
-            $data["pejabat"] = "WALI KOTA";
+            $data["pejabat"] = "Wali Kota Manado";
             $data["nosk"] = $datapost["edit_gb_no_sk"];
             $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
             $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];

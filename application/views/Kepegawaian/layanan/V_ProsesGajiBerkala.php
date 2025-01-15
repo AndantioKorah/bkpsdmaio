@@ -79,6 +79,7 @@
         Batal Verif
         </button>
        
+        <?php if($result[0]['status'] == 1){ ?>
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
         Download Draf SK
         </button>
@@ -86,8 +87,10 @@
         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadSKKgb">
         Upload SK 
         </button>
-       <?php } ?>
-       <?php if($result[0]['status'] == 2){ ?>
+        <?php } ?>
+        <?php } ?>
+      
+        <?php if($result[0]['status'] == 2){ ?>
        
        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
        <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
@@ -347,15 +350,15 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan_kgb" enctype="multipart/form-data" >
-        <input type="text" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
-        <input type="tahun" name="tahun" id="tahun" value="<?= $tahun;?>">
+        <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
+        <input type="hidden" name="tahun" id="tahun" value="<?= $tahun;?>">
 
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
         <option value="1">ACC</option>
-        <option value="0">TOLAK</option>
+        <option value="0">Berkas Tidak Lengkap</option>
         <!-- <option value="3">TMS</option> -->
       </select>
       </div>
@@ -489,19 +492,19 @@
          
          <div class="form-group">
           <label for="exampleInputEmail1">Gaji Pokok Lama</label>
-          <input  type="text" class="form-control rupiah"  id="gajilama" name="gajilama" value="<?=$result[0]['gajilama'];?>" >
+          <input  type="text" class="form-control rupiah"  id="gajilama" name="gajilama" value="<?=$result[0]['gajilama'];?>" required>
           </div>
           <div class="form-group">
           <label >Gaji Pokok Baru</label>
-          <input type="text" class="form-control rupiah" id="gajibaru" name="gajibaru" value="<?=$result[0]['gajibaru'];?>">
+          <input type="text" class="form-control rupiah" id="gajibaru" name="gajibaru" value="<?=$result[0]['gajibaru'];?>" required>
           </div>
           <div class="form-group">
           <label >Masa Kerja PNS</label>
-          <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>">
+          <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>" required>
           </div>
           <div class="form-group">
           <label >TMT Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>">
+          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>" required>
           </div>
           <div class="form-group">
           <label >Nomor SK Gaji Berkala</label>
@@ -521,7 +524,7 @@
          
           <div class="form-group">
           <label >Tgl SK Gaji Berkala</label>
-          <input type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>">
+          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>" required>
           </div>
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
@@ -554,7 +557,7 @@
           <label >File SK</label>
           <input type="file" class="form-control"  id="pdf_file_berkala" name="file">
           </div>
-          <button class="btn btn-primary float-right"  id=""><i class="fa fa-save"></i> SIMPAN</button>
+          <button class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
       </div>
     </div>

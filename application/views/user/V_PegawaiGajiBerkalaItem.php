@@ -33,6 +33,7 @@
                     <th style="width: 10%;" class="text-center">TMT Gaji Berkala</th>
                     <th style="width: 10%;" class="text-center"></th>
                     <th>Verifikator</th>
+                    <th>Status</th>
                     <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
                 </thead>
                 <tbody>
@@ -61,7 +62,22 @@
                             </td>
                             <!-- <td class="text-center"><?=formatDateOnly($rs['tmtpangkat'])?></td> -->
                              <td>
-                             <?=($rs['verifikator'])?>
+                             <?php
+                                $data = explode("|",$rs['tberkala']);
+                                echo $data[0];?>
+                             </td>
+                             <td>
+                             <?php
+                             if($rs['tberkala']){
+                                $data = explode("|",$rs['tberkala']);
+                                 if($data[1] == 1 || $data[1] == 2) {
+                                    echo "ACC";
+                                 } else {
+                                    echo "Berkas Tidak Lengkap";
+                                 }
+                             }
+                                
+                               ;?>
                              </td>
                         </tr>
                     <?php } ?>

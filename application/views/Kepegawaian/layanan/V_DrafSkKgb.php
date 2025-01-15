@@ -142,7 +142,7 @@
 	<table style="width:100%;" border="0">
 	
 		<tr valign="top">
-			<td style="width:25%;">1. Nama Pegawai </td>
+			<td style="width:28%;">1. Nama Pegawai </td>
 			<td style="text-align: center;">:</td>
 			<td><?= getNamaPegawaiFull($profil_pegawai);?></td>
 		</tr>
@@ -217,14 +217,14 @@
 		</tr>
 		<tr valign="top">
 			<td valign="top">7. Gaji Pokok Baru </td>
-			<td style="text-align: center;">:</td>
+			<td style="text-align: center;" valign="top">:</td>
 			<td valign="top">Rp. <?= $gaji_baru;?>,-<br>
 			<?=$terbilang;?> Rupiah</td>
 		</tr>
 		<tr valign="top">
 			<td>8. Berdasarkan Masa Kerja </td>
 			<td style="text-align: center;">:</td>
-			<td>4 Tahun</td>
+			<td><?= $masa_kerja;?></td>
 		</tr>
 		<tr valign="top">
 			<td>9. Dalam Golongan Ruang </td>

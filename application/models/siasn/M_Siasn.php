@@ -289,6 +289,59 @@
             }
         }
 
+        public function cronRiwayatJabatanSiasn(){
+            $listPegawai = $this->db->select('a.*, b.id as id_m_user')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                ->where('b.flag_active', 1)
+                                ->where('b.id NOT IN (
+                                    SELECT aa.id_m_user
+                                    FROM t_cron_sync_jabatan_siasn aa
+                                    WHERE aa.flag_active = 1
+                                )')
+                                // ->where('a.nipbaru_ws', '199502182020121013')
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->limit(100)
+                                // ->limit(1)
+                                ->get()->result_array();
+            // dd($listPegawai);
+            if($listPegawai){
+                foreach($listPegawai as $lp){
+                    $this->db->insert('t_cron_sync_jabatan_siasn', [
+                        'id_m_user' => $lp['id_m_user']
+                    ]);
+                }
+            }
+
+            $data = $this->db->select('*')
+                            ->from('t_cron_sync_jabatan_siasn')
+                            ->where('flag_active', 1)
+                            ->where('flag_done', 0)
+                            ->where('temp_count <', 3)
+                            ->limit(10)
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $cron = $this->syncRiwayatJabatanSiasn($d['id_m_user']);
+                    
+                    $udpate = [
+                        'temp_count' => $d['temp_count'] += 1,
+                        'last_try_date' => date('Y-m-d H:i:s'),
+                        'log' => $cron['data'],
+                        'flag_done' => 0
+                    ];
+
+                    if($cron['code'] == 0){
+                        $udpate['flag_done'] = 1;
+                        $udpate['done_date'] = date('Y-m-d H:i:s');
+                    }
+
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_sync_jabatan_siasn', $udpate);
+                }
+            }
+        }
+
         public function syncRiwayatJabatanSiasn($id_m_user){
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';

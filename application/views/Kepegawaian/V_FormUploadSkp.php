@@ -47,8 +47,35 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
   <button onclick="syncRiwayatSkpSiasn('<?=$profil_pegawai['id_m_user']?>')" class="btn btn-block text-right float-right btn-info ml-2">
-    <i class="fa fa-file-download"></i> Sinkron Riwayat Jabatan SIASN
-  </button>
+    <i class="fa fa-file-download"></i> Sinkron Riwayat SKP SIASN
+  </button><br>
+  <?php $messageSinkron = "";
+    $txtcolor = "grey";
+    if($sinkronSiasn){
+      if($sinkronSiasn['flag_done'] == 1){
+        $txtcolor = "green";
+        $messageSinkron = "Sinkronisasi SKP SIASN sudah selesai";
+      } else {
+        $log = json_decode($sinkronSiasn['log'], true);
+        $logMessage = json_decode($log['data'], true);
+        $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$logMessage['message'];
+        if($sinkronSiasn['temp_count'] == 3){
+          $txtcolor = "red";
+          $messageSinkron = "Sinkronisasi SKP SIASN gagal".$errMessageFooter;
+        } else {
+          $txtcolor = "blue";
+          $messageSinkron = "sedang dilakukan sinkronisasi dengan ".$sinkronSiasn['temp_count']." kali percobaan".$errMessageFooter;
+        }
+      }
+    } else {
+      $messageSinkron = "Belum dilakukan sinkronisasi SKP SIASN";
+    }
+  ?>
+  <div class="row">
+    <div class="col-lg-12 text-right" style="margin-bottom: 15px;">
+      <span style="color: <?=$txtcolor?>; font-size: .7rem; font-weight: bold; font-style: italic;"><?=$messageSinkron?></span>
+    </div>
+  </div>
   <!-- <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
   </button> -->

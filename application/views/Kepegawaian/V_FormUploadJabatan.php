@@ -59,7 +59,35 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   </button>
   <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
-  </button>
+  </button><br>
+  <?php $messageSinkron = "";
+    $txtcolor = "grey";
+    if($sinkronSiasn){
+      if($sinkronSiasn['flag_done'] == 1){
+        $txtcolor = "green";
+        $messageSinkron = "Sinkronisasi Jabatan SIASN sudah selesai";
+      } else {
+        $log = json_decode($sinkronSiasn['log'], true);
+        $logMessage = json_decode($log['data'], true);
+        $errMessage = isset($logMessage['message']) ? $logMessage['message'] : $logMessage['data'];
+        $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$errMessage;
+        if($sinkronSiasn['temp_count'] == 3){
+          $txtcolor = "red";
+          $messageSinkron = "Sinkronisasi Jabatan SIASN gagal".$errMessageFooter;
+        } else {
+          $txtcolor = "blue";
+          $messageSinkron = "sedang dilakukan sinkronisasi dengan ".$sinkronSiasn['temp_count']." kali percobaan".$errMessageFooter;
+        }
+      }
+    } else {
+      $messageSinkron = "Belum dilakukan sinkronisasi Jabatan SIASN";
+    }
+  ?>
+  <div class="row">
+    <div class="col-lg-12 text-right" style="margin-bottom: 15px;">
+      <span style="color: <?=$txtcolor?>; font-size: .7rem; font-weight: bold; font-style: italic;"><?=$messageSinkron?></span>
+    </div>
+  </div>
 <?php } ?>
 <script>
     function openModalStatusPmd(jenisberkas){

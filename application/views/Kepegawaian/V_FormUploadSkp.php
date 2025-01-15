@@ -57,8 +57,15 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         $messageSinkron = "Sinkronisasi SKP SIASN sudah selesai";
       } else {
         $log = json_decode($sinkronSiasn['log'], true);
-        $logMessage = json_decode($log['data'], true);
-        $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$logMessage['message'];
+        $logMessage = null;
+        if($log && isset($log['data']) && $log['data']){
+          $logMessage = json_decode($log['data'], true);
+        }
+        $errMessage = "";
+        if($logMessage){
+          $errMessage = isset($logMessage['message']) ? $logMessage['message'] : $logMessage['data'];
+        }
+        $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$errMessage;
         if($sinkronSiasn['temp_count'] == 3){
           $txtcolor = "red";
           $messageSinkron = "Sinkronisasi SKP SIASN gagal".$errMessageFooter;
@@ -76,7 +83,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <span style="color: <?=$txtcolor?>; font-size: .7rem; font-weight: bold; font-style: italic;"><?=$messageSinkron?></span>
     </div>
   </div>
-  <!-- <button data-toggle="modal" onclick="openSiasn('jabatan', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
+  <!-- <button data-toggle="modal" onclick="openSiasn('SKP', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
   </button> -->
 <?php } ?>

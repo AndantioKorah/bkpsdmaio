@@ -68,8 +68,14 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         $messageSinkron = "Sinkronisasi Jabatan SIASN sudah selesai";
       } else {
         $log = json_decode($sinkronSiasn['log'], true);
-        $logMessage = json_decode($log['data'], true);
-        $errMessage = isset($logMessage['message']) ? $logMessage['message'] : $logMessage['data'];
+        $logMessage = null;
+        if($log && isset($log['data']) && $log['data']){
+          $logMessage = json_decode($log['data'], true);
+        }
+        $errMessage = "";
+        if($logMessage){
+          $errMessage = isset($logMessage['message']) ? $logMessage['message'] : $logMessage['data'];
+        }
         $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$errMessage;
         if($sinkronSiasn['temp_count'] == 3){
           $txtcolor = "red";

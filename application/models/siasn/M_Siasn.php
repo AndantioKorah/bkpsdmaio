@@ -193,7 +193,7 @@
                     $udpate = [
                         'temp_count' => $d['temp_count'] += 1,
                         'last_try_date' => date('Y-m-d H:i:s'),
-                        'log' => isset($cron['data']) ? $cron['data'] : json_encode($cron['data']),
+                        'log' => $cron && isset($cron['data']) ? $cron['data'] : json_encode($cron),
                         'flag_done' => 0
                     ];
 
@@ -327,7 +327,7 @@
                     $udpate = [
                         'temp_count' => $d['temp_count'] += 1,
                         'last_try_date' => date('Y-m-d H:i:s'),
-                        'log' => isset($cron['data']) ? $cron['data'] : json_encode($cron['data']),
+                        'log' => $cron && isset($cron['data']) ? $cron['data'] : json_encode($cron),
                         'flag_done' => 0
                     ];
 
@@ -380,7 +380,7 @@
                             if($d['nomorSk'] && isset($listJabatanSiladen[$d['nomorSk'].formatDateOnlyForEdit2($d['tmtJabatan'])])){
                                 // kalo ada nomor SK yang sama dengan riwayat, update meta_data_siasn
                                 $fileName = null;
-                                if($d['path']){
+                                if($d['path'] && isset($d['path'][872])){
                                     $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
                                     if($file['code'] == 0){
                                         $fileName = 'SK_JABATAN_'.$d['id'].'_'.date('ymdhis').'.pdf';
@@ -450,7 +450,7 @@
 
                                 // $this->db->insert('db_pegawai.pegjabatan', $insert_data);
                                 $fileName = null;
-                                if($d['path']){
+                                if($d['path'] && isset($d['path'][872])){
                                     $file = $this->siasnlib->downloadDokumen($d['path'][872]['dok_uri']);
                                     if($file['code'] == 0){
                                         $fileName = 'SK_JABATAN_'.$d['id'].'_'.date('ymdhis').'.pdf';

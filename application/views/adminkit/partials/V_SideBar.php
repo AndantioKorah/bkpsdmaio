@@ -272,6 +272,7 @@
 			</ul>
 		</li>
 	<?php } ?>
+
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 		<a title="SIASN" data-bs-target="#siasn" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-users-cog"></i> 
@@ -297,6 +298,26 @@
 			<li class="sidebar-item ">
 				<a title="Mapping Jabatan" class="sidebar-link sidebar-link-child" href="<?=base_url('siasn/mapping/jabatan')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Mapping Jabatan
+				</a>
+			</li>
+		</ul>
+	<?php } ?>
+
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_siladen')){ ?>
+		<a title="Admin SILADEN" data-bs-target="#adminsiladen" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-cogs"></i> 
+			<span class="align-middle">Admin SILADEN
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
+		</a>
+		<ul id="adminsiladen" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+			<li class="sidebar-item ">
+				<a title="Broadcast WhatsApp" class="sidebar-link sidebar-link-child" href="<?=base_url('admin/broadcast-whatsapp')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Broadcast WhatsApp
 				</a>
 			</li>
 		</ul>

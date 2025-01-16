@@ -876,6 +876,7 @@
                             ->where('temp_count <=', 2)
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('created_date', 'asc')
+                            ->order_by('flag_prioritas', 'desc')
                             ->limit(5)
                             ->get()->result_array();
 

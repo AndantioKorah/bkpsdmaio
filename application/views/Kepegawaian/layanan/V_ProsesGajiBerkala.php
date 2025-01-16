@@ -78,7 +78,11 @@
         <button id="btn_tolak_verifikasi" onclick="batalVerifProsesKgb('<?=$result[0]['id'];?>')" type="button" class="btn btn-sm btn-danger">
         Batal Verif
         </button>
-       
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalDetailVerifikasi">
+        Detail Verifikasi
+       </button>
+        
+
         <?php if($result[0]['status'] == 1){ ?>
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
         Download Draf SK
@@ -94,7 +98,7 @@
        
        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
        <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
-       <button onclick="deleteFile('')"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+       <button onclick="deleteFileKgb('<?=$result[0]['id'];?>','<?=$result[0]['id_peggajiberkala'];?>','90','<?=$result[0]['id_pegawai'];?>')"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
        <i class="fa fa-file-trash"></i> Hapus File</button>
 
        <?php } ?>
@@ -534,6 +538,38 @@
 </div>
 <?php } ?>
 
+
+<!-- Modal -->
+<div class="modal fade" id="modalDetailVerifikasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      <div class="form-group row">
+        <label for="staticEmail" class="col-sm-2 col-form-label">Status</label>
+        <div class="col-sm-10">
+          <input readonly type="text"  class="form-control" value="<?php if($result[0]['status'] != 0) echo "ACC"; else echo "Berkas Tidak Lengkap"; ?>">
+        </div>
+      </div>
+      <div class="form-group row mt-2">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Catatan</label>
+        <div class="col-sm-10">
+        <textarea class="form-control customTextarea" rowspan="5" name="" id="" value="tes" readonly><?=$result[0]['keterangan'];?></textarea>
+        </div>
+      </div>
+
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
 <!-- Modal -->
 <div class="modal fade" id="modalUploadSKKgb" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -557,12 +593,13 @@
           <label >File SK</label>
           <input type="file" class="form-control"  id="pdf_file_berkala" name="file">
           </div>
-          <button class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
+          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 
 		
 <script>
@@ -638,7 +675,7 @@ function openPresensiTab(){
         } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "skkgb"){
-          dir = "arsipgajiberkala/";
+          dir = "arsipgjberkala/";
         } else if(file == "skjabatan"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
@@ -778,11 +815,11 @@ $('#iframe_view_file').on('load', function(){
 }
 
 
-function deleteFile(id,reference_id_dok,id_m_layanan){
+function deleteFileKgb(id,reference_id_dok,id_m_layanan,id_pegawai){
                    
                    if(confirm('Apakah Anda yakin ingin menghapus data?')){
                        $.ajax({
-                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileLayanan/")?>'+id+'/'+reference_id_dok+'/'+id_m_layanan,
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileLayanan/")?>'+id+'/'+reference_id_dok+'/'+id_m_layanan+'/'+id_pegawai,
                            method: 'post',
                            data: null,
                            success: function(){
@@ -822,8 +859,8 @@ function kirimBkad(id,status){
                }
 
     $('#upload_sk_kgb_form').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_uploadkgb').disabled = true;
+        $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#upload_sk_kgb_form');
         var form_data = new FormData(formvalue[0]);

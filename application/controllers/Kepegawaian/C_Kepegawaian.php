@@ -2484,9 +2484,9 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->uploadSKLayanan());
 	}
 
-	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan)
+	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {
-        $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan);
+        $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan,$id_pegawai);
     }
 
 	public function kirimBkad($id,$status)
@@ -2580,6 +2580,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat_nosk'] = $this->input->post('pangkat_nosk');
 		$data['pangkat_mkg'] = $this->input->post('pangkat_mkg');
 		$data['pangkat_tglsk'] = $this->input->post('pangkat_tglsk');
+		
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['skpd']);
+        $nama = str_replace('.', '', $data['profil_pegawai']['nama']);
 
 		$nominal = str_replace('.', '', $this->input->post('gajibaru'));
 		// $nominal = 50;
@@ -2602,7 +2605,7 @@ class C_Kepegawaian extends CI_Controller
 				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
 				$mpdf->WriteHTML($html);
 				$mpdf->showImageErrors = true;
-				$mpdf->Output('Draf SK Pangkat.pdf', 'D');
+				$mpdf->Output('Draf_SK_Kenaikan_Gaji_Berkala '.$nama.'.pdf', 'D');
 		
         }
 	

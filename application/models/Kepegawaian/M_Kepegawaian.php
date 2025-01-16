@@ -9911,7 +9911,7 @@ public function getFileForVerifLayanan()
             $datainsKgb["id_pegawai"] = $dataKgb[0]['id_pegawai'];
             $datainsKgb["pangkat"] = $dataKgb[0]['pangkat'];
             $datainsKgb["masakerja"] =$dataKgb[0]['masakerja'];
-            $datainsKgb["pejabat"] = "WALI KOTA";
+            $datainsKgb["pejabat"] = "Wali Kota Manado";
             $datainsKgb["nosk"] = $dataKgb[0]['nosk'];
             $datainsKgb["tglsk"] = $dataKgb[0]['tglsk'];
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
@@ -9919,10 +9919,13 @@ public function getFileForVerifLayanan()
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
             $datainsKgb["status"] = 2;
             $datainsKgb["gambarsk"] = $data['file_name'];
+          
+            $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
+            $id_peggajiberkala = $this->db->insert_id();
+            $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
             $this->db->where('id', $id)
             ->update('t_gajiberkala', $datainsKgb);
             
-            $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
         }
@@ -9931,13 +9934,13 @@ public function getFileForVerifLayanan()
     }
 
 
-    public function deleteFileLayanan($id_usul,$reference_id_dok,$id_m_layanan){
+    public function deleteFileLayanan($id_usul,$reference_id_dok,$id_m_layanan, $id_pegawai){
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
 
         $this->db->trans_begin();
-
+       
         $dataLayanan = $this->db->select('c.*,a.*')
         ->from('t_layanan a')
         ->join('m_user b', 'a.id_m_user = b.id')
@@ -9945,29 +9948,30 @@ public function getFileForVerifLayanan()
         ->where('a.id', $id_usul)
         ->get()->row_array();
 
-
-            $data["reference_id_dok"] = null; 
-            $this->db->where('id', $id_usul)
-                    ->update('t_layanan', $data);
-                  
         // PANGKAT 
         if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 0){
-            $this->db->where('id', $reference_id_dok)
+        $data["reference_id_dok"] = null; 
+        $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+                  
+        $this->db->where('id', $reference_id_dok)
                     ->update('db_pegawai.pegpangkat', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         $this->updatePangkat($dataLayanan['id_peg']);
         }
-
-        // $message = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n. Terima kasih.".FOOTER_MESSAGE_CUTI;
-        // $cronWa = [
-        //     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
-        //     'message' => $message,
-        //     'type' => 'text',
-        //     'jenis_layanan' => 'Pangkat',
-        //     'created_by' => $this->general_library->getId()
-        // ];
-        // $this->db->insert('t_cron_wa', $cronWa);
-
          // PANGKAT
+
+        // GAJI BERKALA 
+        if($id_m_layanan == 90){
+            $data["id_peggajiberkala"] = null; 
+            $data["status"] = 1;
+            $this->db->where('id', $id_usul)
+                        ->update('t_gajiberkala', $data);
+                      
+            $this->db->where('id', $reference_id_dok)
+                        ->update('db_pegawai.peggajiberkala', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+            $this->updateBerkala($id_pegawai);
+            }
+        // GAJI BERKALA
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -10080,7 +10084,7 @@ public function getFileForVerifLayanan()
         ->where('a.id_m_user', $this->general_library->getId())
         ->where('a.flag_active', 1)
         ->where('a.id_m_layanan', $id_m_layanan)
-        // ->where('a.status', 0)
+        ->where_in('a.status', [0,2])
         ->get()->result_array();
 
         if($cek){

@@ -287,7 +287,7 @@ Gaji Pokok yang baru
 4. Kepala Kantor Pembendaharaan dan Kas Negara Manado di Manado,<br>
 5. Kepala Tata Usaha Anggaran Manado di Manado,<br>
 6. Kepala Kantor Cabang Utama PT. Taspen (Persero) Manado di Manado,<br>
-7. Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado di Manado,<br>
+7. Kepala <?=$profil_pegawai['nm_unitkerja'];?> Kota Manado di Manado,<br>
 8. Bendaharawan Pembuat Daftar Gaji yang bersangkutan,<br>
 9. Pegawai yang bersangkutan,<br>
 10.Untuk Berkas.

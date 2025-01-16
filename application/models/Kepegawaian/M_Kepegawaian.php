@@ -7457,6 +7457,7 @@ public function submitEditJabatan(){
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
                             ->where('a.id_t_nomor_surat !=', 0)
+                            ->group_by('a.id')
                             // ->where('id_m_jenis_ds', $data['jenis_layanan'])
                             ->order_by('a.created_date', 'desc');
                             // ->get()->result_array();

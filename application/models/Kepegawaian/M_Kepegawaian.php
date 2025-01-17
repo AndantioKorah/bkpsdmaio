@@ -9117,7 +9117,8 @@ public function getFileForKarisKarsu()
 
     public function verifDokumenPdm($id, $status){
         $rs['code'] = 0;        
-        $rs['message'] = 'OK';        
+        $rs['message'] = 'OK';
+
         $this->db->trans_begin();
 
         $tabel = $this->input->post('tabel');
@@ -9129,6 +9130,8 @@ public function getFileForKarisKarsu()
         $this->db->where('id', $id)
             ->update($tabel, $data_verif);
         
+        // insert bidik disini
+
         if($tabel == "db_pegawai.pegjabatan"){
             $this->updateJabatan($id_peg);
         }
@@ -9151,19 +9154,19 @@ public function getFileForKarisKarsu()
 
         $eselonPeg = $this->general_library->getEselonPegawai($id_peg);  
         if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
-        $id = 1;
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+            $id = 1;
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
         } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
-        $id = 2;
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
+            $id = 2;
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,3,$id);
         } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
         $id = 3;
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         } else {
-        $id = 4;
-        $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
+            $id = 4;
+            $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         }
         
         return $rs;

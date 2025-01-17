@@ -12,57 +12,17 @@
 </style>
 
 <div class="row p-3">
-    <div class="col-lg-6" style="min-height: 75vh; overflow-x: auto;">
+    <div class="col-lg-6" style="max-height: 75vh; overflow-x: auto;">
         <div class="row">
             <div class="col-lg-12">
-                BORADCAST TO:
+                BORADCAST TO: <?=formatCurrencyWithoutRpWithDecimal(count($selectedNip), 0)?> Pegawai
                 <hr>
             </div>
         </div>
-        <?php if($list_pegawai){ foreach($list_pegawai as $lp){ ?>
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <center>
-                            <!-- <img style="width: 75px; height: 75px" class="img-fluid rounded-circle mb-2 b-lazy"
-                            src="<?=$this->general_library->getFotoPegawai($lp['fotopeg'])?>"/> -->
-                            <img style="width: 75px; height: 75px;object-fit: cover" class="img-fluid rounded-circle mb-2 b-lazy"
-                            src="<?php
-                                $path = './assets/fotopeg/'.$lp['fotopeg'];
-                                // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                if($lp['fotopeg']){
-                                if (file_exists($path)) {
-                                $src = './assets/fotopeg/'.$lp['fotopeg'];
-                                //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                } else {
-                                $src = './assets/img/user.png';
-                                // $src = '../siladen/assets/img/user.png';
-                                }
-                                } else {
-                                $src = './assets/img/user.png';
-                                }
-                                echo base_url().$src;?>" /> 
-                        </center>
-                    </div>
-                    <div class="col-lg-9">
-                        <table class="table_data" style="line-height: 15px;">
-                            <tr>
-                                <td><span class="value_tabel"><?=getNamaPegawaiFull($lp)?></span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="sec_value"><?=($lp['nipbaru_ws'])?></span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="sec_value"><?=($lp['nm_pangkat'])?></span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="sec_value"><?=($lp['nama_jabatan'])?></span></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+        <?php if($list_pegawai){ ?>
+            <div class="col-lg-12" id="list_selected_pegawai">
             </div>
-        <?php } } ?>
+        <?php } ?>
     </div>
     <div class="col-lg-6">
         <div class="row">
@@ -97,7 +57,7 @@
                             <label>Pesan Broadcast</label>
                             <textarea class="form-control" rows=5 name="pesan_broadcast"></textarea>
                         </div>
-                        <div class="col-lg-12 mt-3">
+                        <div class="col-lg-12 mt-3 text-right">
                             <button id="btn_submit" class="btn btn-navy">SUBMIT BROADCAST</button>
                             <button disabled id="btn_submit_loading" style="display: none;" class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                         </div>
@@ -110,7 +70,16 @@
 <script>
     $(function(){
         $('#jenis_pesan').select2()
+        loadSelectedPegawai(10)
     })
+
+    function loadSelectedPegawai(limit){
+        $('#list_selected_pegawai').html('')
+        $('#list_selected_pegawai').append(divLoaderNavy)
+        $('#list_selected_pegawai').load('<?=base_url("admin/C_Admin/loadSelectedPegawai/")?>'+limit, function(){
+            $('#loader').hide()
+        })
+    }
 
     $('#form_broadcast').on('submit', function(e){
         $('#btn_submit').hide()

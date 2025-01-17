@@ -282,6 +282,7 @@ ol {
           </div>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
           <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+          <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
 					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
 					<input type="hidden" id="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
@@ -604,6 +605,7 @@ $(function(){
 
 
         var sk_cpns = $('#sk_cpns').val()
+        var sk_pns = $('#sk_pns').val()
         var sk_pangkat = $('#sk_pangkat').val()
         var skp1 = $('#skp1').val()
         var skp2 = $('#skp2').val()
@@ -619,6 +621,10 @@ $(function(){
        
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
         if(sk_cpns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_pns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }

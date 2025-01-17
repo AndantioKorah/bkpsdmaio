@@ -490,6 +490,31 @@
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
+        <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+          <input type="text" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+          <input type="text" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+          <input type="text" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+          <input type="text" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+					<input type="text" id="skp1" name="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+					<input type="text" id="skp2" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
+					<?php } ?>
+          <?php if($id_m_layanan == 7) { ?>
+					<input type="text"  name="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
+					<input type="text" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+
+          <?php } ?>
+          <?php if($id_m_layanan == 8) { ?>
+					<input type="text" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
+					<input type="text" name="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
+					<input type="text" name="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
+          <?php } else if($id_m_layanan == 9) { ?>
+          <input type="text" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
+					<input type="text" name="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
+					<input type="text" name="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
+					<input type="text" name="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
+					<input type="text" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
+          <?php } ?>
+
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -705,7 +730,7 @@ function openPresensiTab(){
                   $('#btn_tolak_verifikasi').show()
                   // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
-                  location.reload()
+                  // location.reload()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

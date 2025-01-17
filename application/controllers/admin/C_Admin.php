@@ -101,14 +101,34 @@ class C_Admin extends CI_Controller
 		$data['selectedNip'] = $this->input->post('list_nip');
         $this->session->set_userdata('selected_nip_broadcast', $data['selectedNip']);
 		$data['list_pegawai'] = $this->admin->getListDetailPegawai($data['selectedNip']);
-        $data['sisa'] = 0;
-        if(count($data['selectedNip']) > 10){
-            $data['sisa'] = count($data['selectedNip']) - 10;
-        }
+        // $data['sisa'] = 0;
+        // if(count($data['selectedNip']) > 10){
+        //     $data['sisa'] = count($data['selectedNip']) - 10;
+        // }
         $this->load->view('admin/V_BroadcastWhatsappModal', $data);
 	}
 
+    public function loadSelectedPegawai($limit){
+		$data['selectedNip'] = $this->session->userdata('selected_nip_broadcast');
+		$data['list_pegawai'] = $this->admin->getListDetailPegawai($data['selectedNip'], $limit);
+        $data['sisa'] = 0;
+        if($limit != 'all' && count($data['selectedNip']) > $limit){
+            $data['sisa'] = count($data['selectedNip']) - $limit;
+        }
+        $this->load->view('admin/V_BroadcastWhatsappListSelectedPegawai', $data);
+    }
+
     public function submitBroadcast(){
         echo json_encode($this->admin->submitBroadcast());
+    }
+
+    public function loadBroadcastHistory(){
+        $data['result'] = $this->admin->loadBroadcastHistory();
+        $this->load->view('admin/V_BroadcastWhatsappHistory', $data);
+    }
+
+    public function detailBroadcast($id){
+        $data['result'] = $this->admin->loadDetailBroadcast($id);
+        $this->load->view('admin/V_BroadcastWhatsappHistoryDetail', $data);
     }
 }

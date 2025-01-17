@@ -15,8 +15,8 @@ class M_Admin extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    public function getListDetailPegawai($list){
-        return $this->db->select('a.*, b.nama_jabatan, c.nm_unitkerja, d.nm_pangkat')
+    public function getListDetailPegawai($list, $limit = 'all'){
+        $this->db->select('a.*, b.nama_jabatan, c.nm_unitkerja, d.nm_pangkat')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                         ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
@@ -24,9 +24,14 @@ class M_Admin extends CI_Model
                         ->where_in('a.nipbaru_ws', $list)
                         ->order_by('b.eselon', 'asc')
                         ->order_by('d.id_pangkat', 'desc')
-                        ->order_by('a.nama', 'asc')
-                        ->limit(10)
-                        ->get()->result_array();
+                        ->order_by('a.nama', 'asc');
+                        // ->limit(10)
+                        // ->get()->result_array();
+        if($limit != 'all'){
+            $this->db->limit($limit);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function submitBroadcast(){
@@ -113,5 +118,45 @@ class M_Admin extends CI_Model
         }
 
         return $rs;
+    }
+
+    public function loadBroadcastHistory(){
+        return $this->db->select('a.*, c.*,
+                            (
+                                SELECT COUNT(bb.id)
+                                FROM t_cron_wa bb
+                                WHERE a.id = bb.id_t_broadcast
+                                GROUP BY bb.id_t_broadcast
+                            ) as jumlah_pegawai
+                        ')
+                        ->from('t_broadcast a')
+                        ->join('m_user b', 'a.created_by = b.id')
+                        ->join('db_pegawai.pegawai c', 'c.nipbaru = b.username')
+                        ->where('a.flag_active', 1)
+                        ->order_by('created_date', 'desc')
+                        ->get()->result_array();
+    }
+
+    public function loadDetailBroadcast($id){
+        $rs['data'] = $this->db->select('a.*, c.*,
+                                        (
+                                            SELECT COUNT(bb.id)
+                                            FROM t_cron_wa bb
+                                            WHERE a.id = bb.id_t_broadcast
+                                            GROUP BY bb.id_t_broadcast
+                                        ) as jumlah_pegawai
+                                        ')
+                                ->from('t_broadcast a')
+                                ->join('m_user b', 'a.created_by = b.id')
+                                ->join('db_pegawai.pegawai c', 'c.nipbaru = b.username')
+                                ->where('a.flag_active', 1)
+                                ->where('a.id', $id)
+                                ->order_by('created_date', 'desc')
+                                ->get()->result_array();
+
+        $rs['list'] = $this->db->select('a.*')
+                            ->from('t_cron_wa a')
+                            ->where('a.id_t_broadcast', $id)
+                            ->get()->result_array();
     }
 }

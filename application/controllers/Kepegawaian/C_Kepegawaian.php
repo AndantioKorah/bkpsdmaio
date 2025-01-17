@@ -2348,6 +2348,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
 		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
+		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+	
 
 		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
 			if($id_layanan == 7){
@@ -2482,9 +2484,9 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->uploadSKLayanan());
 	}
 
-	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan)
+	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {
-        $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan);
+        $this->kepegawaian->deleteFileLayanan($id,$reference_id_dok,$id_m_layanan,$id_pegawai);
     }
 
 	public function kirimBkad($id,$status)
@@ -2543,7 +2545,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function prosesGajiBerkala($nip,$tahun){
 		
-		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);
 		$id_pegawai = $data['profil_pegawai']['id_peg'];
 		$data['result'] = $this->kepegawaian->cekProsesKenaikanBerkala($id_pegawai,$tahun);
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
@@ -2573,6 +2575,20 @@ class C_Kepegawaian extends CI_Controller
 		$data['tmt_kgb_baru'] = $this->input->post('edit_tmt_gaji_berkala');
 		$data['nosk'] = $this->input->post('edit_gb_no_sk');
 		$data['tglsk'] = $this->input->post('edit_gb_tanggal_sk');
+		$data['pangkat_pejabat'] = $this->input->post('pangkat_pejabat');
+		$data['pangkat_tmt'] = formatDateNamaBulan($this->input->post('pangkat_tmt'));
+		$data['pangkat_nosk'] = $this->input->post('pangkat_nosk');
+		$data['pangkat_mkg'] = $this->input->post('pangkat_mkg');
+		$data['pangkat_tglsk'] = $this->input->post('pangkat_tglsk');
+		
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['skpd']);
+        $nama = str_replace('.', '', $data['profil_pegawai']['nama']);
+
+		$nominal = str_replace('.', '', $this->input->post('gajibaru'));
+		// $nominal = 50;
+
+		$data['terbilang']= terbilang($nominal);
+
 
 		$this->kepegawaian->simpanDataDrafKgb();
 
@@ -2589,7 +2605,7 @@ class C_Kepegawaian extends CI_Controller
 				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
 				$mpdf->WriteHTML($html);
 				$mpdf->showImageErrors = true;
-				$mpdf->Output('Draf SK Pangkat.pdf', 'D');
+				$mpdf->Output('Draf_SK_Kenaikan_Gaji_Berkala '.$nama.'.pdf', 'D');
 		
         }
 	

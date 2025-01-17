@@ -144,6 +144,7 @@
                                     <option value="991" >Semua SD</option>
                                     <option value="992" >Semua SMP</option>
                                     <option value="993" >Semua UPTD Dinas kesehatan</option>
+                                    <option value="994" >Diluar Guru dan Tenaga Kesehatan</option>
                                 </select>
                             </div>
                         </div>

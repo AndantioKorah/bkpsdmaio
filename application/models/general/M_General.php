@@ -875,7 +875,7 @@
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('created_date', 'asc')
                             ->order_by('flag_prioritas', 'desc')
-                            ->limit(5)
+                            ->limit(10)
                             ->get()->result_array();
 
             if($list){

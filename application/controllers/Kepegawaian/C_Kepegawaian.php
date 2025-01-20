@@ -2438,6 +2438,44 @@ class C_Kepegawaian extends CI_Controller
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9){
+			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$currentYear = date('Y'); 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
+		$data['tahun_1_lalu'] = $previous1Year;
+		$data['tahun_2_lalu'] = $previous2Year;
+		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
+		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
+		if($layanan == 7){
+			$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+			$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
+			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+			$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+			$data['petajabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+		
+		}
+		if($layanan == 8){
+			$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();
+			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+			$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','67','0');	
+		}
+		if($layanan == 9){
+			$data['uraiantugas'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','15','0');	
+			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+			$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
+			$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');	
+			$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
+			$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+		}
+
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		}
 	}

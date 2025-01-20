@@ -9657,8 +9657,9 @@ public function getFileForVerifLayanan()
         $res['data'] = null;
 
         $datapost = $this->input->post();
-        
+        // dd($datapost);
         $this->db->trans_begin();
+
 
           
         $id_pengajuan = $datapost['id_pengajuan'];
@@ -9677,10 +9678,38 @@ public function getFileForVerifLayanan()
                 ->where('c.id', $id_pengajuan)
                 ->get()->result_array();
 
-
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";
             $statusForMessage = "disetujui";
+
+            if($datapost['skp1']){
+                $this->verifBerkas($datapost['skp1'], "db_pegawai.pegskp");
+            }
+            if($datapost['skp2']){
+                $this->verifBerkas($datapost['skp2'], "db_pegawai.pegskp");
+            }
+            if($datapost['sk_cpns']){
+                $this->verifBerkas($datapost['sk_cpns'], "db_pegawai.pegberkaspns");
+            }
+            if($datapost['sk_pns']){
+                $this->verifBerkas($datapost['sk_pns'], "db_pegawai.pegberkaspns");
+            }
+            if(isset($datapost['diklat'])){
+                $this->verifBerkas($datapost['diklat'], "db_pegawai.pegdiklat");
+            }
+            if($datapost['sk_pangkat']){
+                $this->verifBerkas($datapost['sk_pangkat'], "db_pegawai.pegpangkat");
+                $this->updatePangkat($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['sk_jabatan'])){
+
+                $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
+                $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+
+            
+          
+
         } else if($dataPengajuan[0]['status'] == 2){
             $status = "Ditolak";
             $statusForMessage = "ditolak";
@@ -9707,6 +9736,12 @@ public function getFileForVerifLayanan()
         }
 
         return $res;
+    }
+
+    function verifBerkas($id,$tabel){
+        $data["status"] = 2;
+        $this->db->where('id', $id)
+        ->update($tabel, $data);
     }
 
    
@@ -9995,7 +10030,7 @@ public function getFileForVerifLayanan()
         ->where('jenisdiklat', "00")
         ->where('jenjang_diklat', 2)
         ->where('flag_active', 1)
-        ->where('status', 2)
+        ->where('status', 1)
         ->order_by('id', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegdiklat');

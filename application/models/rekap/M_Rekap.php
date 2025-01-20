@@ -1151,7 +1151,8 @@
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                                     ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                    ->where('a.nipbaru_ws', '198811072010012001')
+                                    // ->where('a.nipbaru_ws', '198811072010012001')
+                                    ->where('a.nipbaru_ws', '199704282020122021')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array(); 
 
@@ -2844,6 +2845,11 @@
                     // }
 
                     $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
+                    // if($this->general_library->isProgrammer()){
+                    //     // dd($result[$l['nipbaru_ws']]);
+                    //     $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
+                    //     dd($result[$l['nipbaru_ws']]['pph']);
+                    // }
                     $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                     // $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);
                     // $whole = $result[$l['nipbaru_ws']]['nominal_pph'] - $rounded;

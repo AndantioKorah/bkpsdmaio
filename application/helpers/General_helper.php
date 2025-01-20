@@ -480,6 +480,65 @@ function generateRandomNumber($length = 10)
     return $randomString;
 }
 
+function getPphByPenghasilanBruto($nominal){
+
+    if($nominal <= 5400000){
+        return 0;
+    } else if($nominal > 5400000 && $nominal <= 5650000){
+        return 0.25;
+    } else if($nominal > 5650000 && $nominal <= 5950000){
+        return 0.5;
+    } else if($nominal > 5950000 && $nominal <= 6300000){
+        return 0.75;
+    } else if($nominal > 6300000 && $nominal <= 6750000){
+        return 1;
+    } else if($nominal > 6750000 && $nominal <= 7500000){
+        return 1.25;
+    } else if($nominal > 7500000 && $nominal <= 8550000){
+        return 1.5;
+    } else if($nominal > 8550000 && $nominal <= 9650000){
+        return 1.75;
+    } else if($nominal > 9650000 && $nominal <= 10050000){
+        return 2;
+    } else if($nominal > 9650000 && $nominal <= 10350000){
+        return 2.25;
+    } else if($nominal > 10350000 && $nominal <= 10700000){
+        return 2.5;
+    } else if($nominal > 10700000 && $nominal <= 11050000){
+        return 3;
+    } else if($nominal > 11050000 && $nominal <= 11600000){
+        return 3.5;
+    } else if($nominal > 11600000 && $nominal <= 12500000){
+        return 4;
+    } else if($nominal > 12500000 && $nominal <= 13750000){
+        return 5;
+    } else if($nominal > 13750000 && $nominal <= 15100000){
+        return 6;
+    } else if($nominal > 15100000 && $nominal <= 16950000){
+        return 7;
+    } else if($nominal > 16950000 && $nominal <= 19750000){
+        return 8;
+    } else if($nominal > 19750000 && $nominal <= 24150000){
+        return 9;
+    } else if($nominal > 24150000 && $nominal <= 26450000){
+        return 10;
+    } else if($nominal > 26450000 && $nominal <= 28000000){
+        return 11;
+    } else if($nominal > 28000000 && $nominal <= 30050000){
+        return 12;
+    } else if($nominal > 30050000 && $nominal <= 32400000){
+        return 13;
+    } else if($nominal > 32400000 && $nominal <= 35400000){
+        return 14;
+    } else if($nominal > 35400000 && $nominal <= 39100000){
+        return 15;
+    } else if($nominal > 39100000 && $nominal <= 43850000){
+        return 16;
+    } else {
+        return null;
+    }
+}
+
 function getPphByIdPangkat($id_pangkat)
 {
     if (in_array($id_pangkat, [31, 32, 33, 34, 59, 60])) {

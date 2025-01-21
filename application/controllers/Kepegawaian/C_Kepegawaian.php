@@ -1137,6 +1137,10 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->updateTmBerkala());
 	}
+	public function updateJenisKelamin()
+	{ 
+		echo json_encode( $this->kepegawaian->updateJenisKelamin());
+	}
 
 
 	
@@ -2646,7 +2650,20 @@ class C_Kepegawaian extends CI_Controller
 				$mpdf->Output('Draf_SK_Kenaikan_Gaji_Berkala '.$nama.'.pdf', 'D');
 		
         }
+
+		public function loadListGajiBerkalaSelesai(){
+			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+			render('kepegawaian/layanan/V_GajiBerkalaSelesai', '', '', $data);
+		}
 	
+		public function loadListGajiBerkalaSelesaiItem(){
+			$data['result'] = $this->kepegawaian->loadListGajiBerkalaSelesai();
+			$data['param'] = $this->input->post();
+			$data['tahun'] = $this->input->post('gb_tahun');
+			$this->load->view('kepegawaian/layanan/V_GajiBerkalaSelesaiItem', $data);
+		}
+
+		
 
 
 

@@ -2286,8 +2286,8 @@
         ->group_by('a.id_m_user')
         ->order_by('a.tanggal_absensi', 'asc');
         $result = $this->db->get()->result_array();
-        
-        if($status == 3){
+        // dd($status);
+        if($status == 2 || $status == 3){
             $data_verif['status'] = $status;
             $data_verif['id_m_user_verif'] = $this->general_library->getId();
             $data_verif['updated_by'] = $this->general_library->getId();

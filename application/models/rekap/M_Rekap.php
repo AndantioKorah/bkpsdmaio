@@ -1088,6 +1088,7 @@
                                 ->where('id_m_status_pegawai', 1)
                                 ->get()->result_array();
         } else if(stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){ // jika puskes, cari kepalaskpd, bendahara dan kasubag umum di dinkes
+            $result['flag_puskesmas'] = 1;
             $list_pegawai_unor_induk = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                 ->from('db_pegawai.pegawai a')
@@ -1142,7 +1143,10 @@
         || stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])
         || $id_unitkerja == 6160000
         || $id_unitkerja == 7005020
-        || $id_unitkerja == 7005010){ 
+        || $id_unitkerja == 7005010){
+            if(stringStartWith('Puskesmas', $unitkerja['nm_unitkerja'])){
+                $result['flag_puskesmas'] = 1;
+            } 
             // jika dinkes, puskes dan instalasi farmasi, ambil bendahara hardocde yang ada
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1177,10 +1181,11 @@
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                                     ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                    ->where('a.nipbaru_ws', '197205032000032006')
+                                    // ->where('a.nipbaru_ws', '197205032000032006')
+                                    ->where('a.nipbaru_ws', '198604132010012005')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
-            } 
+            }
         }
 
         if($list_pegawai_unor_induk){
@@ -1205,7 +1210,7 @@
                 }
             }
         }
-        
+
         if($unitkerja['nip_kepalaskpd_hardcode']){
             $tempresult['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                 e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
@@ -1230,10 +1235,6 @@
                 $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
             }
         }
-
-        // if($id_unitkerja == 6090000){
-        //     dd($result);
-        // }
 
         // if($this->general_library->isProgrammer()){
         //     dd($result);
@@ -2844,6 +2845,11 @@
                     // }
 
                     $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
+                    // if($this->general_library->isProgrammer()){
+                    //     // dd($result[$l['nipbaru_ws']]);
+                    //     $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
+                    //     dd($result[$l['nipbaru_ws']]['pph']);
+                    // }
                     $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                     // $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);
                     // $whole = $result[$l['nipbaru_ws']]['nominal_pph'] - $rounded;

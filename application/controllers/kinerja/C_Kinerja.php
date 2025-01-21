@@ -732,6 +732,11 @@ class C_Kinerja extends CI_Controller
 
     public function checkMaxDate(){
         $data = $this->input->post();
+        // $res = null;
+        // if($this->general_library->isProgrammer()){
+        //     // dd($data);
+        //     $res['syaratDisker'] = $this->kinerja->cekSyaratDisker($data);
+        // }
         $res = countMaxDateUpload(formatDateOnlyForEdit($data['date']), $data['max'], $data['operand']);
         echo json_encode($res);
     }

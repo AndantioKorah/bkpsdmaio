@@ -1558,14 +1558,42 @@
         }
 
         $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
-        
-        $explode_tanggal_awal = explode('-', $tanggal[0]);
-        $explode_tanggal_akhir = explode('-', $tanggal[1]);
+        $list_hari_kerja = null;
 
         $list_pegawai = null;
         foreach($data['pegawai'] as $dp){
             $list_pegawai[] = $dp;
         }
+
+        if($this->general_library->isProgrammer()){
+            $list_hari_kerja = countHariKerjaDateToDate($tanggal[0], $tanggal[1]);
+            $count_hari_kerja_bulan = null;
+            if($jenis_disiplin[0] == 2){
+                // if(count($list_hari_kerja[3]) >= 2){
+                    $lkBulan = null;
+                    foreach($list_hari_kerja[3] as $lk){
+                        $explTanggalHk = explode("-", $lk);
+                        $count_hari_kerja_bulan[$explTanggalHk[0].$explTanggalHk[1]][] = $lk;
+                        // dd($lk);
+                        $exBk = explode("-", $lk);
+                        if(isset($lkBulan[$exBk[1]])){
+                            $lkBulan[$exBk[1]]++;
+
+                            if($lkBulan[$exBk[1]] > 2){ // jika ijin lebih dari 2 hari kerja dalam bulan yang sama
+                                $res['code'] = 1;
+                                $res['message'] = 'Maksimal pengajuan Izin adalah 2 hari kerja berturut-turut di bulan yang sama.';
+                                return $res;
+                            }
+                        } else {
+                            $lkBulan[$exBk[1]] = 1;
+                        }
+                    }
+                // }
+            }
+        }
+        
+        $explode_tanggal_awal = explode('-', $tanggal[0]);
+        $explode_tanggal_akhir = explode('-', $tanggal[1]);
 
         $list_nama_pegawai = $this->db->select('*')
                                     ->from('m_user')
@@ -1601,9 +1629,45 @@
         $insert_data = null;
         $i = 0;
         $batchId = null;
+        $existIzin = null;
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
-            foreach($list_tanggal as $l){
+            // foreach($list_tanggal as $l){
+            foreach($list_hari_kerja[3] as $l){
+                $explTanggal = explode("-", $l);
+                // $list_hari_kerja[$explTanggal[0].$explTanggal[1]] = 
+                if($disiplin[0] == 2){
+                    if($this->general_library->isProgrammer()){
+                        $paramExistIzin = $d['id'].$explTanggal[0].$explTanggal[1]; // buat key id.tahun.bulan untuk cek akumulasi izin
+                        $existIzin = null;
+                        if(isset($existIzin[$paramExistIzin])){
+
+                        } else {
+                            // cari data izin di bulan tersebut untuk setiap pegawai
+                            $existIzin[$paramExistIzin] = $this->db->select('*')
+                                                                    ->from('t_dokumen_pendukung')
+                                                                    ->where('status !=', 3)
+                                                                    ->where('id_m_user', $d['id'])
+                                                                    ->where('bulan', intval($explTanggal[1]))
+                                                                    ->where('tahun', intval($explTanggal[0]))
+                                                                    ->where('id_m_jenis_disiplin_kerja', $disiplin[0])
+                                                                    ->where('flag_active', 1)
+                                                                    ->get()->result_array();
+                        }
+                        // dd($count_hari_kerja_bulan);
+                        if(isset($count_hari_kerja_bulan[$explTanggal[0].$explTanggal[1]])){
+                            // dd(count($count_hari_kerja_bulan[$explTanggal[0].$explTanggal[1]]).'  '.count($existIzin[$paramExistIzin]));
+                            $total_ijin = count($existIzin[$paramExistIzin]) 
+                                            + count($count_hari_kerja_bulan[$explTanggal[0].$explTanggal[1]]);
+                            // dd($total_ijin);
+                            if($total_ijin > 3){
+                                $res['code'] = 1;
+                                $res['message'] = 'Gagal mengisi Dokumen Pendukung Presensi. Akumulasi Izin untuk pegawai atas nama '.$d['nama'].' telah melebihi batas maksimal 3 kali dalam bulan yang sama.';
+                                return $res;  
+                            }
+                        }
+                    }
+                }
                 if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);
                     // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
@@ -2684,6 +2748,13 @@
             $beban_kerja = "19.014023292059";
         }
         return $beban_kerja;
+    }
+
+    public function cekSyaratDisker($data, $nip){
+        $explDisker = explode(";", $data);
+        if($explDisker[0] == 2){
+
+        }
     }
 
     public function checkLockTpp(){

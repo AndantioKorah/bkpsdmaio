@@ -10,9 +10,10 @@
           
           <?php if($kode == 2) { ?>
           <th class="text-left">Keterangan</th>
+         
           <th class="text-left">  </th>
           <?php } ?>
-     
+          <th class="text-left">Tanggal Upload</th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -50,7 +51,7 @@
 
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
-                <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+                <!-- <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>  -->
               </div>
               <?php } ?>
                <?php } ?>
@@ -79,6 +80,9 @@
               <?php } ?>
               </td>
               <?php } ?>
+              <td>
+              <?=$rs['created_date'];?>
+              </td>
             </tr>
           <?php } ?>
         </tbody>

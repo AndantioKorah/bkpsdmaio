@@ -3263,6 +3263,36 @@ public function updateTmBerkala()
 
 }
 
+public function updateJenisKelamin()
+{
+  
+        $this->db->select('*')
+    ->from('db_pegawai.pegawai as a')
+    ->where('a.id_m_status_pegawai',1)
+    ->where('a.jk is null');
+    $result = $this->db->get()->result_array(); 
+   
+    foreach($result as $res){
+
+        // dd($res['nipbaru_ws']);
+        // dd(substr($res['nipbaru_ws'],14,1));
+        // dd(substr("199503222020122021",14,1));
+
+        if(substr($res['nipbaru_ws'],14,1) == 1){
+            $data["jk"] = "Laki-Laki";
+        } else {
+            $data["jk"] = "Perempuan";
+        }
+
+
+           
+            $this->db->where('id_peg', $res['id_peg'])
+            ->update('db_pegawai.pegawai', $data);
+    }
+    
+
+}
+
 
 
 
@@ -10377,6 +10407,23 @@ public function getFileForVerifLayanan()
                        $query = $this->db->get()->row_array();
                        return $query;
    }
+
+   public function loadListGajiBerkalaSelesai(){
+    $data = $this->input->post();
+    $this->db->select('*, a.id as id_t_berkala')
+            ->from('t_gajiberkala a')
+            ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('db_pegawai.peggajiberkala g', 'g.id = a.id_peggajiberkala')
+            ->where('a.flag_active', 1)
+            ->where('a.status', 2)
+            ->where('year(a.tmtgajiberkala)', $data['gb_tahun']);
+            if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+                $this->db->where('e.skpd', $data['id_unitkerja']);
+            }
+
+    return $this->db->get()->result_array();
+}
 
 
 

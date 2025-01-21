@@ -456,8 +456,52 @@
 								</ul>
 							</li>
 		<?php } ?>
+
+		
+		
 		</ul>
-	</li>
+
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
+				<span class="align-middle">
+					Layanan Otomatis
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="datamaster" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+			<li class="sidebar-item">
+								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
+								<i class="align-middle me-2 far fa-circle"></i>Gaji Berkala <i class="fa fa-chevron-down" 
+				style="position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i></a>
+								<ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
+									
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('list-pegawai/gaji-berkala')?>"><i class="fa fa-minus"></i>Gaji Berkala - List</a>
+									</li>
+									<li class="sidebar-item sub-sidebar-item">
+									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/C_Kepegawaian/loadListGajiBerkalaSelesai')?>"><i class="fa fa-minus"></i>Gaji Berkala - Selesai</a>
+									</li>
+									
+								</ul>
+							</li>
+				<li class="sidebar-item ">
+				<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Pangkat
+				</a>
+			</li>
+			</ul>
+		</li>
+		
+
+		
 	<?php } ?>
 	<!-- <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 

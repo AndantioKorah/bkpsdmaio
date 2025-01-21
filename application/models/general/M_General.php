@@ -289,7 +289,7 @@
             $this->db->select('a.id_peg,a.tmtpangkat,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala,
             (select CONCAT(aa.nm_m_user_verif,"|",aa.status) from t_gajiberkala as aa where a.id_peg = aa.id_pegawai and tahun = '.$data['tahun'].' and aa.flag_active = 1 limit 1) as tberkala')
-            ->from('db_pegawai.pegawai a')
+            ->from('db_pegawai.pegawaix a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
@@ -656,7 +656,7 @@
             $result['eselon'] = null;
             $result['agama'] = null;
             $result['pendidikan'] = null;
-            $result['jenis_kelamin']['laki']['nama'] = 'Laki-laki';
+            $result['jenis_kelamin']['laki']['nama'] = 'Laki-Laki';
             $result['jenis_kelamin']['laki']['jumlah'] = 0;
             $result['jenis_kelamin']['perempuan']['nama'] = 'Perempuan';
             $result['jenis_kelamin']['perempuan']['jumlah'] = 0;
@@ -735,12 +735,14 @@
             }
 
             $pegawai = $this->db->select('c.jenis_jabatan,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
+            d.nm_pangkat, a.tgllahir,  c.eselon, d.id_pangkat, a.pendidikan, a.jk, a.statuspeg, a.agama')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('id_m_status_pegawai', 1)
+            // ->where('a.jk', "Perempuan")
+            // ->where('a.jk', "Laki-Laki")
             ->where_not_in('c.id_unitkerja', [5, 9050030])
             ->get()->result_array();
 
@@ -784,7 +786,7 @@
                     $result['agama'][$peg['agama']]['jumlah']++;
                 }
                 
-                if($peg['jk'] == 'Laki-Laki'){
+                if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {
                     $result['jenis_kelamin']['perempuan']['jumlah']++;

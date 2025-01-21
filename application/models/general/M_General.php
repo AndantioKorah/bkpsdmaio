@@ -742,6 +742,7 @@
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->where('id_m_status_pegawai', 1)
             // ->where('a.jk', "Perempuan")
+            // ->where('a.jk', "Laki-Laki")
             ->where_not_in('c.id_unitkerja', [5, 9050030])
             ->get()->result_array();
 
@@ -785,7 +786,7 @@
                     $result['agama'][$peg['agama']]['jumlah']++;
                 }
                 
-                if($peg['jk'] == 'Laki-Laki'){
+                if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
                     $result['jenis_kelamin']['laki']['jumlah']++;
                 } else {
                     $result['jenis_kelamin']['perempuan']['jumlah']++;

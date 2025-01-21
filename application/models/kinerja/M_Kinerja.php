@@ -2287,12 +2287,12 @@
         ->order_by('a.tanggal_absensi', 'asc');
         $result = $this->db->get()->result_array();
         // dd($status);
-        if($status == 2 || $status == 3){
+        if($status == 3 || $status == 2){
             $data_verif['status'] = $status;
             $data_verif['id_m_user_verif'] = $this->general_library->getId();
             $data_verif['updated_by'] = $this->general_library->getId();
             $data_verif['tanggal_verif'] = date('Y-m-d H:i:s');
-            
+            $data_verif['keterangan_verif'] = $this->input->post('keterangan');
             $this->db->where_in('id', $id)
             ->update('t_peninjauan_absensi', $data_verif);
         } else {

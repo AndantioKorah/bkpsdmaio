@@ -182,6 +182,10 @@ class C_User extends CI_Controller
         render('user/V_UserChangePassword', null, null, $data);
     }
 
+    public function requestSendOtp(){
+        echo json_encode($this->user->requestSendOtp());
+    }
+
     public function personalChangePasswordSubmit(){
         echo json_encode($this->user->changePassword($this->input->post()));
         

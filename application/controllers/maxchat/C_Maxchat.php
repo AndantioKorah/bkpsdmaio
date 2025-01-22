@@ -259,7 +259,7 @@ class C_Maxchat extends CI_Controller
             }
         }
 
-        if($reply != null && $reply != "" && ($result->from != GROUP_CHAT_TPP_HARDWORKER || $result->to != GROUP_CHAT_TPP_HARDWORKER)){
+        if($reply != null && $reply != "" && ($result->chat != GROUP_CHAT_TPP_HARDWORKER)){
             if($result->type == "text"){
                 // $log = $this->maxchatlibrary->sendText($sendTo, $reply);
                 $cronWa = [

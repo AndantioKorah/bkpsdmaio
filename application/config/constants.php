@@ -92,6 +92,7 @@ define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'db_efort');
 
+define('ERROR_MESSAGE_RESET_PASSWORD', 'Untuk alasan keamanan, Password harus diganti dan tidak boleh menggunakan Tanggal Lahir. Terima Kasih.');
 
 define('KODE_TRANSAKSI', '01');
 define('KODE_TRANSAKSI_PEMBAYARAN', '02');

@@ -51,6 +51,7 @@
                     <h5 style="
                         font-weight: bold;
                         color: red;
+                        font-size: 1.5rem;
                     ">
                         <?=ERROR_MESSAGE_RESET_PASSWORD?>
                     </h5>
@@ -72,7 +73,7 @@
 		//   $('#error_div').show()
 		//   $('#error_div').append('<label>'+'<?=$this->session->userdata('apps_error')?>'+'</label>')
 		<?php
-		    $this->session->set_userdata('apps_error', null);
+		    // $this->session->set_userdata('apps_error', null);
 		} ?>
     })
 
@@ -106,7 +107,7 @@
         $('#btn_submit_loading').show()
         e.preventDefault()
         $.ajax({
-            url: '<?=base_url("user/C_User/personalChangePasswordSubmit")?>',
+            url: '<?=base_url("user/C_UserWOSession/personalChangePasswordSubmit")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){
@@ -115,7 +116,7 @@
                     errortoast(resp['message'])
                 } else {
                     successtoast("Password Berhasil Diubah")
-                    // window.location.("<?=base_url('welcome')?>")
+                    window.location.replace("<?=base_url('welcome')?>")
                 }
                 $('#password_lama').val("")
                 $('#konfirmasi_password').val("")

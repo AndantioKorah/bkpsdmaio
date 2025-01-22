@@ -1565,7 +1565,7 @@
             $list_pegawai[] = $dp;
         }
 
-        if($this->general_library->isProgrammer()){
+        // if($this->general_library->isProgrammer()){
             $list_hari_kerja = countHariKerjaDateToDate($tanggal[0], $tanggal[1]);
             $count_hari_kerja_bulan = null;
             if($jenis_disiplin[0] == 2){
@@ -1576,6 +1576,7 @@
                         $count_hari_kerja_bulan[$explTanggalHk[0].$explTanggalHk[1]][] = $lk;
                         // dd($lk);
                         $exBk = explode("-", $lk);
+                        
                         if(isset($lkBulan[$exBk[1]])){
                             $lkBulan[$exBk[1]]++;
 
@@ -1590,7 +1591,7 @@
                     }
                 // }
             }
-        }
+        // }
         
         $explode_tanggal_awal = explode('-', $tanggal[0]);
         $explode_tanggal_akhir = explode('-', $tanggal[1]);
@@ -1636,8 +1637,8 @@
             foreach($list_hari_kerja[3] as $l){
                 $explTanggal = explode("-", $l);
                 // $list_hari_kerja[$explTanggal[0].$explTanggal[1]] = 
-                if($disiplin[0] == 2){
-                    if($this->general_library->isProgrammer()){
+                if($disiplin[0] == 2){ // jika izin, masuk sini
+                    // if($this->general_library->isProgrammer()){
                         $paramExistIzin = $d['id'].$explTanggal[0].$explTanggal[1]; // buat key id.tahun.bulan untuk cek akumulasi izin
                         $existIzin = null;
                         if(isset($existIzin[$paramExistIzin])){
@@ -1666,7 +1667,7 @@
                                 return $res;  
                             }
                         }
-                    }
+                    // }
                 }
                 if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);

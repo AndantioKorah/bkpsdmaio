@@ -1,6 +1,6 @@
 <?php
 
-class C_User extends CI_Controller
+class C_UserWOSession extends CI_Controller
 {
     public function __construct()
     {
@@ -9,9 +9,9 @@ class C_User extends CI_Controller
         $this->load->model('user/M_User', 'user');
         $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('master/M_Master', 'master');
-        if(!$this->general_library->isNotMenu()){
-            redirect('logout');
-        };
+        // if(!$this->general_library->isNotMenu()){
+        //     redirect('logout');
+        // };
     }
 
     public function roles(){
@@ -178,8 +178,9 @@ class C_User extends CI_Controller
     }
 
     public function personalChangePassword(){
+        $data['flag_need_reset_pass'] = 1;
         $data['otp'] = $this->user->sendOtpResetPassword();
-        render('user/V_UserChangePassword', null, null, $data);
+        render('user/V_UserChangePasswordNoss', null, null, $data);
     }
 
     public function personalChangePasswordSubmit(){

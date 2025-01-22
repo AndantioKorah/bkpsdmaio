@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <?php if($otp["message"]){ ?>
-            <h4 style="
+            <h4 id="blue_message" style="
                 font-weight: bold;
                 font-size: .85rem;
                 color: blue;
@@ -122,6 +122,7 @@
                 $('#konfirmasi_password').val("")
                 $('#password_baru').val("")
                 $('#kode_otp').val("")
+                $('#blue_message').hide()
 
                 $('#btn_submit').show()
                 $('#btn_submit_loading').hide()

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
         <?php if($otp["message"]){ ?>
-            <h4 style="
+            <h4 id="blue_message" style="
                 font-weight: bold;
                 font-size: .85rem;
                 color: blue;
@@ -52,7 +52,7 @@
                         font-weight: bold;
                         color: red;
                     ">
-                        Password harus diganti terlebih dahulu agar proses dapat dilanjutkan.
+                        <?=ERROR_MESSAGE_RESET_PASSWORD?>
                     </h5>
                 </div>
             <?php } ?>
@@ -121,6 +121,7 @@
                 $('#konfirmasi_password').val("")
                 $('#password_baru').val("")
                 $('#kode_otp').val("")
+                $('#blue_message').hide()
 
                 $('#btn_submit').show()
                 $('#btn_submit_loading').hide()

@@ -310,9 +310,39 @@ class General_library
         ]);
     }
 
+    public function update($fieldName, $fieldValue, $tableName, $data)
+    {
+        $this->db->where($fieldName, $fieldValue)
+        ->update($tableName, $data);
+    }
+
+    public function needResetPassword(){
+        $user = $this->nikita->m_general->getOne('m_user', 'id', $this->getId());
+        // $user = $this->nikita->m_general->getOne('m_user', 'username', '196908071994032011');
+        if($user){
+            $passSplit = str_split($user['username']);
+            $oldPasswordRaw = $passSplit[6].$passSplit[7].$passSplit[4].$passSplit[5].$passSplit[0].$passSplit[1].$passSplit[2].$passSplit[3];
+            $oldPassword = $this->encrypt($user['username'], $oldPasswordRaw);
+            if($user['password'] == $oldPassword){
+                $this->nikita->m_general->update('id', $user['id'], 'm_user', [
+                    'flag_reset_password' => 0,
+                ]);
+                return 2;
+            } else {
+                $this->nikita->m_general->update('id', $user['id'], 'm_user', [
+                    'flag_reset_password' => 1,
+                ]);
+                return 1;
+            }
+        } else {
+            return 0;
+        }
+    }
+
     public function isNotMenu(){
         // return true;
         $res = 0;
+
         if($this->isSessionExpired()){
             if($this->isProgrammer()){
                 return true;
@@ -328,6 +358,23 @@ class General_library
                     $res = 1;
                 }
             }
+
+            // if($this->isProgrammer()){
+                $needResetPass = $this->needResetPassword();
+                if($needResetPass == 1){
+                    return true;
+                    $res = 1;
+                } else if($needResetPass == 2){
+                    $this->nikita->session->set_userdata('apps_error', 'Password harus diganti terlebih dahulu agar proses dapat dilanjutkan');
+                    redirect('noss/user/password/change');
+                    $res = 0;
+                } else {
+                    $this->nikita->session->set_userdata('apps_error', 'Terjadi Kesalahan. Silahkan Login kembali.');
+                    redirect('logout');
+                }
+            // }
+
+            //nanti pindah sini kalo so klar
 
             if($res == 0){
                 if(isset($url_exist[$current_url]) && $url_exist[$current_url] == 0){

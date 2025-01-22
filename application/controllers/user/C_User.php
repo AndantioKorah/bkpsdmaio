@@ -178,7 +178,8 @@ class C_User extends CI_Controller
     }
 
     public function personalChangePassword(){
-        render('user/V_UserChangePassword', null, null, null);
+        $data['otp'] = $this->user->sendOtpResetPassword();
+        render('user/V_UserChangePassword', null, null, $data);
     }
 
     public function personalChangePasswordSubmit(){

@@ -365,7 +365,7 @@ class General_library
                     return true;
                     $res = 1;
                 } else if($needResetPass == 2){
-                    $this->nikita->session->set_userdata('apps_error', 'Password harus diganti terlebih dahulu agar proses dapat dilanjutkan');
+                    $this->nikita->session->set_userdata('apps_error', ERROR_MESSAGE_RESET_PASSWORD);
                     redirect('noss/user/password/change');
                     $res = 0;
                 } else {

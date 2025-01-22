@@ -1,8 +1,15 @@
 <div class="row">
     <div class="col-lg-12">
+        <?php if($otp["message"]){ ?>
+            <h4 style="
+                font-weight: bold;
+                font-size: .85rem;
+                color: blue;
+            "><?=$otp['message']?></h4>
+        <?php } ?>
         <div class="card card-default">
             <div class="card-header">
-                <div class="card-title">Ganti Passowrd</div>
+                <div class="card-title">Ganti Password</div>
                 <hr>
             </div>
             <div class="card-body">
@@ -20,6 +27,18 @@
                             <label>Konfirmasi Password Baru</label>
                             <input class="form-control" autocomplete="off" type="password" id="konfirmasi_password" name="konfirmasi_password"/>
                         </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="row">
+                                <div class="col-lg-9 col-md-9">
+                                    <label>Kode OTP</label>
+                                    <input class="form-control" autocomplete="off" type="number" id="kode_otp" name="kode_otp"/>
+                                </div>
+                                <div class="col-lg-3 col-md-3">
+                                    <button class="btn btn-info" style="margin-top: 21px;" id="btn_otp" onclick="requestSendOtp()">Resend OTP</button>
+                                    <button class="btn btn-info" style="display: none; margin-top: 21px;" id="btn_otp_loading" disabled><i class="fa fa-spin fa-spinner"></i> Mohon menunggu...</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-12 col-md-12 text-right mt-3">
                             <button id="btn_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i>&nbsp;&nbsp;Ganti Password</button>
                             <button style="display: none;" id="btn_submit_loading" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;Mohon Menunggu</button>
@@ -32,8 +51,9 @@
                     <h5 style="
                         font-weight: bold;
                         color: red;
+                        font-size: 1.5rem;
                     ">
-                        Password harus diganti terlebih dahulu agar proses dapat dilanjutkan.
+                        <?=ERROR_MESSAGE_RESET_PASSWORD?>
                     </h5>
                 </div>
             <?php } ?>
@@ -57,6 +77,31 @@
 		} ?>
     })
 
+    function requestSendOtp(){
+        $('#btn_otp').hide()
+        $('#btn_otp_loading').show()
+        $.ajax({
+            url: '<?=base_url("user/C_User/personalChangePasswordSubmit")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let resp = JSON.parse(data)
+                if(resp['code'] == 1){
+                    errortoast(resp['code'])
+                } else {
+                    successtoast("OTP Berhasil dikirim. Mohon menunggu.")
+                    // window.location.("<?=base_url('welcome')?>")
+                }
+                $('#btn_otp').show()
+                $('#btn_otp_loading').hide()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+                $('#btn_otp').show()
+                $('#btn_otp_loading').hide()
+            }
+        })
+    }
+
     $('#form_change_password').on('submit', function(e){
         $('#btn_submit').hide()
         $('#btn_submit_loading').show()
@@ -76,6 +121,7 @@
                 $('#password_lama').val("")
                 $('#konfirmasi_password').val("")
                 $('#password_baru').val("")
+                $('#kode_otp').val("")
 
                 $('#btn_submit').show()
                 $('#btn_submit_loading').hide()

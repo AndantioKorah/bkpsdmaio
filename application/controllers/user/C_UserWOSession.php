@@ -179,6 +179,7 @@ class C_UserWOSession extends CI_Controller
 
     public function personalChangePassword(){
         $data['flag_need_reset_pass'] = 1;
+        $data['otp'] = $this->user->sendOtpResetPassword();
         render('user/V_UserChangePasswordNoss', null, null, $data);
     }
 

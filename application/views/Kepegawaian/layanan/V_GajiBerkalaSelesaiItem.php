@@ -5,6 +5,7 @@
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-center">File Gaji Berkala</th>
+          <th>Status</th>
           <th></th>
           
         </thead>
@@ -19,6 +20,9 @@
             <td class="text-center">
                 <button href="#modal_view_file" onclick="openFileGajiberkala('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button>
+              </td>
+              <td>
+              <?php if($rs['status_berkala'] == '2') echo "Selesai BKPSDM"; else if($rs['status_berkala'] == '3') echo "Usul BKAD"; else if($rs['status_berkala'] == '4') echo "Diterima BKAD"; else echo "Ditolak BKAD"?>  
               </td>
              <td>
              <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/prosesGajiBerkala/<?=$rs['nipbaru_ws']?>/<?=$tahun;?>">

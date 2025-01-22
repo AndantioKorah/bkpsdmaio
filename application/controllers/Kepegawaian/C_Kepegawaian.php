@@ -2536,6 +2536,11 @@ class C_Kepegawaian extends CI_Controller
         $this->kepegawaian->kirimBkad($id,$status);
     }
 
+	public function kirimBerkalaBkad($id,$status)
+    {
+        $this->kepegawaian->kirimBerkalaBkad($id,$status);
+    }
+
 	
 
 	public function downloadDrafSKPangkat($id_usul,$id_m_layanan){
@@ -2579,11 +2584,16 @@ class C_Kepegawaian extends CI_Controller
 			echo json_encode( $this->kepegawaian->submitVerifikasiPangkatBkad());
 		}
 
+		public function submitVerifikasiBerkalaBkad()
+		{ 
+			echo json_encode( $this->kepegawaian->submitVerifikasiBerkalaBkad());
+		}
+
 
 		public function submitEditSPLayanan()
-	{ 
-		echo json_encode($this->kepegawaian->submitEditSPLayanan());
-	}
+		{ 
+			echo json_encode($this->kepegawaian->submitEditSPLayanan());
+		}
 
 	public function prosesGajiBerkala($nip,$tahun){
 		
@@ -2663,6 +2673,17 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_GajiBerkalaSelesaiItem', $data);
 		}
 
+
+		public function verifikasiBerkalaBkad(){
+			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+			render('kepegawaian/layanan/V_VerifikasiBerkalaBkad', '', '', $data);
+		}
+    
+		public function verifikasiBerkalaBkadItem(){
+			$data['result'] = $this->kepegawaian->verifikasiBerkalaBkadItem();
+			$data['param'] = $this->input->post();
+			$this->load->view('kepegawaian/layanan/V_VerifikasiBerkalaBkadItem', $data);
+		}
 		
 
 

@@ -296,7 +296,7 @@
             ->where_in('a.statuspeg', [1, 2])
             ->where('id_m_status_pegawai', 1)
             // ->where('c.jenis_jabatan !=', 'JFT')
-            ->where('year(a.tmtgjberkala) <=', $tahun)
+            ->where('year(a.tmtgjberkala) <=', $tahun) 
             // ->where('year(a.tmtgjberkala) ', $tahun)
 
             ->where('a.tmtgjberkala !=', '0000-00-00')

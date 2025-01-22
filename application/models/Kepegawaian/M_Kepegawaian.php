@@ -10095,6 +10095,29 @@ public function getFileForVerifLayanan()
         return $res;
     }
 
+    public function kirimBerkalaBkad($id_usul,$status){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $this->db->trans_begin();
+
+            $data["status"] = $status; 
+            $data["tanggal_usul_bkad"] =  date("Y-m-d");
+            $this->db->where('id', $id_usul)
+                    ->update('t_gajiberkala', $data);
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
     public function searchUsulPangkatBkad(){
         $data = $this->input->post();
         $this->db->select('*, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
@@ -10109,6 +10132,25 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc');
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('a.status', $data['status_pengajuan']);
+                } else {
+                    $this->db->where_in('a.status', [3,4,5]);
+                }
+               
+        return $this->db->get()->result_array();
+    }
+
+    public function verifikasiBerkalaBkadItem(){
+        $data = $this->input->post();
+        $this->db->select('*, a.status as status_berkala, a.id as id_berkala')
+                ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
+                ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+                ->join('db_pegawai.peggajiberkala g', 'g.id = a.id_peggajiberkala','left')
+                ->where('a.flag_active', 1)
+                // ->where('a.status', 3)
+                ->order_by('a.created_date', 'desc');
+                if(isset($data['status_berkala']) && $data['status_berkala'] != ""){
+                    $this->db->where('a.status', $data['status_berkala']);
                 } else {
                     $this->db->where_in('a.status', [3,4,5]);
                 }
@@ -10132,6 +10174,35 @@ public function getFileForVerifLayanan()
         $data["keterangan_bkad"] = $datapost['keterangan'];
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
+
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function submitVerifikasiBerkalaBkad(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $datapost = $this->input->post();
+        
+        $this->db->trans_begin();
+
+          
+        $id_berkala = $datapost['id_berkala'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan_bkad"] = $datapost['keterangan'];
+        $this->db->where('id', $id_berkala)
+                ->update('t_gajiberkala', $data);
 
 
         if($this->db->trans_status() == FALSE){
@@ -10410,17 +10481,21 @@ public function getFileForVerifLayanan()
 
    public function loadListGajiBerkalaSelesai(){
     $data = $this->input->post();
-    $this->db->select('*, a.id as id_t_berkala')
+    $this->db->select('*, a.id as id_t_berkala, a.status as status_berkala')
             ->from('t_gajiberkala a')
             ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
             ->join('db_pegawai.peggajiberkala g', 'g.id = a.id_peggajiberkala')
             ->where('a.flag_active', 1)
-            ->where('a.status', 2)
+            // ->where('a.status', 2)
             ->where('year(a.tmtgajiberkala)', $data['gb_tahun']);
             if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
                 $this->db->where('e.skpd', $data['id_unitkerja']);
             }
+            if(isset($data['status']) && $data['status'] != "0"){
+                $this->db->where('a.status', $data['status']);
+            }
+         
 
     return $this->db->get()->result_array();
 }

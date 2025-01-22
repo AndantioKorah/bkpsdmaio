@@ -56,7 +56,7 @@
             <div class="col">
               <label>Status Pengajuan</label>
               <select class="form-control select2-navy" style="width: 100%"
-              id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
+              id="status_berkala" data-dropdown-css-class="select2-navy" name="status_berkala">
                   <option value="" >Semua</option>
                   <option value="3" selected>Usul BKPSDM</option>
                   <option value="4" >Diterima</option>
@@ -91,7 +91,7 @@
     $('#result_search').append(divLoaderNavy)
     e.preventDefault()
     $.ajax({
-      url: '<?=base_url("kepegawaian/C_Kepegawaian/searchUsulPangkatBkad/")?>',
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/verifikasiBerkalaBkadItem/")?>',
       method:"POST",  
       data: $(this).serialize(),
       success: function(res){

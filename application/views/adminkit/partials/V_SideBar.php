@@ -583,6 +583,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-berkala-bkad')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Usul Berkala BKSPDM
+					</a>
+				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">

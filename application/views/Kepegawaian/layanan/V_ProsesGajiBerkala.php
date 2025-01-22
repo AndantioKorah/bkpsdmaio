@@ -94,15 +94,24 @@
         <?php } ?>
         <?php } ?>
       
-        <?php if($result[0]['status'] == 2){ ?>
+        <?php if($result[0]['status'] == 2 || $result[0]['status'] == 5){ ?>
        
        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
        <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
        <button onclick="deleteFileKgb('<?=$result[0]['id'];?>','<?=$result[0]['id_peggajiberkala'];?>','90','<?=$result[0]['id_pegawai'];?>')"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
        <i class="fa fa-file-trash"></i> Hapus File</button>
-
+       <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
+       Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
        <?php } ?>
-    <?php } ?>
+       <?php if($result[0]['status'] == 3){ ?>
+        <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',2)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
+        Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
+       <?php } ?>
+       <?php if($result[0]['status'] == 4){ ?>
+        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
+       <?php } ?>
+       <?php } ?>
    
 
       
@@ -836,7 +845,7 @@ function deleteFileKgb(id,reference_id_dok,id_m_layanan,id_pegawai){
                    }
                }
 
-function kirimBkad(id,status){
+function kirimBerkalaBkad(id,status){
                    if(status == 3){
                     var pesan = "kirim Data ke BKAD ?";
                    } else {
@@ -844,7 +853,7 @@ function kirimBkad(id,status){
                    }
                    if(confirm(pesan)){
                        $.ajax({
-                           url: '<?=base_url("kepegawaian/C_Kepegawaian/kirimBkad/")?>'+id+'/'+status,
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/kirimBerkalaBkad/")?>'+id+'/'+status,
                            method: 'post',
                            data: null,
                            success: function(){

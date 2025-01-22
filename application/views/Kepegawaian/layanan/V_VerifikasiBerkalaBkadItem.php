@@ -5,12 +5,10 @@
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-center">Tanggal Usul Ke BKAD</th>
-          <!-- <th class="text-center">Surat Pengantar</th> -->
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
-            <th class="text-center">Jenis Kenaikan Pangkat</th>
-            <th class="text-center">File Pangkat</th>
+            <th class="text-center">File Berkala</th>
           <?php } ?>
           <th></th>
           
@@ -23,43 +21,27 @@
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td>
-              <!-- <td class="text-center">
-              <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-              <i class="fa fa-file-pdf"></i></button>
-              </td> -->
               <td class="text-left">
-              <span class="badge badge-<?php if($rs['status_pengajuan'] == '3') echo "success"; else if($rs['status_pengajuan'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '3') echo "Usul BKPSDM"; else if($rs['status_pengajuan'] == '4') echo "Diterima"; else if($rs['status_pengajuan'] == '5') echo "ditolak"; ?>
+              <span class="badge badge-<?php if($rs['status_berkala'] == '3') echo "success"; else if($rs['status_berkala'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_berkala'] == '3') echo "Usul BKPSDM"; else if($rs['status_berkala'] == '4') echo "Diterima"; else if($rs['status_berkala'] == '5') echo "ditolak"; ?>
               </span>
             </td>
             <td class="text-left"><?=$rs['keterangan_bkad']?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad') ) { ?>
-            <td class="text-left">
-            <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "3"?>  
-            </td>
             <td class="text-center">
-            <?php if($rs['status_layanan'] >= 3) { ?>
-              <?php if($rs['reference_id_dok'] != null) { ?>
-                <button href="#modal_view_file" onclick="openFilePangkat('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+            <?php if($rs['status_berkala'] >= 3) { ?>
+                <button href="#modal_view_file" onclick="openFileBerkala('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button>
-                <?php } else { ?>
-                  <!-- <button 
-                data-toggle="modal" 
-                data-id="<?=$rs['id_pengajuan']?>"
-                href="#modal_upload_sk"
-                onclick="loadModalUploadSK('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" title="Ubah Data" class="btn btn-sm btn-primary"> 
-                <i class="fa fa-upload" aria-hidden="true"></i></button> -->
-                <?php } ?>
             <?php } ?>
               </td>
             <?php } ?>
              <td>
-             <!-- <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
+             <!-- <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_berkala']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a> -->
                 <button
-                data-id="<?=$rs['id_pengajuan'];?>" 
+                data-id="<?=$rs['id_berkala'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerifBkad">
                 Verifikasi
                 </button>
@@ -89,8 +71,8 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+      <form method="post" id="form_verifikasi_berkala_bkad" enctype="multipart/form-data" >
+        <input type="hidden" name="id_berkala" id="id_berkala">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -136,13 +118,13 @@
 
   
 
-async function openFilePangkat(filename){
+async function openFileBerkala(filename){
 
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 2000);
-$link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
+$link = "<?=base_url();?>/arsipgjberkala/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
@@ -156,11 +138,11 @@ $('#modelVerifBkad').on('show.bs.modal', function (event) {
     
             var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
             var modal = $(this)
-            modal.find('#id_pengajuan').attr("value",div.data('id'));
+            modal.find('#id_berkala').attr("value",div.data('id'));
         });
   
 
-$('#form_verifikasi_layanan').on('submit', function(e){
+$('#form_verifikasi_berkala_bkad').on('submit', function(e){
           var status = $('#status').val()
           var catatan = $('#keterangan').val()
           if(status == "--"){
@@ -178,7 +160,7 @@ $('#form_verifikasi_layanan').on('submit', function(e){
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPangkatBkad")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiBerkalaBkad")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

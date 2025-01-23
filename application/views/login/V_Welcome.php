@@ -139,12 +139,13 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
           <div class="row">
             <div class="col-lg-12">
               <?php
-                $data['chart'] = $chart; 
+                $data['chart'] = $chart;
+                $this->session->set_userdata('total_seluruh_pegawai', $chart['total']);
                 $this->load->view('dashboard/V_DashboardKepegawaian', $data);
               ?>
             </div>
-            <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
-            </div>
+            <!-- <div class="col-lg-12 mt-2" id="dashboard_pdm_welcome">
+            </div> -->
           </div>
        
         <?php } else { ?>

@@ -1059,12 +1059,12 @@
             }
 
             if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
-                if($id_unitkerja == 3014000){
-                    // jika disnaker, kasubag ganti sek krna kasubag sudah pensiun
-                    $result['kasubag'] = null;
-                } else {
+                // if($id_unitkerja == 3014000){
+                //     // jika disnaker, kasubag ganti sek krna kasubag sudah pensiun
+                //     $result['kasubag'] = null;
+                // } else {
                     $result['kasubag'] = $lp;
-                } 
+                // } 
             }
 
             if(stringStartWith('Sekretaris', $lp['nama_jabatan'])){
@@ -1134,8 +1134,33 @@
                 }
             }
         } else { //jika dinas atau badan
-            if(!$result['kasubag']){ // jika kasubag kosong, pakai sek
-                $result['kasubag'] = $result['sek'];
+            if(!$result['kasubag']){ // jika kasubag kosong
+                // cek di plt plh
+                $list_plt =  $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                        f.id as id_m_user, a.flag_bendahara, h.nama_jabatan, h.kepalaskpd, h.eselon, g.jenis')
+                                        ->from('db_pegawai.pegawai a')
+                                        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                        ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                        ->join('m_user f', 'a.nipbaru_ws = f.username')
+                                        ->join('t_plt_plh g', 'f.id = g.id_m_user')
+                                        ->join('db_pegawai.jabatan h', 'g.id_jabatan = h.id_jabatanpeg')
+                                        ->where('a.skpd', $unitkerja['id_unitkerja'])
+                                        // ->where('e.nama_jabatan', 'Sekretaris Daerah')
+                                        ->where('id_m_status_pegawai', 1)
+                                        ->get()->result_array();
+                // dd($list_plt);
+                if($list_plt){
+                    foreach($list_plt as $plt){
+                        if(isKasubKepegawaian($plt['nama_jabatan'], $plt['eselon'])){
+                            $result['kasubag'] = $plt;
+                            $result['kasubag']['nama_jabatan'] = $plt['jenis'].'. '.$plt['nama_jabatan'];
+                        }
+                    }
+                }
+                
+                if(!$result['kasubag']){ //jika masih kosong, ambil sek
+                    $result['kasubag'] = $result['sek'];
+                }
             }
         }
 
@@ -1235,11 +1260,11 @@
                 $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
             }
         }
-
+        
         // if($this->general_library->isProgrammer()){
         //     dd($result);
         // }
-        
+
         return $result;
     }
 

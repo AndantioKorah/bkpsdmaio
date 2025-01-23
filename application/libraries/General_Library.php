@@ -319,6 +319,9 @@ class General_library
     public function needResetPassword(){
         $user = $this->nikita->m_general->getOne('m_user', 'id', $this->getId());
         // $user = $this->nikita->m_general->getOne('m_user', 'username', '196908071994032011');
+        if($user['username'] != '001' || $user['username'] != '002'){
+            return 1;
+        }
         if($user){
             $passSplit = str_split($user['username']);
             $oldPasswordRaw = $passSplit[6].$passSplit[7].$passSplit[4].$passSplit[5].$passSplit[0].$passSplit[1].$passSplit[2].$passSplit[3];

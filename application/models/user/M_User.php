@@ -207,6 +207,12 @@
             $res['code'] = 0;
             $res['message'] = "";
 
+            if(FLAG_RESET_PASSWORD_USE_OTP == 0){
+                $res['code'] = 1;
+                $res['message'] = "";
+                return $res;
+            }
+
             $this->db->trans_begin();
 
             $user = $this->db->select('a.kode_otp, a.date_otp, b.*, a.id')
@@ -223,7 +229,7 @@
             } else {
                 $randomString = generateRandomNumber(6);
                 $res['otp'] = $randomString;
-                $res['date_otp'] = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+                $res['date_otp'] = date('Y-m-d H:i:s', strtotime(OTP_RESET_PASSWORD_TIME));
                 $this->db->where('id', $user['id'])
                             ->update('m_user', [
                                 'kode_otp' => $randomString,
@@ -253,72 +259,96 @@
             $res['date_otp'] = null;
             $res['message'] = null;
 
-            $this->db->trans_begin();
+            if(FLAG_RESET_PASSWORD_USE_OTP == 0){
+                return $res;
+            }
 
-            $user = $this->db->select('a.kode_otp, a.date_otp, b.*, a.id, a.flag_valid_otp')
-                            ->from('m_user a')
-                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
-                            ->where('a.id', $this->general_library->getId())
-                            ->where('a.flag_active', 1)
-                            ->get()->row_array();
-            if($user){
-                if($user['handphone']){
-                    $randomString = (generateRandomNumber(6));
-                    if($user['kode_otp'] == null){
-                        $res['otp'] = $randomString;
-                        $res['date_otp'] = date('Y-m-d H:i:s', strtotime('+30 minutes'));
-                        $this->db->where('id', $user['id'])
-                                ->update('m_user', [
-                                    'kode_otp' => $randomString,
-                                    'date_otp' => $res['date_otp'],
-                                    'flag_valid_otp' => 1
-                                ]);
-                        $this->db->insert('t_cron_wa', [
-                            'type' => 'text',
-                            'sendTo' => convertPhoneNumber($user['handphone']),
-                            'message' => "*[OTP RESET PASSWORD]*\nSelamat ".greeting()." ".getNamaPegawaiFull($user)."\nBerikut adalah kode OTP reset password Anda:\n\n"."*".$res['otp']."* berlaku sampai *".formatDateNamaBulanWT($res['date_otp'])."*\n\nKarena alasan keamanan, mohon agar kode OTP ini tidak diberikan kepada orang lain maupun pegawai BKPSDM. Terima kasih.".FOOTER_MESSAGE_CUTI
-                        ]);
-                        $res['message'] = "Kode OTP sedang dikirimkan ke nomor Anda melalui WhatsApp. Mohon menunggu.";
-                    } else {
-                        if($user['flag_valid_otp'] == 0){
-                            $res['otp'] = $user['kode_otp'];
-                            $res['date_otp'] = $user['date_otp'];
-                            $res['message'] = "Kode OTP sedang dikirimkan ke nomor Anda melalui WhatsApp. Mohon menunggu.";
-                            // $diff = countDiffDateLengkap(date('Y-m-d H:i:s'), $user['date_otp'], ['menit', 'detik']);
-                            $diff = strtotime($user['date_otp']) - strtotime(date('Y-m-d H:i:s'));
-                            $diffMin = $diff/60;
-                            // if($diffMin < 0){ // otp habis masa berlaku, kirim lagi kode
-                                $res['otp'] = $randomString;
-                                $res['date_otp'] = date('Y-m-d H:i:s', strtotime('+30 minutes'));
-                                $this->db->where('id', $user['id'])
+            if(FLAG_RESET_PASSWORD_USE_OTP == 1){
+                $this->db->trans_begin();
+                $user = $this->db->select('a.kode_otp, a.date_otp, b.*, a.id, a.flag_valid_otp')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->where('a.id', $this->general_library->getId())
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+                if($user){
+                    if($user['handphone']){
+                        $randomString = (generateRandomNumber(6));
+                        if($user['kode_otp'] == null){
+                            $res['otp'] = $randomString;
+                            $res['date_otp'] = date('Y-m-d H:i:s', strtotime(OTP_RESET_PASSWORD_TIME));
+                            $this->db->where('id', $user['id'])
                                     ->update('m_user', [
                                         'kode_otp' => $randomString,
                                         'date_otp' => $res['date_otp'],
                                         'flag_valid_otp' => 1
                                     ]);
-
-                                $this->db->insert('t_cron_wa', [
-                                    'type' => 'text',
-                                    'sendTo' => convertPhoneNumber($user['handphone']),
-                                    'message' => "*[OTP RESET PASSWORD]*\nSelamat ".greeting()." ".getNamaPegawaiFull($user).",\nberikut adalah kode OTP reset password Anda:\n\n"."*".$res['otp']."* berlaku sampai *".formatDateNamaBulanWT($res['date_otp'])."*\n\nKarena alasan keamanan, mohon agar kode OTP ini tidak diberikan kepada orang lain maupun pegawai BKPSDM. Terima kasih.".FOOTER_MESSAGE_CUTI
-                                ]);
-                            // }
+                            $this->db->insert('t_cron_wa', [
+                                'type' => 'text',
+                                'sendTo' => convertPhoneNumber($user['handphone']),
+                                'message' => "*[OTP RESET PASSWORD]*\nSelamat ".greeting()." ".getNamaPegawaiFull($user)."\nBerikut adalah kode OTP reset password Anda:\n\n"."*".$res['otp']."* berlaku sampai *".formatDateNamaBulanWT($res['date_otp'])."*\n\nKarena alasan keamanan, mohon agar kode OTP ini tidak diberikan kepada orang lain maupun pegawai BKPSDM. Terima kasih.".FOOTER_MESSAGE_CUTI
+                            ]);
+                            $res['message'] = "Kode OTP sedang dikirimkan ke nomor Anda melalui WhatsApp. Mohon menunggu.";
                         } else {
-                            $res['message'] = "Kode OTP Anda sudah dikirimkan melalui WhatsApp. Jika belum ada, silahkan menunggu atau klik tombol Resend OTP.";
+                            if($user['flag_valid_otp'] == 0){
+                                $res['otp'] = $user['kode_otp'];
+                                $res['date_otp'] = $user['date_otp'];
+                                $res['message'] = "Kode OTP sedang dikirimkan ke nomor Anda melalui WhatsApp. Mohon menunggu.";
+                                // $diff = countDiffDateLengkap(date('Y-m-d H:i:s'), $user['date_otp'], ['menit', 'detik']);
+                                $diff = strtotime($user['date_otp']) - strtotime(date('Y-m-d H:i:s'));
+                                $diffMin = $diff/60;
+                                // if($diffMin < 0){ // otp habis masa berlaku, kirim lagi kode
+                                    $res['otp'] = $randomString;
+                                    $res['date_otp'] = date('Y-m-d H:i:s', strtotime(OTP_RESET_PASSWORD_TIME));
+                                    $this->db->where('id', $user['id'])
+                                        ->update('m_user', [
+                                            'kode_otp' => $randomString,
+                                            'date_otp' => $res['date_otp'],
+                                            'flag_valid_otp' => 1
+                                        ]);
+
+                                    $this->db->insert('t_cron_wa', [
+                                        'type' => 'text',
+                                        'sendTo' => convertPhoneNumber($user['handphone']),
+                                        'message' => "*[OTP RESET PASSWORD]*\nSelamat ".greeting()." ".getNamaPegawaiFull($user).",\nberikut adalah kode OTP reset password Anda:\n\n"."*".$res['otp']."* berlaku sampai *".formatDateNamaBulanWT($res['date_otp'])."*\n\nKarena alasan keamanan, mohon agar kode OTP ini tidak diberikan kepada orang lain maupun pegawai BKPSDM. Terima kasih.".FOOTER_MESSAGE_CUTI
+                                    ]);
+                                // }
+                            } else {
+                                $diff = strtotime($user['date_otp']) - strtotime(date('Y-m-d H:i:s'));
+                                if($diff < 0){ // jika sudah kadaluarsa, buat lagi
+                                    $res['otp'] = $randomString;
+                                    $res['date_otp'] = date('Y-m-d H:i:s', strtotime(OTP_RESET_PASSWORD_TIME));
+                                    $this->db->where('id', $user['id'])
+                                        ->update('m_user', [
+                                            'kode_otp' => $randomString,
+                                            'date_otp' => $res['date_otp'],
+                                            'flag_valid_otp' => 1
+                                        ]);
+                                    $this->db->insert('t_cron_wa', [
+                                        'type' => 'text',
+                                        'sendTo' => convertPhoneNumber($user['handphone']),
+                                        'message' => "*[OTP RESET PASSWORD]*\nSelamat ".greeting()." ".getNamaPegawaiFull($user).",\nberikut adalah kode OTP reset password Anda:\n\n"."*".$res['otp']."* berlaku sampai *".formatDateNamaBulanWT($res['date_otp'])."*\n\nKarena alasan keamanan, mohon agar kode OTP ini tidak diberikan kepada orang lain maupun pegawai BKPSDM. Terima kasih.".FOOTER_MESSAGE_CUTI
+                                    ]);
+                                    $res['message'] = "Kode OTP sedang dikirimkan ke nomor Anda melalui WhatsApp. Mohon menunggu.";
+                                } else {
+                                    $res['message'] = "Kode OTP Anda sudah dikirimkan melalui WhatsApp. Jika belum ada, silahkan menunggu atau klik tombol Resend OTP.";
+                                }
+                            }
                         }
+                    } else {
+                        $this->session->set_userdata('apps_error', 'Nomor Handphone belum diinput, silahkan hubungi Admin untuk input Nomor Handphone agar proses Reset Password dapat dilanjutkan.');
+                        redirect('logout');
                     }
                 } else {
-                    $this->nikita->session->set_userdata('apps_error', 'Nomor Handphone belum diinput, silahkan hubungi Admin untuk input Nomor Handphone agar proses Reset Password dapat dilanjutkan.');
+                    $this->session->set_userdata('apps_error', 'Terjadi Kesalahan. Silahkan Login kembali.');
+                    redirect('logout');
                 }
-            } else {
-                $this->nikita->session->set_userdata('apps_error', 'Terjadi Kesalahan. Silahkan Login kembali.');
-                redirect('logout');
-            }
 
-            if($this->db->trans_status() == FALSE || $res['otp'] == null){
-                $this->db->trans_rollback();
-            } else {
-                $this->db->trans_commit();
+                if($this->db->trans_status() == FALSE || $res['otp'] == null){
+                    $this->db->trans_rollback();
+                } else {
+                    $this->db->trans_commit();
+                }
             }
 
             return $res;
@@ -341,13 +371,15 @@
                     return ['message' => 'Panjang Password harus lebih dari 6 karakter'];
                 }
 
-                if($data['kode_otp'] != $user[0]['kode_otp']){
-                    return ['message' => 'Kode OTP yang Anda masukkan salah.'];
-                } else {
-                    $diff = strtotime($user[0]['date_otp']) - strtotime(date('Y-m-d H:i:s'));
-                    $diffMin = $diff/60;
-                    if($diffMin < 0){
-                        return ['message' => 'Kode OTP yang Anda masukkan sudah tidak berlaku. Silahkan request untuk kirim kode OTP yang baru.'];
+                if(FLAG_RESET_PASSWORD_USE_OTP == 1){
+                    if($data['kode_otp'] != $user[0]['kode_otp']){
+                        return ['message' => 'Kode OTP yang Anda masukkan salah.'];
+                    } else {
+                        $diff = strtotime($user[0]['date_otp']) - strtotime(date('Y-m-d H:i:s'));
+                        $diffMin = $diff/60;
+                        if($diffMin < 0){
+                            return ['message' => 'Kode OTP yang Anda masukkan sudah tidak berlaku. Silahkan request untuk kirim kode OTP yang baru.'];
+                        }
                     }
                 }
 

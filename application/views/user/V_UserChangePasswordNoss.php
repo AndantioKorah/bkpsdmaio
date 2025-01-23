@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12">
-        <?php if($otp["message"]){ ?>
+        <?php if($otp["message"] && FLAG_RESET_PASSWORD_USE_OTP == 1) { ?>
             <h4 id="blue_message" style="
                 font-weight: bold;
                 font-size: .85rem;
@@ -27,18 +27,20 @@
                             <label>Konfirmasi Password Baru</label>
                             <input class="form-control" autocomplete="off" type="password" id="konfirmasi_password" name="konfirmasi_password"/>
                         </div>
-                        <div class="col-lg-12 col-md-12">
-                            <div class="row">
-                                <div class="col-lg-9 col-md-9">
-                                    <label>Kode OTP</label>
-                                    <input class="form-control" autocomplete="off" type="number" id="kode_otp" name="kode_otp"/>
-                                </div>
-                                <div class="col-lg-3 col-md-3">
-                                    <button class="btn btn-info" style="margin-top: 21px;" id="btn_otp" onclick="requestSendOtp()">Resend OTP</button>
-                                    <button class="btn btn-info" style="display: none; margin-top: 21px;" id="btn_otp_loading" disabled><i class="fa fa-spin fa-spinner"></i> Mohon menunggu...</button>
+                        <?php if(FLAG_RESET_PASSWORD_USE_OTP == 1){ ?>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-9 col-md-9">
+                                        <label>Kode OTP</label>
+                                        <input class="form-control" autocomplete="off" type="number" id="kode_otp" name="kode_otp"/>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3">
+                                        <button class="btn btn-info" type="button" style="margin-top: 21px;" id="btn_otp" onclick="requestSendOtp()">Resend OTP</button>
+                                        <button class="btn btn-info" style="display: none; margin-top: 21px;" id="btn_otp_loading" disabled><i class="fa fa-spin fa-spinner"></i> Mohon menunggu...</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                         <div class="col-lg-12 col-md-12 text-right mt-3">
                             <button id="btn_submit" type="submit" class="btn btn-navy"><i class="fa fa-save"></i>&nbsp;&nbsp;Ganti Password</button>
                             <button style="display: none;" id="btn_submit_loading" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;Mohon Menunggu</button>
@@ -81,13 +83,13 @@
         $('#btn_otp').hide()
         $('#btn_otp_loading').show()
         $.ajax({
-            url: '<?=base_url("user/C_User/personalChangePasswordSubmit")?>',
+            url: '<?=base_url("user/C_UserWOSession/requestSendOtp")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){
                 let resp = JSON.parse(data)
                 if(resp['code'] == 1){
-                    errortoast(resp['code'])
+                    errortoast(resp['message'])
                 } else {
                     successtoast("OTP Berhasil dikirim. Mohon menunggu.")
                     // window.location.("<?=base_url('welcome')?>")

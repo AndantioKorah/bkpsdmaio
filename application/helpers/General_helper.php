@@ -41,12 +41,16 @@ function convertToBase64($path){
     return null;
 }
 
-function fileToBase64($filename){
+function fileToBase64($filename, $raw = 0){
     if(file_exists($filename)){
         $type = pathinfo($filename, PATHINFO_EXTENSION);
         $data = file_get_contents($filename);
-        $base64 = 'data:application/' . $type . ';base64,' . base64_encode($data);
-        return $base64;
+        if($raw == 1){
+            return base64_encode($data);
+        } else {
+            $base64 = 'data:application/' . $type . ';base64,' . base64_encode($data);
+            return $base64;
+        }
     } 
     return null;
 }

@@ -850,7 +850,8 @@
   <?php if ($result['status_dokumen'] == 1) { ?>
     
  <form method="post" id="form_verifikasi_dokumen" enctype="multipart/form-data" >
-  <input type="hidden  " name="jenis_dokumen" id="jenis_dokumen" value="<?= $param['jenisdokumen']['value'];?>">
+  <input type="hidden" name="jenis_dokumen" id="jenis_dokumen" value="<?= $param['jenisdokumen']['value'];?>">
+  <input type="hidden" name="file_path" id="file_path" value="<?= $path?>">
   <input type="hidden" name="db_dokumen" id="db_dokumen" value="<?= $param['jenisdokumen']['db'];?>">
   <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai" value="id_pegawai">
 

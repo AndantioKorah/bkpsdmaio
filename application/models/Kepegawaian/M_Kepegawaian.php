@@ -3045,9 +3045,25 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
+
     if($this->general_library->isProgrammer()){
-        dd($data);
+        // dd(base_url($datapost['file_path']));
+        $base64 = convertToBase64(($datapost['file_path']));
+        $bulan = date('m');
+        
+        if(!file_exists('assets/bukti_kegiatan/'.date('Y')) && !is_dir('assets/bukti_kegiatan/'.date('Y'))) {
+            mkdir('assets/bukti_kegiatan/'.date('Y'), 0777);       
+        }
+
+        if(!file_exists('assets/bukti_kegiatan/'.date('Y').'/'.$bulan) && !is_dir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan)) {
+            mkdir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan, 0777);       
+        }
+
+        $urlFile = 'assets/bukti_kegiatan/'.date('Y').'/'.$bulan.'/'.'VERIF_PDM_'.$this->general_library->getUserName().'_'.date('Ymdhis').'.jpg';
+        base64ToFile($base64, $urlFile);
+        dd($base64);
     }
+    
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){
     $data["tmtjabatan"] = $datapost["edit_tmt_jabatan_verif"];
     // $data["id_jabatan"] = $datapost["edit_nama_jabatan_verif"];

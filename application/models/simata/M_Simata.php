@@ -1858,6 +1858,16 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         }
                     }
                 }
+           } else if($jenis_pengisian == 1) {
+            $this->db->select('a.id')
+            ->from('db_pegawai.pegdiklat a')
+            ->where('a.id_pegawai', $id)
+            ->where('a.jenjang_diklat', 10)
+            ->where('a.flag_active', 1);
+            $diklat = $this->db->get()->result_array();
+            if($diklat){
+                $id_diklat = 106;
+            } 
            }
 
          

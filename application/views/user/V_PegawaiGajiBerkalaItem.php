@@ -39,20 +39,31 @@
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
                         <?php  
+                             $badge_status = 'badge-cpns';
+                             if($rs['statuspeg'] == 2){
+                                 $badge_status = 'badge-pns';
+                             } else if($rs['statuspeg'] == 3){
+                                 $badge_status = 'badge-pppk';
+                             }
+
                          if($rs['tberkala']){
                             $data = explode("|",$rs['tberkala']);
-                            $stts = $data[1];
+                            if($data[1] == 1 || $data[1] == 2 || $data[1] == 4 || $data[1] == 5){
+                                $stts = 1;
+                            }
+                           
                             } else {
                             $stts = 2;
                             }
                           ?>
 
                         <tr style="<?php if($stts == 1) echo 'background-color:#88eda6'; else if($stts == 0) echo 'background-color:#f99999'; else if($stts == 2 || $stts == null) echo 'background-color:#fff';  ?>">
-                            <td class="text-center"><?=$no++;?></td>
+                            <td class="text-center"><?=$no++;?> <?=$stts;?></td>
                             <td class="text-left">
                             <a style="color:#000" target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs['nipbaru_ws'];?>" style="color:#fff">
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
                                 <span class="text-small"><?=formatNip($rs['nipbaru_ws'])?></span><br>
+                                <span class="badge <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>
                                 <!-- <span class="text-small"><?=($rs['nama_jabatan'])?></span><br> -->
                                 <!-- <span class="text-small"><?=($rs['nm_pangkat'])?></span> -->
                                 </a>
@@ -79,7 +90,7 @@
                              <?php
                              if($rs['tberkala']){
                                 $data = explode("|",$rs['tberkala']);
-                                 if($data[1] == 1 || $data[1] == 2) {
+                                 if($data[1] == 1 || $data[1] == 2 || $data[1] == 4 || $data[1] == 5) {
                                     echo "ACC";
                                  } else {
                                     echo "Berkas Tidak Lengkap";

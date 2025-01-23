@@ -334,7 +334,7 @@
                                             </td>
                                             </tr>
                                             <tr>
-                                                <td style="width:25%"><span class="sp_label">Pengembangan Kompetensi 20 JP Tahun 2023</span></td>
+                                                <td style="width:25%"><span class="sp_label">Pengembangan Kompetensi 20 JP Tahun <?php echo date('Y')-1; ?></span></td>
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor5'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor5'];?> Point] <?=$nilai_potensial['potensial5'];?></span>

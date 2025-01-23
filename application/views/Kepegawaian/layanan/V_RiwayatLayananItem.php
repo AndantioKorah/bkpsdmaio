@@ -26,7 +26,7 @@
             <i class="fa fa-file-pdf"></i></button>
             </td>
               <td>
-              <?php if($rs['status'] == 0) { ?>
+              <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
               <?php if($rs['status'] == 2) { ?>

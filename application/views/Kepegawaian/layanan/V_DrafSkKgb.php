@@ -167,7 +167,13 @@
 			<td>3. Pangkat </td>
 			<td style="text-align: center;">:</td>
 			<td>
-			<?= $profil_pegawai['nm_pangkat'];?> 
+			<?php
+				if($profil_pegawai['statuspeg'] == 1 || $profil_pegawai['statuspeg'] == 2){
+					echo $profil_pegawai['nm_pangkat'];
+				} else {
+					echo "-";
+				}
+				?>
 			</td>
 		</tr>
 
@@ -219,7 +225,7 @@
 			<td valign="top">7. Gaji Pokok Baru </td>
 			<td style="text-align: center;" valign="top">:</td>
 			<td valign="top">Rp. <?= $gaji_baru;?>,-<br>
-			<?=$terbilang;?> Rupiah</td>
+			 (<?=$terbilang;?> Rupiah)</td>
 		</tr>
 		<tr valign="top">
 			<td>8. Berdasarkan Masa Kerja </td>
@@ -231,8 +237,13 @@
 			<td style="text-align: center;">:</td>
 			<td>
 				<?php
-				$data = explode(",",$profil_pegawai['nm_pangkat']);
-				echo $data[1];?>
+				if($profil_pegawai['statuspeg'] == 1 || $profil_pegawai['statuspeg'] == 2){
+					$data = explode(",",$profil_pegawai['nm_pangkat']);
+					echo $data[1];
+				} else {
+					echo $profil_pegawai['nm_pangkat'];
+				}
+				?>
 			 </td>
 		</tr>
 		<tr valign="top">
@@ -251,8 +262,13 @@
 		</tr>
 	</table>
 	<p style="text-align: justify">
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diharapkan agar sesuai dengan pasal 11 dan 23 Peraturan Pemerintah Nomor 7 Tahun 1977 yo
-Peraturan Pemerintah Nomor 05 Tahun 2024 kepada Pegawai tersebut dapat dibayarkan penghasilannya berdasarkan
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diharapkan agar sesuai dengan 
+	<?php if($profil_pegawai['statuspeg'] == 1 || $profil_pegawai['statuspeg'] == 2){ ?>
+	pasal 11 dan 23 Peraturan Pemerintah Nomor 7 Tahun 1977 yo Peraturan Pemerintah Nomor 05 Tahun 2024 
+	<?php } else { ?>
+	pasal 3 Peraturan Presiden Republik Indonesia Nomor 11 Tahun 2024
+	<?php }  ?>
+	kepada Pegawai tersebut dapat dibayarkan penghasilannya berdasarkan
 Gaji Pokok yang baru
     </p>
 	

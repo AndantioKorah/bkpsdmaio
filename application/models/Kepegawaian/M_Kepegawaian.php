@@ -393,7 +393,7 @@ class M_Kepegawaian extends CI_Model
 
         function getProfilPegawaiForDrafSK($nip){
            
-            $this->db->select('a.tmtpangkat,e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('a.statuspeg,a.tmtpangkat,e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -10005,7 +10005,7 @@ public function getFileForVerifLayanan()
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
             $datainsKgb["gajilama"] = $dataKgb[0]['gajilama'];
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
-            $datainsKgb["status"] = 2;
+            $datainsKgb["status"] = 3;
             $datainsKgb["gambarsk"] = $data['file_name'];
           
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);

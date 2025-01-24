@@ -6,6 +6,15 @@
 		color: var(--bs-list-group-active-color);
 		z-index: 2;
 	}
+ 
+        /* Important part */
+        .modal-dialog{
+            overflow-y: initial !important
+        }
+        .modal-body{
+            height: 80vh;
+            overflow-y: auto;
+        }
 
 </style>
 
@@ -92,7 +101,9 @@
     <div class="modal-content">
       <div class="modal-header" style="background-color:#2e4963;">
         <h5 style="color:#fff" class="modal-title" id="exampleModalLabel">Detail Penilaian</h5>
-       
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
       </div>
       <div class="modal-body" id="div_modal_detail_profil_talenta">
         ...

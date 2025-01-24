@@ -1722,7 +1722,7 @@ animation06
 
       <tr>
         <td  rowspan="3">
-        <span class="vertical-rl rotated" style="font-size:20px;height:15%;color:#2e4963;">KINERJA</span>
+        <span class="vertical-rl rotated" style="font-size:20px;height:16%;color:#2e4963;">KINERJA</span>
 
         </td>
         <td style="background-color:#2e4963;color:#fff">

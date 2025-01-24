@@ -10033,9 +10033,10 @@ public function getFileForVerifLayanan()
         $this->updatePangkat($id_peg);
 
         $dataUpdate['status'] = 3;
+        $dataUpdate["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");
         $dataUpdate['reference_id_dok'] = $id_insert_dok;
         $url_file = "arsipelektronik/".$data['nama_file'];
-
+      
         $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
@@ -10169,7 +10170,8 @@ public function getFileForVerifLayanan()
         $this->db->trans_begin();
 
             $data["status"] = $status; 
-            $data["tanggal_usul_bkad"] =  date("Y-m-d");
+            $data["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");
+
             $this->db->where('id', $id_usul)
                     ->update('t_layanan', $data);
         if($this->db->trans_status() == FALSE){
@@ -10218,7 +10220,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 // ->where('a.status', 3)
                 ->where_in('a.id_m_layanan', [6,7,8,9])
-                ->order_by('a.created_date', 'desc');
+                ->order_by('g.tmtpangkat', 'desc');
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('a.status', $data['status_pengajuan']);
                 } else {

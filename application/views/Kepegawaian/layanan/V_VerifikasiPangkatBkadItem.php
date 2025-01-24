@@ -10,6 +10,8 @@
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
+            <th class="text-center">TMT Pangkat</th>
+
             <th class="text-center">File Pangkat</th>
           <?php } ?>
           <th></th>
@@ -37,6 +39,7 @@
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "3"?>  
             </td>
+            <td><?= formatDateNamaBulan($rs['tmtpangkat'])?></td>
             <td class="text-center">
             <?php if($rs['status_layanan'] >= 3) { ?>
               <?php if($rs['reference_id_dok'] != null) { ?>
@@ -83,7 +86,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Verifikasi Layanan</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Verifikasi</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

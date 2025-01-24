@@ -4,12 +4,14 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
-          <th class="text-center">Tanggal Usul Ke BKAD</th>
+          <!-- <th class="text-center">Tanggal Usul Ke BKAD</th> -->
           <!-- <th class="text-center">Surat Pengantar</th> -->
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
+            <th class="text-center">TMT Pangkat</th>
+
             <th class="text-center">File Pangkat</th>
           <?php } ?>
           <th></th>
@@ -22,7 +24,7 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs);?><br>
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-              <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td>
+              <!-- <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td> -->
               <!-- <td class="text-center">
               <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
               <i class="fa fa-file-pdf"></i></button>
@@ -37,6 +39,7 @@
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "3"?>  
             </td>
+            <td><?= formatDateNamaBulan($rs['tmtpangkat'])?></td>
             <td class="text-center">
             <?php if($rs['status_layanan'] >= 3) { ?>
               <?php if($rs['reference_id_dok'] != null) { ?>

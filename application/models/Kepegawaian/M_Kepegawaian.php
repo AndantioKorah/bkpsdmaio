@@ -10097,6 +10097,7 @@ public function getFileForVerifLayanan()
 
             $data["status"] = $status; 
             $data["tanggal_usul_bkad"] =  date("Y-m-d");
+
             $this->db->where('id', $id_usul)
                     ->update('t_layanan', $data);
         if($this->db->trans_status() == FALSE){
@@ -10145,7 +10146,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 // ->where('a.status', 3)
                 ->where_in('a.id_m_layanan', [6,7,8,9])
-                ->order_by('a.created_date', 'desc');
+                ->order_by('g.tmtpangkat', 'desc');
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('a.status', $data['status_pengajuan']);
                 } else {

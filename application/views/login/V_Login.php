@@ -64,7 +64,6 @@
 						<center>
 							<img style="height: 10vh; border-radius: 5px;" class="mb-4  p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 							data-src="<?=base_url('')?>assets/new_login/images/logoSiladen.png"/>
-
 						</center>
 						<div class="wrap-input100 validate-input" data-validate = "Username Anda">
 							<input class="input100" type="text" name="username">
@@ -85,12 +84,23 @@
 							<span class="label-input100">Password</span>
 						</div>
 
-						<div class="text-right">
-							<!-- <input class="input100" type="password" name="password">
-							<span class="focus-input100"></span>
-							<span class="label-input100">Password</span> -->
-							<span class="text-toggle-password txt2 text-show-password"><i class="fa fa-eye"></i> Show Password</span>
-							<span style="display: none;" class="text-toggle-password txt2 text-hide-password"><i class="fa fa-eye-slash"></i> Hide Password</span>
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<table style="width: 100%;">
+									<tr>
+										<td>
+											<a href="<?=base_url('noss/user/password/forget')?>"><span class="text-toggle-password txt2" style="cursor: pointer;">Lupa Password</span></a>
+										</td>
+										<td align="right">
+											<span class="text-toggle-password txt2 text-show-password"><i class="fa fa-eye"></i> Show Password</span>
+											<span style="display: none;" class="text-toggle-password txt2 text-hide-password"><i class="fa fa-eye-slash"></i> Hide Password</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<!-- <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+								
+							</div> -->
 						</div>						
 
 						<div class="flex-sb-m w-full p-t-3 p-b-32">
@@ -132,7 +142,7 @@
 						</div> -->
 					</div>
 				</form>
-				<div class="login100-more b-lazy" data-src="assets/new_login/images/bg-02.png">
+				<div class="login100-more b-lazy" data-src="<?=$background?>">
 				</div>
 			</div>
 		</div>

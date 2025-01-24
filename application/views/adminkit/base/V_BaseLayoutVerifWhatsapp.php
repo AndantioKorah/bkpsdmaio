@@ -178,7 +178,7 @@
 <script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
-	  var timertoast = 2500
+	  var timertoast = 5000
 
 	function errortoast(message = ''){
 		const Toast = Swal.mixin({

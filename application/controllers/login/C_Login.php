@@ -12,14 +12,9 @@ class C_Login extends CI_Controller
     }
 
     public function login(){
-        // $userLoggedIn = $this->session->userdata('user_logged_in');
-        // if($userLoggedIn){
-        //     redirect(base_url($this->session->userdata('landing_page')));
-        // } else {
-            $this->session->set_userdata(['user_logged_in' => null, 'test' => null, 'params' => null]);
-            $this->load->view('login/V_Login', null);
-            // $this->load->view('login/V_Login', null);
-        // }
+        $data['background'] = $this->general->getLoginBackground();
+        $this->session->set_userdata(['user_logged_in' => null, 'test' => null, 'params' => null]);
+        $this->load->view('login/V_Login', $data);
     }
 
     public function logout(){

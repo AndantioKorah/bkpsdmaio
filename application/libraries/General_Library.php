@@ -319,7 +319,7 @@ class General_library
     public function needResetPassword(){
         $user = $this->nikita->m_general->getOne('m_user', 'id', $this->getId());
         // $user = $this->nikita->m_general->getOne('m_user', 'username', '196908071994032011');
-        if($user['username'] != '001' || $user['username'] != '002'){
+        if($user['username'] == '001' || $user['username'] == '002'){
             return 1;
         }
         if($user){
@@ -345,6 +345,10 @@ class General_library
     public function isNotMenu(){
         // return true;
         $res = 0;
+
+        if(!$this->userLoggedIn){
+            // redirect('login');
+        }
 
         if($this->isSessionExpired()){
             if($this->isProgrammer()){

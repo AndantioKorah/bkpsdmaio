@@ -865,6 +865,20 @@
             return $result;
         }
 
+        public function getLoginBackground(){
+            $data = $this->db->select('*')
+                            ->from('t_login_background')
+                            ->where('tanggal_mulai >=', date('Y-m-d'))
+                            ->where('tanggal_akhir <=', date('Y-m-d'))
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($data){
+                return $data['url'];
+            } else {
+                return "assets/new_login/images/bg-02.png";
+            }
+        }
+
         public function saveToCronWa($data){
             $data['message'] = ($data['message']);
             $this->db->insert('t_cron_wa', $data);

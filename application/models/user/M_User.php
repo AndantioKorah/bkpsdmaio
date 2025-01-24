@@ -991,6 +991,28 @@
             return $rs;
         }
 
+        public function submitForgetPassword(){
+            $res['code'] = 0;
+            $res['message'] = "";
+            $data = $this->input->post();
+
+            $pegawai = $this->db->select('a.*, b.id as id_m_user')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->where('a.nipbaru_ws', trim($data['form_nip']))
+                            ->where('a.handphone', trim($data['form_no_hp']))
+                            ->where('b.flag_active', 1)
+                            ->get()->row_array();
+            if($pegawai){
+                $this->resetPassword($pegawai['id_m_user']);
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Kombinasi NIP dan Nomor Handphone yang Anda masukkan tidak ditemukan. Jika Anda belum menginputkan Nomor Handphone Anda di Siladen, silahkan menghubungi Admin.";
+            }
+
+            return $res;
+        }
+
         public function resetPassword($id){
             $user = $this->db->select('*')
                             ->from('m_user')

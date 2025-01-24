@@ -2,6 +2,7 @@
 $route['users'] = 'user/C_User/users';
 $route['user/password/change'] = 'user/C_User/personalChangePassword';
 $route['noss/user/password/change'] = 'user/C_UserWOSession/personalChangePassword';
+$route['noss/user/password/forget'] = 'user/C_UserWOSession/forgetPassword';
 $route['user/setting'] = 'user/C_User/userSetting';
 $route['roles'] = 'user/C_User/roles';
 $route['menu'] = 'user/C_User/menu';

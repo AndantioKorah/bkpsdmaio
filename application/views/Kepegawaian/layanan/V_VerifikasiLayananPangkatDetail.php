@@ -837,6 +837,9 @@ function deleteFile(id,reference_id_dok,id_m_layanan){
                }
 
 function kirimBkad(id,status){
+                  // var tanggal =  new Date();
+                  // alert(tanggal)
+                  // return false;
                    if(status == 3){
                     var pesan = "kirim Data ke BKAD ?";
                    } else {
@@ -846,7 +849,7 @@ function kirimBkad(id,status){
                        $.ajax({
                            url: '<?=base_url("kepegawaian/C_Kepegawaian/kirimBkad/")?>'+id+'/'+status,
                            method: 'post',
-                           data: null,
+                           data: { tanggalkirim : tanggal},
                            success: function(){
                                successtoast('Data berhasil terkirim')
                                setTimeout(window.location.reload.bind(window.location), 1000);

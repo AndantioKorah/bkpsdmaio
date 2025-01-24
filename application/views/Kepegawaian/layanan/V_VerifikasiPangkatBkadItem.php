@@ -4,7 +4,7 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
-          <!-- <th class="text-center">Tanggal Usul Ke BKAD</th> -->
+          <th class="text-center">Tanggal Usul Ke BKAD</th>
           <!-- <th class="text-center">Surat Pengantar</th> -->
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
@@ -24,7 +24,7 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs);?><br>
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-              <!-- <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td> -->
+              <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td>
               <!-- <td class="text-center">
               <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
               <i class="fa fa-file-pdf"></i></button>
@@ -86,7 +86,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Verifikasi Layanan</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Verifikasi</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

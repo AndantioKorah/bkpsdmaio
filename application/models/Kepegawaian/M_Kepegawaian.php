@@ -10033,9 +10033,10 @@ public function getFileForVerifLayanan()
         $this->updatePangkat($id_peg);
 
         $dataUpdate['status'] = 3;
+        $dataUpdate["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");
         $dataUpdate['reference_id_dok'] = $id_insert_dok;
         $url_file = "arsipelektronik/".$data['nama_file'];
-
+      
         $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
@@ -10169,7 +10170,7 @@ public function getFileForVerifLayanan()
         $this->db->trans_begin();
 
             $data["status"] = $status; 
-            $data["tanggal_usul_bkad"] =  date("Y-m-d");
+            $data["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");
 
             $this->db->where('id', $id_usul)
                     ->update('t_layanan', $data);

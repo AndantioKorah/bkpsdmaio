@@ -349,7 +349,7 @@ ol {
                 <li>
 								<a class="<?php if($stlud){ if($stlud['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($stlud) { ?>
 									onclick="viewBerkasPangkat('<?=$stlud['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah dari golongan) <i
+									<?php } ?>> <i class="fa fa-file-pdf"></i>  Sertifikat Ujian Dinas (STLUD) (bagi PNS yang pindah golongan) <i
 											class="fas fa-<?php if($stlud) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>

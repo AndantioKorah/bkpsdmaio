@@ -270,7 +270,7 @@
                 <i class="fa fa-id-badge"></i> DRH <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Umum</a>
+                  <!-- <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrh('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Umum</a> -->
                   <a class="dropdown-item" data-toggle="modal" href="#modal_drh" onclick="loadDrhSatyalencana('<?=$profil_pegawai['nipbaru_ws']?>')">DRH Untuk Satyalancana</a>
                   </div>
               </div>

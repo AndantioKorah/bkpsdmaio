@@ -2740,9 +2740,28 @@
             // dd($result);
             return $result;
         } else {
+            $list_nip = null;
+            $list_gaji = null;
             $list_pegawai = null;
             foreach($pagu_tpp as $pt){
                 $list_pegawai['result'][$pt['nipbaru_ws']] = $pt;
+                $list_nip[] = $pt['nipbaru_ws'];
+            }
+
+            $gaji = null;
+            if($param['tahun'] >= 2025){
+                $gaji = $this->db->select('*')
+                                ->from('t_bkad_upload_gaji_detail')
+                                ->where('bulan', $param['bulan'])
+                                ->where('tahun', $param['tahun'])
+                                ->where_in('nip', $list_nip)
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+                if($gaji){
+                    foreach($gaji as $g){
+                        $list_gaji[$g['nip']] = $g;
+                    }
+                }
             }
 
             $list_pegawai = $this->getDaftarPenilaianTpp($list_pegawai, $param, $flag_rekap_tpp);
@@ -2856,7 +2875,7 @@
                     //     dd(json_encode($data_rekap));
                     // }
                     if($l['nipbaru_ws'] == '199502182020121013'){
-                        // dd($result[$l['nipbaru_ws']]);
+                        // dd($list_gaji);
                     }
 
                     $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal($result[$l['nipbaru_ws']]['presentase_tpp']);
@@ -2912,7 +2931,13 @@
                     // if($l['nipbaru_ws'] == '197707042010011005'){
                     //     $result[$l['nipbaru_ws']]['besaran_tpp'] = 5118036;
                     // }
-                    $result[$l['nipbaru_ws']]['besaran_gaji'] = $l['besaran_gaji'];
+
+                    if(isset($list_gaji[$l['nipbaru_ws']])){
+                        $result[$l['nipbaru_ws']]['besaran_gaji'] = $list_gaji[$l['nipbaru_ws']]['gaji'];
+                    } else {
+                        $result[$l['nipbaru_ws']]['besaran_gaji'] = $l['besaran_gaji'];
+                    }
+
                     $result[$l['nipbaru_ws']]['bpjs'] = (0.01 * $result[$l['nipbaru_ws']]['besaran_tpp']);
 
                     // capaian tpp presentasi kerja
@@ -3603,6 +3628,7 @@
         $temp_not_found = null;
         $filename = "";
         $list_exec = null;
+        $input_post = $this->input->post(); 
 
         if($_FILES){
             $allowed_extension = ['xls', 'csv', 'xlsx'];
@@ -3624,6 +3650,8 @@
                     $this->db->trans_begin();
 
                     $this->db->insert('t_bkad_upload_gaji', [
+                        'bulan' => $input_post['bulan'],
+                        'tahun' => $input_post['tahun'],
                         'url_file' => $config['upload_path'].'/'.$config['file_name'],
                         'created_by' => $this->general_library->getId()
                     ]);
@@ -3720,10 +3748,11 @@
     }
 
     public function cronUpdateGajiBkad(){
-        $data = $this->db->select('*')
-                        ->from('t_cron_bkad_upload_gaji')
-                        ->where('flag_active', 1)
-                        ->where('flag_update', 0)
+        $data = $this->db->select('a.*, b.bulan, b.tahun')
+                        ->from('t_cron_bkad_upload_gaji a')
+                        ->join('t_bkad_upload_gaji b', 'a.id_t_bkad_upload_gaji = b.id')
+                        ->where('a.flag_active', 1)
+                        ->where('a.flag_update', 0)
                         ->limit(1000)
                         ->get()->result_array();
 
@@ -3734,6 +3763,29 @@
                             'besaran_gaji' => $d['besaran_gaji'],
                             'id_t_bkad_upload_gaji' => $d['id_t_bkad_upload_gaji']
                         ]);
+
+                $exists = $this->db->select('a.*')
+                                ->from('t_bkad_upload_gaji_detail a')
+                                ->where('a.flag_active', 1)
+                                ->where('a.bulan', $d['bulan'])
+                                ->where('a.tahun', $d['tahun'])
+                                ->where('a.nip', $d['nip'])
+                                ->get()->row_array();
+
+                if($exists){
+                    $this->db->where('id', $exists['id'])
+                            ->update('t_bkad_upload_gaji_detail', [
+                                'gaji' => $d['besaran_gaji']
+                            ]);
+                } else {
+                    $this->db->insert('t_bkad_upload_gaji_detail', [
+                        'nip' => $d['nip'],
+                        'gaji' => $d['besaran_gaji'],
+                        'id_t_bkad_upload_gaji' => $d['id_t_bkad_upload_gaji'],
+                        'bulan' => $d['bulan'],
+                        'tahun' => $d['tahun'],
+                    ]);
+                }
                 
                 $this->db->where('id', $d['id'])
                         ->update('t_cron_bkad_upload_gaji', [

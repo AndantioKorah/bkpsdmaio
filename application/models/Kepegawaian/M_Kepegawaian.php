@@ -9336,7 +9336,7 @@ public function getFileForKarisKarsu()
 
     public function getPltPlh()
     {
-        $this->db->select('*,a.id as id_pltplh')
+        $this->db->select('*, a.id as id_pltplh')
         ->from('db_efort.t_plt_plh as a')
         ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -9346,6 +9346,20 @@ public function getFileForKarisKarsu()
         ->order_by('a.id', 'desc');
      
         return $this->db->get()->result_array(); 
+    }
+
+    public function loadDataPltPlhById($id)
+    {
+        $this->db->select('*, a.id as id_pltplh, a.id_jabatan as id_jabatan_plt_plh')
+        ->from('db_efort.t_plt_plh as a')
+        ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
+        ->join('db_pegawai.jabatan e', 'a.id_jabatan = e.id_jabatanpeg')
+        ->where('a.flag_active', 1)
+        ->where('a.id', $id);
+     
+        return $this->db->get()->row_array(); 
     }
 
     function getNamaJabatanStruktural(){
@@ -9366,6 +9380,46 @@ public function getFileForKarisKarsu()
         ->from('db_pegawai.unitkerja a');
         return $this->db->get()->result_array(); 
     }
+
+    public function submitEditPltPlh($id){
+        $this->db->trans_begin();
+
+        if($this->input->post('pltplh_jabatan_edit')){
+
+        $jabatan = explode(",", $this->input->post('pltplh_jabatan_edit'));
+        $id_jabatan = $jabatan[0];
+        $id_unitkerja = $jabatan[1];
+
+        
+            $dataEdit['jenis']     = $this->input->post('pltplh_jenis_edit');
+            $dataEdit['id_unitkerja']     = $id_unitkerja;
+            $dataEdit['id_jabatan']     = $id_jabatan;
+            $dataEdit['tanggal_mulai']     = $this->input->post('pltplh_tgl_mulai_edit');
+            $dataEdit['tanggal_akhir']     = $this->input->post('pltplh_tgl_akhir_edit');
+            $dataEdit['presentasi_tpp']     = $this->input->post('pltplh_presentasi_tpp_edit');
+            $dataEdit['flag_use_bpjs']     = $this->input->post('pltplh_bpjs_edit');
+            // $dataEdit['id_m_user']     = $this->input->post('pltplh_id_m_user_edit');
+            // dd($dataEdit);
+
+            $this->db->where('id', $id)
+                    ->update('t_plt_plh', $dataEdit);
+
+            // $result = $this->db->insert('db_efort.t_plt_plh', $dataEdit);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        } else {
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        }
+        
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+        
+	}
 
     public function submitPltPlh()
 	{

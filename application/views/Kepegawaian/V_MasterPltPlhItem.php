@@ -4,7 +4,7 @@
     transform: scale(1.2); 
 } */
 </style>
-    <div class="col-12">
+    <div class="col-12 table-responsive">
         <table class="table table-hover" id="table_announcement">
             <thead>
                 <th class="text-center">No</th>
@@ -30,26 +30,30 @@
                         <td class="text-left"><?= formatDateNamaBulan($lp['tanggal_akhir'])?></td>
                         <td class="text-left"><?=$lp['presentasi_tpp']?></td>
                         <td class="text-left"><?= $lp['flag_use_bpjs'] == '1' ? 'Ya' : 'Tidak';   ?></td>
-                        
                         <td class="text-center">
-                            <button onclick="deleteTpltPlh('<?=$lp['id_pltplh']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <button onclick="editPltPlh('<?=$lp['id_pltplh']?>')" href="#modal_edit" data-toggle="modal" 
+                                class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button>
+                            <button onclick="deletePltPlh('<?=$lp['id_pltplh']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
     </div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" data-backdrop="static" data-keyboard="false" 
-  aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="col-lg-12 float-right text-right">
-    <button type="button" class="btn-close btn-close-modal-announcement btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
-  </div>
-    <div id="modal-dialog" class="modal-dialog modal-xl">
-        <div id="modal-announcement-content">
+    <div class="modal fade" id="modal_edit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="modal-dialog" class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">EDIT DATA PLT PLH</h2>
+                    <button type="button" class="close" id="btn_modal_close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal_edit_content">
+                </div>
+            </div>
         </div>
     </div>
-  </div>
 
     <script>
 
@@ -73,10 +77,10 @@ $(document).ready( function () {
 
        
 
-        function deleteTpltPlh(id){
+        function deletePltPlh(id){
             if(confirm('Apakah Anda yakin ingin menghapus data?')){
                 $.ajax({
-                    url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteTpltPlh/")?>'+id,
+                    url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePltPlh/")?>'+id,
                     method: 'post',
                     data: null,
                     success: function(){
@@ -88,6 +92,15 @@ $(document).ready( function () {
                 })
             }
         }
+
+        function editPltPlh(id){
+            $('#modal_edit_content').html('')
+            $('#modal_edit_content').append(divLoaderNavy)
+            $('#modal_edit_content').load('<?=base_url('kepegawaian/C_Kepegawaian/loadEditPltPlh/')?>'+id, function(){
+                $('#loader').hide()
+            })
+        }
+
     </script>
 <?php } else { ?>
     <div class="row">

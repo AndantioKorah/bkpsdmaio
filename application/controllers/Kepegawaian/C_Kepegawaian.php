@@ -2317,6 +2317,16 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_MasterPltPlhItem', $data);
     }
 
+	public function loadEditPltPlh($id){
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+		$data['result'] = $this->kepegawaian->loadDataPltPlhById($id);
+        $this->load->view('kepegawaian/V_MasterPltPlhEdit', $data);
+	}
+
+	public function submitEditPltPlh($id){
+		echo json_encode( $this->kepegawaian->submitEditPltPlh($id));
+	}
+
 	public function submitPltPlh()
 	{ 
 		echo json_encode( $this->kepegawaian->submitPltPlh());

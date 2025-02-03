@@ -61,11 +61,11 @@
                 <td class="text-center"><?=$p['date_sending'] ? formatDateNamaBulanWT($p['date_sending']) : ''?></td>
                 <td class="text-center"><?=$p['date_sent'] ? formatDateNamaBulanWT($p['date_sent']) : ''?></td>
                 <td class="text-center">
-                  <?php if($this->general_library->isProgrammer() &&
-                  $p['flag_verif'] == 0 &&
+                  <?php if($this->general_library->isProgrammer() ||
+                  ($p['flag_verif'] == 0 &&
                   $p['jabatan'] != ID_JABATAN_KABAN_BKPSDM && 
                   $progress['current'] &&
-                  $progress['current']['id'] == $p['id']){ ?>
+                  $progress['current']['id'] == $p['id'])){ ?>
                     <button id="btn_resend_<?=$p['id']?>" class="btn btn-sm btn-danger" type="button" onclick="resendMessage('<?=$p['id']?>')">
                       <i class="fa fa-bell"></i> Resend
                     </button>

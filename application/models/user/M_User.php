@@ -1004,7 +1004,12 @@
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
             if($pegawai){
-                $this->resetPassword($pegawai['id_m_user']);
+                if($pegawai['skpd'] == ID_UNITKERJA_BKPSDM){
+                    $res['code'] = 1;
+                    $res['message'] = "Reset Password untuk User dengan NIP berikut hanya dapat dilakukan oleh Admin";
+                } else {
+                    $this->resetPassword($pegawai['id_m_user']);
+                }
             } else {
                 $res['code'] = 1;
                 $res['message'] = "Kombinasi NIP dan Nomor Handphone yang Anda masukkan tidak ditemukan. Jika Anda belum menginputkan Nomor Handphone Anda di Siladen, silahkan menghubungi Admin.";

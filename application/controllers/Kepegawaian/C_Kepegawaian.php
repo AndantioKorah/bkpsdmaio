@@ -2450,7 +2450,14 @@ class C_Kepegawaian extends CI_Controller
 
 	public function verifikasiLayananNew($id_m_layanan){
 		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+			$data['nm_layanan'] = "KENAIKAN PANGKAT";
+		} else {
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_m_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+		}
 		$data['id_m_layanan'] = $id_m_layanan;
+
 		render('kepegawaian/layanan/V_VerifikasiLayanan', '', '', $data);
 	}
 
@@ -2478,13 +2485,15 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $layanan;
 		$data['id_usul'] = $id;
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
-
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);      
+		
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9){
-		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
-		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
-		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
+		// $data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
+		// $data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
+		// $data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
 		 
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
@@ -2522,7 +2531,7 @@ class C_Kepegawaian extends CI_Controller
 		}
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		} else if($layanan == 10){
-			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpns(); 
+			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpnsAdmin($id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananPerbaikanDataDetail', '', '', $data);
 		} 
 	}

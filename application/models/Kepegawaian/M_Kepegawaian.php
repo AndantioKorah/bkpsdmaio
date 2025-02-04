@@ -8259,7 +8259,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
         ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->from($table);
 
         if($table == "db_pegawai.pegarsip"){
@@ -9121,6 +9121,26 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getMlayanan($id_m_layanan)
+    {
+        $this->db->select('*')
+        ->where('id', $id_m_layanan)
+        ->from('m_layanan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahCpnsAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('ijazah_cpns', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanForLayanan()
     {
         $this->db->select('*')
@@ -9885,6 +9905,15 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "ijazah_cpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpendidikan as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.ijazah_cpns', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }  else {
          return [''];
         }
@@ -9899,7 +9928,6 @@ public function getFileForVerifLayanan()
         $res['data'] = null;
 
         $datapost = $this->input->post();
-        // dd($datapost);
         $this->db->trans_begin();
 
 
@@ -9944,9 +9972,11 @@ public function getFileForVerifLayanan()
                 $this->updatePangkat($dataPengajuan[0]['id_peg']);
             }
             if(isset($datapost['sk_jabatan'])){
-
                 $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
                 $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if($datapost['ijazah_cpns']){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
             }
 
             

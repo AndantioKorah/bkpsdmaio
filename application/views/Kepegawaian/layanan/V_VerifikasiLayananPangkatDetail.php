@@ -730,7 +730,7 @@ function openPresensiTab(){
                   $('#btn_tolak_verifikasi').show()
                   // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
-                  // location.reload()
+                  location.reload()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

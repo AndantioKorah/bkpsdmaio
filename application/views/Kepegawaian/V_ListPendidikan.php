@@ -1,9 +1,16 @@
 <?php if($result){ ?>
   <div class="row">
     <div class="col-lg-12 table-responsive">
+
+  
+
+<script>
+  
+</script>
       <table class="table table-hover datatable">
         <thead>
           <th class="text-left">No</th>
+          <th class="text-left">Ijazah Saat Melamar CPNS</th>
           <th class="text-left">Tingkat Pendidikan</th>
           <th class="text-left">Nama Sekolah</th>
           <th class="text-left">Fakultas</th>
@@ -26,6 +33,12 @@
 
 
               <td class="text-left"><?=$no++;?></td>
+              <td class="text-left">
+              <div class="form-check">
+              <input <?= $rs['ijazah_cpns'] == '1' ? 'checked' : ''; ?>
+               onclick="pilihIjazah('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="fooby[1][]" /></label>
+            </div>
+              </td>
               <td class="text-left"><?=$rs['nm_tktpendidikan']?></td>
            
               <td class="text-left"><?=$rs['namasekolah']?></td>
@@ -92,6 +105,7 @@
               <?php } ?>
               </td>
               <?php } ?>
+              
             </tr>
           <?php } ?>
         </tbody>
@@ -244,6 +258,60 @@
             }
         })
     }
+
+
+    $("input:checkbox").on('click', function() {
+  // in the handler, 'this' refers to the box clicked on
+  var $box = $(this);
+  if ($box.is(":checked")) {
+    // the name of the box is retrieved using the .attr() method
+    // as it is assumed and expected to be immutable
+    var group = "input:checkbox[name='" + $box.attr("name") + "']";
+    // the checked state of the group/box on the other hand will change
+    // and the current value is retrieved using .prop() method
+    $(group).prop("checked", false);
+    $box.prop("checked", true);
+  } else {
+    $box.prop("checked", false);
+  }
+  // alert($(this).val())
+
+ 
+  // $.ajax({
+  //                          url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegpendidikan/'+file,
+  //                          method: 'post',
+  //                          data: null,
+  //                          success: function(){
+  //                              successtoast('Data sudah terhapus')
+  //                              if(kode == 1){
+  //                               loadListPendidikan()
+
+  //                              } else {
+  //                               loadRiwayatUsulPendidikan()
+
+  //                              }
+  //                          }, error: function(e){
+  //                              errortoast('Terjadi Kesalahan')
+  //                          }
+  //                      })
+ 
+
+});
+
+function pilihIjazah(id,id_pegawai){
+
+   $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/checkListIjazahCpns/")?>'+id+'/'+id_pegawai,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                               successtoast('Berhasil ubah data')
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+}
+
 
 
 </script>

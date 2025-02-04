@@ -1174,6 +1174,12 @@ class C_Kepegawaian extends CI_Controller
         $this->kepegawaian->delete('id', $id, "db_pegawai.".$table,$file);
     }
 
+	public function checkListIjazahCpns($id, $id_pegawai)
+    {
+        echo json_encode($this->kepegawaian->checkListIjazahCpns($id, $id_pegawai));
+    }
+
+
 	public function submitVerifikasiDokumen()
 	{ 
 		echo json_encode( $this->kepegawaian->submitVerifikasiDokumen());
@@ -2397,6 +2403,17 @@ class C_Kepegawaian extends CI_Controller
 		// $data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');
 		// $this->load->view('kepegawaian/layanan/V_LayananPangkatFungsional', $data);
 		// }
+	}
+
+	public function layananPerbaikanData($id_layanan){
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+		$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpns(); 
+		
+		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanData', $data);
+		
+	
 	}
 
 	public function loadListRiwayatLayanan($id){

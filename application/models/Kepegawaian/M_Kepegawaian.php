@@ -480,7 +480,7 @@ class M_Kepegawaian extends CI_Model
        
 
         function getPendidikan($nip,$kode){
-             $this->db->select('b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
+             $this->db->select('c.ijazah_cpns,b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
@@ -4582,12 +4582,15 @@ public function submitEditJabatan(){
                 $filename = $_FILES['file']['name'];
             } 
 
-    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+        
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE; 
+        $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4601,14 +4604,14 @@ public function submitEditJabatan(){
 			$dataFile = $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["tktpendidikan"] = $datapost["edit_pendidikan_tingkat"];
@@ -9074,6 +9077,17 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahCpns()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_cpns', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanForLayanan()
     {
         $this->db->select('*')
@@ -10643,6 +10657,36 @@ public function getFileForVerifLayanan()
          
 
     return $this->db->get()->result_array();
+}
+
+public function checkListIjazahCpns($id, $id_pegawai){
+    $rs['code'] = 0;        
+    $rs['message'] = 'OK';
+
+    $this->db->trans_begin();
+
+    $data['ijazah_cpns'] = 0;
+    $dataCheck['ijazah_cpns'] = 1;
+            
+    $this->db->where('id_pegawai', $id_pegawai)
+        ->update('db_pegawai.pegpendidikan', $data);
+    
+    $this->db->where('id', $id)
+        ->update('db_pegawai.pegpendidikan', $dataCheck);
+    
+   
+
+    if ($this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;        
+        $rs['message'] = 'Terjadi Kesalahan';
+    }else{
+        $this->db->trans_commit();
+    }
+
+   
+    
+    return $rs;
 }
 
 

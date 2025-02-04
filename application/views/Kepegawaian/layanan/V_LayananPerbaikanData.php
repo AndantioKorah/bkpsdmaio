@@ -52,6 +52,19 @@
 	color: #fff;
 }
 
+.filter-warning {
+	/* border: 1px solid #222e3c;
+        color: white;
+        font-weight: bold;
+        background-color: #0a7129; */
+	position: relative;
+	background-color:rgb(239, 255, 8);
+	/* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025); */
+	/* transition: 0.5s ease-in-out; */
+	/* border: 3px solid #0a7129; */
+	color: #fff;
+}
+
 /* .filter-select:hover{
         cursor: pointer;
         background-color: #222e3c;
@@ -147,6 +160,18 @@ ol {
     transition: all .3s ease-out;
   }
 
+  .rectangle-list .warning{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em .8em;
+    *padding: .4em;
+    margin: .5em 0 .5em 2.5em;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: all .3s ease-out;
+  }
+
   .rectangle-list .unselect{
     position: relative;
     display: block;
@@ -193,6 +218,21 @@ ol {
     font-weight: bold;
   }
 
+  .rectangle-list .warning:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background-color:rgb(239, 255, 8);
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+  }
+
   .rectangle-list a:after{
     position: absolute;
     content: '';
@@ -207,11 +247,18 @@ ol {
     left: -.5em;
     border-left-color: #0ed095;
   }
+
+  .rectangle-list .warning:hover:after{
+    left: -.5em;
+    border-left-color:rgb(187, 255, 14);
+  }
+
   .rectangle-list .unselect:hover:after{
     left: -.5em;
     border-left-color: #fa8072;
   }
 </style>
+
 <div class="row">
 	<div class="col-lg-12">
 		<div class="card card-default">
@@ -278,10 +325,12 @@ ol {
 					Berkas Sudah diupload<br>
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
+          <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
+					</button> Menunggu Verifikasi BKPSDM<br><br>
 					Berkas diupload Pada Menu Profil <br>
-					<!-- Untuk Berkas : <br>
+					Untuk Berkas : <br>
 					<i class="fa fa-file-pdf"></i> <b>Ijazah Saat Melamar CPNS.</b>
-					<br>di upload pada pilihan Arsip Lainnya. -->
+					<br>Centang Ijazah yang dipakai melamar CPNS pada riwayat pendidikan dimenu Profil.
 				</p>
 				
 			</div>
@@ -435,5 +484,25 @@ $(function(){
       $('#loader').hide()
     })
     }
+
+
+    $("#pdf_surat_pengantar").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
 
 </script>

@@ -36,7 +36,8 @@
               <td class="text-left">
               <div class="form-check">
               <input <?= $rs['ijazah_cpns'] == '1' ? 'checked' : ''; ?>
-               onclick="pilihIjazah('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="fooby[1][]" /></label>
+               onclick="pilihIjazah('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="fooby[1][]" 
+               <?php if($this->general_library->getUserName() != $nip) echo "disabled"; else echo "";?> /></label>
             </div>
               </td>
               <td class="text-left"><?=$rs['nm_tktpendidikan']?></td>

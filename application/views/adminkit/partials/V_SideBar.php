@@ -589,11 +589,13 @@
 				</li>
 				<?php } ?>
 
+				<?php if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/10')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Perbaikan Data Kepegawaian
 					</a>
 				</li>
+				<?php } ?>
 
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">

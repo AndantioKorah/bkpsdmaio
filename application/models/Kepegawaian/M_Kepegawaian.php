@@ -9929,7 +9929,7 @@ public function getFileForVerifLayanan()
 
         $datapost = $this->input->post();
         $this->db->trans_begin();
-
+       
 
           
         $id_pengajuan = $datapost['id_pengajuan'];
@@ -9947,6 +9947,7 @@ public function getFileForVerifLayanan()
                 ->join('t_layanan c', 'a.id = c.id_m_user')
                 ->where('c.id', $id_pengajuan)
                 ->get()->result_array();
+
 
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";
@@ -9987,13 +9988,19 @@ public function getFileForVerifLayanan()
             $statusForMessage = "ditolak";
         }
 
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 10){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Perbaikan Data Kepegawaian";
+        }
        
         $cronWaNextVerifikator = [
                     'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
                     'message' => trim($message.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
-                    'jenis_layanan' => 'Pangkat',
+                    'jenis_layanan' =>  $jenislayanan,
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);

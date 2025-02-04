@@ -5773,10 +5773,20 @@ public function submitEditJabatan(){
                     $this->db->insert('t_cron_wa', $cronWaVerifikator);
                 } else {
                     $pada_tanggal = formatDateNamaBulan($resp['cuti']['tanggal_mulai']);
-                        if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
-                            $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
-                        }
-                    $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
+                        $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
+                    }
+                    
+                    if($progress['current']){
+                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().
+                                ", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".
+                                $resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.
+                                ". Permohonan Cuti ini telah disetujui sebelumnya oleh ".
+                                $progress['current']['nama_jabatan'].
+                                ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    } else {
+                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    }
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     $cronWaNextVerifikator = [
@@ -6754,7 +6764,18 @@ public function submitEditJabatan(){
                         if($data['tanggal_mulai'] != $data['tanggal_akhir']){
                             $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
                         }
-                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        if($res['progress']['current']){
+                            $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".
+                            greeting().", pegawai atas nama: ".
+                            getNamaPegawaiFull($data).
+                            " telah mengajukan Permohonan ".
+                            $data['nm_cuti']." selama ".$data['lama_cuti'].
+                            " hari pada ".$pada_tanggal." dan telah diverifikasi oleh "
+                            .$res['progress']['current']['nama_jabatan'].
+                            ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        } else {
+                            $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        }
                         // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                         if($res['progress']['next']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){ // jika next kaban, buat nods SK Cuti
                             $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
@@ -8272,6 +8293,7 @@ public function submitEditJabatan(){
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
                 ->where('d.id_m_jenis_layanan', 3)
+                ->group_by('a.id')
                 ->order_by('a.created_date', 'asc');
 
         if($data['id_unitkerja'] != 0){

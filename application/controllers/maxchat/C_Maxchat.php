@@ -35,8 +35,8 @@ class C_Maxchat extends CI_Controller
             $this->general->updateCronWa($result);
         // }
         if (($result->type == "text" || $result->type == "image") && 
-            $result->chatType != "story" &&
-            $result->from != GROUP_CHAT_HELPDESK) {
+            ($result->chatType != "story" &&
+            $result->from != GROUP_CHAT_HELPDESK)) {
                 if(!isset($result->replyId)){
                     $this->chatBotLayanan($result);
                 } else {

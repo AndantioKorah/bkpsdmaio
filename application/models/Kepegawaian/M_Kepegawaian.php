@@ -8382,6 +8382,17 @@ public function submitEditJabatan(){
                        return $query;
    }
 
+   function getRiwayatPerbaikanData(){
+    $this->db->select('*')
+                   ->from('t_layanan a')
+                   ->where('a.id_m_user', $this->general_library->getId())
+                   ->where('a.flag_active', 1)
+                   ->where('a.id_m_layanan', 10)
+                   ->order_by('a.id','desc');
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
+
        function loadListRiwayatPensiun($jenis_pensiun){
         $this->db->select('*')
                        ->from('t_pensiun a')
@@ -9548,6 +9559,23 @@ public function getFileForKarisKarsu()
 
     }
 
+    public function getDokumenForLayananPangkatAdmin($table,$tahun,$id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        // ->where('status', 2)
+        ->order_by('id', 'desc')
+        ->from($table);
+
+        if($table == "db_pegawai.pegskp"){
+            $this->db->where('tahun', $tahun); 
+        }
+        $query = $this->db->get()->row_array();
+        return $query;  
+
+    }
+
 
     function getRiwayatLayanan($id){
         $this->db->select('*')
@@ -9619,6 +9647,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             }  else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
+            } else if($id_m_layanan == 10){ 
+                $this->db->where('a.id_m_layanan', 10);
             } else {
                 $this->db->where('a.id_m_layanan', 99);
             }
@@ -10419,6 +10449,9 @@ public function getFileForVerifLayanan()
             if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/pangkat';
+            } else if($id_m_layanan == 10){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/perbaikan_data';
             } else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 

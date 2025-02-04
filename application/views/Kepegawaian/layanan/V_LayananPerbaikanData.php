@@ -279,9 +279,9 @@ ol {
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
 					Berkas diupload Pada Menu Profil <br>
-					Untuk Berkas : <br>
+					<!-- Untuk Berkas : <br>
 					<i class="fa fa-file-pdf"></i> <b>Ijazah Saat Melamar CPNS.</b>
-					<br>di upload pada pilihan Arsip Lainnya.
+					<br>di upload pada pilihan Arsip Lainnya. -->
 				</p>
 				
 			</div>
@@ -328,7 +328,7 @@ ol {
 </div>
 
 <script>
-
+var id_m_layanan = "<?=$id_m_layanan;?>"
 $(function(){
   $(".select2").select2({   
 		width: '100%',
@@ -347,7 +347,7 @@ $(function(){
         var sk_pns = $('#sk_pns').val()
         var sk_pangkat = $('#sk_pangkat').val()
         var ijazah_cpns = $('#ijazah_cpns').val()
-
+        var id_m_layanan = "<?=$id_m_layanan;?>"
 
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
@@ -371,7 +371,7 @@ $(function(){
 
 
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananKarisKarsu/1")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananNew/")?>"+id_m_layanan,
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -420,10 +420,18 @@ $(function(){
 
   }
 
+  // function loadListRiwayatPerbaikanData(){
+  //   $('#list_riwayat_karsu').html('')
+  //   $('#list_riwayat_karsu').append(divLoaderNavy)
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPerbaikanData/")?>', function(){
+  //     $('#loader').hide()
+  //   })
+  //   }
+
   function loadListRiwayatPerbaikanData(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
-    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPerbaikanData/")?>', function(){
+    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){
       $('#loader').hide()
     })
     }

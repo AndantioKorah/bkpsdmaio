@@ -122,6 +122,9 @@
                                if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
                                loadListRiwayatLayananPangkat()
                                }
+                               if(id_layanan == 10){
+                                loadListRiwayatPerbaikanData()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -130,12 +133,16 @@
                }
 
 async function openFilePengantar(filename){
-
+ var id_layanan = "<?=$m_layanan;?>"
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 2000);
-$link = "<?=base_url();?>dokumen_layanan/pangkat/"+filename+"?v="+number;
+if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+  $link = "<?=base_url();?>dokumen_layanan/pangkat/"+filename+"?v="+number;
+} else if(id_layanan == 10){
+  $link = "<?=base_url();?>dokumen_layanan/perbaikan_data/"+filename+"?v="+number;
+}
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){

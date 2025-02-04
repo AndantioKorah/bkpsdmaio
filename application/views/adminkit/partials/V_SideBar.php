@@ -461,7 +461,7 @@
 		
 		</ul>
 
-		<li class="sidebar-item ">
+		<!-- <li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
 				<span class="align-middle">
@@ -474,7 +474,6 @@
 				</span>
 			</a>
 			<ul id="datamaster" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				
 			<li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Gaji Berkala <i class="fa fa-chevron-down" 
@@ -498,7 +497,7 @@
 				</a>
 			</li>
 			</ul>
-		</li>
+		</li> -->
 		
 
 		
@@ -589,6 +588,13 @@
 					</a>
 				</li>
 				<?php } ?>
+
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/10')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Perbaikan Data Kepegawaian
+					</a>
+				</li>
+
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pensiun')?>">

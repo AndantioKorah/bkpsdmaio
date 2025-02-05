@@ -159,7 +159,7 @@ function ajukanKembali(id){
                            method: 'post',
                            data: null,
                            success: function(){
-                               successtoast('Data sudah terhapus')
+                               successtoast('Layanan diajukan kembali')
                                if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
                                loadListRiwayatLayananPangkat()
                                }

@@ -61,10 +61,11 @@
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
                   <option value="2" >Ditolak</option>
+                  <?php if($id_m_layanan != 10) { ?>
                   <option value="3" >Usul BKAD</option>
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>
-                
+                  <?php } ?>
               </select>
             </div>
           </div>

@@ -84,7 +84,7 @@ class M_Layanan extends CI_Model
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegberkaspns b', 'a.id_peg = b.id_pegawai')
                         ->where('a.nipbaru_ws', $nip)
-                        ->where('b.status', 2)
+                        // ->where('b.status', 2)
                         ->order_by('b.created_date')
                         ->where_in('flag_active', [1,2])
                         ->get()->result_array();

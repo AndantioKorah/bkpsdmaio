@@ -5785,10 +5785,10 @@ public function submitEditJabatan(){
                                 $progress['current']['nama_jabatan'].
                                 ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     } else {
-                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     }
                     
-                    // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                    // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     $cronWaNextVerifikator = [
                         'sendTo' => convertPhoneNumber($progress['next']['nohp']),
                         'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
@@ -5926,6 +5926,12 @@ public function submitEditJabatan(){
                 }
             } else {
                 $reply .= '*DITOLAK*';
+                $this->db->where('id', $dataCuti['id'])
+                        ->update('t_pengajuan_cuti', [
+                            'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan']
+                        ]);
+
+                $this->updateSisaCuti($dataCuti['id'], 'min');
             }
 
             $reply .= ' oleh '.$progress['current']['nama_jabatan'].' pada '.formatDateNamaBulanWT($resp['response']['tanggal_verif']); // pilih dari progress untuk progress yang aktif
@@ -5961,6 +5967,10 @@ public function submitEditJabatan(){
         } else {
             $this->db->trans_rollback();
         }
+    }
+
+    public function updateSisaCuti($id_t_pengajuan_cuti, $operand){
+        //mulai disini
     }
 
     public function checkIfReplyCuti($chat){
@@ -6191,7 +6201,7 @@ public function submitEditJabatan(){
                     $tahun = $tahunIni - $i;
                     $this->db->insert('t_meta_cuti',
                         [
-                            'id_t_penggunaan_cuti' => $insert_id,
+                            'id_t_pengajuan_cuti' => $insert_id,
                             'tahun' => $tahun,
                             'jumlah' => $keterangan_cuti[$tahun],
                             'created_by' => $this->general_library->getId()
@@ -6234,7 +6244,7 @@ public function submitEditJabatan(){
                             if($data['tanggal_mulai'] != $data['tanggal_akhir']){
                                 $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
                             }
-                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                             $sendTo = convertPhoneNumber($progressCuti[0]['nohp']);
                             // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
                             $cronWa = [
@@ -6373,7 +6383,7 @@ public function submitEditJabatan(){
         $meta_cuti = null;
         $list_meta_cuti = $this->db->select('*')
                             ->from('t_meta_cuti')
-                            ->where('id_t_penggunaan_cuti', $id)
+                            ->where('id_t_pengajuan_cuti', $id)
                             ->get()->result_array();
 
         // if($list_meta_cuti){
@@ -6401,7 +6411,7 @@ public function submitEditJabatan(){
                 ->update('t_pengajuan_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         }
 
-        // $this->db->where('id_t_penggunaan_cuti', $id)
+        // $this->db->where('id_t_pengajuan_cuti', $id)
         //         ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
 
         if($this->db->trans_status() == FALSE){
@@ -6510,14 +6520,14 @@ public function submitEditJabatan(){
         if($list_id){
             $meta = $this->db->select('a.*')
                         ->from('t_meta_cuti a')
-                        ->where_in('a.id_t_penggunaan_cuti', $list_id)
+                        ->where_in('a.id_t_pengajuan_cuti', $list_id)
                         ->where('flag_active', 1)
                         ->order_by('tahun', 'desc')
                         ->get()->result_array();
             if($meta){
                 foreach($meta as $m){
-                    if(isset($result[$m['id_t_penggunaan_cuti']])){
-                        $result[$m['id_t_penggunaan_cuti']]['detail'][$m['tahun']] = $m;
+                    if(isset($result[$m['id_t_pengajuan_cuti']])){
+                        $result[$m['id_t_pengajuan_cuti']]['detail'][$m['tahun']] = $m;
                     }
                 }
             }
@@ -6576,7 +6586,7 @@ public function submitEditJabatan(){
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
                 ->group_by('a.id')
-                ->order_by('created_date', 'asc');
+                ->order_by('created_date', 'desc');
 
         if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
             $this->db->where('e.skpd', $data['id_unitkerja']);
@@ -6693,7 +6703,7 @@ public function submitEditJabatan(){
         if($result){
             $meta = $this->db->select('a.*')
                         ->from('t_meta_cuti a')
-                        ->where('a.id_t_penggunaan_cuti', $result['id'])
+                        ->where('a.id_t_pengajuan_cuti', $result['id'])
                         // ->where('flag_active', 1)
                         ->order_by('tahun', 'desc')
                         ->get()->result_array();
@@ -6774,9 +6784,9 @@ public function submitEditJabatan(){
                             .$res['progress']['current']['nama_jabatan'].
                             ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                         } else {
-                            $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                            $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                         }
-                        // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas pesan ini dengan *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                        // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($data)." telah mengajukan Permohonan ".$data['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                         if($res['progress']['next']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){ // jika next kaban, buat nods SK Cuti
                             $path_file = 'arsipcuti/nods/CUTI_'.$res['data']['nipbaru_ws'].'_'.date("Y", strtotime($res['data']['created_date'])).'_'.date("m", strtotime($res['data']['created_date'])).'_'.date("d", strtotime($res['data']['created_date'])).'.pdf';
                             $update['url_sk_temp'] = $path_file;
@@ -6914,7 +6924,7 @@ public function submitEditJabatan(){
                 $list_meta_cuti = null;
                 $meta_cuti = $this->db->select('*')
                                 ->from('t_meta_cuti')
-                                ->where('id_t_penggunaan_cuti', $id)
+                                ->where('id_t_pengajuan_cuti', $id)
                                 ->get()->result_array();
 
                 $list_sisa_cuti = null;

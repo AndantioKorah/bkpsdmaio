@@ -10479,7 +10479,7 @@ public function getFileForVerifLayanan()
         ->get()->result_array();
 
         if($cek){
-            $res = array('msg' => 'Sudah ada usul layanan Pangkat', 'success' => false);
+            $res = array('msg' => 'Sudah ada usul layanan yang belum disetujui', 'success' => false);
         } else {
             $nip = $this->input->post('nip');
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );

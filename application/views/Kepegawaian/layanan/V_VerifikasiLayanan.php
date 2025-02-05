@@ -29,7 +29,7 @@
   <div class="col-lg-12">
     <div class="card card-default">
       <div class="card-header">
-        <div class="card-title"><h5>VERIFIKASI PENGAJUAN LAYANAN</h5></div>
+        <div class="card-title"><h5>VERIFIKASI PENGAJUAN LAYANAN <?=strtoupper($nm_layanan);?></h5></div>
         <hr>
       </div>
       <div class="card-body">

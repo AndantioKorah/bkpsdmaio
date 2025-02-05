@@ -480,7 +480,7 @@ class M_Kepegawaian extends CI_Model
        
 
         function getPendidikan($nip,$kode){
-             $this->db->select('b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
+             $this->db->select('c.ijazah_cpns,b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
@@ -4582,12 +4582,15 @@ public function submitEditJabatan(){
                 $filename = $_FILES['file']['name'];
             } 
 
-    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+        
 		$config['upload_path']          = $target_dir;
 		$config['allowed_types']        = 'pdf';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE; 
+        $config['file_name']            = "$filename";
 
 		$this->load->library('upload', $config);
 		// coba upload file		
@@ -4601,14 +4604,14 @@ public function submitEditJabatan(){
 			$dataFile = $this->upload->data();
             $file_tmp = $_FILES['file']['tmp_name'];
             $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $res = $this->dokumenlib->setDokumenWs('POST',[
-                'username' => "199401042020121011",
-                'password' => "039945c6ccf8669b8df44612765a492a",
-                'filename' => $path.$filename,
-                'docfile'  => $base64
-            ]);
+            // $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            // $path = substr($target_dir,2);
+            // $res = $this->dokumenlib->setDokumenWs('POST',[
+            //     'username' => "199401042020121011",
+            //     'password' => "039945c6ccf8669b8df44612765a492a",
+            //     'filename' => $path.$filename,
+            //     'docfile'  => $base64
+            // ]);
            
             $id = $datapost['id'];
             $data["tktpendidikan"] = $datapost["edit_pendidikan_tingkat"];
@@ -8256,7 +8259,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
         ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->from($table);
 
         if($table == "db_pegawai.pegarsip"){
@@ -8378,6 +8381,17 @@ public function submitEditJabatan(){
                        $query = $this->db->get()->result_array();
                        return $query;
    }
+
+   function getRiwayatPerbaikanData(){
+    $this->db->select('*')
+                   ->from('t_layanan a')
+                   ->where('a.id_m_user', $this->general_library->getId())
+                   ->where('a.flag_active', 1)
+                   ->where('a.id_m_layanan', 10)
+                   ->order_by('a.id','desc');
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
 
        function loadListRiwayatPensiun($jenis_pensiun){
         $this->db->select('*')
@@ -9096,6 +9110,37 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahCpns()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_cpns', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getMlayanan($id_m_layanan)
+    {
+        $this->db->select('*')
+        ->where('id', $id_m_layanan)
+        ->from('m_layanan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahCpnsAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('ijazah_cpns', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanForLayanan()
     {
         $this->db->select('*')
@@ -9534,6 +9579,23 @@ public function getFileForKarisKarsu()
 
     }
 
+    public function getDokumenForLayananPangkatAdmin($table,$tahun,$id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        // ->where('status', 2)
+        ->order_by('id', 'desc')
+        ->from($table);
+
+        if($table == "db_pegawai.pegskp"){
+            $this->db->where('tahun', $tahun); 
+        }
+        $query = $this->db->get()->row_array();
+        return $query;  
+
+    }
+
 
     function getRiwayatLayanan($id){
         $this->db->select('*')
@@ -9605,6 +9667,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left');
             }  else if($id_m_layanan == 1){ 
                 $this->db->where('a.id_m_layanan', 1);
+            } else if($id_m_layanan == 10){ 
+                $this->db->where('a.id_m_layanan', 10);
             } else {
                 $this->db->where('a.id_m_layanan', 99);
             }
@@ -9841,6 +9905,15 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "ijazah_cpns"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpendidikan as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.ijazah_cpns', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }  else {
          return [''];
         }
@@ -9855,9 +9928,8 @@ public function getFileForVerifLayanan()
         $res['data'] = null;
 
         $datapost = $this->input->post();
-        // dd($datapost);
         $this->db->trans_begin();
-
+       
 
           
         $id_pengajuan = $datapost['id_pengajuan'];
@@ -9875,6 +9947,7 @@ public function getFileForVerifLayanan()
                 ->join('t_layanan c', 'a.id = c.id_m_user')
                 ->where('c.id', $id_pengajuan)
                 ->get()->result_array();
+
 
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";
@@ -9900,9 +9973,11 @@ public function getFileForVerifLayanan()
                 $this->updatePangkat($dataPengajuan[0]['id_peg']);
             }
             if(isset($datapost['sk_jabatan'])){
-
                 $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
                 $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if($datapost['ijazah_cpns']){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
             }
 
             
@@ -9913,13 +9988,19 @@ public function getFileForVerifLayanan()
             $statusForMessage = "ditolak";
         }
 
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 10){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Perbaikan Data Kepegawaian";
+        }
        
         $cronWaNextVerifikator = [
                     'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
                     'message' => trim($message.FOOTER_MESSAGE_CUTI),
                     'type' => 'text',
-                    'jenis_layanan' => 'Pangkat',
+                    'jenis_layanan' =>  $jenislayanan,
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
@@ -10405,6 +10486,9 @@ public function getFileForVerifLayanan()
             if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/pangkat';
+            } else if($id_m_layanan == 10){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/perbaikan_data';
             } else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 
@@ -10665,6 +10749,36 @@ public function getFileForVerifLayanan()
          
 
     return $this->db->get()->result_array();
+}
+
+public function checkListIjazahCpns($id, $id_pegawai){
+    $rs['code'] = 0;        
+    $rs['message'] = 'OK';
+
+    $this->db->trans_begin();
+
+    $data['ijazah_cpns'] = 0;
+    $dataCheck['ijazah_cpns'] = 1;
+            
+    $this->db->where('id_pegawai', $id_pegawai)
+        ->update('db_pegawai.pegpendidikan', $data);
+    
+    $this->db->where('id', $id)
+        ->update('db_pegawai.pegpendidikan', $dataCheck);
+    
+   
+
+    if ($this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;        
+        $rs['message'] = 'Terjadi Kesalahan';
+    }else{
+        $this->db->trans_commit();
+    }
+
+   
+    
+    return $rs;
 }
 
 

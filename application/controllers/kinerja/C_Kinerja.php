@@ -62,7 +62,12 @@ class C_Kinerja extends CI_Controller
         $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
         }
 
+        $date = new DateTime();
+        $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
+
         // dd($data['list_rencana_kinerja']);
         // $data['apel-pagi'] = $this->kinerja->cekRencanaKinerjaApelPagi();
         render('kinerja/V_RencanaKinerja', '', '', $data);
@@ -286,6 +291,7 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
+
         $this->load->view('kinerja/V_RencanaKinerjaItem', $data);
     }
 

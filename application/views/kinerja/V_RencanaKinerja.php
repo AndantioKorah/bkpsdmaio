@@ -289,7 +289,9 @@ $("#checkBoxID").click(function() {
   var batasMonth = previousMonth - 1;
 
   var statusLock = "<?=$status_lock[0]['status'];?>"
-  
+   var maxDate = "<?= $maxDate['max_date'];?>";
+   var currentDate = "<?= $current_date;?>";
+   
     if(statusLock == 0){
       $('.customButton').show()
     } else {
@@ -297,7 +299,7 @@ $("#checkBoxID").click(function() {
         if(bulanSearch < previousMonth) {
           $('.customButton').hide()
         } else {
-          if(tanggal <= 3) {
+          if(currentDate <= maxDate) {
             $('.customButton').show()
         } else {
             $('.customButton').hide()

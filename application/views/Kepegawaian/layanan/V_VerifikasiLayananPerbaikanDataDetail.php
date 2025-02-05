@@ -65,25 +65,25 @@
     <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
-  <button 
+  <!-- <button 
   id="btn_upload_sk"
   data-toggle="modal" 
   href="#modal_upload_sk"
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button> -->
   <!-- Button trigger modal -->
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
   </button> -->
   <?php if($result[0]['verifikator'] == 0) { ;?>
-  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
+  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
         Kerjakan Pengajuan ini
-        </button>
+        </button> -->
 <?php } else { ?>
   <?php if($result[0]['status_layanan'] == 0) { ;?>
-  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
+  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Kerjakan Pengajuan ini
-        </button>
+        </button> -->
   <?php } ?>
 <?php } ?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
@@ -167,7 +167,6 @@
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
- <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 ||  $id_m_layanan == 9) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
   <li>
@@ -181,90 +180,11 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
   <li>
-
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
+    <button onclick="getFile(file='ijazah_cpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah saat melamar CPNS</button>
   <li>
   
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
-  <li>
 
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pmk')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peninjauan Masa Kerja </button>
-  <li>
-<?php } ?>
-<?php if($id_m_layanan == 6) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
-  <li>
-  <?php } ?>
-<?php if($id_m_layanan == 7) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
-  <li> -->
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
-  <li> -->
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='peta')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
-  <li>
-  
- <?php } ?>
- <?php if($id_m_layanan == 8) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabterusmenerus')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='diklat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Diklat PIM III </button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
-  <li> -->
- 
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
-  <li> -->
- <?php } ?>
- <?php if($id_m_layanan == 9) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='uraiantugas')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti </button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar </button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='akreditasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Akreditasi Program Studi</button>
-  <li>
-
- <?php } ?>
         </li>
 
 
@@ -490,31 +410,10 @@
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
-          <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
-          <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-          <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-          <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-					<input type="hidden" id="skp1" name="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
-					<input type="hidden" id="skp2" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
-					<?php } ?>
-          <?php if($id_m_layanan == 7) { ?>
-					<input type="hidden"  name="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
-					<input type="hidden" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
-
-          <?php } ?>
-          <?php if($id_m_layanan == 8) { ?>
-					<input type="hidden" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
-					<input type="hidden" name="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
-					<input type="hidden" name="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
-          <?php } else if($id_m_layanan == 9) { ?>
-          <input type="hidden" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
-					<input type="hidden" name="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
-					<input type="hidden" name="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
-					<input type="hidden" name="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
-					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
-          <?php } ?>
-
+        <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+        <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+        <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+        <input type="hidden" id="ijazah_cpns" name="ijazah_cpns"  value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -648,7 +547,9 @@ function openPresensiTab(){
         } else if(file == "skjabatan"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
-          dir = "./dokumen_layanan/pangkat/";
+          dir = "./dokumen_layanan/perbaikan_data/";
+        } else if(file == "ijazah_cpns"){
+          dir = "./arsippendidikan/";
         }  else {
           dir = "uploads/";
         }
@@ -730,7 +631,7 @@ function openPresensiTab(){
                   $('#btn_tolak_verifikasi').show()
                   // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
-                  location.reload()
+                //   location.reload()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

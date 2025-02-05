@@ -182,7 +182,7 @@ define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n_*Semua Jeni
 define('OTP_RESET_PASSWORD_TIME', "+1440 minutes");
 define('FLAG_RESET_PASSWORD_USE_OTP', 0);
 
-define('ID_UNITKERJA_BKPSDM', 4018000);
+// define('ID_UNITKERJA_BKPSDM', 4018000);
 
 define('TTE_STATE', 'PROD'); //DEV = development, PROD = production
 define('TTE_NIK_DEV', '1234567890123456'); //DEV = development, PROD = production

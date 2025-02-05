@@ -58,7 +58,7 @@
                           ?>
 
                         <tr style="<?php if($stts == 1) echo 'background-color:#88eda6'; else if($stts == 0) echo 'background-color:#f99999'; else if($stts == 2 || $stts == null) echo 'background-color:#fff';  ?>">
-                            <td class="text-center"><?=$no++;?> <?=$stts;?></td>
+                            <td class="text-center"><?=$no++;?></td>
                             <td class="text-left">
                             <a style="color:#000" target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs['nipbaru_ws'];?>" style="color:#fff">
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>

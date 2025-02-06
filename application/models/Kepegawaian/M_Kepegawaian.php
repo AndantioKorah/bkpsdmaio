@@ -8646,11 +8646,45 @@ public function getFileForKarisKarsu()
         
         $this->db->trans_begin();
         $id_pengajuan = $datapost['id_pengajuan'];
+
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+        ->from('m_user a')
+        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        ->join('t_pensiun c', 'a.id = c.id_m_user')
+        ->where('c.id', $id_pengajuan)
+        ->get()->result_array();
+        dd($dataPengajuan[0]['jenis_pensiun']);
+
+
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
         $data["id_m_user_verif"] = $this->general_library->getId();
         $this->db->where('id', $id_pengajuan)
                 ->update('t_pensiun', $data);
+
+       
+        // kirim wa pensiun
+       if($dataPengajuan[0]['jenis_pensiun'] == 2){
+            $jenispensiun = "JANDA/DUDA";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 3){
+            $jenispensiun = "ATAS PERMINTAAN SENDIRI";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 4){
+            $jenispensiun = "SAKIT/UZUR";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 5){
+            $jenispensiun = "TEWAS	";
+        }
+
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENSIUN ".$jenispensiun."]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        $jenislayanan = "Pensiun";
+
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' =>  $jenislayanan,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

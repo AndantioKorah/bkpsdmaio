@@ -9,8 +9,8 @@
         <form id="form_search">
           <div class="row" style="margin-top: -40px;">
             <?php
-              if($this->general_library->isProgrammer() ||
-                $this->general_library->isKepalaBkpsdm()){
+              // if($this->general_library->isProgrammer() ||
+              //   $this->general_library->isKepalaBkpsdm()){
               ?>
             <div class="col-lg-6 col-md-12">
               <label>PERANGKAT DAERAH</label>
@@ -26,7 +26,7 @@
                   <?php } ?>
               </select>
             </div>
-            <?php } ?>
+            <?php // } ?>
             <div class="col-lg-3 col-md-12">
               <label>Pilih Bulan</label>  
               <select class="form-control select2-navy" style="width: 100%"

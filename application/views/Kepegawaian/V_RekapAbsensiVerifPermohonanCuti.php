@@ -33,7 +33,7 @@
         <tr>
           <td class="text-center"><?=$no++;?></td>
           <td class="text-left"><?=getNamaBulan($d['bulan']).' '.$d['tahun']?></td>
-          <td class="text-center"><?=$golruang[1]?></td>
+          <td class="text-center"><?=isset($golruang[1]) ? $golruang[1] : ''?></td>
           <td class="text-center"><?=$data_rekap['nama_jabatan']?></td>
           <td class="text-center"><?=$data_rekap['eselon'] == "Non Eselon" ? "" : $data_rekap['eselon']?></td>
           <td style="width: 5% !important;" class="text-center"><?=$d['data']['jhk']?></td>

@@ -1571,6 +1571,10 @@ class C_Kepegawaian extends CI_Controller
         render('kepegawaian/V_VerifPermohonanCuti', '', '', $data);
 	}
 
+	public function updateSisaCuti($id, $operand){
+		$this->kepegawaian->updateSisaCuti($id, $operand);
+	}
+
 	public function searchPermohonanCuti(){
 		$data['result'] = $this->kepegawaian->searchPermohonanCuti();
 		$data['param'] = $this->input->post();

@@ -5931,7 +5931,7 @@ public function submitEditJabatan(){
                             'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan']
                         ]);
 
-                $this->updateSisaCuti($dataCuti['id'], 'min');
+                $this->updateSisaCuti($dataCuti['id'], 'plus');
             }
 
             $reply .= ' oleh '.$progress['current']['nama_jabatan'].' pada '.formatDateNamaBulanWT($resp['response']['tanggal_verif']); // pilih dari progress untuk progress yang aktif
@@ -5970,7 +5970,38 @@ public function submitEditJabatan(){
     }
 
     public function updateSisaCuti($id_t_pengajuan_cuti, $operand){
-        //mulai disini
+        $dataCuti = null;
+        $dataCutiRaw = $this->db->select('a.*, b.tahun, b.jumlah')
+                            ->from('t_pengajuan_cuti a')
+                            ->join('t_meta_cuti b', 'a.id = b.id_t_pengajuan_cuti')
+                            ->where('a.id', $id_t_pengajuan_cuti)
+                            ->get()->result_array();
+
+        $sisaCuti = $this->db->select('*')
+                            ->from('t_sisa_cuti')
+                            ->where('id_m_user', $dataCutiRaw[0]['id_m_user'])
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+        foreach($dataCutiRaw as $drw){
+            $dataCuti[$drw['tahun']] = $drw;
+        }
+
+        foreach($sisaCuti as $sc){
+            if(isset($dataCuti[$sc['tahun']])){
+                if($operand == 'plus'){
+                    $new_sisa = $sc['sisa'] + $dataCuti[$sc['tahun']]['jumlah'];
+                } else {
+                    $new_sisa = $sc['sisa'] - $dataCuti[$sc['tahun']]['jumlah'];
+                }
+
+                $this->db->where('id', $sc['id'])
+                        ->update('t_sisa_cuti', [
+                            'sisa' => $new_sisa
+                        ]);
+            }
+        }
+        
     }
 
     public function checkIfReplyCuti($chat){
@@ -6820,6 +6851,7 @@ public function submitEditJabatan(){
                     $update_data_pengajuan = [
                         'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan']
                     ];
+                    $this->updateSisaCuti($data['id'], 'plus');
                 }
                 $reply .= ' oleh '.$res['progress']['current']['nama_jabatan'].' pada '.formatDateNamaBulanWT(date('Y-m-d H:i:s')); // pilih dari progress untuk progress yang aktif
                 if($res['code'] == 0){

@@ -45,6 +45,10 @@ class C_Cron extends CI_Controller
 		$this->layanan->cronBulkDs();
 	}
 
+    public function updateSisaCuti($id, $operand){
+		$this->kepegawaian->updateSisaCuti($id, $operand);
+	}
+
     public function cronSyncJabatanSiasn(){
         $this->general->logCron('cronSyncJabatanSiasn');
         // $this->siasn->cronRiwayatJabatanSiasn();

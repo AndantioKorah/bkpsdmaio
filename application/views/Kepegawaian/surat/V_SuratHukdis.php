@@ -92,7 +92,7 @@
 	</div>
 		<p class="judul" style="margin-top:5px;text-align: center;"> SURAT PERNYATAAN<br>
 			<u>TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</u></p>
-		<p style="text-align: center;"> Nomor : <?php if(isset($nomorsurat)) echo $nomorsurat; else echo "";?></p>
+		<p style="text-align: center;"> Nomor : <?php if(isset($data['nomor_surat'])) echo $data['nomor_surat']; else echo "";?></p>
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">

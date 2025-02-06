@@ -109,7 +109,7 @@
 		<p class="judul" style="margin-top:5px;"> SURAT PERNYATAAN<br>
 			TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA<br>
 			<u>BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP</u> </p>
-		<p class="judul" style="margin-top:-18px;"> Nomor : <?php if(isset($nomorsurat)) echo $nomorsurat; else echo "";?> </p>
+		<p class="judul" style="margin-top:-18px;"> Nomor : <?php if(isset($data['nomor_surat'])) echo $data['nomor_surat']; else echo "";?> </p>
 
 	<p>Yang bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">

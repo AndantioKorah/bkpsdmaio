@@ -124,7 +124,10 @@ class M_Layanan extends CI_Model
                 }
                 return 0;
             }
-            usort($result['akte_anak'], 'sortByOrder');
+
+            if(isset($result['anak']) && $result['anak'] != null){
+                usort($result['akte_anak'], 'sortByOrder');
+            }
 
         } else {
             $result['akte_anak'] = $this->db->select('a.nipbaru_ws, b.*, c.nm_keluarga')
@@ -412,6 +415,43 @@ class M_Layanan extends CI_Model
         return $rs;
     }
 
+    public function searchPenomoranDokumenPensiun($data){
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.nama_jenis_ds, e.nomor_surat, d.nama_kolom_flag, d.id as id_t_request_ds')
+                ->from('t_checklist_pensiun a')
+                ->join('m_user b', 'a.nip = b.username')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('t_request_ds d', 'a.id = d.ref_id')
+                ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
+                ->where('a.flag_active', 1)
+                ->where('MONTH(d.created_date)', $data['bulan'])
+                ->where('YEAR(d.created_date)', $data['tahun'])
+                ->where_in('d.id_m_jenis_ds', [1,2,3])
+                ->where('d.flag_selected', 0)
+                ->group_by('d.id')
+                ->order_by('a.created_date', 'asc')
+                ->where('a.flag_active', 1)
+                ->where('d.flag_active', 1);
+
+        if($data['id_unitkerja'] != 0){
+            $this->db->where('c.skpd', $data['id_unitkerja']);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    public function loadDetailPenomoranDokumenPensiun($id){
+        return $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*')
+                    ->from('t_request_ds a')
+                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+                    // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+                    ->where('a.flag_active', 1)
+                    ->where('a.id', $id)
+                    // ->where('a.table_ref', 't_pengajuan_cuti')
+                    ->get()->row_array();
+    }
+
     public function getKepalaBkpsdm(){
         return $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
         ->from('db_pegawai.pegawai a')
@@ -485,7 +525,9 @@ class M_Layanan extends CI_Model
                 'random_string' => $tteTemplateDpcp['data']['randomString'],
                 'created_by' => $this->general_library->getId(),
                 'nama_kolom_flag' => 'flag_ds_dpcp',
-                'nip' => $data['nip']
+                'nip' => $data['nip'],
+                'meta_view' => 'kepegawaian/V_CetakDpcp',
+                'meta_data' => json_encode($data)
             ]);
             $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
@@ -532,13 +574,17 @@ class M_Layanan extends CI_Model
                     'table_ref' => 't_checklist_pensiun',
                     'id_m_jenis_ds' => 2,
                     'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                    'perihal' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
                     'request' => json_encode($request_ws),
                     'url_file' => $pathHukdis,
                     'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
                     'random_string' => $tteTemplateHukdis['data']['randomString'],
                     'created_by' => $this->general_library->getId(),
                     'nama_kolom_flag' => 'flag_ds_hukdis',
-                    'nip' => $data['nip']
+                    'nip' => $data['nip'],
+                    'meta_view' => 'kepegawaian/surat/V_SuratHukdis',
+                    'meta_data' => json_encode($data),
+                    'id_m_jenis_layanan' => 39
                 ]);
             } else { // jika ada hukdis, masuk di sini
                 
@@ -590,14 +636,18 @@ class M_Layanan extends CI_Model
                 'ref_id' => $data['id_t_checklist_pensiun'],
                 'table_ref' => 't_checklist_pensiun',
                 'id_m_jenis_ds' => 3,
-                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP',
+                'perihal' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
                 'request' => json_encode($request_ws),
                 'url_file' => $pathPidana,
                 'url_image_ds' => $tteTemplatePidana['data']['qrBase64'],
                 'random_string' => $tteTemplatePidana['data']['randomString'],
                 'created_by' => $this->general_library->getId(),
                 'nama_kolom_flag' => 'flag_ds_pidana',
-                'nip' => $data['nip']
+                'nip' => $data['nip'],
+                'meta_view' => 'kepegawaian/surat/V_SuratPidana',
+                'meta_data' => json_encode($data),
+                'id_m_jenis_layanan' => 39
             ]);
         }
 

@@ -111,4 +111,27 @@ class C_Layanan extends CI_Controller
 	public function deleteBerkasPensiun($id){
 		echo json_encode($this->layanan->deleteBerkasPensiun($id));
 	}
+
+	public function penomoranDokumenPensiun(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('kepegawaian/layanan/V_PenomoranDokumenPensiun', '', '', $data);
+	}
+
+	public function searchPenomoranDokumenPensiun(){
+		$data['result'] = $this->layanan->searchPenomoranDokumenPensiun($this->input->post());
+		$this->load->view('kepegawaian/layanan/V_PenomoranDokumenPensiunData', $data);
+	}
+
+	public function openModalPenomoranDokumenPensiun($id){
+		$data['result'] = $this->layanan->loadDetailPenomoranDokumenPensiun($id);
+		$this->load->view('kepegawaian/layanan/V_PenomoranDokumenPensiunDetail', $data);
+	}
+	
+	public function saveUploadFileDsPenomoranDokumenPensiun($id){
+        echo json_encode($this->layanan->saveUploadFileDsPenomoranDokumenPensiun($id));
+	}
+
+	public function deleteFileDsManual($id){
+        echo json_encode($this->layanan->deleteFileDsManual($id));
+	}
 }

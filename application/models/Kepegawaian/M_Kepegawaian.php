@@ -9711,7 +9711,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 1);
             } else if($id_m_layanan == 10){ 
                 $this->db->where('a.id_m_layanan', 10);
-            } else {
+            } else if($id_m_layanan == 11){ 
+                $this->db->where('a.id_m_layanan', 11);
+            }  else {
                 $this->db->where('a.id_m_layanan', 99);
             }
 
@@ -10531,7 +10533,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 10){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/perbaikan_data';
-            } else {
+            } else if($id_m_layanan == 11){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/permohonan_salinan_sk';
+            }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 
 

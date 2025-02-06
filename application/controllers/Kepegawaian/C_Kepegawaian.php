@@ -2415,6 +2415,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpns(); 
 		$data['id_m_layanan'] = $id_layanan;
+		$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+		$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+
 		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanData', $data);
 	
 	}
@@ -2473,7 +2476,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
 		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
-		} else if($id_m_layanan == 10){
+		} else if($id_m_layanan == 10 || $id_m_layanan == 11){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
 		}
 	}
@@ -2534,7 +2537,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','11','0',$id_peg);	
 		}
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
-		} else if($layanan == 10){
+		} else if($layanan == 10 || $layanan == 11){
 			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpnsAdmin($id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananPerbaikanDataDetail', '', '', $data);
 		} 

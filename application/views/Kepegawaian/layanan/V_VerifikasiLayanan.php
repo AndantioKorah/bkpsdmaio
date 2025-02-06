@@ -61,7 +61,7 @@
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
                   <option value="2" >Ditolak</option>
-                  <?php if($id_m_layanan != 10) { ?>
+                  <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
                   <option value="3" >Usul BKAD</option>
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>

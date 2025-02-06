@@ -604,6 +604,13 @@
 						<i class="align-middle me-2 far fa-circle"></i>Perbaikan Data Kepegawaian
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/11')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Permohonan Salinan SK
+					</a>
+				</li>
+
 				<?php } ?>
 
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>

@@ -170,6 +170,7 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
   <li>
+  <?php if($id_m_layanan == 10 || $id_m_layanan == 11) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
   <li>
@@ -180,9 +181,12 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
   <li>
+  <?php } ?>
+  <?php if($id_m_layanan == 10) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='ijazah_cpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah saat melamar CPNS</button>
   <li>
+  <?php } ?>
   
 
         </li>
@@ -534,6 +538,8 @@ function openPresensiTab(){
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     $('#ket').html('');
    
+    var id_layanan = "<?=$id_m_layanan;?>";
+
     if(file == "skcpns" || file == "skpns"){
           dir = "arsipberkaspns/";
         } else if(file == "skpangkat"){
@@ -547,7 +553,11 @@ function openPresensiTab(){
         } else if(file == "skjabatan"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
-          dir = "./dokumen_layanan/perbaikan_data/";
+          if(id_layanan == 10){
+            dir = "./dokumen_layanan/perbaikan_data/";
+          } else {
+            dir = "./dokumen_layanan/permohonan_salinan_sk/";
+          }
         } else if(file == "ijazah_cpns"){
           dir = "./arsippendidikan/";
         }  else {

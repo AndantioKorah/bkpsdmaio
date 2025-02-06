@@ -264,7 +264,7 @@ ol {
 		<div class="card card-default">
 			<div class="card-header">
 				<div class="card-title">
-					<h5>FORM LAYANAN PERBAIKAN DATA KEPEGAWAIAN</h5>
+					<h5>FORM LAYANAN <?= strtoupper($nm_layanan);?></h5>
 				</div>
 				<hr>
 			</div>
@@ -273,12 +273,14 @@ ol {
 
 				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
-         
-                    <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-                    <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-					          <input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+          <?php if($id_m_layanan == 10 || $id_m_layanan == 11) { ?>
+            <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+            <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+					  <input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+          <?php } ?>
+          <?php if($id_m_layanan == 10) { ?>
 					          <input type="hidden" id="ijazah_cpns" value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
-					
+					<?php } ?>
           <span><b>Berkas Persyaratan :</b></span>
 					<div class="list-type1x mt-2">
           <div class="form-group">
@@ -287,6 +289,7 @@ ol {
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
 						<ol class="rectangle-list">
+            <?php if($id_m_layanan == 10 || $id_m_layanan == 11) { ?>
             <li>
 								<a class="<?php if($sk_cpns){ if($sk_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_cpns) { ?>
 									onclick="viewBerkasPangkat('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
@@ -305,13 +308,15 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Akhir* <i
 											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 							</li>
+              <?php } ?>
+              <?php if($id_m_layanan == 10) { ?>
               <li>
 								<a class="<?php if($ijazah_cpns){ if($ijazah_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah_cpns) { ?>
 									onclick="viewBerkasPangkat('<?=$ijazah_cpns['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah waktu saat melamar CPNS* <i
 											class="fas fa-<?php if($ijazah_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
-
+              <?php } ?>
 						</ol>
 					</div>
 
@@ -328,11 +333,12 @@ ol {
           <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
 					</button> Menunggu Verifikasi BKPSDM<br><br>
 					Berkas diupload Pada Menu Profil <br>
+          <?php if($id_m_layanan == 10) { ?>
 					Untuk Berkas : <br>
 					<i class="fa fa-file-pdf"></i> <b>Ijazah Saat Melamar CPNS.</b>
 					<br>Centang Ijazah yang dipakai melamar CPNS pada riwayat pendidikan dimenu Profil.
-				</p>
-				
+				 </p>
+         <?php } ?>
 			</div>
 		</div>
 	</div>
@@ -398,6 +404,7 @@ $(function(){
         var ijazah_cpns = $('#ijazah_cpns').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
 
+        if(id_m_layanan == 10 || id_m_layanan == 11){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -412,11 +419,14 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+        }
 
+        if(id_m_layanan == 10){
         if(ijazah_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+       }
 
 
         $.ajax({  

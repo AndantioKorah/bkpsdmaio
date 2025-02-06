@@ -8470,11 +8470,12 @@ public function submitEditJabatan(){
 
 public function searchPengajuanPensiun(){
     $data = $this->input->post();
-    $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+    $this->db->select('g.nama as verifikator, a.*, d.*,e.*,f.*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_pensiun a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('m_user g', 'a.id_m_user_verif = g.id','left')
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
@@ -8647,6 +8648,7 @@ public function getFileForKarisKarsu()
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
         $this->db->where('id', $id_pengajuan)
                 ->update('t_pensiun', $data);
 
@@ -10038,6 +10040,9 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 10){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Perbaikan Data Kepegawaian";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 11){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Permohonan Salinan SK";
         }
        
         $cronWaNextVerifikator = [

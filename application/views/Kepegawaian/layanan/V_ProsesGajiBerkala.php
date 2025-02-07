@@ -432,6 +432,7 @@
     </div>
 </div>
     
+<?php if($result){ ?>
 <!-- Modal -->
 <div style="display:none" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -544,6 +545,7 @@
     </div>
   </div>
 </div>
+<?php } ?>
 
 
 <!-- Modal -->

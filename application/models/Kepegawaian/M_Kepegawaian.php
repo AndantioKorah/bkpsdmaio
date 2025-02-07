@@ -10307,6 +10307,7 @@ public function getFileForVerifLayanan()
             $id  = $this->input->post('id_tkgb');
             $dataKgb = $this->db->select('*')
                 ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
                 ->where('a.id', $id)
                 ->get()->result_array();
             
@@ -10321,7 +10322,8 @@ public function getFileForVerifLayanan()
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
             $datainsKgb["status"] = 3;
             $datainsKgb["gambarsk"] = $data['file_name'];
-          
+            $url_file = "arsipgjberkala/".$data['nama_file'];
+
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $id_peggajiberkala = $this->db->insert_id();
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
@@ -10330,6 +10332,29 @@ public function getFileForVerifLayanan()
             
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                // ->join('db_pegawai.pegpangkat d', 'a.reference_id_dok = d.id')
+                // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+        
+
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataKgb[0]['handphone']),
+                    'message' => $caption,
+                    'filename' => "SK KENAIKAN GAJI BERKALA.pdf",
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Gaji Berkala'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+
         }
         // GAJI BERKALA
         return $result;
@@ -10716,7 +10741,7 @@ public function getFileForVerifLayanan()
         $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan'].". \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";
             
          }
         $cronWaNextVerifikator = [

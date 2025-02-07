@@ -410,7 +410,7 @@
 			</li>
 		<?php }
 			if($this->general_library->isProgrammer() ||
-				$this->general_library->isHakAkses('admin_simponi')){
+				$this->general_library->isHakAkses('admin_simponi_asn')){
 		?>
 			<li class="sidebar-item ">
 				<a title="Penomoran Dokumen Pensiun" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/penomoran-dokumen-pensiun')?>">

@@ -7934,7 +7934,8 @@ public function submitEditJabatan(){
        
         $this->db->trans_begin();
 
-        $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat, f.nomor_surat')
+        $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat,
+                            f.nomor_surat, e.id as id_t_request_ds')
                             ->from('t_pengajuan_cuti a')
                             ->join('m_user b', 'a.id_m_user = b.id')
                             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -7971,6 +7972,12 @@ public function submitEditJabatan(){
                 
                 $filepath = 'arsipcuti/'.$filename;
                 if($uploadfile){
+                    $this->db->where('id', $data['id_t_request_ds'])
+                            ->update('t_request_ds', [
+                                'flag_selected' => 1,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
                     $this->db->where('id', $id)
                             ->update('t_pengajuan_cuti', [
                                 'url_sk_manual' => $filepath,

@@ -22,17 +22,20 @@
             <td class="text-center">
               <?php
                 $status = "";
-                if($rs['nomor_surat'] == null){
+                $class = "badge badge-danger";
+                if($rs['nomor_surat'] == null && $rs['id_m_jenis_ds'] != 1){
                   $status = "Nomor Surat belum diinput";
                 } else {
                   if($rs[$rs['nama_kolom_flag']] == 0){
-                    $status = "Belum dilakukan Digital Signature";
+                    $class = "badge badge-warning";
+                    $status = "File DS belum diupload";
                   } else {
-                    $status = "Selesai";
+                    $status = "File DS sudah diupload";
+                    $class = "badge badge-success";
                   }
                 }
               ?>
-              <?=$status?>
+              <span class="<?=$class?>"><?=$status?></span>
             </td>
             <td class="text-center">
               <button href="#modal_nomor_surat_manual" data-toggle="modal" class="btn btn-sm btn-warning"

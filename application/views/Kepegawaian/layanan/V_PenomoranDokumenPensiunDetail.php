@@ -53,7 +53,7 @@
           </form>
           <?php } else {
             $fileUrl = "";
-            $keterangan = "File sudah dilakukan Digital Signature oleh Kepala BKPSDM";
+            $keterangan = "File DS sudah diupload";
             if($result[$result['nama_kolom_flag']] == 1){
               $fileUrl = $result['url_ds_manual_dpcp'] ? $result['url_ds_manual_dpcp'] : $result['url_file_dpcp'];
               if($result['id_m_jenis_ds'] == 2){
@@ -68,7 +68,7 @@
                 <span style="font-weight: bold; color: green; size: .8rem;"><?=$keterangan?></span>
               </div>
               <div class="col-lg-6">
-                <?php if($result['flag_ds_manual'] == 1){ ?>
+                <?php if($result[$result['nama_kolom_flag']] == 1){ ?>
                   <button id="btn_delete_file" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                   <button id="btn_delete_file_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                 <?php } ?>
@@ -83,78 +83,78 @@
     </div>
 
     <script>
-      // $('#btn_delete_file').on('click', function(){
-      //   if(confirm('Apakah Anda yakin ingin menghapus data?')){
-      //     $('#btn_delete_file').hide()
-      //     $('#btn_delete_file_loading').show()
-      //     $.ajax({
-      //       url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileDsManual/".$result['id_t_request_ds'])?>',
-      //       method:"POST",  
-      //       data: $(this).serialize(),
-      //       success: function(res){
-      //         $('#btn_delete_file').show()
-      //         $('#btn_delete_file_loading').hide()
+      $('#btn_delete_file').on('click', function(){
+        if(confirm('Apakah Anda yakin ingin menghapus data?')){
+          $('#btn_delete_file').hide()
+          $('#btn_delete_file_loading').show()
+          $.ajax({
+            url: '<?=base_url("kepegawaian/C_Layanan/deleteFileDsManual/".$result['id_t_request_ds'])?>',
+            method:"POST",  
+            data: $(this).serialize(),
+            success: function(res){
+              $('#btn_delete_file').show()
+              $('#btn_delete_file_loading').hide()
 
-      //         let rs = JSON.parse(res)
-      //         if(rs.code == 1){
-      //           errortoast(rs.message)
-      //         } else {
-      //           openModalPenomoranSkCuti('<?=$result['id_t_request_ds']?>')
-      //           successtoast('Data berhasil dihapus')
-      //         }
-      //       }, error: function(err){
-      //         errortoast('Terjadi Kesalahan')
-      //         $('#btn_delete_file').show()
-      //         $('#btn_delete_file_loading').hide()
-      //       }
-      //     })
-      //   }
-      // })
+              let rs = JSON.parse(res)
+              if(rs.code == 1){
+                errortoast(rs.message)
+              } else {
+                openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                successtoast('Data berhasil dihapus')
+              }
+            }, error: function(err){
+              errortoast('Terjadi Kesalahan')
+              $('#btn_delete_file').show()
+              $('#btn_delete_file_loading').hide()
+            }
+          })
+        }
+      })
 
-      // $('#form_upload_dokumen_ds').on('submit', function(e){
-      //     e.preventDefault()
-      //     $('#btn_upload_file').hide()
-      //     $('#btn_upload_file_loading').show()
+      $('#form_upload_dokumen_ds').on('submit', function(e){
+          e.preventDefault()
+          $('#btn_upload_file').hide()
+          $('#btn_upload_file_loading').show()
 
-      //     var formvalue = $('#form_upload_dokumen_ds');
-      //     var form_data = new FormData(formvalue[0]);
-      //     var ins = document.getElementById('file_ds_manual').files.length;
+          var formvalue = $('#form_upload_dokumen_ds');
+          var form_data = new FormData(formvalue[0]);
+          var ins = document.getElementById('file_ds_manual').files.length;
           
-      //     if(ins == 0){
-      //         $('#btn_upload_file').show()
-      //         $('#btn_upload_file_loading').hide()
-      //         errortoast("Silahkan upload file terlebih dahulu");
+          if(ins == 0){
+              $('#btn_upload_file').show()
+              $('#btn_upload_file_loading').hide()
+              errortoast("Silahkan upload file terlebih dahulu");
 
-      //         return false;
-      //     }
+              return false;
+          }
 
-      //     e.preventDefault()
-      //         $.ajax({
-      //         url: '<?=base_url('kepegawaian/C_Kepegawaian/saveUploadFileDsPenomoranSkCuti/'.$result['id_t_request_ds'])?>',
-      //         method: 'POST',
-      //         data: form_data,  
-      //         contentType: false,  
-      //         cache: false,  
-      //         processData:false,
-      //         success: function(rs){
-      //             let res = JSON.parse(rs)
-      //             if(res.code == 0){
-      //                 successtoast('Upload Dokumen DS Berhasil')    
-      //                 openModalPenomoranSkCuti('<?=$result['id_t_request_ds']?>')
-      //                 // $('#btn_modal_balasan_close').click()
-      //             } else {
-      //                 errortoast(res.message)
-      //             }
-      //             $('#btn_upload_file').show()
-      //             $('#btn_upload_file_loading').hide()
-      //         }, error: function(e){
-      //             errortoast('Terjadi Kesalahan')
-      //             console.log(e)
-      //             $('#btn_upload_file').show()
-      //             $('#btn_upload_file_loading').hide()
-      //         }
-      //     })
-      // })
+          e.preventDefault()
+              $.ajax({
+              url: '<?=base_url('kepegawaian/C_Layanan/saveUploadFileDsPenomoranDokumenPensiun/'.$result['id_t_request_ds'])?>',
+              method: 'POST',
+              data: form_data,  
+              contentType: false,  
+              cache: false,  
+              processData:false,
+              success: function(rs){
+                  let res = JSON.parse(rs)
+                  if(res.code == 0){
+                      successtoast('Upload Dokumen DS Berhasil')    
+                      openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                      // $('#btn_modal_balasan_close').click()
+                  } else {
+                      errortoast(res.message)
+                  }
+                  $('#btn_upload_file').show()
+                  $('#btn_upload_file_loading').hide()
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+                  console.log(e)
+                  $('#btn_upload_file').show()
+                  $('#btn_upload_file_loading').hide()
+              }
+          })
+      })
 
       $('#form_input_nomor_surat_manual').on('submit', function(e){
         e.preventDefault()

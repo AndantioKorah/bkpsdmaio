@@ -10713,7 +10713,7 @@ public function getFileForVerifLayanan()
          $this->db->insert('t_gajiberkala', $dataKgb);
 
          if($datapost["status"] == 1){
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses. \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
         $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan'].". \n\nTerima kasih.";

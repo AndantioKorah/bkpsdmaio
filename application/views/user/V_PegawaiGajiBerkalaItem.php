@@ -45,19 +45,22 @@
                              } else if($rs['statuspeg'] == 3){
                                  $badge_status = 'badge-pppk';
                              }
-
+                             $stts = null;
                          if($rs['tberkala']){
                             $data = explode("|",$rs['tberkala']);
                             if($data[1] == 1 || $data[1] == 2 || $data[1] == 4 || $data[1] == 5){
                                 $stts = 1;
-                            }
-                           
-                            } else {
-                            $stts = 2;
-                            }
+                            } else if($data[1] == 0) {
+                                $stts = 2;
+                            } 
+                        }
+
+                            // else if($data[1] == 0) {
+                            // $stts = 2;
+                            // }
                           ?>
 
-                        <tr style="<?php if($stts == 1) echo 'background-color:#88eda6'; else if($stts == 0) echo 'background-color:#f99999'; else if($stts == 2 || $stts == null) echo 'background-color:#fff';  ?>">
+                        <tr style="<?php if($stts == 1) echo 'background-color:#88eda6'; else if($stts == 2) echo 'background-color:#facc6c'; else if($stts == null) echo 'background-color:#fff';  ?>">
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-left">
                             <a style="color:#000" target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs['nipbaru_ws'];?>" style="color:#fff">

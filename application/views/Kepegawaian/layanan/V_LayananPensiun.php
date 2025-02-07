@@ -274,12 +274,12 @@ ol {
               <?php } ?> -->
 
               <?php if (in_array($jenis_layanan, $list_layanan_surat_berhenti)) { ?>
-                <?php if($jenis_layanan == 9) { ?>
+                <?php if($jenis_layanan == 3) { ?>
                   <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
 									onclick="viewBerkas('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper(' Surat permohonan berhenti atas permintaan sendiri bermeterai yang ditandatangani oleh PNS ybs mengetahui kepala perangkat daerah*'); ?></a></li>
-                  <?php } else if($jenis_layanan == 10){ ?>
+                  <?php } else if($jenis_layanan == 4){ ?>
                     <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
 									onclick="viewBerkas('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -347,8 +347,8 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_rekom_sakit)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($surat_rekom_sakit) echo 'select'; else echo 'unselect';?>" <?php if($surat_rekom_sakit) { ?>
+									onclick="viewBerkas('<?=$surat_rekom_sakit['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper(' Surat Rekomendasi Sakit/Uzur dari tim dokter pemerintah yang ditunjuk oleh menteri kesehatan'); ?></a></li>
 							<li>
@@ -357,7 +357,7 @@ ol {
                   <li><a class="<?php if($pidana) echo 'select'; else echo 'unselect';?>" <?php if($pidana) { ?>
 									onclick="viewBerkas('<?=$pidana['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper(' Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah Dipidana Penjara Berdasarkan Putusan Pengadilan Yang Telah Berkekuatan Hukum Tetap'); ?></a></li>
+                  <?php echo strtoupper(' Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah Dipidana Penjara Berdasarkan Putusan Pengadilan Yang Telah Berkekuatan Hukum Tetap*'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_ket_kematian)) { ?>
@@ -375,14 +375,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktenikah)) { ?>
-                <?php if($jenis_layanan != 8) { ?>
+                <?php if($jenis_layanan != 2) { ?>
                   <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
 									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte perkawinan (bagi yang sudah menikah/ pernah menikah)'); ?></a></li>
 							<li>
 
-              <?php } else if($jenis_layanan == 8) { ?>
+              <?php } else if($jenis_layanan == 2) { ?>
                 <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
 									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -399,14 +399,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktekematian)) { ?>
-                <?php if($jenis_layanan != 8) { ?>
+                <?php if($jenis_layanan != 5) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte kematian (bagi pasangan yang sudah meninggal)'); ?></a></li>
 							<li>
               <?php } ?>
-              <?php if($jenis_layanan == 8) { ?>
+              <?php if($jenis_layanan == 5) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>

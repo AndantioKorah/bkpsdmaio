@@ -3333,7 +3333,7 @@ public function updateTmBerkala()
         $this->db->select('a.id_pegawai,
                             b.tmtgjberkala as kgbprofil,
 	                        max(a.tmtgajiberkala) as kgbpeg')
-    ->from('db_pegawai.peggajiberkala as a')
+    ->from('db_pegawai.peggajiberkala_copy1 as a')
     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
     // ->where('a.status', 2)
     ->where('a.flag_active', 1)
@@ -8477,11 +8477,12 @@ public function submitEditJabatan(){
 
 public function searchPengajuanPensiun(){
     $data = $this->input->post();
-    $this->db->select('*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
+    $this->db->select('g.nama as verifikator, a.*, d.*,e.*,f.*, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan')
             ->from('t_pensiun a')
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('m_user g', 'a.id_m_user_verif = g.id','left')
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
 
@@ -8652,10 +8653,45 @@ public function getFileForKarisKarsu()
         
         $this->db->trans_begin();
         $id_pengajuan = $datapost['id_pengajuan'];
+
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+        ->from('m_user a')
+        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        ->join('t_pensiun c', 'a.id = c.id_m_user')
+        ->where('c.id', $id_pengajuan)
+        ->get()->result_array();
+        dd($dataPengajuan[0]['jenis_pensiun']);
+
+
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
         $this->db->where('id', $id_pengajuan)
                 ->update('t_pensiun', $data);
+
+       
+        // kirim wa pensiun
+       if($dataPengajuan[0]['jenis_pensiun'] == 2){
+            $jenispensiun = "JANDA/DUDA";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 3){
+            $jenispensiun = "ATAS PERMINTAAN SENDIRI";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 4){
+            $jenispensiun = "SAKIT/UZUR";
+            } else if($dataPengajuan[0]['jenis_pensiun'] == 5){
+            $jenispensiun = "TEWAS	";
+        }
+
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENSIUN ".$jenispensiun."]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        $jenislayanan = "Pensiun";
+
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' =>  $jenislayanan,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -10045,6 +10081,9 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 10){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Perbaikan Data Kepegawaian";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 11){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Permohonan Salinan SK";
         }
        
         $cronWaNextVerifikator = [
@@ -10275,6 +10314,7 @@ public function getFileForVerifLayanan()
             $id  = $this->input->post('id_tkgb');
             $dataKgb = $this->db->select('*')
                 ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
                 ->where('a.id', $id)
                 ->get()->result_array();
             
@@ -10289,7 +10329,8 @@ public function getFileForVerifLayanan()
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
             $datainsKgb["status"] = 3;
             $datainsKgb["gambarsk"] = $data['file_name'];
-          
+            $url_file = "arsipgjberkala/".$data['nama_file'];
+
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $id_peggajiberkala = $this->db->insert_id();
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
@@ -10298,6 +10339,29 @@ public function getFileForVerifLayanan()
             
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+            $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                // ->join('db_pegawai.pegpangkat d', 'a.reference_id_dok = d.id')
+                // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+        
+
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataKgb[0]['handphone']),
+                    'message' => $caption,
+                    'filename' => "SK KENAIKAN GAJI BERKALA.pdf",
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Gaji Berkala'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+
         }
         // GAJI BERKALA
         return $result;
@@ -10681,10 +10745,10 @@ public function getFileForVerifLayanan()
          $this->db->insert('t_gajiberkala', $dataKgb);
 
          if($datapost["status"] == 1){
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses. \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan'].". \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";
             
          }
         $cronWaNextVerifikator = [

@@ -1969,7 +1969,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_layanan_skcpns'] = array(1,2,3,4,5);
 		$data['list_layanan_skpns'] = array(1,2,3,4,5);
 		$data['list_layanan_skpangak'] = array(1,2,3,4,5);
-		$data['list_layanan_skjabatan'] = array(7,8,9,10);
+		$data['list_layanan_skjabatan'] = array(1,2,3,4);
 		$data['list_layanan_aktenikah'] = array(1,2,3,4,5);
 		$data['list_layanan_hd'] = array(1,2,3,4,5);
 		$data['list_layanan_pidana'] = array(1,2,3,4,5);

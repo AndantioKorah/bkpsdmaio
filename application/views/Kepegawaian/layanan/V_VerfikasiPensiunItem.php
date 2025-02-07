@@ -9,7 +9,7 @@
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th></th>
-          
+          <th class="text-left">Verifikator</th>
         </thead>
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
@@ -33,7 +33,9 @@
                 Verifikasi</button>
                 </a>
              </td>
-              
+              <td>
+              <?=$rs['verifikator']?>
+              </td>
             </tr>
           <?php } ?>
         </tbody>

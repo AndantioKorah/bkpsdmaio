@@ -535,12 +535,12 @@ ol {
               <?php } ?> -->
 
               <?php if (in_array($jenis_layanan, $list_layanan_surat_berhenti)) { ?>
-                <?php if($jenis_layanan == 9) { ?>
+                <?php if($jenis_layanan == 3) { ?>
                   <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
 									onclick="viewBerkas('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper(' Surat permohonan berhenti atas permintaan sendiri bermeterai yang ditandatangani oleh PNS ybs mengetahui kepala perangkat daerah*'); ?></a></li>
-                  <?php } else if($jenis_layanan == 10){ ?>
+                  <?php } else if($jenis_layanan == 4){ ?>
                     <li><a class="<?php if($surat_berhenti) echo 'select'; else echo 'unselect';?>" <?php if($surat_berhenti) { ?>
 									onclick="viewBerkas('<?=$surat_berhenti['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -636,14 +636,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktenikah)) { ?>
-                <?php if($jenis_layanan != 8) { ?>
+                <?php if($jenis_layanan != 2) { ?>
                   <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
 									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte perkawinan (bagi yang sudah menikah/ pernah menikah)'); ?></a></li>
 							<li>
 
-              <?php } else if($jenis_layanan == 8) { ?>
+              <?php } else if($jenis_layanan == 2) { ?>
                 <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
 									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -660,14 +660,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktekematian)) { ?>
-                <?php if($jenis_layanan != 8) { ?>
+                <?php if($jenis_layanan != 5) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte kematian (bagi pasangan yang sudah meninggal)'); ?></a></li>
 							<li>
               <?php } ?>
-              <?php if($jenis_layanan == 8) { ?>
+              <?php if($jenis_layanan == 5) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -798,7 +798,7 @@ ol {
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -917,6 +917,11 @@ function openPresensiTab(){
           var catatan = $('#keterangan').val()
           if(status == "--"){
             errortoast('Silahkan Pilih Status')
+            return false;
+           }
+
+          if(catatan == ""){
+            errortoast('Silahkan mengisi catatan')
             return false;
            }
 

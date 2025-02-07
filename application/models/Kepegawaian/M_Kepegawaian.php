@@ -3333,7 +3333,7 @@ public function updateTmBerkala()
         $this->db->select('a.id_pegawai,
                             b.tmtgjberkala as kgbprofil,
 	                        max(a.tmtgajiberkala) as kgbpeg')
-    ->from('db_pegawai.peggajiberkala as a')
+    ->from('db_pegawai.peggajiberkala_copy1 as a')
     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
     // ->where('a.status', 2)
     ->where('a.flag_active', 1)

@@ -1,6 +1,6 @@
 <form method="post" id="form_edit_berkala" enctype="multipart/form-data" >
     <input type="hidden" id="id" name="id" value="<?= $berkala[0]['id'];?>">
-    <input type="text" id="id_pegawai" name="id_pegawai" value="<?= $berkala[0]['id_pegawai'];?>">
+    <input type="hidden" id="id_pegawai" name="id_pegawai" value="<?= $berkala[0]['id_pegawai'];?>">
 
     <input type="hidden" id="gambarsk" name="gambarsk" value="<?= $berkala[0]['gambarsk'];?>">
 

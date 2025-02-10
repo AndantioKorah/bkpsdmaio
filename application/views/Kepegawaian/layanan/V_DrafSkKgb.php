@@ -256,8 +256,15 @@
 			<td style="text-align: center;">:</td>
 			<td>
 			<?php
+			$int_var = substr($masa_kerja, 0, 2);
 			$new_date = date('Y-m-d H:i:s', strtotime('+2 years', strtotime($tmt_kgb_baru)));
-			echo formatDateNamaBulan($new_date); ?>
+			if($int_var == 32){
+				echo "-";
+			} else {
+				echo formatDateNamaBulan($new_date); 
+			}
+
+			?>
 			</td>
 		</tr>
 	</table>

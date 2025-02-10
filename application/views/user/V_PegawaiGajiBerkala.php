@@ -58,6 +58,7 @@
 </div>
 
 <div class="card card-default" id="div_result">
+<h5 id="iframe_loader" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i>LOADING...</h5>
 </div>
 <script>
     $(function(){
@@ -78,6 +79,8 @@
     })
 
     $('#form_search').on('submit', function(e){
+        $('#div_result').html('<h5 id="iframe_loader" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i>LOADING...</h5>')
+        
         e.preventDefault()
         $.ajax({
             url: '<?=base_url("user/C_User/getListPegawaiGajiBerkalaByYear/")?>',

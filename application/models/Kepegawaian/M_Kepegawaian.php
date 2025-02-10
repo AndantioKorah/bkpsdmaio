@@ -3336,7 +3336,7 @@ public function updateTmBerkala()
     ->from('db_pegawai.peggajiberkala_copy1 as a')
     ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
     // ->where('a.status', 2)
-    ->where('a.flag_active', 1)
+    // ->where('a.flag_active', 1)
     // ->where('b.nip_baruws', '196809121995031005')
     ->order_by('a.id', 'desc')
     ->group_by('a.id_pegawai');
@@ -3347,6 +3347,43 @@ public function updateTmBerkala()
             $this->db->where('id_peg', $res['id_pegawai'])
             ->update('db_pegawai.pegawai', $data);
         }
+    }
+}
+
+    public function mergeBerkala(){
+    $this->db->select('*')
+    ->from('db_pegawai.peggajiberkala_copy1 as a')
+    // ->where('a.id_pegawai', 'PEG0000000ei284')
+    ->where('a.flag_active', 1);
+    $result = $this->db->get()->result_array(); 
+    // dd($result);
+    foreach($result as $res){
+
+        $this->db->select('*')
+        ->from('db_pegawai.peggajiberkala as b')
+        ->where('b.id_pegawai', $res['id_pegawai'])
+        ->where('b.tmtgajiberkala', $res['tmtgajiberkala']);
+        $result2 = $this->db->get()->result_array(); 
+
+      
+        if(!$result2){
+            $data["id_pegawai"] = $res['id_pegawai'];
+            $data["pangkat"] = $res['pangkat'];
+            $data["masakerja"] = $res['masakerja'];
+            $data["pejabat"] = $res['pejabat'];
+            $data["nosk"] = $res['nosk'];
+            $data["tglsk"] = $res['tglsk'];
+            $data["tmtgajiberkala"] = $res['tmtgajiberkala'];
+            $data["gambarsk"] = $res['gambarsk'];
+            $data["gajilama"] = $res['gajilama'];
+            $data["gajibaru"] = $res['gajibaru'];
+            $data["status"] = 2;
+            $data["created_by"] = 1;
+            $this->db->insert('db_pegawai.peggajiberkala', $data);
+        }
+
+
+     
     }
     
 
@@ -4486,7 +4523,7 @@ public function submitEditJabatan(){
         $this->db->trans_begin();
         $target_dir = './arsipgjberkala/';
         $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
-       
+        $id_pegawai = $datapost["id_pegawai"];
         if($_FILES['file']['name'] != ""){
           
             if($filename == ""){
@@ -4561,6 +4598,7 @@ public function submitEditJabatan(){
             $res = array('msg' => 'Data gagal disimpan', 'success' => false);
         } else {
             $this->db->trans_commit();
+            $this->updateBerkala($id_pegawai);
         }
     
         return $res;
@@ -10327,7 +10365,7 @@ public function getFileForVerifLayanan()
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
             $datainsKgb["gajilama"] = $dataKgb[0]['gajilama'];
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
-            $datainsKgb["status"] = 3;
+            $datainsKgb["status"] = 2;
             $datainsKgb["gambarsk"] = $data['file_name'];
             $url_file = "arsipgjberkala/".$data['nama_file'];
 
@@ -10351,7 +10389,7 @@ public function getFileForVerifLayanan()
         
         
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataKgb[0]['handphone']),
                     'message' => $caption,

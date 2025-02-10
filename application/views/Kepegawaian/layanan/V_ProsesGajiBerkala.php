@@ -104,6 +104,8 @@
        Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
        <?php } ?>
        <?php if($result[0]['status'] == 3){ ?>
+        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
         <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',2)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
         Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
        <?php } ?>
@@ -718,6 +720,7 @@ function openPresensiTab(){
     // $('#ket_file').html('Tidak ada data');
            
           } else {
+            $('.iframe_loader').hide()
             $('#view_file_verif_kgb').attr('src', '')
             $('#ket_file').html('Tidak ada data');
           }

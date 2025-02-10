@@ -589,16 +589,7 @@
                 </span>
               </div>
 
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jenis Kepegawaian
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_jenispeg'])?>
-                </span>
-              </div>
+             
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
@@ -643,6 +634,17 @@
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
                   <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  TMT Gaji Berkala Terakhir
+                </span>
+              </div>
+              <div class="col-lg-12 text-left" >
+                <span class="sp_profil_sm">
+                <?=formatDateNamaBulan($profil_pegawai['tmtgjberkala'])?>
                 </span>
               </div>
 

@@ -1137,6 +1137,12 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->updateTmBerkala());
 	}
+
+	public function mergeBerkala()
+	{ 
+		echo json_encode( $this->kepegawaian->mergeBerkala());
+	}
+	
 	public function updateJenisKelamin()
 	{ 
 		echo json_encode( $this->kepegawaian->updateJenisKelamin());

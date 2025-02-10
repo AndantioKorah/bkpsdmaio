@@ -460,8 +460,8 @@
 		
 		
 		</ul>
-
-		<!-- <li class="sidebar-item ">
+		<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
+		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datamaster" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-database"></i> 
 				<span class="align-middle">
@@ -491,14 +491,14 @@
 									
 								</ul>
 							</li>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 				<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Pangkat
 				</a>
-			</li>
+			</li> -->
 			</ul>
-		</li> -->
-		
+		</li>
+	<?php } ?>
 
 		
 	<?php } ?>

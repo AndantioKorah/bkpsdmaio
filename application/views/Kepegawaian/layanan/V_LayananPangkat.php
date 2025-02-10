@@ -499,7 +499,7 @@ ol {
 					</button> Berkas belum diupload<br>
           <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
 					</button> Menunggu Verifikasi BKPSDM<br><br>
-
+          <span class="mt-2">Berkas dengan tanda * Wajib diupload</span><br>
 					Berkas diupload Pada Menu Profil <br>
           <?php if($id_m_layanan == 6) { ?>
           Untuk Berkas : <br>

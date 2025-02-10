@@ -134,4 +134,74 @@ class C_Layanan extends CI_Controller
 	public function deleteFileDsManual($id){
         echo json_encode($this->layanan->deleteFileDsManual($id));
 	}
+
+	public function openModalNotifPegawai($nip){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['berkas'] = $this->layanan->getKelengkapanBerkas($nip, 1);
+		
+		$messages = "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*"."\nSelamat ".greeting().",\nYth. ".getNamaPegawaiFull($data['profil_pegawai']).
+					", saat ini operator sedang melakukan verifikasi dokumen-dokumen kepegawaian Anda untuk keperluan pensiun. ";
+		
+		$listBerkasKosong = null;
+
+		if(!$data['berkas']['cpns']){
+			$listBerkasKosong[] = "SK CPNS";
+		}
+
+		if(!$data['berkas']['pns']){
+			$listBerkasKosong[] = "SK PNS";
+		}
+
+		if(!$data['berkas']['pmk']){
+			$listBerkasKosong[] = "SK Peninjauan Masa Kerja (jika ada)";
+		}
+
+		if(!$data['berkas']['skp']){
+			$listBerkasKosong[] = "Sasaran Kerja Pegawai";
+		}
+
+		if(!$data['berkas']['akte_nikah']){
+			$listBerkasKosong[] = "Akte Perkawinan";
+		}
+
+		if(!$data['berkas']['akte_cerai']){
+			$listBerkasKosong[] = "Akte Cerai";
+		}
+
+		if(!$data['berkas']['akte_anak']){
+			$listBerkasKosong[] = "Akte Anak";
+		}
+
+		if(!$data['berkas']['akte_kematian']){
+			$listBerkasKosong[] = "Akte Kematian";
+		}
+
+		if(!$data['berkas']['kartu_keluarga']){
+			$listBerkasKosong[] = "Kartu Keluarga";
+		}
+
+		if(!$data['berkas']['ktp']){
+			$listBerkasKosong[] = "Kartu Tanda Penduduk (KTP)";
+		}
+
+		if(!$data['berkas']['npwp']){
+			$listBerkasKosong[] = "NPWP";
+		}
+
+		if($listBerkasKosong){
+			$messages .= "\n\n*Silahkan lengkapi dokumen-dokumen berikut agar proses pengurusan dokumen pensiun Anda tidak terhambat*";
+			foreach($listBerkasKosong as $lb){
+				$messages .= "\n"."- ".$lb;
+			}
+		}
+
+		$messages .= FOOTER_MESSAGE_CUTI;
+
+		$data['message'] = $messages;
+		$this->load->view('kepegawaian/V_KelengkapanBerkasModalNotif', $data);
+	}
+
+	public function sendNotif(){
+		echo json_encode($this->layanan->sendNotif());
+	}
 }

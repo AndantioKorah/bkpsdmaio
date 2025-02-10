@@ -158,7 +158,7 @@ class M_Layanan extends CI_Model
                         ->join('db_pegawai.pegskp b', 'a.id_peg = b.id_pegawai')
                         ->where('a.nipbaru_ws', $nip)
                         ->where_in('b.status', [1,2])
-                        ->order_by('b.tahun, b.created_date')
+                        ->order_by('b.tahun', 'desc')
                         ->where_in('flag_active', [1,2])
                         ->get()->row_array();
                         
@@ -1154,4 +1154,15 @@ class M_Layanan extends CI_Model
 		return $rs;
 		// echo "<img src='".$uri."' />";
 	}
+
+    public function sendNotif(){
+        $data = $this->input->post();
+        $this->db->insert('t_cron_wa', [
+            'type' => 'text',
+            'sendTo' => convertPhoneNumber($data['nohp']),
+            'message' => $data['pesan'],
+            'jenis_layanan' => 'Administrasi Kepegawaian - Pensiun',
+            'created_by' => $this->general_library->getId()
+        ]);
+    }
 }

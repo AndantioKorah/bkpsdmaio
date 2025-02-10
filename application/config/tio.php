@@ -86,6 +86,9 @@ $route['kepegawaian/verifikasi-permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/ve
 $route['kepegawaian/penomoran-sk-cuti'] = 'kepegawaian/C_Kepegawaian/penomoranSkCuti';
 $route['whatsapp-verification/cuti/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/verifWhatsapp/$1';
 
+//dokumen pensiun
+$route['kepegawaian/penomoran-dokumen-pensiun'] = 'kepegawaian/C_Layanan/penomoranDokumenPensiun';
+
 //rating layanan
 $route['survey-kepuasan-layanan/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/surveyKepuasan/$1';
 

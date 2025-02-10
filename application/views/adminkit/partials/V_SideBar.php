@@ -408,6 +408,15 @@
 					<i class="align-middle me-2 far fa-circle"></i>Penomoran SK Cuti
 				</a>
 			</li>
+		<?php }
+			if($this->general_library->isProgrammer() ||
+				$this->general_library->isHakAkses('admin_simponi_asn')){
+		?>
+			<li class="sidebar-item ">
+				<a title="Penomoran Dokumen Pensiun" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/penomoran-dokumen-pensiun')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Penomoran Dokumen Pensiun
+				</a>
+			</li>
 		<?php } ?>
 		<?php 
 			if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 

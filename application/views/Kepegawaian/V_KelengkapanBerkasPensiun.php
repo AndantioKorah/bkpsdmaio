@@ -144,6 +144,10 @@
                             <!-- </form> -->
                         <?php } ?>
                     </div>
+                    <div class="col-lg-12 text-right" style="margin-top: -10px;">
+                    <button id="btn_notif_pegawai" href="#modal_notif" onclick="notifPegawai('<?=$nip?>')"
+                    class="btn btn-block btn-warning float-right"><i class="fa fa-bell"></i> NOTIFIKASI PEGAWAI CALON PENSIUN</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -870,7 +874,25 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
+
+<div class="modal fade" id="modal_notif" tabindex="-1" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">NOTIFIKASI PEGAWAI CALON PENSIUN</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modal_notif_content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
@@ -918,6 +940,15 @@
                 }
             })
         }
+    }
+
+    function notifPegawai(nip){
+        $('#modal_notif').modal('show')
+        $('#modal_notif_content').html('')
+        $('#modal_notif_content').append(divLoaderNavy)
+        $('#modal_notif_content').load('<?=base_url("kepegawaian/C_Layanan/openModalNotifPegawai/")?>'+nip, function(){
+            $('#loader').hide()
+        })
     }
 
     function showDpcp(id){

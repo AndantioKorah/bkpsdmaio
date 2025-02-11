@@ -128,25 +128,36 @@
                             <span style="color: red; font-weight: bold; font-style: italic; font-size: .65rem;">*pegawai sedang dalam masa menjalani hukuman disiplin sedang/berat mulai <?=formatDateNamaBulan($berkas['data_hukdis']['tglsurat'])?> sampai <?=formatDateNamaBulan($berkas['data_hukdis']['tmt_akhir'])?></span><br>
                         <?php } ?>
                         <?php if($progress['data']['url_file_dpcp'] == null){ ?>
-                            <form id="form_create_dpcp">
-                                <button id="btn_create_dpcp" type="submit" class="btn btn-block btn-danger float-right"><i class="fa fa-input"></i> BUAT BERKAS PENSIUN DAN AJUKAN DS</button>
-                                <button id="btn_create_dpcp_loading" style="display: none;" disabled type="button" class="btn btn-block btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</button>
-                            </form>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form id="form_create_dpcp">
+                                        <button id="btn_create_dpcp" type="submit" class="btn btn-sm btn-danger float-right"><i class="fa fa-input"></i> BUAT BERKAS PENSIUN DAN AJUKAN DS</button>
+                                        <button id="btn_create_dpcp_loading" style="display: none;" disabled type="button" class="btn btn-sm btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</button>
+                                    </form>
+                                </div>
+                                <div class="col-lg-12 mt-2">
+                                    <button id="btn_notif_pegawai" href="#modal_notif" onclick="notifPegawai('<?=$nip?>')"
+                                    class="btn btn-sm btn-warning float-right"><i class="fa fa-bell"></i> NOTIFIKASI PEGAWAI CALON PENSIUN</button>
+                                </div>
+                            </div>
                         <?php } else { ?>
-                            <!-- <form id="form_show_dpcp" action="<?=base_url('kepegawaian/C_Layanan/showDpcp/'.$id_t_checklist_pensiun)?>" target="_blank"> -->
-                                <button id="btn_show_dpcp" href="#modal_berkas" data-toggle="modal" onclick="showDpcp('<?=$id_t_checklist_pensiun?>')"
-                                class="btn btn-block btn-success float-right"><i class="fa fa-eye"></i> LIHAT BERKAS PENSIUN</button>
-
-                                <button id="btn_delete_berkas_pensiun" onclick="deleteBerkas('<?=$id_t_checklist_pensiun?>')"
-                                class="btn btn-block btn-danger float-right mr-3"><i class="fa fa-trash"></i> HAPUS BERKAS</button>
-                                <button id="btn_delete_berkas_pensiun_loading" style="display: none;" disabled
-                                class="btn btn-block btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Menghapus Data...</button>
-                            <!-- </form> -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <button id="btn_show_dpcp" href="#modal_berkas" data-toggle="modal" onclick="showDpcp('<?=$id_t_checklist_pensiun?>')"
+                                    class="btn btn-sm btn-success float-right"><i class="fa fa-eye"></i> LIHAT BERKAS PENSIUN</button>
+                                </div>
+                                <div class="col-lg-12 mt-2">
+                                    <button id="btn_notif_dpcp" href="#modal_berkas" onclick="notifPegawaiDpcp('<?=$nip?>')"
+                                    class="btn btn-sm btn-warning float-right"><i class="fa fa-bell"></i> NOTIFIKASI PENANDATANGANAN DPCP</button>
+                                </div>
+                                <div class="col-lg-12 mt-2">
+                                    <button id="btn_delete_berkas_pensiun" onclick="deleteBerkas('<?=$id_t_checklist_pensiun?>')"
+                                    class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i> HAPUS BERKAS</button>
+                                    <button id="btn_delete_berkas_pensiun_loading" style="display: none;" disabled
+                                    class="btn btn-sm btn-danger float-right"><i class="fa fa-spin fa-spinner"></i> Menghapus Data...</button>
+                                </div>
+                            </div>
                         <?php } ?>
-                    </div>
-                    <div class="col-lg-12 text-right" style="margin-top: -10px;">
-                    <button id="btn_notif_pegawai" href="#modal_notif" onclick="notifPegawai('<?=$nip?>')"
-                    class="btn btn-block btn-warning float-right"><i class="fa fa-bell"></i> NOTIFIKASI PEGAWAI CALON PENSIUN</button>
                     </div>
                 </div>
             </div>
@@ -940,6 +951,15 @@
                 }
             })
         }
+    }
+
+    function notifPegawaiDpcp(nip){
+        $('#modal_notif').modal('show')
+        $('#modal_notif_content').html('')
+        $('#modal_notif_content').append(divLoaderNavy)
+        $('#modal_notif_content').load('<?=base_url("kepegawaian/C_Layanan/openModalNotifPegawaiDpcp/")?>'+nip, function(){
+            $('#loader').hide()
+        })
     }
 
     function notifPegawai(nip){

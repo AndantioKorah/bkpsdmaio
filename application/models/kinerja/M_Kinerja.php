@@ -2174,7 +2174,9 @@
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
         $this->db->select('c.fotopeg,g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
-        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_diverif')
+        (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_diverif,
+        (select path_masuk from db_sip.gambar as i where i.user_id = a.teman_absensi and a.flag_active = 1 and a.tanggal_absensi = i.tgl limit 1) as foto_absen_masuk,
+        (select path_pulang from db_sip.gambar as i where i.user_id = a.teman_absensi and a.flag_active = 1 and a.tanggal_absensi = i.tgl limit 1) as foto_absen_pulang')
         ->from('t_peninjauan_absensi a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2184,6 +2186,7 @@
         ->where('a.status', floatval($status))
         ->where('c.id_m_status_pegawai', 1)
         ->where('a.flag_active', 1)
+        // ->where('a.id_m_user', 221)
         ->order_by('a.tanggal_absensi', 'asc');
         if($id_unitkerja != 0){
             $this->db->where('c.skpd', $id_unitkerja);
@@ -2363,9 +2366,9 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 5) {
+        if($result[0]['total_verif'] >= 2) {
             $rs['code'] = 1;        
-            $rs['message'] = 'Sudah ada 5 Pengajuan yang diterima';        
+            $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     
 
             $data_verif['status'] = $status;

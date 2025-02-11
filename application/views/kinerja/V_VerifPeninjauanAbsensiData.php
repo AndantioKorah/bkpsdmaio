@@ -64,6 +64,8 @@
                         data-bulan="<?=$bulan;?>" 
                         data-tahun="<?=$tahun;?>"  
                         data-gambar="<?=$file_name;?>" 
+                        data-foto_absen_masuk="<?=$r['foto_absen_masuk'];?>" 
+                        data-foto_absen_pulang="<?=$r['foto_absen_pulang'];?>" 
                         data-toggle="modal" 
                         data-target="#exampleModalb"
                         class="btn btn-info btn-sm " type="button" id="dropdownMenuButton"  aria-haspopup="true" aria-expanded="false"><i class="fa fa-file"></i> Dokumen</button>
@@ -207,35 +209,35 @@
         <b >Foto Pegawai</b>
         <img  id="foto_pegawai" class="mt-3" style="width:375px;height:510px;"  alt="">
       </div>
-      <div class="col-lg-8">
+      <div class="col-lg-4">
       <style>
     .popup figure {
-  width: 100%;
-  height: 510px;
-  overflow: hidden;
-}
+        width: 100%;
+        height: 510px;
+        overflow: hidden;
+      }
 
-.popup img {
-  width: 200px;
-  height: 200px;
-  cursor: pointer;
-  overflow: scroll;
-}
+      .popup img {
+        width: 200px;
+        height: 200px;
+        cursor: pointer;
+        overflow: scroll;
+      }
 
-.btnZoom {
-  /* z-index: 99999; */
-  cursor: pointer;
-  font-size: 14px;
-  /* font-weight: 200; */
-  background: #222e3c;
-  padding: 5px;
-  text-align: center;
-  border-radius: 5px;
-  color:#fff;
-  margin-top:-13px;
-  margin-bottom:-10px;
+      .btnZoom {
+        /* z-index: 99999; */
+        cursor: pointer;
+        font-size: 14px;
+        /* font-weight: 200; */
+        background: #222e3c;
+        padding: 5px;
+        text-align: center;
+        border-radius: 5px;
+        color:#fff;
+        margin-top:-13px;
+        margin-bottom:-10px;
 
-}
+      }
 </style>
       <b class="mb-2">Bukti Peninjauan </b>
       <button class="btn btn-sm btnZoom plus" title="ZoomIn"> <i class="fas fa-search-plus"></i></button>
@@ -246,11 +248,14 @@
 <div class="popup mt-3">
     
     <figure>
-      <img id="bukti_absen" class="workspace"        alt="">
+      <img id="bukti_absen" class="workspace" alt="">
     </figure>
   </div>
       </div>
-     
+      <div class="col-lg-4" id="foto_absen_teman" style="display:none">
+      <b >Foto Absensi Teman</b>
+      <img  id="foto_absen" class="mt-3" style="width:360px;height:510px;"  alt="">
+    </div>
 
 
 
@@ -435,9 +440,19 @@
 
             if(div.data('jenis_absen') == 1){
                 var jenis_absen = "Pagi"
+                var path = "http://203.175.10.90/sip/upload/"+div.data('foto_absen_masuk')
             } else {
                 var jenis_absen = "Sore"
+                 var path = "http://203.175.10.90/sip/upload/"+div.data('foto_absen_pulang')
             }
+            
+
+            if(div.data('jenis_bukti') == 1){
+              $('#foto_absen_teman').show();
+            } else {
+              $('#foto_absen_teman').hide();
+            }
+           
             $('#nama_peg').html('');
             $('#input_jam').html('');
             modal.find("figure img").css({
@@ -446,6 +461,8 @@
                   top: "0",
                   left: "0"
                 });
+
+            modal.find('#foto_absen').attr("src",path);
 
             modal.find('#nma_peg').html(div.data('nama'));
             modal.find('#id').attr("value",div.data('id'));

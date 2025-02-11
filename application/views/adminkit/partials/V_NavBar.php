@@ -317,7 +317,6 @@
 									overflow: scroll;">
 								<?php foreach($list_notif_layanan as $ly){ ?>
 									
-								<?php if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){ ?>
 									<a href="#" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
@@ -330,7 +329,6 @@
 											</div>
 										</div>
 									</a>
-									<?php } ?>
 									<?php } ?>
 								</div>
 							
@@ -347,7 +345,7 @@
 								<div class="position-relative">
 									<i class="align-middle" data-feather="bell"></i>
 									<?php if($list_notif_layanan) { ?>
-									<span class="indicator" ></span>
+									<span class="indicator" ><?= count($list_notif_layanan);?></span>
 									<?php } ?>
 								</div>
 							</a>
@@ -360,7 +358,6 @@
 									height: 400px;
 									overflow: scroll;">
 								<?php foreach($list_notif_layanan as $ly){ ?>
-								<?php if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){ ?>
 									<a href="#" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
@@ -372,7 +369,6 @@
 											</div>
 										</div>
 									</a>
-									<?php } ?>
 									<?php } ?>
 								</div>
 							</div>

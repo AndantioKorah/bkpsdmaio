@@ -5608,6 +5608,14 @@ public function submitEditJabatan(){
             return $this->db->get()->row_array();
        }
 
+       function getVerifLayanan($id){
+        $this->db->select('*')
+        ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
+            ->from('db_efort.t_layanan a')
+            ->where('a.status', 0);
+        return $this->db->get()->result_array();
+   }
+
 
 
 
@@ -10106,7 +10114,6 @@ public function getFileForVerifLayanan()
         $datapost = $this->input->post();
         $this->db->trans_begin();
        
-        dd($datapost['sk_pangkat']);
 
           
         $id_pengajuan = $datapost['id_pengajuan'];

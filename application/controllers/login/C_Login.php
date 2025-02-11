@@ -40,6 +40,8 @@ class C_Login extends CI_Controller
         // dd($data);
         // $this->session->set_userdata('live_tpp', null);
         // $data = null;
+        $data['layanan'] = $this->kepegawaian->getVerifLayanan($this->general_library->getId());
+        // dd($data['layanan']);
         $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
         $data['nip'] = $this->general_library->getUserName();
         $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();

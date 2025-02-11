@@ -1,6 +1,18 @@
+<style>
+  .tr_selesai{
+    display: none;
+  }
+</style>
+
 <div class="row">
   <div class="col-lg-12 table-responsive">
-    <table class="table table-hover table-striped">
+    <div style="cursor: pointer;" class="form-check float-right text-right mb-5">
+      <input style="cursor: pointer; width: 25px; height: 25px;" class="form-check-input" type="checkbox" value="" id="checkTampilSemua">
+      <label style="cursor: pointer; padding: 5px; font-size: 1rem;" class="form-check-label" for="checkTampilSemua">
+        Tampilkan Semua
+      </label>
+    </div>
+    <table class="table table-hover table-striped" id="table_res">
       <thead>
         <th class="text-center">No</th>
         <th class="text-center">Pegawai</th>
@@ -10,8 +22,26 @@
         <th class="text-center">Pilihan</th>
       </thead>
       <tbody>
-        <?php if($result){ $no = 1; foreach($result as $rs){ ?>
-          <tr>
+        <?php if($result){ $no = 1; foreach($result as $rs){
+          $classSelesai = "";
+          $status = "";
+          $status_pengajuan_cuti = $rs['status_pengajuan_cuti'];
+          $class = "badge badge-danger";
+          if($rs['nomor_surat'] == null){
+            $status = "Nomor Surat belum diinput";
+          } else {
+            if($rs['flag_ds_cuti'] == 0){
+              $class = "badge badge-warning";
+              $status = "File DS belum diupload";
+            } else {
+              $status_pengajuan_cuti = "Selesai";
+              $status = "File DS sudah diupload";
+              $class = "badge badge-success";
+              $classSelesai = "tr_selesai";
+            }
+          }
+        ?>
+          <tr class="<?=$classSelesai?>">
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left">
               <span><?=getNamaPegawaiFull($rs)?></span><br>
@@ -27,7 +57,10 @@
               <?=$tanggal_cuti_raw?>
             </td>
             <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
-            <td class="text-center"><?=$rs['status_pengajuan_cuti']?></td>
+            <td class="text-center">
+              <?=$status_pengajuan_cuti?><br>
+              <span class="<?=$class?>"><?=$status?></span>
+            </td>
             <td class="text-center">
               <button href="#modal_nomor_surat_manual" data-toggle="modal" class="btn btn-sm btn-warning"
               onclick="openModalPenomoranSkCuti('<?=$rs['id']?>')">
@@ -55,11 +88,23 @@
 </div>
 
 <script>
+  $(function(){
+    $('#table_res').dataTable()
+  })
+
   function openModalPenomoranSkCuti(id){
-      $('#modal_nomor_surat_manual_content').html('')
-      $('#modal_nomor_surat_manual_content').append(divLoaderNavy)
-      $('#modal_nomor_surat_manual_content').load('<?=base_url('kepegawaian/C_Kepegawaian/openModalPenomoranSkCuti/')?>'+id, function(){
-        $('#loader').hide()
-      })
+    $('#modal_nomor_surat_manual_content').html('')
+    $('#modal_nomor_surat_manual_content').append(divLoaderNavy)
+    $('#modal_nomor_surat_manual_content').load('<?=base_url('kepegawaian/C_Kepegawaian/openModalPenomoranSkCuti/')?>'+id, function(){
+      $('#loader').hide()
+    })
+  }
+
+  $('#checkTampilSemua').on('change', function(){
+    if($(this).is(':checked')){
+      $('.tr_selesai').show()
+    } else {
+      $('.tr_selesai').hide()
     }
+  })
 </script>

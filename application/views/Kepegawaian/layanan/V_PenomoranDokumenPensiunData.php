@@ -1,6 +1,18 @@
+<style>
+  .tr_selesai{
+    display: none;
+  }
+</style>
+
 <div class="row">
   <div class="col-lg-12 table-responsive">
-    <table class="table table-hover table-striped">
+    <div style="cursor: pointer;" class="form-check float-right text-right mb-5">
+      <input style="cursor: pointer; width: 25px; height: 25px;" class="form-check-input" type="checkbox" value="" id="checkTampilSemua">
+      <label style="cursor: pointer; padding: 5px; font-size: 1rem;" class="form-check-label" for="checkTampilSemua">
+        Tampilkan Semua
+      </label>
+    </div>
+    <table class="table table-hover table-striped" id="table_res">
       <thead>
         <th class="text-center">No</th>
         <th class="text-center">Pegawai</th>
@@ -10,8 +22,25 @@
         <th class="text-center">Pilihan</th>
       </thead>
       <tbody>
-        <?php if($result){ $no = 1; foreach($result as $rs){ ?>
-          <tr>
+        <?php if($result){ $no = 1; foreach($result as $rs){
+          $status = "";
+          $class = "badge badge-danger";
+          $classSelesai = "";
+
+          if($rs['nomor_surat'] == null && $rs['id_m_jenis_ds'] != 1){
+            $status = "Nomor Surat belum diinput";
+          } else {
+            if($rs[$rs['nama_kolom_flag']] == 0){
+              $class = "badge badge-warning";
+              $status = "File DS belum diupload";
+            } else {
+              $status = "File DS sudah diupload";
+              $class = "badge badge-success";
+              $classSelesai = "tr_selesai";
+            }
+          }  
+        ?>
+          <tr class="<?=$classSelesai?>">
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left">
               <span style="font-weight: bold; font-size: .9rem;"><?=getNamaPegawaiFull($rs)?></span><br>
@@ -20,21 +49,6 @@
             <td class="text-center"><?=$rs['nama_jenis_ds'];?></td>
             <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
             <td class="text-center">
-              <?php
-                $status = "";
-                $class = "badge badge-danger";
-                if($rs['nomor_surat'] == null && $rs['id_m_jenis_ds'] != 1){
-                  $status = "Nomor Surat belum diinput";
-                } else {
-                  if($rs[$rs['nama_kolom_flag']] == 0){
-                    $class = "badge badge-warning";
-                    $status = "File DS belum diupload";
-                  } else {
-                    $status = "File DS sudah diupload";
-                    $class = "badge badge-success";
-                  }
-                }
-              ?>
               <span class="<?=$class?>"><?=$status?></span>
             </td>
             <td class="text-center">
@@ -64,11 +78,23 @@
 </div>
 
 <script>
+  $(function(){
+    $('#table_res').dataTable()
+  })
+
   function openModalPenomoranDokumenPensiun(id){
-      $('#modal_nomor_surat_manual_content').html('')
-      $('#modal_nomor_surat_manual_content').append(divLoaderNavy)
-      $('#modal_nomor_surat_manual_content').load('<?=base_url('kepegawaian/C_Layanan/openModalPenomoranDokumenPensiun/')?>'+id, function(){
-        $('#loader').hide()
-      })
-    }
+    $('#modal_nomor_surat_manual_content').html('')
+    $('#modal_nomor_surat_manual_content').append(divLoaderNavy)
+    $('#modal_nomor_surat_manual_content').load('<?=base_url('kepegawaian/C_Layanan/openModalPenomoranDokumenPensiun/')?>'+id, function(){
+      $('#loader').hide()
+    })
+  }
+
+  $('#checkTampilSemua').on('change', function(){
+  if($(this).is(':checked')){
+    $('.tr_selesai').show()
+  } else {
+    $('.tr_selesai').hide()
+  }
+})
 </script>

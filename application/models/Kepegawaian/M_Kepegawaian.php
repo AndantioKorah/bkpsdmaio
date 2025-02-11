@@ -6251,7 +6251,6 @@ public function submitEditJabatan(){
             }
             if($res['code'] == 0){
                 $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
-
                 $data['surat_pendukung'] = $filename;
                 $data['created_by'] = $this->general_library->getId();
                 $data['id_m_user'] = $this->general_library->getId();
@@ -6262,6 +6261,55 @@ public function submitEditJabatan(){
                 $keterangan_cuti = $data['keterangan_cuti'];
                 unset($data['keterangan_cuti']);
                 unset($data['sisa_cuti']);
+
+                // if($this->general_library->isProgrammer()){
+                    $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+                    $listHari = null;
+                    $listBulan = null;
+                    $listTahun = null;
+                    foreach($hariKerja[3] as $hk){
+                        $explode = explode("-", $hk);
+                        $listTahun[] = $explode[0];
+                        $listBulan[] = $explode[1];
+                        $listHari[] = $explode[2];
+                    }
+
+                    $dokpen = $this->db->select('a.*, b.nama_jenis_disiplin_kerja')
+                                        ->from('t_dokumen_pendukung a')
+                                        ->join('m_jenis_disiplin_kerja b', 'a.id_m_jenis_disiplin_kerja = b.id')
+                                        ->where('a.flag_active', 1)
+                                        ->where_in('tanggal', $listHari)
+                                        ->where_in('bulan', $listBulan)
+                                        ->where_in('tahun', $listTahun)
+                                        ->where('id_m_user', $data['id_m_user'])
+                                        ->where('status != ', 3)
+                                        ->limit(1)
+                                        ->get()->row_array();
+                    if($dokpen){
+                        $res['code'] = 1;
+                        $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Dokumen Pendukung Presensi '".$dokpen['nama_jenis_disiplin_kerja'].
+                                        "' pada ".formatDateNamaBulan($dokpen['tahun'].'-'.$dokpen['bulan'].'-'.$dokpen['tanggal']);
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
+
+                    $permohonanCuti = $this->db->select('*')
+                                            ->from('t_pengajuan_cuti')
+                                            ->where('id_m_user', $data['id_m_user'])
+                                            ->where('flag_active', 1)
+                                            ->where('tanggal_mulai >=', $data['tanggal_mulai'])
+                                            ->where('tanggal_akhir >=', $data['tanggal_akhir'])
+                                            ->limit(1)
+                                            ->get()->row_array();
+                    if($permohonanCuti){
+                        $res['code'] = 1;
+                        $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Permohonan Cuti pada ".
+                                            formatDateNamaBulan($permohonanCuti['tanggal_mulai']);
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
+                // }
+
                 $this->db->insert('t_pengajuan_cuti', $data);
                 $insert_id = $this->db->insert_id();
                 $total_year = 3;
@@ -8371,15 +8419,17 @@ public function submitEditJabatan(){
     }
 
     public function searchPenomoranSkCuti($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws')
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat, d.id_m_jenis_ds')
                 ->from('t_pengajuan_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                 ->join('t_request_ds d', 'a.id = d.ref_id')
-                ->where('a.flag_active', 1)
+                ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
                 ->where('d.id_m_jenis_layanan', 3)
+                ->where('a.flag_active', 1)
+                ->where('d.flag_active', 1)
                 ->group_by('a.id')
                 ->order_by('a.created_date', 'asc');
 

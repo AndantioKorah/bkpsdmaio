@@ -3047,94 +3047,94 @@ public function submitVerifikasiDokumen(){
     $data["id_m_user_verif"] = $this->general_library->getId();
 
     // if($this->general_library->isProgrammer()){
-    //     // dd(base_url($datapost['file_path']));
-    //     $base64 = convertToBase64(($datapost['file_path']));
-    //     $bulan = date('m');
+        // dd(base_url($datapost['file_path']));
+        $base64 = convertToBase64(($datapost['file_path']));
+        $bulan = date('m');
         
-    //     if(!file_exists('assets/bukti_kegiatan/'.date('Y')) && !is_dir('assets/bukti_kegiatan/'.date('Y'))) {
-    //         mkdir('assets/bukti_kegiatan/'.date('Y'), 0777);       
-    //     }
+        if(!file_exists('assets/bukti_kegiatan/'.date('Y')) && !is_dir('assets/bukti_kegiatan/'.date('Y'))) {
+            mkdir('assets/bukti_kegiatan/'.date('Y'), 0777);       
+        }
 
-    //     if(!file_exists('assets/bukti_kegiatan/'.date('Y').'/'.$bulan) && !is_dir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan)) {
-    //         mkdir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan, 0777);       
-    //     }
+        if(!file_exists('assets/bukti_kegiatan/'.date('Y').'/'.$bulan) && !is_dir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan)) {
+            mkdir('assets/bukti_kegiatan/'.date('Y').'/'.$bulan, 0777);       
+        }
 
-    //     $file_name = 'VERIF_PDM_'.$this->general_library->getUserName().'_'.date('Ymdhis').'.jpg';
-    //     $urlFile = 'assets/bukti_kegiatan/'.date('Y').'/'.$bulan.'/'.$file_name;
-    //     $img = imagegrabscreen();
-    //     imagepng($im, $urlFile);
-    //     base64ToFile($base64, $urlFile);
+        $file_name = 'VERIF_PDM_'.$this->general_library->getUserName().'_'.date('Ymdhis').'.jpg';
+        $urlFile = 'assets/bukti_kegiatan/'.date('Y').'/'.$bulan.'/'.$file_name;
+        $img = imagegrabscreen();
+        imagepng($im, $urlFile);
+        base64ToFile($base64, $urlFile);
 
-    //     $peg = $this->db->select('b.id as id_m_user, a.*')
-    //                     ->from('db_pegawai.pegawai a')
-    //                     ->join('m_user b', 'a.nipbaru_ws = b.username')
-    //                     ->where('b.flag_active', 1)
-    //                     ->where('a.id_peg', $datapost['id_pegawai'])
-    //                     ->get()->row_array();
-    //     if($peg){
-    //         $list_tugas_jabatan = [
-    //             'Melakukan Verifikasi Data PDM di Siladen',
-    //             'Melakukan Verifikasi Data PDM',
-    //             'Memverifikasi Data PDM di Siladen',
-    //             'Memverifikasi Data PDM',
-    //         ];
-    //         $exists = $this->db->select('*')
-    //                         ->from('t_rencana_kinerja')
-    //                         ->where('bulan', floatval(date('m')))
-    //                         ->where('tahun', floatval(date('Y')))
-    //                         ->where_in('tugas_jabatan', $list_tugas_jabatan)
-    //                         ->where('flag_active', 1)
-    //                         ->where('id_m_user', $this->general_library->getId())
-    //                         ->order_by('created_date', 'desc')
-    //                         ->get()->row_array();
-    //         $realisasi = null;
-    //         if($exists){
-    //             $realisasi = [
-    //                 'id_t_rencana_kinerja' => $exists['id'],
-    //                 'tanggal_kegiatan' => date('Y-m-d H:i:s'),
-    //                 'deskripsi_kegiatan' => 'Melakukan Verifikasi Data PDM '.strtoupper($datapost['jenis_dokumen']).' untuk pegawai atas nama '.getNamaPegawaiFull($peg),
-    //                 'bukti_kegiatan' => json_encode([$file_name]),
-    //                 'realisasi_target_kuantitas' => 1,
-    //                 'satuan' => 'Data',
-    //                 'target_kualitas' => 100,
-    //                 'id_m_user' => $this->general_library->getId(),
-    //                 'status_verif' => 1,
-    //                 'tanggal_verif' => date('Y-m-d H:i:s'),
-    //                 'created_by' => $this->general_library->getId(),
-    //             ];
-    //         } else {
-    //             $this->db->insert('t_rencana_kinerja', [
-    //                 'id_m_user' => $this->general_library->getId(),
-    //                 'tugas_jabatan' => 'Melakukan Verifikasi Data PDM di Siladen',
-    //                 'tahun' => date('Y'),
-    //                 'bulan' => floatval($bulan),
-    //                 'satuan' => 'Data',
-    //                 'sasaran_kerja' => 'Terverifikasinya Data PDM di Siladen',
-    //                 'target_kualitas' => 100,
-    //                 'target_kuantitas' => 1,
-    //                 'created_by' => $this->general_library->getId()
-    //             ]);
-    //             $insertId = $this->db->insert_id();
+        $peg = $this->db->select('b.id as id_m_user, a.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        ->where('b.flag_active', 1)
+                        ->where('a.id_peg', $datapost['id_pegawai'])
+                        ->get()->row_array();
+        if($peg){
+            $list_tugas_jabatan = [
+                'Melakukan Verifikasi Data PDM di Siladen',
+                'Melakukan Verifikasi Data PDM',
+                'Memverifikasi Data PDM di Siladen',
+                'Memverifikasi Data PDM',
+            ];
+            $exists = $this->db->select('*')
+                            ->from('t_rencana_kinerja')
+                            ->where('bulan', floatval(date('m')))
+                            ->where('tahun', floatval(date('Y')))
+                            ->where_in('tugas_jabatan', $list_tugas_jabatan)
+                            ->where('flag_active', 1)
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->order_by('created_date', 'desc')
+                            ->get()->row_array();
+            $realisasi = null;
+            if($exists){
+                $realisasi = [
+                    'id_t_rencana_kinerja' => $exists['id'],
+                    'tanggal_kegiatan' => date('Y-m-d H:i:s'),
+                    'deskripsi_kegiatan' => 'Melakukan Verifikasi Data PDM '.strtoupper($datapost['jenis_dokumen']).' untuk pegawai atas nama '.getNamaPegawaiFull($peg),
+                    'bukti_kegiatan' => json_encode([$file_name]),
+                    'realisasi_target_kuantitas' => 1,
+                    'satuan' => 'Data',
+                    'target_kualitas' => 100,
+                    'id_m_user' => $this->general_library->getId(),
+                    'status_verif' => 1,
+                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->general_library->getId(),
+                ];
+            } else {
+                $this->db->insert('t_rencana_kinerja', [
+                    'id_m_user' => $this->general_library->getId(),
+                    'tugas_jabatan' => 'Melakukan Verifikasi Data PDM di Siladen',
+                    'tahun' => date('Y'),
+                    'bulan' => floatval($bulan),
+                    'satuan' => 'Data',
+                    'sasaran_kerja' => 'Terverifikasinya Data PDM di Siladen',
+                    'target_kualitas' => 100,
+                    'target_kuantitas' => 1,
+                    'created_by' => $this->general_library->getId()
+                ]);
+                $insertId = $this->db->insert_id();
 
-    //             $realisasi = [
-    //                 'id_t_rencana_kinerja' => $insertId,
-    //                 'tanggal_kegiatan' => date('Y-m-d H:i:s'),
-    //                 'deskripsi_kegiatan' => 'Melakukan Verifikasi Data PDM '.strtoupper($datapost['jenis_dokumen']).' untuk pegawai atas nama '.getNamaPegawaiFull($peg),
-    //                 'bukti_kegiatan' => json_encode([$file_name]),
-    //                 'realisasi_target_kuantitas' => 1,
-    //                 'satuan' => 'Data',
-    //                 'target_kualitas' => 100,
-    //                 'id_m_user' => $this->general_library->getId(),
-    //                 'status_verif' => 1,
-    //                 'tanggal_verif' => date('Y-m-d H:i:s'),
-    //                 'created_by' => $this->general_library->getId(),
-    //             ];
-    //         }
+                $realisasi = [
+                    'id_t_rencana_kinerja' => $insertId,
+                    'tanggal_kegiatan' => date('Y-m-d H:i:s'),
+                    'deskripsi_kegiatan' => 'Melakukan Verifikasi Data PDM '.strtoupper($datapost['jenis_dokumen']).' untuk pegawai atas nama '.getNamaPegawaiFull($peg),
+                    'bukti_kegiatan' => json_encode([$file_name]),
+                    'realisasi_target_kuantitas' => 1,
+                    'satuan' => 'Data',
+                    'target_kualitas' => 100,
+                    'id_m_user' => $this->general_library->getId(),
+                    'status_verif' => 1,
+                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->general_library->getId(),
+                ];
+            }
 
-    //         if($realisasi){
-    //             $this->db->insert('t_kegiatan', $realisasi);
-    //         }
-    //     }
+            if($realisasi){
+                $this->db->insert('t_kegiatan', $realisasi);
+            }
+        }
     // }
     
     if(trim($datapost["jenis_dokumen"]) == "jabatan"){

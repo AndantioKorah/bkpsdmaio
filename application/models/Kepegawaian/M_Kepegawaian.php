@@ -3061,8 +3061,9 @@ public function submitVerifikasiDokumen(){
 
         $file_name = 'VERIF_PDM_'.$this->general_library->getUserName().'_'.date('Ymdhis').'.jpg';
         $urlFile = 'assets/bukti_kegiatan/'.date('Y').'/'.$bulan.'/'.$file_name;
-        $img = imagegrabscreen();
-        imagepng($im, $urlFile);
+        // $img = imagegrabscreen();
+        // imagepng($im, $urlFile);
+        // base64ToFile($base64, $urlFile);
         base64ToFile($base64, $urlFile);
 
         $peg = $this->db->select('b.id as id_m_user, a.*')

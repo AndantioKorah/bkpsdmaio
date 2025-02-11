@@ -67,7 +67,7 @@
             return $this->db->get()->result_array(); 
         }
 
-        public function authenticate($username, $password)
+        public function authenticate($username, $password, $flagSwitchAcc = 0)
         {
             $exclude_username = ['prog', '001'];
 
@@ -79,9 +79,14 @@
                         ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon', 'left')
                         ->join('db_pegawai.jabatan f', 'b.id_jabatan_tambahan = f.id_jabatanpeg', 'left')
                         ->where('a.username', $username)
-                        ->where('a.password', $password)
+                        // ->where('a.password', $password)
                         // ->where('id_m_status_pegawai', 1)
                         ->where('a.flag_active', 1);
+
+            if($flagSwitchAcc == 0){
+                $this->db->where('a.password', $password);
+            }
+
             $result = $this->db->get()->result_array();
             if(!$result){
                 $this->session->set_flashdata('message', 'Kombinasi Username dan Password tidak ditemukan');

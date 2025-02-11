@@ -97,20 +97,102 @@ class C_Login extends CI_Controller
         echo json_encode($data['tpp']);
     }
 
-    public function authenticateAdmin()
+    public function switchToAdmin(){
+        $progSession = $this->session->userdata('programmer_session');
+        if($progSession){
+            $this->session->set_userdata([
+                'user_logged_in' => null,
+                'params' => null,
+                'list_menu' => null,
+                'list_exist_url' => null,
+                'list_role' => null,
+                'list_hak_akses' => null,
+                'list_url' => null,
+                'active_role' => null,
+                'active_role_id' => null,
+                'active_role_name' => null,
+                'landing_page' => null,
+                'pegawai' => null,
+            ]);
+
+            $this->session->set_userdata('programmer_session', null);
+            
+            $this->session->set_userdata([
+                'user_logged_in' => $progSession['user_logged_in'],
+                'params' => $progSession['params'],
+                // 'test' => $progSession['test'],
+                'list_menu' => $progSession['list_menu'],
+                'list_exist_url' => $progSession['list_exist_url'],
+                'list_role' => $progSession['list_role'],
+                'list_hak_akses' => $progSession['list_hak_akses'],
+                'list_url' => $progSession['list_url'],
+                'active_role' => $progSession['active_role'],
+                'active_role_id' => $progSession['active_role_id'],
+                'active_role_name' => $progSession['active_role_name'],
+                'landing_page' => $progSession['landing_page'],
+                'pegawai' => $progSession['pegawai'],
+            ]);
+        } else {
+            $this->session->set_flashdata('message', "FORBIDDEN. PROGRAMMERS ONLY.");
+            redirect('logout');
+        }
+    }
+
+    public function authenticateAdmin($flagSwitchAccount = 0, $nip = 0)
     { 
-      
         if($this->input->post('username') == 'prog' && $this->input->post('password') == '123Tes.'){
             redirect('developer');
         }
+
         $username = $this->input->post('username');
-        // dd($this->input->post());
-        // $username = 'prog';
         $password = $this->general_library->encrypt($username, $this->input->post('password'));
-        // dd($password);
-        // var_dump($password);
-        // die();
-        $result = $this->m_general->authenticate($username, $password);
+
+        if($flagSwitchAccount == 1){
+            if($this->general_library->isProgrammer()){
+                $username = $nip;
+                $password = null;
+
+                $progSession['user_logged_in'] = $this->session->userdata('user_logged_in');
+                $progSession['params'] = $this->session->userdata('params');
+                $progSession['list_menu'] = $this->session->userdata('list_menu');
+                $progSession['list_exist_url'] = $this->session->userdata('list_exist_url');
+                $progSession['list_role'] = $this->session->userdata('list_role');
+                $progSession['list_hak_akses'] = $this->session->userdata('list_hak_akses');
+                $progSession['list_url'] = $this->session->userdata('list_url');
+                $progSession['active_role'] = $this->session->userdata('active_role');
+                $progSession['active_role_id'] = $this->session->userdata('active_role_id');
+                $progSession['active_role_name'] = $this->session->userdata('active_role_name');
+                $progSession['landing_page'] = $this->session->userdata('landing_page');
+                $progSession['pegawai'] = $this->session->userdata('pegawai');
+
+                $this->session->set_userdata('programmer_session', $progSession);
+
+                $this->session->set_userdata([
+                    'user_logged_in' => null,
+                    'params' => null,
+                    'test' => null,
+                    'list_menu' => null,
+                    'list_exist_url' => null,
+                    'list_role' => null,
+                    'list_hak_akses' => null,
+                    'list_url' => null,
+                    'active_role' => null,
+                    'active_role_id' => null,
+                    'active_role_name' => null,
+                    'landing_page' => null,
+                    'pegawai' => null,
+                    'list_tpp_kelas_jabatan' => null,
+                    'live_tpp' => null,
+                ]);
+
+            } else {
+                $this->session->set_flashdata('message', "FORBIDDEN. PROGRAMMERS ONLY.");
+                redirect('logout');
+            }
+        }
+
+
+        $result = $this->m_general->authenticate($username, $password, $flagSwitchAccount);
         // dd($result);
         if($result != null){
            
@@ -179,8 +261,6 @@ class C_Login extends CI_Controller
                 'active_role_name' =>  $active_role['role_name'],
                 'landing_page' =>  $landing_page,
                 'pegawai' => $pegawai,
-                // 'getBidangBySub' => $list_sub_bidang,
-                'ID_PENDAFTARAN_PASIEN' =>  null,
                 'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
                 'live_tpp' => null
             ]);

@@ -2498,6 +2498,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $layanan;
 		$data['id_usul'] = $id;
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
+		dd($data['sk_pangkat']);
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);      
 		

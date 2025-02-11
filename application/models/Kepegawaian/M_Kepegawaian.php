@@ -9352,7 +9352,7 @@ public function getFileForKarisKarsu()
         $this->db->select('a.*, b.nm_pangkat')
         ->where('a.id_pegawai', $id_peg)
         ->where('a.flag_active', 1)
-        ->where('a.status', 2)
+        // ->where('a.status', 2)
         ->order_by('a.tmtpangkat', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegpangkat a')
@@ -9366,7 +9366,7 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->order_by('tmtjabatan', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegjabatan');
@@ -9379,7 +9379,7 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
-        ->where('status', 2)
+        // ->where('status', 2)
         ->order_by('tmtjabatan', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegjabatan');
@@ -10106,6 +10106,7 @@ public function getFileForVerifLayanan()
         $datapost = $this->input->post();
         $this->db->trans_begin();
        
+        dd($datapost['sk_pangkat']);
 
           
         $id_pengajuan = $datapost['id_pengajuan'];
@@ -10123,7 +10124,6 @@ public function getFileForVerifLayanan()
                 ->join('t_layanan c', 'a.id = c.id_m_user')
                 ->where('c.id', $id_pengajuan)
                 ->get()->result_array();
-
 
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";

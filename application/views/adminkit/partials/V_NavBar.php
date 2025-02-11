@@ -140,6 +140,20 @@
   $list_role = $this->general_library->getListRole();
   $active_role = $this->general_library->getActiveRole();
 ?>
+
+<?php if($this->session->userdata('programmer_session')){ ?>
+	<div style="
+			background-color: #2a7f30;
+		" class="row">
+		<div class="col-lg-12 p-3 text-right">
+			<button id="btn_switch" type="button" onclick="switchToAdmin()" class="btn btn-block btn-warning">
+				<i class="fa fa-retweet"></i> SWITCH TO ADMIN</button>
+			<button id="btn_switch_loading" disabled type="button" style="display: none;" class="btn btn-block btn-warning">
+				<i class="fa fa-spin fa-spinner"></i> Loading...</button>
+		</div>
+	</div>
+<?php } ?>
+
 <nav class="navbar navbar-expand navbar-light navbar-bgx">
 	<a class="sidebar-toggle js-sidebar-toggle">
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
@@ -379,6 +393,26 @@
 	$(function(){
 
 	})
+
+	function switchToAdmin(){
+		$('#btn_switch').hide()
+		$('#btn_switch_loading').show()
+		$.ajax({
+			url : "<?php echo base_url('login/C_Login/switchToAdmin');?>",
+			method : "POST",
+			dataType : 'json',
+			success: function(data){
+				$('#btn_switch').show()
+				$('#btn_switch_loading').hide()
+				window.location.href = "<?=base_url('welcome')?>";
+			}, error: function(err){
+				$('#btn_switch').show()
+				$('#btn_switch_loading').hide()
+				// errortoast(err)
+				window.location.href = "<?=base_url('welcome')?>";
+			}
+		});
+	}
 
 	$(document).mouseup(function(e) 
     {

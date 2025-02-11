@@ -277,8 +277,8 @@
 
               
             
-                <?php } else if($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000'
-                || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                <?php } else if(($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000')
+                || ($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi())){ ?>
                   <hr>
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
                     <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;"
@@ -290,6 +290,11 @@
                       margin-top: 4px;
                       margin-left: 30px;">GURU SERTIFIKASI</label>
                   </div>
+                <?php } if($this->general_library->isProgrammer() && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
+                  <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
+                    <i class="fa fa-key"></i> LOGIN</button>
+                  <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
+                    <i class="fa fa-spin fa-spinner"></i> Loading...</button>
                 <?php } ?>
 
               </div>
@@ -1576,6 +1581,26 @@
     $('#loader').hide()    
     })
  }
+
+  function loginAs(nip){
+    $('#btn_login').hide()
+    $('#btn_login_loading').show()
+    $.ajax({
+        url : "<?php echo base_url('login/C_Login/authenticateAdmin/1/'.$nip);?>",
+        method : "POST",
+        dataType : 'json',
+        success: function(data){
+            $('#btn_login').show()
+            $('#btn_login_loading').hide()
+            window.location.href = "<?=base_url('welcome')?>";
+        }, error: function(err){
+            $('#btn_login').show()
+            $('#btn_login_loading').hide()
+            // errortoast(err)
+            window.location.href = "<?=base_url('welcome')?>";
+        }
+    });
+  }
 
 //  $('#profilePict').on('change', function(){
 //         $('#form_profile_pict').submit()

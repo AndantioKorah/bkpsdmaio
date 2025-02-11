@@ -316,15 +316,14 @@
 									height: 400px;
 									overflow: scroll;">
 								<?php foreach($list_notif_layanan as $ly){ ?>
-									
-									<a href="#" class="list-group-item">
+									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
 												<i class="text-danger" data-feather="alert-circle"></i>
 											</div>
 											<div class="col-10">
 												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Ada pengajuan layanan yang belum diverifikasi.</div>
+												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
 												<!-- <div class="text-muted small mt-1">30m ago</div> -->
 											</div>
 										</div>
@@ -358,14 +357,14 @@
 									height: 400px;
 									overflow: scroll;">
 								<?php foreach($list_notif_layanan as $ly){ ?>
-									<a href="#" class="list-group-item">
+									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
 												<i class="text-danger" data-feather="alert-circle"></i>
 											</div>
 											<div class="col-10">
 												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Ada pengajuan layanan yang belum diverifikasi.</div>
+												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
 											</div>
 										</div>
 									</a>

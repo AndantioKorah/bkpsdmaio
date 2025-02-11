@@ -5632,14 +5632,15 @@ public function submitEditJabatan(){
         
       
    
-        $this->db->select('*')
-        ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
+        $this->db->select('*, a.id as id_t_layanan')
+            ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
+            ->join('db_efort.m_user as c', 'a.id_m_user = c.id')
             ->from('db_efort.t_layanan a')
             ->where('a.status', 0)
             ->where('a.flag_active', 1)
-            ->where_in('a.id_m_layanan',$id_layanan)
+            ->where_in('a.id_m_layanan',$id_layanan);
             // ->where_in('a.id_m_layanan',$id_layanan)
-            ->group_by('a.id_m_layanan');
+            // ->group_by('a.id_m_layanan');
         
            
 

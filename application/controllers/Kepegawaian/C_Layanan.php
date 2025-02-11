@@ -134,6 +134,15 @@ class C_Layanan extends CI_Controller
 	public function deleteFileDsManual($id){
         echo json_encode($this->layanan->deleteFileDsManual($id));
 	}
+	
+	public function openModalNotifPegawaiDpcp($nip){
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		
+		$data['message'] = "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*"."\nSelamat ".greeting().",\nYth. ".getNamaPegawaiFull($data['profil_pegawai']).
+					", silahkan mendatangi Kantor BKPSDM untuk melakukan penandatanganan dokumen Data Perorangan Calon Penerima Pensiun (DPCP) .".FOOTER_MESSAGE_CUTI;
+		
+		$this->load->view('kepegawaian/V_KelengkapanBerkasModalNotif', $data);
+	}
 
 	public function openModalNotifPegawai($nip){
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);

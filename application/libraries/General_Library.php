@@ -26,6 +26,7 @@ class General_library
         $this->nikita->load->model('user/M_User', 'm_user');
         $this->nikita->load->model('kinerja/M_Kinerja', 'm_kinerja');
         $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
+        $this->nikita->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
     }
 
     public function listHakAkses(){
@@ -261,6 +262,12 @@ class General_library
 
     public function isKasubagKepegawaianDiknas(){
         return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
+    }
+
+    public function getListAdminLayanan(){
+        // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
+        // return $result;
+          return $this->nikita->kepegawaian->getVerifLayanan($this->getId());
     }
 
     public function getDataUnitKerjaPegawai(){

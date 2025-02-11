@@ -40,8 +40,7 @@ class C_Login extends CI_Controller
         // dd($data);
         // $this->session->set_userdata('live_tpp', null);
         // $data = null;
-        $data['layanan'] = $this->kepegawaian->getVerifLayanan($this->general_library->getId());
-        // dd($data['layanan']);
+       
         $data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
         $data['nip'] = $this->general_library->getUserName();
         $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
@@ -159,6 +158,7 @@ class C_Login extends CI_Controller
                 $progSession['list_menu'] = $this->session->userdata('list_menu');
                 $progSession['list_exist_url'] = $this->session->userdata('list_exist_url');
                 $progSession['list_role'] = $this->session->userdata('list_role');
+                $progSession['list_admin_layanan'] = $this->session->userdata('list_admin_layanan');
                 $progSession['list_hak_akses'] = $this->session->userdata('list_hak_akses');
                 $progSession['list_url'] = $this->session->userdata('list_url');
                 $progSession['active_role'] = $this->session->userdata('active_role');
@@ -176,6 +176,7 @@ class C_Login extends CI_Controller
                     'list_menu' => null,
                     'list_exist_url' => null,
                     'list_role' => null,
+                    'list_admin_layanan' => null,
                     'list_hak_akses' => null,
                     'list_url' => null,
                     'active_role' => null,
@@ -202,7 +203,10 @@ class C_Login extends CI_Controller
             $all_menu = $this->m_general->getAll('m_menu');
             $list_menu = null;
             $list_role = $this->user->getListRoleForUser($result[0]['id']);
+            // 
+            // dd($list_admin_layanan);
             $list_hak_akses = $this->user->getHakAksesUser($result[0]['id']);
+         
             $active_role = null;
             $list_exist_url = null;
             $pegawai = $this->m_general->getDataPegawai($result[0]['username']);
@@ -271,6 +275,8 @@ class C_Login extends CI_Controller
                     $this->session->set_userdata([$p['parameter_name'] => $p]);
                 }
             }
+           
+
             redirect(base_url($landing_page));   
             // redirect(base_url($this->session->userdata('landing_page')));                
         } else {

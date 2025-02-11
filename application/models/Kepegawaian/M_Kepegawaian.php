@@ -5609,10 +5609,45 @@ public function submitEditJabatan(){
        }
 
        function getVerifLayanan($id){
+        $id_layanan[] = null;
+        if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){
+            $id_layanan[] = 11;
+        }
+
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
+            // $id_layanan = [6,7,8,9]; 
+            $id_layanan[] = 6;
+            $id_layanan[] = 7;
+            $id_layanan[] = 8;
+            $id_layanan[] = 9;
+        }
+
+        if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
+            $id_layanan[] = 10;
+        }
+
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){
+            $id_layanan[] = 1;
+        }
+        
+      
+   
         $this->db->select('*')
         ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
             ->from('db_efort.t_layanan a')
-            ->where('a.status', 0);
+            ->where('a.status', 0)
+            ->where('a.flag_active', 1)
+            ->where_in('a.id_m_layanan',$id_layanan)
+            // ->where_in('a.id_m_layanan',$id_layanan)
+            ->group_by('a.id_m_layanan');
+        
+           
+
+            // if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
+            //     $this->db->group_start(); 
+            //     $this->db->or_where('a.id_m_layanan',6);
+            //     $this->db->group_end(); 
+            // }
         return $this->db->get()->result_array();
    }
 

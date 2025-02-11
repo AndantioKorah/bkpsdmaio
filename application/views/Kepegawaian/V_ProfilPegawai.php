@@ -290,7 +290,7 @@
                       margin-top: 4px;
                       margin-left: 30px;">GURU SERTIFIKASI</label>
                   </div>
-                <?php } if($this->general_library->isProgrammer()){ ?>
+                <?php } if($this->general_library->isProgrammer() && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
                   <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
                     <i class="fa fa-key"></i> LOGIN</button>
                   <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">

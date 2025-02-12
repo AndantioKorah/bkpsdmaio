@@ -147,10 +147,13 @@
 	<div style="
 			background-color: #2a7f30;
 		" class="row">
-		<div class="col-lg-12 p-3 text-right">
-			<button id="btn_switch" type="button" onclick="switchToAdmin()" class="btn btn-block btn-warning">
+		<div class="col-lg-6">
+			<h3 style="color: white; padding: 15px;">Logged in as: <strong><?=$this->general_library->getNamaUser()?></strong></h3>
+		</div>
+		<div class="col-lg-6 p-3 text-right">
+			<button id="btn_switch" type="button" onclick="switchToAdmin()" class="btn btn-block btn-info">
 				<i class="fa fa-retweet"></i> SWITCH TO ADMIN</button>
-			<button id="btn_switch_loading" disabled type="button" style="display: none;" class="btn btn-block btn-warning">
+			<button id="btn_switch_loading" disabled type="button" style="display: none;" class="btn btn-block btn-info">
 				<i class="fa fa-spin fa-spinner"></i> Loading...</button>
 		</div>
 	</div>
@@ -161,33 +164,33 @@
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
 	<?php if(!$this->general_library->isGuest()) { ?>
-	<?php if($this->general_library->getRole() == 'programmer' 
-	|| $this->general_library->getRole() == 'admin_aplikasi' 
-	|| $this->general_library->isHakAkses('akses_profil_pegawai') 
-	|| $this->general_library->isKasubagKepegawaianDiknas() 
-	|| $this->general_library->getRole() == 'walikota') { ?>
-		<?php
-			// $number = excelRoundDown(30665.78, 5);
-			// echo $number;
-		?>
-		<form id="form_search_navbar" class="form-inline mr-3">
-			<div class="row">
-				<div class="div_search_bar">
-				<input id="search_navbar" name="search_navbar;" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai / Perangkat Daerah" aria-label="Search">
-					<!-- <div class="input-group-append"> -->
-						<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
-						<i class="fas fa-search"></i>
-						</button> -->
-						<!-- <button style="display: none;" id="button_fa_loading" class="btn btn-navbar" type="button">
-						<i class="fas fa-spin fa-spinner"></i>
-						</button> -->
-					<!-- </div> -->
+		<?php if($this->general_library->getRole() == 'programmer' 
+		|| $this->general_library->getRole() == 'admin_aplikasi' 
+		|| $this->general_library->isHakAkses('akses_profil_pegawai') 
+		|| $this->general_library->isKasubagKepegawaianDiknas() 
+		|| $this->general_library->getRole() == 'walikota') { ?>
+			<?php
+				// $number = excelRoundDown(30665.78, 5);
+				// echo $number;
+			?>
+			<form id="form_search_navbar" class="form-inline mr-3">
+				<div class="row">
+					<div class="div_search_bar">
+					<input id="search_navbar" name="search_navbar;" style="width: 300px" autocomplete="off" class="form-control form-control-navbar" type="text" placeholder="Cari Pegawai / Perangkat Daerah" aria-label="Search">
+						<!-- <div class="input-group-append"> -->
+							<!-- <button id="button_fa_search" class="btn btn-navbar" type="button">
+							<i class="fas fa-search"></i>
+							</button> -->
+							<!-- <button style="display: none;" id="button_fa_loading" class="btn btn-navbar" type="button">
+							<i class="fas fa-spin fa-spinner"></i>
+							</button> -->
+						<!-- </div> -->
+					</div>
 				</div>
-			</div>
-			<div class="row" id="div_search_result">
-			</div>
-		</form>
-	<?php } ?>
+				<div class="row" id="div_search_result">
+				</div>
+			</form>
+		<?php } ?>
 	<?php } ?>
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">
@@ -293,104 +296,63 @@
 			
 			<!-- role  -->
 
-				
+			<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
+				<li class="nav-item dropdown">
+					<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+						<div class="position-relative">
+							<i class="align-middle" data-feather="bell"></i>
+							<?php if($list_notif_layanan) { ?>
+								<span class="indicator" ><?= count($list_notif_layanan);?></span>
+							<?php } ?>
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
+						<div class="dropdown-menu-header">
+							Notifikasi Baru
+						</div>
+						<div class="list-group" style="
+							width: 100%;
+							height: 400px;
+							overflow: scroll;">
+						<?php foreach($list_notif_layanan as $ly){ ?>
+							<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
+								<div class="row g-0 align-items-center">
+									<div class="col-2">
+										<i class="text-danger" data-feather="alert-circle"></i>
+									</div>
+									<div class="col-10">
+										<div class="text-dark"><?=$ly['nama_layanan']?></div>
+										<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
+									</div>
+								</div>
+							</a>
+							<?php } ?>
+						</div>
+					</div>
+				</li>
+			<?php } ?>
 			<?php 
 			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
 			if($cari_role == false){ ?>	
-			<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
-			<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-togglex" href="#" id="alertsDropdown" data-bs-toggle="dropdown" >
-								<div class="position-relative" >
-									<i class="align-middle" data-feather="bell" ></i>
-									<?php if($list_notif_layanan) { ?>
-									<span class="indicator" ></span>
-									<?php } ?>
-								</div>
-							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
-								<div class="dropdown-menu-header">
-									Notifikasi
-								</div>
-								<div class="list-group" style="
-									width: 100%;
-									height: 400px;
-									overflow: scroll;">
-								<?php foreach($list_notif_layanan as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
-												<!-- <div class="text-muted small mt-1">30m ago</div> -->
-											</div>
-										</div>
-									</a>
-									<?php } ?>
-								</div>
-							
-							</div>
-				</li>
-				<?php } ?>	
-				<a class="nav-link  d-none d-sm-inline-block" href="#" >
-				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?php if($this->general_library->isWalikota()) echo $active_role['nama']; else echo "Pegawai"  ?>  </span>
+				<a class="nav-link d-none d-sm-inline-block" href="#" >
+					<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?php if($this->general_library->isWalikota()) echo $active_role['nama']; else echo "Pegawai"  ?>  </span>
 				</a>
 			<?php } else { ?>
-				<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
 				<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-								<div class="position-relative">
-									<i class="align-middle" data-feather="bell"></i>
-									<?php if($list_notif_layanan) { ?>
-									<span class="indicator" ><?= count($list_notif_layanan);?></span>
-									<?php } ?>
-								</div>
+					<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+						<i class="align-middle" data-feather="user-check"></i>
+					</a>
+					<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+						<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?=$active_role['nama']?>  </span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end">
+						<?php foreach($list_role as $lr){ ?>
+							<a onclick="setActiveRole('<?=$lr['id']?>')" class="dropdown-item">
+								<?=$lr['id'] == $this->session->userdata('active_role_id') ? '<i class="fa fa-check-circle"></i> '.$lr['nama'] : $lr['nama']?>
 							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
-								<div class="dropdown-menu-header">
-									Notifikasi Baru
-								</div>
-								<div class="list-group" style="
-									width: 100%;
-									height: 400px;
-									overflow: scroll;">
-								<?php foreach($list_notif_layanan as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
-											</div>
-										</div>
-									</a>
-									<?php } ?>
-								</div>
-							</div>
+						<?php } ?>
+					</div>
 				</li>
-				<?php } ?>
-				<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-					<i class="align-middle" data-feather="user-check"></i>
-				</a>
-
-				
-				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?=$active_role['nama']?>  </span>
-				</a>
-
-				<div class="dropdown-menu dropdown-menu-end">
-				<?php foreach($list_role as $lr){ ?>
-					<a onclick="setActiveRole('<?=$lr['id']?>')" class="dropdown-item">
-					<?=$lr['id'] == $this->session->userdata('active_role_id') ? '<i class="fa fa-check-circle"></i> '.$lr['nama'] : $lr['nama']?>
-				</a>
-					<?php } ?>
-				</div>
-			</li>
 			<?php } ?>
 				
 			

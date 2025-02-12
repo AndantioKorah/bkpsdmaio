@@ -561,12 +561,12 @@ function openPresensiTab(){
             return false;
            }
 
-           if(status == "2"){
+          
            if(catatan == ""){
             errortoast('Silahkan mengisi catatan')
             return false;
            }
-           }
+          
 
             e.preventDefault()
             $.ajax({

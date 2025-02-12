@@ -8759,10 +8759,40 @@ public function getFileForKarisKarsu()
         
         $this->db->trans_begin();
         $id_pengajuan = $datapost['id_pengajuan'];
+
+       
+
         $data["status"] = $datapost["status"];
         $data["keterangan"] = $datapost['keterangan'];
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
+        
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('t_layanan c', 'a.id = c.id_m_user')
+                ->where('c.id', $id_pengajuan)
+                ->get()->result_array();
+
+                if($dataPengajuan[0]['status'] == 1){
+                    $status = "ACC";
+                    $statusForMessage = "disetujui";
+                } else if($dataPengajuan[0]['status'] == 2){
+                    $status = "Ditolak";
+                    $statusForMessage = "ditolak";
+                }
+                
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KARIS/KARSU]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Karis/Karsu anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        $jenislayanan = "karis karsu";
+
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' =>  $jenislayanan,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -8813,7 +8843,7 @@ public function getFileForKarisKarsu()
             $jenispensiun = "TEWAS	";
         }
 
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENSIUN ".$jenispensiun."]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENSIUN ".$jenispensiun."]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Pe anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
         $jenislayanan = "Pensiun";
 
         $cronWaNextVerifikator = [
@@ -8850,7 +8880,7 @@ public function getFileForKarisKarsu()
         $data["status"] = 0; 
         $data["keterangan"] = "";
         $this->db->where('id', $id_usul)
-                ->update('t_karis_karsu', $data);
+                ->update('t_layanan', $data);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

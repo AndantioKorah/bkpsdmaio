@@ -592,7 +592,7 @@ class M_Kepegawaian extends CI_Model
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
                             ->where('c.flag_active', 1)
-                            ->order_by('c.tglsk','desc');
+                            ->order_by('c.tmtgajiberkala','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
                             }

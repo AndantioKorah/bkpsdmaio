@@ -5638,12 +5638,11 @@ public function submitEditJabatan(){
             ->from('db_efort.t_layanan a')
             ->where('a.status', 0)
             ->where('a.flag_active', 1)
-            ->where_in('a.id_m_layanan',$id_layanan);
+            ->where_in('a.id_m_layanan',$id_layanan)
+            ->order_by('a.created_date', 'desc');
             // ->where_in('a.id_m_layanan',$id_layanan)
             // ->group_by('a.id_m_layanan');
         
-           
-
             // if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
             //     $this->db->group_start(); 
             //     $this->db->or_where('a.id_m_layanan',6);

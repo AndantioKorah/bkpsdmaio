@@ -77,7 +77,7 @@ $('#form_edit_skp').on('submit', function(e){
              document.getElementById('btn_edit_skp').disabled = false;
             $('#btn_edit_skp').html('Simpan')
              setTimeout(function() {$("#modal_edit_skp").trigger( "click" );}, 1000);
-             const myTimeout = setTimeout(loadListPenghargaan, 2000);
+             const myTimeout = setTimeout(loadListSkp, 2000);
              loadRiwayatUsulSkp()
            } else {
              errortoast(result.msg)

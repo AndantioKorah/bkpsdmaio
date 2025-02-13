@@ -62,8 +62,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
           $logMessage = json_decode($log['data'], true);
         }
         $errMessage = "";
-        if($logMessage){
-          $errMessage = isset($logMessage['message']) ? $logMessage['message'] : $logMessage['data'];
+        if(isset($logMessage['data']['message'])){
+          $errMessage = isset($logMessage['data']['message']) ? $logMessage['data']['message'] : $logMessage['data'];
         }
         $errMessageFooter = "<br>Last try sinkron: ".formatDateNamaBulanWT($sinkronSiasn['last_try_date'])."<br>Log: ".$errMessage;
         if($sinkronSiasn['temp_count'] == 3){

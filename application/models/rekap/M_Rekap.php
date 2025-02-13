@@ -2888,12 +2888,14 @@
                     //     }
                     // }
 
+                    // yang lama pakai perhitungan pajak yang ini
                     $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
-                    // if($this->general_library->isProgrammer()){
-                    //     // dd($result[$l['nipbaru_ws']]);
-                    //     $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
-                    //     dd($result[$l['nipbaru_ws']]['pph']);
-                    // }
+
+                    // yang baru pakai perhitungan pajak yang ini
+                    if($param['tahun'] >= 2025){
+                        $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
+                    }
+
                     $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                     // $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);
                     // $whole = $result[$l['nipbaru_ws']]['nominal_pph'] - $rounded;

@@ -538,6 +538,14 @@ function getPphByPenghasilanBruto($nominal){
         return 15;
     } else if($nominal > 39100000 && $nominal <= 43850000){
         return 16;
+    } else if($nominal > 43850000 && $nominal <= 47800000){
+        return 17;
+    } else if($nominal > 47800000 && $nominal <= 51400000){
+        return 18;
+    } else if($nominal > 51400000 && $nominal <= 56300000){
+        return 19;
+    } else if($nominal > 56300000 && $nominal <= 62200000){
+        return 20;
     } else {
         return null;
     }

@@ -333,6 +333,8 @@ function countNilaiSkp2($data)
         $akumulasi_nilai_capaian = 0;
         foreach ($data as $d) {
             $nilai_capaian = 0;
+            dd($d);
+            
             if (floatval($d['realisasi']) > 0) {
                 if(floatval($d['target']) == 0){
                     $d['target'] = $d['realisasi'];
@@ -345,12 +347,14 @@ function countNilaiSkp2($data)
                     }
                 // }
             }
+            print_r($d['realisasi']);
             $akumulasi_nilai_capaian += $nilai_capaian;
         }
         
         if (count($data) != 0) {
             $result['capaian'] = floatval($akumulasi_nilai_capaian) / count($data);
         }
+        // dd($data);
         $result['bobot'] = $result['capaian'] * floatval(BOBOT_NILAI_SKBP);
         if ($result['bobot'] > 30) {
             $result['bobot'] = 30;

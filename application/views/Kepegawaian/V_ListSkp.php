@@ -16,6 +16,7 @@
           <th class="text-left"> Pilihan </th>
           <?php } else { ?>
             <th></th>
+            <th></th>
             <?php } ?>
         </thead>
         <tbody>

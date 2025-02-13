@@ -422,6 +422,26 @@
                 }
             }
 
+        public function updateTotalRealisasi($id){
+
+            
+            $cek = $this->db->select('a.id,a.id_t_rencana_kinerja,
+            (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id_t_rencana_kinerja = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+            ')
+                            ->from('t_kegiatan a')
+                            // ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
+                            ->where('a.id', $id)
+                            ->get()->result_array();
+           
+            if($cek){
+               $this->db->where('id',  $cek[0]['id_t_rencana_kinerja'])
+                         ->update('t_rencana_kinerja', [
+                        //  'updated_by' => $this->general_library->getId(),
+                         'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
+                ]);
+            }
+        }
+
         public function loadKegiatan($tahun,$bulan){
             $id =  $this->general_library->getId();
             return $this->db->select('a.*, b.tugas_jabatan,c.status_verif, a.status_verif as id_status_verif')
@@ -4151,6 +4171,7 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
             ->where('b.flag_active', 1)
+            ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
@@ -4182,8 +4203,10 @@
 
                     }
                     $temp['kinerja'] = $this->getKinerjaPegawai2($p['id'], $data['bulan'], $data['tahun']);
+                   
                     if($temp['kinerja']){
                         $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
+                        dd($temp['nilai_skp']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
@@ -4235,7 +4258,7 @@
             //                 ->where('flag_active', 1)
             //                 ->get()->result_array();
             return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
-                            ->from('t_rencana_kinerja')
+                            ->from('t_rencana_kinerjax')
                             ->where('id_m_user', $id_m_user)
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)

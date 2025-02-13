@@ -1881,6 +1881,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where('a.id_pegawai', $id)
             ->where('a.flag_active', 1);
         $hukdis = $this->db->get()->row_array();
+        // dd($hukdis);
         $id_hukdis = null;
         if($hukdis){
             $yearHukdis = date('Y', strtotime($hukdis['tglsurat']));
@@ -1903,6 +1904,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         } else {
         $id_hukdis = 115;
         }
+        // dd($id_hukdis);
     return $id_hukdis;   
     }
 

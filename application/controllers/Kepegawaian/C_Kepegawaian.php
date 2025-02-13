@@ -1477,6 +1477,14 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_EditPenghargaan', $data);
     }
 
+	public function loadEditSkp($id)
+    {
+		// $data['pemberi'] = $this->kepegawaian->getPemberiPenghargaan();
+		// $data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 49);
+		$data['skp'] = $this->kepegawaian->getSkpEdit($id);
+		$this->load->view('kepegawaian/V_EditSkp', $data);
+    }
+
 	public function loadEditSumjan($id)
     {
 		$data['jenis_sumpah'] = $this->kepegawaian->getAllWithOrder('db_pegawai.sumpah', 'id_sumpah', 'asc');
@@ -1769,6 +1777,11 @@ class C_Kepegawaian extends CI_Controller
 	public function submitEditPenghargaan()
 	{ 
 		echo json_encode($this->kepegawaian->submitEditPenghargaan());
+	}
+
+	public function submitEditSkp()
+	{ 
+		echo json_encode($this->kepegawaian->submitEditSkp());
 	}
 
 	public function submitEditSumjan()

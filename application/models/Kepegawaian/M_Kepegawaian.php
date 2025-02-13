@@ -4112,6 +4112,18 @@ function getPenghargaanEdit($id){
                    return $query;
 }
 
+function getSkpEdit($id){
+    $this->db->select('a.*, b.*,c.*')
+                   ->from('m_user a')
+                   ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                   ->join('db_pegawai.pegskp c', 'b.id_peg = c.id_pegawai')
+                   ->where('c.id', $id)
+                   ->where('c.flag_active', 1)
+                   ->where('a.flag_active', 1);
+                   $query = $this->db->get()->result_array();
+                   return $query;
+}
+
 function getSumpahJanjiEdit($id){
     $this->db->select('*')
                    ->from('m_user a')
@@ -5130,6 +5142,58 @@ public function submitEditJabatan(){
 
        }
 
+       public function submitEditSkp(){
+
+        $datapost = $this->input->post();
+      
+        $this->db->trans_begin();
+        $target_dir = './arsipskp/';
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+       
+            if($filename == ""){
+                $filename = $_FILES['file']['name'];
+            } 
+           
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number.$filename;
+    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename";
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $id = $datapost['id'];
+            $data["gambarsk"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegskp', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+      
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
        public function submitEditSumjan(){
 
         $datapost = $this->input->post();
@@ -5614,6 +5678,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 11;
         }
 
+        // if($this->general_library->getId() != 78){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
             // $id_layanan = [6,7,8,9]; 
             $id_layanan[] = 6;
@@ -5621,6 +5686,8 @@ public function submitEditJabatan(){
             $id_layanan[] = 8;
             $id_layanan[] = 9;
         }
+        // }
+
 
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
             $id_layanan[] = 10;
@@ -8781,8 +8848,8 @@ public function getFileForKarisKarsu()
                     $status = "Ditolak";
                     $statusForMessage = "ditolak";
                 }
-                
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KARIS/KARSU]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Karis/Karsu anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KARIS/KARSU]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Karis/Karsu anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
         $jenislayanan = "karis karsu";
 
         $cronWaNextVerifikator = [
@@ -10237,13 +10304,13 @@ public function getFileForVerifLayanan()
         }
 
         if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
-            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Pangkat";
         } else if($dataPengajuan[0]['id_m_layanan'] == 10){
-            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\Pengajuan Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Perbaikan Data Kepegawaian";
         } else if($dataPengajuan[0]['id_m_layanan'] == 11){
-            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nUsul Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Permohonan Salinan SK";
         }
        

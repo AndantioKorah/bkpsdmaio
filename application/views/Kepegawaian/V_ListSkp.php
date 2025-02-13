@@ -64,6 +64,7 @@
                 <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
                
                 <?php } ?>
+                
                 <button onclick="deleteDataSKP('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               </div>
               <?php } else { ?>
@@ -75,6 +76,12 @@
               </td>
               <?php } else { ?>
                 <td>
+                <button 
+                data-toggle="modal" 
+                data-id="<?=$rs['id']?>"
+                href="#modal_edit_skp"
+                onclick="loadEditSkp('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailPenghargaan btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button>
+                
                 <button onclick="deleteDataSKP('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
                 </td>
                 <?php } ?>
@@ -203,6 +210,14 @@ $('#iframe_view_file_skp').attr('src', $link)
             }
         })
     }
+
+    function loadEditSkp(id){
+              $('#edit_skp_pegawai').html('')
+              $('#edit_skp_pegawai').append(divLoaderNavy)
+              $('#edit_skp_pegawai').load('<?=base_url("kepegawaian/C_Kepegawaian/loadEditSkp")?>'+'/'+id, function(){
+                $('#loader').hide()
+              })
+         }
 </script>
 <?php } else { ?>
   <div class="row">

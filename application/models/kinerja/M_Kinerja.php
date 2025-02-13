@@ -426,13 +426,12 @@
 
             
             $cek = $this->db->select('a.id,a.id_t_rencana_kinerja,
-            (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+            (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id_t_rencana_kinerja = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
             ')
                             ->from('t_kegiatan a')
-                            ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
+                            // ->join('t_rencana_kinerja b', 'a.id_t_rencana_kinerja = b.id')
                             ->where('a.id', $id)
                             ->get()->result_array();
-           
            
             if($cek){
                $this->db->where('id',  $cek[0]['id_t_rencana_kinerja'])

@@ -896,6 +896,7 @@
                             ->where('flag_sent', 0)
                             ->where('flag_active', 1)
                             ->where('temp_count <=', 2)
+                            ->where('sendTo IS NOT NULL')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('created_date', 'asc')
                             ->order_by('flag_prioritas', 'desc')
@@ -903,6 +904,7 @@
                             ->get()->result_array();
 
             if($list){
+                // dd($list);
                 foreach($list as $l){
                     if($l['type'] == 'text'){
                         if($l['replyId']){

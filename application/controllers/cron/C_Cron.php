@@ -34,6 +34,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
+        $this->general->logCron('cronSendWa');
         $this->general->cronSendWa();
         // dd('asdd');
         // echo date('d-m-Y H:i:s')." asd \n";

@@ -4206,7 +4206,6 @@
                    
                     if($temp['kinerja']){
                         $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
-                        dd($temp['nilai_skp']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);

@@ -153,7 +153,9 @@ $('#form_edit_diklat').on('submit', function(e){
 
      $("#pdf_file_edit_diklat").change(function (e) {
 
-        var extension = pdf_file_edit_diklat.value.split('.')[1];
+        // var extension = pdf_file_edit_diklat.value.split('.')[1];
+        var doc = pdf_file_edit_diklat.value.split('.')
+        var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
         var MaxSize = <?=$format_dok['file_size']?>;

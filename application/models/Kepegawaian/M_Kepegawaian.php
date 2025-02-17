@@ -8004,6 +8004,11 @@ public function submitEditJabatan(){
                 // 'debug' => true
             ]);
 
+            // jika ada file dengan nama sama, hapus terlebih dahulu agar tertimpa file yang lama
+            if(file_exists($request_ds['url_file'])){
+                unlink($request_ds['url_file']);
+            }
+
             $html = $this->load->view($request_ds['meta_view'], $meta_data, true);
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
@@ -8166,7 +8171,11 @@ public function submitEditJabatan(){
             $file_array = explode(".", $_FILES["file_ds_manual"]["name"]);
             $file_extension = end($file_array);
 
+            // $filename = 'CUTI_DSM_'.$data['nipbaru_ws'].'_'.date("Y", strtotime($data['tanggal_mulai']))."_".date("m", strtotime($data['tanggal_mulai'])).'_'.date("d", strtotime($data['tanggal_mulai'])).'_'.generateRandomString().'.pdf';
             $filename = 'CUTI_DSM_'.$data['nipbaru_ws'].'_'.date("Y", strtotime($data['tanggal_mulai']))."_".date("m", strtotime($data['tanggal_mulai'])).'_'.date("d", strtotime($data['tanggal_mulai'])).'.pdf';
+            if(file_exists('arsipcuti/'.$filename)){
+                unlink('arsipcuti/'.$filename);
+            }
 
             if(in_array($file_extension, $allowed_extension)){
                 $config['upload_path'] = 'arsipcuti/';

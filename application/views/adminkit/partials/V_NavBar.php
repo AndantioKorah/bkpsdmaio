@@ -320,6 +320,7 @@
 											<div class="col-10">
 												<div class="text-dark"><?=$ly['nama_layanan']?></div>
 												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
+												<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
 											</div>
 										</div>
 									</a>

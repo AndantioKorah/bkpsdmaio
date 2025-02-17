@@ -3124,6 +3124,7 @@ public function submitVerifikasiDokumen(){
                     'target_kualitas' => 100,
                     'target_kuantitas' => 1,
                     'total_realisasi' => 1,
+                    'target_kuantitas' => 1,
                     'created_by' => $this->general_library->getId()
                 ]);
                 $insertId = $this->db->insert_id();

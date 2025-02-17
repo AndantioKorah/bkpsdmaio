@@ -4171,7 +4171,7 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
             ->where('b.flag_active', 1)
-            ->where('b.id', 16)
+            // ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
@@ -4206,7 +4206,6 @@
                    
                     if($temp['kinerja']){
                         $temp['nilai_skp'] = countNilaiSkp2($temp['kinerja']);
-                        dd($temp['nilai_skp']);
                         $bobot_skp = $temp['nilai_skp']['bobot'];
                     }
                     $temp['bobot_capaian_produktivitas_kerja'] = floatval($bobot_komponen_kinerja) + floatval($bobot_skp);
@@ -4258,7 +4257,7 @@
             //                 ->where('flag_active', 1)
             //                 ->get()->result_array();
             return $this->db->select('id,sum(target_kuantitas) as target, sum(total_realisasi) as realisasi')
-                            ->from('t_rencana_kinerjax')
+                            ->from('t_rencana_kinerja')
                             ->where('id_m_user', $id_m_user)
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)

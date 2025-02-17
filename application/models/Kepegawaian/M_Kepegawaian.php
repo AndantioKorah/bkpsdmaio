@@ -5699,7 +5699,7 @@ public function submitEditJabatan(){
         
       
    
-        $this->db->select('*, a.id as id_t_layanan')
+        $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
             ->join('db_efort.m_user as c', 'a.id_m_user = c.id')
             ->from('db_efort.t_layanan a')

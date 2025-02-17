@@ -293,52 +293,7 @@
 			
 			<!-- role  -->
 
-				
-			<?php 
-			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
-			if($cari_role == false){ ?>	
 			<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
-			<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-togglex" href="#" id="alertsDropdown" data-bs-toggle="dropdown" >
-								<div class="position-relative" >
-									<i class="align-middle" data-feather="bell" ></i>
-									<?php if($list_notif_layanan) { ?>
-									<span class="indicator" ></span>
-									<?php } ?>
-								</div>
-							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
-								<div class="dropdown-menu-header">
-									Notifikasi
-								</div>
-								<div class="list-group" style="
-									width: 100%;
-									height: 400px;
-									overflow: scroll;">
-								<?php foreach($list_notif_layanan as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
-												<!-- <div class="text-muted small mt-1">30m ago</div> -->
-											</div>
-										</div>
-									</a>
-									<?php } ?>
-								</div>
-							
-							</div>
-				</li>
-				<?php } ?>	
-				<a class="nav-link  d-none d-sm-inline-block" href="#" >
-				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?php if($this->general_library->isWalikota()) echo $active_role['nama']; else echo "Pegawai"  ?>  </span>
-				</a>
-			<?php } else { ?>
-				<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
 				<li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 								<div class="position-relative">
@@ -364,7 +319,8 @@
 											</div>
 											<div class="col-10">
 												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>an <?=$ly['nama']?></div>
+												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
+												<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
 											</div>
 										</div>
 									</a>
@@ -372,7 +328,16 @@
 								</div>
 							</div>
 				</li>
-				<?php } ?>
+				<?php } ?>	
+			<?php 
+			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
+			if($cari_role == false){ ?>	
+			
+				<a class="nav-link  d-none d-sm-inline-block" href="#" >
+				<i class="align-middle" data-feather="user-check"></i> <span class="text-dark"> <?php if($this->general_library->isWalikota()) echo $active_role['nama']; else echo "Pegawai"  ?>  </span>
+				</a>
+			<?php } else { ?>
+				
 				<li class="nav-item dropdown">
 				<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 					<i class="align-middle" data-feather="user-check"></i>

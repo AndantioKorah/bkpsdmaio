@@ -3103,6 +3103,16 @@ public function submitVerifikasiDokumen(){
                     'tanggal_verif' => date('Y-m-d H:i:s'),
                     'created_by' => $this->general_library->getId(),
                 ];
+
+                $totalRealisasi = floatval($exists['total_realisasi']) + 1;
+
+                $this->db->where('id', $exists['id'])
+                        ->update('t_rencana_kinerja', [
+                            'total_realisasi' => $totalRealisasi,
+                            'target_kuantitas' => $totalRealisasi,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+                        
             } else {
                 $this->db->insert('t_rencana_kinerja', [
                     'id_m_user' => $this->general_library->getId(),
@@ -3113,6 +3123,7 @@ public function submitVerifikasiDokumen(){
                     'sasaran_kerja' => 'Terverifikasinya Data PDM di Siladen',
                     'target_kualitas' => 100,
                     'target_kuantitas' => 1,
+                    'total_realisasi' => 1,
                     'created_by' => $this->general_library->getId()
                 ]);
                 $insertId = $this->db->insert_id();

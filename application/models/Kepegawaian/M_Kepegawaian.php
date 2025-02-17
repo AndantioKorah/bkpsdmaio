@@ -5678,7 +5678,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 11;
         }
 
-        // if($this->general_library->getId() != 78){
+        if($this->general_library->getId() != 78){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
             // $id_layanan = [6,7,8,9]; 
             $id_layanan[] = 6;
@@ -5686,7 +5686,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 8;
             $id_layanan[] = 9;
         }
-        // }
+        }
 
 
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){

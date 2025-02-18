@@ -18,6 +18,7 @@
         <th class="text-center">Pegawai</th>
         <th class="text-center">Tanggal Cuti</th>
         <th class="text-center">Tanggal Usul</th>
+        <th class="text-center">Nomor Surat</th>
         <th class="text-center">Status</th>
         <th class="text-center">Pilihan</th>
       </thead>
@@ -57,6 +58,7 @@
               <?=$tanggal_cuti_raw?>
             </td>
             <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
+            <td class="text-center"><?=($rs['nomor_surat'])?></td>
             <td class="text-center">
               <?=$status_pengajuan_cuti?><br>
               <span class="<?=$class?>"><?=$status?></span>

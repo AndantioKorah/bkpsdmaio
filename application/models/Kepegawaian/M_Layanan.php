@@ -850,6 +850,10 @@ class M_Layanan extends CI_Model
             }
 
             if(in_array($file_extension, $allowed_extension)){
+                if(file_exists($path.$filename)){
+                    unlink($path.$filename);
+                }
+
                 $config['upload_path'] = $path;
                 $config['allowed_types'] = '*';
                 $config['file_name'] = ($filename);

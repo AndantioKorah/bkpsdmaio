@@ -9902,7 +9902,7 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        // ->where('status', 2)
+        ->where('status !=', 3)
         ->order_by('id', 'desc')
         ->from($table);
 

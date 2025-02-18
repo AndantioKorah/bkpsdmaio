@@ -2449,7 +2449,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')

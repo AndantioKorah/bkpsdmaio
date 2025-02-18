@@ -217,14 +217,20 @@ ol {
 		<div class="card card-default">
 			<div class="card-header">
 				<div class="card-title">
-					<h5>FORM LAYANAN KARIS/KARSU</h5>
+					<h5>    <b>Karis/karsu sekarang sudah bisa diunduh pada link 
+        
+        <a href="https://myasn.bkn.go.id/"> https://myasn.bkn.go.id/</a>
+        masing-masing pegawai<b></h5>
 				</div>
 				<hr>
 			</div>
 
 			<div class="card-body">
+  
 
-				<form id="form_karis_karsu" method="post" enctype="multipart/form-data" id="form_cuti"
+      
+
+				<!-- <form id="form_karis_karsu" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
 
 					<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
@@ -282,68 +288,9 @@ ol {
 					</div>
 
 
-					<!-- <div class="col-lg-12 mt-2">
-        <div class="filter-option col-lg-12">
-        <span style="width:95%"  onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal"  
-        class="filter-btn filter-<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>">SK CPNS <i class="fas fa-<?php if($sk_cpns) echo 'check'; else echo 'times';?>"></i> </span> 
-        <?php if($sk_cpns) { ?> 
-        <a onclick="filterClicked1('<?=$sk_cpns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
-        <?php } ?>
-      </div>
-    </div>
-
-  <div class="col-lg-12 mt-2">
-     <div class="filter-option col-lg-12">
-     <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($sk_pns) echo 'select'; else echo 'unselect';?>">SK PNS <i class="fas fa-<?php if($sk_pns) echo 'check'; else echo 'times';?>"></i></span> 
-      <?php if($sk_pns) { ?> 
-      <a onclick="filterClicked1('<?=$sk_pns['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
-     </div>
-     <?php } ?>
-  </div>
-
-  <div class="col-lg-12 mt-2">
-     <div class="filter-option col-lg-12">
-     <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($laporan_perkawinan) echo 'select'; else echo 'unselect';?>">LAPORAN PERKAWINAN PERTAMA MENGETAHUI ATASAN <i class="fas fa-<?php if($laporan_perkawinan) echo 'check'; else echo 'times';?>"></i></span>
-      <?php if($laporan_perkawinan) { ?> 
-      <a onclick="filterClicked2('<?=$laporan_perkawinan['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a>
-     </div>
-     <?php } ?>
-  </div>
-
-  <div class="col-lg-12 mt-2">
-     <div class="filter-option col-lg-12">
-     <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($daftar_keluarga) echo 'select'; else echo 'unselect';?> ">DAFTAR KELUARGA MENGETAHUI ATASAN <i class="fas fa-<?php if($daftar_keluarga) echo 'check'; else echo 'times';?>"></i></span> 
-      <?php if($daftar_keluarga) { ?>
-      <a onclick="filterClicked2('<?=$daftar_keluarga['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
-      <?php } ?>
-    </div>
-  </div>
-
-  <div class="col-lg-12 mt-2">
-     <div class="filter-option col-lg-12">
-     <span style="width:95%"  onclick="filterClicked()" 
-      class="filter-btn filter-<?php if($akte_nikah) echo 'select'; else echo 'unselect';?> ">BUKU NIKAH / AKTA PERKAWINAN DILEGALISIR <i class="fas fa-<?php if($akte_nikah) echo 'check'; else echo 'times';?>"></i></span> 
-      <?php if($akte_nikah) { ?>
-      <a onclick="filterClicked2('<?=$akte_nikah['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
-      <?php } ?>
-    </div>
-  </div>
-
-  <div class="col-lg-12 mt-2">
-     <div class="filter-option col-lg-12">
-     <span style="width:95%" 
-      class="filter-btn filter-<?php if($pas_foto) echo 'select'; else echo 'unselect';?> ">PAS FOTO ISTRI 3X4 LATAR MERAH (BAGI PNS LAKI-LAKI) / PAS FOTO SUAMI (BAGI PNS PEREMPUAN) <i class="fas fa-<?php if($pas_foto) echo 'check'; else echo 'times';?>"></i></span> 
-      <?php if($pas_foto) { ?>
-      <a onclick="filterClicked2('<?=$pas_foto['gambarsk'];?>')"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary"> <i class="fa fa-file"></i> </a> 
-      <?php } ?>
-    </div>
-  </div> -->
 					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
-				</form>
-				<p class="mt-5">
+				</form> -->
+				<!-- <p class="mt-5">
 					Keterangan :<br>
 					<button style="width:3%" class="btn btn-sm filter-btn filter-select"> &nbsp; </button>
 					Berkas Sudah diupload<br>
@@ -359,7 +306,7 @@ ol {
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
 				<a href="<?=base_url('kepegawaian/download');?>"> <i class="fa fa-download"> <i> Download Format Laporan
-							Perkawinanan pertama & Daftar keluarga </i></i></a>
+							Perkawinanan pertama & Daftar keluarga </i></i></a> -->
 			</div>
 		</div>
 	</div>

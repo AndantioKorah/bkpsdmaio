@@ -1770,6 +1770,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.jenjang_diklat', 3)
+                ->where('a.status', 2)
                 ->where('a.flag_active', 1);
                 $diklat = $this->db->get()->result_array();
                 if($diklat){
@@ -1779,6 +1780,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
+                    ->where('a.status', 2)
                     ->where('a.flag_active', 1);
                     $diklat = $this->db->get()->result_array();
                     if($diklat){
@@ -1788,6 +1790,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         ->from('db_pegawai.pegdiklat a')
                         ->where('a.id_pegawai', $id)
                         ->where('a.jenjang_diklat', 1)
+                        ->where('a.status', 2)
                         ->where('a.flag_active', 1);
                         $diklat = $this->db->get()->result_array();
                         if($diklat){
@@ -1800,6 +1803,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.jenjang_diklat', 3)
+                ->where('a.status', 2)
                 ->where('a.flag_active', 1);
                 $diklat = $this->db->get()->result_array();
                 if($diklat){
@@ -1809,6 +1813,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
+                    ->where('a.status', 2)
                     ->where('a.flag_active', 1);
                     $diklat = $this->db->get()->result_array();
                     if($diklat){
@@ -1822,6 +1827,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.jenjang_diklat', 2)
+                ->where('a.status', 2)
                 ->where('a.flag_active', 1);
                 $diklat = $this->db->get()->result_array();
                 if($diklat){
@@ -1831,6 +1837,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 1)
+                    ->where('a.status', 2)
                     ->where('a.flag_active', 1);
                     $diklat = $this->db->get()->result_array();
                     if($diklat){
@@ -1842,6 +1849,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     ->from('db_pegawai.pegdiklat a')
                     ->where('a.id_pegawai', $id)
                     ->where('a.jenjang_diklat', 2)
+                    ->where('a.status', 2)
                     ->where('a.flag_active', 1);
                     $diklat = $this->db->get()->result_array();
                     if($diklat){
@@ -1851,6 +1859,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         ->from('db_pegawai.pegdiklat a')
                         ->where('a.id_pegawai', $id)
                         ->where('a.jenjang_diklat', 1)
+                        ->where('a.status', 2)
                         ->where('a.flag_active', 1);
                         $diklat = $this->db->get()->result_array();
                         if($diklat){
@@ -1859,17 +1868,40 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     }
                 }
            } else if($jenis_pengisian == 1) {
-            $this->db->select('a.id')
-            ->from('db_pegawai.pegdiklat a')
-            ->where('a.id_pegawai', $id)
-            ->where('a.jenjang_diklat', 10)
-            ->where('a.flag_active', 1);
-            $diklat = $this->db->get()->result_array();
-            if($diklat){
-                $id_diklat = 106;
-            } 
-           }
+            if($eselonpegawai == "IV A" || $eselonpegawai == "IV A"){
+                $this->db->select('a.id')
+                    ->from('db_pegawai.pegdiklat a')
+                    ->where('a.id_pegawai', $id)
+                    ->where('a.jenjang_diklat', 1)
+                    ->where('a.status', 2)
+                    ->where('a.flag_active', 1);
+                    $diklat = $this->db->get()->result_array();
+                    if($diklat){
+                        $id_diklat = 105;
+                    } else {
+                        $this->db->select('a.id')
+                        ->from('db_pegawai.pegdiklat a')
+                        ->where('a.id_pegawai', $id)
+                        ->where('a.jenjang_diklat', 10)
+                        ->where('a.status', 2)
+                        ->where('a.flag_active', 1);
+                        $diklat = $this->db->get()->result_array();
+                        if($diklat){
+                            $id_diklat = 107;
+                        }
+                    }
+                }
 
+            // $this->db->select('a.id')
+            // ->from('db_pegawai.pegdiklat a')
+            // ->where('a.id_pegawai', $id)
+            // ->where('a.jenjang_diklat', 10)
+            // ->where('a.flag_active', 1);
+            // $diklat = $this->db->get()->result_array();
+            // if($diklat){
+            //     $id_diklat = 106;
+            // } 
+           }
          
     
     return $id_diklat;   
@@ -2268,7 +2300,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     $predikat = "67";
                 } else if($id_predikat == "Butuh Perbaikan" || $id_predikat == "BUTUH PERBAIKAN"){
                     $predikat = "68";
-                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG"){
+                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG" || $id_predikat == "KURANG / MISONDUCT"){
                     $predikat = "69";
                 } else if($id_predikat == "Sangat Kurang" || $id_predikat == "SANGAT KURANG"){
                     $predikat = "70";
@@ -2280,7 +2312,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                     $predikat = "72";
                 } else if($id_predikat == "Butuh Perbaikan" || $id_predikat == "BUTUH PERBAIKAN"){
                     $predikat = "73";
-                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG"){
+                } else if($id_predikat == "Kurang" || $id_predikat == "KURANG" || $id_predikat == "KURANG / MISONDUCT"){
                     $predikat = "74";
                 } else if($id_predikat == "Sangat Kurang" || $id_predikat == "SANGAT KURANG"){
                     $predikat = "75";

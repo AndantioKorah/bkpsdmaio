@@ -164,7 +164,8 @@
                 id="eselon" data-dropdown-css-class="select2-navy" name="eselon">
                 
                 <?php if($jenis_pengisian == 1) { ?>
-        
+                  <option value="8">IV A</option>
+                  <option value="9">IV B</option>
         <?php } ?>
         <?php if($jenis_pengisian == 2) { ?>
           <option value="6">III A</option>
@@ -540,7 +541,6 @@ var id = $(this).data('id');
 var nip = $(this).data('nip');
 var kode = $(this).data('kode');
 var jenispengisian = $(this).data('jenispengisian');
-
 
 $('#div_modal_penilaian_potensial').html('')
 $('#div_modal_penilaian_potensial').append(divLoaderNavy)

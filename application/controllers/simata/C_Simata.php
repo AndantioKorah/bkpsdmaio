@@ -378,7 +378,7 @@ class C_Simata extends CI_Controller
         $data['jp_kompetensi'] = $this->simata->getJPKompetensi($id_peg);
         $data['pangkatgol'] = $this->simata->getPangkatGolPengawai($id_peg,$kode,$jenis_pengisian);
         $data['porganisasi'] = $this->simata->getPengalamanOrganisasiPengawai($id_peg);
-        $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$kode,$eselonpegawai,$jabatanpegawai);
+        $data['dklt'] = $this->simata->getDiklatPengawai($id_peg,$jenis_pengisian,$eselonpegawai,$jabatanpegawai);
         $data['hukdis'] = $this->simata->getHukdisPengawai($id_peg);
         $data['masa_kerja'] = $this->simata->getMasaKerjaJabatan($id_peg,$kode,$eselonpegawai,$jenis_pengisian);
         $data['kode'] = $kode;  

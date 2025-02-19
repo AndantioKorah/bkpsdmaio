@@ -3475,6 +3475,7 @@ public function submitEditProfil(){
     $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
+    $data["updated_by"] = $this->general_library->getId();
     if(isset($datapost["edit_flag_terima_tpp"])){
         $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
     }

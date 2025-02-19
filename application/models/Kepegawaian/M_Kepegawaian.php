@@ -11149,6 +11149,16 @@ public function checkListIjazahCpns($id, $id_pegawai){
     return $rs;
 }
 
+public function updateStatusLayananPangkat($id)
+{
+    $data['status'] = $id;
+    $this->db->where_in('id', [6,7,8,9])
+                    ->update('m_layanan', $data);
+}
+
+
+
+
 
 
 }

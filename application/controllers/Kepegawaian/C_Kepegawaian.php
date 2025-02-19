@@ -2762,6 +2762,10 @@ class C_Kepegawaian extends CI_Controller
 			$data['param'] = $this->input->post();
 			$this->load->view('kepegawaian/layanan/V_VerifikasiBerkalaBkadItem', $data);
 		}
+
+		public function updateStatusLayananPangkat($id){
+			$this->kepegawaian->updateStatusLayananPangkat($id);
+		}
 		
 
 

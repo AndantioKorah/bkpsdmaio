@@ -8497,7 +8497,7 @@ public function submitEditJabatan(){
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        // ->where('status', 2)
+        ->where('status !=', 3)
         ->from($table);
 
         if($table == "db_pegawai.pegarsip"){
@@ -9482,7 +9482,7 @@ public function getFileForKarisKarsu()
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
         ->where('jenisjabatan', 10)
-        // ->where('status', 2)
+        ->where('status !=', 3)
         ->order_by('tmtjabatan', 'desc')
         ->order_by('id', 'desc')
         ->limit(1)
@@ -9902,7 +9902,7 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
-        // ->where('status', 2)
+        ->where('status !=', 3)
         ->order_by('id', 'desc')
         ->from($table);
 

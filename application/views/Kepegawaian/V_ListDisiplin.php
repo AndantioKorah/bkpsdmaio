@@ -44,7 +44,7 @@
               <td>
               <div class="btn-group" role="group" aria-label="Basic example">
               <?php if($kode == 1) { ?>
-                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() ||  $this->general_library->getBidangUser() == ID_BIDANG_PEKIN) { ?>
 
                 <button 
                 data-toggle="modal" 
@@ -54,7 +54,7 @@
                 <?php } ?>
                 <?php } ?>
 
-                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+                <?php  if($this->general_library->isProgrammer()  
                 || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
                 || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
                 <?php if($kode == 1) { ?>

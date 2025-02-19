@@ -45,9 +45,9 @@
                 <td><?=$total_nilai;?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
 				<td>
-				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-kode="1"
+				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$rs2['id_jabatan_target']?>" data-jenispengisian = "<?=$jenis_pengisian;?>" data-kode="1"
 										href="#modal_penilaian_potensial" title="Ubah Data" class="open-DetailPenilaian btn btn-sm btn-info">
-										<i class="fa fa-edit"></i></button>
+										<i class="fa fa-edit"></i>cdsc</button>
 				</td>
             </tr>
 			<?php } ?>

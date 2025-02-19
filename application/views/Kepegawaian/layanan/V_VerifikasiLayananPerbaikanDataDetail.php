@@ -238,7 +238,7 @@
           </div>
           <div class="col-lg-12 text-center" >
             <span class="sp_profil">
-              <?=formatNip($result[0]['nipbaru_ws'])?>
+              <?=($result[0]['nipbaru_ws'])?>
             </span>
           </div>
         </div>

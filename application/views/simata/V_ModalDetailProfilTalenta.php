@@ -116,6 +116,10 @@
 		font-weight:bold
 	} */
 
+    .red {
+		color: red;
+		/* width: 50%; */
+	}
 </style>
 
 
@@ -233,7 +237,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_kinerja['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor1'];?> Point] <?=$nilai_kinerja['kinerja1'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
 
@@ -242,7 +248,9 @@
                                                 <td style="width:25%">
                                                 <?php if(isset($nilai_kinerja['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor2'];?> Point] <?=$nilai_kinerja['kinerja2'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
 
@@ -254,7 +262,9 @@
                                                 <td style="width:25%">
                                                 <?php if(isset($nilai_kinerja['skor3'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor3'];?> Point] <?=$nilai_kinerja['kinerja3'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?>  
                                             </td>
                                             </tr>
                                             <tr>
@@ -262,7 +272,9 @@
                                                 <td style="width:25%">
                                                 <?php if(isset($nilai_kinerja['skor4'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor4'];?> Point] <?=$nilai_kinerja['kinerja4'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -270,7 +282,9 @@
                                                 <td style="width:25%">
                                                 <?php if(isset($nilai_kinerja['skor5'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_kinerja['skor5'];?> Point] <?=$nilai_kinerja['kinerja5'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                         </table>
@@ -288,7 +302,9 @@
                                                 <span class="sp_profil_sm">
                                                 <?php if(isset($nilai_potensial['nilai_assesment'])) { ?>
                                                         <?=$nilai_potensial['nilai_assesment'];?>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">Belum ada nilai</span>
+                                                <?php }  ?> 
                                                 </span>
                                             </td>
                                             </tr>
@@ -305,7 +321,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor1'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor1'];?> Point] <?=$nilai_potensial['potensial1'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
 
                                             </td>
                                             </tr>
@@ -314,7 +332,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor2'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor2'];?> Point] <?=$nilai_potensial['potensial2'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -322,7 +342,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor3'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor3'];?> Point] <?=$nilai_potensial['potensial3'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -330,7 +352,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor4'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor4'];?> Point] <?=$nilai_potensial['potensial4'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -338,7 +362,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor5'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor5'];?> Point] <?=$nilai_potensial['potensial5'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -346,7 +372,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor6'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor6'];?> Point] <?=$nilai_potensial['potensial6'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -354,7 +382,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor7'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor7'];?> Point] <?=$nilai_potensial['potensial7'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                         </table>
@@ -370,7 +400,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor8'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor8'];?> Point] <?=$nilai_potensial['potensial8'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
 
                                             </td>
                                             </tr>
@@ -382,7 +414,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor9'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor9'];?> Point] <?=$nilai_potensial['potensial9'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <tr>
@@ -390,7 +424,9 @@
                                                 <td style="width:75%">
                                                 <?php if(isset($nilai_potensial['skor10'])) { ?>
                                                 <span class="sp_profil_sm">[<?=$nilai_potensial['skor10'];?> Point] <?=$nilai_potensial['potensial10'];?></span>
-                                                <?php } ?>
+                                                <?php } else { ?>
+                                                <span class="sp_profil_sm red">[0 Point] Belum ada nilai</span>
+                                                <?php }  ?> 
                                             </td>
                                             </tr>
                                             <?php } ?>

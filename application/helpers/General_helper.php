@@ -333,7 +333,7 @@ function countNilaiSkp2($data)
         $akumulasi_nilai_capaian = 0;
         foreach ($data as $d) {
             $nilai_capaian = 0;
-            dd($d);
+            // dd($d);
             
             if (floatval($d['realisasi']) > 0) {
                 if(floatval($d['target']) == 0){
@@ -347,7 +347,6 @@ function countNilaiSkp2($data)
                     }
                 // }
             }
-            print_r($d['realisasi']);
             $akumulasi_nilai_capaian += $nilai_capaian;
         }
         

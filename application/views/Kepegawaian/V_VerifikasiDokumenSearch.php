@@ -17,7 +17,7 @@
           <td class="text-center"><?=formatNip($rs['nipbaru_ws'])?></td>
           <td class="text-center"><?=getNamaPegawaiFull($rs)?></td>
           <td class="text-center"><?=($rs['nm_unitkerja'])?></td>
-          <td class="text-center"><?=formatDateNamaBulan($rs['created_date'])?></td>
+          <td class="text-center"><?=formatDateNamaBulan($rs['tgl_usul'])?></td>
           <td class="text-center">
             
             <button href="#edit_data" data-toggle="modal" onclick="openDetail('<?=$rs['id_dokumen']?>', '<?=$param['jenisdokumen']['value']?>')"

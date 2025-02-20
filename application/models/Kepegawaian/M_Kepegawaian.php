@@ -263,7 +263,7 @@ class M_Kepegawaian extends CI_Model
             // $tanggal_akhir = explode("-", $tanggal[1]);
             // $tak = $tanggal_akhir[0].'-'.$tanggal_akhir[2].'-'.$tanggal_akhir[1];
 
-            $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen')
+            $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen, a.created_date as tgl_usul')
                         ->from('db_pegawai.'.$data['jenisdokumen'].' a')
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -3475,6 +3475,7 @@ public function submitEditProfil(){
     $data["karpeg"] = $datapost["edit_karpeg"];
     $data["handphone"] = $datapost["edit_no_hp"];
     $data["email"] = $datapost["edit_email"];
+    $data["updated_by"] = $this->general_library->getId();
     if(isset($datapost["edit_flag_terima_tpp"])){
         $data["flag_terima_tpp"] = $datapost["edit_flag_terima_tpp"];
     }
@@ -11147,6 +11148,16 @@ public function checkListIjazahCpns($id, $id_pegawai){
     
     return $rs;
 }
+
+public function updateStatusLayananPangkat($id)
+{
+    $data['status'] = $id;
+    $this->db->where_in('id', [6,7,8,9])
+                    ->update('m_layanan', $data);
+}
+
+
+
 
 
 

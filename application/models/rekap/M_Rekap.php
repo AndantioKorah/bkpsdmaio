@@ -23,6 +23,29 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function searchDataHukdis($data){
+            $this->db->select('a.*, b.*, e.nm_unitkerja, c.nama as nama_hd, d.nama_jhd')
+                    ->from('db_pegawai.pegdisiplin a')
+                    ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                    ->join('db_pegawai.hd c', 'a.hd = c.idk')
+                    ->join('db_pegawai.jhd d', 'a.jhd = d.id_jhd')
+                    ->join('db_pegawai.unitkerja e', 'b.skpd = e.id_unitkerja')
+                    ->where('a.flag_active', 1)
+                    ->where('YEAR(a.tglsurat)', $data['tahun'])
+                    ->where('a.status', 2)
+                    ->order_by('a.tglsurat', 'desc');
+
+            if($data['bulan'] != 0){
+                $this->db->where('MONTH(a.tglsurat)', $data['bulan']);
+            }
+            
+            if($data['unitkerja'] != 0){
+                $this->db->where('b.skpd', $data['unitkerja']);
+            }
+
+            return $this->db->get()->result_array();
+        }
+
         public function getKomponenKinerja($id_m_user, $bulan, $tahun){
             return $this->db->select('*')
                             ->from('t_komponen_kinerja as a')

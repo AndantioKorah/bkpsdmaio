@@ -193,6 +193,26 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPerbaikanData/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 12) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 13) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 14) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 15) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 16) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
     } else {
       $('#form_layanan').html('')
     }

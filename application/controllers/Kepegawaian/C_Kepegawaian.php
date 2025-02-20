@@ -2428,6 +2428,54 @@ class C_Kepegawaian extends CI_Controller
 		// }
 	}
 
+	public function layananJabatanFungsional($id_layanan){
+		     
+		$currentYear = date('Y'); 
+		$previous1Year = $currentYear - 1;   
+		$previous2Year = $currentYear - 2; 
+		$data['tahun_1_lalu'] = $previous1Year;
+		$data['tahun_2_lalu'] = $previous2Year;
+		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
+		$data['id_m_layanan'] = $id_layanan;
+		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+	
+
+			if($id_layanan == 12){
+				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
+				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
+				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan();
+				$data['dok_lain'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','72','0');	
+
+			}
+			if($id_layanan == 13){
+				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
+				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			}
+			if($id_layanan == 14){
+				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
+				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+			}
+			if($id_layanan == 15){
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+			}
+			if($id_layanan == 16){
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+			}
+
+		$this->load->view('kepegawaian/layanan/V_LayananJabatanFungsional', $data);
+		// else if($id_layanan == 7){
+		// $data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');
+		// $this->load->view('kepegawaian/layanan/V_LayananPangkatFungsional', $data);
+		// }
+	}
+
 	public function layananPerbaikanData($id_layanan){
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        

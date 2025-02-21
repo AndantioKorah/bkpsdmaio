@@ -562,9 +562,13 @@
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() ||
 				$this->general_library->isAdminAplikasi() || 
-				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
-				$this->general_library->isKepalaPd() ||
-				$this->general_library->isVerifPermohonanCuti()){ ?>
+				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+				// buka 3 dibawah ini untuk verifikasi melalui SILADEN. sekarang ditutup karena bocor
+				// ||
+				// $this->general_library->isKepalaPd() ||
+				// $this->general_library->isVerifPermohonanCuti()
+				){
+					?>
 					<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
@@ -790,8 +794,15 @@
 						</a>
 					</li>
 				<?php } ?>
-				
-				
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+				<li class="sidebar-item ">
+					<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
+					</a>
+				</li>
+				<?php } ?>
 			</ul>
 		</li>
 		

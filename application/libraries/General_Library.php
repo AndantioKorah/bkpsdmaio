@@ -361,6 +361,10 @@ class General_library
             if($this->isProgrammer()){
                 return true;
             }
+            // else {
+            //     $this->nikita->session->set_userdata('apps_error', 'Sistem sedang Maintenance. Silahkan dicoba beberapa saat kemudian. Terima Kasih.');
+            //     redirect('logout');
+            // }
             
             // $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
             $current_url = substr($_SERVER["REQUEST_URI"], 1, strlen($_SERVER["REQUEST_URI"])-1);

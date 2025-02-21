@@ -1275,6 +1275,10 @@ function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
 }
 
+function isKapus($nama_jabatan){
+    return (stringStartWith('Kepala Puskesmas', $nama_jabatan)); 
+}
+
 function isKasubKepegawaian($nama_jabatan, $eselon = null){
     $CI = &get_instance();
     if($eselon != null){

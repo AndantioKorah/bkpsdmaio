@@ -28,6 +28,16 @@ class C_Rekap extends CI_Controller
         };
     }
 
+    public function rekapHukdis(){
+        $data['list_skpd'] = $this->user->getAllSkpd();
+        render('rekap/V_RekapHukdis', '', '', $data);
+    }
+
+    public function searchDataHukdis(){
+        $data['result'] = $this->rekap->searchDataHukdis($this->input->post());
+        $this->load->view('rekap/V_RekapHukdisResult', $data);
+    }
+
     public function rekapAbsensi()
     {
         $data['jam_kerja'] = $this->general->getAll('t_jam_kerja');

@@ -31,20 +31,20 @@
               <?php } ?>
               <?php if($rs['status'] == 2) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-  <div class="btn-group mr-2" role="group" aria-label="First group">
-  <button
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
                 data-id="<?=$rs['id'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
                 <i class="fa fa-edit"></i> Ubah Surat Pengantar 
                 </button>
-  </div>
-  <div class="btn-group mr-2" role="group" aria-label="Second group">
-  <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
 
-  </div>
-  
-</div>
+                </div>
+                
+              </div>
               
                
               <?php } ?>

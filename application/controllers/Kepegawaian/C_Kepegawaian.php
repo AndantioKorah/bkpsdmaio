@@ -2455,6 +2455,11 @@ class C_Kepegawaian extends CI_Controller
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
+				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan();
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','73','0');
+
 			}
 			if($id_layanan == 14){
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	

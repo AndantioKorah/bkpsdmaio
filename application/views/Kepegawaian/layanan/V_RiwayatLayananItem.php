@@ -243,7 +243,7 @@ function ajukanKembali(id){
 <?php } else { ?>
   <div class="row">
     <div class="col-lg-12 text-center">
-      <h4>DATA TIDAK DITEMUKAN <i class="fa fa-exclamation"></i></h4>
+      <h4>TIDAK ADA RIWAYAT LAYANAN <i class="fa fa-exclamation"></i></h4>
     </div>
   </div>
 <?php } ?>

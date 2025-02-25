@@ -5163,9 +5163,9 @@ public function submitEditJabatan(){
         $target_dir = './arsipskp/';
         $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
-            if($filename == ""){
-                $filename = $_FILES['file']['name'];
-            } 
+            // if($filename == ""){
+            //     $filename = $_FILES['file']['name'];
+            // } 
            
     
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
@@ -10064,7 +10064,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 1)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10074,7 +10074,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 2)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10084,7 +10084,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 11)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10093,7 +10093,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpangkat as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.tmtpangkat', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10103,7 +10103,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.tahun', $previous1Year)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10113,7 +10113,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.tahun', $previous2Year)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10123,7 +10123,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 13)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10133,7 +10133,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 65)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10143,7 +10143,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 12)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10154,7 +10154,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.jenisdiklat', "00")
                 ->where('a.jenjang_diklat', 2)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10172,7 +10172,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 10)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10182,7 +10182,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 15)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10192,7 +10192,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 29)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10202,7 +10202,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 67)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10212,7 +10212,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 66)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10233,7 +10233,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 68)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10242,7 +10242,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.peggajiberkala as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                // ->where('a.status', 2)
+                ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -10322,14 +10322,17 @@ public function getFileForVerifLayanan()
 
             
           
+            $tambahan = "";
 
         } else if($dataPengajuan[0]['status'] == 2){
             $status = "Ditolak";
             $statusForMessage = "ditolak";
+            $tambahan = "Silahkan Perbaiki Berkas Persyaratan dan klik Tombol Ajukan Kembali Pada bagian riwayat layanan agar pengajuan layanan dapat diverifikasi kembali di BKPSDM.";
+
         }
 
         if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
-            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n$tambahan\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Pangkat";
         } else if($dataPengajuan[0]['id_m_layanan'] == 10){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\Pengajuan Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
@@ -10998,10 +11001,10 @@ public function getFileForVerifLayanan()
          $this->db->insert('t_gajiberkala', $dataKgb);
 
          if($datapost["status"] == 1){
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";
             
          }
         $cronWaNextVerifikator = [

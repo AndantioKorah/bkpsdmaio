@@ -6090,7 +6090,8 @@ public function submitEditJabatan(){
                 $reply .= '*DITOLAK*';
                 $this->db->where('id', $dataCuti['id'])
                         ->update('t_pengajuan_cuti', [
-                            'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan']
+                            'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan'],
+                            'flag_ditolak' => 1
                         ]);
 
                 $this->updateSisaCuti($dataCuti['id'], 'plus');
@@ -7060,7 +7061,8 @@ public function submitEditJabatan(){
                 } else if($status == 0){ // jika ditolak
                     $reply .= "*DITOLAK*";
                     $update_data_pengajuan = [
-                        'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan']
+                        'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan'],
+                        'flag_ditolak' => 1
                     ];
                     $this->updateSisaCuti($data['id'], 'plus');
                 }

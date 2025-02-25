@@ -8567,7 +8567,7 @@ public function submitEditJabatan(){
                 ->where('a.flag_active', 1)
                 ->where('d.flag_active', 1)
                 ->group_by('a.id')
-                ->order_by('a.created_date', 'asc');
+                ->order_by('a.created_date', 'desc');
 
         if($data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);

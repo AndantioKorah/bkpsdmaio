@@ -6422,7 +6422,8 @@ public function submitEditJabatan(){
                                             ->where('id_m_user', $data['id_m_user'])
                                             ->where('flag_active', 1)
                                             ->where('tanggal_mulai >=', $data['tanggal_mulai'])
-                                            ->where('tanggal_akhir >=', $data['tanggal_akhir'])
+                                            ->where('tanggal_akhir <=', $data['tanggal_akhir'])
+                                            ->where('flag_ditolak != ', 1)
                                             ->limit(1)
                                             ->get()->row_array();
                     if($permohonanCuti){

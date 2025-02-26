@@ -6090,7 +6090,8 @@ public function submitEditJabatan(){
                 $reply .= '*DITOLAK*';
                 $this->db->where('id', $dataCuti['id'])
                         ->update('t_pengajuan_cuti', [
-                            'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan']
+                            'status_pengajuan_cuti' => 'Ditolak oleh '.$progress['current']['nama_jabatan'],
+                            'flag_ditolak' => 1
                         ]);
 
                 $this->updateSisaCuti($dataCuti['id'], 'plus');
@@ -6422,7 +6423,8 @@ public function submitEditJabatan(){
                                             ->where('id_m_user', $data['id_m_user'])
                                             ->where('flag_active', 1)
                                             ->where('tanggal_mulai >=', $data['tanggal_mulai'])
-                                            ->where('tanggal_akhir >=', $data['tanggal_akhir'])
+                                            ->where('tanggal_akhir <=', $data['tanggal_akhir'])
+                                            ->where('flag_ditolak != ', 1)
                                             ->limit(1)
                                             ->get()->row_array();
                     if($permohonanCuti){
@@ -7059,7 +7061,8 @@ public function submitEditJabatan(){
                 } else if($status == 0){ // jika ditolak
                     $reply .= "*DITOLAK*";
                     $update_data_pengajuan = [
-                        'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan']
+                        'status_pengajuan_cuti' => 'Ditolak oleh'.$res['progress']['current']['nama_jabatan'],
+                        'flag_ditolak' => 1
                     ];
                     $this->updateSisaCuti($data['id'], 'plus');
                 }
@@ -8564,7 +8567,7 @@ public function submitEditJabatan(){
                 ->where('a.flag_active', 1)
                 ->where('d.flag_active', 1)
                 ->group_by('a.id')
-                ->order_by('a.created_date', 'asc');
+                ->order_by('a.created_date', 'desc');
 
         if($data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);

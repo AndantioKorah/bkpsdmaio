@@ -40,7 +40,7 @@
                 </button>
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
-                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                <!-- <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button>  -->
 
                 </div>
                 

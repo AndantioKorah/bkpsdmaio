@@ -1138,6 +1138,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->updateTmBerkala());
 	}
 
+	public function updateTmBerkalaPPPK()
+	{ 
+		echo json_encode( $this->kepegawaian->updateTmBerkalaPPPK());
+	}
+
 	public function mergeBerkala()
 	{ 
 		echo json_encode( $this->kepegawaian->mergeBerkala());
@@ -2732,8 +2737,9 @@ class C_Kepegawaian extends CI_Controller
 		$id_pegawai = $data['profil_pegawai']['id_peg'];
 		$data['result'] = $this->kepegawaian->cekProsesKenaikanBerkala($id_pegawai,$tahun);
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
+		$data['sk_kgb'] = $this->kepegawaian->getDokumenGajiBerkala($id_pegawai); 
 		$data['tahun'] = $tahun;
-		// dd($data['result']);
+		// dd($data['sk_kgb']);
 		render('kepegawaian/layanan/V_ProsesGajiBerkala', '', '', $data);
 	}
 

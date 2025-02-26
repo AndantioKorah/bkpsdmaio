@@ -3363,6 +3363,26 @@ public function updateTmBerkala()
     }
 }
 
+public function updateTmBerkalaPPPK()
+{
+   
+
+        $this->db->select('*')
+    ->from('db_pegawai.pegawai as a')
+    ->where('a.statuspeg', 3)
+    ->where('a.tmtgjberkala', '0000-00-00');
+    $result = $this->db->get()->result_array(); 
+    // dd($result);
+
+    foreach($result as $res){
+            $data["tmtgjberkala"] = $res['tmtcpns'];
+            // $data["tmtgjberkala"] = '2024-02-01';
+
+            $this->db->where('id_peg', $res['id_peg'])
+            ->update('db_pegawai.pegawai', $data);
+    }
+}
+
     public function mergeBerkala(){
     $this->db->select('*')
     ->from('db_pegawai.peggajiberkala_copy1 as a')
@@ -9526,6 +9546,19 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getDokumenGajiBerkala($id_peg)
+    {
+        $this->db->select('a.*')
+        ->where('a.id_pegawai', $id_peg)
+        ->where('a.flag_active', 1)
+        ->where('a.status !=', 3)
+        ->order_by('a.tmtgajiberkala', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.peggajiberkala a');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanForPensiun()
     {
         $this->db->select('*')
@@ -10321,6 +10354,8 @@ public function getFileForVerifLayanan()
             }
 
             
+
+            
           
             $tambahan = "";
 
@@ -10967,7 +11002,6 @@ public function getFileForVerifLayanan()
         $res['data'] = null;
 
         $datapost = $this->input->post();
-        
         $this->db->trans_begin();
 
           
@@ -11001,7 +11035,16 @@ public function getFileForVerifLayanan()
          $this->db->insert('t_gajiberkala', $dataKgb);
 
          if($datapost["status"] == 1){
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
+            if($datapost['sk_pangkat']){
+                $this->verifBerkas($datapost['sk_pangkat'], "db_pegawai.pegpangkat");
+            }
+
+            if($datapost['sk_kgb']){
+                $this->verifBerkas($datapost['sk_kgb'], "db_pegawai.peggajiberkala");
+                $this->updateBerkala($datapost["id_pegawai"]);
+            }
+
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala Otomatis anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
         $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";

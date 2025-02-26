@@ -305,7 +305,7 @@
             ->where('year(a.tmtgjberkala) <=', $tahun) 
             // ->where('year(a.tmtgjberkala) ', $tahun)
 
-            ->where('a.tmtgjberkala !=', '0000-00-00')
+            // ->where('a.tmtgjberkala !=', '0000-00-00')
             ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
             ->order_by('a.tmtgjberkala');
 

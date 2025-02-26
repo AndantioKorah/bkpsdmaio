@@ -4460,14 +4460,15 @@ public function submitEditJabatan(){
         $datapost = $this->input->post();
         $this->db->trans_begin();
         $target_dir = './arsipelektronik/';
-        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
-       
+
         if($_FILES['file']['name'] != ""){
           
-            if($filename == ""){
-                $filename = $_FILES['file']['name'];
-            } 
-
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+        
+        if($filename == ""){
+            $filename = $_FILES['file']['name'];
+        } 
+        
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $filename = $random_number.$filename;
 

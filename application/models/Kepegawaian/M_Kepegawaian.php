@@ -8568,7 +8568,7 @@ public function submitEditJabatan(){
     
         $query = $this->db->get()->row_array();
     
-        return $query;  
+        return $query;
 
     }
 

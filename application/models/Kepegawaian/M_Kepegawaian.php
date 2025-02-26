@@ -3372,10 +3372,12 @@ public function updateTmBerkalaPPPK()
     ->where('a.statuspeg', 3)
     ->where('a.tmtgjberkala', '0000-00-00');
     $result = $this->db->get()->result_array(); 
-    dd($result);
+    // dd($result);
 
     foreach($result as $res){
             $data["tmtgjberkala"] = $res['tmtcpns'];
+            // $data["tmtgjberkala"] = '2024-02-01';
+
             $this->db->where('id_peg', $res['id_peg'])
             ->update('db_pegawai.pegawai', $data);
     }
@@ -11042,7 +11044,7 @@ public function getFileForVerifLayanan()
                 $this->updateBerkala($datapost["id_pegawai"]);
             }
 
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala Otomatis anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
 
          } else {
         $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";

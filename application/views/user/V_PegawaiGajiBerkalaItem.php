@@ -75,7 +75,13 @@
                             <td class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
                             <td class="text-center">
-                                <?= formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
+                                <?php
+                                if($rs['tmtgjberkala'] == '0000-00-00') {
+                                    echo "-";
+                                } else {
+                                    echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));
+                                }
+                                //  echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
                                 <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->
                             </td>
                             <td class="text-center">

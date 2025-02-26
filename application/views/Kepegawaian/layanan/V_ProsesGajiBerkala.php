@@ -368,6 +368,13 @@
         <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
         <input type="hidden" name="tahun" id="tahun" value="<?= $tahun;?>">
 
+        <input type="text" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+        <input type="text" id="sk_kgb" name="sk_kgb"  value="<?php if($sk_kgb) echo $sk_kgb['id']; else echo "";?>">
+
+       
+
+
+
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -769,7 +776,7 @@ function openPresensiTab(){
                   $('#btn_tolak_verifikasi').show()
                   // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
-                  location.reload()
+                  location.reload() 
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

@@ -505,7 +505,7 @@ ol {
               <h4>
             <b style="color:red;">
               Layanan kenaikan pangkat sudah ditutup dan akan dibuka kembali pada periode kenaikan pangkat berikutnya.<br>
-              periode kenaikan pangkat april 2025 (dibuka pada tanggal 22 januari - 19 februari 2025)
+              periode kenaikan pangkat juni 2025 (dibuka pada tanggal 18 maret - 15 april 2025)
             </b>
           </h4>
           </p>

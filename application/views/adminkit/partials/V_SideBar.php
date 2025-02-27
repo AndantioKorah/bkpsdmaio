@@ -574,6 +574,11 @@
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 						</a>
 					</li>
+					<li class="sidebar-item ">
+						<a title="Operator Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-operator-cuti')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Operator Cuti
+						</a>
+					</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">

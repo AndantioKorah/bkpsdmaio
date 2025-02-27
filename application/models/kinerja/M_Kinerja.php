@@ -1706,6 +1706,17 @@
                         } else {
                             $tolak = 1;
                         }
+
+                        if($list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 19 ||
+                        $list_exist[$d['id'].$date[2].$date[1].$date[0]]['id_m_jenis_disiplin_kerja'] == 20){ // jika TLP atau TLS, hanya sidak dan kenegaraan yang diterima
+                            if($disiplin[0] != 5 && $disiplin[0] != 6){
+                                $tolak = 1;
+                            } else {
+                                $tolak = 0;
+                            }
+                        } else {
+                            $tolak = 1;
+                        }
                         
                         // if($this->general_library->getId() == 16){
                         //     dd($tolak);

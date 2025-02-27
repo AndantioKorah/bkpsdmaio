@@ -1578,6 +1578,23 @@ class C_Kepegawaian extends CI_Controller
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');
 	}
 
+	public function deleteOperatorPermohonanCuti($id){
+		$this->kepegawaian->deleteOperatorPermohonanCuti($id);
+		// $this->general->delete('id', $id, 't_pengajuan_cuti');
+	}
+
+	public function verifikasiOperatorPermohonanCuti(){
+		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('kepegawaian/V_VerifOperatorPermohonanCuti', '', '', $data);
+	}
+
+	public function searchOperatorPermohonanCuti(){
+		$data['result'] = $this->kepegawaian->searchOperatorPermohonanCuti();
+		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		$data['param'] = $this->input->post();
+		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiItem', $data);
+	}
+
 	public function verifikasiPermohonanCuti(){
 		// $data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
 		$data['unitkerja'] = null;

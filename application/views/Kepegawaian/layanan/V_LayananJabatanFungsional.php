@@ -357,6 +357,18 @@ ol {
         <?php } ?>
         <?php if($id_m_layanan == 13) { ?>
           <li>
+				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+				</li>
+        <li>
+				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+				</li>
+          <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (maximal 3 bulan sebelum expired)* <i
@@ -380,6 +392,12 @@ ol {
 				<?php } ?>> <i class="fa fa-file-pdf"></i> STR (kersehatan) / Serdik (pendidikan) <i
 				class="fas fa-<?php if($str_serdik) echo ''; else echo '';?>"></i></a>
         </li>
+        <li>
+				<a class="<?php if($skp1){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah) { ?>
+				onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah* <i
+				class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
+				</li>
               <?php } ?>
               <?php if($id_m_layanan == 8) { ?>
                 <li>
@@ -665,6 +683,8 @@ $(function(){
         $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
     } else if(id == 6){
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    } else if(id == 7){
+        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
     }
    
    

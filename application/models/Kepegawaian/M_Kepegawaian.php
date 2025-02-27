@@ -4468,7 +4468,7 @@ public function submitEditJabatan(){
         if($filename == ""){
             $filename = $_FILES['file']['name'];
         } 
-        
+
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $filename = $random_number.$filename;
 
@@ -9476,6 +9476,17 @@ public function getFileForKarisKarsu()
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
         ->where('ijazah_cpns', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahTerakhir()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->order_by('tahunlulus', 'desc')
         ->from('db_pegawai.pegpendidikan');
         $query = $this->db->get()->row_array();
         return $query;  

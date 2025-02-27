@@ -6347,6 +6347,97 @@ public function submitEditJabatan(){
         return $result;
     }
 
+    public function submitVerifOperatorCuti(){
+        $rs['code'] = 0;
+        $rs['message'] = "Berhasil";
+
+        $dataCuti = $this->session->userdata('data_verif_sisa_cuti');
+        $dataVerif = $this->input->post();
+        $metaData = json_decode($dataCuti['meta_data'], true);
+        $tahunExce = null;
+
+        $this->db->trans_begin();
+
+        $flag_continue_save = 1;
+
+        foreach($dataVerif as $kDv => $vDv){
+            $expl = explode("_", $kDv);
+            if(!isset($metaData['keterangan_cuti'][$expl[2]])){
+                $rs['code'] = 1;
+                $rs['message'] = "Terjadi Kesalahan";
+            } else {
+                if(floatval($vDv) < floatval($metaData['keterangan_cuti'][$expl[2]])){
+                    $tahunExce[] = $expl[2];
+                    $flag_continue_save = 0;
+                }
+            }
+
+            $this->db->where('id_m_user', $dataCuti['id_m_user'])
+                    ->where('tahun', $expl[2])
+                    ->where('flag_active', 1)
+                    ->update('t_sisa_cuti', [
+                        'sisa' => floatval($vDv),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        $message = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($dataCuti).", data Permohonan Cuti Anda telah ";
+
+        if($flag_continue_save == 1){
+            $metaData['id_m_user'] = $dataCuti['id_m_user'];
+
+            $message .= "*DISETUJUI* oleh operator. Menunggu proses verifikasi selanjutnya. Terima Kasih."; 
+
+            $this->db->where('id', $dataCuti['id'])
+                    ->update('t_verif_sisa_cuti', [
+                        'status_verifikasi' => 1,
+                        'updated_by' => $this->general_library->getId(),
+                        'tanggal_verif' => date('Y-m-d H:i:s'),
+                        'id_m_user_verif' => $this->general_library->getId()
+                    ]);
+            
+            $metaData['created_date'] = $dataCuti['created_date'];
+            $this->submitPermohonanCuti($metaData, 0);
+        } else {
+            $strTahun = "";
+            foreach($tahunExce as $te){
+                $strTahun .= $te.", "; 
+            }
+            $keterangan = "Sisa Cuti Tahun ".trim($strTahun)." tidak mencukupi";
+
+            $message .= "*DITOLAK* oleh operator dengan keterangan: *".$keterangan."*. \nSilahkan melakukan pengajuan kembali. Terima Kasih."; 
+
+            $this->db->where('id', $dataCuti['id'])
+                    ->update('t_verif_sisa_cuti', [
+                        'status_verifikasi' => 2,
+                        'updated_by' => $this->general_library->getId(),
+                        'keterangan' => $keterangan,
+                        'tanggal_verif' => date('Y-m-d H:i:s'),
+                        'id_m_user_verif' => $this->general_library->getId()
+                    ]);
+        }
+
+        $cronWa = [
+            'sendTo' => convertPhoneNumber($dataCuti['handphone']),
+            'message' => $message.FOOTER_MESSAGE_CUTI,
+            'type' => 'text',
+            // 'ref_id' => $insert_id,
+            'jenis_layanan' => 'Cuti',
+            // 'table_state' => 't_progress_cuti',
+            // 'column_state' => 'chatId', 
+            // 'id_state' => $last_id
+        ];
+        $this->db->insert('t_cron_wa', $cronWa);
+
+        if($rs['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $rs;
+    }
+
     public function submitPermohonanCuti($dataInput = null, $flagVerifOperator = 1){
         if($flagVerifOperator == 1){ //jika flag after verif = 0, lakukan pengecekan
             $data = $this->input->post();
@@ -6389,30 +6480,16 @@ public function submitEditJabatan(){
             if($res['code'] != 0){
                 $this->db->trans_rollback();
                 return $res;
-            } else {
-                if($flagVerifOperator == 1){
-                    $this->db->trans_rollback();
-
-                    $this->db->insert('t_verif_sisa_cuti', [
-                        'id_cuti' => $data['id_cuti'],
-                        'id_m_user' => $data['id_m_user'],
-                        'meta_data' => json_encode($data),
-                        'created_by' => $this->general_library->getId()
-                    ]);
-
-                    $res['code'] = 0;
-                    $res['message'] = "Permohonan Cuti berhasil disimpan. Selanjutnya menunggu verifikasi operator.";                    
-                    $this->db->trans_commit();
-
-                    return $res;
-                }
             }
+            // else {    
+            // }
         }
         $res = $this->countJumlahHariCuti($data);
         if($res['code'] == 0){
-            $pegawai = $this->db->select('a.*')
+            $dataPegawai = $this->db->select('a.*')
                             ->from('db_pegawai.pegawai a')
                             ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->where('b.id', $data['id_m_user'])
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
@@ -6444,6 +6521,9 @@ public function submitEditJabatan(){
                 $data['tanggal_akhir'] = date('Y-m-d', strtotime($data['tanggal_akhir']));
                 $data['lama_cuti'] = floatval($data['lama_cuti']);
                 $data['random_string'] = $randomString;
+                // if(isset($data['created_date'])){
+                //     $data['created_date'] = $data['created_date'];
+                // }
                 $keterangan_cuti = $data['keterangan_cuti'];
                 unset($data['keterangan_cuti']);
                 unset($data['sisa_cuti']);
@@ -6460,6 +6540,7 @@ public function submitEditJabatan(){
                         $listHari[] = $explode[2];
                     }
 
+                    //cek jika ada dokumen pendukung lain di antara tanggal antara cuti
                     $dokpen = $this->db->select('a.*, b.nama_jenis_disiplin_kerja')
                                         ->from('t_dokumen_pendukung a')
                                         ->join('m_jenis_disiplin_kerja b', 'a.id_m_jenis_disiplin_kerja = b.id')
@@ -6479,6 +6560,7 @@ public function submitEditJabatan(){
                         return $res;
                     }
 
+                    // cek jika ada pengajuan cuti di antara tanggal cuti
                     $permohonanCuti = $this->db->select('*')
                                             ->from('t_pengajuan_cuti')
                                             ->where('id_m_user', $data['id_m_user'])
@@ -6495,7 +6577,57 @@ public function submitEditJabatan(){
                         $this->db->trans_rollback();
                         return $res;
                     }
+
+                    // cek jika masih ada data cuti yang belum selesai atau aktif
+                    $permohonanCutiAktif = $this->db->select('*')
+                                        ->from('t_pengajuan_cuti')
+                                        ->where('id_m_user', $data['id_m_user'])
+                                        ->where('flag_active', 1)
+                                        ->where('flag_ditolak != ', 1)
+                                        ->where('flag_ds_cuti', 0)
+                                        ->limit(1)
+                                        ->get()->row_array();
+
+                    if($permohonanCutiAktif){
+                        $res['code'] = 1;
+                        $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Permohonan Cuti yang masih dalam tahap proses verifikasi atasan.";
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
+
+                    // cek jika ada data cuti yang masih dalam tahap verif operator
+                    $verifOperatorAktif = $this->db->select('*')
+                                        ->from('t_verif_sisa_cuti')
+                                        ->where('id_m_user', $data['id_m_user'])
+                                        ->where('status_verifikasi', 0)
+                                        ->where('flag_active', 1)
+                                        ->limit(1)
+                                        ->get()->row_array();
+
+                    if($verifOperatorAktif){
+                        $res['code'] = 1;
+                        $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Permohonan Cuti yang masih dalam tahap proses verifikasi operator.";
+                        $this->db->trans_rollback();
+                        return $res;
+                    }
                 // }
+                
+                if($flagVerifOperator == 1){
+                    $this->db->trans_rollback();
+
+                    $this->db->insert('t_verif_sisa_cuti', [
+                        'id_cuti' => $data['id_cuti'],
+                        'id_m_user' => $data['id_m_user'],
+                        'meta_data' => json_encode($this->input->post()),
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    $res['code'] = 0;
+                    $res['message'] = "Permohonan Cuti berhasil disimpan. Selanjutnya menunggu verifikasi operator.";                    
+                    $this->db->trans_commit();
+
+                    return $res;
+                }
 
                 $this->db->insert('t_pengajuan_cuti', $data);
                 $insert_id = $this->db->insert_id();
@@ -6548,7 +6680,7 @@ public function submitEditJabatan(){
                             if($data['tanggal_mulai'] != $data['tanggal_akhir']){
                                 $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
                             }
-                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($pegawai)." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($dataPegawai)." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                             $sendTo = convertPhoneNumber($progressCuti[0]['nohp']);
                             // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
                             $cronWa = [
@@ -6742,6 +6874,7 @@ public function submitEditJabatan(){
                                     // ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
                                     ->where('id_m_user', $this->general_library->getId())
                                     ->where('a.flag_active', 1)
+                                    ->where('status_verifikasi', 0)
                                     ->order_by('created_date', 'desc')
                                     ->group_by('a.id')
                                     ->get()->result_array();
@@ -6827,6 +6960,23 @@ public function submitEditJabatan(){
 		return $res;
 	}
 
+    public function loadDetailCutiVerifOperator($id){
+        return $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, d.nama_jabatan, e.nm_pangkat, c.nipbaru_ws, f.nm_unitkerja, g.nm_cuti, c.handphone,
+                h.nama as nama_verifikator')
+                ->from('t_verif_sisa_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
+                ->join('db_pegawai.pangkat e', 'c.pangkat = e.id_pangkat')
+                ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+                ->join('db_pegawai.cuti g', 'a.id_cuti = g.id_cuti')
+                ->join('m_user h', 'a.id_m_user_verif = h.id', 'left')
+                ->where('b.flag_active', 1)
+                ->where('a.flag_active', 1)
+                ->where('a.id', $id)
+                ->get()->row_array();
+    }
+
     public function searchOperatorPermohonanCuti(){
         $data = $this->input->post();
 
@@ -6840,7 +6990,8 @@ public function submitEditJabatan(){
                 ->join('db_pegawai.cuti g', 'a.id_cuti = g.id_cuti')
                 ->where('b.flag_active', 1)
                 ->where('a.flag_active', 1)
-                ->order_by('a.created_date', 'asc');
+                ->order_by('a.created_date', 'asc')
+                ->order_by('a.status_verifikasi', 'asc');
 
         if(!isset($data['id_unitkerja']) && $data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);

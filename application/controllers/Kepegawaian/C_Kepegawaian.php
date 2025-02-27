@@ -1630,6 +1630,16 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->resendMessage($id));
 	}
 
+	public function loadDetailCutiVerifOperator($id){
+		$data['result'] = $this->kepegawaian->loadDetailCutiVerifOperator($id);
+		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiDetail', $data);
+	}
+
+	public function submitVerifOperatorCuti(){
+		echo json_encode($this->kepegawaian->submitVerifOperatorCuti());
+	}
+
 	public function loadDetailCutiVerif($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
 		$data['progress'] = $this->kepegawaian->loadProgressCuti($id);

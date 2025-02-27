@@ -82,9 +82,26 @@
     </div>
   </div>
   <div class="col-lg-12 mt-2">
-    <div class="card card-detail p-3" id="result_search"></div>
+    <div class="card card-detail p-3 table-responsive" id="result_search"></div>
   </div>
 </div>
+
+<div class="modal fade" id="modal_detail_cuti" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">DETAIL CUTI</h6>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="row" id="modal_detail_cuti_content">
+            </div>
+        </div>
+    </div>
+  </div>
+
 <script>
   $(function(){
     $('#id_unitkerja').select2()
@@ -94,7 +111,7 @@
   })
 
   $('#id_unitkerja').on('change', function(){
-    $('#form_search').submit()  
+    $('#form_search').submit()
   })
 
   $('#form_search').on('submit', function(e){

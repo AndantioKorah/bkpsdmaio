@@ -4460,15 +4460,14 @@ public function submitEditJabatan(){
         $datapost = $this->input->post();
         $this->db->trans_begin();
         $target_dir = './arsipelektronik/';
-
+        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+       
         if($_FILES['file']['name'] != ""){
           
-        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
-        
-        if($filename == ""){
-            $filename = $_FILES['file']['name'];
-        } 
-        
+            if($filename == ""){
+                $filename = $_FILES['file']['name'];
+            } 
+
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $filename = $random_number.$filename;
 
@@ -5800,6 +5799,17 @@ public function submitEditJabatan(){
                                     ->get()->row_array();
             if($dataSisaCuti){
                 $yearlist[$tahun] = $dataSisaCuti;
+                if($tahun != $tahunIni){
+                    if($dataSisaCuti['sisa'] > 6){ //jika lebih dari 6, maka ubah menjadi sisa 6
+                        $yearlist[$tahun]['sisa'] = 6;
+
+                        $this->db->where('id', $dataSisaCuti['id'])
+                                ->update('t_sisa_cuti', [
+                                    'sisa' => 6,
+                                    'updated_by' => $this->general_library->getId()
+                                ]);
+                    }
+                }
             } else {
                 $jatah = 12;
                 if($tahun != $tahunIni){
@@ -6335,8 +6345,13 @@ public function submitEditJabatan(){
         return $result;
     }
 
-    public function submitPermohonanCuti(){
-        $data = $this->input->post();
+    public function submitPermohonanCuti($dataInput = null, $flagVerifOperator = 1){
+        if($flagVerifOperator == 1){ //jika flag after verif = 0, lakukan pengecekan
+            $data = $this->input->post();
+            $data['id_m_user'] = $this->general_library->getId();
+        } else {
+            $data = $dataInput;
+        }
         $res['code'] = 0;
         $res['message'] = "Permohonan Cuti Berhasil";
         $res['data'] = null;
@@ -6365,17 +6380,40 @@ public function submitEditJabatan(){
                 }
 
                 $new_sisa = $data['sisa_cuti'][$tahun] - floatval($data['keterangan_cuti'][$tahun]);
-                $this->db->where('id_m_user', $this->general_library->getId())
+                $this->db->where('id_m_user', $data['id_m_user'])
                         ->where('tahun', $tahun)
                         ->update('t_sisa_cuti', ['sisa' => $new_sisa]);
             }
             if($res['code'] != 0){
                 $this->db->trans_rollback();
                 return $res;
+            } else {
+                if($flagVerifOperator == 1){
+                    $this->db->trans_rollback();
+
+                    $this->db->insert('t_verif_sisa_cuti', [
+                        'id_cuti' => $data['id_cuti'],
+                        'id_m_user' => $data['id_m_user'],
+                        'meta_data' => json_encode($data),
+                        'created_by' => $this->general_library->getId()
+                    ]);
+
+                    $res['code'] = 0;
+                    $res['message'] = "Permohonan Cuti berhasil disimpan. Selanjutnya menunggu verifikasi operator.";                    
+                    $this->db->trans_commit();
+
+                    return $res;
+                }
             }
         }
         $res = $this->countJumlahHariCuti($data);
         if($res['code'] == 0){
+            $pegawai = $this->db->select('a.*')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->where('b.flag_active', 1)
+                            ->get()->row_array();
+
             $filename = null;
             if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
                 if($_FILES['surat_pendukung']['type'] != "application/pdf"){
@@ -6384,7 +6422,7 @@ public function submitEditJabatan(){
                 } else {
                     $config['upload_path'] = './assets/dokumen_pendukung_cuti';
                     $config['allowed_types'] = '*';
-                    $_FILES['surat_pendukung']['name'] = $this->general_library->getUserName().'_'.date('Ymdhis').'.pdf'; 
+                    $_FILES['surat_pendukung']['name'] = $pegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
                     $this->load->library('upload',$config);
                     if($this->upload->do_upload('surat_pendukung')){
                         $upload = $this->upload->data();
@@ -6398,8 +6436,8 @@ public function submitEditJabatan(){
             if($res['code'] == 0){
                 $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
                 $data['surat_pendukung'] = $filename;
-                $data['created_by'] = $this->general_library->getId();
-                $data['id_m_user'] = $this->general_library->getId();
+                $data['created_by'] = $data['id_m_user'];
+                $data['id_m_user'] = $data['id_m_user'];
                 $data['tanggal_mulai'] = date('Y-m-d', strtotime($data['tanggal_mulai']));
                 $data['tanggal_akhir'] = date('Y-m-d', strtotime($data['tanggal_akhir']));
                 $data['lama_cuti'] = floatval($data['lama_cuti']);
@@ -6468,7 +6506,7 @@ public function submitEditJabatan(){
                             'id_t_pengajuan_cuti' => $insert_id,
                             'tahun' => $tahun,
                             'jumlah' => $keterangan_cuti[$tahun],
-                            'created_by' => $this->general_library->getId()
+                            'created_by' => $data['id_m_user']
                         ]
                     );
                 }
@@ -6480,7 +6518,7 @@ public function submitEditJabatan(){
                 //                 ->where('a.skpd', $this->general_library->getIdUnitKerjaPegawai())
                 //                 ->get()->row_array();
 
-                $id_m_user = $this->general_library->getId();
+                $id_m_user = $data['id_m_user'];
                 // $id_m_user = 555;
                 
                 $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
@@ -6508,7 +6546,7 @@ public function submitEditJabatan(){
                             if($data['tanggal_mulai'] != $data['tanggal_akhir']){
                                 $pada_tanggal .= " sampai ".formatDateNamaBulan($data['tanggal_akhir']);
                             }
-                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".$this->general_library->getNamaUser()." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
+                            $message = "*[PERMOHONAN CUTI - ".$randomString."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($pegawai)." telah mengajukan Permohonan ".$master['nm_cuti']." selama ".$data['lama_cuti']." hari pada ".$pada_tanggal.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                             $sendTo = convertPhoneNumber($progressCuti[0]['nohp']);
                             // $this->maxchatlibrary->sendText($sendTo, $message, 0, 0);
                             $cronWa = [
@@ -6631,6 +6669,13 @@ public function submitEditJabatan(){
         return $result;
     }
 
+    public function deleteOperatorPermohonanCuti($id){
+        $this->db->where('id', $id)
+                ->update('t_verif_sisa_cuti', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+    }
 
     public function deletePermohonanCuti($id, $flag_delete_record = 1){
         $res['code'] = 0;
@@ -6690,6 +6735,15 @@ public function submitEditJabatan(){
     }
 
     public function loadRiwayatPermohonanCuti(){
+        $operatorVerif = $this->db->select('a.*')
+                                    ->from('t_verif_sisa_cuti a')
+                                    // ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
+                                    ->where('id_m_user', $this->general_library->getId())
+                                    ->where('a.flag_active', 1)
+                                    ->order_by('created_date', 'desc')
+                                    ->group_by('a.id')
+                                    ->get()->result_array();
+
         $result = null;
         $riwayat = $this->db->select('a.*, a.status_pengajuan_cuti, c.nm_cuti, d.id as id_progress_cuti')
                     ->from('t_pengajuan_cuti a')
@@ -6703,83 +6757,30 @@ public function submitEditJabatan(){
                     ->get()->result_array();
 
         $list_id = null;
+
+        if($operatorVerif){
+            foreach($operatorVerif as $ov){
+                $dt = json_decode($ov['meta_data'], true);
+                $lamaCuti = explode(" ", $dt['lama_cuti']);
+                $newOv['id'] = $ov['id'];
+                $newOv['nm_cuti'] = "Cuti Tahunan";
+                $newOv['tanggal_mulai'] = $dt['tanggal_mulai'];
+                $newOv['tanggal_akhir'] = $dt['tanggal_akhir'];
+                $newOv['lama_cuti'] = $lamaCuti[0];
+                $newOv['created_date'] = $ov['created_date'];
+                $newOv['status_pengajuan_cuti'] = "Menunggu Verifikasi Operator";
+                $newOv['flag_operator_verif'] = 1;
+                $result[] = $newOv;
+            }    
+        }
+
         if($riwayat){
             foreach($riwayat as $rw){
                 $list_id[] = $rw['id'];
-        //         if($rw['id_m_status_pengajuan_cuti'] == 4 && $rw['url_sk'] == null){
-        //             $rw['nama_status'] .= ', menuggu DS SK';
-        //         }
-
-        //         if($rw['url_sk'] != null){
-        //             // $rw['id_m_status_pengajuan_cuti'] = 6;
-        //             $rw['nama_status'] = 'Selesai';
-        //         }
-
                 $result[$rw['id']] = $rw;
-        //         $result[$rw['id']]['detail'] = null;
-        //         $progress[0]['keterangan'] = "PENGAJUAN, menunggu Verifikasi Atasan";
-        //         $progress[0]['icon'] = "fa fa-spin fa-spinner";
-        //         $progress[0]['color'] = "yellow";
-        //         $progress[0]['font-color'] = "black";
-        //         if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 2){
-        //             $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-        //             $progress[1]['icon'] = "fa fa-spin fa-spinner";
-        //             $progress[1]['color'] = "yellow";
-        //             $progress[1]['font-color'] = "black";
-        //         } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 3){
-        //             $progress[1]['keterangan'] = "DITOLAK OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan'])." : ".$result[$rw['id']]['keterangan_verifikasi_atasan'];
-        //             $progress[1]['icon'] = "fa fa-times";
-        //             $progress[1]['color'] = "red";
-        //             $progress[1]['font-color'] = "white";
-        //         }
-
-        //         if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 4){
-        //             $progress[1]['icon'] = "fa fa-check";
-        //             $progress[1]['color'] = "green";
-        //             $progress[1]['font-color'] = "white";
-        //             $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi Kepala BKPSDM";
-        //             if($result[$rw['id']]['url_sk']){
-        //                 $progress[2]['keterangan'] = "VERIFIKASI KEPALA BKPSDM SELESAI pada ".formatDateNamaBulanWT($result[$rw['id']]['updated_date']).". SK Cuti sudah dapat diunduh.";
-        //                 $progress[2]['icon'] = "fa fa-check";
-        //                 $progress[2]['color'] = "green";
-        //                 $progress[2]['font-color'] = "white";
-        //             } else {
-        //                 $progress[2]['keterangan'] = "DITERIMA OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-        //                 $progress[2]['icon'] = "fa fa-spin fa-spinner";
-        //                 $progress[2]['color'] = "yellow";
-        //                 $progress[2]['font-color'] = "black";
-        //             }
-        //         } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 5){
-        //             $progress[2]['keterangan'] = "DITOLAK OLEH KEPALA BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm'])." : ".$result[$rw['id']]['keterangan_verifikasi_kepala_bkpsdm'];
-        //             $progress[2]['icon'] = "fa fa-times";
-        //             $progress[2]['color'] = "red";
-        //             $progress[2]['font-color'] = "white";
-        //         } else if($result[$rw['id']]['id_m_status_pengajuan_cuti'] == 6){
-        //             $progress[1]['icon'] = "fa fa-check";
-        //             $progress[1]['color'] = "green";
-        //             $progress[1]['font-color'] = "white";
-        //             $progress[1]['keterangan'] = "DITERIMA OLEH ATASAN pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_atasan']).". Menunggu Verifikasi BKPSDM";
-        
-        //             $progress[2]['keterangan'] = "SELESAI VERIFIKASI BKPSDM pada ".formatDateNamaBulanWT($result[$rw['id']]['tanggal_verifikasi_kepala_bkpsdm']).". Menunggu penerbitan SK Cuti";
-        //             $progress[2]['icon'] = "fa fa-check";
-        //             $progress[2]['color'] = "green";
-        //             $progress[2]['font-color'] = "white";
-        
-        //             $progress[3]['keterangan'] = "SK SUDAH SELESAI DS PADA ".formatDateNamaBulanWT($result[$rw['id']]['updated_date']);
-        //             $progress[3]['icon'] = "fa fa-check";
-        //             $progress[3]['color'] = "green";
-        //             $progress[3]['font-color'] = "white";
-        //         }
-
-        //         if($result[$rw['id']]['id_m_status_pengajuan_cuti'] != 1){
-        //             $progress[0]['icon'] = "fa fa-check";
-        //             $progress[0]['color'] = "green";
-        //             $progress[0]['font-color'] = "white";
-        //         }
-                
-        //         $result[$rw['id']]['progress'] = $progress;
             }
         }
+
         $meta = null;
         if($list_id){
             $meta = $this->db->select('a.*')
@@ -6823,6 +6824,29 @@ public function submitEditJabatan(){
         }
 		return $res;
 	}
+
+    public function searchOperatorPermohonanCuti(){
+        $data = $this->input->post();
+
+        $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, d.nama_jabatan, e.nm_pangkat, c.nipbaru_ws, f.nm_unitkerja, g.nm_cuti')
+                ->from('t_verif_sisa_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
+                ->join('db_pegawai.pangkat e', 'c.pangkat = e.id_pangkat')
+                ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
+                ->join('db_pegawai.cuti g', 'a.id_cuti = g.id_cuti')
+                ->where('b.flag_active', 1)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'asc');
+
+        if(!isset($data['id_unitkerja']) && $data['id_unitkerja'] != 0){
+            $this->db->where('c.skpd', $data['id_unitkerja']);
+        }
+
+        return $this->db->get()->result_array();
+
+    }
 
     public function searchPermohonanCuti(){
         $data = $this->input->post();

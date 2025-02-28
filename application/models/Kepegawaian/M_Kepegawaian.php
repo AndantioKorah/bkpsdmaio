@@ -6078,46 +6078,55 @@ public function submitEditJabatan(){
                         $last_insert_nomor_surat = $this->db->insert_id();
                     }
 
-                    $this->db->insert('t_request_ds', [
-                        'ref_id' => $dataCuti['id'],
-                        'table_ref' => 't_pengajuan_cuti',
-                        'id_m_jenis_ds' => 4,
-                        'nama_jenis_ds' => 'PERMOHONAN CUTI',
-                        'id_m_jenis_layanan' => $master['id'],
-                        'request' => json_encode($signatureProperties),
-                        'url_file' => $path_file,
-                        'url_image_ds' => null,
-                        'random_string' => $randomString,
-                        'created_by' => $this->general_library->getId(),
-                        'nama_kolom_flag' => 'flag_ds_cuti',
-                        'nip' => $dataCuti['nipbaru_ws'],
-                        'id_t_nomor_surat' => $last_insert_nomor_surat,
-                        'meta_data' => json_encode($resCuti),
-                        'meta_view' => 'kepegawaian/V_SKPermohonanCuti',
-                        'perihal' => $perihal,
-                    ]);
+                    $existsRequestDs = $this->db->select('*')
+                                                ->from('t_request_ds')
+                                                ->where('table_ref', 't_penggajuan_cuti')
+                                                ->where('ref_id', $dataCuti['id'])
+                                                ->where('flag_active', 1)
+                                                ->get()->row_array();
+                                                
+                    if(!$existsRequestDs){
+                        $this->db->insert('t_request_ds', [
+                            'ref_id' => $dataCuti['id'],
+                            'table_ref' => 't_pengajuan_cuti',
+                            'id_m_jenis_ds' => 4,
+                            'nama_jenis_ds' => 'PERMOHONAN CUTI',
+                            'id_m_jenis_layanan' => $master['id'],
+                            'request' => json_encode($signatureProperties),
+                            'url_file' => $path_file,
+                            'url_image_ds' => null,
+                            'random_string' => $randomString,
+                            'created_by' => $this->general_library->getId(),
+                            'nama_kolom_flag' => 'flag_ds_cuti',
+                            'nip' => $dataCuti['nipbaru_ws'],
+                            'id_t_nomor_surat' => $last_insert_nomor_surat,
+                            'meta_data' => json_encode($resCuti),
+                            'meta_view' => 'kepegawaian/V_SKPermohonanCuti',
+                            'perihal' => $perihal,
+                        ]);
 
-                    $request_tte = [
-                        'id_ref' => [$dataCuti['id']],
-                        'table_ref' => 't_pengajuan_cuti',
-                        // 'nik' => $input_post['nik'],
-                        // 'passphrase' => $input_post['passphrase'],
-                        'signatureProperties' => [$signatureProperties],
-                        'file' => [
-                            $fileBase64
-                        ]
-                    ];
-
-                    $this->db->update('t_pengajuan_cuti', [
-                        'url_sk' => $path_file,
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                    ]);
-                    
-                    $this->db->insert('t_file_ds', [
-                        'random_string' => $randomString,
-                        'url' => $path_file,
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                    ]);
+                        $request_tte = [
+                            'id_ref' => [$dataCuti['id']],
+                            'table_ref' => 't_pengajuan_cuti',
+                            // 'nik' => $input_post['nik'],
+                            // 'passphrase' => $input_post['passphrase'],
+                            'signatureProperties' => [$signatureProperties],
+                            'file' => [
+                                $fileBase64
+                            ]
+                        ];
+    
+                        $this->db->update('t_pengajuan_cuti', [
+                            'url_sk' => $path_file,
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                        ]);
+                        
+                        $this->db->insert('t_file_ds', [
+                            'random_string' => $randomString,
+                            'url' => $path_file,
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                        ]);
+                    }
                 }
             } else {
                 $reply .= '*DITOLAK*';

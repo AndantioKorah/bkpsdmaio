@@ -11242,10 +11242,10 @@ public function getFileForVerifLayanan()
                 $this->updateBerkala($datapost["id_pegawai"]);
             }
 
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala Otomatis anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\nSK Kenaikan Gaji Berkala Otomatis anda telah diproses, silahkan menunggu untuk pemberitahuan selanjutnya. \n\nTerima kasih.\n*BKPSDM Kota Manado*";
 
          } else {
-        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.";
+        $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN KENAIKAN GAJI BERKALA OTOMATIS]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($dataPegawai).",\n\n".$datapost['keterangan']." \n\nTerima kasih.\n*BKPSDM Kota Manado*";
             
          }
         $cronWaNextVerifikator = [

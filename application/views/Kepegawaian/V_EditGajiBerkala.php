@@ -54,7 +54,7 @@
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_edit_berkala" name="file"   />
-    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+    <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
   </div>
 
   <div class="form-group col-lg-12">
@@ -124,10 +124,13 @@ $('#form_edit_berkala').on('submit', function(e){
 
         $("#pdf_file_edit_berkala").change(function (e) {
 
-        var extension = pdf_file_edit_berkala.value.split('.')[1];
+        // var extension = pdf_file_edit_berkala.value.split('.')[1];
+        var doc = pdf_file_edit_berkala.value.split('.')
+        var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>;
+        // var MaxSize = <?=$format_dok['file_size']?>;
+        var MaxSize = 1024;
         var MaxMb = MaxSize/1024;
 
         if (extension != "pdf"){

@@ -2852,6 +2852,11 @@ class C_Kepegawaian extends CI_Controller
 		public function updateStatusLayananPangkat($id){
 			$this->kepegawaian->updateStatusLayananPangkat($id);
 		}
+		public function hitungMasaKerja(){
+			echo countDiffDateLengkap($this->input->post('tmtberkala'), $this->input->post('tmtcpns'), ['tahun', 'bulan']);
+		}
+
+		
 		
 
 

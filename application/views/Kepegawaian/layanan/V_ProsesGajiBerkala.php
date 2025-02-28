@@ -368,8 +368,8 @@
         <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $profil_pegawai['id_peg'];?>">
         <input type="hidden" name="tahun" id="tahun" value="<?= $tahun;?>">
 
-        <input type="text" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-        <input type="text" id="sk_kgb" name="sk_kgb"  value="<?php if($sk_kgb) echo $sk_kgb['id']; else echo "";?>">
+        <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+        <input type="hidden" id="sk_kgb" name="sk_kgb"  value="<?php if($sk_kgb) echo $sk_kgb['id']; else echo "";?>">
 
        
 
@@ -458,6 +458,7 @@
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id" name="id" value="<?=$result[0]['id'];?>" readonly>
+          <input type="text" class="form-control" id="tmt_cpns" name="tmt_cpns" value="<?=$profil_pegawai['tmtcpns'];?>" readonly>
 
           
           <label for="exampleInputEmail1">Nama Lengkap</label>
@@ -521,12 +522,12 @@
           <input type="text" class="form-control rupiah" id="gajibaru" name="gajibaru" value="<?=$result[0]['gajibaru'];?>" required>
           </div>
           <div class="form-group">
-          <label >Masa Kerja PNS</label>
-          <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>" required>
+          <label >TMT Gaji Berkala</label>
+          <input onchange="hitungMasaKerja()" autocomplete="off" type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>" required>
           </div>
           <div class="form-group">
-          <label >TMT Gaji Berkala</label>
-          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>" required>
+          <label >Masa Kerja PNS</label>
+          <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>" required>
           </div>
           <div class="form-group">
           <label >Nomor SK Gaji Berkala</label>
@@ -941,4 +942,24 @@ function kirimBerkalaBkad(id,status){
                 }
 
                 });
+
+
+function hitungMasaKerja(){
+  var tmtcpns = $('#tmt_cpns').val()
+  var tmtberkala = $('#edit_tmt_gaji_berkala').val()
+  $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/hitungMasaKerja")?>',
+            method: 'post',
+            data: {
+              tmtcpns: tmtcpns,
+              tmtberkala: tmtberkala
+            },
+            success: function(data){
+               $('#edit_gb_masa_kerja').val(data.trim())
+            }, error: function(e){
+               
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+}
 </script>

@@ -55,6 +55,18 @@
       border-radius: 10%;
   }
 
+  .sp_whatsapp{
+  color: #50575e !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_whatsapp:hover{
+  color: green !important;
+  text-decoration: none;
+  transition: .2s;
+}
+
   input[readonly] {
     background-color:rgb(204, 204, 207);
 }
@@ -186,9 +198,7 @@
                   $badge_aktif = 'badge-tidak-aktif';
                 }
               ?>
-              <div class="col-lg-12 text-center">
-                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
-              </div>
+            
               
           <div class="col-lg-12 text-center">
             
@@ -224,6 +234,9 @@
             </span>
           </div>
         </div>
+        <div class="col-lg-12 text-center">
+                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              </div>
   </div>
   <div class="col-lg-4">
   <div class="row">
@@ -294,16 +307,7 @@
                   </span>
                 </div>
 
-                <div class="col-lg-12 div_label text-left">
-                  <span class="sp_label">
-                  Agama
-                  </span>
-                </div>
-                <div class="col-lg-12 text-left" >
-                  <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_agama'])?>
-                  </span>
-                </div>
+              
 
               </div>
           
@@ -362,10 +366,27 @@
                 </span>
               </div>
               <div class="col-lg-12 " >
-                <span class="sp_profil_sm">
-                <?=($profil_pegawai['handphone'])?>
+                <span class="sp_profil_sm sp_profil_alamat">
+                <?php if($profil_pegawai['handphone'] != null) { ?>
+                    <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($profil_pegawai['handphone'])?>">
+                      <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                      <i class="fab fa-whatsapp"></i></a>
+                  <?php } else { ?>
+                    <?= $profil_pegawai['handphone'] != null ? $profil_pegawai['handphone'] : '-'; ?>
+                  <?php } ?>
                 </span>
               </div>
+
+              <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Agama
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_agama'])?>
+                  </span>
+                </div>
 
 
   </div>

@@ -213,6 +213,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 17) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
+      $('#loader').hide()
+    })
     } else {
       $('#form_layanan').html('')
     }

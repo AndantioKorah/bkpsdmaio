@@ -8842,12 +8842,29 @@ public function submitEditJabatan(){
         $res['message'] = 'ok';
         $res['data'] = null;
         $this->db->trans_begin();
+        
+
    
-            $dataUsul['id_m_user']      = $this->general_library->getId();
-            $dataUsul['created_by']      = $this->general_library->getId();
-            $dataUsul['jenis_pensiun']      = $this->input->post('jenis_pensiun');
-            $this->db->insert('db_efort.t_pensiun', $dataUsul);
-            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        
+            $cek =  $this->db->select('*')
+            ->from('t_pensiun a')
+            ->where('a.id_m_user', $this->general_library->getId())
+            ->where('a.flag_active', 1)
+            ->where('a.status', 0)
+            ->get()->result_array();
+        
+            if($cek){
+                $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['jenis_pensiun']      = $this->input->post('jenis_pensiun');
+                $this->db->insert('db_efort.t_pensiun', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+   
+          
         if ($this->db->trans_status() === FALSE)
         {
                 $this->db->trans_rollback();

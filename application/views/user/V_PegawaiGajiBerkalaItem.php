@@ -22,8 +22,8 @@
                 <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button>
             </form> -->
         </div>
-        <div class="col-lg-12">
-            <table border=1 id="table_result" class="table table-hover datatable">
+        <div class="col-lg-12 table-responsive">
+            <table id="tblgjberkala" class="table table-bordered cell-border">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
                     <th style="width: 35%;" class="text-center">Nama Pegawai</th>
@@ -123,8 +123,12 @@
 
 <script>
     $(function(){
-        $('.datatable').dataTable()
+        // $('.datatable').dataTable()
     })
+
+    var table = $('#tblgjberkala').DataTable({
+    displayLength: 25,
+    });
 
     function cetak() {
         $("#print_div").load('<?= base_url('user/C_User/cetakNaikPangkat')?>',

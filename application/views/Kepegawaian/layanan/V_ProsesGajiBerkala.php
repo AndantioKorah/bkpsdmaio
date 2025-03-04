@@ -154,16 +154,44 @@
   </div>
   </div>
   
-  <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="row">
+  <div  class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+  <div class="row" style="height:400px;">
+  <div class="col-lg-4">
+  <div class="row">
           <?php if($profil_pegawai['statuspeg'] == 1){ ?>
             <div class="col-lg-12 text-left">
               <h3><span class="badge badge-danger">CPNS</span></h3>
             </div>
           <?php } ?>
+          <?php
+                $badge_status = 'badge-cpns';
+                if($profil_pegawai['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($profil_pegawai['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                }
+
+                $badge_aktif = 'badge-aktif';
+                if($profil_pegawai['id_m_status_pegawai'] == 2){
+                  $badge_aktif = 'badge-pensiun-bup';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 3){
+                  $badge_aktif = 'badge-pensiun-dini';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 4){
+                  $badge_aktif = 'badge-diberhentikan';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 5){
+                  $badge_aktif = 'badge-mutasi';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 6){
+                  $badge_aktif = 'badge-meninggal';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 8){
+                  $badge_aktif = 'badge-tidak-aktif';
+                }
+              ?>
+              <div class="col-lg-12 text-center">
+                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              </div>
+              
           <div class="col-lg-12 text-center">
+            
           <a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
           <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
                             data-src="<?php
@@ -192,7 +220,225 @@
           </div>
           <div class="col-lg-12 text-center" >
             <span class="sp_profil">
-              <?=formatNip($profil_pegawai['nipbaru_ws'])?>
+              <?=($profil_pegawai['nipbaru_ws'])?>
+            </span>
+          </div>
+        </div>
+  </div>
+  <div class="col-lg-4">
+  <div class="row">
+          <div class="col-lg-12 div_label text-left">
+            <span class="sp_label">
+              Perangkat Daerah
+            </span>
+          </div>
+          <div class="col-lg-12 text-left" >
+            <span class="sp_profil_sm">
+              <?=($profil_pegawai['nm_unitkerja'])?>
+            </span>
+          </div>
+         
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Pangkat / Gol. Ruang
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($profil_pegawai['nm_pangkat'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Jabatan 
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nama_jabatan'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  NIK (Nomor Induk Kependudukan) 
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($profil_pegawai['nik'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Tempat, Tanggal Lahir
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($profil_pegawai['tptlahir'].', '.formatDateNamaBulan($profil_pegawai['tgllahir']))?>
+
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Alamat
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($profil_pegawai['alamat'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Agama
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($profil_pegawai['nm_agama'])?>
+                  </span>
+                </div>
+
+              </div>
+          
+           
+          
+            
+  </div>
+  <div class="col-lg-4">
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                  TMT Pangkat
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtpangkat'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                  TMT Jabatan
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtjabatan'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                  TMT Gaji Berkala Terakhir
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtgjberkala'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                Jenis Kelamin / Umur 
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                <?=$profil_pegawai['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $profil_pegawai['tgllahir'], ['tahun', 'bulan'])?>
+                </span>
+              </div>
+
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                No Handphone/WA 
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                <?=($profil_pegawai['handphone'])?>
+                </span>
+              </div>
+
+
+  </div>
+  </div>
+
+  
+  
+  <!-- <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <?php if($profil_pegawai['statuspeg'] == 1){ ?>
+            <div class="col-lg-12 text-left">
+              <h3><span class="badge badge-danger">CPNS</span></h3>
+            </div>
+          <?php } ?>
+          <?php
+                $badge_status = 'badge-cpns';
+                if($profil_pegawai['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($profil_pegawai['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                }
+
+                $badge_aktif = 'badge-aktif';
+                if($profil_pegawai['id_m_status_pegawai'] == 2){
+                  $badge_aktif = 'badge-pensiun-bup';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 3){
+                  $badge_aktif = 'badge-pensiun-dini';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 4){
+                  $badge_aktif = 'badge-diberhentikan';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 5){
+                  $badge_aktif = 'badge-mutasi';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 6){
+                  $badge_aktif = 'badge-meninggal';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 8){
+                  $badge_aktif = 'badge-tidak-aktif';
+                }
+              ?>
+              <div class="col-lg-12 text-center">
+                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              </div>
+              
+          <div class="col-lg-12 text-center">
+            
+          <a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+          <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
+                            data-src="<?php
+                                $path = './assets/fotopeg/'. $profil_pegawai['fotopeg'];
+                                // $path = '../siladen/assets/fotopeg/'. $profil_pegawai['fotopeg'];
+                                if( $profil_pegawai['fotopeg']){
+                                if (file_exists($path)) {
+                                   $src = './assets/fotopeg/'. $profil_pegawai['fotopeg'];
+                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                } else {
+                                  $src = './assets/img/user.png';
+                                  // $src = '../siladen/assets/img/user.png';
+                                }
+                                } else {
+                                  $src = './assets/img/user.png';
+                                }
+                                echo base_url().$src;?>" /> 
+                                </a>
+          </div>
+          <div class="col-lg-12 text-center">
+          <a style="color:#495057;" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$profil_pegawai['nipbaru_ws']?>" target="_blank">
+            <span class="sp_profil">
+            <?=getNamaPegawaiFull($profil_pegawai)?>
+            </span>
+          </a>
+          </div>
+          <div class="col-lg-12 text-center" >
+            <span class="sp_profil">
+              <?=($profil_pegawai['nipbaru_ws'])?>
             </span>
           </div>
         </div>
@@ -276,12 +522,13 @@
             <div class="col-lg-6">
               <div class="col-lg-12 div_label text-right">
                 <span class="sp_label">
-                  Agama
+                TMT Gaji Berkala Terakhir
                 </span>
               </div>
               <div class="col-lg-12 text-right" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_agama'])?>
+                <?=formatDateNamaBulan($profil_pegawai['tmtgjberkala'])?>
+
                 </span>
               </div>
             </div>
@@ -335,10 +582,29 @@
               </div>
             </div>
 
+            <div class="col-lg-6">
+              <div class="col-lg-12 div_label text-left">
+                <span class="sp_label">
+                  Agama
+                </span>
+              </div>
+              <div class="col-lg-12 text-left">
+                <span class="sp_profil_sm">
+                <?=($profil_pegawai['nm_agama'])?>
+                </span>
+              </div>
+            </div>
+            
+
+
+            
+            
+            
+
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
 
@@ -547,7 +813,7 @@
          
           <div class="form-group">
           <label >Tgl SK Gaji Berkala</label>
-          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo "";?>" required>
+          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo date('Y-m-d');?>" required>
           </div>
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
@@ -684,6 +950,7 @@ function openPresensiTab(){
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     $('#ket').html('');
+    $('#ket_file').html('');
    
     if(file == "skcpns" || file == "skpns"){
           dir = "arsipberkaspns/";
@@ -722,6 +989,7 @@ function openPresensiTab(){
            $('#view_file_verif_kgb').on('load', function(){
          $('.iframe_loader').hide()
          $('#view_file_verif_kgb').show()
+        
        })
     // $('.iframe_loader').hide()  
     // $('#view_file_verif_kgb').attr('src', '')
@@ -947,19 +1215,28 @@ function kirimBerkalaBkad(id,status){
 function hitungMasaKerja(){
   var tmtcpns = $('#tmt_cpns').val()
   var tmtberkala = $('#edit_tmt_gaji_berkala').val()
-  $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/hitungMasaKerja")?>',
-            method: 'post',
-            data: {
-              tmtcpns: tmtcpns,
-              tmtberkala: tmtberkala
-            },
-            success: function(data){
-               $('#edit_gb_masa_kerja').val(data.trim())
-            }, error: function(e){
+
+  var tgl1=new Date(document.getElementById("tmt_cpns").value);
+    var tgl2=new Date(document.getElementById("edit_tmt_gaji_berkala").value);
+    var timeDiff = Math.abs(tgl2.getTime() - tgl1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    var mk = Math.round(diffDays/365)
+    $('#edit_gb_masa_kerja').val(mk)
+    // document.getElementById("edit_gb_masa_kerja").innerHTML = Math.round(diffDays/365) + " Tahun";
+
+  // $.ajax({
+  //           url: '<?=base_url("kepegawaian/C_Kepegawaian/hitungMasaKerja")?>',
+  //           method: 'post',
+  //           data: {
+  //             tmtcpns: tmtcpns,
+  //             tmtberkala: tmtberkala
+  //           },
+  //           success: function(data){
+  //              $('#edit_gb_masa_kerja').val(data.trim())
+  //           }, error: function(e){
                
-                errortoast('Terjadi Kesalahan')
-            }
-        })
+  //               errortoast('Terjadi Kesalahan')
+  //           }
+  //       })
 }
 </script>

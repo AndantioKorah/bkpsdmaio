@@ -471,12 +471,15 @@
                             ->where('flag_active', 1)
                             ->get()->row_array();
 
+            $totalPresentasi = floatval($data['prestasi_kerja']) + floatval($data['beban_kerja']) + floatval($data['kondisi_kerja']);
+            // dd($totalPresentasi);
             if($exists){
                 $this->db->where('id', $exists['id'])
                         ->update('m_presentase_tpp',[
                             'prestasi_kerja' => $data['prestasi_kerja'],
                             'beban_kerja' => $data['beban_kerja'],
-                            'kondisi_kerja' => $data['kondisi'],
+                            'kondisi_kerja' => $data['kondisi_kerja'],
+                            'total_presentase' => $totalPresentasi,
                             'updated_by' => $this->general_library->getId(),
                         ]);
             } else {
@@ -486,11 +489,12 @@
                     'prestasi_kerja' => $data['prestasi_kerja'],
                     'beban_kerja' => $data['beban_kerja'],
                     'kondisi_kerja' => $data['kondisi_kerja'],
+                    'total_presentase' => $totalPresentasi,
                     'created_by' => $this->general_library->getId(),
                 ]);
             }
 
-            $res['data'] = $data['prestasi_kerja'] + $data['beban_kerja'] + $data['kondisi_kerja'];
+            $res['data'] = $totalPresentasi;
             $res['data'] .= " %";
 
             return $res;

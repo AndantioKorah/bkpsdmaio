@@ -90,4 +90,8 @@ class C_Cron extends CI_Controller
         // $data = $this->siasnlib->getJabatanByNip($nip);
         dd($data);
     }
+
+    public function queryInsertTppKelasJabatan(){
+        return $this->general->queryInsertTppKelasJabatan();
+    }
 }

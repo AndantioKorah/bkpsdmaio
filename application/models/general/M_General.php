@@ -873,12 +873,22 @@
         public function getLoginBackground(){
             $data = $this->db->select('*')
                             ->from('t_login_background')
-                            ->where('tanggal_mulai >=', date('Y-m-d'))
-                            ->where('tanggal_akhir <=', date('Y-m-d'))
+                            // ->where('tanggal_mulai >=', date('Y-m-d'))
+                            // ->where('tanggal_akhir <=', date('Y-m-d'))
                             ->where('flag_active', 1)
-                            ->get()->row_array();
+                            ->get()->result_array();
+            
             if($data){
-                return $data['url'];
+                foreach($data as $d){
+                    // $listHari = getDateBetweenDates($d['tanggal_mulai'], $d['tanggal_akhir']);
+                    if(date('Y-m-d') >= $d['tanggal_mulai'] && date('Y-m-d') <= $d['tanggal_akhir']){
+                        return $d['url'];
+                    }
+                    // if(date('Y-m-d'))
+                    // if()
+                }
+                
+                return "assets/new_login/images/bg-02.png";
             } else {
                 return "assets/new_login/images/bg-02.png";
             }
@@ -1488,6 +1498,48 @@
 
         public function cronSyncJabatanSiasn(){
             
+        }
+
+        public function queryInsertTppKelasJabatan(){
+            $kelasJabatan = null;
+            for($i = 1; $i <= 15; $i++){
+                $kelasJabatan[$i] = $i;
+            }
+
+            $unitkerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->get()->result_array();
+
+            $dataInsert = null;
+
+            foreach($unitkerja as $uk){
+                for($i = 1; $i <= 15; $i++){
+                    $exists = $this->db->select('*')
+                                    ->from('m_presentase_tpp')
+                                    ->where('kelas_jabatan', $i)
+                                    ->where('id_unitkerja', $uk['id_unitkerja'])
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+
+                    if(!$exists){ // jika belum ada, isi
+                        $dataInsert[$uk['id_unitkerja']][$i]['id_unitkerja'] = $uk['id_unitkerja'];
+                        $dataInsert[$uk['id_unitkerja']][$i]['kelas_jabatan'] = $i;
+                        $dataInsert[$uk['id_unitkerja']][$i]['prestasi_kerja'] = 50;
+                        $dataInsert[$uk['id_unitkerja']][$i]['beban_kerja'] = 0;
+                        $dataInsert[$uk['id_unitkerja']][$i]['kondisi_kerja'] = 0;
+                        $dataInsert[$uk['id_unitkerja']][$i]['total_presentase'] = 50;
+                    } else {
+                        echo "exists ".$uk['nm_unitkerja']." kelas jabatan ".$i."<br>";
+                    }
+                }
+
+                if($dataInsert[$uk['id_unitkerja']]){
+                    $this->db->insert_batch('m_presentase_tpp', $dataInsert[$uk['id_unitkerja']]);
+                    echo "done ".$uk['nm_unitkerja']."<br>";
+                }
+            }
+
+            dd('done');
         }
 	}
 ?>

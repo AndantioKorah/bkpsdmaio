@@ -347,6 +347,16 @@ class M_Kepegawaian extends CI_Model
                     ->update('db_pegawai.pegawai', $data);
         }
 
+        public function changeFlagBerakala($status, $nip){
+            $data['flag_terima_berkala'] = 0;
+            if($status == "true"){
+                $data['flag_terima_berkala'] = 1;
+            }
+
+            $this->db->where('nipbaru_ws', $nip)
+                    ->update('db_pegawai.pegawai', $data);
+        }
+
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() 

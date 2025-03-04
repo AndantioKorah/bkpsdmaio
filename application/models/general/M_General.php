@@ -301,6 +301,7 @@
             ->join('db_pegawai.statuspeg e', 'a.statuspeg = e.id_statuspeg')
             ->where_in('a.statuspeg', [1, 2, 3])
             ->where('id_m_status_pegawai', 1)
+            ->where('flag_terima_berkala', 1)
             // ->where('c.jenis_jabatan !=', 'JFT')
             ->where('year(a.tmtgjberkala) <=', $tahun) 
             // ->where('year(a.tmtgjberkala) ', $tahun)

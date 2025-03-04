@@ -1890,6 +1890,16 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                             $id_diklat = 107;
                         }
                     }
+                } else {
+                $this->db->select('a.id')
+                            ->from('db_pegawai.pegdiklat a')
+                            ->where('a.id_pegawai', $id)
+                            ->where('a.jenjang_diklat', 10)
+                            ->where('a.flag_active', 1);
+                            $diklat = $this->db->get()->result_array();
+                            if($diklat){
+                                $id_diklat = 106;
+                            } 
                 }
 
             // $this->db->select('a.id')
@@ -2251,7 +2261,16 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 } else {
                     $qty2++;
                 }
-                } 
+                }
+                if($peng['eselon'] == "IV A"){ 
+                    // dd($peng);
+                    if($peng['statusjabatan'] == 2) {
+                        if($peng['pejabat'] == "Walikota Manado" || $peng['pejabat'] == "WALIKOTA" || $peng['pejabat'] == "WALI KOTA" || $peng['pejabat'] == "WALIKOTA MANADO ANDREI ANGOUW" || $peng['pejabat'] == "ANDREI ANGOUW" || $peng['pejabat'] == "Wali Kota Manado"){ 
+                            $qty1++;
+                        }
+                    } 
+                 
+                }  
              }
 
             if($qty1 != 0){

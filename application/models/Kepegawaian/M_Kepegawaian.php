@@ -347,6 +347,16 @@ class M_Kepegawaian extends CI_Model
                     ->update('db_pegawai.pegawai', $data);
         }
 
+        public function changeFlagBerakala($status, $nip){
+            $data['flag_terima_berkala'] = 0;
+            if($status == "true"){
+                $data['flag_terima_berkala'] = 1;
+            }
+
+            $this->db->where('nipbaru_ws', $nip)
+                    ->update('db_pegawai.pegawai', $data);
+        }
+
         function getProfilPegawai($nip = ''){
             $username = $this->general_library->getUserName();
             if($this->general_library->isProgrammer() 
@@ -8832,12 +8842,29 @@ public function submitEditJabatan(){
         $res['message'] = 'ok';
         $res['data'] = null;
         $this->db->trans_begin();
+        
+
    
-            $dataUsul['id_m_user']      = $this->general_library->getId();
-            $dataUsul['created_by']      = $this->general_library->getId();
-            $dataUsul['jenis_pensiun']      = $this->input->post('jenis_pensiun');
-            $this->db->insert('db_efort.t_pensiun', $dataUsul);
-            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        
+            $cek =  $this->db->select('*')
+            ->from('t_pensiun a')
+            ->where('a.id_m_user', $this->general_library->getId())
+            ->where('a.flag_active', 1)
+            ->where('a.status', 0)
+            ->get()->result_array();
+        
+            if($cek){
+                $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['jenis_pensiun']      = $this->input->post('jenis_pensiun');
+                $this->db->insert('db_efort.t_pensiun', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+   
+          
         if ($this->db->trans_status() === FALSE)
         {
                 $this->db->trans_rollback();

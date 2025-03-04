@@ -293,7 +293,7 @@ ol {
             <li>
 								<a class="<?php if($sk_cpns){ if($sk_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_cpns) { ?>
 									onclick="viewBerkasPangkat('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS* <i
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS/SK PPPK* <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>

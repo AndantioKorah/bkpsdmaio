@@ -22,8 +22,18 @@
     if($result[$jenis_file]['url_ds_manual_'.$jenis_file]){
         $url = $result[$jenis_file]['url_ds_manual_'.$jenis_file];
     }
-?>
-    <iframe style="width: 100%; height: 75vh;" src="<?=base_url($url)?>"></iframe>
+?> 
+    <?php $newUrl = $url."?v=".generateRandomString() ?>
+    <iframe id="iframe_show_file" style="width: 100%; height: 75vh;" src="<?=base_url($newUrl)?>"></iframe>
+    <script>
+        $(function(){
+            // document.getElementById('iframe_show_file').attr('src', "<?=base_url($url)?>")
+            // console.log(document.getElementById('iframe_show_file').attr('src'))
+            // $('#iframe_show_file')[0].contentWindow.location.reload(true)
+            // $('#iframe_show_file').attr('src', "<?=base_url($url)?>")
+
+        })
+    </script>
 <?php } else { ?>
     <h4 class="text-center">DATA TIDAK DITEMUKAN</h4>
 <?php } ?>

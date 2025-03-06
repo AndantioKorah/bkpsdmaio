@@ -269,6 +269,7 @@ class M_Kepegawaian extends CI_Model
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg','left')
                         ->where('a.flag_active', 1)
+                        ->where('a.id_m_status_pegawai', 1)
                         // ->where('a.created_date >=', $taw.' 00:00:00')
                         // ->where('a.created_date <=', $tak.' 23:59:59')
                         ->order_by('a.created_date', 'desc');

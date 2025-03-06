@@ -148,6 +148,9 @@
     <button onclick="getFile(file='skkgb')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Kenaikan Gaji Berkala Terakhir
     </button>
   <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadPresensiPegawai()" class="nav-link nav-link-layanan" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
+  </li>
   
 
 
@@ -165,7 +168,42 @@
             <iframe style="display: none; width: 100%;height: 90vh;" type="application/pdf"  id="view_file_verif_kgb"  frameborder="0" ></iframe>	
   </div>
   </div>
-  
+
+  <div class="tab-pane fade show " id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab">
+    <div class="row">
+                  <form id="form_presensi_pegawai">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Bulan</label>
+                            <select class="form-control select2-navy" style="width: 100%"
+                                id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
+                                <option <?=date('m') == '01' ? 'selected' : ''?> value="01">Januari</option>
+                                <option <?=date('m') == '02' ? 'selected' : ''?> value="02">Feburari</option>
+                                <option <?=date('m') == '03' ? 'selected' : ''?> value="03">Maret</option>
+                                <option <?=date('m') == '04' ? 'selected' : ''?> value="04">April</option>
+                                <option <?=date('m') == '05' ? 'selected' : ''?> value="05">Mei</option>
+                                <option <?=date('m') == '06' ? 'selected' : ''?> value="06">Juni</option>
+                                <option <?=date('m') == '07' ? 'selected' : ''?> value="07">Juli</option>
+                                <option <?=date('m') == '08' ? 'selected' : ''?> value="08">Agustus</option>
+                                <option <?=date('m') == '09' ? 'selected' : ''?> value="09">September</option>
+                                <option <?=date('m') == '10' ? 'selected' : ''?> value="10">Oktober</option>
+                                <option <?=date('m') == '11' ? 'selected' : ''?> value="11">November</option>
+                                <option <?=date('m') == '12' ? 'selected' : ''?> value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Tahun</label>
+                            <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+                        </div>
+                        <div class="col-lg-4">
+                            <label style="color: white;">.</label><br>
+                            <button class="btn btn-navy" type="submit">Submit</button>
+                        </div>
+                    </div>
+                  </form>
+                  <div class="mt-3" id="div_presensi_result"></div>
+                </div>
+  </div>
   <div  class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
   <div class="row" style="height:400px;">
   <div class="col-lg-4">
@@ -392,7 +430,6 @@
   </div>
   </div>
 
-  
   
   <!-- <div class="row">
       <div class="col-lg-12">
@@ -813,7 +850,7 @@
           <input onchange="hitungMasaKerja()" autocomplete="off" type="text" class="form-control datepickerr"  id="edit_tmt_gaji_berkala" name="edit_tmt_gaji_berkala" value="<?php if($result[0]['tmtgajiberkala'] != "0000-00-00") echo $result[0]['tmtgajiberkala']; else echo "";?>" required>
           </div>
           <div class="form-group">
-          <label >Masa Kerja PNS</label>
+          <label >Masa Kerja ASN</label>
           <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>" required>
           </div>
           <div class="form-group">
@@ -1260,4 +1297,34 @@ function hitungMasaKerja(){
   //           }
   //       })
 }
+
+
+$('#bulan').on('change', function(){
+  $('#form_presensi_pegawai').submit();
+ })
+
+ $('#tahun').on('change', function(){
+  $('#form_presensi_pegawai').submit();
+})
+
+ $('#form_presensi_pegawai').on('submit', function(e){
+    e.preventDefault()
+    $('#div_presensi_result').html('')
+    $('#div_presensi_result').append(divLoaderNavy)
+    $.ajax({
+        url: '<?=base_url("user/C_User/searchDetailAbsenPegawai/1/".$profil_pegawai['id_m_user'])?>',
+        method: 'post',
+        data: $(this).serialize(),
+        success: function(data){
+            $('#div_presensi_result').html('')
+            $('#div_presensi_result').append(data)
+        }, error: function(e){
+            errortoast('Terjadi Kesalahan')
+        }
+    })
+})
+
+ function loadPresensiPegawai(){
+  $('#form_presensi_pegawai').submit();
+ }
 </script>

@@ -707,7 +707,7 @@
         if($id_m_user != null){
             $pegawai = $this->db->select('b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
                         d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan, c.flag_uptd,
-                        d.id_asisten_grouping')
+                        d.id_asisten_grouping, b.nipbaru_ws, d.nip_kepalaskpd_hardcode, d.nama_jabatan_kepalaskpd_hardcode')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg', 'left')
@@ -730,6 +730,8 @@
         // jenis_skpd 4 puskes
         // dd($pegawai['id_unitkerja']);
         
+        
+
         if($pegawai['kepalaskpd'] != 1){ //bukan kepala skpd
             if($pegawai['id_unitkerjamaster'] == 4000000 || // 
             $pegawai['id_unitkerjamaster'] == 3000000 || $pegawai['id_unitkerjamaster'] == 1000000 || 
@@ -1120,7 +1122,30 @@
             }
         }
 
-        return ['atasan' => $atasan, 'kepala' => $kepala, 'sek' => $sek, 'kadis' => $kadis];
+        $result['atasan'] = $atasan;
+        $result['kepala'] = $kepala;
+        $result['sek'] = $sek;
+        $result['kadis'] = $kadis;
+
+        if($pegawai['nip_kepalaskpd_hardcode']){
+            $result['kepala'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                        e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
+                                        ->from('db_pegawai.pegawai a')
+                                        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                        ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                        ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                        ->where('a.nipbaru_ws', $pegawai['nip_kepalaskpd_hardcode'])
+                                        ->get()->row_array();
+
+            $result['kepala']['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
+
+            if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika guru, atasan = kepala
+                $result['atasan'] = $result['kepala'];
+            }
+        }
+
+        return $result;
     }
 
     public function createSkpBulanan($data){
@@ -1139,7 +1164,8 @@
         //                     ->get()->row_array();
 
         $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, d.flag_uptd,
-        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon')
+                            a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, g.nama_sub_bidang, a.id_m_sub_bidang, 
+                            d.nama_jabatan, d.kepalaskpd, f.id_eselon, c.nip_kepalaskpd_hardcode, c.nama_jabatan_kepalaskpd_hardcode')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')

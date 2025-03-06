@@ -213,4 +213,8 @@ class C_Layanan extends CI_Controller
 	public function sendNotif(){
 		echo json_encode($this->layanan->sendNotif());
 	}
+
+	public function usulDs(){
+        render('kepegawaian/layanan/V_UsulDs', '', '', null);
+    }
 }

@@ -9,6 +9,7 @@
         "phpoffice/phpexcel": "^1.8",
         "ticketpark/htmlphpexcel": "^0.5.1",
         "shuchkin/simplexlsxgen": "^1.4",
-        "pdfcrowd/pdfcrowd": "^6.0"
+        "pdfcrowd/pdfcrowd": "^6.0",
+        "enyo/dropzone": "^5.9"
     }
 }

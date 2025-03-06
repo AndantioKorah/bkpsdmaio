@@ -403,6 +403,12 @@
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
 			</li>
+
+			<li class="sidebar-item ">
+				<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/usul-ds')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Usul DS
+				</a>
+			</li>
 		<?php } ?>
 		<?php
 			if($this->general_library->isProgrammer() ||

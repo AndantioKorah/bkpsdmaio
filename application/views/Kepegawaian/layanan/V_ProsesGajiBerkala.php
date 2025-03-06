@@ -701,7 +701,7 @@
 
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
-        <select class="form-select" aria-label="Default select example" name="status" id="status">
+        <select onchange="myFunction()" class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
         <option value="1">ACC</option>
         <option value="0">Berkas Tidak Lengkap</option>
@@ -1327,4 +1327,13 @@ $('#bulan').on('change', function(){
  function loadPresensiPegawai(){
   $('#form_presensi_pegawai').submit();
  }
+
+ function myFunction() {
+  var status = $('#status').val()
+  if(status == 1){
+    document.getElementById("keterangan").innerHTML = "Proses Lanjut";
+  } else {
+    document.getElementById("keterangan").innerHTML = "";
+  }
+}
 </script>

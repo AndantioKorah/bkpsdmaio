@@ -2235,7 +2235,6 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where('a.status', 2)
             ->where('a.flag_active', 1);
         $penugasan = $this->db->get()->result_array();
-        // dd($penugasan);
        
         $id_penugasan = null;
         $qty1 = 0;
@@ -2263,10 +2262,11 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 }
                 }
                 if($peng['eselon'] == "IV A"){ 
-                    // dd($peng);
                     if($peng['statusjabatan'] == 2) {
                         if($peng['pejabat'] == "Walikota Manado" || $peng['pejabat'] == "WALIKOTA" || $peng['pejabat'] == "WALI KOTA" || $peng['pejabat'] == "WALIKOTA MANADO ANDREI ANGOUW" || $peng['pejabat'] == "ANDREI ANGOUW" || $peng['pejabat'] == "Wali Kota Manado"){ 
                             $qty1++;
+                        } else {
+                            $qty2++;
                         }
                     } 
                  

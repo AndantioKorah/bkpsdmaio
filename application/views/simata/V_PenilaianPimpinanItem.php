@@ -241,10 +241,10 @@ $('#table_list_pegawai').DataTable({
         cache: false,  
         processData:false,  
         success:function(res){ 
-          //  location.reload()
+           location.reload()
                 
-        // }  
-        // });  
+        }  
+        });  
           
         });
 
@@ -270,6 +270,8 @@ $('#table_list_pegawai').DataTable({
             }
         })
     }
+
+    
     </script>
 <?php } else { ?>
 <?php } ?>

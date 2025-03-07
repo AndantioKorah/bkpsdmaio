@@ -258,7 +258,7 @@
 			<?php
 			$int_var = substr($masa_kerja, 0, 2);
 			$new_date = date('Y-m-d H:i:s', strtotime('+2 years', strtotime($tmt_kgb_baru)));
-			if($int_var == 32){
+			if($int_var >= 32){
 				echo "-";
 			} else {
 				echo formatDateNamaBulan($new_date); 

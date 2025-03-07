@@ -213,7 +213,29 @@ ol {
     border-left-color: #fa8072;
   }
 </style>
+
+
 <div class="row">
+
+<div class="col-lg-12 mt-3">
+		<div class="card card-default">
+			<div class="card-header">
+				<div class="card-title">
+					<div class="card-title">
+						<h5>RIWAYAT LAYANAN PENSIUN <?=$nama_layanan;?></h5>
+					</div>
+					<hr>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="row" style="margin-top: -40px;">
+					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 	<div class="col-lg-12">
 		<div class="card card-default">
 			<div class="card-header">
@@ -512,24 +534,7 @@ ol {
 
 	</div>
   
-	<div class="col-lg-12 mt-3">
-		<div class="card card-default">
-			<div class="card-header">
-				<div class="card-title">
-					<div class="card-title">
-						<h5>RIWAYAT LAYANAN PENSIUN <?=$nama_layanan;?></h5>
-					</div>
-					<hr>
-				</div>
-			</div>
-			<div class="card-body">
-				<div class="row" style="margin-top: -40px;">
-					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+	
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -742,7 +747,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 loadListRiwayatPensiun(jenis_layanan)
-                window.scrollTo(0, document.body.scrollHeight);
+                // window.scrollTo(0, document.body.scrollHeight);
+                window.scrollTo(0, 0);
               } else {
                 errortoast(result.msg)
                 return false;

@@ -217,4 +217,10 @@ class C_Layanan extends CI_Controller
 	public function usulDs(){
         render('kepegawaian/layanan/V_UsulDs', '', '', null);
     }
+
+	public function uploadFileUsulDs(){
+		$file = $_FILES['file'];
+		$data = $this->input->post();
+		dd($file);
+	}
 }

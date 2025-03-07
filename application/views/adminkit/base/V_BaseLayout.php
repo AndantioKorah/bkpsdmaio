@@ -36,8 +36,7 @@
   <link href="<?=base_url('assets/css/select2.min.css')?>" rel="stylesheet" />
   <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 
-  <link href="<?=base_url('assets/css/dropzone.css')?>" rel="stylesheet" />
-  <script src="<?=base_url('assets/js/dropzone-min.js')?>"></script>
+  <link href="<?=base_url('assets/plugins/dropzone/dropzone.css')?>" rel="stylesheet" />
 
   <link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
   <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
@@ -552,8 +551,10 @@
   </div>
   <div id="print_div" style="display:none;"></div>
   <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
-  <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->
+  <!-- <script src="<?php //echo base_url()?>assets/siladen/plugins/dropzone/dropzone.js"></script> -->
+  <!-- <script src="<?php //echo base_url('assets/js/dropzone-min.js')?>"></script> -->
 	<script src="<?=base_url('')?>assets/adminkit/js/app.js"></script>
+  <!-- <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/min/dropzone.min.js"></script> -->
   
   <!-- <script src="<?=base_url()?>assets/js/jquery.dataTables.min.js"></script>  -->
 	

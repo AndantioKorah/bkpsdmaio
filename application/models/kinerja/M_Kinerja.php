@@ -1140,9 +1140,9 @@
 
             $result['kepala']['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
 
-            if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika guru, atasan = kepala
-                $result['atasan'] = $result['kepala'];
-            }
+            // if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika guru, atasan = kepala
+            //     $result['atasan'] = $result['kepala'];
+            // }
         }
 
         return $result;

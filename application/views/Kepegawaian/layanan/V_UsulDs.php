@@ -17,12 +17,8 @@
             <button id="btn_back" class="btn btn-sm btn-warning"><i class="fa fa-chevron-left"></i> Kembali</button>
           </div>
           <div class="col-lg-12">
-            <div id="dropzone">
-              <form id="form_dropzone" class="dropzone needsclick">
-                <div class="dz-message needsclick">
-                  <span class="text" style="color: grey;">Klik atau Drag File</span>
-                </div>
-              </form>
+            <div id="dropzone" class="dropzone text-center">
+              <span class="span_dz"><i class="fa fa-3x fa-upload"></i><br>Klik atau drag file ke area ini</span>
             </div>
           </div>
         </div>
@@ -30,6 +26,8 @@
     </div>
   </div>
 </div>
+<script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/min/dropzone.min.js"></script>
+
 <script>
   $('#btn_add_new').on('click', function(){
     $('#div_form_button').hide()
@@ -40,4 +38,27 @@
     $('#div_form_button').show()
     $('#div_form_input').hide()
   })
+
+  Dropzone.options.dropzone = {
+    url: "<?=base_url("kepegawaian/C_Layanan/uploadFileUsulDs")?>",
+    autoProcessQueue: false,
+    paramName: "file",
+    clickable: true,
+    maxFilesize: 5, //in mb
+    addRemoveLinks: true,
+    acceptedFiles: '.pdf',
+    dictDefaultMessage: "",
+    init: function() {
+      this.on("sending", function(file, xhr, formData) {
+        // console.log("sending file");
+      });
+      this.on("success", function(file, responseText) {
+        console.log('great success');
+      });
+      this.on("addedfile", function(file){
+        $('.span_dz').hide()
+        // console.log('file added');
+      });
+    }
+  };
 </script>

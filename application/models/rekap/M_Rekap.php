@@ -2915,9 +2915,9 @@
                     $result[$l['nipbaru_ws']]['pph'] = getPphByIdPangkat($l['id_pangkat']);
 
                     // yang baru pakai perhitungan pajak yang ini
-                    if($param['tahun'] >= 2025){
-                        $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
-                    }
+                    // if($param['tahun'] >= 2025){
+                    //     $result[$l['nipbaru_ws']]['pph'] = getPphByPenghasilanBruto($result[$l['nipbaru_ws']]['besaran_tpp']);
+                    // }
 
                     $result[$l['nipbaru_ws']]['nominal_pph'] = pembulatan((floatval($result[$l['nipbaru_ws']]['pph']) / 100) * $result[$l['nipbaru_ws']]['besaran_tpp']);
                     // $rounded = floor($result[$l['nipbaru_ws']]['nominal_pph']);

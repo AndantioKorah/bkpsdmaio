@@ -44,10 +44,17 @@
                     </td>
                 </tr>
             <?php // } ?>
-            <?php } else { ?>
+            <?php } else {
+                $menyetujui = $kepala_pd;
+                if($kepala_pd['nipbaru_ws'] == $pegawai['nipbaru_ws']){
+                    $menyetujui = $atasan_pegawai;
+                }
+            ?>
                 <tr>
                 <!-- <td style="width: 100%; text-align: center;">Kepala Perangkat Daerah</td> -->
-                <td style="width: 100%; text-align: center;"><?=$kepala_pd['nama_jabatan']?></td>
+                <td style="width: 100%; text-align: center;">
+                    <?=$menyetujui['nama_jabatan']?>
+                </td>
             </tr>
             <tr>
                 <td><br><br><br></td>
@@ -55,8 +62,8 @@
             <?php // if($atasan_pegawai['nipbaru_ws'] != $kepala_pd['nipbaru_ws']){ ?>
                 <tr>
                     <td style="width: 100%; text-align: center;">
-                        <u><?=strtoupper(getNamaPegawaiFull($kepala_pd))?></u><br>
-                        NIP. <?=formatNip($kepala_pd['nipbaru_ws'])?>
+                        <u><?=strtoupper(getNamaPegawaiFull($menyetujui))?></u><br>
+                        NIP. <?=formatNip($menyetujui['nipbaru_ws'])?>
                     </td>
                 </tr>
             <?php // } ?>

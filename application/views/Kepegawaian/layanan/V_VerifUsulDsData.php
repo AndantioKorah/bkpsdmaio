@@ -28,7 +28,7 @@
             </td>
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left"><?=$rs['user_inputer']?></td>
-            <td class="text-left"><?=$rs['filename']?></td>
+            <td class="text-left"><?=$rs['id'].$rs['filename']?></td>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
             </td>
@@ -45,6 +45,7 @@
   $(function(){
     $('#table_verif_usul_detail').dataTable()
     list_checked = [];
+    terpilih = 0
   })
 
   function openFile(url){

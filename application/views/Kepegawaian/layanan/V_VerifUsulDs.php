@@ -50,7 +50,8 @@
 <script>
   $(function(){
     $('#bulan').select2()
-
+    let list_checked = []
+    let terpilih = 0
     $('#form_search_usul_ds').submit()
   })
 

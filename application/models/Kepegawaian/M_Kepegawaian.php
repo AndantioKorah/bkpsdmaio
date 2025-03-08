@@ -8075,7 +8075,7 @@ public function submitEditJabatan(){
                             ->join('m_jenis_ds d', 'a.id_m_jenis_ds = d.id')
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
-                            ->where('(a.id_t_nomor_surat != 0 OR id_m_jenis_ds = 1)')
+                            ->where('(a.id_t_nomor_surat != 0 OR id_m_jenis_ds = 1 OR id_m_jenis_ds = 5)')
                             ->group_by('a.id')
                             // ->where('id_m_jenis_ds', $data['jenis_layanan'])
                             ->order_by('a.created_date', 'desc');

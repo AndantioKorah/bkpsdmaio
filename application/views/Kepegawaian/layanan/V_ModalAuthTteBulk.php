@@ -51,7 +51,7 @@
           $('.message_text').text(rs.message)
           $('.message_text').css("color", "red")
         } else {
-          $('#form_load_ds').submit()
+          $('#form_search_usul_ds').submit()
           successtoast('File sudah berhasil ditambahkan ke dalam antrian untuk dilakukan Digital Signature secara otomatis.')
           $("#auth_modal_tte .close").click()
           $('#auth_modal_tte').modal('hide')

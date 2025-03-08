@@ -1169,4 +1169,243 @@ class M_Layanan extends CI_Model
             'created_by' => $this->general_library->getId()
         ]);
     }
+
+    public function removeUploadedFileDs($filename){
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+        if($filename == "0"){
+            unlink("arsipusulds/".$tahun."/".$bulan."/".$filename);
+        } else {
+    		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+            if($uploadedFile){
+                foreach($uploadedFile as $uf){
+                    unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
+                }
+            }
+        }
+    }
+
+    public function uploadFileUsulDs(){
+        $res['code'] = 0;
+        $res['message'] = "";
+        $res['data'] = "";
+
+        $file = $_FILES['file'];
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+        
+        if(!file_exists("arsipusulds/".$tahun) && !is_dir("arsipusulds/".$tahun)) {
+            mkdir("arsipusulds/".$tahun, 0777, TRUE);       
+        }
+
+        if(!file_exists("arsipusulds/".$tahun."/".$bulan) && !is_dir("arsipusulds/".$tahun."/".$bulan)) {
+            mkdir("arsipusulds/".$tahun."/".$bulan, 0777, TRUE);       
+        }
+
+        if($file){
+            $newFileName = generateRandomString()."_".str_replace(' ', '_', $_FILES['file']['name']);
+            $config['upload_path'] = 'arsipusulds/'.$tahun.'/'.$bulan.'/';
+            $config['allowed_types'] = '*';
+            $config['file_name'] = $newFileName;
+            $this->load->library('upload', $config);
+
+            // $newFileName = generateRandomString()."_".str_replace(' ', '_', $file['name']);
+            $file['name'] = $newFileName;
+
+            $_FILES['file_usul_ds']['name'] = $newFileName;
+            $_FILES['file_usul_ds']['type'] = $file['type'];
+            $_FILES['file_usul_ds']['tmp_name'] = $file['tmp_name'];
+            $_FILES['file_usul_ds']['error'] = $file['error'];
+            $_FILES['file_usul_ds']['size'] = $file['size'];
+
+            if(!file_exists("arsipusulds/".$tahun."/".$bulan."/".$newFileName)){
+                if(!$this->upload->do_upload('file_usul_ds')){ // jika gagal upload
+                    $res['code'] = 1;
+                    $res['message'] = $this->upload->display_errors();
+                } else { // jika berhasil upload
+                    $uploadedFile[$newFileName] = $file;
+                    $this->session->set_userdata('uploaded_file_usul_ds', $uploadedFile);
+                    $res['message'] = "Berhasil";
+                }
+            }
+        }
+
+        $res['data'] = $uploadedFile ? count($uploadedFile) : 0;
+        return $res;
+    }
+
+    public function getPegawaiByIdJabatan($idJabatan){
+        $pegawai = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_Ws = b.username')
+                            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                            // ->where('c.kepalaskpd', 1)
+                            ->where('a.jabatan', $idJabatan)
+                            ->where('b.flag_active', 1)
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->get()->row_array();
+        // dd($pegawai);
+        // if(!$pegawai){
+            $plt = $this->db->select('*')
+                            ->from('t_plt_plh')
+                            ->where('id_jabatan', $idJabatan)
+                            ->where('tanggal_mulai <= ', date('Y-m-d'))
+                            ->where('tanggal_akhir >= ', date('Y-m-d'))
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+            if($plt){
+                $pegawai = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_Ws = b.username')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                // ->where('c.kepalaskpd', 1)
+                                ->where('b.id', $plt['id_m_user'])
+                                ->where('b.flag_active', 1)
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->get()->row_array();
+                if($pegawai){
+                    $pegawai['nama_jabatan'] = $plt['jenis'].". ".$pegawai['nama_jabatan'];
+                }
+            }
+        // }
+
+        return $pegawai;
+    }
+
+    public function submitUploadFileUsulDs($dataInput){
+        $result = [
+            'code' => 0,
+            'message' => ''
+        ];
+
+        $this->db->trans_begin();
+
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+        if(!$uploadedFile){
+            $result['code'] = 1;
+            $result['message'] = "Belum ada file yang dipilih";
+        } else {
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
+            
+            // $kepalabkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_KABAN_BKPSDM);
+
+            $sekbkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
+
+            $batchId = generateRandomString();
+            $data['id_m_user'] = $this->general_library->getId();
+            $data['created_by'] = $this->general_library->getId();
+            $data['keterangan'] = $dataInput['keterangan'];
+            $data['ds_code'] = $dataInput['ds_code'];
+            $data['batch_id'] = $batchId;
+            $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+            $this->db->insert('t_usul_ds', $data);
+            $id_t_usul_ds = $this->db->insert_id();
+
+            $usulDetail = null;
+            $i = 0;
+            foreach($uploadedFile as $uf){
+                $usulDetail[$i]['id_t_usul_ds'] = $id_t_usul_ds;
+                $usulDetail[$i]['url'] = "arsipusulds/".$tahun."/".$bulan."/".$uf['name'];
+                $usulDetail[$i]['created_by'] = $this->general_library->getId();
+                $usulDetail[$i]['filename'] = $uf['name'];
+                $usulDetail[$i]['batch_id_detail'] = generateRandomString();
+
+                $this->db->insert('t_usul_ds_detail', $usulDetail[$i]);
+                $id_t_usul_ds_detail = $this->db->insert_id();
+
+                $progress[1]['urutan'] = 1;
+                $progress[1]['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+                $progress[1]['id_m_user_verif'] = $pegawai['atasan']['id'];
+                $progress[1]['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
+                
+                $progress[2]['urutan'] = 2;
+                $progress[2]['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+                $progress[2]['id_m_user_verif'] = $sekbkpsdm['id_m_user'];
+                $progress[2]['nama_jabatan'] = $sekbkpsdm['nama_jabatan'];
+
+                $this->db->insert_batch('t_usul_ds_detail_progress', $progress);
+
+                $i++;
+            }
+        }
+
+        if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $result;
+    }
+
+    public function searchVerifUsulDs(){
+        $data = $this->input->post();
+        
+        $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id')
+                ->from('t_usul_ds a')
+                ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
+                ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
+                ->join('m_user d', 'a.created_by = d.id')
+                ->where('c.flag_active', 1)
+                ->where('a.flag_active', 1)
+                ->where('a.flag_done', 0)
+                ->where('c.flag_verif', 0)
+                ->where('b.flag_done', 0)
+                ->where('YEAR(c.created_date)', $data['tahun'])
+                ->where('c.id_m_user_verif', $this->general_library->getId())
+                ->order_by('c.created_date', 'desc');
+
+        if($data['bulan'] != 0){
+            $this->db->where('MONTH(c.created_date)', $data['bulan']);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    public function dsBulk($params){
+        $list_data = $this->db->select('a.*, b.batch_id_detail, b.url')
+                        ->from('t_usul_ds_detail_progress a')
+                        ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
+                        ->where_in('a.id', $params['list_checked'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+        if($list_data){
+            $selected = $list_data[0];
+
+            $request['signatureProperties'] = [
+                'tampilan' => 'INVISIBLE',
+                'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan']
+            ];
+
+            $base64File = base64_encode(file_get_contents(base_url().$selected['url']));
+            $jsonRequest['file'][] = $base64File;
+            // dd($base64File);
+
+            $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+            $jsonRequest['nik'] = $params['nik'];
+            $jsonRequest['passphrase'] = $params['passphrase'];
+            // dd(json_encode($jsonRequest));
+
+            $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
+            $response = json_decode($oneData, true);
+
+            if($response == null || !isset($response['file'])){ // jika gagal
+                $res['code'] = 1;
+                $res['message'] = $oneData;
+                $res['data'] = null;
+            } else {
+
+            }
+
+            dd($res);
+        }
+    }
 }

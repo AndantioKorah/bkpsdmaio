@@ -218,9 +218,60 @@ class C_Layanan extends CI_Controller
         render('kepegawaian/layanan/V_UsulDs', '', '', null);
     }
 
+	public function removeAllUploadedFileDs(){
+		$this->layanan->removeUploadedFileDs("0");
+		$this->session->set_userdata('uploaded_file_usul_ds', null);
+	}
+
+	public function getSelectedFile(){
+		$result['data'] = $this->session->userdata('uploaded_file_usul_ds');
+		$result['count'] = $result['data'] ? count($result['data']) : 0;
+
+		echo json_encode($result);
+	}
+
+	public function removeUploadedFileDs(){
+		$filename = $this->input->post('filename');
+		$this->layanan->removeUploadedFileDs($filename);
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		unset($uploadedFile[$filename]);
+	}
+
 	public function uploadFileUsulDs(){
-		$file = $_FILES['file'];
-		$data = $this->input->post();
-		dd($file);
+		// $file = $_FILES['file'];
+		// // $data = $this->input->post();
+		// $uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+
+		// $uploadedFile[$file['name']] = $file;
+		// $this->session->set_userdata('uploaded_file_usul_ds', $uploadedFile);
+		
+		echo json_encode($this->layanan->uploadFileUsulDs());
+
+		// echo count($uploadedFile);
+	}
+
+	public function submitUploadFileUsulDs(){
+		echo json_encode($this->layanan->submitUploadFileUsulDs($this->input->post()));
+	}
+
+	public function verifUsulDs(){
+        render('kepegawaian/layanan/V_VerifUsulDs', '', '', null);
+	}
+
+	public function searchVerifUsulDs(){
+		$data['result'] = $this->layanan->searchVerifUsulDs();
+		$this->load->view('kepegawaian/layanan/V_VerifUsulDsData', $data);
+	}
+
+	public function loadAuthModalTteBulk(){
+		$data['user'] = $this->general->getDataPegawai($this->general_library->getUserName());
+		$data['jenis_layanan'] = 'Lainnya';
+		$data['table_ref'] = 't_usul_ds_detail_progress';
+		$this->load->view('kepegawaian/layanan/V_ModalAuthTteBulk', $data);
+	}
+
+	public function dsBulk(){
+		echo json_encode($this->layanan->dsBulk($this->input->post()));
+		// dd($this->input->post());
 	}
 }

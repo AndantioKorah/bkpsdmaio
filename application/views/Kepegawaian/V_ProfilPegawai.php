@@ -297,6 +297,8 @@
                     <i class="fa fa-spin fa-spinner"></i> Loading...</button>
                 <?php } ?>
                 <?php  if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
+                 
+
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
                     <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;"
                     name="radio_button_berkala" class="form-check-input" type="checkbox" id="radio_button_berkala" 

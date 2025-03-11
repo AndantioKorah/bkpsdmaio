@@ -35,7 +35,7 @@
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
                 <th>Total Nilai </th>
-                <th>Hasil Pemetanaan </th>
+                <th>Hasil Pemetaan </th>
                 <th>Rekomendasi</th>
                 <th style="display:none">eselon</th>
 				<th></th>
@@ -102,7 +102,8 @@
                 <th>Nilai Pertimbangan Lainnya (10%)</th>
                 <th>Total Nilai Potensial</th>
 				<th>Pemeringkatan Potensial</th>
-                <th>Hasil Pemetanaan</th>
+                <th>Total Nilai </th>
+                <th>Hasil Pemetaan</th>
                 <th>Rekomendasi</th>
                 <th style="display:none">eselon</th>
 				<th></th>

@@ -97,7 +97,7 @@
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
         </button>
-        <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
   
 <!-- Modal -->
@@ -544,7 +544,6 @@
 var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
 var status = "<?= $result[0]['status_layanan'];?>";
 var dok = "<?= $result[0]['dokumen_layanan'];?>";
-
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
@@ -565,8 +564,9 @@ $(function(){
     $('#btn_lihat_dok').hide()
    } else if(status == 1) {
     $('#btn_upload_sk').show()
-    if(dok == null){
+    if(dok == null || dok == ""){
       $('#btn_tolak_verifikasi').show()
+      $('#btn_lihat_dok').hide()
     } else {
       $('#btn_tolak_verifikasi').hide()
       $('#btn_upload_dok').show()

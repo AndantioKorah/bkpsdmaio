@@ -20,7 +20,6 @@
 
             </td>
               <td class="text-left"><?=$rs['keterangan']?></td>
-            
               <td>
               <?php if($rs['status'] == 0) { ?>
               <button onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 

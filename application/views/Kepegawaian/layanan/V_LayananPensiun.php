@@ -213,7 +213,29 @@ ol {
     border-left-color: #fa8072;
   }
 </style>
+
+
 <div class="row">
+
+<div class="col-lg-12 mt-3">
+		<div class="card card-default">
+			<div class="card-header">
+				<div class="card-title">
+					<div class="card-title">
+						<h5>RIWAYAT LAYANAN PENSIUN <?=$nama_layanan;?></h5>
+					</div>
+					<hr>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="row" style="margin-top: -40px;">
+					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 	<div class="col-lg-12">
 		<div class="card card-default">
 			<div class="card-header">
@@ -225,7 +247,16 @@ ol {
 			</div>
 
 			<div class="card-body">
+      <?php if($jenis_layanan == 17) { ?>
+       
+        <form id="form_pensiun" method="post" enctype="multipart/form-data" id="" style="margin-top: -45px;">
+        <input type="hidden" name="jenis_pensiun" id="jenis_pensiun" value="<?=$jenis_layanan;?>">
+        <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-block">Ajukan</button>
+        </div>
+				</form>
 
+        <?php } else { ?>
 				<form id="form_pensiun" method="post" enctype="multipart/form-data" id="" style="margin-top: -45px;">
 
         <input type="hidden" name="jenis_pensiun" id="jenis_pensiun" value="<?=$jenis_layanan;?>">
@@ -260,7 +291,8 @@ ol {
           <input type="hidden" id="npwp" value="<?php if($npwp) echo $npwp['id']; else echo "";?>">
           <input type="hidden" id="buku_rekening" value="<?php if($buku_rekening) echo $buku_rekening['id']; else echo "";?>">
 
-
+          
+          
 					<span>Berkas Persyaratan :</span>
 					<div class="list-type1x">
 						<ol class="rectangle-list">
@@ -498,25 +530,11 @@ ol {
 							Perkawinanan pertama & Daftar keluarga </i></i></a> -->
 			</div>
 		</div>
+    <?php } ?>
+
 	</div>
-	<div class="col-lg-12 mt-3">
-		<div class="card card-default">
-			<div class="card-header">
-				<div class="card-title">
-					<div class="card-title">
-						<h5>RIWAYAT LAYANAN PENSIUN <?=$nama_layanan;?></h5>
-					</div>
-					<hr>
-				</div>
-			</div>
-			<div class="card-body">
-				<div class="row" style="margin-top: -40px;">
-					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+  
+	
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -556,7 +574,10 @@ $(function(){
         var formvalue = $('#form_pensiun');
         var form_data = new FormData(formvalue[0]);
 
-        var sk_cpns = $('#sk_cpns').val();
+       var jenis_layanan = "<?=$jenis_layanan;?>"
+
+        if(jenis_layanan != 17){
+          var sk_cpns = $('#sk_cpns').val();
         var sk_pns = $('#sk_pns').val();
         var sk_pangkat = $('#sk_pangkat').val();
         var sk_pangkat = $('#sk_pangkat').val();
@@ -582,10 +603,6 @@ $(function(){
         var berita_acara = $('#berita_acara').val();
         var npwp = $('#npwp').val();
         var buku_rekening = $('#buku_rekening').val();
-        
-
-
-        var jenis_layanan = "<?=$jenis_layanan;?>"
 
         if(jenis_layanan == 1 || jenis_layanan == 2 || jenis_layanan == 3){
         if(sk_cpns == ""){
@@ -706,6 +723,14 @@ $(function(){
             return false;
           }
         }
+         
+        } 
+       
+
+
+        
+
+       
 
 
         $.ajax({  
@@ -722,7 +747,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 loadListRiwayatPensiun(jenis_layanan)
-                window.scrollTo(0, document.body.scrollHeight);
+                // window.scrollTo(0, document.body.scrollHeight);
+                window.scrollTo(0, 0);
               } else {
                 errortoast(result.msg)
                 return false;

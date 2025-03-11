@@ -56,8 +56,8 @@
               <label>Status</label>
               <select class="form-control select2-navy" style="width: 100%"
               id="status" data-dropdown-css-class="select2-navy" name="status">
-                  <option value="0" >Semua</option>
-                  <option value="2" selected>Selesai BKPSDM</option>
+                  <option value="0" selected>Semua</option>
+                  <option value="2" >Selesai BKPSDM</option>
                   <option value="3" >Usul BKAD</option>
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>

@@ -280,8 +280,8 @@ $(function(){
 
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    startDate: '-0d',
-    // startDate : '2024-12-11',
+    // startDate: '-0d',
+    startDate : '2025-03-10',
     endDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,
@@ -311,7 +311,7 @@ function loadListPeninjauan(){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
 
-                if(total >= 2) {
+                if(total >= 6) {
 
                   $('#btn_upload').hide()
                   $('#ket').show()

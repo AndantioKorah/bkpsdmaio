@@ -9,6 +9,9 @@
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">Surat Pengantar</th>
+          <?php if($m_layanan == 10) { ?>
+          <th class="text-left">SK Perbaikan Data</th>
+          <?php } ?>
           <th style="width:40%;"></th>
         </thead>
         <tbody>
@@ -25,6 +28,12 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
+            <?php if($m_layanan == 10) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openFileSK('<?=$rs['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
               <td>
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
@@ -40,7 +49,7 @@
                 </button>
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
-                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                <!-- <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button>  -->
 
                 </div>
                 
@@ -153,6 +162,19 @@ $('#iframe_view_file').on('load', function(){
 })
 }
 
+async function openFileSK(filename){
+ var id_layanan = "<?=$m_layanan;?>"
+$('#iframe_view_file').hide()
+$('.iframe_loader').show()  
+var number = Math.floor(Math.random() * 2000);
+$link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
+$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').on('load', function(){
+  $('.iframe_loader').hide()
+  $(this).show()
+})
+}
+
 function ajukanKembali(id){
                   var id_layanan = "<?=$m_layanan;?>"
                    if(confirm('Ajukan kembali layanan pangkat ?')){
@@ -243,7 +265,7 @@ function ajukanKembali(id){
 <?php } else { ?>
   <div class="row">
     <div class="col-lg-12 text-center">
-      <h4>DATA TIDAK DITEMUKAN <i class="fa fa-exclamation"></i></h4>
+      <h4>TIDAK ADA RIWAYAT LAYANAN <i class="fa fa-exclamation"></i></h4>
     </div>
   </div>
 <?php } ?>

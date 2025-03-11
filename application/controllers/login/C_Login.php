@@ -185,6 +185,7 @@ class C_Login extends CI_Controller
                     'landing_page' => null,
                     'pegawai' => null,
                     'list_tpp_kelas_jabatan' => null,
+                    'list_tpp_kelas_jabatan_new' => null,
                     'live_tpp' => null,
                 ]);
 
@@ -211,6 +212,7 @@ class C_Login extends CI_Controller
             $list_exist_url = null;
             $pegawai = $this->m_general->getDataPegawai($result[0]['username']);
             $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
+            $tpp_kelas_jabatan_new = $this->m_general->getAll('m_tpp_kelas_jabatan_new');
             // $sub_bidang = $this->m_general->getAllSubBidang();
             $list_sub_bidang = null;
           
@@ -241,9 +243,16 @@ class C_Login extends CI_Controller
             // }
 
             $list_tpp_kelas_jabatan = null;
+            $list_tpp_kelas_jabatan_new = null;
             if($tpp_kelas_jabatan){
                 foreach($tpp_kelas_jabatan as $tpp){
                     $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
+                }
+            }
+
+            if($tpp_kelas_jabatan_new){
+                foreach($tpp_kelas_jabatan_new as $tpp){
+                    $list_tpp_kelas_jabatan_new[$tpp['kelas_jabatan']] = $tpp['nominal'];
                 }
             }
             
@@ -268,6 +277,7 @@ class C_Login extends CI_Controller
                 'landing_page' =>  $landing_page,
                 'pegawai' => $pegawai,
                 'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
+                'list_tpp_kelas_jabatan_new' =>  $list_tpp_kelas_jabatan_new,
                 'live_tpp' => null
             ]);
             if($params){

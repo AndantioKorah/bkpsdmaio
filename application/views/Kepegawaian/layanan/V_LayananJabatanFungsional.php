@@ -314,7 +314,7 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pernyataan Tersedia Formasi* <i
 											class="fas fa-<?php if($formasi) echo ''; else echo '';?>"></i></a>
 							</li>
-                            <li>
+              <li>
 								<a class="<?php if($pak){ if($pak['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($pak) { ?>
 									onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> PAK* <i
@@ -329,7 +329,7 @@ ol {
 				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
 				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 				</li>
-                <li>
+        <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (maximal 3 bulan sebelum expired)* <i
@@ -354,34 +354,50 @@ ol {
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen lain yang apabila diperlukan <i
 				class="fas fa-<?php if($dok_lain) echo ''; else echo '';?>"></i></a>
                 </li>
-              <?php } ?>
-              <?php if($id_m_layanan == 7) { ?>
-                <li>
-								<a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
-									onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional* <i
-											class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
-							</li>
-              <li>
-								<a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
-									onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> PAK* <i
-											class="fas fa-<?php if($pak) echo ''; else echo '';?>"></i></a>
-							</li>
-             
-              <li>
-								<a class="<?php if($sertiukom) echo 'select'; else echo 'unselect';?>" <?php if($sertiukom) { ?>
-									onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Uji Kompetensi (bagi PNS yang pindah jenjang jabatan fungsional) <i
-											class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
-							</li>
-              
-              <li>
-								<a class="<?php if($petajabatan) echo 'select'; else echo 'unselect';?>" <?php if($petajabatan) { ?>
-									onclick="viewBerkasPangkat('<?=$petajabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> Asli/Fotokopi legalisir peta jabatan (khusus bagi pejabat fungsional yang tidak dapat diangkat dalam jenjang jabatan setingkat lebih tinggi karena tidak tersedia kebutuhan jabatan)<i
-											class="fas fa-<?php if($petajabatan) echo ''; else echo '';?>"></i></a>
-							</li>
+        <?php } ?>
+        <?php if($id_m_layanan == 13) { ?>
+          <li>
+				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+				</li>
+        <li>
+				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+				</li>
+          <li>
+				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
+				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (maximal 3 bulan sebelum expired)* <i
+				class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
+				</li>
+        <li>
+				<a class="<?php if($peta_jabatan){ if($peta_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($peta_jabatan) { ?>
+				onclick="viewBerkasPangkat('<?=$peta_jabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Peta Jabatan* <i
+				class="fas fa-<?php if($peta_jabatan) echo ''; else echo '';?>"></i></a>
+				</li>
+        <li>
+				<a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
+				onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
+				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+        </li>
+        <li>
+				<a class="<?php if($str_serdik) echo 'select'; else echo 'unselect';?>" <?php if($str_serdik) { ?>
+				onclick="viewBerkasPangkat('<?=$str_serdik['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> STR (kersehatan) / Serdik (pendidikan) <i
+				class="fas fa-<?php if($str_serdik) echo ''; else echo '';?>"></i></a>
+        </li>
+        <li>
+				<a class="<?php if($skp1){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah) { ?>
+				onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah* <i
+				class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
+				</li>
               <?php } ?>
               <?php if($id_m_layanan == 8) { ?>
                 <li>
@@ -667,6 +683,8 @@ $(function(){
         $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
     } else if(id == 6){
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    } else if(id == 7){
+        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
     }
    
    

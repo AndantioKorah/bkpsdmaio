@@ -96,11 +96,11 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal2" >
+<div style="margin-left:-1px;" class="modal fade" id="exampleModal2" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header" style="background-color:#2e4963;">
-        <h5 style="color:#fff" class="modal-title" id="exampleModalLabel">Detail Penilaian</h5>
+      <div class="modal-header" style="background-color:#2e4963x;">
+        <h5 style="color:#2e4963" class="modal-title" id="exampleModalLabel"><b>Detail Penilaian</b></h5>
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button> -->
@@ -108,7 +108,7 @@
       <div class="modal-body" id="div_modal_detail_profil_talenta">
         ...
       </div>
-      <div class="modal-footer" style="background-color:#2e4963;">
+      <div class="modal-footer" style="background-color:#2e4963x;">
        
       </div>
     </div>

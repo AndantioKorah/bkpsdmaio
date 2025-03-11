@@ -4,6 +4,7 @@
     <th class="text-left">Pegawai</th>
     <th class="text-center">Kelas Jabatan</th>
     <?php if($this->general_library->isProgrammer()){ ?>
+      <th class="text-center">Basic TPP</th>
       <th class="text-center">Prestasi Kerja</th>
       <th class="text-center">Beban Kerja</th>
       <th class="text-center">Kondisi Kerja</th>
@@ -12,7 +13,9 @@
     <th class="text-left">Besaran TPP</th>
   </thead>
   <tbody>
-    <?php if($result){ $no = 1; foreach($result as $rs){ ?>
+    <?php if($result){
+      $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan_new');
+      $no = 1; foreach($result as $rs){ ?>
       <tr>
         <td class="text-center"><?=$no++;?></td>
         <td class="text-left" style="line-height: 15px;">
@@ -23,9 +26,10 @@
         </td>
         <td class="text-center"><?=$rs['kelas_jabatan']?></td>
         <?php if($this->general_library->isProgrammer()){ ?>
-          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['prestasi_kerja'])).'%'?></td>
-          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['beban_kerja'])).'%'?></td>
-          <td class="text-center"><?=formatCurrencyWithoutRp(floatval($rs['kondisi_kerja'])).'%'?></td>
+          <td class="text-center"><?=formatCurrencyWithoutRp(($pagu_tpp[$rs['kelas_jabatan']]), 0)?></td>
+          <td class="text-center"><?=(floatval($rs['prestasi_kerja'])).'%'?></td>
+          <td class="text-center"><?=(floatval($rs['beban_kerja'])).'%'?></td>
+          <td class="text-center"><?=(floatval($rs['kondisi_kerja'])).'%'?></td>
           <td class="text-center"><?=floatval($rs['prestasi_kerja']) + floatval($rs['beban_kerja']) + floatval($rs['kondisi_kerja']).'%'?></td>
         <?php } ?>
         <td class="text-left" style="font-weight: bold;"><?='Rp '.formatCurrencyWithoutRp($rs['pagu_tpp'], 0)?></td>

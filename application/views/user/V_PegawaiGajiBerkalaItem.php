@@ -22,8 +22,8 @@
                 <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button>
             </form> -->
         </div>
-        <div class="col-lg-12">
-            <table border=1 id="table_result" class="table table-hover datatable">
+        <div class="col-lg-12 table-responsive">
+            <table id="tblgjberkala" class="table table-bordered cell-border">
                 <thead>
                     <th style="width: 5%;" class="text-center">No</th>
                     <th style="width: 35%;" class="text-center">Nama Pegawai</th>
@@ -34,7 +34,7 @@
                     <th style="width: 10%;" class="text-center"></th>
                     <th>Verifikator</th>
                     <th>Status</th>
-                    <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
+                    <th style="width: 10%;" class="text-center">Keterangan</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -75,7 +75,13 @@
                             <td class="text-center"><?=($rs['nama_jabatan'])?></td>
                             <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
                             <td class="text-center">
-                                <?= formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
+                                <?php
+                                if($rs['tmtgjberkala'] == '0000-00-00') {
+                                    echo "-";
+                                } else {
+                                    echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));
+                                }
+                                //  echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
                                 <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->
                             </td>
                             <td class="text-center">
@@ -103,6 +109,16 @@
                                 
                                ;?>
                              </td>
+                             <td>
+                             <?php
+                              if($rs['tberkala']){
+                                $data = explode("|",$rs['tberkala']);
+                                echo $data[2];
+                                }
+                                ?>
+                                
+                             </td>
+                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -117,8 +133,12 @@
 
 <script>
     $(function(){
-        $('.datatable').dataTable()
+        // $('.datatable').dataTable()
     })
+
+    var table = $('#tblgjberkala').DataTable({
+    displayLength: 25,
+    });
 
     function cetak() {
         $("#print_div").load('<?= base_url('user/C_User/cetakNaikPangkat')?>',

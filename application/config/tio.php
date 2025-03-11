@@ -63,6 +63,7 @@ $route['list-pegawai/pensiun'] = 'user/C_User/pegawaiPensiun';
 $route['list-pegawai/naik-pangkat'] = 'user/C_User/pegawaiNaikPangkat';
 $route['list-pegawai/gaji-berkala'] = 'user/C_User/pegawaiGajiBerkala';
 $route['master/list-tpp'] = 'master/C_Master/listTpp';
+$route['master/presentase-tpp'] = 'master/C_Master/presentaseTpp';
 $route['master/input-gaji'] = 'master/C_Master/inputGaji';
 
 //maxchat
@@ -84,6 +85,7 @@ $route['walikota/dashboard'] = 'dashboard/C_Dashboard/dashboardWalikota';
 //cuti
 $route['kepegawaian/permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/permohonanCuti';
 $route['kepegawaian/verifikasi-permohonan-cuti'] = 'kepegawaian/C_Kepegawaian/verifikasiPermohonanCuti';
+$route['kepegawaian/verifikasi-operator-cuti'] = 'kepegawaian/C_Kepegawaian/verifikasiOperatorPermohonanCuti';
 $route['kepegawaian/penomoran-sk-cuti'] = 'kepegawaian/C_Kepegawaian/penomoranSkCuti';
 $route['whatsapp-verification/cuti/(:any)'] = 'verif_whatsapp/C_VerifWhatsapp/verifWhatsapp/$1';
 
@@ -98,6 +100,7 @@ $route['verifPdf/(:any)'] = 'kepegawaian/C_VerifTte/verifPdf/$1';
 
 //DS
 $route['kepegawaian/digital-signature'] = 'kepegawaian/C_Kepegawaian/digitalSignature';
+$route['kepegawaian/usul-ds'] = 'kepegawaian/C_Layanan/usulDs';
 
 //SIASN
 $route['siasn/mapping/unor'] = 'master/C_Master/mappingUnor';

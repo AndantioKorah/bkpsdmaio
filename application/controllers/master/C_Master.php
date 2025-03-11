@@ -272,10 +272,16 @@ class C_Master extends CI_Controller
 
     public function presentaseTpp(){
         $data['unitkerja'] = $this->master->getAllUnitKerja();
-        $data['role'] = $this->general->getAll('m_role');
-        $data['pangkat'] = $this->general->getAll('db_pegawai.pangkat', 0);
-        $data['jabatan'] = $this->general->getAll('db_pegawai.jabatan', 0);
         render('master/V_PresentaseTpp', '', '', $data);
+    }
+
+    public function loadMasterPresentaseTppNew($id){
+        $data['result'] = $this->master->loadMasterPresentaseTppNew($id);
+        $this->load->view('master/V_PresentaseTppData', $data);
+    }
+
+    public function savePresentaseTpp($id_unitkerja){
+        echo json_encode($this->master->savePresentaseTpp($id_unitkerja));
     }
 
     public function loadPresentaseTpp(){

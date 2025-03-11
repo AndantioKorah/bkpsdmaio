@@ -127,8 +127,11 @@
 <div class="row">
 	<div class="col-lg-12">
 		<div class="card card-default" style="background-color:#e1e1e1;">
-			<div class="row p-3">
-				<div class="col-lg-4">
+		<!-- <div class="card card-default" style="background-color:#f5ebe0;"> -->
+
+			<div class="p-3" style="border-style:solid;border-color: #222e3c;border-radius:3px;border-width:4px;">
+            <div class="row">
+            <div class="col-lg-4">
 					<div class="row">
 						<?php if($profil_pegawai['statuspeg'] == 1){ ?>
 						<div class="col-lg-12 text-left">
@@ -442,6 +445,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 
 

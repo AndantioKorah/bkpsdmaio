@@ -456,6 +456,82 @@
                             ->get()->result_array();
         }
 
+        public function savePresentaseTpp($id_unitkerja){
+            $res = [
+                'code' => 0,
+                'message' => "",
+                'data' => null
+            ];
+
+            $data = $this->input->post();
+            $exists = $this->db->select('*')
+                            ->from('m_presentase_tpp')
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->where('kelas_jabatan', $data['kelas_jabatan'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+            $totalPresentasi = floatval($data['prestasi_kerja']) + floatval($data['beban_kerja']) + floatval($data['kondisi_kerja']);
+            // dd($totalPresentasi);
+            if($exists){
+                $this->db->where('id', $exists['id'])
+                        ->update('m_presentase_tpp',[
+                            'prestasi_kerja' => $data['prestasi_kerja'],
+                            'beban_kerja' => $data['beban_kerja'],
+                            'kondisi_kerja' => $data['kondisi_kerja'],
+                            'total_presentase' => $totalPresentasi,
+                            'updated_by' => $this->general_library->getId(),
+                        ]);
+            } else {
+                $this->db->insert('m_presentase_tpp', [
+                    'id_unitkerja' => $id_unitkerja,
+                    'kelas_jabatan' => $data['kelas_jabatan'],
+                    'prestasi_kerja' => $data['prestasi_kerja'],
+                    'beban_kerja' => $data['beban_kerja'],
+                    'kondisi_kerja' => $data['kondisi_kerja'],
+                    'total_presentase' => $totalPresentasi,
+                    'created_by' => $this->general_library->getId(),
+                ]);
+            }
+
+            $res['data'] = $totalPresentasi;
+            $res['data'] .= " %";
+
+            return $res;
+        }
+
+        public function loadMasterPresentaseTppNew($id){
+            $result = null;
+            for($i = 1; $i <= 15; $i++){
+                $result['data'][$i]['kelas_jabatan'] = $i;
+                $result['data'][$i]['prestasi_kerja'] = 0;
+                $result['data'][$i]['beban_kerja'] = 0;
+                $result['data'][$i]['kondisi_kerja'] = 0;
+            }
+
+            $result['unitkerja'] = $this->db->select('*')
+                                        ->from('db_pegawai.unitkerja')
+                                        ->where('id_unitkerja', $id)
+                                        ->get()->row_array();
+
+            $data = $this->db->select('a.*')
+                            ->from('m_presentase_tpp a')
+                            ->where('a.id_unitkerja', $id)
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.kelas_jabatan', 'asc')
+                            ->get()->result_array();
+
+            if($data){
+                foreach($data as $d){
+                    $result['data'][$d['kelas_jabatan']]['prestasi_kerja'] = $d['prestasi_kerja'];
+                    $result['data'][$d['kelas_jabatan']]['beban_kerja'] = $d['beban_kerja'];
+                    $result['data'][$d['kelas_jabatan']]['kondisi_kerja'] = $d['kondisi_kerja'];
+                }
+            }
+
+            return $result;
+        }
+
         public function loadMasterTpp(){
             return $this->db->select('a.nominal, b.nm_unitkerja, c.nm_pangkat, a.id, a.id_jabatan,
                             (SELECT (d.nama_jabatan) FROM db_pegawai.jabatan d WHERE d.id_jabatanpeg = a.id_jabatan LIMIT 1) as nama_jabatan')

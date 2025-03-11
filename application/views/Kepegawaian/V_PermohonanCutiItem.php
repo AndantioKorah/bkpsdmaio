@@ -51,16 +51,20 @@
     ?>
       <tr>
         <td class="text-center"><?=$no++;?></td>
-        <td class="text-center"><?=($rs['nm_cuti'])?></td>
+        <td class="text-center"><?=$rs['nm_cuti']?></td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
         <td class="text-left"><?=$rs['lama_cuti'].' hari'?></td>
         <td class="text-center"><span class=""><?=($rs['status_pengajuan_cuti'])?></span></td>
         <td class="text-center">
-          <button type="button" href="#modal_detail_cuti" onclick="loadDetailCuti('<?=$rs['id']?>')"
-          data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
-          <?php if(!$rs['id_progress_cuti']){ ?>
-            <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
+          <?php if(!isset($rs['flag_operator_verif'])){ ?>
+            <button type="button" href="#modal_detail_cuti" onclick="loadDetailCuti('<?=$rs['id']?>')"
+            data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
+            <?php if(!$rs['id_progress_cuti']){ ?>
+              <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
+            <?php } ?>
+          <?php } else { ?>
+            <button onclick="deleteOperatorPermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
           <?php } ?>
         </td>
       </tr>
@@ -90,6 +94,22 @@
     if(confirm('Apakah Anda yakin ingin menghapus data permohonan cuti?')){
       $.ajax({
         url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePermohonanCuti/")?>'+id,
+        method:"POST",  
+        data: [],
+        success: function(res){
+          successtoast('Data berhasil dihapus')
+          window.location=""
+        }, error: function(err){
+          errortoast('Terjadi Kesalahan')
+        }
+      })
+    }
+  }
+
+  function deleteOperatorPermohonanCuti(id){
+    if(confirm('Apakah Anda yakin ingin menghapus data permohonan cuti?')){
+      $.ajax({
+        url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteOperatorPermohonanCuti/")?>'+id,
         method:"POST",  
         data: [],
         success: function(res){

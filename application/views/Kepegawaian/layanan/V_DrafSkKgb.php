@@ -86,7 +86,7 @@
 
 </style>
 <body id="bodysurat">
-	<div class="header" style="margin-top:-40px;margin-right:40px;">
+	<div class="header" style="margin-top:-40px;">
 		<?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?>
 		<!-- <?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?> -->
 
@@ -230,7 +230,7 @@
 		<tr valign="top">
 			<td>8. Berdasarkan Masa Kerja </td>
 			<td style="text-align: center;">:</td>
-			<td><?= $masa_kerja;?></td>
+			<td><?= $masa_kerja;?> Tahun</td>
 		</tr>
 		<tr valign="top">
 			<td>9. Dalam Golongan Ruang </td>
@@ -258,13 +258,13 @@
 			<?php
 			$int_var = substr($masa_kerja, 0, 2);
 			$new_date = date('Y-m-d H:i:s', strtotime('+2 years', strtotime($tmt_kgb_baru)));
-			if($int_var == 32){
+			if($int_var >= 32){
 				echo "-";
 			} else {
 				echo formatDateNamaBulan($new_date); 
 			}
 
-			?>
+			?> 
 			</td>
 		</tr>
 	</table>
@@ -276,7 +276,7 @@
 	pasal 3 Peraturan Presiden Republik Indonesia Nomor 11 Tahun 2024
 	<?php }  ?>
 	kepada Pegawai tersebut dapat dibayarkan penghasilannya berdasarkan
-Gaji Pokok yang baru
+	Gaji Pokok yang baru.
     </p>
 	
 	

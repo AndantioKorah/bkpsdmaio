@@ -296,7 +296,20 @@
                   <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
                     <i class="fa fa-spin fa-spinner"></i> Loading...</button>
                 <?php } ?>
+                <?php  if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
+                 
 
+                  <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
+                    <input style="cursor: pointer; float: none; margin-right: -30px; width: 45px; height: 25px;"
+                    name="radio_button_berkala" class="form-check-input" type="checkbox" id="radio_button_berkala" 
+                    <?=$profil_pegawai['flag_terima_berkala'] == 1 ? "checked" : ""?>>
+                    <label class="form-check-label" for="radio_button_berkala" style="
+                      font-weight: bold;
+                      font-size: 1rem;
+                      margin-top: 4px;
+                      margin-left: 30px;">Pegawai Terima Berkala</label>
+                  </div>
+                <?php } ?>
               </div>
             </div>
           </div>
@@ -828,8 +841,7 @@
                 ?>
               <?php 
               // if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") {
-              // if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
-
+              if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
               ?>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ||  $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->getUserName() == $nip){ ?>
               <li class="nav-item nav-item-profile" role="presentation"> 
@@ -837,7 +849,7 @@
               </li>
               <?php } ?>
               <?php 
-              //  } 
+               } 
               ?>
               <?php 
               //  }  
@@ -1264,6 +1276,19 @@
         $('#radio_button_sertifikasi').on('click', function(){
           $.ajax({
               url: '<?=base_url("kepegawaian/C_Kepegawaian/changeFlagSertifikasi/")?>'+$(this).is(':checked')+'/'+'<?=$profil_pegawai['nipbaru_ws']?>',
+              method: 'post',
+              data: $(this).serialize(),
+              success: function(data){
+                  successtoast('Berhasil')
+              }, error: function(e){
+                  errortoast('Terjadi Kesalahan')
+              }
+          })
+        })
+
+        $('#radio_button_berkala').on('click', function(){
+          $.ajax({
+              url: '<?=base_url("kepegawaian/C_Kepegawaian/changeFlagBerakala/")?>'+$(this).is(':checked')+'/'+'<?=$profil_pegawai['nipbaru_ws']?>',
               method: 'post',
               data: $(this).serialize(),
               success: function(data){

@@ -180,6 +180,11 @@
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 				<li class="sidebar-item ">
+					<a title="Presentase TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('master/presentase-tpp')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Presentase TPP
+					</a>
+				</li>
+				<li class="sidebar-item ">
 					<a title="Bidang/Bagian" class="sidebar-link sidebar-link-child" href="<?=base_url('master/bidang')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Bidang/Bagian
 					</a>
@@ -398,6 +403,12 @@
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
 			</li>
+
+			<li class="sidebar-item ">
+				<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/usul-ds')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Usul DS
+				</a>
+			</li>
 		<?php } ?>
 		<?php
 			if($this->general_library->isProgrammer() ||
@@ -572,6 +583,11 @@
 					<li class="sidebar-item ">
 						<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-permohonan-cuti')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+						</a>
+					</li>
+					<li class="sidebar-item ">
+						<a title="Operator Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-operator-cuti')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Operator Cuti
 						</a>
 					</li>
 				<?php } ?>

@@ -1043,6 +1043,10 @@ class M_Layanan extends CI_Model
                     if($d['id_m_jenis_ds'] == 4){
                         $this->kepegawaian->tteCuti($d['id_t_request_ds']);
                     }
+
+                    if($d['table_ref'] == 't_usul_ds_detail_progress'){
+                        $this->proceedNextVerifikatorUsulDs($d['ref_id']);
+                    }
                 }
             }
         }
@@ -1350,7 +1354,7 @@ class M_Layanan extends CI_Model
     public function searchVerifUsulDs(){
         $data = $this->input->post();
         
-        $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id')
+        $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id, c.url_file')
                 ->from('t_usul_ds a')
                 ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
                 ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
@@ -1373,7 +1377,7 @@ class M_Layanan extends CI_Model
     }
 
     public function proceedNextVerifikatorUsulDs($id_t_usul_ds_detail, $selectedData){
-        $nextVerifikator = $this->db->select('a.*, b.ds_code, c.nama_jabatan, c.id as id_t_usul_ds_detail_progress')
+        $nextVerifikator = $this->db->select('a.*, b.ds_code, c.urutan, c.nama_jabatan, c.id as id_t_usul_ds_detail_progress')
                                 ->from('t_usul_ds_detail a')
                                 ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                                 ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
@@ -1386,10 +1390,18 @@ class M_Layanan extends CI_Model
 
         // jika masih ada urutan selanjutnya, ubah flag_ds_now jadi 1
         // dd($nextVerifikator);
-        if($nextVerifikator){ 
+        if($nextVerifikator){
+            $currVerifikator = $this->db->select('*')
+                                    ->from('t_usul_ds_detail_progress a')
+                                    ->where('a.id_t_usul_ds_detail', $id_t_usul_ds_detail)
+                                    ->where('urutan', intval($nextVerifikator['urutan'])-1)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+            
             $this->db->where('id', $nextVerifikator['id_t_usul_ds_detail_progress'])
                     ->update('t_usul_ds_detail_progress', [
                         'flag_ds_now' => 1,
+                        'url_file' => $currVerifikator ? $currVerifikator['url_file'] : null,
                         'updated_by' => $this->general_library->getId()
                     ]);
                     
@@ -1429,28 +1441,45 @@ class M_Layanan extends CI_Model
                     "width" => 100,
                     "height" => 100,
                     "page" => 1,
+                    "reason" => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado melalui apikasi Siladen."
                 ],
                 // 'file' => convertToBase64(($pathHukdis))
             ];
 
-            $requestDs = [
-                'created_by' => $this->general_library->getId(),
-                'id_t_nomor_surat' => 0,
-                'ref_id' => $dataUsul['id'],
-                'table_ref' => 't_usul_ds_detail',
-                'id_m_jenis_ds' => 5,
-                'nama_jenis_ds' => 'LAINNYA',
-                'random_string' => $randomString,
-                'request' => json_encode($request_ws),
-                'url_file' => $dataUsul['url_file'],
-                'url_image_ds' => $qrTemplate['data']['qrBase64'],
-                'nama_kolom_flag' => 'flag_done',
-                'nip' => $dataUsul['nip']
-            ];
+            $existsReqDs = $this->db->select('*')
+                                    ->from('t_request_ds')
+                                    ->where('table_ref', 't_usul_ds_detail')
+                                    ->where('ref_id', $dataUsul['id'])
+                                    ->where('flag_active', 1)
+                                    ->where('flag_active', 1)
+                                    ->where('flag_selected', 0)
+                                    ->get()->row_array();
 
-            // dd($requestDs);
-
-            $this->db->insert('t_request_ds', $requestDs);
+            if(!$existsReqDs){ // jika tidak ada, input di t_request_ds
+                $requestDs = [
+                    'created_by' => $this->general_library->getId(),
+                    'id_t_nomor_surat' => 0,
+                    'ref_id' => $dataUsul['id'],
+                    'table_ref' => 't_usul_ds_detail',
+                    'id_m_jenis_ds' => 5,
+                    'nama_jenis_ds' => 'LAINNYA',
+                    'random_string' => $randomString,
+                    'request' => json_encode($request_ws),
+                    'url_file' => $dataUsul['url_done'],
+                    'url_image_ds' => $qrTemplate['data']['qrBase64'],
+                    'nama_kolom_flag' => 'flag_done',
+                    'nip' => $dataUsul['nip']
+                ];
+                $this->db->insert('t_request_ds', $requestDs);
+            }
+            // else { // jika ada berarti kaban sudah DS
+            //     $this->db->where('id', $id_t_usul_ds_detail)
+            //             ->update('t_usul_ds_detail', [
+            //                 'flag_done' => 1,
+            //                 'flag_status' => 1,
+            //                 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+            //             ]);
+            // }
         }
     }
 
@@ -1461,7 +1490,7 @@ class M_Layanan extends CI_Model
 
         $this->db->trans_begin();
 
-        $list_data = $this->db->select('a.*, b.batch_id_detail, b.url, b.filename, b.id as id_t_usul_ds_detail')
+        $list_data = $this->db->select('a.*, b.batch_id_detail, b.url, b.filename, b.id as id_t_usul_ds_detail, b.url_done')
                         ->from('t_usul_ds_detail_progress a')
                         ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
                         ->where_in('a.id', $params['list_checked'])
@@ -1478,10 +1507,12 @@ class M_Layanan extends CI_Model
 
             $request['signatureProperties'] = [
                 'tampilan' => 'INVISIBLE',
-                'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan']." melalui apikasi website Siladen."
+                'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan']." melalui apikasi Siladen."
             ];
 
-            $base64File = base64_encode(file_get_contents(base_url().$selected['url']));
+            $selectedUrl = $selected['url_done'] ? $selected['url_done'] : $selected['url'];
+
+            $base64File = base64_encode(file_get_contents(base_url().$selectedUrl));
             $jsonRequest['file'][] = $base64File;
             // dd($base64File);
 
@@ -1502,6 +1533,7 @@ class M_Layanan extends CI_Model
                 $newFileName = $explFn[0]."_signed_".$selected['id_m_user_verif'].".pdf";
                 $filepath = "arsipusulds/".$tahun."/".$bulan;
                 $fullpath = $filepath."/".$newFileName;
+                // $fullpath = $filepath."/".$selected['filename'];
 
                 base64ToFile($response['file'][0], $fullpath); //simpan ke file
 
@@ -1512,7 +1544,14 @@ class M_Layanan extends CI_Model
                             'date_verif' => $dateNow,
                             'flag_verif' => 1,
                             'url_file' => $fullpath,
+                            'updated_by' => $this->general_library->getId(),
                             'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.$dateNow
+                        ]);
+
+                $this->db->where('id', $selected['id_t_usul_ds_detail'])
+                        ->update('t_usul_ds_detail', [
+                            'url_done' => $fullpath,
+                            'updated_by' => $this->general_library->getId()
                         ]);
 
                 $this->proceedNextVerifikatorUsulDs($selected['id_t_usul_ds_detail'], $selected);
@@ -1524,7 +1563,7 @@ class M_Layanan extends CI_Model
 
                         $requestLd['signatureProperties'] = [
                             'tampilan' => 'INVISIBLE',
-                            'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$ld['nama_jabatan']
+                            'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$ld['nama_jabatan']." melalui apikasi Siladen."
                         ];
 
                         $this->db->insert('t_request_ds', [
@@ -1580,5 +1619,21 @@ class M_Layanan extends CI_Model
         }
 
         return $res;
+    }
+
+    public function loadRiwayatUsulDs(){
+        $this->db->select('a.*, b.nama as nama_pegawai')
+                ->from('t_usul_ds a')
+                ->join('m_user b', 'a.created_by = b.id')
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_by', 'desc');
+
+        if($this->general_library->isProgrammer()){
+
+        } else {
+            $this->db->where('b.id', $this->general_library->getId());
+        }
+
+        return $this->db->get()->result_array();
     }
 }

@@ -16,7 +16,13 @@
         <th class="text-center">Pilihan</th>
       </thead>
       <tbody>
-        <?php $all_check = null; if($result){ $no = 1; foreach($result as $rs){ $all_check[] = $rs['id']; ?>
+        <?php $all_check = null; if($result){ $no = 1; foreach($result as $rs){ $all_check[] = $rs['id'];
+          $filename = $rs['filename'];  
+          if($rs['url_file']){
+            $expl = explode("/", $rs['url_file']);
+            $filename = $expl[count($expl)-1];
+          }
+        ?>
           <tr class="data_tr" onclick="setSelectedItem('<?=$rs['id']?>')" data-id="<?=$rs['id']?>" style="cursor: pointer;">
             <td class="text-center">
               <div class="form-check">
@@ -28,9 +34,9 @@
             </td>
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left"><?=$rs['user_inputer']?></td>
-            <td class="text-left"><?=$rs['id'].$rs['filename']?></td>
+            <td class="text-left"><?=$rs['id'].$filename?></td>
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
+              <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file'] ? $rs['url_file'] : $rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
             </td>
           </tr>
         <?php } } ?>

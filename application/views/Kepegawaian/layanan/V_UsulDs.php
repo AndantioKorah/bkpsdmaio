@@ -1,53 +1,82 @@
-<div class="card card-default">
-  <div class="card-header">
-    <div class="card-title">
-      <h4>USUL DIGITAL SIGNATURE</h4>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-lg-12 text-center" id="div_form_button">
-        <button style="width: 300px; height: 100px; font-size: 1.1rem;" id="btn_add_new" class="btn btn-sm btn-navy">
-          <i class="fa fa-plus"></i> TAMBAH USUL DS
-        </button>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card card-default">
+      <div class="card-header">
+        <div class="card-title">
+          <h4>USUL DIGITAL SIGNATURE</h4>
+        </div>
       </div>
-      <div class="col-lg-12" id="div_form_input" style="display: none;">
+      <div class="card-body">
         <div class="row">
-          <div class="col-lg-12 text-left">
-            <button id="btn_back" class="btn btn-sm btn-warning"><i class="fa fa-chevron-left"></i> Kembali</button>
+          <div class="col-lg-12 text-center" id="div_form_button">
+            <button style="width: 300px; height: 100px; font-size: 1.1rem;" id="btn_add_new" class="btn btn-sm btn-navy">
+              <i class="fa fa-plus"></i> TAMBAH USUL DS
+            </button>
           </div>
-          <div class="col-lg-12">
-            <form id="form_usul_ds">
-              <div class="row">
-                <div class="col-lg-8 mt-3">
-                  <label>Keterangan:</label>
-                  <input class="form-control" value="" id="keterangan" name="keterangan" />
-                </div>
-                <div class="col-lg-4 mt-3">
-                  <label>Kode Unik DS:</label>
-                  <input class="form-control" value="" id="ds_code" name="ds_code" />
-                </div>
+          <div class="col-lg-12" id="div_form_input" style="display: none;">
+            <div class="row">
+              <div class="col-lg-12 text-left">
+                <button id="btn_back" class="btn btn-sm btn-warning"><i class="fa fa-chevron-left"></i> Kembali</button>
               </div>
-              <div class="col-lg-12 mt-3">
-                <label>Upload File:</label>
-                <div id="dropzone" class="dropzone text-center">
-                  <span class="span_dz"><i class="fa fa-3x fa-upload"></i><br>Klik atau drag file ke area ini</span>
-                </div>
+              <div class="col-lg-12">
+                <form id="form_usul_ds">
+                  <div class="row">
+                    <div class="col-lg-8 mt-3">
+                      <label>Keterangan:</label>
+                      <input class="form-control" value="" id="keterangan" name="keterangan" />
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                      <label>Kode Unik DS:</label>
+                      <input class="form-control" value="" id="ds_code" name="ds_code" />
+                    </div>
+                  </div>
+                  <div class="col-lg-12 mt-3">
+                    <label>Upload File:</label>
+                    <div id="dropzone" class="dropzone text-center">
+                      <span class="span_dz"><i class="fa fa-3x fa-upload"></i><br>Klik atau drag file ke area ini</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 text-right mt-3">
+                    <button id="btn_submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
+                    <button style="display: none;" id="btn_submit_loadings" class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
+                  </div>
+                </form>
               </div>
-              <div class="col-lg-12 text-right mt-3">
-                <button id="btn_submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
-                <button style="display: none;" id="btn_submit_loadings" class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="col-lg-12 mt-3">
+    <div class="card card-default">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-12 text-right">
+            <button id="btn_refresh" class="btn btn-warning"><i class="fa fa-sync"></i> Refresh</button>
+          </div>
+          <div class="col-lg-12 mt-3 table-responsive" id="div_result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 <script src="<?php echo base_url()?>assets/siladen/plugins/dropzone/min/dropzone.min.js"></script>
 
 <script>
+  $(function(){
+    $('#btn_refresh').click()  
+  })
+
+  $('#btn_refresh').on('click', function(){
+    $('#div_result').html('')
+    $('#div_result').append(divLoaderNavy)
+    $('#div_result').load('<?=base_url('kepegawaian/C_Layanan/loadRiwayatUsulDs')?>', function(){
+      $('#loader').hide()
+    })
+  })
+
   $('#form_usul_ds').on('submit', function(e){
     e.preventDefault()
     $('#btn_submit').hide()

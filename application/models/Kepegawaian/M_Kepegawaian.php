@@ -5769,7 +5769,9 @@ public function submitEditJabatan(){
 
     $id_layanan[] = null;
     if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
-        $id_layanan[] = 17;
+        // if($this->general_library->getId() != 78){
+        // $id_layanan[] = 17;
+    // }
     }
 
     $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')

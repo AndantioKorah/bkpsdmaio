@@ -274,4 +274,9 @@ class C_Layanan extends CI_Controller
 		echo json_encode($this->layanan->dsBulk($this->input->post()));
 		// dd($this->input->post());
 	}
+
+	public function loadRiwayatUsulDs(){
+		$data['result'] = $this->layanan->loadRiwayatUsulDs();
+		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', $data);
+	}
 }

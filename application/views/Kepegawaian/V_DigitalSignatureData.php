@@ -5,7 +5,12 @@
 </style>
 
 <div class="card card-default p-3">
-    <div class="div_table" style="min-height: 50vh; overflow-y: scroll;">
+    <?php if($result){ ?>
+        <div class="col-lg-12 mt-3 text-right">
+            <button id="btn_ds_top_selected" class="btn btn-success">Digital Sign (<span class="count_selected_files">0</span>)</button>
+        </div>
+    <?php } ?>
+    <div class="div_table mt-3" style="min-height: 50vh; overflow-y: scroll;">
         <table class="table" id="table_pilih_ds">
             <thead>
                 <th class="text-center">
@@ -39,7 +44,7 @@
                         <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
                         <td class="text-center"><?=($rs['nip'])?></td>
                         <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                        <td class="text-left"><?=($rs['jenis_ds'])?></td>
+                        <td class="text-left"><?=($rs['id_m_jenis_layanan'] != 104 ? $rs['jenis_ds'] : $rs['nama_layanan'].' / '.$rs['jenis_ds'])?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_pengajuan'])?></td>
                         <td class="text-center">
                             <?php if($jenis_layanan == 4){ ?>
@@ -131,6 +136,10 @@
         terpilih = $('.form-check-input-data:checkbox:checked').length
         $('.count_selected_files').html(terpilih)
     }
+
+    $('#btn_ds_top_selected').on('click', function(){
+        $('#btn_ds_selected').click()    
+    })
 
     $('#btn_ds_selected').on('click', function(){
         if(parseInt(terpilih) > 0){

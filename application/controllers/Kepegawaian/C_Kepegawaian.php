@@ -41,7 +41,8 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function digitalSignature(){
-		$data['list'] = $this->general->getAllWithOrder('m_jenis_ds', 'nama_jenis_ds', 'asc');
+		// $data['list'] = $this->general->getAllWithOrder('m_jenis_ds', 'nama_jenis_ds', 'asc');
+		$data['list'] = $this->general->getAllWithOrder('m_jenis_layanan', 'nama_layanan', 'asc');
 		render('kepegawaian/V_DigitalSignature', null, null, $data);
 	}
 

@@ -139,6 +139,7 @@
 <?php
   $list_role = $this->general_library->getListRole();
   $list_notif_layanan = $this->general_library->getListAdminLayanan();
+  $list_notif_layanan_pensiun = $this->general_library->getListAdminLayananPensiun();
 //   dd( $list_notif_layanan);
   $active_role = $this->general_library->getActiveRole();
 ?>
@@ -298,9 +299,20 @@
 				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 								<div class="position-relative">
 									<i class="align-middle" data-feather="bell"></i>
-									<?php if($list_notif_layanan) { ?>
-									<span class="indicator" ><?= count($list_notif_layanan);?></span>
-									<?php } ?>
+									<?php 
+									$layanan = 0;
+									$layanan2 = 0;
+									if($list_notif_layanan){
+										$layanan = count($list_notif_layanan);
+									}
+									if($list_notif_layanan_pensiun){
+										$layanan2 = count($list_notif_layanan_pensiun);
+									} 
+									$total = $layanan + $layanan2;  
+									;?>
+									
+									<span class="indicator" ><?= $total;?></span>
+									
 								</div>
 							</a>
 							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
@@ -313,6 +325,20 @@
 									overflow: scroll;">
 								<?php foreach($list_notif_layanan as $ly){ ?>
 									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
+										<div class="row g-0 align-items-center">
+											<div class="col-2">
+												<i class="text-danger" data-feather="alert-circle"></i>
+											</div>
+											<div class="col-10">
+												<div class="text-dark"><?=$ly['nama_layanan']?></div>
+												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
+												<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
+											</div>
+										</div>
+									</a>
+									<?php } ?>
+									<?php foreach($list_notif_layanan_pensiun as $ly){ ?>
+									<a href="<?php echo base_url('kepegawaian/verifikasi-pensiun-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['jenis_pensiun']?>" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
 												<i class="text-danger" data-feather="alert-circle"></i>

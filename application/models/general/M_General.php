@@ -307,7 +307,7 @@
             // ->where('year(a.tmtgjberkala) ', $tahun)
 
             // ->where('a.tmtgjberkala !=', '0000-00-00')
-            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+            ->where_not_in('b.id_unitkerjamaster', [0000000, 7000000, 9050000])
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){

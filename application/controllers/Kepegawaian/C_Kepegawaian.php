@@ -2872,6 +2872,12 @@ class C_Kepegawaian extends CI_Controller
 			echo countDiffDateLengkap($this->input->post('tmtberkala'), $this->input->post('tmtcpns'), ['tahun', 'bulan']);
 		}
 
+		public function catatanGajiBerkala()
+		{ 
+			
+			echo json_encode($this->kepegawaian->catatanGajiBerkala());
+		}
+
 		
 		
 

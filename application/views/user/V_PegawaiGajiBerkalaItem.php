@@ -34,7 +34,7 @@
                     <th style="width: 10%;" class="text-center"></th>
                     <th>Verifikator</th>
                     <th>Status</th>
-                    <th style="width: 10%;" class="text-center">Keterangan</th>
+                    <th style="width: 10%;" class="text-center">Catatan</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -110,13 +110,8 @@
                                ;?>
                              </td>
                              <td>
-                             <?php
-                              if($rs['tberkala']){
-                                $data = explode("|",$rs['tberkala']);
-                                echo $data[2];
-                                }
-                                ?>
-                                
+                             <textarea  style="border-radius: 5px;" id="catatan_<?=$rs['id_peg']?>" name="catatan_<?=$rs['id_peg']?>" rows="3" cols="20"><?=$rs['catatan_berkala']?></textarea>
+                             <button onclick="sendCode('<?=$rs['id_peg']?>')" style="border-radius: 5px;" class="btn btn-primary btn-sm float-right"> <i class="fa fa-save"></i> </button>
                              </td>
                              </td>
                         </tr>
@@ -153,5 +148,27 @@
         window.frames["print_frame"].document.body.innerHTML = isi;
         window.frames["print_frame"].window.focus();
         window.frames["print_frame"].window.print();
+    }
+
+    function sendCode(id_peg){
+    var cttn = $('#catatan_'+id_peg).val()
+    $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/catatanGajiBerkala/")?>',
+                           method: 'post',
+                           data: {catatan : cttn, id_pegawai : id_peg},
+                           success: function(res){
+                          
+                            var result = JSON.parse(res); 
+                            if(result.success == true){
+                                successtoast(result.msg)
+                            } else {
+                                errortoast(result.msg)
+                                return false;
+                            } 
+                              
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
     }
 </script>

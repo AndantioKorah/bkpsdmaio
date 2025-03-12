@@ -270,6 +270,12 @@ class General_library
           return $this->nikita->kepegawaian->getVerifLayanan($this->getId());
     }
 
+    public function getListAdminLayananPensiun(){
+        // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
+        // return $result;
+          return $this->nikita->kepegawaian->getVerifLayananPensiun($this->getId());
+    }
+
     public function getDataUnitKerjaPegawai(){
         $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
         $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];

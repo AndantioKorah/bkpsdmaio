@@ -29,7 +29,7 @@
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=$lp['tanggal_absensi']?></td>
                         <td class="text-left">
-                          <?php if($lp['jenis_absensi'] == 1) echo "Absen Pagi"; else echo "Absen Sore";?>
+                          <?php if($lp['jenis_absensi'] == 1) echo "Absen Pagi"; else echo "Absen Pulang";?>
                         </td>
                         <td class="text-left">
                           <?php if($lp['jenis_bukti'] == 1) echo "Foto Bersama Teman"; else echo "Screenshot Whatsapp";?>

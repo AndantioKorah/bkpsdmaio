@@ -3349,10 +3349,11 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                       ->join('db_pegawai.pegawai b','a.id_peg = b.id_peg')
                       ->join('db_pegawai.pangkat c', 'b.pangkat = c.id_pangkat')
                       ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
-                      ->where('a.res_potensial_total >=', 77)
+                      ->where('a.res_potensial_total >=', 68)
                       ->where('a.res_kinerja >=', 85)
                       ->where('a.flag_active', 1)
                       ->where('b.id_m_status_pegawai', 1)
+                      ->where('a.jenjang_jabatan', 3)
                       ->group_by('a.id_peg')
                       ->order_by('b.pangkat desc, d.eselon');
                      
@@ -3364,8 +3365,35 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $this->db->where_in('d.eselon', ["III B", "III A"]);
                     }
 
-                      $query = $this->db->get()->result_array();
-                      return $query;
+            $query = $this->db->get()->result_array();
+
+            $this->db->select('*')
+                      ->from('db_simata.t_penilaian a')
+                      ->join('db_pegawai.pegawai b','a.id_peg = b.id_peg')
+                      ->join('db_pegawai.pangkat c', 'b.pangkat = c.id_pangkat')
+                      ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                      ->where('a.res_potensial_total >=', 77)
+                      ->where('a.res_kinerja >=', 70)
+                      ->where('a.res_kinerja <', 85)
+                      ->where('a.flag_active', 1)
+                      ->where('b.id_m_status_pegawai', 1)
+                      ->where('a.jenjang_jabatan', 3)
+                      ->group_by('a.id_peg')
+                      ->order_by('b.pangkat desc, d.eselon');
+                     
+
+                    if($id == 2){
+                        $this->db->where_in('d.eselon', ["II B", "II A"]);
+                    }
+                    if($id == 1){
+                        $this->db->where_in('d.eselon', ["III B", "III A"]);
+                    }
+
+            $query2 = $this->db->get()->result_array();
+            $result = array_merge($query,$query2);
+                     
+                     
+                      return $result;
   }
 
 //     function loadListJabatanKosong($id){

@@ -5761,8 +5761,30 @@ public function submitEditJabatan(){
             //     $this->db->or_where('a.id_m_layanan',6);
             //     $this->db->group_end(); 
             // }
+            
         return $this->db->get()->result_array();
    }
+
+   function getVerifLayananPensiun($id){
+
+    $id_layanan[] = null;
+    if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
+        // if($this->general_library->getId() != 78){
+        // $id_layanan[] = 17;
+    // }
+    }
+
+    $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
+        ->join('db_efort.m_layanan as b', 'a.jenis_pensiun = b.id')
+        ->join('db_efort.m_user as c', 'a.id_m_user = c.id')
+        ->from('db_efort.t_pensiun a')
+        ->where('a.status', 0)
+        ->where('a.flag_active', 1)
+        ->where_in('a.jenis_pensiun',$id_layanan)
+        ->order_by('a.created_date', 'desc');
+        
+    return $this->db->get()->result_array();
+}
 
 
 
@@ -10856,6 +10878,10 @@ public function getFileForVerifLayanan()
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
             $this->db->where('id', $id)
             ->update('t_gajiberkala', $datainsKgb);
+
+            $dataUpdatePeg["catatan_berkala"] = "";
+            $this->db->where('id_peg', $dataKgb[0]['id_pegawai'])
+            ->update('db_pegawai.pegawai', $dataUpdatePeg);
             
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
@@ -11450,13 +11476,37 @@ public function checkListIjazahCpns($id, $id_pegawai){
    
     
     return $rs;
-}
+    }
 
-public function updateStatusLayananPangkat($id)
-{
-    $data['status'] = $id;
-    $this->db->where_in('id', [6,7,8,9])
-                    ->update('m_layanan', $data);
+    public function updateStatusLayananPangkat($id)
+    {
+        $data['status'] = $id;
+        $this->db->where_in('id', [6,7,8,9])
+                        ->update('m_layanan', $data);
+    }
+
+    public function catatanGajiBerkala()
+    {
+
+    $rs['code'] = 0;        
+    $rs['message'] = 'OK';
+
+    $this->db->trans_begin();
+
+    $id_pegawai = $this->input->post('id_pegawai');
+    $data['catatan_berkala'] = $this->input->post('catatan');
+    $this->db->where_in('id_peg', $id_pegawai)
+                    ->update('db_pegawai.pegawai', $data);
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+    if ($this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    }else{
+        $this->db->trans_commit();
+    }
+
+    return $res;
 }
 
 

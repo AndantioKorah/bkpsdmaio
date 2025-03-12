@@ -20,7 +20,7 @@
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_pengajuan'])?></td>
               <td class="text-left">
-              <?php if($rs['jenis_pensiun'] == '7') echo "Pensiun BUP"; else if($rs['jenis_pensiun'] == '2') echo "Pensiun Janda/Duda"; else if($rs['jenis_pensiun'] == '3') echo "Pensiun Atas Permintaan Sendiri"; else if($rs['jenis_pensiun'] == '4') echo "Pensiun Sakit/Uzur";else if($rs['jenis_pensiun'] == '5') echo "Pensiun Tewas";?>
+              <?php if($rs['jenis_pensiun'] == '17') echo "Pensiun BUP"; else if($rs['jenis_pensiun'] == '2') echo "Pensiun Janda/Duda"; else if($rs['jenis_pensiun'] == '3') echo "Pensiun Atas Permintaan Sendiri"; else if($rs['jenis_pensiun'] == '4') echo "Pensiun Sakit/Uzur";else if($rs['jenis_pensiun'] == '5') echo "Pensiun Tewas";?>
               </td>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '1') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else echo "Menunggu Verifikasi BKPSDM";?>

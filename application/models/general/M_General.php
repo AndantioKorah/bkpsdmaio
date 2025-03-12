@@ -291,7 +291,7 @@
                 $bulan = $data['bulan'];
             }
             $result = null;
-            $this->db->select('e.nm_statuspeg,a.statuspeg,a.id_peg,a.tmtpangkat,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.catatan_berkala,e.nm_statuspeg,a.statuspeg,a.id_peg,a.tmtpangkat,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala,
             (select CONCAT(aa.nm_m_user_verif,"|",aa.status,"|",aa.keterangan) from t_gajiberkala as aa where a.id_peg = aa.id_pegawai and tahun = '.$data['tahun'].' and aa.flag_active = 1 limit 1) as tberkala')
             ->from('db_pegawai.pegawai a')
@@ -307,7 +307,7 @@
             // ->where('year(a.tmtgjberkala) ', $tahun)
 
             // ->where('a.tmtgjberkala !=', '0000-00-00')
-            ->where_not_in('b.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+            ->where_not_in('b.id_unitkerjamaster', [0000000, 7000000, 9050000])
             ->order_by('a.tmtgjberkala');
 
             if($data['eselon'] != "0"){

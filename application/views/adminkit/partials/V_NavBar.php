@@ -338,7 +338,7 @@
 									</a>
 									<?php } ?>
 									<?php foreach($list_notif_layanan_pensiun as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/verifikasi-pensiun-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['jenis_pensiun']?>" class="list-group-item">
+									<a href="<?php echo base_url('kepegawaian/pensiun/kelengkapan-berkas/');?><?=$ly['username']?>" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
 												<i class="text-danger" data-feather="alert-circle"></i>

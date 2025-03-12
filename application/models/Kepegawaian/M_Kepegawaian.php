@@ -11449,13 +11449,37 @@ public function checkListIjazahCpns($id, $id_pegawai){
    
     
     return $rs;
-}
+    }
 
-public function updateStatusLayananPangkat($id)
-{
-    $data['status'] = $id;
-    $this->db->where_in('id', [6,7,8,9])
-                    ->update('m_layanan', $data);
+    public function updateStatusLayananPangkat($id)
+    {
+        $data['status'] = $id;
+        $this->db->where_in('id', [6,7,8,9])
+                        ->update('m_layanan', $data);
+    }
+
+    public function catatanGajiBerkala()
+    {
+
+    $rs['code'] = 0;        
+    $rs['message'] = 'OK';
+
+    $this->db->trans_begin();
+
+    $id_pegawai = $this->input->post('id_pegawai');
+    $data['catatan_berkala'] = $this->input->post('catatan');
+    $this->db->where_in('id_peg', $id_pegawai)
+                    ->update('db_pegawai.pegawai', $data);
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+    if ($this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+    }else{
+        $this->db->trans_commit();
+    }
+
+    return $res;
 }
 
 

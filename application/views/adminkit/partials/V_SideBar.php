@@ -564,6 +564,16 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isProgrammer()
+				|| stringStartWith('Kepala Bidang', $this->general_library->getNamaJabatan())
+				|| stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())
+				){ ?>
+					<li class="sidebar-item ">
+						<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-usul-ds')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Usul DS
+						</a>
+					</li>
+				<?php } ?>
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
 					<li class="sidebar-item ">
 						<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">

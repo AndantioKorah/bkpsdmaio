@@ -8068,20 +8068,21 @@ public function submitEditJabatan(){
         // if($data['jenis_layanan'] == 4){
         //     $result = $this->loadDataDsPengajuanCuti();
         // } else {
-            $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja, d.keterangan as jenis_ds')
+            $this->db->select('a.*, a.created_date as tanggal_pengajuan, b.gelar1, b.gelar2, b.nipbaru_ws, b.nama, c.nm_unitkerja, a.nama_jenis_ds as jenis_ds,
+                            a.id_m_jenis_layanan, d.nama_layanan')
                             ->from('t_request_ds a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                            ->join('m_jenis_ds d', 'a.id_m_jenis_ds = d.id')
+                            ->join('m_jenis_layanan d', 'a.id_m_jenis_layanan = d.id', 'left')
                             ->where('a.flag_selected', 0)
                             ->where('a.flag_active', 1)
-                            ->where('(a.id_t_nomor_surat != 0 OR id_m_jenis_ds = 1 OR id_m_jenis_ds = 5)')
+                            // ->where('(a.id_t_nomor_surat != 0 OR id_m_jenis_layanan = 104 OR id_m_jenis_layanan = 5)')
                             ->group_by('a.id')
                             // ->where('id_m_jenis_ds', $data['jenis_layanan'])
                             ->order_by('a.created_date', 'desc');
                             // ->get()->result_array();
             if($data['jenis_layanan'] != 0){
-                $this->db->where('id_m_jenis_ds', $data['jenis_layanan']);
+                $this->db->where('id_m_jenis_layanan', $data['jenis_layanan']);
             } else {
                 // $this->db->where('id_m_jenis_ds !=', 4);
             }

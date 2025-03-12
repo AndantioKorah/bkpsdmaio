@@ -35,9 +35,6 @@
       <div class="card-body">
         <form id="form_search">
           <div class="row" style="margin-top: -40px;">
-            <?php if($this->general_library->isAdminAplikasi() 
-            || $this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') 
-            || $this->general_library->isProgrammer()){?>
               <div class="col">
                 <label>Unit Kerja</label>
                 <select class="form-control select2-navy" style="width: 100%"
@@ -52,7 +49,6 @@
                     <?php } } } ?>
                 </select>
               </div>
-            <?php } ?>
             <div class="col">
               <label>Status Pengajuan</label>
               <select class="form-control select2-navy" style="width: 100%"

@@ -260,6 +260,26 @@ ol {
 </style>
 
 <div class="row">
+
+<div class="col-lg-12 mt-3">
+		<div class="card card-default">
+			<div class="card-header">
+				<div class="card-title">
+					<div class="card-title">
+						<h5>RIWAYAT LAYANAN PERBAIKAN DATA</h5>
+					</div>
+					<hr>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="row" style="margin-top: -40px;">
+					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 	<div class="col-lg-12">
 		<div class="card card-default">
 			<div class="card-header">
@@ -342,24 +362,7 @@ ol {
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-12 mt-3">
-		<div class="card card-default">
-			<div class="card-header">
-				<div class="card-title">
-					<div class="card-title">
-						<h5>RIWAYAT LAYANAN KARIS/KARSU</h5>
-					</div>
-					<hr>
-				</div>
-			</div>
-			<div class="card-body">
-				<div class="row" style="margin-top: -40px;">
-					<div class="col-lg-12 table-responsive" id="list_riwayat_karsu"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+	
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

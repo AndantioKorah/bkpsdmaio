@@ -75,6 +75,14 @@
     outline: 2px solid grey;
     background-color : rgb(204, 204, 207);   /* oranges! yey */
     }
+
+    .badge-pns2{
+      /* box-shadow: 3px 3px 10px #888888; */
+      background-color: var(--badge-pns-color);
+      border: 2px solid var(--badge-pns-color);
+      color: white;
+    }
+
 </style>
 
 
@@ -204,10 +212,10 @@
                   <div class="mt-3" id="div_presensi_result"></div>
                 </div>
   </div>
-  <div  class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
-  <div class="row" style="height:400px;">
+  <div style="border-style:solid;border-color: #222e3c;padding:10px;background-color:#e1e1e1;"  class="tab-pane show active " id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+  <div class="row table-responsive" style="height:350px;">
   <div class="col-lg-4">
-  <div class="row">
+  <div class="row ">
           <?php if($profil_pegawai['statuspeg'] == 1){ ?>
             <div class="col-lg-12 text-left">
               <h3><span class="badge badge-danger">CPNS</span></h3>
@@ -387,6 +395,17 @@
                 </span>
               </div>
 
+              <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  TMT CPNS
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($profil_pegawai['tmtcpns'])?>
+                  </span>
+                </div>
+
               <div class="col-lg-12 div_label">
                 <span class="sp_label">
                 Jenis Kelamin / Umur 
@@ -415,16 +434,7 @@
                 </span>
               </div>
 
-              <div class="col-lg-12 div_label text-left">
-                  <span class="sp_label">
-                  Agama
-                  </span>
-                </div>
-                <div class="col-lg-12 text-left" >
-                  <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_agama'])?>
-                  </span>
-                </div>
+             
 
 
   </div>

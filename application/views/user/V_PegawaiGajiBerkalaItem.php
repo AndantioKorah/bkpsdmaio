@@ -34,7 +34,7 @@
                     <th style="width: 10%;" class="text-center"></th>
                     <th>Verifikator</th>
                     <th>Status</th>
-                    <!-- <th style="width: 10%;" class="text-center">Tgl. Naik Pangkat Selanjutnya</th> -->
+                    <th style="width: 10%;" class="text-center">Keterangan</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -108,6 +108,16 @@
                              }
                                 
                                ;?>
+                             </td>
+                             <td>
+                             <?php
+                              if($rs['tberkala']){
+                                $data = explode("|",$rs['tberkala']);
+                                echo $data[2];
+                                }
+                                ?>
+                                
+                             </td>
                              </td>
                         </tr>
                     <?php } ?>

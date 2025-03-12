@@ -25,12 +25,14 @@ tab-container {
 /*
 TAB CONTROLS
 Hide radios */
-input {display: none;}
+
+/* input {display: none;}
 input:checked + label {
 	color: var(--page-text-color-hover);
 	background-color: #222e3c;
 	transition: all 250ms;
-}
+} */
+
 .tab-label {
 	cursor: pointer;
 	transition: color 250ms;
@@ -40,16 +42,27 @@ input:checked + label {
 	text-align: center;
 	transition: all 250ms;
 }
-label:last-of-type {border: none; }
+
+/* label:last-of-type {border: none; }
 label:hover {
 	color: var(--page-text-color-hover);
 	background-color: rgba(255,255,255,0.05);
-}
+} */
 
 tab-content {
 	display: var(--tab-display);
 	grid-column: 1 / -1;
 }
+.nav-link-mt{
+			color:#000;
+			background-color: #bbc0c5;
+			border-style: solid;
+}
+
+.nav-mt{
+	/* background-color: #bbc0c5; */
+}
+
 /*
 Why doesn't this work!? 
 input ~ tab-content {display: none;}
@@ -63,27 +76,40 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 </style>
 <tab-container  id="tabs-mt">
 	<!-- TAB CONTROLS -->
-	 <?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "IV B" || $profil_pegawai['kelas_jabatan'] == "9") { ?>
+	 <style>
+		
+	 </style>
+	<nav>
+	<div class="nav nav-tabs nav-mt mb-2" id="nav-tab" role="tablist" >
+	<?php if($profil_pegawai['eselon'] == "IV A" || $profil_pegawai['eselon'] == "IV B" || $profil_pegawai['kelas_jabatan'] == "9") { ?>
 	<?php if($this->general_library->isProgrammer()) { ?>
-	<input type="radio" id="tabToggle02" name="tabs" value="1" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Rotasi</label>
+	<button class="nav-link nav-link-mt"  onclick="LoadNilaiTalenta(1)" id="tab-promosi" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Rotasi</button>
+	<!-- <input type="radio" id="tabToggle02" name="tabs" value="1" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Rotasi</label> -->
 	<?php } ?>
-	<input type="radio" id="tabToggle022" name="tabs" value="2" />
-	<label class="tab-label" id="tab-promosi-iv"  onclick="LoadNilaiTalenta(2)" for="tabToggle02">Promosi</label>
+    <button class="nav-link nav-link-mt"  onclick="LoadNilaiTalenta(2)" id="tab-promosi-iv" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Promosi</button>
+	<!-- <input type="radio" id="tabToggle022" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi-iv"  onclick="LoadNilaiTalenta(2)" for="tabToggle02">Promosi</label> -->
 	<?php } else if($profil_pegawai['eselon'] == "III A" || $profil_pegawai['eselon'] == "III B") { ?>
 	<?php if($this->general_library->isProgrammer()) { ?>
-	<input type="radio" id="tabToggle01" name="tabs" value="1" checked />
-	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label>
+    <button class="nav-link nav-link-mt"  onclick="LoadNilaiTalenta(2)" id="tab-rotasi" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Rotasi</button>
+	<!-- <input type="radio" id="tabToggle01" name="tabs" value="1" checked />
+	<label class="tab-label" id="tab-rotasi"  onclick="LoadNilaiTalenta(2)" for="tabToggle01" checked="checked">Rotasi</label> -->
 	<?php } ?>
-	<input type="radio" id="tabToggle02" name="tabs" value="2" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label>
+    <button class="nav-link nav-link-mt"  onclick="LoadNilaiTalenta(3)" id="tab-promosi" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Promosi</button>
+	<!-- <input type="radio" id="tabToggle02" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Promosi</label> -->
 	<?php } else if($profil_pegawai['eselon'] == "II A" || $profil_pegawai['eselon'] == "II B") { ?>
-	<input type="radio" id="tabToggle02" name="tabs" value="2" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Rotasi</label>
+	<button class="nav-link nav-link-mt"  onclick="LoadNilaiTalenta(3)" id="tab-promosi" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Promosi</button>
+	<!-- <input type="radio" id="tabToggle02" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(3)" for="tabToggle02">Rotasi</label> -->
 	<?php } else { ?>
-		<input type="radio" id="tabToggle02" name="tabs" value="2" />
-	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Promosi</label>
+	<button class="nav-link nav-link-mt active"  onclick="LoadNilaiTalenta(1)" id="tab-promosi" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Promosi</button>
+	<!-- <input type="radio" id="tabToggle02" name="tabs" value="2" />
+	<label class="tab-label" id="tab-promosi"  onclick="LoadNilaiTalenta(1)" for="tabToggle02">Promosi</label> -->
 	<?php } ?>
+	</div>
+	</nav>
 	<tab-content>
 		<!-- <p>TAB [ <tab-number>01</tab-number> ] content</p>
 		<p>CSS...</p>
@@ -100,16 +126,14 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
 <div class="modal fade" id="modal_detail_profil_talenta" tabindex="-1" role="dialog" aria-labelledby="table-admModalLabelIndikator" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header" >
         <h3 class="modal-title" id="table-admModalLabelIndikator"><span id="nm_indikator"></span></h3>
         <!-- <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button> -->
       </div>
-      <div class="modal-body">
-      <div id="div_modal_detail_profil_talenta">
-      
-        </div>
+      <div class="modal-body" id="div_modal_detail_profil_talenta" style="margin-bottom:-20px;">
+    
       </div>
       <div class="modal-footer">
        
@@ -124,13 +148,16 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
   var eselon = "<?= $this->general_library->getIdEselon();?>";
   var eselonby_admin = "<?=$profil_pegawai['eselon'];?>"
   $(function(){
+  var eselon = "<?= $this->general_library->getIdEselon();?>";
     if(eselon == 4 || eselon == 5) {
       $('#tab-promosi').click()
       $("#tabs-mt").hide();
     } else if(eselon == 6 || eselon == 7) {
     //   $('#tab-rotasi').click()
       $('#tab-promosi').click()
-
+    } else if(eselon == 1) {
+    //   $('#tab-rotasi').click()
+      $('#tab-promosi').click()
     }
 
 	if(eselonby_admin == 'II A' || eselonby_admin == 'II B') {
@@ -139,7 +166,9 @@ input#tabToggle04:checked ~ tab-content:not(:nth-of-type(4)) {display: none;} */
     } else if(eselonby_admin == 'III A' || eselonby_admin == 'III B') {
     //   $('#tab-rotasi').click()
       $('#tab-promosi').click()
-
+    } else if(eselonby_admin == 'IV A' || eselonby_admin == 'IV B') {
+    //   $('#tab-rotasi').click()
+      $('#tab-promosi-iv').click()
     }
    
     })

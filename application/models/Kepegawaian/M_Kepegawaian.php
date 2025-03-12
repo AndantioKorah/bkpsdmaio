@@ -10715,6 +10715,8 @@ public function getFileForVerifLayanan()
             $target_dir						= './arsipsumpah/';
         } else if($this->input->post('id_dokumen') == 18){
             $target_dir						= './arsipdisiplin/';
+        } else if($this->input->post('id_dokumen') == 46){
+            $target_dir						= './arsipperbaikandata/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
         } else if($this->input->post('pegpenghargaan')){
@@ -10857,14 +10859,12 @@ public function getFileForVerifLayanan()
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
-            $dataLayanan = $this->db->select('c.*,a.*')
-                ->from('t_layanan a')
-                ->join('m_user b', 'a.id_m_user = b.id')
-                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                // ->join('db_pegawai.pegpangkat d', 'a.reference_id_dok = d.id')
-                // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
-                ->where('a.id', $id_usul)
-                ->get()->row_array();
+            // $dataLayanan = $this->db->select('c.*,a.*')
+            //     ->from('t_layanan a')
+            //     ->join('m_user b', 'a.id_m_user = b.id')
+            //     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+            //     ->where('a.id', $id_usul)
+            //     ->get()->row_array();
         
         
 
@@ -10878,9 +10878,36 @@ public function getFileForVerifLayanan()
                     'jenis_layanan' => 'Gaji Berkala'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
-
-        }
         // GAJI BERKALA
+        // PERBAIKAN DATA
+        } else if($id_dok == 46){
+            $id  = $this->input->post('id_layanan');
+              $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.id', $id)
+                ->get()->row_array();
+            
+            $datains["dokumen_layanan"] = $data['file_name'];
+            $url_file = "arsipperbaikandata/".$data['nama_file'];
+            $this->db->where('id', $id)
+            ->update('t_layanan', $datains);
+        
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Perbaikan Data Kepegawaian Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan perbaikan data kepegawaian anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                    'message' => $caption,
+                    'filename' => "SK PERBAIKAN DATA.pdf",
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Perbaikan Data'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+        $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        // PERBAIKAN DATA
+        }
+       
         return $result;
     }
 

@@ -30,7 +30,9 @@
         </td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
-        <td class="text-center"></td>
+        <td class="text-center">
+          <button class="btn btn-navy" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-detail"></i> Detail</button>
+        </td>
       </tr>
     <?php } } ?>
   </tbody>
@@ -39,4 +41,13 @@
   $(function(){{
     $('#table_riwayat_usul_ds').dataTable()
   }})
+
+  function openDetailModal(id){
+    $('#modal_detail').modal('show')
+    $('#modal_detail_content').html('')
+    $('#modal_detail_content').append(divLoadernavy)
+    $('#modal_detail_content').load('<?=base_url("kepegawaian/C_Layanan/loadDetailUsulDs/")?>'+id, function(){
+      $('#loader').hide()
+    })
+  }
 </script>

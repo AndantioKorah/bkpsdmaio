@@ -1444,6 +1444,8 @@ class M_Layanan extends CI_Model
                                     ->get()->row_array();
             // dd($currVerifikator);
 
+            copy($selectedData['url_file'], $currVerifikator['url_file']);
+
             $this->db->where('id', $nextVerifikator['id_t_usul_ds_detail_progress'])
                     ->update('t_usul_ds_detail_progress', [
                         'flag_ds_now' => 1,
@@ -1734,5 +1736,32 @@ class M_Layanan extends CI_Model
         }
 
         return $this->db->get()->result_array();
+    }
+
+    public function loadDetailUsulDs($id){
+        $detail = null;
+        $result = $this->db->select('*')
+                            ->from('t_usul_ds')
+                            ->where('id', $id)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+        if($result){
+            $detail = $this->db->select('a.url, a.url_done, a.flag_done, a.flag_status, a.keterangan,
+                            (
+                                SELECT concat(aa.date_verif,";",aa.flag_verif,";",aa.url_file,";",aa.keterangan) as data_progress
+                                FROM t_usul_ds_detail_progress b
+                                WHERE b.id_t_usul_ds_detail = a.id
+                            )')
+                            ->from('t_usul_ds_detail a')
+                            ->where('a.id_t_usul_ds', $result['id'])
+                            ->order_by('a.id')
+                            ->group_by('a.id')
+                            ->get()->result_array();
+
+            $result['detail'] = $detail;
+        }
+
+        return $result;
     }
 }

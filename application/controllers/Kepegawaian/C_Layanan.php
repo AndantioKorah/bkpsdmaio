@@ -288,4 +288,9 @@ class C_Layanan extends CI_Controller
 	public function cronBulkDs(){
 		$this->layanan->cronBulkDs();
 	}
+
+	public function loadDetailUsulDs($id){
+		$data['result'] = $this->layanan->loadDetailUsulDs($id);
+		$this->load->view('kepegawaian/layanan/V_UsulDsDetail', $data);
+	}
 }

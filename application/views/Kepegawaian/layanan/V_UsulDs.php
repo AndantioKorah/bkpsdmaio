@@ -66,12 +66,27 @@
       <div class="card-body">
         <div class="row">
           <div class="col-lg-12 text-right">
-            <button id="btn_refresh" class="btn btn-warning"><i class="fa fa-sync"></i> Refresh</button>
+            <button id="btn_refresh" class="btn btn-success"><i class="fa fa-sync"></i> Refresh</button>
           </div>
           <div class="col-lg-12 mt-3 table-responsive" id="div_result"></div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal_detail" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">DETAIL USUL DIGITAL SIGNATURE</h6>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="modal_detail_content">
+          </div>
+      </div>
   </div>
 </div>
 

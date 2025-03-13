@@ -12,6 +12,7 @@
         </th>
         <th class="text-center">No</th>
         <th class="text-center">Uploader</th>
+        <th class="text-center">Layanan</th>
         <th class="text-center">Nama File</th>
         <th class="text-center">Pilihan</th>
       </thead>
@@ -34,7 +35,27 @@
             </td>
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left"><?=$rs['user_inputer']?></td>
-            <td class="text-left"><?=$rs['id'].$filename?></td>
+            <td class="text-left">
+              <div style="
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 150px;
+              ">
+                <span title="<?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>">
+                  <?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
+                </span>
+              </div>
+            </td>
+            <td class="text-left">
+              <div style="
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  width: 150px;
+                " title="<?=$filename?>">
+                <?=$rs['id'].$filename?></td>
+              </div>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file'] ? $rs['url_file'] : $rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
             </td>

@@ -21,11 +21,24 @@
               <div class="col-lg-12">
                 <form id="form_usul_ds">
                   <div class="row">
-                    <div class="col-lg-8 mt-3">
+                    <div class="col-lg-6 mt-3">
+                      <label>Jenis Layanan</label>
+                      <select class="form-control select2-navy" style="width: 100%;"
+                          id="id_m_jenis_layanan" data-dropdown-css-class="select2-navy" name="id_m_jenis_layanan">
+                          <?php if($layanan_ds){
+                              foreach($layanan_ds as $ld){
+                              ?>
+                              <option value="<?=$ld['id']?>">
+                                  <?="(".$ld['nomor_surat'].") ".$ld['nama_layanan']?>
+                              </option>
+                          <?php } } ?>
+                      </select>
+                    </div>
+                    <div class="col-lg-3 mt-3">
                       <label>Keterangan:</label>
                       <input class="form-control" value="" id="keterangan" name="keterangan" />
                     </div>
-                    <div class="col-lg-4 mt-3">
+                    <div class="col-lg-3 mt-3">
                       <label>Kode Unik DS:</label>
                       <input class="form-control" value="" id="ds_code" name="ds_code" />
                     </div>
@@ -33,7 +46,7 @@
                   <div class="col-lg-12 mt-3">
                     <label>Upload File:</label>
                     <div id="dropzone" class="dropzone text-center">
-                      <span class="span_dz"><i class="fa fa-3x fa-upload"></i><br>Klik atau drag file ke area ini</span>
+                      <span class="span_dz"><i class="fa fa-3x fa-upload"></i><br>Klik atau drag file ke area ini<br>*Hanya file pdf yang akan terupload</span>
                     </div>
                   </div>
                   <div class="col-lg-12 text-right mt-3">
@@ -67,6 +80,7 @@
 <script>
   $(function(){
     $('#btn_refresh').click()  
+    $('#id_m_jenis_layanan').select2()
   })
 
   $('#btn_refresh').on('click', function(){
@@ -113,7 +127,8 @@
       method: 'post',
       data: {
         keterangan: $('#keterangan').val(),
-        ds_code: $('#ds_code').val()
+        ds_code: $('#ds_code').val(),
+        id_m_jenis_layanan: $('#id_m_jenis_layanan').val()
       },
       success: function(data){
         let rs = JSON.parse(data)

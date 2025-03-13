@@ -215,7 +215,8 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function usulDs(){
-        render('kepegawaian/layanan/V_UsulDs', '', '', null);
+		$data['layanan_ds'] = $this->general->getAllWithOrder('m_jenis_layanan', 'nama_layanan', 'asc');
+        render('kepegawaian/layanan/V_UsulDs', '', '', $data);
     }
 
 	public function removeAllUploadedFileDs(){
@@ -278,5 +279,13 @@ class C_Layanan extends CI_Controller
 	public function loadRiwayatUsulDs(){
 		$data['result'] = $this->layanan->loadRiwayatUsulDs();
 		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', $data);
+	}
+
+	public function tesCopy(){
+		copy("arsipusulds/2025/Maret/yPeLwFNJMZ_Format_Surat_Pernyataan_Melaksanakan_Kegiatan_Tugas_JF.pdf", "arsipusulds/2025/Maret/yPeLwFNJMZ_Format_Surat_Pernyataan_Melaksanakan_Kegiatan_Tugas_JF_signed.pdf");
+	}
+
+	public function cronBulkDs(){
+		$this->layanan->cronBulkDs();
 	}
 }

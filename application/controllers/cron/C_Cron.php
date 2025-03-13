@@ -42,8 +42,8 @@ class C_Cron extends CI_Controller
 
     public function cronDsBulkTte(){
         $this->general->logCron('cronDsBulkTte');
-		$this->kepegawaian->cronDsBulkTte();
-		$this->layanan->cronBulkDs();
+		// $this->kepegawaian->cronDsBulkTte();
+		// $this->layanan->cronBulkDs();
 	}
 
     public function updateSisaCuti($id, $operand){

@@ -11,6 +11,8 @@
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Ijazah Saat Melamar CPNS</th>
+          <th class="text-left">Ijazah Sebelum Penyesuaian (UPKP)</th>
+          <th class="text-left">Ijazah Penyesuaian (UPKP)</th>
           <th class="text-left">Tingkat Pendidikan</th>
           <th class="text-left">Nama Sekolah</th>
           <th class="text-left">Fakultas</th>
@@ -37,6 +39,20 @@
               <div class="form-check">
               <input <?= $rs['ijazah_cpns'] == '1' ? 'checked' : ''; ?>
                onclick="pilihIjazah('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="fooby[1][]" 
+               <?php if($this->general_library->getUserName() != $nip) echo "disabled"; else echo "";?> /></label>
+            </div>
+              </td>
+              <td>
+              <div class="form-check">
+              <input <?= $rs['ijazah_s_penyesuaian'] == '1' ? 'checked' : ''; ?>
+              onclick="pilihIjazahSP('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="foobyx[1][]" 
+               <?php if($this->general_library->getUserName() != $nip) echo "disabled"; else echo "";?> /></label>
+            </div>
+              </td>
+              <td>
+              <div class="form-check">
+              <input <?= $rs['ijazah_penyesuaian'] == '1' ? 'checked' : ''; ?>
+              onclick="pilihIjazahP('<?=$rs['id']?>','<?=$rs['id_peg']?>')" type="radio" class="radio" value="1" name="foobyy[1][]" 
                <?php if($this->general_library->getUserName() != $nip) echo "disabled"; else echo "";?> /></label>
             </div>
               </td>
@@ -311,6 +327,34 @@ function pilihIjazah(id,id_pegawai){
                                errortoast('Terjadi Kesalahan')
                            }
                        })
+}
+
+function pilihIjazahSP(id,id_pegawai){
+
+$.ajax({
+                        url: '<?=base_url("kepegawaian/C_Kepegawaian/checkListIjazahSP/")?>'+id+'/'+id_pegawai,
+                        method: 'post',
+                        data: null,
+                        success: function(){
+                            successtoast('Berhasil ubah data')
+                        }, error: function(e){
+                            errortoast('Terjadi Kesalahan')
+                        }
+                    })
+}
+
+function pilihIjazahP(id,id_pegawai){
+
+$.ajax({
+                        url: '<?=base_url("kepegawaian/C_Kepegawaian/checkListIjazahP/")?>'+id+'/'+id_pegawai,
+                        method: 'post',
+                        data: null,
+                        success: function(){
+                            successtoast('Berhasil ubah data')
+                        }, error: function(e){
+                            errortoast('Terjadi Kesalahan')
+                        }
+                    })
 }
 
 

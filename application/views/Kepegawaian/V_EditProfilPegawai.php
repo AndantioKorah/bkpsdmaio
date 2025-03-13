@@ -305,6 +305,13 @@
         <input <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "readonly" ?> type="text" id="edit_tmt_cpns" name="edit_tmt_cpns" class="form-control datepicker" value="<?= $profil_pegawai['tmtcpns'];?>">
       </div>
 
+      <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> TMT Gaji Berkala </label>
+      </div>
+      <div class="col-lg-10">
+        <input <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "readonly" ?> type="text" id="edit_tmt_berkala" name="edit_tmt_berkala" class="form-control datepicker" value="<?= $profil_pegawai['tmtgjberkala'];?>">
+      </div>
+
       <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
       </div>
    <?php } ?>

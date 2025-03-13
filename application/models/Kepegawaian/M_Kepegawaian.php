@@ -492,7 +492,7 @@ class M_Kepegawaian extends CI_Model
        
 
         function getPendidikan($nip,$kode){
-             $this->db->select('c.ijazah_cpns,b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
+             $this->db->select('c.ijazah_s_penyesuaian,c.ijazah_penyesuaian,c.ijazah_cpns,b.id_peg,e.nm_tktpendidikanb as nm_tktpendidikan,c.id,c.status,c.namasekolah,c.fakultas,c.pimpinansekolah,c.tahunlulus,c.noijasah,c.tglijasah,c.gambarsk,c.jurusan,c.keterangan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegpendidikan c', 'b.id_peg = c.id_pegawai')
@@ -3498,6 +3498,7 @@ public function submitEditProfil(){
     $data["pangkat"] = $datapost["edit_pangkat"];
     // $data["tmtpangkat"] = $datapost["edit_tmt_pangkat"];
     $data["tmtcpns"] = $datapost["edit_tmt_cpns"];
+    $data["tmtgjberkala"] = $datapost["edit_tmt_berkala"];
     // $data["tmtgjberkala"] = $datapost["edit_tmt_gjberkala"];
     $data["status"] = $datapost["edit_status_kawin"];
     $data["statuspeg"] = $datapost["edit_status_pegawai"];
@@ -5743,6 +5744,13 @@ public function submitEditJabatan(){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){
             $id_layanan[] = 1;
         }
+
+        if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
+            $id_layanan[] = 18;
+            $id_layanan[] = 19;
+            $id_layanan[] = 20;
+        }
+        
         
       
    
@@ -5770,9 +5778,9 @@ public function submitEditJabatan(){
 
     $id_layanan[] = null;
     if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
-        // if($this->general_library->getId() != 78){
-        // $id_layanan[] = 17;
-    // }
+        if($this->general_library->getId() != 78){
+        $id_layanan[] = 17;
+    }
     }
 
     $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
@@ -9723,6 +9731,28 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahSP()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_S_penyesuaian', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahP()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_penyesuaian', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getIjazahTerakhir()
     {
         $this->db->select('*')
@@ -11183,7 +11213,16 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 11){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/permohonan_salinan_sk';
-            }  else {
+            } else if($id_m_layanan == 18){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            } else if($id_m_layanan == 19){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            } else if($id_m_layanan == 20){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            }   else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 
 
@@ -11468,8 +11507,6 @@ public function checkListIjazahCpns($id, $id_pegawai){
     $this->db->where('id', $id)
         ->update('db_pegawai.pegpendidikan', $dataCheck);
     
-   
-
     if ($this->db->trans_status() === FALSE){
         $this->db->trans_rollback();
         $rs['code'] = 1;        
@@ -11477,11 +11514,61 @@ public function checkListIjazahCpns($id, $id_pegawai){
     }else{
         $this->db->trans_commit();
     }
-
-   
     
     return $rs;
     }
+
+    public function checkListIjazahSP($id, $id_pegawai){
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';
+    
+        $this->db->trans_begin();
+    
+        $data['ijazah_s_penyesuaian'] = 0;
+        $dataCheck['ijazah_s_penyesuaian'] = 1;
+                
+        $this->db->where('id_pegawai', $id_pegawai)
+            ->update('db_pegawai.pegpendidikan', $data);
+        
+        $this->db->where('id', $id)
+            ->update('db_pegawai.pegpendidikan', $dataCheck);
+        
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;        
+            $rs['message'] = 'Terjadi Kesalahan';
+        }else{
+            $this->db->trans_commit();
+        }
+        
+        return $rs;
+        }
+
+        public function checkListIjazahP($id, $id_pegawai){
+            $rs['code'] = 0;        
+            $rs['message'] = 'OK';
+        
+            $this->db->trans_begin();
+        
+            $data['ijazah_penyesuaian'] = 0;
+            $dataCheck['ijazah_penyesuaian'] = 1;
+                    
+            $this->db->where('id_pegawai', $id_pegawai)
+                ->update('db_pegawai.pegpendidikan', $data);
+            
+            $this->db->where('id', $id)
+                ->update('db_pegawai.pegpendidikan', $dataCheck);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;        
+                $rs['message'] = 'Terjadi Kesalahan';
+            }else{
+                $this->db->trans_commit();
+            }
+            
+            return $rs;
+            }
 
     public function updateStatusLayananPangkat($id)
     {

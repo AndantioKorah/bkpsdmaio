@@ -446,7 +446,8 @@ $(function(){
             if(result.success == true){
                 successtoast(result.msg)
                 loadListRiwayatPerbaikanData()
-                window.scrollTo(0, document.body.scrollHeight);
+                // window.scrollTo(0, document.body.scrollHeight);
+                window.scrollTo(0, 0);
               } else {
                 errortoast(result.msg)
                 return false;

@@ -2901,7 +2901,15 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['karya_tulis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','43','0');	
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
-			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
+			$data['ijazah_s_penyesuaian'] = $this->kepegawaian->getIjazahSP(); 
+			$data['ijazah_penyesuaian'] = $this->kepegawaian->getIjazahP(); 
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+			
+			if($data['ibel'] == null || $data['ibel'] == ""){
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','14','0');	
+			}
+
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];

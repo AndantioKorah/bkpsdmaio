@@ -5744,6 +5744,13 @@ public function submitEditJabatan(){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){
             $id_layanan[] = 1;
         }
+
+        if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
+            $id_layanan[] = 18;
+            $id_layanan[] = 19;
+            $id_layanan[] = 20;
+        }
+        
         
       
    
@@ -9724,6 +9731,28 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahSP()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_S_penyesuaian', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahP()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('ijazah_penyesuaian', 1)
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getIjazahTerakhir()
     {
         $this->db->select('*')
@@ -11184,7 +11213,16 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 11){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/permohonan_salinan_sk';
-            }  else {
+            } else if($id_m_layanan == 18){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            } else if($id_m_layanan == 19){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            } else if($id_m_layanan == 20){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/ujian_dinas';
+            }   else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 
 

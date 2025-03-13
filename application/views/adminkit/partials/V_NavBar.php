@@ -311,8 +311,9 @@
 									$total = $layanan + $layanan2;  
 									;?>
 									
+									<?php if($total > 0) { ?>
 									<span class="indicator" ><?= $total;?></span>
-									
+									<?php } ?>
 								</div>
 							</a>
 							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">

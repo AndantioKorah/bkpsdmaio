@@ -134,6 +134,9 @@
                                if(id_layanan == 10){
                                 loadListRiwayatPerbaikanData()
                                }
+                               if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
+                                loadListRiwayatUjianDinas()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -153,6 +156,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/perbaikan_data/"+filename+"?v="+number;
 } else if(id_layanan == 11){
   $link = "<?=base_url();?>dokumen_layanan/permohonan_salinan_sk/"+filename+"?v="+number;
+} else if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
+  $link = "<?=base_url();?>dokumen_layanan/ujian_dinas/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

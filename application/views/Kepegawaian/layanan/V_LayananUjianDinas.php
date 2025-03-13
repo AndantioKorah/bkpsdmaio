@@ -291,18 +291,20 @@ ol {
 
 		<div class="card-body">
 
-			<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
+			<form id="form_ujian_dinas" method="post" enctype="multipart/form-data" id="form_cuti"
 				style="margin-top: -45px;">
-				<?php if($id_m_layanan == 10 || $id_m_layanan == 11) { ?>
+				
 				<input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
 				<input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-				<input type="hidden" id="sk_pangkat"
-					value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-				<?php } ?>
-				<?php if($id_m_layanan == 10) { ?>
-				<input type="hidden" id="ijazah_cpns"
-					value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
-				<?php } ?>
+				<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+				<input type="hidden" id="ijazah" value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
+				<input type="hidden" id="sk_jabatan" value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
+				<input type="hidden" id="ijazah_s_penyesuaian" value="<?php if($ijazah_s_penyesuaian) echo $ijazah_s_penyesuaian['id']; else echo "";?>">
+				<input type="hidden" id="ijazah_penyesuaian" value="<?php if($ijazah_penyesuaian) echo $ijazah_penyesuaian['id']; else echo "";?>">
+				<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
+				<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+				<input type="hidden" id="karya_tulis" value="<?php if($karya_tulis) echo $karya_tulis['id']; else echo "";?>">
+				
 				<span><b>Berkas Persyaratan :</b></span>
 				<div class="list-type1x mt-2">
 					<div class="form-group">
@@ -360,12 +362,45 @@ ol {
 						</li>
                         <li>
 							<a class="<?php if($karya_tulis){ if($karya_tulis['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-								<?php if($karya_tulis) { ?> onclick="viewBerkasPangkat('<?=$karya_tulis['gambarsk'];?>',3)"
+								<?php if($karya_tulis) { ?> onclick="viewBerkasPangkat('<?=$karya_tulis['gambarsk'];?>',6)"
 								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
 									class="fa fa-file-pdf"></i> Karya Tulis tentang Tugas Pokok* <i
 									class="fas fa-<?php if($karya_tulis) echo ''; else echo '';?>"></i></a>
 						</li>
                         <?php } ?>
+                        <?php if($id_m_layanan == 20) { ?>
+                        
+                        <li>
+							<a class="<?php if($ijazah_s_penyesuaian){ if($ijazah_s_penyesuaian['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+								<?php if($ijazah_s_penyesuaian) { ?> onclick="viewBerkasPangkat('<?=$ijazah_s_penyesuaian['gambarsk'];?>',7  )"
+								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
+									class="fa fa-file-pdf"></i> Ijazah Sebelum Penyesuaian / Transkrip Nilai* <i
+									class="fas fa-<?php if($ijazah_s_penyesuaian) echo ''; else echo '';?>"></i></a>
+						</li>
+                        <li>
+							<a class="<?php if($ijazah_penyesuaian){ if($ijazah_penyesuaian['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+								<?php if($ijazah_penyesuaian) { ?> onclick="viewBerkasPangkat('<?=$ijazah_penyesuaian['gambarsk'];?>',7)"
+								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
+									class="fa fa-file-pdf"></i> Ijazah Penyesuaian/ Transkrip Nilai* <i
+									class="fas fa-<?php if($ijazah_penyesuaian) echo ''; else echo '';?>"></i></a>
+						</li>
+                        <li>
+							<a class="<?php if($ibel){ if($ibel['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+								<?php if($ibel) { ?> onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',6)"
+								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
+									class="fa fa-file-pdf"></i> Surat Izin Belajar dan/atau Tugas Belajar Biaya Mandiri* <i
+									class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
+						</li>
+                       
+                        <li>
+							<a class="<?php if($karya_tulis){ if($karya_tulis['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+								<?php if($karya_tulis) { ?> onclick="viewBerkasPangkat('<?=$karya_tulis['gambarsk'];?>',6)"
+								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
+									class="fa fa-file-pdf"></i> Karya Tulis tentang Tugas Pokok* <i
+									class="fas fa-<?php if($karya_tulis) echo ''; else echo '';?>"></i></a>
+						</li>
+                        <?php } ?>
+
 					</ol>
 				</div>
 
@@ -423,7 +458,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-//   loadListRiwayatPerbaikanData()
+  loadListRiwayatUjianDinas()
     })
 
 
@@ -447,6 +482,8 @@ $(function(){
         $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
     } else if(id == 6){
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    } else if(id == 7){
+        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
     }
    
    
@@ -457,5 +494,118 @@ $(function(){
     })
 
   }
+
+  $('#form_ujian_dinas').on('submit', function(e){  
+        //     document.getElementById('btn_upload').disabled = true;
+        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        e.preventDefault();
+        var formvalue = $('#form_ujian_dinas');
+        var form_data = new FormData(formvalue[0]);
+        var sk_cpns = $('#sk_cpns').val()
+        var sk_pns = $('#sk_pns').val()
+        var sk_pangkat = $('#sk_pangkat').val()
+        var ijazah = $('#ijazah').val()
+        var sk_jabatan = $('#sk_jabatan').val()
+        var ijazah_s_penyesuaian = $('#ijazah_s_penyesuaian').val()
+        var ijazah_penyesuaian = $('#ijazah_penyesuaian').val()
+        var ibel = $('#ibel').val()
+        var skp1 = $('#skp1').val()
+        var karya_tulis = $('#karya_tulis').val()
+
+        var id_m_layanan = "<?=$id_m_layanan;?>"
+
+       
+        if(sk_cpns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        
+        if(sk_pns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(sk_pangkat == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(id_m_layanan == 18){
+        if(sk_jabatan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+       }
+
+       if(id_m_layanan == 19){
+        if(karya_tulis == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+       }
+        
+        
+
+        if(id_m_layanan == 18 || id_m_layanan == 19){
+        if(ijazah == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+       }
+
+       if(id_m_layanan == 20){
+        if(ijazah_s_penyesuaian == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        if(ijazah_penyesuaian == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(karya_tulis == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+       }
+
+
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananNew/")?>"+id_m_layanan,
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            if(result.success == true){
+                successtoast(result.msg)
+                loadListRiwayatUjianDinas()
+                window.scrollTo(0, 0);
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+            
+        }  
+        });  
+          
+        });
    
+function loadListRiwayatUjianDinas(){
+    $('#list_riwayat_karsu').html('')
+    $('#list_riwayat_karsu').append(divLoaderNavy)
+    $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){
+      $('#loader').hide()
+    })
+    }
+
 </script>

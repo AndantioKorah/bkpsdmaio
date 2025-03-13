@@ -1451,14 +1451,19 @@ class M_Layanan extends CI_Model
                         'updated_by' => $this->general_library->getId()
                     ]);
 
-            copy($selectedData['url_file'], $currVerifikator['url_file']);
-                    
-            // update status t_usul_ds
+            // copy($selectedData['url_file'], $currVerifikator['url_file']);
+            
+            // update status t_usul_ds_detail
+            $detail['keterangan'] = 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'];
+            $detail['updated_by'] = $this->general_library->getId();
+            
+            //jika hasil dari cron dan adalah progress, update url_done di detail ambil dari data yang sudah di DS
+            if($flag_progress == 1){
+                $detail['url_done'] = $selectedData['url_file'];
+            }
+
             $this->db->where('id', $nextVerifikator['id'])
-                    ->update('t_usul_ds_detail', [
-                        'keterangan' => 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'],
-                        'updated_by' => $this->general_library->getId()
-                    ]);
+                    ->update('t_usul_ds_detail', $detail);
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
             $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
@@ -1513,7 +1518,7 @@ class M_Layanan extends CI_Model
                 ];
 
                 $urlFile = $dataUsul['url_done'];
-                if($flag_progress){
+                if($flag_progress == 1){
                     $urlFile = $selectedData['url_file'];
                 }
 
@@ -1649,7 +1654,7 @@ class M_Layanan extends CI_Model
                         $this->db->where('id', $ld['id'])
                                 ->update('t_usul_ds_detail_progress', [
                                     'flag_selected' => 1,
-                                    // 'url_file' => $newFullPath,
+                                    'url_file' => $newFullPath,
                                     'updated_by' => $this->general_library->getId()
                                 ]);
 

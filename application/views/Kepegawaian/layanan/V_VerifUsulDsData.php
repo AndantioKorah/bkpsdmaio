@@ -58,6 +58,7 @@
               </div>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file'] ? $rs['url_file'] : $rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
+              <!-- <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file']?>')"><i class="fa fa-file-pdf"></i></button> -->
             </td>
           </tr>
         <?php } } ?>

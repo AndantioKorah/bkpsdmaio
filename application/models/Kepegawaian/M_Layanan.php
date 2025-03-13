@@ -1745,21 +1745,18 @@ class M_Layanan extends CI_Model
 
     public function loadDetailUsulDs($id){
         $detail = null;
-        $result = $this->db->select('*')
-                            ->from('t_usul_ds')
-                            ->where('id', $id)
-                            ->where('flag_active', 1)
+        $result = $this->db->select('a.*, b.nama_layanan')
+                            ->from('t_usul_ds a')
+                            ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
                             ->get()->row_array();
 
         if($result){
-            $detail = $this->db->select('a.url, a.url_done, a.flag_done, a.flag_status, a.keterangan,
-                            (
-                                SELECT concat(aa.date_verif,";",aa.flag_verif,";",aa.url_file,";",aa.keterangan) as data_progress
-                                FROM t_usul_ds_detail_progress b
-                                WHERE b.id_t_usul_ds_detail = a.id
-                            )')
+            $detail = $this->db->select('a.id, a.url, a.url_done, a.flag_done, a.flag_status, a.keterangan, a.filename')
                             ->from('t_usul_ds_detail a')
                             ->where('a.id_t_usul_ds', $result['id'])
+                            ->where('a.flag_active', 1)
                             ->order_by('a.id')
                             ->group_by('a.id')
                             ->get()->result_array();
@@ -1768,5 +1765,15 @@ class M_Layanan extends CI_Model
         }
 
         return $result;
+    }
+
+    public function loadProgressUsulDs($id){
+        return $this->db->select('a.*, b.filename')
+                        ->from('t_usul_ds_detail_progress a')
+                        ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
+                        ->where('a.id_t_usul_ds_detail', $id)
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.urutan')
+                        ->get()->result_array();
     }
 }

@@ -55,11 +55,12 @@
   function deleteData(id){
     if(confirm("Apakah Anda yakin ingin menghapus Usul DS tersebut?")){
       $.ajax({
-        url: '<?=base_url("kepegawaian/C_Layanan/deleteUsulDs")?>',
+        url: '<?=base_url("kepegawaian/C_Layanan/deleteUsulDs/")?>'+id,
         method: 'post',
         data: $(this).serialize(),
         success: function(data){
-            $('#btn_refresh').click()  
+          $('#modal_detail').modal('hide')
+          $('#btn_refresh').click()
         }, error: function(e){
             errortoast('Terjadi Kesalahan')
         }

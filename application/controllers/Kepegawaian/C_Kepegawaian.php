@@ -1199,6 +1199,15 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($this->kepegawaian->checkListIjazahCpns($id, $id_pegawai));
     }
 
+	public function checkListIjazahSP($id, $id_pegawai)
+    {
+        echo json_encode($this->kepegawaian->checkListIjazahSP($id, $id_pegawai));
+    }
+	public function checkListIjazahP($id, $id_pegawai)
+    {
+        echo json_encode($this->kepegawaian->checkListIjazahP($id, $id_pegawai));
+    }
+
 
 	public function submitVerifikasiDokumen()
 	{ 
@@ -2876,6 +2885,29 @@ class C_Kepegawaian extends CI_Controller
 		{ 
 			
 			echo json_encode($this->kepegawaian->catatanGajiBerkala());
+		}
+
+
+		public function layananUjianDinas($id_layanan){
+
+
+			$currentYear = date('Y'); 
+			$previous1Year = $currentYear - 1;   
+			$previous2Year = $currentYear - 2; 
+			$data['tahun_1_lalu'] = $previous1Year;
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['karya_tulis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','43','0');	
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
+			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+			
+			$this->load->view('kepegawaian/layanan/V_LayananUjianDinas', $data);
+		
 		}
 
 		

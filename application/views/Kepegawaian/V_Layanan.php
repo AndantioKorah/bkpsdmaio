@@ -217,7 +217,19 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
       $('#loader').hide()
     })
-    } else {
+    } else if(val == 18) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananUjianDinas/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 19) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananUjianDinas/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 20) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananUjianDinas/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }  else {
       $('#form_layanan').html('')
     }
 

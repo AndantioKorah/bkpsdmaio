@@ -998,8 +998,12 @@ class M_Layanan extends CI_Model
         // dd($data);
         if($data){
             foreach($data as $d){
-                $this->proceedNextVerifikatorUsulDs($d['ref_id'], 1, $d);
-                dd('asd');
+                // if($d['table_ref'] == 't_usul_ds_detail'){
+                //     $this->proceedNextVerifikatorUsulDs($d['ref_id'], 0, null);
+                // } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
+                //     $this->proceedNextVerifikatorUsulDs($d['ref_id'], 1, $d);
+                // }
+                // dd('asd');
                 $request = json_decode($d['request'], true);
                 if($d['url_image_ds']){
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
@@ -1014,7 +1018,7 @@ class M_Layanan extends CI_Model
                 $jsonRequest['nik'] = $credential['nik'];
                 $jsonRequest['passphrase'] = $credential['passphrase'];
                 // dd(json_encode($jsonRequest));
-
+                
                 $ws = $this->ttelib->signPdfNikPass($jsonRequest);
                 $response = json_decode($ws, true);
                 if($response == null || !isset($response['file'])){ // jika gagal
@@ -1431,7 +1435,6 @@ class M_Layanan extends CI_Model
         // dd($nextVerifikator);
 
         $this->db->trans_begin();
-
         if($nextVerifikator){
             $currVerifikator = $this->db->select('*')
                                     ->from('t_usul_ds_detail_progress a')
@@ -1449,48 +1452,32 @@ class M_Layanan extends CI_Model
                     ]);
                     
             // update status t_usul_ds
-            $this->db->where('id', $nextVerifikator['id_t_usul_ds'])
-                    ->update('t_usul_ds', [
-                        'status' => 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'],
+            $this->db->where('id', $nextVerifikator['id'])
+                    ->update('t_usul_ds_detail', [
+                        'keterangan' => 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'],
                         'updated_by' => $this->general_library->getId()
                     ]);
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
-            // jika flag_progress, buat query data usul dengan id pakai id_t_usul_ds_detail_progress
-            $dataUsul = $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
-                                b.keterangan as keterangan_ds, b.id_m_jenis_layanan')
-                                ->from('t_usul_ds_detail a')
-                                ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
-                                ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
-                                ->join('m_user d', 'b.created_by = d.id')
-                                ->where('a.flag_active', 1)
-                                ->where('a.id', $id_t_usul_ds_detail)
-                                ->where('c.flag_verif', 1)
-                                ->order_by('c.urutan', 'desc')
-                                ->group_by('a.id')
-                                ->get()->row_array();
-                                                
-            dd('asddsad');
-            $this->db->where('id', $dataUsul['id_t_usul_ds'])
-                                ->update('t_usul_ds', [
-                                    'status' => 'Menunggu DS oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado',
-                                    'updated_by' => $this->general_library->getId()
-                                ]);
+            $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
+                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan')
+                        ->from('t_usul_ds_detail a')
+                        ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
+                        ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
+                        ->join('m_user d', 'b.created_by = d.id')
+                        ->where('a.flag_active', 1)
+                        // ->where('a.id', $id_t_usul_ds_detail)
+                        ->where('c.flag_verif', 1)
+                        ->order_by('c.urutan', 'desc')
+                        ->group_by('a.id');
 
-            $randomString = generateRandomString(30, 1, 't_file_ds'); 
-            $qrTemplate = $this->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $qrTemplate['data']['qrBase64'],
-                    "tag" => $dataUsul['ds_code'],
-                    "width" => 100,
-                    "height" => 100,
-                    "page" => 1,
-                    "reason" => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado melalui apikasi Siladen."
-                ],
-                // 'file' => convertToBase64(($pathHukdis))
-            ];
+            if($flag_progress == 1){
+                $this->db->where('c.id', $id_t_usul_ds_detail);
+            } else {
+                $this->db->where('a.id', $id_t_usul_ds_detail);
+            }
+
+            $dataUsul = $this->db->get()->row_array();
 
             $existsReqDs = $this->db->select('*')
                                     ->from('t_request_ds')
@@ -1498,10 +1485,36 @@ class M_Layanan extends CI_Model
                                     ->where('ref_id', $dataUsul['id'])
                                     ->where('flag_active', 1)
                                     ->where('flag_active', 1)
-                                    ->where('flag_selected', 0)
+                                    // ->where('flag_selected', 0)
                                     ->get()->row_array();
 
             if(!$existsReqDs){ // jika tidak ada, input di t_request_ds
+                $this->db->where('id', $dataUsul['id'])
+                                    ->update('t_usul_ds_detail', [
+                                        'keterangan' => 'Menunggu DS oleh Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado',
+                                        'updated_by' => $this->general_library->getId()
+                                    ]);
+
+                $randomString = generateRandomString(30, 1, 't_file_ds'); 
+                $qrTemplate = $this->createQrTte();
+                $request_ws = [
+                    'signatureProperties' => [
+                        "tampilan" => "VISIBLE",
+                        "imageBase64" => $qrTemplate['data']['qrBase64'],
+                        "tag" => $dataUsul['ds_code'],
+                        "width" => 100,
+                        "height" => 100,
+                        "page" => 1,
+                        "reason" => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado melalui apikasi Siladen."
+                    ],
+                    // 'file' => convertToBase64(($pathHukdis))
+                ];
+
+                $urlFile = $dataUsul['url_done'];
+                if($flag_progress){
+                    $urlFile = $selectedData['url_file'];
+                }
+
                 $requestDs = [
                     'created_by' => $this->general_library->getId(),
                     'id_t_nomor_surat' => 0,
@@ -1510,7 +1523,7 @@ class M_Layanan extends CI_Model
                     'id_m_jenis_ds' => 5,
                     'random_string' => $randomString,
                     'request' => json_encode($request_ws),
-                    'url_file' => $dataUsul['url_done'],
+                    'url_file' => $urlFile,
                     'url_image_ds' => $qrTemplate['data']['qrBase64'],
                     'nama_kolom_flag' => 'flag_done',
                     'nip' => $dataUsul['nip'],
@@ -1518,6 +1531,23 @@ class M_Layanan extends CI_Model
                     'nama_jenis_ds' => $dataUsul['keterangan_ds']
                 ];
                 $this->db->insert('t_request_ds', $requestDs);
+            } else { // jika sudah ada, berarti kaban sudah DS
+                $bulan = getNamaBulan(date('m'));
+                $tahun = date('Y');
+                $newFileName = "SIGNED".substr($dataUsul['filename'], 10, strlen($dataUsul['filename'])-1);
+                $newFullPath = "arsipusulds/".$tahun."/".$bulan."/".$newFileName;
+
+                $this->db->where('id', $dataUsul['id'])
+                        ->update('t_usul_ds_detail', [
+                            'url_done' => $newFullPath,
+                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado ",
+                            'flag_status' => 1,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+
+                // simpan newfullpath ke dalam t_usul_ds_detail beserta keterangannya
+
+                copy($selectedData['url_file'], $newFullPath);
             }
         }
 
@@ -1599,6 +1629,7 @@ class M_Layanan extends CI_Model
                 $this->db->where('id', $selected['id_t_usul_ds_detail'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $fullpath,
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.$dateNow,
                             'updated_by' => $this->general_library->getId()
                         ]);
 

@@ -3269,7 +3269,7 @@
                         a.flag_terima_tpp, a.kelas_jabatan_hardcode, e.id_unitkerjamaster, g.prestasi_kerja AS prestasi_kerja_tambahan, a.id_jabatan_tambahan,
                         g.beban_kerja AS beban_kerja_tambahan, g.kelas_jabatan as kelas_jabatan_tambahan, a.flag_bendahara,
                         g.kondisi_kerja AS kondisi_kerja_tambahan, a.statuspeg, e.id_unitkerja,
-                        g.nama_jabatan AS nama_jabatan_tambahan, a.besaran_gaji')
+                        g.nama_jabatan AS nama_jabatan_tambahan, a.besaran_gaji, c.flag_override_tpp')
                         ->from('db_pegawai.pegawai a')
                         ->join('m_pangkat b', 'a.pangkat = b.id_pangkat')
                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -3336,18 +3336,10 @@
             $temp = null;
             $temp_plt = null;
             foreach($pegawai as $p){
-                // if(isset($result[$p['id_m_user']])){
-                //     $temp[$p['id_m_user']] = $result[$p['id_m_user']];
-                //     // if($p['id_m_user'] == '1806'){
-                //     //     dd($temp);
-                //     // }
-                // }
                 $result[$p['id_m_user']] = $p;
 
                 $result[$p['id_m_user']]['kepala_skpd'] = $p['kepalaskpd'];
-                $result[$p['id_m_user']]['count'] = isset($result[$p['id_m_user']]['count']) 
-                ? $result[$p['id_m_user']]['count']++ 
-                : 1;
+                $result[$p['id_m_user']]['count'] = isset($result[$p['id_m_user']]['count']) ? $result[$p['id_m_user']]['count']++ : 1;
 
                 $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                 $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
@@ -3372,48 +3364,6 @@
                             }
                         }
                     }
-                   
-                    // penentuan besaran presentasi
-                    // if($data['id_unitkerja'] == '4011000'){ // jika INSPEKTORAT
-                    //     if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
-                    //         // $result[$p['id_m_user']]['beban_kerja'] = "99";
-                    //         $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    //     } else if(isContainSeq($p['nama_jabatan'], "Ahli Madya")){
-                    //         // $result[$p['id_m_user']]['beban_kerja'] = "99";
-                    //         $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    //     } else if(isContainSeq($p['nama_jabatan'], "Ahli Muda")){
-                    //         // $result[$p['id_m_user']]['beban_kerja'] = "93.50";
-                    //         $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    //     } else if(isContainSeq($p['nama_jabatan'], "Ahli Pertama")){
-                    //         // $result[$p['id_m_user']]['beban_kerja'] = "41";
-                    //         $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    //     }  else if(isContainSeq($p['nama_jabatan'], "Mahir") || isContainSeq($p['nama_jabatan'], "Terampil") || isContainSeq($p['nama_jabatan'], "Penyelia")){
-                    //         // $result[$p['id_m_user']]['beban_kerja'] = "41";
-                    //         $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    //     }
-                    // } else if($data['id_unitkerja'] == '4026000'){ // jika BKAD
-                    //     if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
-                    //         $result[$p['id_m_user']]['beban_kerja'] = "97.89";
-                    //     } else {
-                    //         $result[$p['id_m_user']]['beban_kerja'] = "38.73";
-                    //     }
-                    // } else if($data['id_unitkerja'] == '4018000' || $data['id_unitkerja'] == '3030000' || $data['id_unitkerja'] == '4012000'){ // jika BKPSDM atau PTSP atau bapelitbang
-                    //     if($result[$p['id_m_user']]['beban_kerja'] == "0" || $result[$p['id_m_user']]['beban_kerja'] == 0){
-                    //         $result[$p['id_m_user']]['beban_kerja'] = "19.014023292059";
-                    //     }
-                    // } else if($data['id_unitkerja'] == '3015000'){ //jika DISDUKCAPIL
-                    //     if($result[$p['id_m_user']]['beban_kerja'] == "0" || $result[$p['id_m_user']]['beban_kerja'] == 0){
-                    //         $result[$p['id_m_user']]['beban_kerja'] = "23.94";
-                    //     }
-                    // } else if($data['id_unitkerja'] == '1010400' || $data['id_unitkerja'] == '1030750' || $data['id_unitkerja'] == '1020500'){ // jika BAGIAN HUKUM / BPK / BARJAS
-                    //     if($result[$p['id_m_user']]['beban_kerja'] == "0" || $result[$p['id_m_user']]['beban_kerja'] == 0){
-                    //         $result[$p['id_m_user']]['beban_kerja'] = "23.94";
-                    //     }
-                    // } else if($data['id_unitkerja'] == '7005010' || $data['id_unitkerja'] == '7005020'){ // jika RSUD atau RSKDGM
-                    //     if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
-                    //         $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
-                    //     }
-                    // }
                     
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
@@ -3425,26 +3375,7 @@
                                 $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                             }
                         }
-                        
-                        // $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jft'];
                     }
-
-                    // if($this->general_library->isProgrammer()){
-                    //     if(!isset($p['skpd'])){
-                    //         dd($p);
-                    //     }
-                    // }
-
-                    if($p['id_unitkerja'] == 6170000 || // if puskes bunaken
-                    $unitkerja['id_unitkerjamaster_kecamatan'] == 5011001 || // sekolah di bunaken kepulauan
-                    $p['id_unitkerja'] == 8020096){  // smp bunaken kepulauan
-                        if($result[$p['id_m_user']]['kondisi_kerja'] == "0" || $result[$p['id_m_user']]['kondisi_kerja'] == 0){
-                            $result[$p['id_m_user']]['kondisi_kerja'] = "19.014023292059";
-                        }
-                    }
-                    // else if($p['id_unitkerjamaster'] == 5011001){ // if kecamatan bunaken kepulauan
-
-                    // }
 
                     if(isset($p['id_jabatan_tambahan']) && $p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                         if(stringStartWith("Kepala Puskesmas", $p['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
@@ -3465,28 +3396,89 @@
                 } else if($p['jenis_jabatan'] == 'Struktural'){ // jika struktural
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                 }  else if($p['jenis_jabatan'] == 'JFU'){ // jika JFU
-                    // if($data['id_unitkerja'] == '7005010' || $data['id_unitkerja'] == '7005020'){ // jika RSUD atau RSKDGM
-                    //     $result[$p['id_m_user']]['kondisi_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
-                    // } else {
-                    //     $result[$p['id_m_user']]['beban_kerja'] = $this->getBebanKerjaJfuSkpd($data['id_unitkerja']);
-                    // }
-
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
+                }
+
+                if($data['id_unitkerja'] == 4026000){ // jika BKAD
+                    if($p['jenis_jabatan'] == 'JFT'){
+                        if(isContainSeq($p['nama_jabatan'], "Ahli Pertama") || isContainSeq($p['nama_jabatan'], "Penyelia")){
+                            $result[$p['id_m_user']]['beban_kerja'] = 15;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 48;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        } else if(isContainSeq($p['nama_jabatan'], "Lanjutan") 
+                        || isContainSeq($p['nama_jabatan'], "Mahir")
+                        || isContainSeq($p['nama_jabatan'], "Terampil")
+                        || isContainSeq($p['nama_jabatan'], "Pemula")
+                        ){
+                            $result[$p['id_m_user']]['beban_kerja'] = 17;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        }
+                    } else if($p['jenis_jabatan'] == 'JFU'){
+                        if($result[$p['id_m_user']]['kelas_jabatan'] == 7){
+                            $result[$p['id_m_user']]['beban_kerja'] = 30;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 23;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 25;
+                        } else if($result[$p['id_m_user']]['kelas_jabatan'] == 6){
+                            $result[$p['id_m_user']]['beban_kerja'] = 28;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        } else if($result[$p['id_m_user']]['kelas_jabatan'] == 5){
+                            $result[$p['id_m_user']]['beban_kerja'] = 17;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        }
+                    }
+                } else if($data['id_unitkerja'] == 4012000){ // jika BAPELITBANG
+                    if($p['jenis_jabatan'] == 'JFT'){
+                        if(isContainSeq($p['nama_jabatan'], "Ahli Utama")){
+                            $result[$p['id_m_user']]['beban_kerja'] = 17;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        }
+                    } else if($p['jenis_jabatan'] == 'JFU'){
+                        if($result[$p['id_m_user']]['kelas_jabatan'] == 6){
+                            $result[$p['id_m_user']]['beban_kerja'] = 0;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 49;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        }
+                    }
+                } else if($data['id_unitkerja'] == 3015000){ // jika CAPIL
+                    if($p['jenis_jabatan'] == 'JFT'){
+                        if(isContainSeq($p['nama_jabatan'], "Mahir")){
+                            $result[$p['id_m_user']]['beban_kerja'] = 37;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 30;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        } else if(isContainSeq($p['nama_jabatan'], "Terampil")){
+                            $result[$p['id_m_user']]['beban_kerja'] = 15;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 48;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        }
+                    }
+                } 
+
+                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
+                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                 }
 
                 $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
                 $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
                 $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
 
-                // if($data['id_unitkerja'] == 1030550){
-                //     // dd($p);
-                // }
-                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
-                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
+                if(isset($p['flag_override_tpp']) && $p['flag_override_tpp'] == 1){
+                    $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja'];
+                    $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
+                    $result[$p['id_m_user']]['kondisi_kerja'] = $p['kondisi_kerja'];
                 }
                 
+                // if($p['nipbaru_ws'] == '197605242003122003'){
+                //     // dd($result[$p['id_m_user']]);
+                //     // dd(json_encode($p));
+                //     // dd($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]);
+                // }
+
                 $result[$p['id_m_user']]['nama_jabatan'] = $p['nama_jabatan'];
                 
                 $result[$p['id_m_user']]['jenis_jabatan'] = $p['jenis_jabatan'];

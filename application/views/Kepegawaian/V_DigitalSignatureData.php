@@ -10,7 +10,7 @@
             <button id="btn_ds_top_selected" class="btn btn-success">Digital Sign (<span class="count_selected_files">0</span>)</button>
         </div>
     <?php } ?>
-    <div class="div_table mt-3" style="min-height: 50vh; overflow-y: scroll;">
+    <div class="div_table mt-3" style="max-height: 50vh; overflow-y: scroll;">
         <table class="table" id="table_pilih_ds">
             <thead>
                 <th class="text-center">

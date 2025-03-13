@@ -1454,7 +1454,7 @@
         $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user,
-            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun')
+            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp')
                                 ->from('t_hardcode_nominatif a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg', 'left')
                                 ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
@@ -1522,7 +1522,7 @@
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja,
-            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat')
+            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
                                 ->join('m_user c', 'a.id_m_user = c.id')

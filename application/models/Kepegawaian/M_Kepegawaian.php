@@ -7,6 +7,7 @@ class M_Kepegawaian extends CI_Model
 		$this->load->model('general/M_General', 'general');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('simata/M_Simata', 'simata');
+        $this->load->model('kepegawaian/M_Layanan', 'layanan');
         // $this->db = $this->load->database('main', true);
     }
 
@@ -7579,6 +7580,10 @@ public function submitEditJabatan(){
                         'url' => $selected['url_file'],
                         'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                     ]);
+
+                    if($selected['table_ref'] == 't_usul_ds_detail'){
+                        $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                    }
 
                     $cronRequest[$selectedId] = [];
 

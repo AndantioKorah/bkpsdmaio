@@ -5770,7 +5770,7 @@ public function submitEditJabatan(){
     $id_layanan[] = null;
     if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
         // if($this->general_library->getId() != 78){
-        // $id_layanan[] = 17;
+        $id_layanan[] = 17;
     // }
     }
 

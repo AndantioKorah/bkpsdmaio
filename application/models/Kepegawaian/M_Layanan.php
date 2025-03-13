@@ -1444,14 +1444,14 @@ class M_Layanan extends CI_Model
                                     ->get()->row_array();
             // dd($currVerifikator);
 
-            copy($selectedData['url_file'], $currVerifikator['url_file']);
-
             $this->db->where('id', $nextVerifikator['id_t_usul_ds_detail_progress'])
                     ->update('t_usul_ds_detail_progress', [
                         'flag_ds_now' => 1,
                         'url_file' => $currVerifikator['url_file'],
                         'updated_by' => $this->general_library->getId()
                     ]);
+
+            copy($selectedData['url_file'], $currVerifikator['url_file']);
                     
             // update status t_usul_ds
             $this->db->where('id', $nextVerifikator['id'])

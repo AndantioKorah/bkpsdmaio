@@ -389,7 +389,9 @@ class C_Rekap extends CI_Controller
         // jika flag_use_this, gunakan file yang sudah ada. cari sandiri dpe coding 
 
         // if($flag_excel == 0){
-            $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            // $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            $html = $this->load->view('rekap/V_BerkasTppDownloadNew', $data, true);
+            // dd($html);
             if($this->general_library->isProgrammer()){
                 // dd($html);
             }
@@ -709,6 +711,7 @@ class C_Rekap extends CI_Controller
         // $mpdf->Output();
 
         $html = $this->load->view('rekap/V_RekapTppPdf', $data, true);
+        // $html = $this->load->view('rekap/V_RekapTppPdfNew', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         // $this->stylesheet = file_get_contents('css/style.css');
         $this->mpdf->AddPage(

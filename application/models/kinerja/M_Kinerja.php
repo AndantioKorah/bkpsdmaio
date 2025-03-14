@@ -3534,9 +3534,13 @@
                     }
                 }
 
-                $explode = explode(".", $result[$p['id_m_user']]['pagu_tpp']);
-                $minus = substr($explode[0], -3);
-                $result[$p['id_m_user']]['pagu_tpp'] = intval($explode[0]) - intval($minus);
+                // dd($result[$p['id_m_user']]['pagu_tpp']);
+
+                // diubah menjadi 000
+                // $explode = explode(".", $result[$p['id_m_user']]['pagu_tpp']);
+                // $minus = substr($explode[0], -3);
+                // $result[$p['id_m_user']]['pagu_tpp'] = intval($explode[0]) - intval($minus);
+
                 // if($p['kepalaskpd'] == 1){
                 //     echo(floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]));
                 //     dd($result[$p['id_m_user']]);

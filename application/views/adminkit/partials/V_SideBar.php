@@ -544,6 +544,7 @@
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
+	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -583,7 +584,8 @@
 				<?php } ?>
 				<?php if($this->general_library->isProgrammer() ||
 				$this->general_library->isAdminAplikasi() || 
-				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') 
+				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') || 
+				$this->general_library->isHakAkses('admin_pengajuan_cuti')
 				// buka 3 dibawah ini untuk verifikasi melalui SILADEN. sekarang ditutup karena bocor
 				// ||
 				// $this->general_library->isKepalaPd() ||
@@ -595,11 +597,15 @@
 							<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 						</a>
 					</li>
+					<?php if($this->general_library->isProgrammer()
+					|| $this->general_library->isHakAkses('admin_pengajuan_cuti')
+					){ ?>
 					<li class="sidebar-item ">
 						<a title="Operator Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-operator-cuti')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Operator Cuti
 						</a>
 					</li>
+					<?php } ?>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){ ?>
 				<li class="sidebar-item ">

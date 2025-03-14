@@ -1127,7 +1127,7 @@
         $result['sek'] = $sek;
         $result['kadis'] = $kadis;
 
-        if($pegawai['nip_kepalaskpd_hardcode']){
+        if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $result['kepala'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                         e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
                                         ->from('db_pegawai.pegawai a')

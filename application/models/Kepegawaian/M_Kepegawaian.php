@@ -5778,17 +5778,19 @@ public function submitEditJabatan(){
 
     $id_layanan[] = null;
     if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
-        if($this->general_library->getId() != 78){
+        // if($this->general_library->getId() != 78){
         $id_layanan[] = 17;
-    }
+    // }
     }
 
     $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
         ->join('db_efort.m_layanan as b', 'a.jenis_pensiun = b.id')
         ->join('db_efort.m_user as c', 'a.id_m_user = c.id')
+        ->join('db_efort.t_checklist_pensiun as d', 'c.username = d.nip','left')
         ->from('db_efort.t_pensiun a')
         ->where('a.status', 0)
         ->where('a.flag_active', 1)
+        ->where('d.id is null')
         ->where_in('a.jenis_pensiun',$id_layanan)
         ->order_by('a.created_date', 'desc');
         

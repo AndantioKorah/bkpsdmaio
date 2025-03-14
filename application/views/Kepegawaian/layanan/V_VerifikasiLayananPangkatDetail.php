@@ -500,7 +500,7 @@
 					<?php } ?>
           <?php if($id_m_layanan == 7) { ?>
 					<input type="hidden"  name="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
-					<input type="hidden" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+					<input type="text" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
 
           <?php } ?>
           <?php if($id_m_layanan == 8) { ?>
@@ -513,6 +513,8 @@
 					<input type="hidden" name="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
 					<input type="hidden" name="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
 					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
+					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
+          
           <?php } ?>
 
       <div class="mb-3">

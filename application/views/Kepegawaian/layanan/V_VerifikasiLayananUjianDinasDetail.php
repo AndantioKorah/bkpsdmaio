@@ -1,58 +1,77 @@
 <style>
-  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    background-color: #222e3c;
-    color: #fff;
+  .nav-pills .nav-link.active,
+  .nav-pills .show>.nav-link {
+  	background-color: #222e3c;
+  	color: #fff;
   }
+
   .nav-pills .nav-link {
-    color: #000;
-    border: 0;
-    border-radius: var(--bs-nav-pills-border-radius);
+  	color: #000;
+  	border: 0;
+  	border-radius: var(--bs-nav-pills-border-radius);
   }
 
-  .nav-link-layanan{
-    padding: 5px !important;
-    font-size: .7rem;
-    color: black;
-    border-right: .5px solid var(--primary-color) !important;
-    border-radius: 0px !important;
-    border-bottom-left-radius: 0px;
+  .nav-link-layanan {
+  	padding: 5px !important;
+  	font-size: .7rem;
+  	color: black;
+  	border-right: .5px solid var(--primary-color) !important;
+  	border-radius: 0px !important;
+  	border-bottom-left-radius: 0px;
   }
 
-  .nav-item-layanan:hover, .nav-link-layanan:hover{
-    color: white !important;
-    background-color: #222e3c91;
-    border-color: 1px solid var(--primary-color) !important;
-  }
-  .customTextarea { width: 100% !important; height: 125px!important; }
-
-  .sp_profil{
-    font-size: .9rem;
-    font-weight: bold;
+  .nav-item-layanan:hover,
+  .nav-link-layanan:hover {
+  	color: white !important;
+  	background-color: #222e3c91;
+  	border-color: 1px solid var(--primary-color) !important;
   }
 
-  .sp_profil_sm{
-    font-size: .8rem;
-    font-weight: bold;
+  .customTextarea {
+  	width: 100% !important;
+  	height: 125px !important;
   }
 
-  .sp_label{
-    font-size: .6rem;
-    font-style: italic;
-    font-weight: 600;
-    color: grey;
+  .sp_profil {
+  	font-size: .9rem;
+  	font-weight: bold;
   }
 
-  .div_label{
-    margin-bottom: -5px;
+  .sp_profil_sm {
+  	font-size: .8rem;
+  	font-weight: bold;
   }
 
-  #profile_pegawai{
-      width: 150px;
-      height: calc(150px * 1.25);
-      background-size: cover;
-      object-fit: cover;
-      box-shadow: 5px 5px 10px #888888;
-      border-radius: 10%;
+  .sp_label {
+  	font-size: .6rem;
+  	font-style: italic;
+  	font-weight: 600;
+  	color: grey;
+  }
+
+  .div_label {
+  	margin-bottom: -5px;
+  }
+
+  #profile_pegawai {
+  	width: 150px;
+  	height: calc(150px * 1.25);
+  	background-size: cover;
+  	object-fit: cover;
+  	box-shadow: 5px 5px 10px #888888;
+  	border-radius: 10%;
+  }
+
+  .sp_whatsapp {
+  	color: #50575e !important;
+  	cursor: pointer;
+  	text-decoration: none;
+  }
+
+  .sp_whatsapp:hover {
+  	color: green !important;
+  	text-decoration: none;
+  	transition: .2s;
   }
 </style>
 
@@ -182,15 +201,41 @@
   </div>
   
   <div style="border-style:solid;border-color: #222e3c;padding:10px;background-color:#e1e1e1;" class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="row">
+  <div class="row table-responsive" style="height:350px;">
+    <div class="col-lg-4">
+  <div class="row ">
           <?php if($result[0]['statuspeg'] == 1){ ?>
             <div class="col-lg-12 text-left">
               <h3><span class="badge badge-danger">CPNS</span></h3>
             </div>
           <?php } ?>
+          <?php
+                $badge_status = 'badge-cpns';
+                if($result[0]['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($result[0]['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                }
+
+                $badge_aktif = 'badge-aktif';
+                if($result[0]['id_m_status_pegawai'] == 2){
+                  $badge_aktif = 'badge-pensiun-bup';
+                } else if($result[0]['id_m_status_pegawai'] == 3){
+                  $badge_aktif = 'badge-pensiun-dini';
+                } else if($result[0]['id_m_status_pegawai'] == 4){
+                  $badge_aktif = 'badge-diberhentikan';
+                } else if($result[0]['id_m_status_pegawai'] == 5){
+                  $badge_aktif = 'badge-mutasi';
+                } else if($result[0]['id_m_status_pegawai'] == 6){
+                  $badge_aktif = 'badge-meninggal';
+                } else if($result[0]['id_m_status_pegawai'] == 8){
+                  $badge_aktif = 'badge-tidak-aktif';
+                }
+              ?>
+            
+              
           <div class="col-lg-12 text-center">
+            
           <a href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result[0]['nipbaru_ws']?>" target="_blank">
           <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
                             data-src="<?php
@@ -199,7 +244,7 @@
                                 if( $result[0]['fotopeg']){
                                 if (file_exists($path)) {
                                    $src = './assets/fotopeg/'. $result[0]['fotopeg'];
-                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                  //  $src = '../siladen/assets/fotopeg/'.$result[0]['fotopeg'];
                                 } else {
                                   $src = './assets/img/user.png';
                                   // $src = '../siladen/assets/img/user.png';
@@ -223,9 +268,12 @@
             </span>
           </div>
         </div>
-      </div>
-      <div class="col-lg-12">
-        <div class="row">
+        <div class="col-lg-12 text-center">
+                <h3><span class="badge <?=$badge_status?>"><?=$result[0]['nm_statuspeg']?></span></h3>
+              </div>
+  </div>
+  <div class="col-lg-4">
+  <div class="row">
           <div class="col-lg-12 div_label text-left">
             <span class="sp_label">
               Perangkat Daerah
@@ -236,10 +284,7 @@
               <?=($result[0]['nm_unitkerja'])?>
             </span>
           </div>
-          <div class="col-lg-12"></div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
+         
                 <div class="col-lg-12 div_label text-left">
                   <span class="sp_label">
                     Pangkat / Gol. Ruang
@@ -250,117 +295,132 @@
                     <?=($result[0]['nm_pangkat'])?>
                   </span>
                 </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Jabatan 
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($result[0]['nama_jabatan'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  NIK (Nomor Induk Kependudukan) 
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($result[0]['nik'])?>
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Tempat, Tanggal Lahir
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=($result[0]['tptlahir'].', '.formatDateNamaBulan($result[0]['tgllahir']))?>
+
+                  </span>
+                </div>
+
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  Alamat
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                    <?=($result[0]['alamat'])?>
+                  </span>
+                </div>
+
+              
+
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
+          
+           
+          
+            
+  </div>
+  <div class="col-lg-4">
+              <div class="col-lg-12 div_label">
                 <span class="sp_label">
                   TMT Pangkat
                 </span>
               </div>
-              <div class="col-lg-12 text-right" >
+              <div class="col-lg-12 " >
                 <span class="sp_profil_sm">
-                  <?=formatDateNamaBulan($result[0]['tmt_pangkat'])?>
+                  <?=formatDateNamaBulan($result[0]['tmtpangkat'])?>
                 </span>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Jabatan
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nama_jabatan'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
+
+              <div class="col-lg-12 div_label">
                 <span class="sp_label">
                   TMT Jabatan
                 </span>
               </div>
-              <div class="col-lg-12 text-right" >
+              <div class="col-lg-12 " >
                 <span class="sp_profil_sm">
                   <?=formatDateNamaBulan($result[0]['tmtjabatan'])?>
                 </span>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  NIK (Nomor Induk Kependudukan)
-                </span>
-              </div>
-              <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nik'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  Agama
-                </span>
-              </div>
-              <div class="col-lg-12 text-right" >
-                <span class="sp_profil_sm">
-                  <?=($result[0]['nm_agama'])?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-left">
-                <span class="sp_label">
-                  Tempat, Tanggal Lahir
-                </span>
-              </div>
-              <div class="col-lg-12 text-left">
-                <span class="sp_profil_sm">
-                  <?=($result[0]['tptlahir'].', '.formatDateNamaBulan($result[0]['tgllahir']))?>
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
-                <span class="sp_label">
-                  Jenis Kelamin / Umur
-                </span>
-              </div>
-              <div class="col-lg-12 text-right">
-                <span class="sp_profil_sm">
-                  <?=$result[0]['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $result[0]['tgllahir'], ['tahun', 'bulan'])?>
-                </span>
-              </div>
-            </div>
 
-            <div class="col-lg-6">
+              <div class="col-lg-12 div_label">
+                <span class="sp_label">
+                  TMT Gaji Berkala Terakhir
+                </span>
+              </div>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtgjberkala'])?>
+                </span>
+              </div>
+
               <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                  TMT CPNS
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left" >
+                  <span class="sp_profil_sm">
+                  <?=formatDateNamaBulan($result[0]['tmtcpns'])?>
+                  </span>
+                </div>
+
+              <div class="col-lg-12 div_label">
                 <span class="sp_label">
-                  Alamat
+                Jenis Kelamin / Umur 
                 </span>
               </div>
-              <div class="col-lg-12 text-left">
+              <div class="col-lg-12 " >
                 <span class="sp_profil_sm">
-                <?=($result[0]['alamat'])?>
+                <?=$result[0]['jk'].' / '.countDiffDateLengkap(date('Y-m-d'), $result[0]['tgllahir'], ['tahun', 'bulan'])?>
                 </span>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="col-lg-12 div_label text-right">
+
+              <div class="col-lg-12 div_label">
                 <span class="sp_label">
-                  No Handphone/WA
+                No Handphone/WA 
                 </span>
               </div>
-              <div class="col-lg-12 text-right">
-                <span class="sp_profil_sm">
-                <?=($result[0]['handphone'])?>
+              <div class="col-lg-12 " >
+                <span class="sp_profil_sm sp_profil_alamat">
+                <?php if($result[0]['handphone'] != null) { ?>
+                    <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($result[0]['handphone'])?>">
+                      <?= $result[0]['handphone'] != null ? $result[0]['handphone'] : '-'; ?>
+                      <i class="fab fa-whatsapp"></i></a>
+                  <?php } else { ?>
+                    <?= $result[0]['handphone'] != null ? $result[0]['handphone'] : '-'; ?>
+                  <?php } ?>
                 </span>
               </div>
-            </div>
 
           </div>
         </div>

@@ -206,7 +206,7 @@
   </div> -->
   </div>
   
-  <div class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+  <div style="border-style:solid;border-color: #222e3c;padding:10px;background-color:#e1e1e1;" class="tab-pane show active" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
     <div class="row">
       <div class="col-lg-12">
         <div class="row">

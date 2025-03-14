@@ -10430,6 +10430,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
     ->join('db_pegawai.agama i', 'b.agama = id_agama')
     ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+    ->join('db_pegawai.statuspeg k', 'b.statuspeg = k.id_statuspeg')
     ->where('c.id', $id);
 
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){

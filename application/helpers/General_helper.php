@@ -619,6 +619,15 @@ function formatCurrencyWithoutRp($data, $decimal = 2)
     return number_format(floatval($explode[0]), $decimal, ",", ".");
 }
 
+function formatCurrencyWithoutRpNew($data, $decimal = 2)
+{
+    $data = pembulatanNew($data);
+    $explode = explode(".", $data);
+    $rs = number_format(floatval($explode[0]), $decimal, ",", ".");
+    // dd($rs);
+    return $rs;
+}
+
 function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
 {
     return number_format($data, $decimal, ",", ".");
@@ -1318,6 +1327,7 @@ function countTmtPensiun($nip, $umur = 0){
 }
 
 function pembulatan($number){
+    return pembulatanNew($number);
     // return $number;
 
     $temp = explode(".", $number);
@@ -1340,6 +1350,31 @@ function pembulatan($number){
     //     }
     // }
     // return $number;
+}
+
+function pembulatanNew($number){
+    // return $number;
+
+    // $temp = explode(".", $number);
+
+    // return $temp[0];
+
+    // return number_format($number,0,'.','');
+
+    $CI = &get_instance();
+
+    $rounded = floor($number);
+    // return $rounded;
+    $whole = $number - $rounded;
+    if($whole != 0){
+        // if($CI->general_library->isProgrammer()){
+        //     $number = $rounded;
+        // } else {
+            // pembulatan angka belakang comma, jika 0.5 ke atas, tambahkan 1
+            $number = $whole >= 0.5 ? $rounded + 1 : $rounded;
+        // }
+    }
+    return $number;
 }
 
 function excelRoundDown($number, $length){

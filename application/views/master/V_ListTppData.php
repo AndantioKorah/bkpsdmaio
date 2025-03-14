@@ -32,7 +32,8 @@
           <td class="text-center"><?=(floatval($rs['kondisi_kerja'])).'%'?></td>
           <td class="text-center"><?=floatval($rs['prestasi_kerja']) + floatval($rs['beban_kerja']) + floatval($rs['kondisi_kerja']).'%'?></td>
         <?php } ?>
-        <td class="text-left" style="font-weight: bold;"><?='Rp '.formatCurrencyWithoutRp($rs['pagu_tpp'], 0)?></td>
+        <!-- <td class="text-left" style="font-weight: bold;"><?='Rp '.formatCurrencyWithoutRp(($rs['pagu_tpp']), 0)?></td> -->
+        <td class="text-left" style="font-weight: bold;"><?='Rp '.formatCurrencyWithoutRpNew(pembulatan($rs['pagu_tpp']), 0)?></td>
       </tr>
     <?php } } ?>
   </tbody>

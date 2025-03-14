@@ -30,13 +30,41 @@
         </td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
-        <td class="text-center"></td>
+        <td class="text-center">
+          <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-detail"></i> Detail</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+        </td>
       </tr>
     <?php } } ?>
   </tbody>
 </table>
 <script>
-  $(function(){{
+  $(function(){
     $('#table_riwayat_usul_ds').dataTable()
-  }})
+  })
+
+  function openDetailModal(id){
+    $('#modal_detail').modal('show')
+    $('#modal_detail_content').html('')
+    $('#modal_detail_content').append(divLoaderNavy)
+    $('#modal_detail_content').load('<?=base_url("kepegawaian/C_Layanan/loadDetailUsulDs/")?>'+id, function(){
+      $('#loader').hide()
+    })
+  }
+
+  function deleteData(id){
+    if(confirm("Apakah Anda yakin ingin menghapus Usul DS tersebut?")){
+      $.ajax({
+        url: '<?=base_url("kepegawaian/C_Layanan/deleteUsulDs/")?>'+id,
+        method: 'post',
+        data: $(this).serialize(),
+        success: function(data){
+          $('#modal_detail').modal('hide')
+          $('#btn_refresh').click()
+        }, error: function(e){
+            errortoast('Terjadi Kesalahan')
+        }
+      })
+    }
+  }
 </script>

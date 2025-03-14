@@ -7564,6 +7564,8 @@ public function submitEditJabatan(){
 
                 $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
                 $response = json_decode($oneData, true);
+                // dd(json_encode($response));
+
 
                 if($response == null || !isset($response['file'])){ // jika gagal
                     $res['code'] = 1;

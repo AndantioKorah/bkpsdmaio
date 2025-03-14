@@ -397,7 +397,7 @@ class M_Layanan extends CI_Model
 
         $this->db->insert_batch('t_checklist_pensiun_detail', $list_input);
 
-        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s'));
+        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWTWT(date('Y-m-d H:i:s'));
         
         return $rs;
     }
@@ -1416,7 +1416,7 @@ class M_Layanan extends CI_Model
                     ->update('t_usul_ds_detail_progress', [
                         'date_verif' => date('Y-m-d'),
                         'url_file' => $selectedData['url_file'],
-                        'keterangan' => "Telah ditandatangani oleh ".$progress['nama_jabatan']
+                        'keterangan' => "Telah ditandatangani oleh ".$progress['nama_jabatan'].' pada '.formatDateNamaBulanWT(date('Y-m-d H:i:s'))
                     ]);
 
             $nextVerifikator = $this->db->select('a.*, b.ds_code, c.urutan, c.nama_jabatan, c.id as id_t_usul_ds_detail_progress')
@@ -1436,11 +1436,12 @@ class M_Layanan extends CI_Model
 
         $this->db->trans_begin();
         if($nextVerifikator){
-            $currVerifikator = $this->db->select('*')
+            $currVerifikator = $this->db->select('a.*, b.url_done')
                                     ->from('t_usul_ds_detail_progress a')
+                                    ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
                                     ->where('a.id_t_usul_ds_detail', $nextVerifikator['id'])
                                     ->where('urutan', intval($nextVerifikator['urutan']-1))
-                                    ->where('flag_active', 1)
+                                    ->where('a.flag_active', 1)
                                     ->get()->row_array();
             // dd($currVerifikator);
 
@@ -1450,13 +1451,21 @@ class M_Layanan extends CI_Model
                         'url_file' => $currVerifikator['url_file'],
                         'updated_by' => $this->general_library->getId()
                     ]);
-                    
-            // update status t_usul_ds
+
+            // copy($selectedData['url_file'], $currVerifikator['url_file']);
+            
+            // update status t_usul_ds_detail
+            $detail['keterangan'] = 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'];
+            $detail['updated_by'] = $this->general_library->getId();
+            
+            //jika hasil dari cron dan adalah progress, update url_done di detail ambil dari data yang sudah di DS
+            if($flag_progress == 1){
+                $detail['url_done'] = $selectedData['url_file'];
+                copy($selectedData['url_file'], $currVerifikator['url_done']);
+            }
+
             $this->db->where('id', $nextVerifikator['id'])
-                    ->update('t_usul_ds_detail', [
-                        'keterangan' => 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'],
-                        'updated_by' => $this->general_library->getId()
-                    ]);
+                    ->update('t_usul_ds_detail', $detail);
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
             $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
@@ -1469,6 +1478,7 @@ class M_Layanan extends CI_Model
                         // ->where('a.id', $id_t_usul_ds_detail)
                         ->where('c.flag_verif', 1)
                         ->order_by('c.urutan', 'desc')
+                        ->limit(1)
                         ->group_by('a.id');
 
             if($flag_progress == 1){
@@ -1485,6 +1495,7 @@ class M_Layanan extends CI_Model
                                     ->where('ref_id', $dataUsul['id'])
                                     ->where('flag_active', 1)
                                     ->where('flag_active', 1)
+                                    ->limit(1)
                                     // ->where('flag_selected', 0)
                                     ->get()->row_array();
 
@@ -1511,7 +1522,7 @@ class M_Layanan extends CI_Model
                 ];
 
                 $urlFile = $dataUsul['url_done'];
-                if($flag_progress){
+                if($flag_progress == 1){
                     $urlFile = $selectedData['url_file'];
                 }
 
@@ -1540,7 +1551,7 @@ class M_Layanan extends CI_Model
                 $this->db->where('id', $dataUsul['id'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $newFullPath,
-                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado ",
+                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado",
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
@@ -1601,6 +1612,8 @@ class M_Layanan extends CI_Model
             $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
             $response = json_decode($oneData, true);
 
+            // $response['file'] = 'asd'; // buka comment ini untuk testing
+
             if($response == null || !isset($response['file'])){ // jika gagal
                 $res['code'] = 1;
                 $res['message'] = $oneData;
@@ -1612,7 +1625,7 @@ class M_Layanan extends CI_Model
                 $fullpath = $filepath."/".$newFileName;
                 // $fullpath = $filepath."/".$selected['filename'];
 
-                base64ToFile($response['file'][0], $fullpath); //simpan ke file
+                base64ToFile($response['file'][0], $fullpath); //simpan ke file, comment ini untuk testing
 
                 // update t_usul_ds_detail_progress
                 $dateNow = date('Y-m-d H:i:s');
@@ -1623,13 +1636,13 @@ class M_Layanan extends CI_Model
                             'flag_selected' => 1,
                             'url_file' => $fullpath,
                             'updated_by' => $this->general_library->getId(),
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.$dateNow
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow)
                         ]);
 
                 $this->db->where('id', $selected['id_t_usul_ds_detail'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $fullpath,
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.$dateNow,
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow),
                             'updated_by' => $this->general_library->getId()
                         ]);
 
@@ -1638,16 +1651,21 @@ class M_Layanan extends CI_Model
                 $batchId = generateRandomString(10);
                 foreach($list_data as $ld){
                     if($ld['id'] != $selected['id']){
-                        $explFn = explode(".pdf", $ld['filename']);
+                        $oldFileName = "arsipusulds/".$tahun."/".$bulan."/".$ld['filename'];
+                        if($ld['url_done']){
+                            $oldFileName = $ld['url_done'];
+                        }
+                        $explFn = explode(".pdf", $oldFileName);
                         $newFileName = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
-                        $newFullPath = "arsipusulds/".$tahun."/".$bulan."/".$newFileName;
-
-                        copy($ld['url'], $newFullPath);
+                        $newFullPath = $newFileName;
+                        
+                        // dd($oldFileName.'<br>'.$newFullPath);
+                        copy($oldFileName, $newFullPath); // comment ini untuk testing
                         
                         $this->db->where('id', $ld['id'])
                                 ->update('t_usul_ds_detail_progress', [
                                     'flag_selected' => 1,
-                                    // 'url_file' => $newFullPath,
+                                    'url_file' => $newFullPath,
                                     'updated_by' => $this->general_library->getId()
                                 ]);
 
@@ -1734,5 +1752,39 @@ class M_Layanan extends CI_Model
         }
 
         return $this->db->get()->result_array();
+    }
+
+    public function loadDetailUsulDs($id){
+        $detail = null;
+        $result = $this->db->select('a.*, b.nama_layanan')
+                            ->from('t_usul_ds a')
+                            ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+        if($result){
+            $detail = $this->db->select('a.id, a.url, a.url_done, a.flag_done, a.flag_status, a.keterangan, a.filename')
+                            ->from('t_usul_ds_detail a')
+                            ->where('a.id_t_usul_ds', $result['id'])
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.id')
+                            ->group_by('a.id')
+                            ->get()->result_array();
+
+            $result['detail'] = $detail;
+        }
+
+        return $result;
+    }
+
+    public function loadProgressUsulDs($id){
+        return $this->db->select('a.*, b.filename')
+                        ->from('t_usul_ds_detail_progress a')
+                        ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
+                        ->where('a.id_t_usul_ds_detail', $id)
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.urutan')
+                        ->get()->result_array();
     }
 }

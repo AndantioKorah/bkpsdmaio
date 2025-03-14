@@ -4473,7 +4473,7 @@ public function submitEditJabatan(){
         $datapost = $this->input->post();
         $this->db->trans_begin();
         $target_dir = './arsipelektronik/';
-        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+        // $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
        
         if($_FILES['file']['name'] != ""){
           
@@ -4487,7 +4487,7 @@ public function submitEditJabatan(){
         $filename = $random_number.$filename;
 
 		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = 'pdf';
+		$config['allowed_types']        = '*';
 		$config['encrypt_name']			= FALSE;
 		$config['overwrite']			= TRUE;
 		$config['detect_mime']			= TRUE; 

@@ -2877,12 +2877,12 @@
 
     public function countPaguTpp($data, $id_pegawai = null, $flag_profil = 0, $flag_rekap_tpp = 0, $flag_sekolah_kecamatan = 0){
         $result = null;
-        $bulan = isset($data['bulan']) ? $data['bulan'] : null;
-        $tahun = isset($data['tahun']) ? $data['tahun'] : null;
+        $bulan = isset($data['bulan']) ? $data['bulan'] : date('m');
+        $tahun = isset($data['tahun']) ? $data['tahun'] : date('Y');
 
         //comment salah satu di bawah
-        // if($tahun >= 2025){
-        if($this->general_library->isProgrammer()){
+        if($tahun >= 2025){
+        // if($this->general_library->isProgrammer()){
             return $this->countPaguTppNew($data, $id_pegawai, $flag_profil, $flag_rekap_tpp, $flag_sekolah_kecamatan);
         }
         // $data['bulan'] = '3';

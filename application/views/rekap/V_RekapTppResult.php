@@ -19,13 +19,13 @@
                             <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                             <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                             <?php // if($this->general_library->isProgrammer()){ ?>
-                            <?php if($data_search['tahun'] <= 2024 || $this->general_library->isProgrammer()){ ?>
+                            <?php //if($data_search['tahun'] <= 2024 || $this->general_library->isProgrammer()){ ?>
                                 <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
                                     <i class="fa fa-download"></i> Download as PDF
                                 </button>
-                            <?php } else { ?>
-                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu KEPWAL terbaru</h5>
-                            <?php } ?>
+                            <?php //} else { ?>
+                                <!-- <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu KEPWAL terbaru</h5> -->
+                            <?php //} ?>
                             <?php // } ?>
                         </form>
                     </div>
@@ -36,13 +36,13 @@
                                 <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                                 <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                                 <?php // if($this->general_library->isProgrammer()){ ?>
-                                <?php if($data_search['tahun'] <= 2024 || $this->general_library->isProgrammer()){ ?>
+                                <?php // if($data_search['tahun'] <= 2024 || $this->general_library->isProgrammer()){ ?>
                                     <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success">
                                         <i class="fa fa-download"></i> Download Format Excel
                                     </button>
-                                <?php } else { ?>
-                                    <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu Kepwal terbaru</h5>
-                                <?php } ?>
+                                <?php // } else { ?>
+                                    <!-- <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu Kepwal terbaru</h5> -->
+                                <?php //} ?>
                                 <?php // } ?>
                             </form>
                         </div>

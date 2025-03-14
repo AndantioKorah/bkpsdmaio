@@ -2592,6 +2592,9 @@ class C_Kepegawaian extends CI_Controller
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_m_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
 		}
+		if($id_m_layanan == 18 || $id_m_layanan == 19 || $id_m_layanan == 20){
+			$data['nm_layanan'] = "UJIAN DINAS DAN UJIAN PENYESUAIAN KENAIKAN PANGKAT";
+		}
 		$data['id_m_layanan'] = $id_m_layanan;
 
 		render('kepegawaian/layanan/V_VerifikasiLayanan', '', '', $data);
@@ -2607,6 +2610,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
 		} else if($id_m_layanan == 10 || $id_m_layanan == 11){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
+		} else if($id_m_layanan == 18 || $id_m_layanan == 19 || $id_m_layanan == 20){
+			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananUjianDinasItem', $data);
 		}
 	}
 
@@ -2669,7 +2674,12 @@ class C_Kepegawaian extends CI_Controller
 		} else if($layanan == 10 || $layanan == 11){
 			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpnsAdmin($id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananPerbaikanDataDetail', '', '', $data);
+		} else if($layanan == 18 || $layanan == 19 || $layanan == 20){
+			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpnsAdmin($id_peg);
+			render('kepegawaian/layanan/V_VerifikasiLayananUjianDinasDetail', '', '', $data);
 		} 
+
+		
 	}
 
 	public function getFileForVerifLayanan()

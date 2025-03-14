@@ -635,6 +635,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/18')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Ujian Dinas
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/11')?>">

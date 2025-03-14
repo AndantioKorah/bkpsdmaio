@@ -10327,9 +10327,11 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 10);
             } else if($id_m_layanan == 11){ 
                 $this->db->where('a.id_m_layanan', 11);
+            } else if($id_m_layanan == 18 || $id_m_layanan == 18 || $id_m_layanan == 20){
+                $this->db->where_in('a.id_m_layanan', [18,19,20]);
             }  else {
                 $this->db->where('a.id_m_layanan', 99);
-            }
+            } 
 
     if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
         $this->db->where('e.skpd', $data['id_unitkerja']);

@@ -274,6 +274,9 @@ $(function(){
       loadListSkp()
     })
 
+    
+
+
     $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
     // viewMode: "years", 
@@ -282,11 +285,15 @@ $(function(){
     autoclose: true
     });
 
+    var end = new Date();
+    end.setFullYear(end.getFullYear() - 2);
+
     $('.yearpicker').datepicker({
     format: 'yyyy',
     viewMode: "years", 
     minViewMode: "years",
     orientation: 'bottom',
+    endDate: end,
     autoclose: true
 });
 

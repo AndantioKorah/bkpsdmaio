@@ -2586,12 +2586,14 @@
                         ->where('a.jenis_absensi', $this->input->post('jenis_absensi'))
                         ->where('a.status', 0)
                         ->get()->result_array();
+
         foreach ($peninjauan as $rs) {
             $absen = $this->db->select('*')   
             ->from('db_sip.absen a')
             ->where('a.user_id', $rs['id_m_user'])
             ->where('a.tgl', $this->input->post('tanggal_kolektif'))
             ->get()->row_array();
+           
             if($absen){
                 if($rs['jenis_absensi'] == 1){
                     $dataUpdate['masuk'] = "07:00:00";

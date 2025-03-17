@@ -3399,6 +3399,10 @@
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
+
+                    if($result[$p['id_m_user']]['kelas_jabatan'] > 7){
+                        $result[$p['id_m_user']]['kelas_jabatan'] = 7;
+                    }
                 }
 
                 if($data['id_unitkerja'] == 4026000){ // jika BKAD

@@ -907,7 +907,7 @@
                     }
                 }
 
-                if($d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
+                if(isset($d['id_jabatan_tambahan']) && $d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                     if(isset($d['nama_jabatan_tambahan'])){
                         if(stringStartWith("Kepala Puskesmas", $d['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
                             $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_tambahan'];
@@ -926,6 +926,9 @@
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan'];
             } else if($d['jenis_jabatan'] == 'JFU'){
                 $result[$i]['kelas_jabatan'] = $d['kelas_jabatan_jfu'];
+                if($result[$i]['kelas_jabatan'] > 7){
+                    $result[$i]['kelas_jabatan'] = 7; // tahun 2025, semua JFU kelas jabatan 7
+                }
             }
 
             if(isset($d['kelas_jabatan_hardcode']) && $d['kelas_jabatan_hardcode'] != null && $d['kelas_jabatan_hardcode'] != 0){
@@ -1453,7 +1456,7 @@
 
         $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
-            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user, f.nm_unitkerja,
             a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp')
                                 ->from('t_hardcode_nominatif a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg', 'left')
@@ -2500,7 +2503,6 @@
                 // }
             }
         }
-
         $result['hukdis'] = $hukdis;
 
         // function comparator($object1, $object2) {
@@ -2938,7 +2940,7 @@
 
                     if($this->general_library->isProgrammer()){
                         if($result[$l['nipbaru_ws']]['total_presentase_kriteria'] == 0){
-                            dd($result[$l['nipbaru_ws']]);
+                            // dd($result[$l['nipbaru_ws']]);
                         }
                     }
 

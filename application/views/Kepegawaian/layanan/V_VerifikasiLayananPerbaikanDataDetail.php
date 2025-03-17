@@ -86,17 +86,23 @@
         </button> -->
   <?php } ?>
 <?php } ?>
+<?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
-
+        <?php } ?>
+        <?php if($result[0]['status_layanan'] == 1) { ;?>
+        
         <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-
+        <?php } ?>
+      
+        <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
         </button>
+        <?php } ?>
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
   

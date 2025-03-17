@@ -54,7 +54,7 @@
 
 <script>
     $(function(){
-        openListData(0)
+        // openListData(0)
         $('#table_disiplin_kerja_result').dataTable()
     })
 

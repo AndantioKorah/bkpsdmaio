@@ -17,7 +17,7 @@
 
                 <div class="form-group mt-2">
          <label class="bmd-label-floating">Jenis Absensi </label>
-         <select onchange="cekAbsenTeman()" class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
+         <select  class="form-control select2-navy select2" name="jenis_absensi" id="jenis_absensi"  required>
          <option value="" selected disabled>- Pilih Jenis Absen -</option>
          <option value="1" >Absen Pagi </option>
          <option value="2" >Absen Pulang </option>

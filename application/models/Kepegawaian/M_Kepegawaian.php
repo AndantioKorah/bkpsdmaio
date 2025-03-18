@@ -11089,6 +11089,7 @@ public function getFileForVerifLayanan()
                 ->get()->row_array();
             
             $datains["dokumen_layanan"] = $data['file_name'];
+            $datains["status"] = 3;
             $url_file = "arsipperbaikandata/".$data['nama_file'];
             $this->db->where('id', $id)
             ->update('t_layanan', $datains);

@@ -7587,7 +7587,16 @@ public function submitEditJabatan(){
                     ]);
 
                     if($selected['table_ref'] == 't_usul_ds_detail'){
-                        $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                        // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                        $this->db->insert('t_cron_async', [
+                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'param' => json_encode([
+                                            'id' => $selected['ref_id'],
+                                            'flag_progress' => 0,
+                                            'selectedData' => null
+                                        ]),
+                            'created_by' => $this->general_library->getId()
+                        ]);
                     }
 
                     $cronRequest[$selectedId] = [];

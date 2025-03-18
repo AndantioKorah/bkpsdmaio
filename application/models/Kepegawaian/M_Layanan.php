@@ -1456,7 +1456,7 @@ class M_Layanan extends CI_Model
         $this->db->trans_begin();
         if($nextVerifikator){
             $currVerifikator = $this->db->select('a.*, b.url_done')
-                                    ->from('t_usul_ds_detail_progresss a')
+                                    ->from('t_usul_ds_detail_progress a')
                                     ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
                                     ->where('a.id_t_usul_ds_detail', $nextVerifikator['id'])
                                     ->where('urutan', intval($nextVerifikator['urutan']-1))
@@ -1781,7 +1781,7 @@ class M_Layanan extends CI_Model
                 ->join('m_user b', 'a.created_by = b.id')
                 ->join('m_jenis_layanan c', 'a.id_m_jenis_layanan = c.id')
                 ->where('a.flag_active', 1)
-                ->order_by('a.created_by', 'desc');
+                ->order_by('a.created_date', 'desc');
 
         if(!$this->general_library->isProgrammer()){
             $this->db->where('b.id', $this->general_library->getId());

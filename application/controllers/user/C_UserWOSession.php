@@ -1,5 +1,8 @@
 <?php
 
+// use chriskacerguis\RestServer\RestController;
+
+// class C_UserWOSession extends RestController
 class C_UserWOSession extends CI_Controller
 {
     public function __construct()

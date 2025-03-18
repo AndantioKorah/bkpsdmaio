@@ -55,6 +55,12 @@
         font-weight: bold;
     }
 
+    .span_invalid{
+        color: white;
+        font-weight: bold;
+        background-color:rgb(184, 0, 221);
+    }
+
     .span_libur{
         color: red;
         font-weight: bold;
@@ -109,14 +115,35 @@
                 }
             }
         }
+
+        if(in_array($status_invalid, [4,5,6])){
+            if($status_invalid == 4){
+                $span_masuk = 'span_invalid';
+            } else if($status_invalid == 5){
+                $span_pulang = 'span_invalid';
+            } else {
+                $span_masuk = 'span_invalid';
+                $span_pulang = 'span_invalid';
+            }
+        }
     ?>
     <div style="position: relative;
     height: 55px;
     display: table-cell;
     vertical-align: middle;
     width: 100vw;" class="col-12 text-right">
+        <?php if(in_array($status_invalid, [4,5,6])){ ?>
+            <div class="row">
+                <!-- <div class="col-lg-6 text-left mt-2">
+                    <span class="span_absen"><?=$alasan_invalid?></span>
+                </div> -->
+                <div class="col-lg-12">
+                    <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                    <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                </div>
+            </div>
         <?php
-            if($dokpen && $flag_tidak_print == 0){ //cek jika ada dokumen pendukung 
+            } else if($dokpen && $flag_tidak_print == 0){ //cek jika ada dokumen pendukung 
                 if($dokpen['keterangan'] == 'Tugas Luar Pagi'){
         ?>  
                     <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span><br>

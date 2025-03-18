@@ -5723,32 +5723,26 @@ public function submitEditJabatan(){
        function getVerifLayanan($id){
         $id_layanan[] = null;
         if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){
-            $id_layanan[] = 11;
+            // $id_layanan[] = 11;
+            $id_layanan = array(11);
         }
 
         if($this->general_library->getId() != 78){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
-            // $id_layanan = [6,7,8,9]; 
-            $id_layanan[] = 6;
-            $id_layanan[] = 7;
-            $id_layanan[] = 8;
-            $id_layanan[] = 9;
+            $id_layanan = array(6,7,8,9);
         }
         }
-
 
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
-            $id_layanan[] = 10;
+            $id_layanan = array(10);
         }
 
         if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){
-            $id_layanan[] = 1;
+            $id_layanan = array(1);
         }
 
         if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
-            $id_layanan[] = 18;
-            $id_layanan[] = 19;
-            $id_layanan[] = 20;
+            $id_layanan = array(18,19,20);
         }
         
         
@@ -7593,7 +7587,16 @@ public function submitEditJabatan(){
                     ]);
 
                     if($selected['table_ref'] == 't_usul_ds_detail'){
-                        $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                        // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                        $this->db->insert('t_cron_async', [
+                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'param' => json_encode([
+                                            'id' => $selected['ref_id'],
+                                            'flag_progress' => 0,
+                                            'selectedData' => $selected
+                                        ]),
+                            'created_by' => $this->general_library->getId()
+                        ]);
                     }
 
                     $cronRequest[$selectedId] = [];
@@ -8630,11 +8633,18 @@ public function submitEditJabatan(){
             ->get()->row_array();
         
             if($getPangkat) {
-  
-                $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
-                $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
-                $this->db->where('id_peg', $id_peg)
-                        ->update('db_pegawai.pegawai', $dataUpdate);
+                
+                // dd(date('Y-m-d'));
+                // dd($getPangkat['tmtpangkat']);
+                $date_now = date("Y-m-d"); // this format is string comparable
+
+                if ($date_now >= $getPangkat['tmtpangkat']) {
+                    $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
+                    $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
+                    $this->db->where('id_peg', $id_peg)
+                            ->update('db_pegawai.pegawai', $dataUpdate);
+                }
+               
             }
     
         if($this->db->trans_status() == FALSE){
@@ -10434,7 +10444,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     ->where('c.id', $id);
 
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
-        $this->db->join('db_pegawai.pegpangkat k', 'k.id = c.reference_id_dok','left');
+        $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
     
     return $this->db->get()->result_array();
@@ -10989,7 +10999,8 @@ public function getFileForVerifLayanan()
         $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
         $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
         $id_insert_dok = $this->db->insert_id();
-        $this->updatePangkat($id_peg);
+
+        // $this->updatePangkat($id_peg);
 
         $dataUpdate['status'] = 3;
         $dataUpdate["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");
@@ -11087,6 +11098,7 @@ public function getFileForVerifLayanan()
                 ->get()->row_array();
             
             $datains["dokumen_layanan"] = $data['file_name'];
+            $datains["status"] = 3;
             $url_file = "arsipperbaikandata/".$data['nama_file'];
             $this->db->where('id', $id)
             ->update('t_layanan', $datains);

@@ -578,6 +578,13 @@ class General_library
         return $this->nikita->m_user->getNipPegawai($id_peg);
     }
 
+    public function getIDPegawaiByNip($nip){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->nikita->m_user->getIDPegawaiByNip($nip);
+    }
+
+    
     public function getEselonPegawai($id_peg){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();

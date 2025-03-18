@@ -618,6 +618,7 @@ $(function(){
   })
 
 function openProfileTab(){
+  $('#ket').html('');
   $('#view_file_verif').hide()
 }
 

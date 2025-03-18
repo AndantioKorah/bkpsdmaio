@@ -62,6 +62,9 @@
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>
                   <?php } ?>
+                  <?php if($id_m_layanan == 10) { ?>
+                  <option value="3" >Selesai</option>
+                  <?php } ?>
               </select>
             </div>
           </div>

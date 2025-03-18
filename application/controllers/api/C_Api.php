@@ -1,9 +1,9 @@
 <?php
 
-// use chriskacerguis\RestServer\RestController;
+use chriskacerguis\RestServer\RestController;
 
-// class C_Api extends RestController 
-class C_Api extends CI_Controller 
+class C_Api extends RestController 
+// class C_Api extends CI_Controller 
 {
     public function __construct()
     {
@@ -29,6 +29,14 @@ class C_Api extends CI_Controller
 
         dd($oneData);
     }
+
+    public function proceedNextVerifikatorUsulDs_post($params = null){
+		if(!$params){
+			$params = $this->post();
+		}
+
+		echo json_encode($this->layanan->proceedNextVerifikatorUsulDs($params));
+	}
 
     public function users_get()
     {

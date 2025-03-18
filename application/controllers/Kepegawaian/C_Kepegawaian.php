@@ -585,6 +585,9 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 		    $data['bidang'] = null;
 			$data['page'] = null;
+
+			$id_peg = $this->general_library->getIDPegawaiByNip($nip);
+			$this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 			$data['nip'] = $nip;
@@ -598,7 +601,8 @@ class C_Kepegawaian extends CI_Controller
 			$data['pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'asc');
 			$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 			$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($nip);
-			// dd($data['profil_pegawai']);
+			// dd($data['profil_pegawai']['id_peg']);
+			
 			render('kepegawaian/V_ProfilPegawai', '', '', $data);
 		}
 	}

@@ -302,5 +302,4 @@ class C_Layanan extends CI_Controller
 	public function deleteUsulDs($id){
 		//hapus t_usul_ds, t_usul_ds_detail, t_usul_ds_detail_progress, t_request_ds, t_cron_request_ds
 	}
-	
 }

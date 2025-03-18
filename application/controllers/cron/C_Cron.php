@@ -65,6 +65,11 @@ class C_Cron extends CI_Controller
         $this->rekap->cronUpdateGajiBkad();
     }
 
+    public function cronAsync(){
+        $this->general->logCron('cronAsync');
+        $this->general->cronAsync();
+    }
+
     public function getOauthToken(){
         return dd($this->general->getOauthToken());
     }

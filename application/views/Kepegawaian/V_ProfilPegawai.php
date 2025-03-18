@@ -277,7 +277,8 @@
 
               
             
-                <?php } else if(($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000')
+                <?php } ?>
+                <?php if(($this->general_library->isKasubagKepegawaianDiknas() && $profil_pegawai['skpd'] != '3010000')
                 || ($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi())){ ?>
                   <hr>
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
@@ -633,12 +634,14 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                <?php if($profil_pegawai['data_pangkat']) {
-                    $data = explode("|", $profil_pegawai['data_pangkat']);
-                    echo formatDateNamaBulan($data[1]);
-                  } else {
-                    echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
-                  }
+                <?php 
+                // if($profil_pegawai['data_pangkat']) {
+                //     $data = explode("|", $profil_pegawai['data_pangkat']);
+                //     echo formatDateNamaBulan($data[1]);
+                //   } else {
+                //     echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
+                //   }
+                  echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
                     ?>
                 
                 </span>

@@ -389,14 +389,18 @@ class C_Rekap extends CI_Controller
         // jika flag_use_this, gunakan file yang sudah ada. cari sandiri dpe coding 
 
         // if($flag_excel == 0){
-            // $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
-            $html = $this->load->view('rekap/V_BerkasTppDownloadNew', $data, true);
+            $html = null;
+            if($data['param']['tahun'] >= 2025){
+                $html = $this->load->view('rekap/V_BerkasTppDownloadNew', $data, true);
+            } else {
+                $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
+            }
             // dd($html);
             if($this->general_library->isProgrammer()){
                 // dd($html);
             }
             // if($data['param']['id_unitkerja'] == '1030550'){
-            //     dd($html);
+            //     dd($html);   
             // }
             $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
             $this->mpdf->AddPage(
@@ -471,7 +475,7 @@ class C_Rekap extends CI_Controller
             case "kehadiran" :
                 $data['skpd'] = $skpd;
                 $data = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
-                $data['result'] = $this->fixOrder($data['result']);
+                // $data['result'] = $this->fixOrder($data['result']);
                 // $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null);
                 $this->load->view('rekap/V_RekapKehadiranResult', $data);
                 break;

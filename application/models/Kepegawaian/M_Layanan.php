@@ -998,12 +998,6 @@ class M_Layanan extends CI_Model
         // dd($data);
         if($data){
             foreach($data as $d){
-                // if($d['table_ref'] == 't_usul_ds_detail'){
-                //     $this->proceedNextVerifikatorUsulDs($d['ref_id'], 0, null);
-                // } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
-                //     $this->proceedNextVerifikatorUsulDs($d['ref_id'], 1, $d);
-                // }
-                // dd('asd');
                 $request = json_decode($d['request'], true);
                 if($d['url_image_ds']){
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
@@ -1056,9 +1050,27 @@ class M_Layanan extends CI_Model
                     }
 
                     if($d['table_ref'] == 't_usul_ds_detail'){
-                        $this->proceedNextVerifikatorUsulDs($d['ref_id'], 0, null);
+                        $this->db->insert('t_cron_async', [
+                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'param' => json_encode([
+                                            'id' => $d['ref_id'],
+                                            'flag_progress' => 0,
+                                            'selectedData' => null
+                                        ]),
+                            'created_by' => $this->general_library->getId()
+                        ]);                      
+                        // $this->proceedNextVerifikatorUsulDs($d['ref_id'], 0, null);
                     } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
-                        $this->proceedNextVerifikatorUsulDs($d['ref_id'], 1, $d);
+                        $this->db->insert('t_cron_async', [
+                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'param' => json_encode([
+                                            'id' => $d['ref_id'],
+                                            'flag_progress' => 1,
+                                            'selectedData' => $d
+                                        ]),
+                            'created_by' => $this->general_library->getId()
+                        ]);                      
+                        // $this->proceedNextVerifikatorUsulDs($d['ref_id'], 1, $d);
                     }
                 }
             }
@@ -1392,15 +1404,22 @@ class M_Layanan extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    public function proceedNextVerifikatorUsulDs($id_t_usul_ds_detail, $flag_progress = 0, $selectedData = null){
+    public function proceedNextVerifikatorUsulDs($params = null){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        if(!$params){
+            $params = $this->input->post();
+        }
+
         $nextVerifikator = null;
-        if($flag_progress == 0){
+        if($params['flag_progress'] == 0){
             $nextVerifikator = $this->db->select('a.*, b.ds_code, c.urutan, c.nama_jabatan, c.id as id_t_usul_ds_detail_progress')
                                 ->from('t_usul_ds_detail a')
                                 ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                                 ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
                                 ->where('a.flag_active', 1)
-                                ->where('a.id', $id_t_usul_ds_detail)
+                                ->where('a.id', $params['id'])
                                 ->where('c.flag_verif', 0)
                                 ->order_by('c.urutan', 'asc')
                                 ->group_by('c.id')
@@ -1408,14 +1427,14 @@ class M_Layanan extends CI_Model
         } else {
             $progress = $this->db->select('*')
                                 ->from('t_usul_ds_detail_progress')
-                                ->where('id', $id_t_usul_ds_detail)
+                                ->where('id', $params['id'])
                                 ->where('flag_active', 1)
                                 ->get()->row_array();
 
             $this->db->where('id', $progress['id'])
                     ->update('t_usul_ds_detail_progress', [
                         'date_verif' => date('Y-m-d'),
-                        'url_file' => $selectedData['url_file'],
+                        'url_file' => $params['selectedData']['url_file'],
                         'keterangan' => "Telah ditandatangani oleh ".$progress['nama_jabatan'].' pada '.formatDateNamaBulanWT(date('Y-m-d H:i:s'))
                     ]);
 
@@ -1437,13 +1456,12 @@ class M_Layanan extends CI_Model
         $this->db->trans_begin();
         if($nextVerifikator){
             $currVerifikator = $this->db->select('a.*, b.url_done')
-                                    ->from('t_usul_ds_detail_progress a')
+                                    ->from('t_usul_ds_detail_progresss a')
                                     ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
                                     ->where('a.id_t_usul_ds_detail', $nextVerifikator['id'])
                                     ->where('urutan', intval($nextVerifikator['urutan']-1))
                                     ->where('a.flag_active', 1)
                                     ->get()->row_array();
-            // dd($currVerifikator);
 
             $this->db->where('id', $nextVerifikator['id_t_usul_ds_detail_progress'])
                     ->update('t_usul_ds_detail_progress', [
@@ -1452,16 +1470,16 @@ class M_Layanan extends CI_Model
                         'updated_by' => $this->general_library->getId()
                     ]);
 
-            // copy($selectedData['url_file'], $currVerifikator['url_file']);
+            // copy($params['selectedData']['url_file'], $currVerifikator['url_file']);
             
             // update status t_usul_ds_detail
             $detail['keterangan'] = 'Menunggu DS oleh '.$nextVerifikator['nama_jabatan'];
             $detail['updated_by'] = $this->general_library->getId();
             
             //jika hasil dari cron dan adalah progress, update url_done di detail ambil dari data yang sudah di DS
-            if($flag_progress == 1){
-                $detail['url_done'] = $selectedData['url_file'];
-                copy($selectedData['url_file'], $currVerifikator['url_done']);
+            if($params['flag_progress'] == 1){
+                $detail['url_done'] = $params['selectedData']['url_file'];
+                copy($params['selectedData']['url_file'], $currVerifikator['url_done']);
             }
 
             $this->db->where('id', $nextVerifikator['id'])
@@ -1475,16 +1493,16 @@ class M_Layanan extends CI_Model
                         ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
                         ->join('m_user d', 'b.created_by = d.id')
                         ->where('a.flag_active', 1)
-                        // ->where('a.id', $id_t_usul_ds_detail)
+                        // ->where('a.id', $params['id'])
                         ->where('c.flag_verif', 1)
                         ->order_by('c.urutan', 'desc')
                         ->limit(1)
                         ->group_by('a.id');
 
-            if($flag_progress == 1){
-                $this->db->where('c.id', $id_t_usul_ds_detail);
+            if($params['flag_progress'] == 1){
+                $this->db->where('c.id', $params['id']);
             } else {
-                $this->db->where('a.id', $id_t_usul_ds_detail);
+                $this->db->where('a.id', $params['id']);
             }
 
             $dataUsul = $this->db->get()->row_array();
@@ -1522,8 +1540,8 @@ class M_Layanan extends CI_Model
                 ];
 
                 $urlFile = $dataUsul['url_done'];
-                if($flag_progress == 1){
-                    $urlFile = $selectedData['url_file'];
+                if($params['flag_progress'] == 1){
+                    $urlFile = $params['selectedData']['url_file'];
                 }
 
                 $requestDs = [
@@ -1558,15 +1576,19 @@ class M_Layanan extends CI_Model
 
                 // simpan newfullpath ke dalam t_usul_ds_detail beserta keterangannya
 
-                copy($selectedData['url_file'], $newFullPath);
+                copy($params['selectedData']['url_file'], $newFullPath);
             }
         }
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan";
         } else {
             $this->db->trans_commit();
         }
+
+        return $res;
     }
 
     public function dsBulk($params){
@@ -1646,7 +1668,21 @@ class M_Layanan extends CI_Model
                             'updated_by' => $this->general_library->getId()
                         ]);
 
-                $this->proceedNextVerifikatorUsulDs($selected['id_t_usul_ds_detail'], 0, $selected);
+                // $this->proceedNextVerifikatorUsulDs($selected['id_t_usul_ds_detail'], 0, $selected);
+                $this->db->insert('t_cron_async', [
+                    'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                    'param' => json_encode([
+                                    'id' => $selected['id_t_usul_ds_detail'],
+                                    'flag_progress' => 0,
+                                    'selectedData' => $selected
+                                ]),
+                    'created_by' => $this->general_library->getId()
+                ]);
+                // $this->proceedNextVerifikatorUsulDs([
+                //     'id' => $selected['id_t_usul_ds_detail'],
+                //     'flag_progress' => 0,
+                //     'selectedData' => $selected
+                // ]);
                 
                 $batchId = generateRandomString(10);
                 foreach($list_data as $ld){

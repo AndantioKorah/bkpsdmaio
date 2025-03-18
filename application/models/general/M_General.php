@@ -1542,5 +1542,20 @@
 
             dd('done');
         }
+
+        public function cronAsync(){
+            $data = $this->db->select('*')
+                            ->from('t_cron_async')
+                            ->where('flag_done', 0)
+                            ->where('flag_active', 1)
+                            ->limit(3)
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $res = $this->apilib->asyncPost(base_url($d['url']), json_decode($d['param'], $d['method']));
+                    dd($res);
+                }
+            }
+        }
 	}
 ?>

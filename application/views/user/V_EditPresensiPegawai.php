@@ -96,6 +96,11 @@
                 <?php } ?>
               </select>
             </div>
+            <div class="col-lg-12 mt-3">
+              <?php if($result['path_masuk']){ ?>
+                <img src="http://203.175.10.90/sip/upload/<?=$result['path_masuk']?>" />
+              <?php } ?>
+            </div>
           </div>
         </center>
       </div>
@@ -150,6 +155,11 @@
                   <option <?= $selected ?> value="<?=$detik_pulang?>"><?=$detik_pulang?></option>
                 <?php } ?>
               </select>
+            </div>
+            <div class="col-lg-12 mt-3">
+              <?php if($result['path_pulang']){ ?>
+                <img src="http://203.175.10.90/sip/upload/<?=$result['path_pulang']?>" />
+              <?php } ?>
             </div>
           </div>
         </center>

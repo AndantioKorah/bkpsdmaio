@@ -2278,9 +2278,10 @@
         }
 
         public function getPresensiPegawaiByNipAndDate($nip, $date){
-            return $this->db->select('a.*')
+            return $this->db->select('a.*, c.path_masuk, c.path_pulang')
                             ->from('db_sip.absen a')
                             ->join('m_user b', 'a.user_id = b.id')
+                            ->join('db_sip.gambar c', 'b.id = c.user_id AND c.tgl = a.tgl', 'LEFT')
                             ->where('a.tgl', $date)
                             ->where('username', $nip)
                             ->get()->row_array();

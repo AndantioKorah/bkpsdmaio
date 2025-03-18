@@ -184,23 +184,44 @@
                                 if(isset($result['list_hari'][$pointer_hari])){
                                     $text_masuk = '';
                                     $text_pulang = '';
+                                    $alasan_invalid = '';
+                                    $status_invalid = 0;
                                     
                                     if(isset($result['data_absen'][$dates])){
                                         $text_masuk = $result['data_absen'][$dates]['masuk'];
                                         $text_pulang = $result['data_absen'][$dates]['pulang'];
+                                        $alasan_invalid = $result['data_absen'][$dates]['alasan'];
+                                        $status_invalid = $result['data_absen'][$dates]['status'];
                                     }
                                     
                                     $temp['text_masuk'] = formatTimeAbsen($text_masuk);
                                     $temp['text_pulang'] = formatTimeAbsen($text_pulang);
                                     $temp['tanggal'] = $tanggal;
                                     $temp['dates'] = $dates;
+                                    $temp['alasan_invalid'] = $alasan_invalid;
+                                    $temp['status_invalid'] = $status_invalid;
                                     $temp['keterangan'] = isset($result['data_absen']['keterangan'][$dates]) ? $result['data_absen']['keterangan'][$dates] : null;
                                     $temp['hari_libur'] = isset($result['hari_libur'][$dates]) ? $result['hari_libur'][$dates] : null;
                                     $temp['flag_tidak_print'] = $flag_tidak_print;
                                     $temp['dokpen'] = null;
+                                    
+                                    if(in_array($status_invalid, [4,5,6])){
+                                        if($status_invalid == 4){
+                                            $temp['text_masuk'] = "INVALID"; 
+                                        } else if($status_invalid == 5){
+                                            $temp['text_pulang'] = "INVALID"; 
+                                        } else {
+                                            $temp['text_masuk'] = "INVALID"; 
+                                            $temp['text_pulang'] = "INVALID"; 
+                                        }
+                                    }
+
                                     if(isset($result['dokpen'][$dates])){
                                         $temp['dokpen'] = $result['dokpen'][$dates];
                                     }
+                                    // if($this->general_library->getUserName() == '196705151994031003'){
+                                        
+                                    // }
                                     // $temp['keterangan'] = $result['data_absen']['keterangan'][$dates];
 
                                     $this->load->view('user/V_DetailAbsensiPegawaiItem', $temp);

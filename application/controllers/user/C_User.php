@@ -402,6 +402,9 @@ class C_User extends CI_Controller
         if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y') && ($id_user == $this->general_library->getId())){
             $this->session->set_userdata('live_tpp', $data['result']);
         }
+        // if($this->general_library->getUserName() == '196705151994031003'){
+        //     dd(json_encode($data));
+        // }
         return $this->load->view('user/V_DetailAbsensiPegawai', $data);
     }
 

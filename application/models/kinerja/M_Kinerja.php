@@ -3407,17 +3407,31 @@
                     }
                 }
 
+                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
+                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
+                }
+
+                $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
+                $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
+                $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
+
                 if($data['id_unitkerja'] == 4026000){ // jika BKAD
                     if($p['jenis_jabatan'] == 'JFT'){
                         if(isContainSeq($p['nama_jabatan'], "Ahli Pertama") || isContainSeq($p['nama_jabatan'], "Penyelia")){
-                            $result[$p['id_m_user']]['beban_kerja'] = 15;
-                            $result[$p['id_m_user']]['prestasi_kerja'] = 48;
+                            $result[$p['id_m_user']]['beban_kerja'] = 29;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
                             $result[$p['id_m_user']]['kondisi_kerja'] = 0;
                         } else if(isContainSeq($p['nama_jabatan'], "Lanjutan") 
                         || isContainSeq($p['nama_jabatan'], "Mahir")
-                        || isContainSeq($p['nama_jabatan'], "Terampil")
-                        || isContainSeq($p['nama_jabatan'], "Pemula")
                         ){
+                            $result[$p['id_m_user']]['beban_kerja'] = 30;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 23;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 25;
+                        } else if(isContainSeq($p['nama_jabatan'], "Terampil")){
+                            $result[$p['id_m_user']]['beban_kerja'] = 28;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['kondisi_kerja'] = 0;
+                        } else if(isContainSeq($p['nama_jabatan'], "Pemula")){
                             $result[$p['id_m_user']]['beban_kerja'] = 17;
                             $result[$p['id_m_user']]['prestasi_kerja'] = 50;
                             $result[$p['id_m_user']]['kondisi_kerja'] = 0;
@@ -3428,8 +3442,8 @@
                             $result[$p['id_m_user']]['prestasi_kerja'] = 23;
                             $result[$p['id_m_user']]['kondisi_kerja'] = 25;
                         } else if($result[$p['id_m_user']]['kelas_jabatan'] == 6){
-                            $result[$p['id_m_user']]['beban_kerja'] = 28;
-                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
+                            $result[$p['id_m_user']]['beban_kerja'] = 15;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 48;
                             $result[$p['id_m_user']]['kondisi_kerja'] = 0;
                         } else if($result[$p['id_m_user']]['kelas_jabatan'] == 5){
                             $result[$p['id_m_user']]['beban_kerja'] = 17;
@@ -3464,14 +3478,6 @@
                         }
                     }
                 } 
-
-                if(isset($p['kelas_jabatan_hardcode']) && ($p['kelas_jabatan_hardcode'] != null || $p['kelas_jabatan_hardcode'] != 0)){
-                    $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
-                }
-
-                $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
-                $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
-                $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
 
                 if(isset($p['flag_override_tpp']) && $p['flag_override_tpp'] == 1){
                     $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja'];

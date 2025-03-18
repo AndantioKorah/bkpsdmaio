@@ -1449,7 +1449,7 @@ class M_Layanan extends CI_Model
                                 ->group_by('c.id')
                                 ->get()->row_array();
         }
-        // dd($nextVerifikator);
+        // dd('asdsad');
         // jika masih ada urutan selanjutnya, ubah flag_ds_now jadi 1
         // dd($nextVerifikator);
 

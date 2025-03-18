@@ -7593,7 +7593,7 @@ public function submitEditJabatan(){
                             'param' => json_encode([
                                             'id' => $selected['ref_id'],
                                             'flag_progress' => 0,
-                                            'selectedData' => null
+                                            'selectedData' => $selected
                                         ]),
                             'created_by' => $this->general_library->getId()
                         ]);

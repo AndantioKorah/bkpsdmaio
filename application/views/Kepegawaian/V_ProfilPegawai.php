@@ -634,12 +634,14 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                <?php if($profil_pegawai['data_pangkat']) {
-                    $data = explode("|", $profil_pegawai['data_pangkat']);
-                    echo formatDateNamaBulan($data[1]);
-                  } else {
-                    echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
-                  }
+                <?php 
+                // if($profil_pegawai['data_pangkat']) {
+                //     $data = explode("|", $profil_pegawai['data_pangkat']);
+                //     echo formatDateNamaBulan($data[1]);
+                //   } else {
+                //     echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
+                //   }
+                  echo formatDateNamaBulan($profil_pegawai['tmtpangkat']);
                     ?>
                 
                 </span>

@@ -8624,11 +8624,18 @@ public function submitEditJabatan(){
             ->get()->row_array();
         
             if($getPangkat) {
-  
-                $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
-                $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
-                $this->db->where('id_peg', $id_peg)
-                        ->update('db_pegawai.pegawai', $dataUpdate);
+                
+                // dd(date('Y-m-d'));
+                // dd($getPangkat['tmtpangkat']);
+                $date_now = date("Y-m-d"); // this format is string comparable
+
+                if ($date_now >= $getPangkat['tmtpangkat']) {
+                    $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
+                    $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
+                    $this->db->where('id_peg', $id_peg)
+                            ->update('db_pegawai.pegawai', $dataUpdate);
+                }
+               
             }
     
         if($this->db->trans_status() == FALSE){
@@ -10983,7 +10990,8 @@ public function getFileForVerifLayanan()
         $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
         $result = $this->db->insert('db_pegawai.pegpangkat', $dataInsert);
         $id_insert_dok = $this->db->insert_id();
-        $this->updatePangkat($id_peg);
+
+        // $this->updatePangkat($id_peg);
 
         $dataUpdate['status'] = 3;
         $dataUpdate["tanggal_usul_bkad"] =  date("Y-m-d h:i:s");

@@ -523,6 +523,7 @@
 
             if($data){
                 foreach($data as $d){
+                    $result['data'][$d['kelas_jabatan']]['id'] = $d['id'];
                     $result['data'][$d['kelas_jabatan']]['prestasi_kerja'] = $d['prestasi_kerja'];
                     $result['data'][$d['kelas_jabatan']]['beban_kerja'] = $d['beban_kerja'];
                     $result['data'][$d['kelas_jabatan']]['kondisi_kerja'] = $d['kondisi_kerja'];

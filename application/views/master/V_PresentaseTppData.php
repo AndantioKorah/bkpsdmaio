@@ -17,7 +17,7 @@
             <form id="form_<?=$i?>">
                 <tr>
                     <!-- <td class="text-center"><?=$no++;?></td> -->
-                    <td class="text-center"><?=$rd['kelas_jabatan']?></td>
+                    <td class="text-center"><?=$rd['kelas_jabatan'].'  '.$rd['id']?></td>
                     <td class="">
                         <input class="form-control form-control-sm" value="<?=$rd['prestasi_kerja']?>" id="pk_val_<?=$i?>" name="pk_val_<?=$i?>" />
                     </td>

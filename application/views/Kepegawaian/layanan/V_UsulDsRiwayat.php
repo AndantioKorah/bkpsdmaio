@@ -5,6 +5,7 @@
       <th class="text-center">Nama Pegawai</th>
     <?php } ?>
     <th class="text-center">Jenis Layanan</th>
+    <th class="text-center">Status</th>
     <th class="text-center">Tanggal Usul</th>
     <th class="text-center">Jumlah Dokumen</th>
     <th class="text-center">Pilihan</th>
@@ -28,11 +29,18 @@
             </span>
           </div>
         </td>
+        <td class="text-center">
+          <badge class="badge <?=$rs['flag_done'] == 0 ? "badge-warning" : "badge-success"?>">
+            <?=($rs['status'])?>
+          </badge>
+        </td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
         <td class="text-center">
-          <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-detail"></i> Detail</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+          <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-list"></i> Detail</button>
+          <?php if($rs['flag_done'] == 0){ ?>
+            <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+          <?php } ?>
         </td>
       </tr>
     <?php } } ?>

@@ -19,10 +19,16 @@
                     <th class="text-center">File</th>
                 </thead>
                 <tbody>
-                    <?php if($result['detail']){ $no = 1; foreach($result['detail'] as $d){ ?>
+                    <?php if($result['detail']){ $no = 1; foreach($result['detail'] as $d){
+                        $fileName = $d['filename'];
+                        if($d['flag_status'] == 1 && $d['flag_done'] == 1){
+                            $tName = explode("/", $d['url_done']);
+                            $fileName = $tName[3];
+                        }
+                    ?>
                         <tr style="cursor: pointer;" onclick="openProgress('<?=$d['id']?>')">
                             <td class="text-center"><?=$no++;?></td>
-                            <td class="text-left"><?=$d['filename']?></td>
+                            <td class="text-left"><?=$fileName?></td>
                             <td class="text-center">
                                 <span class="badge badge-sm <?=$d['flag_status'] == 1 ? 'badge-success' : 'badge-warning'?>"><?=$d['flag_status'] == 1 ? 'Selesai' : 'Belum Selesai'?></span>
                             </td>

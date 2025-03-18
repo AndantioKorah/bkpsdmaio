@@ -10428,7 +10428,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     ->where('c.id', $id);
 
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
-        $this->db->join('db_pegawai.pegpangkat k', 'k.id = c.reference_id_dok','left');
+        $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
     
     return $this->db->get()->result_array();

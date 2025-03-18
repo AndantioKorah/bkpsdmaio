@@ -1612,6 +1612,15 @@
 
         }
 
+        public function getIDPegawaiByNip($nip){
+            $this->db->select('a.id_peg')
+            ->from('db_pegawai.pegawai a')
+            ->where('a.nipbaru_ws', $nip);
+            return $this->db->get()->row_array();
+           
+
+        }
+
         public function getEselonPegawai($id_pegawai){
             $this->db->select('b.eselon')
             ->from('db_pegawai.pegawai a')

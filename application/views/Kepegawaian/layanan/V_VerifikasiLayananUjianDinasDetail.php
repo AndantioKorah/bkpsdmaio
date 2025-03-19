@@ -113,9 +113,9 @@
         Batal Verif
         </button>
 
-        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        <!-- <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
-        </button>
+        </button> -->
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
   

@@ -1663,17 +1663,19 @@ animation06
                      <option <?php if($jt_adm) { if($jt_adm == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
-      </div> -->
-      
+      </div>
+       -->
+       <?php if($this->general_library->isProgrammer()) { ?>
       <div class="mb-3"  id="jpt" style="display:none">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
-                <option value=""  selected>Pilih Jabatan</option>
+                <option value=""  selected>Semua</option>
                     <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
                 </select>
       </div>
+      <?php }  ?>
 
       <button type="submit" class="btn btn-primary float-right mb-2">Lihat</button>
     </form>

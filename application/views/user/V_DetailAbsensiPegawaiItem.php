@@ -61,6 +61,12 @@
         background-color:rgb(184, 0, 221);
     }
 
+    .text_invalid{
+        font-weight: bold;
+        color:rgb(184, 0, 221);
+        font-size: .75rem;
+    }
+
     .span_libur{
         color: red;
         font-weight: bold;
@@ -134,10 +140,10 @@
     width: 100vw;" class="col-12 text-right">
         <?php if(in_array($status_invalid, [4,5,6])){ ?>
             <div class="row">
-                <!-- <div class="col-lg-6 text-left mt-2">
-                    <span class="span_absen"><?=$alasan_invalid?></span>
-                </div> -->
-                <div class="col-lg-12">
+                <div class="col-lg-6 text-left mt-2" style="line-height: 15px;">
+                    <h6 class="span_absen text_invalid p-1"><?=trim($alasan_invalid)?></h6>
+                </div>
+                <div class="col-lg-6">
                     <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
                     <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
                 </div>

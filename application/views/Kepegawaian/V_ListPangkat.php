@@ -51,7 +51,7 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                 <?php if($rs['status'] == 1) { ?>
-                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip || $this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -62,7 +62,7 @@
                 <?php } ?>
                 <?php } ?>
                 <?php if($kode == 1) { ?>
-                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip || $this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"

@@ -1665,11 +1665,11 @@ animation06
                 </select>
       </div>
        -->
-       <?php if($this->general_library->isProgrammer()) { ?>
-      <div class="mb-3"  id="jpt" style="display:none">
+       <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ) { ?>
+      <div class="mb-3"  id="jpt" style="display:nonex">
         <label for="exampleInputPassword1" class="form-label">Jabatan Target</label>
         <select class="form-select select2" name="jabatan_target_jpt" >
-                <option value=""  selected>Semua</option>
+                <option value=""  selected>Semua Talenta</option>
                     <?php if($jabatan_target_jpt){ foreach($jabatan_target_jpt as $r){ ?>
                      <option <?php if($jt_jpt) { if($jt_jpt == $r['id_jabatanpeg']) echo "selected"; else echo "";}?> value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?></option>
                     <?php } } ?>
@@ -1962,8 +1962,8 @@ $(function(){
     var jt = $('#jt').val()
     var box = $(this).data('box');
     var jumlah = $(this).data('jumlah');
-    var jenis_pengisian = "<?=$jenis_pengisian;?>"
-
+    var jenis_pengisian = "<?=$jenis_pengisian;?>";
+   
         $('#detail_nine_box').html('')
         $('#detail_nine_box').append(divLoaderNavy)
         $('#detail_nine_box').load('<?=base_url("simata/C_Simata/loadDetailNineBox/")?>'+jenis_jab+'/'+jt+'/'+box+'/'+jumlah+'/'+jenis_pengisian, function(){

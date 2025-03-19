@@ -267,6 +267,7 @@ class C_Simata extends CI_Controller
         $data['jt_adm'] = null;
         $data['jt_jpt'] = null;
         $data['jenis_pengisian'] = $jenis_pengisian;
+        $data['jabatan_target'] = null;
         // $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxAdm();
         $data['jabatan_target_adm'] = $this->simata->getJabatanTargetNineBoxJpt();
         $data['jabatan_target_jpt'] = $this->simata->getJabatanTargetNineBoxJpt();
@@ -288,7 +289,6 @@ class C_Simata extends CI_Controller
         
         if($_POST) {
         $data['post'] = $_POST;
-       
         if($_POST['jenis_jabatan'] == 2){
             $data['result'] = $this->simata->getPenilaianPegawaiJpt($jenis_pengisian);
             $data['jt_jpt'] = $_POST['jabatan_target_jpt'];

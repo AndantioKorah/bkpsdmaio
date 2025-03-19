@@ -21,7 +21,7 @@
               <div class="col-lg-12">
                 <form id="form_usul_ds">
                   <div class="row">
-                    <div class="col-lg-6 mt-3">
+                    <div class="col-lg-12 mt-3">
                       <label>Jenis Layanan</label>
                       <select class="form-control select2-navy" style="width: 100%;"
                           id="id_m_jenis_layanan" data-dropdown-css-class="select2-navy" name="id_m_jenis_layanan">
@@ -34,13 +34,17 @@
                           <?php } } ?>
                       </select>
                     </div>
-                    <div class="col-lg-3 mt-3">
+                    <div class="col-lg-4 mt-3">
                       <label>Keterangan:</label>
                       <input class="form-control" value="" id="keterangan" name="keterangan" />
                     </div>
-                    <div class="col-lg-3 mt-3">
+                    <div class="col-lg-4 mt-3">
                       <label>Kode Unik DS:</label>
                       <input class="form-control" value="" id="ds_code" name="ds_code" />
+                    </div>
+                    <div class="col-lg-4 mt-3">
+                      <label>Nomor Halaman DS:</label>
+                      <input class="form-control" value="" id="page" name="page" />
                     </div>
                   </div>
                   <div class="col-lg-12 mt-3">

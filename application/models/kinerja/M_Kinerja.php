@@ -3334,6 +3334,21 @@
         }
 
         if($pegawai){
+            if(!$presentaseTpp){
+                $mPresentaseTpp = $this->db->select('*')
+                                ->from('m_presentase_tpp')
+                                ->where('id_unitkerja', $pegawai[0]['id_unitkerja'])
+                                ->where('flag_active', 1)
+                                ->order_by('kelas_jabatan', 'asc')
+                                ->get()->result_array();
+
+                if($mPresentaseTpp){
+                    foreach($mPresentaseTpp as $mtpp){
+                        $presentaseTpp[$mtpp['kelas_jabatan']] = $mtpp;
+                    }
+                }       
+            }
+
             $i = 0;
             $temp = null;
             $temp_plt = null;
@@ -3344,6 +3359,10 @@
                 $result[$p['id_m_user']]['count'] = isset($result[$p['id_m_user']]['count']) ? $result[$p['id_m_user']]['count']++ : 1;
 
                 $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
+                // if(!isset($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'])){
+                //     dd($p);
+                //     dd($result[$p['id_m_user']]);
+                // }
                 $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
                 $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
                 $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];

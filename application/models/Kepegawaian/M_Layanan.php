@@ -1376,10 +1376,106 @@ class M_Layanan extends CI_Model
         return $result;
     }
 
+    public function loadDetailUsulDsFile($id_t_usul_ds_detail){
+        $res['code'] = 0;
+        $res['message'] = "";
+        $res['result'] = null;
+
+        $tRequestDs = $this->db->select('*')
+                            ->from('t_request_ds')
+                            ->where('ref_id', $id_t_usul_ds_detail)
+                            ->where('table_ref', 't_usul_ds_detail')
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+        if($tRequestDs){
+            $res['code'] = 1;
+            $res['message'] = "Data tidak dapat ditolak karena sudah masuk dalam antrian untuk ditandatangani secara digital oleh Kepala BKPSDM.";
+        } else {
+            $res['result'] = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer')
+                                    ->from('t_usul_ds_detail a')
+                                    ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
+                                    ->join('m_user c', 'a.created_by = c.id')
+                                    ->where('c.flag_active', 1)
+                                    ->where('a.flag_active', 1)
+                                    ->where('a.id', $id_t_usul_ds_detail)
+                                    ->get()->row_array();
+            if($res['result']){
+                if($res['result']['flag_status'] != 0){
+                    $res['code'] = 1;
+                    $res['message'] = "Data sudah dilakukan verifikasi dan tidak dapat diverifikasi lagi untuk saat ini.";    
+                }
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Data tidak ditemukan.";
+            }
+        }
+
+        return $res;
+    }
+
+    public function verifUsulDsDetail($id, $flag_verif, $id_t_usul_ds_progress){
+        $res['code'] = 0;
+        $res['message'] = "";
+        $res['result'] = null;
+
+        $tRequestDs = $this->db->select('*')
+                            ->from('t_request_ds')
+                            ->where('ref_id', $id)
+                            ->where('table_ref', 't_usul_ds_detail')
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+        if($tRequestDs){
+            $res['code'] = 1;
+            $res['message'] = "Data tidak dapat ditolak karena sudah masuk dalam antrian untuk ditandatangani secara digital oleh Kepala BKPSDM.";
+        } else {
+            $dsDetail = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer')
+                                    ->from('t_usul_ds_detail a')
+                                    ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
+                                    ->join('m_user c', 'a.created_by = c.id')
+                                    ->where('c.flag_active', 1)
+                                    ->where('a.flag_active', 1)
+                                    ->where('a.id', $id)
+                                    ->get()->row_array();
+            if($dsDetail){
+                if($dsDetail['flag_status'] != 0){
+                    $res['code'] = 1;
+                    $res['message'] = "Data sudah dilakukan verifikasi dan tidak dapat diverifikasi lagi untuk saat ini.";    
+                } else {
+                    $dsProgress = $this->db->select('*')
+                                        ->from('t_usul_ds_detail_progress')
+                                        ->where('id', $id_t_usul_ds_progress)
+                                        ->where('flag_active', 1)
+                                        ->get()->row_array();
+
+                    $this->db->where('id', $dsDetail['id'])
+                            ->update('t_usul_ds_detail', [
+                                'flag_status' => 2,
+                                'keterangan' => 'Ditolak oleh '.$dsProgress['nama_jabatan'].' '.formatDateNamaBulanWT(date('Y-m-d H:i:s')),
+                                // 'keterangan' => $this->input->post('keterangan_verifikasi'),
+                            ]);
+
+                    $this->db->where('id', $dsProgress['id'])
+                            ->update('t_usul_ds_detail_progress', [
+                                'flag_verif' => 2,
+                                'keterangan' => $this->input->post('keterangan_verifikasi'),
+                            ]);
+                }
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Data tidak ditemukan.";
+            }
+        }
+
+        return $res;
+    }
+
     public function searchVerifUsulDs(){
         $data = $this->input->post();
         
-        $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id, c.url_file, e.nama_layanan, a.id_m_jenis_layanan')
+        $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id, c.url_file,
+                e.nama_layanan, a.id_m_jenis_layanan, b.id as id_t_usul_ds_detail')
                 ->from('t_usul_ds a')
                 ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
                 ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
@@ -1390,6 +1486,7 @@ class M_Layanan extends CI_Model
                 ->where('a.flag_done', 0)
                 ->where('c.flag_verif', 0)
                 ->where('b.flag_done', 0)
+                ->where('b.flag_status', 0)
                 ->where('YEAR(c.created_date)', $data['tahun'])
                 ->where('c.id_m_user_verif', $this->general_library->getId())
                 ->where('flag_ds_now', 1)

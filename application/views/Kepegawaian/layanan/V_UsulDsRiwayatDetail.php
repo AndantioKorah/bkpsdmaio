@@ -30,11 +30,22 @@
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-left"><?=$fileName?></td>
                             <td class="text-center">
-                                <span class="badge badge-sm <?=$d['flag_status'] == 1 ? 'badge-success' : 'badge-warning'?>"><?=$d['flag_status'] == 1 ? 'Selesai' : 'Belum Selesai'?></span>
+                                <?php
+                                    $badge = "badge-warning";
+                                    $status_text = "Belum Selesai";
+                                    if($d['flag_status'] == 1){
+                                        $badge = "badge-success";
+                                        $status_text = "Selesai";
+                                    } else if($d['flag_status'] == 2){
+                                        $badge = "badge-danger";
+                                        $status_text = "Ditolak";
+                                    }
+                                ?>
+                                <span class="badge badge-sm <?=$badge?>"><?=$status_text?></span>
                             </td>
                             <td class="text-left"><?=$d['keterangan']?></td>
                             <td class="text-center">
-                                <?php if($d['flag_status'] == 1 && $d['flag_done'] == 1){ ?>
+                                <?php if($d['flag_done'] == 1){ ?>
                                     <a target="_blank" href="<?=base_url($d['url_done'])?>"><button class="btn btn-sm btn-success"><i class="fa fa-file-pdf"></i></button></a>
                                 <?php } else { ?>
                                     <a target="_blank" href="<?=base_url($d['url'])?>"><button class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i></button></a>

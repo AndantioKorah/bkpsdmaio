@@ -1142,7 +1142,7 @@ class M_Layanan extends CI_Model
 		$qrPath = 'arsippensiunotomatis/qr/'.$randomString.'.png';
 		file_put_contents($qrPath, $qrDecode);
 
-		$image = imagecreatetruecolor(600, 600);   
+		$image = imagecreatetruecolor(800, 600);   
 
 		// $background_color = imagecolorallocate($image, 255, 255, 255);
 		$transparency = imagecolorallocatealpha($image, 255,255,255, 127);
@@ -1152,16 +1152,16 @@ class M_Layanan extends CI_Model
 		$text_color = imagecolorallocate($image, 0, 0, 0);    
 		$fonts = "assets/fonts/tahoma.ttf";
 
-		imagettftext($image, 30, 0, 80, 530, $text_color, $fonts, getNamaPegawaiFull($data['user']));
-		imagettftext($image, 30, 0, 80, 570, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
+		imagettftext($image, 40, 0, 95, 525, $text_color, $fonts, getNamaPegawaiFull($data['user']));
+		imagettftext($image, 40, 0, 95, 580, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
 
 		$logoBsre = imagecreatefrompng("assets/img/logo-kunci-bsre-custom.png");
-		$logoBsreHeight = 60;
-		$logoBsreWidth = 60;
+		$logoBsreHeight = 65;
+		$logoBsreWidth = 65;
 		imagealphablending( $logoBsre, FALSE );
 		imagesavealpha( $logoBsre, TRUE );
 		$resizedLogo = $this->resizeImage($logoBsre, $logoBsreHeight, $logoBsreWidth);
-		$this->imagecopymerge_alpha($image, $resizedLogo, 15, 508, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
+		$this->imagecopymerge_alpha($image, $resizedLogo, 20, 508, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
 
 		$qrImage = imagecreatefrompng($qrPath);
         $container_height = imagesy($image);

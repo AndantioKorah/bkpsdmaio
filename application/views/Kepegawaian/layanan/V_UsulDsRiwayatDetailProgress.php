@@ -21,7 +21,7 @@
                             <td class="text-left"><?=$d['keterangan']?></td>
                             <td class="text-center">
                                 <?php if($d['url_file']){ ?>
-                                    <a target="_blank" href="<?=base_url($d['url_file'])?>"><button class="btn btn-danger"><i class="fa fa-file-pdf"></i></button></a>
+                                    <a target="_blank" href="<?=base_url($d['url_file'])?>"><button class="btn <?=$d['flag_verif'] == 1 ? "btn-success" : "btn-danger"?>"><i class="fa fa-file-pdf"></i></button></a>
                                 <?php } ?>
                             </td>
                         </tr>

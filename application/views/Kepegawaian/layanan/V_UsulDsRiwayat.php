@@ -1,3 +1,18 @@
+<style>
+  .div_nama_layanan{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 25vw;
+  }
+
+  .div_nama_layanan:hover{
+    white-space: wrap;
+    width: 25vw;
+    cursor: pointer;
+  }
+</style>
+
 <table class="table table-hover" id="table_riwayat_usul_ds">
   <thead>
     <th class="text-center">No</th>
@@ -5,6 +20,7 @@
       <th class="text-center">Nama Pegawai</th>
     <?php } ?>
     <th class="text-center">Jenis Layanan</th>
+    <th class="text-center">Status</th>
     <th class="text-center">Tanggal Usul</th>
     <th class="text-center">Jumlah Dokumen</th>
     <th class="text-center">Pilihan</th>
@@ -17,22 +33,22 @@
           <td class="text-left"><?=$rs['nama_pegawai']?></td>
         <?php } ?>
         <td class="text-left">
-          <div style="
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 25vw;
-          ">
-            <span title="<?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>">
-              <?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
-            </span>
+          <div class="div_nama_layanan">
+            <?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
           </div>
+        </td>
+        <td class="text-center">
+          <badge style="overflow: wrap; white-space: wrap;" class="badge <?=$rs['flag_done'] == 0 ? "badge-warning" : "badge-success"?>">
+            <?=($rs['flag_done'] == 1 ? "Selesai" : "Belum Selesai")?>
+          </badge>
         </td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
         <td class="text-center">
-          <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-detail"></i> Detail</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+          <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-list"></i> Detail</button>
+          <?php if($rs['flag_done'] == 0){ ?>
+            <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+          <?php } ?>
         </td>
       </tr>
     <?php } } ?>

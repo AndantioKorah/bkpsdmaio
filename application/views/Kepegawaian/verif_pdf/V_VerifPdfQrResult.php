@@ -57,4 +57,9 @@
         }
     })   
   }
+
+  function showSignerDetail(id){
+    $('.signer_div').hide()
+    $('#signer_div_'+id).show()
+  }
 </script>

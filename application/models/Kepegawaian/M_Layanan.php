@@ -1142,7 +1142,7 @@ class M_Layanan extends CI_Model
 		$qrPath = 'arsippensiunotomatis/qr/'.$randomString.'.png';
 		file_put_contents($qrPath, $qrDecode);
 
-		$image = imagecreatetruecolor(500, 500);   
+		$image = imagecreatetruecolor(800, 600);   
 
 		// $background_color = imagecolorallocate($image, 255, 255, 255);
 		$transparency = imagecolorallocatealpha($image, 255,255,255, 127);
@@ -1152,27 +1152,27 @@ class M_Layanan extends CI_Model
 		$text_color = imagecolorallocate($image, 0, 0, 0);    
 		$fonts = "assets/fonts/tahoma.ttf";
 
-		imagettftext($image, 20, 0, 110, 380, $text_color, $fonts, getNamaPegawaiFull($data['user']));
-		imagettftext($image, 20, 0, 110, 420, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
+		imagettftext($image, 40, 0, 95, 525, $text_color, $fonts, getNamaPegawaiFull($data['user']));
+		imagettftext($image, 40, 0, 95, 580, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
 
 		$logoBsre = imagecreatefrompng("assets/img/logo-kunci-bsre-custom.png");
-		$logoBsreHeight = 60;
-		$logoBsreWidth = 60;
+		$logoBsreHeight = 65;
+		$logoBsreWidth = 65;
 		imagealphablending( $logoBsre, FALSE );
 		imagesavealpha( $logoBsre, TRUE );
 		$resizedLogo = $this->resizeImage($logoBsre, $logoBsreHeight, $logoBsreWidth);
-		$this->imagecopymerge_alpha($image, $resizedLogo, 45, 360, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
+		$this->imagecopymerge_alpha($image, $resizedLogo, 20, 508, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
 
-		$container_height = imagesy($image);
-		$container_width = imagesx($image);
 		$qrImage = imagecreatefrompng($qrPath);
+        $container_height = imagesy($image);
+		$container_width = imagesx($image);
 		$qrImageMerge_height = imagesy($qrImage);
 		$qrImageMerge_width = imagesx($qrImage);
 		$qrImagePosX = ($container_width/2)-($qrImageMerge_width/2);
 		$qrImagePosY = ($container_height/2)-($qrImageMerge_height/2)-70;
 		// imagefilter($qrImage, IMG_FILTER_GRAYSCALE);
 		// imagefilter($qrImage, IMG_FILTER_CONTRAST, -100);
-		$this->imagecopymerge_alpha($image, $qrImage, $qrImagePosX, $qrImagePosY, 0, 0, $qrImageMerge_width, $qrImageMerge_height, 100);
+		$this->imagecopymerge_alpha($image, $qrImage, $qrImagePosX, $qrImagePosY+20, 0, 0, $qrImageMerge_width, $qrImageMerge_height, 100);
 
 		ob_start();
 		imagepng($image);
@@ -1449,14 +1449,14 @@ class M_Layanan extends CI_Model
                                 ->group_by('c.id')
                                 ->get()->row_array();
         }
-        // dd($nextVerifikator);
+        // dd('asdsad');
         // jika masih ada urutan selanjutnya, ubah flag_ds_now jadi 1
         // dd($nextVerifikator);
 
         $this->db->trans_begin();
         if($nextVerifikator){
             $currVerifikator = $this->db->select('a.*, b.url_done')
-                                    ->from('t_usul_ds_detail_progresss a')
+                                    ->from('t_usul_ds_detail_progress a')
                                     ->join('t_usul_ds_detail b', 'a.id_t_usul_ds_detail = b.id')
                                     ->where('a.id_t_usul_ds_detail', $nextVerifikator['id'])
                                     ->where('urutan', intval($nextVerifikator['urutan']-1))
@@ -1525,7 +1525,7 @@ class M_Layanan extends CI_Model
                                     ]);
 
                 $randomString = generateRandomString(30, 1, 't_file_ds'); 
-                $qrTemplate = $this->createQrTte();
+                $qrTemplate = $this->createQrTte(null, $randomString);
                 $request_ws = [
                     'signatureProperties' => [
                         "tampilan" => "VISIBLE",
@@ -1563,16 +1563,38 @@ class M_Layanan extends CI_Model
             } else { // jika sudah ada, berarti kaban sudah DS
                 $bulan = getNamaBulan(date('m'));
                 $tahun = date('Y');
-                $newFileName = "SIGNED".substr($dataUsul['filename'], 10, strlen($dataUsul['filename'])-1);
+                $newFileName = "SIGNED_".$dataUsul['filename'];
                 $newFullPath = "arsipusulds/".$tahun."/".$bulan."/".$newFileName;
 
                 $this->db->where('id', $dataUsul['id'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $newFullPath,
-                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado",
+                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s')),
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
+
+                // update t_file_ds untuk scan QR
+                $this->db->where('random_string', $params['selectedData']['random_string'])
+                        ->where('flag_active', 1)
+                        ->update('t_file_ds', [
+                            'url' => $newFullPath
+                        ]);
+
+                $tUsulDs = $this->db->select('*')
+                                ->from('t_usul_ds_detail')
+                                ->where('flag_active', 1)
+                                ->where('id_t_usul_ds', $dataUsul['id_t_usul_ds'])
+                                ->where('flag_done', 0)
+                                ->get()->row_array();
+
+                if(!$tUsulDs){ // jika di t_usul_ds flag_done sudah 1 semua, update flag_done di t_usul_ds
+                    $this->db->where('id', $dataUsul['id_t_usul_ds'])
+                            ->update('t_usul_ds', [
+                                'flag_done' => 1,
+                                'status' => "Selesai"
+                            ]);
+                }
 
                 // simpan newfullpath ke dalam t_usul_ds_detail beserta keterangannya
 
@@ -1781,7 +1803,7 @@ class M_Layanan extends CI_Model
                 ->join('m_user b', 'a.created_by = b.id')
                 ->join('m_jenis_layanan c', 'a.id_m_jenis_layanan = c.id')
                 ->where('a.flag_active', 1)
-                ->order_by('a.created_by', 'desc');
+                ->order_by('a.created_date', 'desc');
 
         if(!$this->general_library->isProgrammer()){
             $this->db->where('b.id', $this->general_library->getId());

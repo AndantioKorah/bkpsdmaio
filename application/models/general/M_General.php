@@ -1548,12 +1548,22 @@
                             ->from('t_cron_async')
                             ->where('flag_done', 0)
                             ->where('flag_active', 1)
-                            ->limit(3)
+                            ->limit(5)
                             ->get()->result_array();
             if($data){
                 foreach($data as $d){
                     $res = $this->apilib->asyncPost(base_url($d['url']), json_decode($d['param'], $d['method']));
-                    dd($res);
+                    $jsonRes = json_decode($res, true);
+                    $update = null;
+                    if(!$jsonRes || ($jsonRes && $jsonRes['code'] == 0)){
+                        $update['flag_done'] = 1;
+                        $update['date_done'] = date('Y-m-d H:i:s');
+                    }
+                    $update['flag_executed'] = 1;
+                    $update['date_executed'] = date('Y-m-d H:i:s');
+                    $update['log'] = $res;
+                    $this->db->where('id', $d['id'])
+                            ->update('t_cron_async', $update);
                 }
             }
         }

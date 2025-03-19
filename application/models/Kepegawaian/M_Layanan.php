@@ -1002,7 +1002,6 @@ class M_Layanan extends CI_Model
                 if($d['url_image_ds']){
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
                 }
-
                 $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
@@ -1055,7 +1054,7 @@ class M_Layanan extends CI_Model
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
                                             'flag_progress' => 0,
-                                            'selectedData' => null
+                                            'selectedData' => $d
                                         ]),
                             'created_by' => $this->general_library->getId()
                         ]);                      
@@ -1487,7 +1486,7 @@ class M_Layanan extends CI_Model
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
             $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
-                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan')
+                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page')
                         ->from('t_usul_ds_detail a')
                         ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                         ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
@@ -1512,7 +1511,6 @@ class M_Layanan extends CI_Model
                                     ->where('table_ref', 't_usul_ds_detail')
                                     ->where('ref_id', $dataUsul['id'])
                                     ->where('flag_active', 1)
-                                    ->where('flag_active', 1)
                                     ->limit(1)
                                     // ->where('flag_selected', 0)
                                     ->get()->row_array();
@@ -1533,7 +1531,7 @@ class M_Layanan extends CI_Model
                         "tag" => $dataUsul['ds_code'],
                         "width" => 100,
                         "height" => 100,
-                        "page" => 1,
+                        "page" => $dataUsul['page'],
                         "reason" => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado melalui apikasi Siladen."
                     ],
                     // 'file' => convertToBase64(($pathHukdis))

@@ -348,12 +348,12 @@ ol {
 				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
                 </li>
                 
-                <li>
+        <li>
 				<a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
 				onclick="viewBerkasPangkat('<?=$dok_lain['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen lain yang apabila diperlukan <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen lain apabila diperlukan <i
 				class="fas fa-<?php if($dok_lain) echo ''; else echo '';?>"></i></a>
-                </li>
+        </li>
         <?php } ?>
         <?php if($id_m_layanan == 13) { ?>
           <li>
@@ -398,6 +398,12 @@ ol {
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah* <i
 				class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
 				</li>
+        <li>
+				<a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
+				onclick="viewBerkasPangkat('<?=$dok_lain['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen lain apabila diperlukan <i
+				class="fas fa-<?php if($dok_lain) echo ''; else echo '';?>"></i></a>
+        </li>
               <?php } ?>
               <?php if($id_m_layanan == 8) { ?>
                 <li>

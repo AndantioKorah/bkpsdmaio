@@ -1183,14 +1183,15 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         //    ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
                            ->join('db_simata.t_penilaian c', 'a.id_peg = c.id_peg','left')
                            ->join('db_pegawai.jabatan d', 'a.jabatan = d.id_jabatanpeg')
-                           ->join('db_simata.t_jabatan_target d', 'c.id_peg = d.id_peg','left')
+                           ->join('db_simata.t_jabatan_target e', 'c.id_peg = e.id_peg','left')
                            // ->where("FIND_IN_SET(c.eselon,'II B')!=",0)
                            ->where_in('d.eselon', ["III A", "III B"])
                            ->where('a.id_m_status_pegawai', 1)
                            ->where('c.jenjang_jabatan', $jenis_pengisian)
                            ->group_by('a.id_peg');
                            if($_POST['jabatan_target_jpt'] != ""){
-                               $this->db->where('d.jabatan_target', $_POST['jabatan_target_jpt']);
+                               $this->db->where('e.jabatan_target', $_POST['jabatan_target_jpt']);
+                               $this->db->where('e.flag_active', 1);
                            }
                return  $this->db->get()->result();
        }
@@ -2980,6 +2981,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                            // }
                            if($jt != 0){
                                $this->db->where("f.jabatan_target",$jt);
+                               $this->db->where("f.flag_active",1);
                            }
 
            return  $this->db->get()->result_array();
@@ -3193,14 +3195,14 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         ->join('db_simata.t_jabatan_target as f', 'a.id_peg = f.id_peg','left')
         ->join('db_pegawai.jabatan as g', 'f.jabatan_target = g.id_jabatanpeg')
         ->join('db_simata.t_penilaian_kompetensi as h', 'a.id_peg = h.id_peg','left')
-        ->where('a.res_potensial_total >=', $potensialtinggi['dari'])
-        ->where('a.res_kinerja >=', $kinerjadiatas['dari'])
+        ->where('a.res_potensial_total >=', 68)
+        ->where('a.res_kinerja >=', 70)
         ->where('a.flag_active', 1)
         ->where('f.flag_active', 1)
         ->group_by('a.id_peg')
-        ->order_by('total', 'desc')
+        ->order_by('total', 'desc');
         // ->order_by('total_talent_pool', 'desc')
-        ->limit(3);
+        // ->limit(3);
 
     // if($jp == 1){
     //     $this->db->where_in('e.eselon', ["II B", "II A"]);

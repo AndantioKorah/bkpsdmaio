@@ -5723,26 +5723,34 @@ public function submitEditJabatan(){
        function getVerifLayanan($id){
         $id_layanan[] = null;
         if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){
-            // $id_layanan[] = 11;
-            $id_layanan = array(11);
+            $id_layanan[] = 11;
         }
 
         if($this->general_library->getId() != 78){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
-            $id_layanan = array(6,7,8,9);
+            // $id_layanan = array(6,7,8,9);
+            $id_layanan[] = 6;
+            $id_layanan[] = 7;
+            $id_layanan[] = 8;
+            $id_layanan[] = 9;
         }
         }
 
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
-            $id_layanan = array(10);
+            $id_layanan[] = 10;
         }
 
         if($this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu')){
-            $id_layanan = array(1);
+            $id_layanan[] = 1;
         }
 
+        if($this->general_library->getId() != 78){
         if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
-            $id_layanan = array(18,19,20);
+            // $id_layanan = array(18,19,20);
+            $id_layanan[] = 18;
+            $id_layanan[] = 19;
+            $id_layanan[] = 20;
+        }
         }
         
         
@@ -5772,9 +5780,9 @@ public function submitEditJabatan(){
 
     $id_layanan[] = null;
     if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){
-        // if($this->general_library->getId() != 78){
+        if($this->general_library->getId() != 78){
         $id_layanan[] = 17;
-    // }
+    }
     }
 
     $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')

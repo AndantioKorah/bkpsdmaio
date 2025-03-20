@@ -158,6 +158,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/permohonan_salinan_sk/"+filename+"?v="+number;
 } else if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
   $link = "<?=base_url();?>dokumen_layanan/ujian_dinas/"+filename+"?v="+number;
+} else if(id_layanan == 12){
+  $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

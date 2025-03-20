@@ -322,8 +322,8 @@ class C_Master extends CI_Controller
         render('master/V_LockTpp', '', '', $data);
     }
 
-    public function loadLockTpp(){
-        $data['result'] = $this->master->loadLockTppData();
+    public function loadLockTpp($bulan, $tahun){
+        $data['result'] = $this->master->loadLockTppData($bulan, $tahun);
         $this->load->view('master/V_LockTppData', $data);
     }
 

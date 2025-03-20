@@ -7,7 +7,7 @@
       <div class="modal-body">
         <form id="form_lock_tpp">
           <div class="row">
-            <div class="col-lg-6 col-md-12">
+            <!-- <div class="col-lg-6 col-md-12">
               <label>Unit Kerja</label>
               <select class="form-control select2-navy" style="width: 100%;"
                   id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
@@ -27,8 +27,8 @@
                       <?php } } ?>
                   <?php } } } ?>
               </select>
-            </div>
-            <div class="col-lg-3 col-md-12">
+            </div> -->
+            <div class="col-lg-6 col-md-12">
                 <div class="form-group">
                     <label class="bmd-label-floating">Pilih Bulan</label>
                     <select class="form-control select2-navy" style="width: 100%"
@@ -48,7 +48,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-12">
+            <div class="col-lg-6 col-md-12">
                 <div class="form-group">
                     <label class="bmd-label-floating">Pilih Tahun</label>
                     <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
@@ -56,7 +56,8 @@
             </div>
           </div>
           <div class="col-lg-12 mt-2 text-right">
-            <button type="submit" class="btn btn-navy btn-block"><i class="fa fa-lock"></i> LOCK</button>
+            <!-- <button type="submit" class="btn btn-navy btn-block"><i class="fa fa-lock"></i> LOCK</button> -->
+            <button type="submit" class="btn btn-navy btn-block"><i class="fa fa-search"></i> Cari</button>
           </div>
         </form>
       </div>
@@ -80,7 +81,7 @@
   function loadListLockTpp(){
     $('#result').html('')
     $('#result').append(divLoaderNavy)
-    $('#result').load('<?=base_url("master/C_Master/loadLockTpp")?>', function(){
+    $('#result').load('<?=base_url("master/C_Master/loadLockTpp/")?>'+$('#bulan').val()+'/'+$('#tahun').val(), function(){
       $('#loader').hide()
     })
   }

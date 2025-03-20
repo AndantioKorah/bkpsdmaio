@@ -817,12 +817,14 @@
             }
         }
 
-        public function loadLockTppData(){
-            return $this->db->select('a.*, a.nama_param_unitkerja as nm_unitkerja, d.gelar1, d.gelar2, d.nama, d.nipbaru_ws')
+        public function loadLockTppData($bulan, $tahun){
+            return $this->db->select('a.*, d.gelar1, d.gelar2, d.nama, d.nipbaru_ws, b.nm_unitkerja')
                             ->from('t_lock_tpp a')
                             ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
                             ->join('m_user c', 'a.created_by = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->where('a.bulan', $bulan)
+                            ->where('a.tahun', $tahun)
                             ->order_by('a.created_date', 'desc')
                             ->order_by('b.nm_unitkerja')
                             ->get()->result_array();

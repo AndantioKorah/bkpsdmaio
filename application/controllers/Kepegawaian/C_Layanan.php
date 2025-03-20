@@ -299,6 +299,16 @@ class C_Layanan extends CI_Controller
 		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayatDetailProgress', $data);
 	}
 
+	public function loadDetailUsulDsFile($id_t_usul_ds_detail, $id_t_usul_ds_detail_progress){
+		$data['result'] = $this->layanan->loadDetailUsulDsFile($id_t_usul_ds_detail);
+		$data['id_t_usul_ds_detail_progress'] = ($id_t_usul_ds_detail_progress);
+		$this->load->view('kepegawaian/layanan/V_VerifUsulDsVerifikasi', $data);
+	}
+
+	public function verifUsulDsDetail($id, $flag_verif, $id_t_usul_ds_progress){
+		echo json_encode($this->layanan->verifUsulDsDetail($id, $flag_verif, $id_t_usul_ds_progress));
+	}
+
 	public function deleteUsulDs($id){
 		//hapus t_usul_ds, t_usul_ds_detail, t_usul_ds_detail_progress, t_request_ds, t_cron_request_ds
 	}

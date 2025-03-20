@@ -14,7 +14,8 @@
         <th class="text-center">Uploader</th>
         <th class="text-center">Layanan</th>
         <th class="text-center">Nama File</th>
-        <th class="text-center">Pilihan</th>
+        <th class="text-center">File</th>
+        <th class="text-center">Tolak</th>
       </thead>
       <tbody>
         <?php $all_check = null; if($result){ $no = 1; foreach($result as $rs){ $all_check[] = $rs['id'];
@@ -58,7 +59,9 @@
               </div>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file'] ? $rs['url_file'] : $rs['url']?>')"><i class="fa fa-file-pdf"></i></button>
-              <!-- <button class="btn btn-sm btn-outline-danger" onclick="openFile('<?=$rs['url_file']?>')"><i class="fa fa-file-pdf"></i></button> -->
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-danger" onclick="tolakUsulFile('<?=$rs['id_t_usul_ds_detail']?>', '<?=$rs['id']?>')"><i class="fa fa-times"></i></button>
             </td>
           </tr>
         <?php } } ?>
@@ -79,6 +82,15 @@
   function openFile(url){
     // successtoast(url)
     window.open('<?=base_url()?>'+url, '_blank');
+  }
+
+  function tolakUsulFile(id_t_usul_ds_detail, id_t_usul_ds_detail_progress){
+    $('#modal_usul_ds').modal('show')
+    $('#modal_usul_ds_content').html('')
+    $('#modal_usul_ds_content').append(divLoaderNavy)
+    $('#modal_usul_ds_content').load('<?=base_url('kepegawaian/C_Layanan/loadDetailUsulDsFile/')?>'+id_t_usul_ds_detail+'/'+id_t_usul_ds_detail_progress, function(){
+      $('#loader').hide()
+    })
   }
 
   function setSelectedItem(id){

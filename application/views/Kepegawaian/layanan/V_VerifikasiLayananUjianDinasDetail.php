@@ -458,7 +458,7 @@
         <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
         <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
         <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-        <input type="hidden" id="ijazah" name="ijazah"  value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
+        <input type="text" id="ijazah" name="ijazah"  value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
         <input type="hidden" id="ijazah_s_penyesuaian" name="ijazah_s_penyesuaian"  value="<?php if($ijazah_s_penyesuaian) echo $ijazah_s_penyesuaian['id']; else echo "";?>">
         <input type="hidden" id="ijazah_penyesuaian" name="ijazah_penyesuaian"  value="<?php if($ijazah_penyesuaian) echo $ijazah_penyesuaian['id']; else echo "";?>">
 		<input type="hidden" id="skp1" name="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">

@@ -9798,6 +9798,18 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getCutiCltn()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('jeniscuti', 50)
+        ->order_by('tglmulai', 'desc')
+        ->from('db_pegawai.pegcuti');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getMlayanan($id_m_layanan)
     {
         $this->db->select('*')
@@ -9823,11 +9835,23 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
-     
+    
         ->from('db_pegawai.pegpendidikan');
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    public function getIjazahTerakhirAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->order_by('tahunlulus', 'desc')
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
 
     public function getIjazahSPAdmin($id_peg)
     {

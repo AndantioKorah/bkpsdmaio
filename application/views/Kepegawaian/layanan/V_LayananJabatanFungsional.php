@@ -314,6 +314,9 @@ ol {
 					<input type="text" id="rekom_instansi_pembina" value="<?php if(isset($rekom_instansi_pembina)) echo $rekom_instansi_pembina['id']; else echo "";?>">
 					<input type="text" id="surat_usul_pyb" value="<?php if(isset($surat_usul_pyb)) echo $surat_usul_pyb['id']; else echo "";?>">
 					<input type="text" id="pengunduran_diri" value="<?php if(isset($pengunduran_diri)) echo $pengunduran_diri['id']; else echo "";?>">
+					<input type="text" id="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
+					<input type="text" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
+					<input type="text" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
 
         
 				
@@ -471,6 +474,51 @@ ol {
                 class="fas fa-<?php if($dok_lain) echo ''; else echo '';?>"></i></a>
                 </li>
               <?php } ?>
+              <?php if($id_m_layanan == 16) { ?>
+                <li>
+                <a class="<?php if($peta_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($peta_jabatan) { ?>
+                onclick="viewBerkasPangkat('<?=$peta_jabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Peta Jabatan* <i
+                class="fas fa-<?php if($peta_jabatan) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($sk_pemberhentian_dari_jabfung) echo 'select'; else echo 'unselect';?>" <?php if($sk_pemberhentian_dari_jabfung) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_pemberhentian_dari_jabfung['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian dari Jabatan Fungsional* <i
+                class="fas fa-<?php if($sk_pemberhentian_dari_jabfung) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+                onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+                class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
+                onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
+                class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($sk_pengaktifan_kembali) echo 'select'; else echo 'unselect';?>" <?php if($sk_pengaktifan_kembali) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_pengaktifan_kembali['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pengaktifan Kembali (khusus pemberhentian alasan CLTN) <i
+                class="fas fa-<?php if($sk_pengaktifan_kembali) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($cltn) echo 'select'; else echo 'unselect';?>" <?php if($cltn) { ?>
+                onclick="viewBerkasPangkat('<?=$cltn['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK CLTN (khusus pemberhentian alasan CLTN) <i
+                class="fas fa-<?php if($cltn) echo ''; else echo '';?>"></i></a>
+                </li>
+                <li>
+                <a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
+                onclick="viewBerkasPangkat('<?=$dok_lain['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen lain apabila diperlukan <i
+                class="fas fa-<?php if($dok_lain) echo ''; else echo '';?>"></i></a>
+                </li>
+              <?php } ?>
+
 						</ol>
 					</div>
 
@@ -584,6 +632,9 @@ $(function(){
         var rekom_instansi_pembina = $('#rekom_instansi_pembina').val()
         var surat_usul_pyb = $('#surat_usul_pyb').val()
         var pengunduran_diri = $('#pengunduran_diri').val()
+        var sk_pemberhentian_dari_jabfung = $('#sk_pemberhentian_dari_jabfung').val()
+        var sk_pengaktifan_kembali = $('#sk_pengaktifan_kembali').val()
+        var cltn = $('#cltn').val()
 
 
         var id_m_layanan = "<?=$id_m_layanan;?>"
@@ -691,7 +742,22 @@ $(function(){
         }
         
         if(id_m_layanan == 16){
-       
+          if(peta_jabatan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_pemberhentian_dari_jabfung == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(skp2 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
         }
 
         

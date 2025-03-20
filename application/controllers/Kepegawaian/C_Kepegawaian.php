@@ -2529,7 +2529,11 @@ class C_Kepegawaian extends CI_Controller
 			
 			}
 			if($id_layanan == 16){
-				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
+				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+				$data['sk_pemberhentian_dari_jabfung'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','73','0');	
+				$data['sk_pengaktifan_kembali'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','74','0');	
+				$data['cltn'] = $this->kepegawaian->getCutiCltn(); 
+
 			}
 
 		$this->load->view('kepegawaian/layanan/V_LayananJabatanFungsional', $data);
@@ -2690,9 +2694,10 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanTerakhirForLayananAdmin($id_peg);
 
 			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
-			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir($id_peg);
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
+			// dd($data['ijazah']);
 			$data['ijazah_s_penyesuaian'] = $this->kepegawaian->getIjazahSPAdmin($id_peg);
-			$data['ijazah_penyesuaian'] = $this->kepegawaian->getIjazahAdmin($id_peg);
+			$data['ijazah_penyesuaian'] = $this->kepegawaian->getIjazahPAdmin($id_peg);
 			$data['karya_tulis'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','43','0',$id_peg);	
 
 			render('kepegawaian/layanan/V_VerifikasiLayananUjianDinasDetail', '', '', $data);

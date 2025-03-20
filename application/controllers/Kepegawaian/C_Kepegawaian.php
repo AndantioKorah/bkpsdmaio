@@ -149,7 +149,6 @@ class C_Kepegawaian extends CI_Controller
 
 
 	public function loadListJabatan($nip,$kode = null,$statusjabatan){
-		
 		$data['nip'] = $nip;
 		$data['kode'] = $kode;
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
@@ -2692,14 +2691,11 @@ class C_Kepegawaian extends CI_Controller
 			render('kepegawaian/layanan/V_VerifikasiLayananPerbaikanDataDetail', '', '', $data);
 		} else if($layanan == 18 || $layanan == 19 || $layanan == 20){
 			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanTerakhirForLayananAdmin($id_peg);
-
 			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
-			// dd($data['ijazah']);
 			$data['ijazah_s_penyesuaian'] = $this->kepegawaian->getIjazahSPAdmin($id_peg);
 			$data['ijazah_penyesuaian'] = $this->kepegawaian->getIjazahPAdmin($id_peg);
 			$data['karya_tulis'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','43','0',$id_peg);	
-
 			render('kepegawaian/layanan/V_VerifikasiLayananUjianDinasDetail', '', '', $data);
 		} 
 

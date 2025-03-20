@@ -502,14 +502,14 @@ class M_Layanan extends CI_Model
 
             $fileBase64 = convertToBase64(base_url($pathDpcp));
 
-            $tteTemplateDpcp = $this->createQrTte();
+            $tteTemplateDpcp = $this->general_library->createQrTte();
             $request_ws = [
                 'signatureProperties' => [
                     "tampilan" => "VISIBLE",
                     "imageBase64" => $tteTemplateDpcp['data']['qrBase64'],
                     "tag" => "^",
-                    "width" => 100,
-                    "height" => 100,
+                    "width" => 150,
+                    "height" => 150,
                     "page" => 1,
                 ],
                 // 'file' => convertToBase64(($pathDpcp))
@@ -558,14 +558,14 @@ class M_Layanan extends CI_Model
 
                 $fileBase64 = convertToBase64(base_url($pathHukdis));
 
-                $tteTemplateHukdis = $this->createQrTte();
+                $tteTemplateHukdis = $this->general_library->createQrTte();
                 $request_ws = [
                     'signatureProperties' => [
                         "tampilan" => "VISIBLE",
                         "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
                         "tag" => "^",
-                        "width" => 100,
-                        "height" => 100,
+                        "width" => 200,
+                        "height" => 200,
                         "page" => 1,
                     ],
                     // 'file' => convertToBase64(($pathHukdis))
@@ -621,14 +621,14 @@ class M_Layanan extends CI_Model
 
             $fileBase64 = convertToBase64(base_url($pathPidana));
 
-            $tteTemplatePidana = $this->createQrTte();
+            $tteTemplatePidana = $this->general_library->createQrTte();
             $request_ws = [
                 'signatureProperties' => [
                     "tampilan" => "VISIBLE",
                     "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
                     "tag" => "^",
-                    "width" => 100,
-                    "height" => 100,
+                    "width" => 200,
+                    "height" => 200,
                     "page" => 1,
                 ],
                 // 'file' => convertToBase64(($pathPidana))
@@ -1076,117 +1076,6 @@ class M_Layanan extends CI_Model
         }
     }
 
-    public function resizeImage($image, $w, $h){
-        imagealphablending( $image, FALSE );
-        imagesavealpha( $image, TRUE );
-        $oldw = imagesx($image);
-        $oldh = imagesy($image);
-        $temp = imagecreatetruecolor($w, $h);
-        imagealphablending( $temp, FALSE );
-        imagesavealpha( $temp, TRUE );
-        imagecopyresampled($temp, $image, 0, 0, 0, 0, $w, $h, $oldw, $oldh);
-
-        return $temp;
-    }
-
-    public function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct){
-        // creating a cut resource
-        $cut = imagecreatetruecolor($src_w, $src_h);
-        $transparency = imagecolorallocatealpha($cut, 0, 0, 0, 127);
-        imagefill($cut, 0, 0, $transparency);
-        imagesavealpha($cut, true);
-        
-        // copying relevant section from background to the cut resource
-        imagecopy($cut, $dst_im, 0, 0, $dst_x, $dst_y, $src_w, $src_h);
-
-        // copying relevant section from watermark to the cut resource
-        imagecopy($cut, $src_im, 0, 0, $src_x, $src_y, $src_w, $src_h);
-        
-        // insert cut resource to destination image
-        imagecopymerge($dst_im, $cut, $dst_x, $dst_y, 0, 0, $src_w, $src_h, $pct);
-        
-    }
-
-    public function createQrTte($nip = null, $randomString = null){
-		$rs['code'] = 0;
-		$rs['message'] = "";
-		$rs['data'] = null;
-
-		$user = null;
-		if($nip != null){
-			$user = $this->user->getProfilUserByNip($nip);
-		} else {
-			$user = $this->layanan->getKepalaBkpsdm();
-		}
-
-		if(!$user){
-			$rs['code'] = 0;
-			$rs['message'] = "User Tidak Ditemukan";
-			return $rs;
-		}
-        if($randomString == null){
-            $randomString = generateRandomString(30, 1, 't_file_ds'); 
-        }
-		$contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-		// dd($contentQr);
-		$qr = generateQr($contentQr);
-		// $image_ds = explode("data:image/png;base64,", $qr);
-		$data['user'] = $user;
-		$data['qr'] = $qr;
-
-		list($type, $qr) = explode(';', $qr);
-		list(, $qr)      = explode(',', $qr);
-		$qrDecode = base64_decode($qr);
-
-		$qrPath = 'arsippensiunotomatis/qr/'.$randomString.'.png';
-		file_put_contents($qrPath, $qrDecode);
-
-		$image = imagecreatetruecolor(800, 600);   
-
-		// $background_color = imagecolorallocate($image, 255, 255, 255);
-		$transparency = imagecolorallocatealpha($image, 255,255,255, 127);
-		imagefill($image, 0, 0, $transparency);
-		imagesavealpha($image, true);
-
-		$text_color = imagecolorallocate($image, 0, 0, 0);    
-		$fonts = "assets/fonts/tahoma.ttf";
-
-		imagettftext($image, 40, 0, 95, 525, $text_color, $fonts, getNamaPegawaiFull($data['user']));
-		imagettftext($image, 40, 0, 95, 580, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
-
-		$logoBsre = imagecreatefrompng("assets/img/logo-kunci-bsre-custom.png");
-		$logoBsreHeight = 65;
-		$logoBsreWidth = 65;
-		imagealphablending( $logoBsre, FALSE );
-		imagesavealpha( $logoBsre, TRUE );
-		$resizedLogo = $this->resizeImage($logoBsre, $logoBsreHeight, $logoBsreWidth);
-		$this->imagecopymerge_alpha($image, $resizedLogo, 20, 508, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
-
-		$qrImage = imagecreatefrompng($qrPath);
-        $container_height = imagesy($image);
-		$container_width = imagesx($image);
-		$qrImageMerge_height = imagesy($qrImage);
-		$qrImageMerge_width = imagesx($qrImage);
-		$qrImagePosX = ($container_width/2)-($qrImageMerge_width/2);
-		$qrImagePosY = ($container_height/2)-($qrImageMerge_height/2)-70;
-		// imagefilter($qrImage, IMG_FILTER_GRAYSCALE);
-		// imagefilter($qrImage, IMG_FILTER_CONTRAST, -100);
-		$this->imagecopymerge_alpha($image, $qrImage, $qrImagePosX, $qrImagePosY+20, 0, 0, $qrImageMerge_width, $qrImageMerge_height, 100);
-
-		ob_start();
-		imagepng($image);
-		$png = ob_get_clean();
-		// $uri = "data:image/png;base64," . base64_encode($png);
-		imagedestroy($image);
-		$rs['data'] = [
-			'qrBase64' => base64_encode($png),
-			'randomString' => $randomString
-		];
-
-		return $rs;
-		// echo "<img src='".$uri."' />";
-	}
-
     public function sendNotif(){
         $data = $this->input->post();
         $this->db->insert('t_cron_wa', [
@@ -1448,6 +1337,13 @@ class M_Layanan extends CI_Model
                                         ->where('id', $id_t_usul_ds_progress)
                                         ->where('flag_active', 1)
                                         ->get()->row_array();
+                                        
+                    $this->db->where('id', $dsDetail['id'])
+                        ->update('t_usul_ds_detail', [
+                            'flag_done' => 2,
+                            'keterangan' => 'Ditolak oleh '.$dsProgress['nama_jabatan'].' '.formatDateNamaBulanWT(date('Y-m-d H:i:s')),
+                            // 'keterangan' => $this->input->post('keterangan_verifikasi'),
+                    ]);
 
                     $this->db->where('id', $dsDetail['id'])
                             ->update('t_usul_ds_detail', [
@@ -1620,14 +1516,14 @@ class M_Layanan extends CI_Model
                                     ]);
 
                 $randomString = generateRandomString(30, 1, 't_file_ds'); 
-                $qrTemplate = $this->createQrTte(null, $randomString);
+                $qrTemplate = $this->general_library->createQrTte(null, $randomString);
                 $request_ws = [
                     'signatureProperties' => [
                         "tampilan" => "VISIBLE",
                         "imageBase64" => $qrTemplate['data']['qrBase64'],
                         "tag" => $dataUsul['ds_code'],
-                        "width" => 100,
-                        "height" => 100,
+                        "width" => 150,
+                        "height" => 150,
                         "page" => $dataUsul['page'],
                         "reason" => "Dokumen ini telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado melalui apikasi Siladen."
                     ],

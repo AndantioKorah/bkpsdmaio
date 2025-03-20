@@ -1,8 +1,10 @@
 <div class="row p-3">
     <?php if($result){ ?>
-        <div class="col-lg-12 text-right">
-            <button class="btn btn-sm btn-danger" onclick="deleteData('<?=$result['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
-        </div>
+        <?php if($result['flag_done'] == 0){ ?>
+            <div class="col-lg-12 text-right">
+                <button class="btn btn-sm btn-danger" onclick="deleteData('<?=$result['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
+            </div>
+        <?php } ?>
         <div class="col-lg-12">
             <h5>JENIS LAYANAN</h5>
             <h3><?=$result['id_m_jenis_layanan'] == 104 ? $result['nama_layanan'].' / '.$result['keterangan'] : $result['nama_layanan']?></h3>
@@ -48,7 +50,7 @@
                                 <?php if($d['flag_done'] == 1){ ?>
                                     <a target="_blank" href="<?=base_url($d['url_done'])?>"><button class="btn btn-sm btn-success"><i class="fa fa-file-pdf"></i></button></a>
                                 <?php } else { ?>
-                                    <a target="_blank" href="<?=base_url($d['url'])?>"><button class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i></button></a>
+                                    <!-- <a target="_blank" href="<?=base_url($d['url'])?>"><button class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i></button></a> -->
                                 <?php } ?>
                             </td>
                         </tr>

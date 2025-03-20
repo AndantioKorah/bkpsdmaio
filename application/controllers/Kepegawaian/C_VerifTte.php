@@ -27,7 +27,7 @@ class C_VerifTte extends CI_Controller
 	}
 
 	public function createQr(){
-		$data = $this->layanan->createQrTte();
+		$data = $this->general_library->createQrTtePortrait();
 		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
 	}
 

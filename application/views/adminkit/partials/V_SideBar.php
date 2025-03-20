@@ -690,96 +690,94 @@
 				</a>
 			</li>
 		<?php } ?>
-		<li class="sidebar-item ">
-			<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
-				<span class="align-middle">
-					Rekapitulasi
-					<i class="fa fa-chevron-down" 
-					style="
-						position: absolute;
-						right: 0;
-						margin-top: .35rem;"></i>
-				</span>
-			</a>
-			<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-			
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
-				|| $this->general_library->isWalikota()){ ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Absensi
-					</a>
-				</li>
-				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
-					<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
-					</a>
-				</li>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
-					</a>
-				</li>
-				<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
-				|| $this->general_library->isProgrammer() 
-				|| $this->general_library->isAdminAplikasi()
-				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
-				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
-				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
-				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
-				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
-				){ ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
-					</a>
-				</li>
-				
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
-						<i class="align-middle me-2 far fa-circle"></i>TPP
-					</a>
-				</li>
-				<?php } ?>
-				<?php if(!$this->general_library->isWalikota()){ ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Presensi
-					</a>
-				</li>
-				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		
-					<li class="sidebar-item ">
-						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
-							<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM
-						</a>
-					</li>
-					<li class="sidebar-item ">
-						<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-peninjauan')?>">
-							<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Absensi
-						</a>
-					</li>
-				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
-				<li class="sidebar-item ">
-					<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
-					</a>
-				</li>
-				<?php } ?>
-			</ul>
-		</li>
 	<?php } ?>
-
-	
+	<li class="sidebar-item ">
+		<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
+		<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
+			<span class="align-middle">
+				Rekapitulasi
+				<i class="fa fa-chevron-down" 
+				style="
+					position: absolute;
+					right: 0;
+					margin-top: .35rem;"></i>
+			</span>
+		</a>
+		<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+		
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+			|| $this->general_library->isHakAkses('rekap_absensi_aars') 
+			|| $this->general_library->isWalikota()){ ?>
+			<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Absensi
+				</a>
+			</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+				<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
+				</a>
+			</li>
+			<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
+				</a>
+			</li>
+			<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+			|| $this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi()
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
+			){ ?>
+			<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/produktivitas')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Penilaian Produktivitas Kerja
+				</a>
+			</li>
+			
+			<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/tpp')?>">
+					<i class="align-middle me-2 far fa-circle"></i>TPP
+				</a>
+			</li>
+			<?php } ?>
+			<?php if(!$this->general_library->isWalikota()){ ?>
+			<li class="sidebar-item ">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Presensi
+				</a>
+			</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		
+				<li class="sidebar-item ">
+					<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-pdm')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi PDM
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="Verifikasi PDM" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/verif-peninjauan')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Absensi
+					</a>
+				</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+			<li class="sidebar-item ">
+				<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
+				</a>
+			</li>
+			<?php } ?>
+		</ul>
+	</li>
 
 	<li class="sidebar-header">
 		<!-- Kinerja -->

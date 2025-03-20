@@ -247,8 +247,8 @@ ol {
 			</div>
 
 			<div class="card-body">
-      <?php if($jenis_layanan == 17) { ?>
-       
+      <?php 
+      if($jenis_layanan == 170) { ?>
         <form id="form_pensiun" method="post" enctype="multipart/form-data" id="" style="margin-top: -45px;">
         <input type="hidden" name="jenis_pensiun" id="jenis_pensiun" value="<?=$jenis_layanan;?>">
         <div class="d-grid gap-2">
@@ -576,7 +576,7 @@ $(function(){
 
        var jenis_layanan = "<?=$jenis_layanan;?>"
 
-        if(jenis_layanan != 17){
+        if(jenis_layanan != 170){
           var sk_cpns = $('#sk_cpns').val();
         var sk_pns = $('#sk_pns').val();
         var sk_pangkat = $('#sk_pangkat').val();
@@ -604,7 +604,7 @@ $(function(){
         var npwp = $('#npwp').val();
         var buku_rekening = $('#buku_rekening').val();
 
-        if(jenis_layanan == 1 || jenis_layanan == 2 || jenis_layanan == 3){
+        if(jenis_layanan == 17 || jenis_layanan == 2 || jenis_layanan == 3){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -627,10 +627,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(dpcp == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(dpcp == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
         if(sk_jabatan == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

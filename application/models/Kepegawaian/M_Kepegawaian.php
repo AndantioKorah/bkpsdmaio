@@ -3330,7 +3330,7 @@ public function getJenisArsip()
 
     $this->db->select('*, CONCAT(nama_dokumen, '.' , " / ", keterangan) AS name')
     // ->where('id !=', 0)
-    // ->where('flag_active', 1)
+    ->where('aktif', 1)
     ->order_by('id_dokumen', 'asc')
     ->where_not_in('id_dokumen', $ignore)
     ->from('m_dokumen');

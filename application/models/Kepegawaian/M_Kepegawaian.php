@@ -11277,7 +11277,7 @@ public function getFileForVerifLayanan()
 
     public function verifikasiBerkalaBkadItem(){
         $data = $this->input->post();
-        $this->db->select('*, a.status as status_berkala, a.id as id_berkala')
+        $this->db->select('*, a.tmtgajiberkala as tmtkgb, a.status as status_berkala, a.id as id_berkala')
                 ->from('t_gajiberkala a')
                 ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
                 ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')

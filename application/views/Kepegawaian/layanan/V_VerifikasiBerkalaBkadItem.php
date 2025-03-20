@@ -4,11 +4,12 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
+         
           <th class="text-center">Tanggal Usul Ke BKAD</th>
-          <th class="text-center">TMT Gaji Berkala</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
+          <th class="text-center">TMT Gaji Berkala</th>
             <th class="text-center">File Berkala</th>
           <?php } ?>
           <th></th>
@@ -21,9 +22,8 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs);?><br>
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+           
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul_bkad'])?></td>
-              <td class="text-left"><?= formatDateNamaBulan($rs['tmtkgb'])?></td>
-
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_berkala'] == '3') echo "success"; else if($rs['status_berkala'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_berkala'] == '3') echo "Usul BKPSDM"; else if($rs['status_berkala'] == '4') echo "Diterima"; else if($rs['status_berkala'] == '5') echo "ditolak"; ?>
               </span>
@@ -31,6 +31,7 @@
             <td class="text-left"><?=$rs['keterangan_bkad']?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad') ) { ?>
+            <td style="width:15%;" class="text-left"><?= formatDateNamaBulan($rs['tmtkgb'])?></td>
             <td class="text-center">
             <?php if($rs['status_berkala'] >= 3) { ?>
                 <button href="#modal_view_file" onclick="openFileBerkala('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

@@ -3330,7 +3330,7 @@ public function getJenisArsip()
 
     $this->db->select('*, CONCAT(nama_dokumen, '.' , " / ", keterangan) AS name')
     // ->where('id !=', 0)
-    // ->where('flag_active', 1)
+    ->where('aktif', 1)
     ->order_by('id_dokumen', 'asc')
     ->where_not_in('id_dokumen', $ignore)
     ->from('m_dokumen');
@@ -10430,6 +10430,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 11);
             } else if($id_m_layanan == 18 || $id_m_layanan == 19 || $id_m_layanan == 20){
                 $this->db->where_in('a.id_m_layanan', [18,19,20]);
+            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+                $this->db->where_in('a.id_m_layanan', [12,13,14,15,16]);
             }  else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -11284,7 +11286,7 @@ public function getFileForVerifLayanan()
                 ->join('db_pegawai.peggajiberkala g', 'g.id = a.id_peggajiberkala','left')
                 ->where('a.flag_active', 1)
                 // ->where('a.status', 3)
-                ->order_by('a.created_date', 'desc');
+                ->order_by('a.tmtgajiberkala', 'asc');
                 if(isset($data['status_berkala']) && $data['status_berkala'] != ""){
                     $this->db->where('a.status', $data['status_berkala']);
                 } else {
@@ -11389,7 +11391,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 20){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/ujian_dinas';
-            }   else {
+            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/jabatan_fungsional';
+            }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             } 
 

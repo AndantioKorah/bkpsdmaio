@@ -690,73 +690,6 @@
 				</a>
 			</li>
 		<?php } ?>
-	<?php } ?>
-
-	
-
-	<li class="sidebar-header">
-		<!-- Kinerja -->
-		 BIDIK ASN JUARA
-	</li>
-
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
-	<li class="sidebar-item ">
-			<a title="Verifikasi" href="<?=base_url();?>dashboard" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fas fa-tachometer-alt"></i> 
-				<span class="align-middle">
-				Dashboard
-				</span>
-			</a>	
-		</li>
-		<?php } ?>
-		<?php if(!$this->general_library->isWalikota()){ ?>
-		<li class="sidebar-item ">
-			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
-			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
-				<span class="align-middle">
-					Keterangan Presensi
-					<i class="fa fa-chevron-down" 
-					style="
-						position: absolute;
-						right: 0;
-						margin-top: .35rem;"></i>
-				</span>
-			</a>
-			<ul id="ketpresensi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/upload')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Upload
-					</a>
-				</li>
-				
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
-					</a>
-				</li>
-
-				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
-
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
-					</a>
-				</li>
-				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ){ ?>
-				<li class="sidebar-item ">
-					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/hukdis/input')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
-					</a>
-				</li>
-				<?php } ?>
-			</ul>
-		</li>
-		<?php } ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#rekapitulasi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-file-archive"></i> 
@@ -844,8 +777,84 @@
 				<?php } ?>
 			</ul>
 		</li>
-		
+	<?php } ?>
 
+	
+
+	<li class="sidebar-header">
+		<!-- Kinerja -->
+		 BIDIK ASN JUARA
+	</li>
+
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
+	<li class="sidebar-item ">
+			<a title="Verifikasi" href="<?=base_url();?>dashboard" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fas fa-tachometer-alt"></i> 
+				<span class="align-middle">
+				Dashboard
+				</span>
+			</a>	
+		</li>
+		<?php } ?>
+		<?php if(!$this->general_library->isWalikota()){ ?>
+		<li class="sidebar-item ">
+			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
+			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
+				<span class="align-middle">
+					Keterangan Presensi
+					<i class="fa fa-chevron-down" 
+					style="
+						position: absolute;
+						right: 0;
+						margin-top: .35rem;"></i>
+				</span>
+			</a>
+			<ul id="ketpresensi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/upload')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Upload
+					</a>
+				</li>
+				
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/tinjau')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Absensi
+					</a>
+				</li>
+
+				<?php if($this->general_library->isHakAkses('verifikasi_peninjauan_absensi')) { ?>
+					<li class="sidebar-item ">
+						<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/verifikasi-tinjau')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peninjauan <br><span class="ml-4">Absensi</span>
+						</a>
+					</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				|| $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ){ ?>
+					<li class="sidebar-item ">
+						<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('dokumen-pendukung-absensi/hukdis/input')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
+						</a>
+					</li>
+				<?php } ?>
+				<?php if($this->general_library->isProgrammer()
+				|| (
+						isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
+						&& $this->general_library->getIdUnitKerjaPegawai() == 4018000
+					)
+				){ ?>
+					<li class="sidebar-item ">
+						<a title="Rekap Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/usul-ds')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Usul DS
+						</a>
+					</li>
+				<?php } ?>
+			</ul>
+		</li>
+		<?php } ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#skbp" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 

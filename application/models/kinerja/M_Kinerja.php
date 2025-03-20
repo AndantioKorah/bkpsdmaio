@@ -3487,8 +3487,8 @@
                 } else if($data['id_unitkerja'] == 3015000){ // jika CAPIL
                     if($p['jenis_jabatan'] == 'JFT'){
                         if(isContainSeq($p['nama_jabatan'], "Mahir")){
-                            $result[$p['id_m_user']]['beban_kerja'] = 37;
-                            $result[$p['id_m_user']]['prestasi_kerja'] = 30;
+                            $result[$p['id_m_user']]['beban_kerja'] = 22;
+                            $result[$p['id_m_user']]['prestasi_kerja'] = 50;
                             $result[$p['id_m_user']]['kondisi_kerja'] = 0;
                         } else if(isContainSeq($p['nama_jabatan'], "Terampil")){
                             $result[$p['id_m_user']]['beban_kerja'] = 15;

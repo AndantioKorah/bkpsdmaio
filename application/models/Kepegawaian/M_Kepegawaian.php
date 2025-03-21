@@ -9810,6 +9810,18 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getCutiCltnAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('jeniscuti', 50)
+        ->order_by('tglmulai', 'desc')
+        ->from('db_pegawai.pegcuti');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getMlayanan($id_m_layanan)
     {
         $this->db->select('*')
@@ -10665,7 +10677,7 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "peta"){
+        } else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
@@ -10675,7 +10687,7 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "skjabatan"){
+        } else if($this->input->post('file') == "skjabatan" || $this->input->post('file') == "sk_jabatan_fungsional"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegjabatan as a')
                 ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
@@ -10750,7 +10762,87 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }    else {
+        } else if($this->input->post('file') == "formasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 69)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "dok_lain"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 75)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "str_serdik"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 76)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "rekom_instansi_pembina"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 70)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_usul_pyb"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 71)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pengunduran_diri"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 72)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_pemberhentian_dari_jabfung"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 73)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_pengaktifan_kembali"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 74)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }   else {
          return [''];
         }
         
@@ -10762,7 +10854,7 @@ public function getFileForVerifLayanan()
         $res['code'] = 0;
         $res['message'] = 'ok';
         $res['data'] = null;
-
+    
         $datapost = $this->input->post();
         $this->db->trans_begin();
        
@@ -10787,27 +10879,26 @@ public function getFileForVerifLayanan()
         if($dataPengajuan[0]['status'] == 1){
             $status = "ACC";
             $statusForMessage = "disetujui";
-
-            if($datapost['skp1']){
+            if(isset($datapost['skp1'])){
                 $this->verifBerkas($datapost['skp1'], "db_pegawai.pegskp");
             }
-            if($datapost['skp2']){
+            if(isset($datapost['skp2'])){
                 $this->verifBerkas($datapost['skp2'], "db_pegawai.pegskp");
             }
-            if($datapost['sk_cpns']){
+            if(isset($datapost['sk_cpns'])){
                 $this->verifBerkas($datapost['sk_cpns'], "db_pegawai.pegberkaspns");
             }
-            if($datapost['sk_pns']){
+            if(isset($datapost['sk_pns'])){
                 $this->verifBerkas($datapost['sk_pns'], "db_pegawai.pegberkaspns");
             }
             if(isset($datapost['diklat'])){
                 $this->verifBerkas($datapost['diklat'], "db_pegawai.pegdiklat");
             }
-            if($datapost['sk_pangkat']){
+            if(isset($datapost['sk_pangkat']) && $datapost['sk_pangkat'] != ""){
                 $this->verifBerkas($datapost['sk_pangkat'], "db_pegawai.pegpangkat");
                 $this->updatePangkat($dataPengajuan[0]['id_peg']);
             }
-            if(isset($datapost['sk_jabatan'])){
+            if(isset($datapost['sk_jabatan']) && $datapost['sk_jabatan'] != ""){
                 $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
                 $this->updateJabatan($dataPengajuan[0]['id_peg']);
             }
@@ -10820,6 +10911,9 @@ public function getFileForVerifLayanan()
             }
             if(isset($datapost['ijazah_penyesuaian'])){
                 $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['ijazah'])){
+                $this->verifBerkas($datapost['ijazah'], "db_pegawai.pegpendidikan");
             }
 
             
@@ -10849,6 +10943,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = "Ujian Dinas Tingkat II";
         } else if($dataPengajuan[0]['id_m_layanan'] == 20){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
         }
        

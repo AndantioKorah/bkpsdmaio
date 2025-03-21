@@ -1625,16 +1625,51 @@ function generateQrOld($content, $filepath ){
     return $filepath;
 }
 
+function wrapText($string, $length = 25){
+    $row = null;
+    $expl = explode(" ", $string);
+    $flagReset = 0;
+    $i = 1;
+    $tLen = $length;
+
+    foreach($expl as $e){
+        if($flagReset == 1){
+            $tLen = $length;
+        }
+
+        $tLen -= strlen($e);
+
+        if(isset($row[$i])){
+            $row[$i] .= " ".$e;
+        } else {
+            $row[$i] = $e;
+        }
+
+        if($tLen <= 0){
+            $i++;
+            $flagReset = 1;            
+        } else {
+            $flagReset = 0;
+        }
+    }
+
+    $result = "";
+    foreach($row as $r){
+        $result .= $r."<br>";
+    }
+    return $result;
+}
+
 function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $type = 'uri'){
     $logo = (base_url('assets/img/logopemkot.png'));
     $qr = new QrCode($content);
     $qr->setText($content)
         ->setLogoPath('assets/img/logopemkot.png')
-        ->setLogoWidth(75)
-        ->setSize(450)
+        ->setLogoWidth(150)
+        ->setSize(650)
         ->setMargin(0)
         ->setValidateResult(false)
-        ->setForegroundColor(['r' => 148, 'g' => 0, 'b' => 0]);
+        ->setForegroundColor(['r' => 200, 'g' => 0, 'b' => 0]);
     // dd($qr);
     return $qr->writeDataUri();
 }

@@ -38,8 +38,19 @@
           </div>
         </td>
         <td class="text-center">
-          <badge style="overflow: wrap; white-space: wrap;" class="badge <?=$rs['flag_done'] == 0 ? "badge-warning" : "badge-success"?>">
-            <?=($rs['flag_done'] == 1 ? "Selesai" : "Belum Selesai")?>
+          <?php
+            $badge = "badge-warning";
+            $status_text = "Belum Selesai";
+            if($rs['flag_done'] == 1){
+                $badge = "badge-success";
+                $status_text = "Selesai";
+            } else if($rs['flag_done'] == 2){
+                $badge = "badge-danger";
+                $status_text = "Ditolak";
+            }
+          ?>
+          <badge style="overflow: wrap; white-space: wrap;" class="badge <?=$badge?>">
+            <?=$status_text?>
           </badge>
         </td>
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>

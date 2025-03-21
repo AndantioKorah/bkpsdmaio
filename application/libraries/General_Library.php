@@ -847,7 +847,7 @@ class General_library
 		$qrPath = 'arsippensiunotomatis/qr/'.$randomString.'.png';
 		file_put_contents($qrPath, $qrDecode);
 
-		$image = imagecreatetruecolor(3000, 1400);   
+		$image = imagecreatetruecolor(2400, 1600);   
 
 		// $background_color = imagecolorallocate($image, 255, 255, 255);
 		$transparency = imagecolorallocatealpha($image, 255,255,255, 0);
@@ -857,26 +857,25 @@ class General_library
 		$text_color = imagecolorallocate($image, 0, 0, 0);    
 		$fonts = "assets/fonts/tahoma.ttf";
 
-		imagettftext($image, 100, 0, 695, 180, $text_color, $fonts, "Kepala Badan Kepegawaian dan");
-		imagettftext($image, 100, 0, 695, 315, $text_color, $fonts, "Pengembangan Sumber Daya Manusia");
-		imagettftext($image, 100, 0, 695, 1180, $text_color, $fonts, getNamaPegawaiFull($data['user']));
-		imagettftext($image, 100, 0, 695, 1315, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
+		imagettftext($image, 100, 0, 0, 100, $text_color, $fonts, "Kepala Badan Kepegawaian dan");
+		imagettftext($image, 100, 0, 0, 235, $text_color, $fonts, "Pengembangan Sumber Daya Manusia");
+		imagettftext($image, 100, 0, 0, 1450, $text_color, $fonts, getNamaPegawaiFull($data['user']));
+		imagettftext($image, 100, 0, 0, 1585, $text_color, $fonts, "NIP. ".$data['user']['nipbaru_ws']);
 
-		$logoBsre = imagecreatefrompng("assets/img/logo-kunci-bsre-custom.png");
-		$logoBsreHeight = 165;
-		$logoBsreWidth = 165;
-		imagealphablending( $logoBsre, FALSE );
-		imagesavealpha( $logoBsre, TRUE );
-		$resizedLogo = $this->resizeImage($logoBsre, $logoBsreHeight, $logoBsreWidth);
-		$this->imagecopymerge_alpha($image, $resizedLogo, 2430, 520, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
+		$logoBsre = imagecreatefrompng("assets/adminkit/img/logo-bsre.png");
+        $containerLogo_height = imagesy($logoBsre);
+		$containerLogo_width = imagesx($logoBsre);
+		$logoBsreHeight = imagesy($logoBsre);
+		$logoBsreWidth = imagesx($logoBsre);
+		$this->imagecopymerge_alpha($image, $logoBsre, 1330, 630, 0, 0, $logoBsreWidth, $logoBsreHeight, 100);
 
 		$qrImage = imagecreatefrompng($qrPath);
         $container_height = imagesy($image);
 		$container_width = imagesx($image);
 		$qrImageMerge_height = imagesy($qrImage);
 		$qrImageMerge_width = imagesx($qrImage);
-		$qrImagePosX = ($container_width/2)-($qrImageMerge_width/2);
-		$qrImagePosY = ($container_height/2)-($qrImageMerge_height/2)-50;
+		$qrImagePosX = 0;
+		$qrImagePosY = ($container_height/2)-($qrImageMerge_height/2);
 
         // $qrImagePosX = 30;
 		// $qrImagePosY = ($container_height/2)-($qrImageMerge_height/2);
@@ -899,6 +898,7 @@ class General_library
 	}
 
     public function createQrTte($nip = null, $randomString = null){
+        return $this->createQrTtePortrait($nip, $randomString);
 		$rs['code'] = 0;
 		$rs['message'] = "";
 		$rs['data'] = null;

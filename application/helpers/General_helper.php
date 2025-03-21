@@ -1666,7 +1666,7 @@ function generateQr($content = 'https://presensi.manadokota.go.id/siladen', $typ
     $qr->setText($content)
         ->setLogoPath('assets/img/logopemkot.png')
         ->setLogoWidth(150)
-        ->setSize(650)
+        ->setSize(850)
         ->setMargin(0)
         ->setValidateResult(false)
         ->setForegroundColor(['r' => 200, 'g' => 0, 'b' => 0]);

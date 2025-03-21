@@ -54,6 +54,18 @@
       box-shadow: 5px 5px 10px #888888;
       border-radius: 10%;
   }
+
+  .sp_whatsapp{
+  color: #50575e !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_whatsapp:hover{
+  color: green !important;
+  text-decoration: none;
+  transition: .2s;
+}
 </style>
 
 
@@ -64,43 +76,47 @@
    <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>" >
     <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
-  <?php if($result[0]['status_layanan'] == 5) { ;?>
-    <button 
-      id="btn_upload_sk"
-      data-toggle="modal" 
-      href="#modal_upload_sk"
-      onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
-    <?php } ?>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
-  <button 
+  <!-- <button 
   id="btn_upload_sk"
   data-toggle="modal" 
   href="#modal_upload_sk"
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button> -->
   <!-- Button trigger modal -->
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
   </button> -->
   <?php if($result[0]['verifikator'] == 0) { ;?>
-  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
+  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
         Kerjakan Pengajuan ini
-        </button>
+        </button> -->
 <?php } else { ?>
   <?php if($result[0]['status_layanan'] == 0) { ;?>
-  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
+  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Kerjakan Pengajuan ini
-        </button>
+        </button> -->
   <?php } ?>
 <?php } ?>
+<?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
-
+        <?php } ?>
+        <?php if($result[0]['status_layanan'] == 1) { ;?>
+        
         <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
+        <?php } ?>
+      
+        <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
+        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        Upload Dokumen
+        </button>
+        <?php } ?>
+        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
   
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -175,105 +191,51 @@
     <button onclick="openProfileTab()" class="nav-link nav-link-layanan active" id="pills-profil-tab"
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
- <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 ||  $id_m_layanan == 9) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
-  <li>
+    </li>
+  <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skcpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK CPNS</button>
-  <li>
+    <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
-  <li>
-
+    <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP <?=$tahun_1_lalu;?></button>
+  </li>
+    <?php if($id_m_layanan != 12) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
-  <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
-  <li>
-  
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
-  <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pmk')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peninjauan Masa Kerja </button>
-  <li>
-<?php } ?>
-<?php if($id_m_layanan == 6) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
-  <li>
+    <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP <?=$tahun_2_lalu;?></button>
+    </li>
   <?php } ?>
-<?php if($id_m_layanan == 7) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
-  <li> -->
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
-  <li> -->
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='peta')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
-  <li>
-  
- <?php } ?>
- <?php if($id_m_layanan == 8) { ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabterusmenerus')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Ujian Dinas (STLUD) </button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='diklat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Diklat PIM III </button>
-  <li>
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
-  <li> -->
  
-  <!-- <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data</button>
-  <li> -->
- <?php } ?>
- <?php if($id_m_layanan == 9) { ?>
+  <?php } ?>
+  <?php if($id_m_layanan == 12) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='uraiantugas')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif</button>
-  <li>
+    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Lulus Uji Komptensi</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti </button>
-  <li>
+    <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar </button>
-  <li>
+    <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
+  </li>
+  <?php } ?>
+  <?php if($id_m_layanan == 13) { ?>
+    <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Lulus Uji Komptensi</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='stlud')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Tanda Lulus Kenaikan Pangkat Penyesuaian Ijazah</button>
-  <li>
+    <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK</button>
-  <li>
+    <button onclick="getFile(file='str_serdik')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">STR / Serdik </button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skjabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional</button>
-  <li>
+    <button onclick="getFile(file='ijazah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah </button>
+  </li>
+<?php } ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Uji Kompetensi</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='akreditasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Akreditasi Program Studi</button>
-  <li>
-
- <?php } ?>
-        </li>
+    <button onclick="getFile(file='dok_lain')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Dokumen lain apabila diperlukan</button>
+  </li>
 
 
 </ul>
@@ -322,7 +284,7 @@
           </div>
           <div class="col-lg-12 text-center" >
             <span class="sp_profil">
-              <?=formatNip($result[0]['nipbaru_ws'])?>
+              <?=($result[0]['nipbaru_ws'])?>
             </span>
           </div>
         </div>
@@ -459,9 +421,13 @@
                 </span>
               </div>
               <div class="col-lg-12 text-right">
-                <span class="sp_profil_sm">
-                <?=($result[0]['handphone'])?>
-                </span>
+              <?php if($result[0]['handphone'] != null) { ?>
+                    <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($result[0]['handphone'])?>">
+                      <?= $result[0]['handphone'] != null ? $result[0]['handphone'] : '-'; ?>
+                      <i class="fab fa-whatsapp"></i></a>
+                  <?php } else { ?>
+                    <?= $result[0]['handphone'] != null ? $result[0]['handphone'] : '-'; ?>
+                  <?php } ?>
               </div>
             </div>
 
@@ -498,33 +464,22 @@
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
-          <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
-          <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-          <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-          <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-					<input type="hidden" id="skp1" name="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
-					<input type="hidden" id="skp2" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
-					<?php } ?>
-          <?php if($id_m_layanan == 7) { ?>
-					<input type="hidden"  name="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
-					<input type="hidden" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
-
-          <?php } ?>
-          <?php if($id_m_layanan == 8) { ?>
-					<input type="hidden" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
-					<input type="hidden" name="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
-					<input type="hidden" name="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
-          <?php } else if($id_m_layanan == 9) { ?>
-          <input type="hidden" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
-					<input type="hidden" name="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
-					<input type="hidden" name="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
-					<input type="hidden" name="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
-					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
-					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
-          
-          <?php } ?>
-
+        <input type="text" name="formasi" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
+		<input type="text" name="sertiukom" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
+		<input type="text" name="peta_jabatan" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
+		<input type="text" name="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+        <input type="text" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
+		<input type="text" name="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
+		<input type="text" name="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+		<input type="text" name="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
+		<input type="text" name="ijazah" value="<?php if(isset($ijazah)) echo $ijazah['id']; else echo "";?>">
+		<input type="text" name="str_serdik" value="<?php if(isset($str_serdik)) echo $str_serdik['id']; else echo "";?>">
+		<input type="text" name="rekom_instansi_pembina" value="<?php if(isset($rekom_instansi_pembina)) echo $rekom_instansi_pembina['id']; else echo "";?>">
+		<input type="text" name="surat_usul_pyb" value="<?php if(isset($surat_usul_pyb)) echo $surat_usul_pyb['id']; else echo "";?>">
+		<input type="text" name="pengunduran_diri" value="<?php if(isset($pengunduran_diri)) echo $pengunduran_diri['id']; else echo "";?>">
+		<input type="text" name="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
+		<input type="text" name="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
+		<input type="text" name="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -590,6 +545,53 @@
 </div>
     
 
+<!-- Modal -->
+<div class="modal fade" id="modalUploadDok" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form id="upload_dok_form" method="post" enctype="multipart/form-data">
+         <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="46" readonly>
+          <input type="hidden" class="form-control" id="id_layanan" name="id_layanan" value="<?=$result[0]['id_pengajuan'];?>" readonly>
+
+        
+          <div class="form-group">
+          <label >Dokumen Layanan</label>
+          <input type="file" class="form-control"  id="pdf_file_dok" name="file">
+          </div>
+          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal_view_file" >
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+    
+
+
 
 		
 <script>
@@ -597,7 +599,7 @@
 
 var nip = "<?= $result[0]['nipbaru_ws'];?>"; 
 var status = "<?= $result[0]['status_layanan'];?>";
-
+var dok = "<?= $result[0]['dokumen_layanan'];?>";
 $(function(){
   // $( "#sidebar_toggle" ).trigger( "click" );
   
@@ -613,20 +615,31 @@ $(function(){
    if(status == 0){
     $('#btn_upload_sk').hide()
     $('#btn_tolak_verifikasi').hide()
+    $('#btn_upload_dok').hide()
     $('#btn_verifikasi').show()
+    $('#btn_lihat_dok').hide()
    } else if(status == 1) {
     $('#btn_upload_sk').show()
-    $('#btn_tolak_verifikasi').show()
+    if(dok == null || dok == ""){
+      $('#btn_tolak_verifikasi').show()
+      $('#btn_lihat_dok').hide()
+    } else {
+      $('#btn_tolak_verifikasi').hide()
+      $('#btn_upload_dok').show()
+      $('#btn_lihat_dok').show()
+    } 
+    // $('#btn_upload_dok').show()
     $('#btn_verifikasi').hide()
    } else if(status == 2) {
     $('#btn_tolak_verifikasi').show()
+    $('#btn_upload_dok').hide()
     $('#btn_upload_sk').hide()
     $('#btn_verifikasi').hide()
+    $('#btn_lihat_dok').hide()
    }
   })
 
 function openProfileTab(){
-  $('#ket').html('');
   $('#view_file_verif').hide()
 }
 
@@ -646,20 +659,24 @@ function openPresensiTab(){
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     $('#ket').html('');
    
+    var id_layanan = "<?=$id_m_layanan;?>";
+
     if(file == "skcpns" || file == "skpns"){
           dir = "arsipberkaspns/";
         } else if(file == "skpangkat"){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file =="sk_pengaktifan_kembali" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
-        } else if(file == "skjabatan"){
+        } else if(file == "skjabatan" || file == "sk_jabatan_fungsional"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
-          dir = "./dokumen_layanan/pangkat/";
+            dir = "./dokumen_layanan/jabatan_fungsional/";
+        } else if(file == "ijazah"){
+          dir = "./arsippendidikan/";
         }  else {
           dir = "uploads/";
         }
@@ -816,7 +833,7 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
+$link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
@@ -872,6 +889,69 @@ function kirimBkad(id,status){
                    }
                }
 
+        $('#upload_dok_form').on('submit', function(e){  
+        document.getElementById('btn_uploadkgb').disabled = true;
+        $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        e.preventDefault();
+        var formvalue = $('#upload_dok_form');
+        var form_data = new FormData(formvalue[0]);
+        var ins = document.getElementById('pdf_file_dok').files.length;
+       
+        if(ins == 0){
+        errortoast("Silahkan upload file terlebih dahulu");
+        return false;
+        }
 
+      
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSKLayanan")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+                successtoast(result.msg)
+                document.getElementById("upload_dok_form").reset();
+                setTimeout(window.location.reload.bind(window.location), 1000);
+                
+                  
+            //    $('#btn_upload_pangkat').html('Simpan')
+               
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+            
+        }  
+        });  
+          
+        });
+        
+               $("#pdf_file_dok").change(function (e) {
+
+              // var extension = pdf_file_dok.value.split('.')[1];
+              var doc = pdf_file_dok.value.split('.')
+              var extension = doc[doc.length - 1]
+
+              var fileSize = this.files[0].size/1024;
+              var MaxSize = 1024;
+
+              if (extension != "pdf"){
+                errortoast("Harus File PDF")
+                $(this).val('');
+              }
+
+              if (fileSize > MaxSize ){
+                errortoast("Maksimal Ukuran File 2 MB")
+                $(this).val('');
+              }
+
+              });
 
 </script>

@@ -30,7 +30,6 @@
             <td class="text-left">
               <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
            
-          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '12') echo "Kenaikan Jabatan Fungsional"; else if($rs['id_m_layanan'] == '13') echo "Perpindahan Dari Jabatan Lain"; else if($rs['id_m_layanan'] == '14') echo "Penyesuaian/Inpassing"; else if($rs['id_m_layanan'] == '15') echo "Pemberhentian dari Jabatan Fungsional Atas Permintaan Sendiri"; else  echo "Pengangkatan Kembali"?>  
             </td>
@@ -49,7 +48,6 @@
                 <?php } ?>
             <?php } ?>
               </td>
-            <?php } ?>
              <td>
 
              <!-- <a id="btn_tolak_verifikasi" onclick="kerjakanBerkas('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" type="button" class="btn btn-sm btn-primary ml-2">

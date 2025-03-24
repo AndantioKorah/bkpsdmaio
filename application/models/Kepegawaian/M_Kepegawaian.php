@@ -8302,8 +8302,11 @@ public function submitEditJabatan(){
             $mpdf->showImageErrors = true;
             $mpdf->Output($usulDs['url_file'], 'F');
 
+            copy($usulDs['url_file'], $usulDs['url_ds']);
+
+
             $this->db->where('id', $id)
-                    ->update('t_request_ds', [
+                    ->update('t_usul_ds', [
                         'id_t_nomor_surat' => $last_insert,
                         'updated_by' => $this->general_library->getId()
                     ]);

@@ -88,7 +88,7 @@
           $('#btn_delete_file').hide()
           $('#btn_delete_file_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Layanan/deleteFileDsManual/".$result['id_t_request_ds'])?>',
+            url: '<?=base_url("kepegawaian/C_Layanan/deleteFileDsManual/".$result['id_t_usul_ds'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){
@@ -99,7 +99,7 @@
               if(rs.code == 1){
                 errortoast(rs.message)
               } else {
-                openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                openModalPenomoranDokumenPensiun('<?=$result['id_t_usul_ds']?>')
                 successtoast('Data berhasil dihapus')
               }
             }, error: function(err){
@@ -130,7 +130,7 @@
 
           e.preventDefault()
               $.ajax({
-              url: '<?=base_url('kepegawaian/C_Layanan/saveUploadFileDsPenomoranDokumenPensiun/'.$result['id_t_request_ds'])?>',
+              url: '<?=base_url('kepegawaian/C_Layanan/saveUploadFileDsPenomoranDokumenPensiun/'.$result['id_t_usul_ds'])?>',
               method: 'POST',
               data: form_data,  
               contentType: false,  
@@ -140,7 +140,7 @@
                   let res = JSON.parse(rs)
                   if(res.code == 0){
                       successtoast('Upload Dokumen DS Berhasil')    
-                      openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                      openModalPenomoranDokumenPensiun('<?=$result['id_t_usul_ds']?>')
                       // $('#btn_modal_balasan_close').click()
                   } else {
                       errortoast(res.message)
@@ -187,7 +187,7 @@
           $('#btn_delete').hide()
           $('#btn_delete_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id_t_request_ds'])?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id_t_usul_ds'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){

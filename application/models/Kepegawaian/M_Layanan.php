@@ -416,15 +416,16 @@ class M_Layanan extends CI_Model
     }
 
     public function searchPenomoranDokumenPensiun($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, e.nomor_surat, f.id_m_jenis_layanan, f.nama_kolom_ds,
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, h.nomor_surat, f.id_m_jenis_layanan, f.nama_kolom_ds,
                 g.nama_layanan, f.id as id_t_usul_ds, f.keterangan')
                 ->from('t_checklist_pensiun a')
                 ->join('m_user b', 'a.nip = b.username')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                 // ->join('t_request_ds d', 'a.id = d.ref_id')
-                ->join('t_nomor_surat e', 'a.id_t_nomor_surat = e.id', 'left')
+                // ->join('t_nomor_surat e', 'a.id_t_nomor_surat = e.id', 'left')
                 ->join('t_usul_ds f', 'a.id = f.ref_id AND f.table_ref = "t_checklist_pensiun" AND f.flag_active = 1')
                 ->join('m_jenis_layanan g', 'f.id_m_jenis_layanan = g.id')
+                ->join('t_nomor_surat h', 'f.id_t_nomor_surat = h.id', 'left')
                 ->where('a.flag_active', 1)
                 ->where('MONTH(f.created_date)', $data['bulan'])
                 ->where('YEAR(f.created_date)', $data['tahun'])
@@ -514,14 +515,18 @@ class M_Layanan extends CI_Model
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathDpcp, 'F');
+            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
+            $metaData = $data;
+            unset($metaData['progress']);
+            
             $rs['data'] = $pathDpcp;
-
             $this->db->where('id', $data['id_t_checklist_pensiun'])
+                    ->where('flag_active', 1)
                     ->update('t_checklist_pensiun', [
                         'url_file_dpcp' => $pathDpcp,
                         'flag_ajukan_ds_dpcp' => 1,
-                        'meta_data' => json_encode($data),
+                        'meta_data' => json_encode($metaData),
                         'updated_by' => $this->general_library->getId()
                     ]);
 
@@ -568,7 +573,6 @@ class M_Layanan extends CI_Model
             //     'meta_data' => json_encode($data),
             //     'id_m_jenis_layanan' => '104'
             // ]);
-            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
             ///////////////////////////////// SP HUKDIS
             if(!$data['berkas']['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
@@ -605,6 +609,7 @@ class M_Layanan extends CI_Model
                 $usulDsHukdis['flag_use_nomor_surat'] = 1;
                 $usulDsHukdis['keterangan'] = 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
                 $usulDsHukdis['id_m_jenis_layanan'] = 39;
+                $usulDsHukdis['url_ds'] = $pathHukdis;
                 $usulDsHukdis['files'][0]['url'] = $pathHukdis;
                 $usulDsHukdis['files'][0]['name'] = generateRandomString()."_".$fileNameHukdis;
     
@@ -680,10 +685,11 @@ class M_Layanan extends CI_Model
             $usulDsPidana['nama_kolom_ds'] = 'flag_ds_pidana';
             $usulDsPidana['ds_code'] = "^";
             $usulDsPidana['page'] = 1;
-            $usulDsHukdis['meta_view'] = 'kepegawaian/surat/V_SuratPidana';
+            $usulDsPidana['meta_view'] = 'kepegawaian/surat/V_SuratPidana';
             $usulDsPidana['flag_use_nomor_surat'] = 1;
             $usulDsPidana['keterangan'] = 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
             $usulDsPidana['id_m_jenis_layanan'] = 39;
+            $usulDsPidana['url_ds'] = $pathPidana;
             $usulDsPidana['files'][0]['url'] = $pathPidana;
             $usulDsPidana['files'][0]['name'] = generateRandomString()."_".$fileNamePidana;
 
@@ -740,12 +746,12 @@ class M_Layanan extends CI_Model
             'pidana' => null
         ];
 
-        $data = $this->db->select('a.*, d.nama as nama_ds, c.created_date as tanggal_ds, b.flag_selected, e.keterangan, e.meta_name')
+        $data = $this->db->select('a.*, b.created_date as tanggal_ds, b.keterangan, b.nama_kolom_ds')
                         ->from('t_checklist_pensiun a')
-                        ->join('t_request_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun"')
-                        ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
-                        ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
-                        ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
+                        ->join('t_usul_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun" AND b.flag_active = 1')
+                        // ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
+                        // ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
+                        // ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
                         ->where('a.id', $id)
                         ->where('b.flag_active', 1)
                         // ->where('d.flag_active', 1)
@@ -754,11 +760,11 @@ class M_Layanan extends CI_Model
         if($data){
             // dd(json_encode($data));
             foreach($data as $d){
-                if($d['meta_name'] == 'dpcp'){
+                if($d['nama_kolom_ds'] == 'flag_ds_dpcp'){
                     $result['dpcp'] = $d;
-                } else if($d['meta_name'] == 'sp_hukdis'){
+                } else if($d['nama_kolom_ds'] == 'flag_ds_hukdis'){
                     $result['hukdis'] = $d;
-                } else if($d['meta_name'] == 'sp_pidana'){
+                } else if($d['nama_kolom_ds'] == 'flag_ds_pidana'){
                     $result['pidana'] = $d;
                 }
             }
@@ -1318,7 +1324,9 @@ class M_Layanan extends CI_Model
             $data['page'] = $dataInput['page'];
             $data['table_ref'] = isset($dataInput['table_ref']) ? $dataInput['table_ref'] : null;
             $data['ref_id'] = isset($dataInput['ref_id']) ? $dataInput['ref_id'] : null;
+            $data['meta_view'] = isset($dataInput['meta_view']) ? $dataInput['meta_view'] : null;
             $data['nama_kolom_ds'] = isset($dataInput['nama_kolom_ds']) ? $dataInput['nama_kolom_ds'] : null;
+            $data['url_ds'] = isset($dataInput['url_ds']) ? $dataInput['url_ds'] : null;
             $data['batch_id'] = $batchId;
             $data['id_m_jenis_layanan'] = $dataInput['id_m_jenis_layanan'];
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];

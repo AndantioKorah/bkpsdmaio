@@ -41,7 +41,7 @@
           }  
         ?>
           <tr class="<?=$classSelesai?>">
-            <td class="text-center"><?=$no++;?></td>
+            <td class="text-center"><?=$rs['id'].' '.$no++;?></td>
             <td class="text-left">
               <span style="font-weight: bold; font-size: .9rem;"><?=getNamaPegawaiFull($rs)?></span><br>
               <span style="color: grey; font-weight: bold; font-size: .75rem;">NIP. <?=$rs['nipbaru_ws']?></span>

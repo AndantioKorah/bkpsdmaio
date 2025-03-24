@@ -304,8 +304,8 @@ ol {
           <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
           <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
 					<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
-					<input type="hidden" id="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
+					<input type="hidden" id="skp1" value="<?php if($skp1 && $skp1['gambarsk'] != null) echo $skp1['id']; else echo "";?>">
+					<input type="hidden" id="skp2" value="<?php if($skp2 && $skp2['gambarsk'] != null) echo $skp2['id']; else echo "";?>">
 					<?php } ?>
           <?php if($id_m_layanan == 7) { ?>
 					<input type="hidden" id="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
@@ -347,13 +347,13 @@ ol {
 											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 							</li>
                 <li>
-								<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+								<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
 									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
 											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
-								<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
+								<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
 									onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_2_lalu;?>* <i
 											class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>

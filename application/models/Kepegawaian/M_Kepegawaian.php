@@ -5196,14 +5196,15 @@ public function submitEditJabatan(){
       
         $this->db->trans_begin();
         $target_dir = './arsipskp/';
-        $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
-       
+        // $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
+        $filename = $datapost['id']."_SKP.pdf"; 
+
             // if($filename == ""){
             //     $filename = $_FILES['file']['name'];
             // } 
            
     
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9));
             $filename = $random_number.$filename;
     
             $config['upload_path']          = $target_dir;

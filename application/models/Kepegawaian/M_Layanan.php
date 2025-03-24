@@ -564,8 +564,8 @@ class M_Layanan extends CI_Model
                         "tampilan" => "VISIBLE",
                         "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
                         "tag" => "^",
-                        "width" => 200,
-                        "height" => 200,
+                        "width" => 150,
+                        "height" => 150,
                         "page" => 1,
                     ],
                     // 'file' => convertToBase64(($pathHukdis))
@@ -627,8 +627,8 @@ class M_Layanan extends CI_Model
                     "tampilan" => "VISIBLE",
                     "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
                     "tag" => "^",
-                    "width" => 200,
-                    "height" => 200,
+                    "width" => 150,
+                    "height" => 150,
                     "page" => 1,
                 ],
                 // 'file' => convertToBase64(($pathPidana))

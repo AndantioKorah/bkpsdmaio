@@ -8253,15 +8253,17 @@ public function submitEditJabatan(){
                         ->where('YEAR(tanggal_surat)', $tahun)
                         ->get()->row_array();
 
-        $request_ds = $this->db->select('a.*')
-                        ->from('t_request_ds a')
+        $usulDs = $this->db->select('a.*, b.url as url_file, c.meta_data')
+                        ->from('t_usul_ds a')
+                        ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
+                        ->join('t_checklist_pensiun c', 'a.ref_id = c.id AND a.table_ref = "t_checklist_pensiun" AND a.flag_active = 1')
                         // ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
                         ->where('a.id', $id)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
         
         if($exists){
-            if($exists['id'] == $request_ds['id_t_nomor_surat']){
+            if($exists['id'] == $usulDs['id_t_nomor_surat']){
                 $res['code'] = 1;
                 $res['message'] = 'Nomor Surat tidak berubah';
             } else {
@@ -8272,16 +8274,16 @@ public function submitEditJabatan(){
             //insert nomor surat manual
             $data_input['counter'] = $data['counter_nomor_surat'];
             $data_input['nomor_surat'] = $data['nomor_surat'];
-            $data_input['id_m_jenis_layanan'] = $request_ds['id_m_jenis_layanan'];
-            $data_input['perihal'] = $request_ds['perihal'];
-            $data_input['tanggal_surat'] = formatDateOnlyForEdit($request_ds['created_date']);
+            $data_input['id_m_jenis_layanan'] = $usulDs['id_m_jenis_layanan'];
+            $data_input['perihal'] = $usulDs['keterangan'];
+            $data_input['tanggal_surat'] = formatDateOnlyForEdit($usulDs['created_date']);
             $data_input['created_by'] = $this->general_library->getId();
 
             $this->db->insert('t_nomor_surat', $data_input);
             $last_insert = $this->db->insert_id();
 
             //buat file baru dengan nomor surat manual
-            $meta_data = json_decode($request_ds['meta_data'], true);
+            $meta_data = json_decode($usulDs['meta_data'], true);
             $meta_data['data']['nomor_surat'] = $data_input['nomor_surat'];
 
             $mpdf = new \Mpdf\Mpdf([
@@ -8290,14 +8292,14 @@ public function submitEditJabatan(){
             ]);
 
             // jika ada file dengan nama sama, hapus terlebih dahulu agar tertimpa file yang lama
-            if(file_exists($request_ds['url_file'])){
-                unlink($request_ds['url_file']);
+            if(file_exists($usulDs['url_file'])){
+                unlink($usulDs['url_file']);
             }
 
-            $html = $this->load->view($request_ds['meta_view'], $meta_data, true);
+            $html = $this->load->view($usulDs['meta_view'], $meta_data, true);
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
-            $mpdf->Output($request_ds['url_file'], 'F');
+            $mpdf->Output($usulDs['url_file'], 'F');
 
             $this->db->where('id', $id)
                     ->update('t_request_ds', [

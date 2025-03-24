@@ -349,7 +349,7 @@ class M_Layanan extends CI_Model
                     ->update('t_checklist_pensiun_detail', [
                         'flag_active' => 0,
                         'created_by' => $this->general_library->getId(),
-                        'udpated_by' => $this->general_library->getId(),
+                        'updated_by' => $this->general_library->getId(),
                         // 'tanggal_validasi' => date('Y-m-d H:i:s')
                     ]);
         }
@@ -397,7 +397,7 @@ class M_Layanan extends CI_Model
 
         $this->db->insert_batch('t_checklist_pensiun_detail', $list_input);
 
-        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWTWT(date('Y-m-d H:i:s'));
+        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s'));
         
         return $rs;
     }
@@ -416,21 +416,24 @@ class M_Layanan extends CI_Model
     }
 
     public function searchPenomoranDokumenPensiun($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.nama_jenis_ds, e.nomor_surat, d.nama_kolom_flag, d.id as id_t_request_ds, d.id_m_jenis_ds')
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, e.nomor_surat, f.id_m_jenis_layanan, f.nama_kolom_ds,
+                g.nama_layanan, f.id as id_t_usul_ds, f.keterangan')
                 ->from('t_checklist_pensiun a')
                 ->join('m_user b', 'a.nip = b.username')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                ->join('t_request_ds d', 'a.id = d.ref_id')
-                ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
+                // ->join('t_request_ds d', 'a.id = d.ref_id')
+                ->join('t_nomor_surat e', 'a.id_t_nomor_surat = e.id', 'left')
+                ->join('t_usul_ds f', 'a.id = f.ref_id AND f.table_ref = "t_checklist_pensiun" AND f.flag_active = 1')
+                ->join('m_jenis_layanan g', 'f.id_m_jenis_layanan = g.id')
                 ->where('a.flag_active', 1)
-                ->where('MONTH(d.created_date)', $data['bulan'])
-                ->where('YEAR(d.created_date)', $data['tahun'])
-                ->where_in('d.id_m_jenis_ds', [1,2,3])
-                ->where('d.flag_selected', 0)
-                ->group_by('d.id')
+                ->where('MONTH(f.created_date)', $data['bulan'])
+                ->where('YEAR(f.created_date)', $data['tahun'])
+                // ->where_in('d.id_m_jenis_ds', [1,2,3])
+                // ->where('d.flag_selected', 0)
+                ->group_by('f.id')
                 ->order_by('a.created_date', 'asc')
-                ->where('a.flag_active', 1)
-                ->where('d.flag_active', 1);
+                ->where('a.flag_active', 1);
+                // ->where('d.flag_active', 1);
 
         if($data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);
@@ -440,16 +443,28 @@ class M_Layanan extends CI_Model
     }
 
     public function loadDetailPenomoranDokumenPensiun($id){
-        return $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*')
-                    ->from('t_request_ds a')
+        return $this->db->select('a.*, a.id as id_t_usul_ds, b.nomor_surat, b.counter, d.*, e.url')
+                    ->from('t_usul_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    // ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
                     ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+                    ->join('t_usul_ds_detail e', 'e.id_t_usul_ds = a.id')
                     // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
                     ->where('a.flag_active', 1)
                     ->where('a.id', $id)
                     // ->where('a.table_ref', 't_pengajuan_cuti')
                     ->get()->row_array();
+
+        // return $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*')
+        //             ->from('t_request_ds a')
+        //             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+        //             ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+        //             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+        //             // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+        //             ->where('a.flag_active', 1)
+        //             ->where('a.id', $id)
+        //             // ->where('a.table_ref', 't_pengajuan_cuti')
+        //             ->get()->row_array();
     }
 
     public function getKepalaBkpsdm(){
@@ -463,6 +478,8 @@ class M_Layanan extends CI_Model
         ->get()->row_array();
     }
 
+    
+
     public function createDpcp($data){
         $rs['code'] = 0;
         $rs['message'] = '';
@@ -472,6 +489,7 @@ class M_Layanan extends CI_Model
         // dd($data);
         $exists = $this->db->select('*')
                         ->from('t_request_ds')
+                        // ->from('t_request_ds')
                         ->where('ref_id', $data['id_t_checklist_pensiun'])
                         ->where('table_ref', 't_checklist_pensiun')
                         ->where('flag_active', 1)
@@ -481,8 +499,12 @@ class M_Layanan extends CI_Model
             $rs['code'] = 1;
             $rs['message'] = 'DPCP sudah diajukan';
         } else {
+            $bulan = getNamaBulan(date('m'));
+            $tahun = date('Y');
+
             ///////////////////////////////// DPCP
-            $pathDpcp = 'arsippensiunotomatis/arsipdpcp/DPCP_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $fileNameDpcp = 'DPCP_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathDpcp = 'arsippensiunotomatis/arsipdpcp/'.$fileNameDpcp;
             $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true);
             // dd($html);
             $mpdf = new \Mpdf\Mpdf([
@@ -497,44 +519,61 @@ class M_Layanan extends CI_Model
 
             $this->db->where('id', $data['id_t_checklist_pensiun'])
                     ->update('t_checklist_pensiun', [
-                        'url_file_dpcp' => $pathDpcp
+                        'url_file_dpcp' => $pathDpcp,
+                        'flag_ajukan_ds_dpcp' => 1,
+                        'meta_data' => json_encode($data),
+                        'updated_by' => $this->general_library->getId()
                     ]);
 
-            $fileBase64 = convertToBase64(base_url($pathDpcp));
+            $usulDsDpcp['table_ref'] = "t_checklist_pensiun";
+            $usulDsDpcp['ref_id'] = $data['id_t_checklist_pensiun'];
+            $usulDsDpcp['nama_kolom_ds'] = 'flag_ds_dpcp';
+            $usulDsDpcp['ds_code'] = "^";
+            $usulDsDpcp['page'] = 1;
+            $usulDsDpcp['flag_use_nomor_surat'] = 0;
+            $usulDsDpcp['keterangan'] = "DPCP pegawai a/n. ".getNamaPegawaiFull($data['profil_pegawai']);
+            $usulDsDpcp['id_m_jenis_layanan'] = 104;
+            $usulDsDpcp['files'][0]['url'] = $pathDpcp;
+            $usulDsDpcp['files'][0]['name'] = generateRandomString()."_".$fileNameDpcp;
 
-            $tteTemplateDpcp = $this->general_library->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplateDpcp['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 150,
-                    "height" => 150,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathDpcp))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 1,
-                'nama_jenis_ds' => 'DPCP',
-                'request' => json_encode($request_ws),
-                'url_file' => $pathDpcp,
-                'url_image_ds' => $tteTemplateDpcp['data']['qrBase64'],
-                'random_string' => $tteTemplateDpcp['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_dpcp',
-                'nip' => $data['nip'],
-                'meta_view' => 'kepegawaian/V_CetakDpcp',
-                'meta_data' => json_encode($data),
-                'id_m_jenis_layanan' => '104'
-            ]);
+            $this->submitUploadFileUsulDs($usulDsDpcp, 1);
+
+            // $fileBase64 = convertToBase64(base_url($pathDpcp));
+
+            // $tteTemplateDpcp = $this->general_library->createQrTte();
+            // $request_ws = [
+            //     'signatureProperties' => [
+            //         "tampilan" => "VISIBLE",
+            //         "imageBase64" => $tteTemplateDpcp['data']['qrBase64'],
+            //         "tag" => "^",
+            //         "width" => 150,
+            //         "height" => 150,
+            //         "page" => 1,
+            //     ],
+            //     // 'file' => convertToBase64(($pathDpcp))
+            // ];
+            // $this->db->insert('t_request_ds', [
+            //     'ref_id' => $data['id_t_checklist_pensiun'],
+            //     'table_ref' => 't_checklist_pensiun',
+            //     'id_m_jenis_ds' => 1,
+            //     'nama_jenis_ds' => 'DPCP',
+            //     'request' => json_encode($request_ws),
+            //     'url_file' => $pathDpcp,
+            //     'url_image_ds' => $tteTemplateDpcp['data']['qrBase64'],
+            //     'random_string' => $tteTemplateDpcp['data']['randomString'],
+            //     'created_by' => $this->general_library->getId(),
+            //     'nama_kolom_flag' => 'flag_ds_dpcp',
+            //     'nip' => $data['nip'],
+            //     'meta_view' => 'kepegawaian/V_CetakDpcp',
+            //     'meta_data' => json_encode($data),
+            //     'id_m_jenis_layanan' => '104'
+            // ]);
             $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
             ///////////////////////////////// SP HUKDIS
             if(!$data['berkas']['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
-                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $fileNameHukdis = 'SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/'.$fileNameHukdis;
                 $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
                 // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
                 // dd($html);
@@ -553,40 +592,55 @@ class M_Layanan extends CI_Model
 
                 $this->db->where('id', $data['id_t_checklist_pensiun'])
                         ->update('t_checklist_pensiun', [
-                            'url_file_hukdis' => $pathHukdis
+                            'url_file_hukdis' => $pathHukdis,
+                            'flag_ajukan_ds_hukdis' => 1,
                         ]);
 
-                $fileBase64 = convertToBase64(base_url($pathHukdis));
+                $usulDsHukdis['table_ref'] = "t_checklist_pensiun";
+                $usulDsHukdis['ref_id'] = $data['id_t_checklist_pensiun'];
+                $usulDsHukdis['nama_kolom_ds'] = 'flag_ds_hukdis';
+                $usulDsHukdis['ds_code'] = "^";
+                $usulDsHukdis['page'] = 1;
+                $usulDsHukdis['meta_view'] = 'kepegawaian/surat/V_SuratHukdis';
+                $usulDsHukdis['flag_use_nomor_surat'] = 1;
+                $usulDsHukdis['keterangan'] = 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
+                $usulDsHukdis['id_m_jenis_layanan'] = 39;
+                $usulDsHukdis['files'][0]['url'] = $pathHukdis;
+                $usulDsHukdis['files'][0]['name'] = generateRandomString()."_".$fileNameHukdis;
+    
+                $this->submitUploadFileUsulDs($usulDsHukdis, 1);
 
-                $tteTemplateHukdis = $this->general_library->createQrTte();
-                $request_ws = [
-                    'signatureProperties' => [
-                        "tampilan" => "VISIBLE",
-                        "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
-                        "tag" => "^",
-                        "width" => 150,
-                        "height" => 150,
-                        "page" => 1,
-                    ],
-                    // 'file' => convertToBase64(($pathHukdis))
-                ];
-                $this->db->insert('t_request_ds', [
-                    'ref_id' => $data['id_t_checklist_pensiun'],
-                    'table_ref' => 't_checklist_pensiun',
-                    'id_m_jenis_ds' => 2,
-                    'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
-                    'perihal' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
-                    'request' => json_encode($request_ws),
-                    'url_file' => $pathHukdis,
-                    'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
-                    'random_string' => $tteTemplateHukdis['data']['randomString'],
-                    'created_by' => $this->general_library->getId(),
-                    'nama_kolom_flag' => 'flag_ds_hukdis',
-                    'nip' => $data['nip'],
-                    'meta_view' => 'kepegawaian/surat/V_SuratHukdis',
-                    'meta_data' => json_encode($data),
-                    'id_m_jenis_layanan' => 39
-                ]);
+                // $fileBase64 = convertToBase64(base_url($pathHukdis));
+
+                // $tteTemplateHukdis = $this->general_library->createQrTte();
+                // $request_ws = [
+                //     'signatureProperties' => [
+                //         "tampilan" => "VISIBLE",
+                //         "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
+                //         "tag" => "^",
+                //         "width" => 150,
+                //         "height" => 150,
+                //         "page" => 1,
+                //     ],
+                //     // 'file' => convertToBase64(($pathHukdis))
+                // ];
+                // $this->db->insert('t_request_ds', [
+                //     'ref_id' => $data['id_t_checklist_pensiun'],
+                //     'table_ref' => 't_checklist_pensiun',
+                //     'id_m_jenis_ds' => 2,
+                //     'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                //     'perihal' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
+                //     'request' => json_encode($request_ws),
+                //     'url_file' => $pathHukdis,
+                //     'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
+                //     'random_string' => $tteTemplateHukdis['data']['randomString'],
+                //     'created_by' => $this->general_library->getId(),
+                //     'nama_kolom_flag' => 'flag_ds_hukdis',
+                //     'nip' => $data['nip'],
+                //     'meta_view' => 'kepegawaian/surat/V_SuratHukdis',
+                //     'meta_data' => json_encode($data),
+                //     'id_m_jenis_layanan' => 39
+                // ]);
             } else { // jika ada hukdis, masuk di sini
                 
                 $this->db->where('id', $data['id_t_checklist_pensiun'])
@@ -597,7 +651,8 @@ class M_Layanan extends CI_Model
 
 
             ///////////////////////////////// SP PIDANA
-            $pathPidana = 'arsippensiunotomatis/arsipskpidana/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $fileNamePidana = 'SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathPidana = 'arsippensiunotomatis/arsipskpidana/'.$fileNamePidana;
     		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
             // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
@@ -616,40 +671,55 @@ class M_Layanan extends CI_Model
 
             $this->db->where('id', $data['id_t_checklist_pensiun'])
                     ->update('t_checklist_pensiun', [
-                        'url_file_pidana' => $pathPidana
+                        'url_file_pidana' => $pathPidana,
+                        'flag_ajukan_ds_pidana' => 1
                     ]);
 
-            $fileBase64 = convertToBase64(base_url($pathPidana));
+            $usulDsPidana['table_ref'] = "t_checklist_pensiun";
+            $usulDsPidana['ref_id'] = $data['id_t_checklist_pensiun'];
+            $usulDsPidana['nama_kolom_ds'] = 'flag_ds_pidana';
+            $usulDsPidana['ds_code'] = "^";
+            $usulDsPidana['page'] = 1;
+            $usulDsHukdis['meta_view'] = 'kepegawaian/surat/V_SuratPidana';
+            $usulDsPidana['flag_use_nomor_surat'] = 1;
+            $usulDsPidana['keterangan'] = 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
+            $usulDsPidana['id_m_jenis_layanan'] = 39;
+            $usulDsPidana['files'][0]['url'] = $pathPidana;
+            $usulDsPidana['files'][0]['name'] = generateRandomString()."_".$fileNamePidana;
 
-            $tteTemplatePidana = $this->general_library->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 150,
-                    "height" => 150,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathPidana))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 3,
-                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP',
-                'perihal' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
-                'request' => json_encode($request_ws),
-                'url_file' => $pathPidana,
-                'url_image_ds' => $tteTemplatePidana['data']['qrBase64'],
-                'random_string' => $tteTemplatePidana['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_pidana',
-                'nip' => $data['nip'],
-                'meta_view' => 'kepegawaian/surat/V_SuratPidana',
-                'meta_data' => json_encode($data),
-                'id_m_jenis_layanan' => 39
-            ]);
+            $this->submitUploadFileUsulDs($usulDsPidana, 1);
+
+            // $fileBase64 = convertToBase64(base_url($pathPidana));
+
+            // $tteTemplatePidana = $this->general_library->createQrTte();
+            // $request_ws = [
+            //     'signatureProperties' => [
+            //         "tampilan" => "VISIBLE",
+            //         "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
+            //         "tag" => "^",
+            //         "width" => 150,
+            //         "height" => 150,
+            //         "page" => 1,
+            //     ],
+            //     // 'file' => convertToBase64(($pathPidana))
+            // ];
+            // $this->db->insert('t_request_ds', [
+            //     'ref_id' => $data['id_t_checklist_pensiun'],
+            //     'table_ref' => 't_checklist_pensiun',
+            //     'id_m_jenis_ds' => 3,
+            //     'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP',
+            //     'perihal' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
+            //     'request' => json_encode($request_ws),
+            //     'url_file' => $pathPidana,
+            //     'url_image_ds' => $tteTemplatePidana['data']['qrBase64'],
+            //     'random_string' => $tteTemplatePidana['data']['randomString'],
+            //     'created_by' => $this->general_library->getId(),
+            //     'nama_kolom_flag' => 'flag_ds_pidana',
+            //     'nip' => $data['nip'],
+            //     'meta_view' => 'kepegawaian/surat/V_SuratPidana',
+            //     'meta_data' => json_encode($data),
+            //     'id_m_jenis_layanan' => 39
+            // ]);
         }
 
         if($this->db->trans_status() == FALSE || $rs['code'] != 0){
@@ -967,8 +1037,33 @@ class M_Layanan extends CI_Model
                     $this->db->where('id', $requestDs['id_t_nomor_surat'])
                             ->update('t_request_ds', [
                                 'flag_active' => 0,
-                                'updated_by' => $this->general_library->getId
+                                'updated_by' => $this->general_library->getId()
                             ]);
+                }
+            }
+
+            $usulDs = $this->db->select('*')
+                            ->from('t_usul_ds')
+                            ->where('ref_id', $id)
+                            ->where('table_ref', 't_checklist_pensiun')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            if($usulDs){
+                foreach($usulDs as $u){
+                    $this->db->where('id', $u['id'])
+                            ->update('t_usul_ds', [
+                                'flag_active' => 0,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
+                    if($u['id_t_nomor_surat']){
+                        $this->db->where('id', $u['id_t_nomor_surat'])
+                                ->update('t_nomor_surat', [
+                                    'flag_active' => 0,
+                                    'updated_by' => $this->general_library->getId()
+                                ]);
+                    }
                 }
             }
         }
@@ -1193,7 +1288,7 @@ class M_Layanan extends CI_Model
         return $pegawai;
     }
 
-    public function submitUploadFileUsulDs($dataInput){
+    public function submitUploadFileUsulDs($dataInput, $flagIntegrasi = 0){
         $result = [
             'code' => 0,
             'message' => ''
@@ -1205,7 +1300,7 @@ class M_Layanan extends CI_Model
         $tahun = date('Y');
 
 		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
-        if(!$uploadedFile){
+        if(!$uploadedFile && $flagIntegrasi == 0){
             $result['code'] = 1;
             $result['message'] = "Belum ada file yang dipilih";
         } else {
@@ -1220,11 +1315,24 @@ class M_Layanan extends CI_Model
             $data['created_by'] = $this->general_library->getId();
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
+            $data['page'] = $dataInput['page'];
+            $data['table_ref'] = isset($dataInput['table_ref']) ? $dataInput['table_ref'] : null;
+            $data['ref_id'] = isset($dataInput['ref_id']) ? $dataInput['ref_id'] : null;
+            $data['nama_kolom_ds'] = isset($dataInput['nama_kolom_ds']) ? $dataInput['nama_kolom_ds'] : null;
             $data['batch_id'] = $batchId;
             $data['id_m_jenis_layanan'] = $dataInput['id_m_jenis_layanan'];
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            if($flagIntegrasi == 1){
+                $data['flag_use_nomor_surat'] = isset($dataInput['flag_use_nomor_surat']) ? $dataInput['flag_use_nomor_surat'] : 0;
+            }
+
             $this->db->insert('t_usul_ds', $data);
             $id_t_usul_ds = $this->db->insert_id();
+
+            if($flagIntegrasi == 1){
+                $uploadedFile = $dataInput['files'];
+            }
 
             $usulDetail = null;
             $i = 0;
@@ -1234,6 +1342,10 @@ class M_Layanan extends CI_Model
                 $usulDetail[$i]['created_by'] = $this->general_library->getId();
                 $usulDetail[$i]['filename'] = $uf['name'];
                 $usulDetail[$i]['batch_id_detail'] = generateRandomString();
+
+                if($flagIntegrasi == 1){
+                    copy($uf['url'], $usulDetail[$i]['url']);
+                }
 
                 $this->db->insert('t_usul_ds_detail', $usulDetail[$i]);
                 $id_t_usul_ds_detail = $this->db->insert_id();
@@ -1255,6 +1367,10 @@ class M_Layanan extends CI_Model
                 $i++;
             }
         }
+        // else {
+        //     $result['code'] = 1;
+        //     $result['message'] = "Terjadi Kesalahan";
+        // }
 
         if($this->db->trans_status() == FALSE && $result['code'] != 0){
             $this->db->trans_rollback();
@@ -1370,8 +1486,10 @@ class M_Layanan extends CI_Model
     public function searchVerifUsulDs(){
         $data = $this->input->post();
         
+        $result = null;
+
         $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id, c.url_file,
-                e.nama_layanan, a.id_m_jenis_layanan, b.id as id_t_usul_ds_detail')
+                e.nama_layanan, a.id_m_jenis_layanan, b.id as id_t_usul_ds_detail, a.flag_use_nomor_surat, a.id_t_nomor_surat')
                 ->from('t_usul_ds a')
                 ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
                 ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
@@ -1387,13 +1505,28 @@ class M_Layanan extends CI_Model
                 ->where('c.id_m_user_verif', $this->general_library->getId())
                 ->where('flag_ds_now', 1)
                 ->where('c.flag_selected', 0)
+                // ->where('(a.flag_use_nomor_surat = 1 AND (a.id_t_nomor_surat is NOT NULL OR a.id_t_nomor_surat != 0)) OR (a.flag_use_nomor_surat = 0 AND (a.id_t_nomor_surat IS NULL OR a.id_t_nomor_surat = 0))')
                 ->order_by('c.created_date', 'desc');
 
         if($data['bulan'] != 0){
             $this->db->where('MONTH(c.created_date)', $data['bulan']);
         }
 
-        return $this->db->get()->result_array();
+        $rs = $this->db->get()->result_array();
+
+        if($rs){
+            foreach($rs as $r){
+                if($r['flag_use_nomor_surat'] == 1){
+                    if($r['id_t_nomor_surat']){
+                        $result[] = $r;
+                    }
+                } else {
+                    $result[] = $r;
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function proceedNextVerifikatorUsulDs($params = null){

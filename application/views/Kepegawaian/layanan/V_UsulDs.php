@@ -147,7 +147,8 @@
       data: {
         keterangan: $('#keterangan').val(),
         ds_code: $('#ds_code').val(),
-        id_m_jenis_layanan: $('#id_m_jenis_layanan').val()
+        id_m_jenis_layanan: $('#id_m_jenis_layanan').val(),
+        page: $('#page').val()
       },
       success: function(data){
         let rs = JSON.parse(data)

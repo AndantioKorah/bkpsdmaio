@@ -38,13 +38,10 @@
             <td class="text-left"><?=$rs['user_inputer']?></td>
             <td class="text-left">
               <div style="
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 150px;
+                overflow: wrap;
               ">
-                <span title="<?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>">
-                  <?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
+                <span title="<?=$rs['id_m_jenis_layanan'] != 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>">
+                  <?=$rs['id_m_jenis_layanan'] != 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
                 </span>
               </div>
             </td>

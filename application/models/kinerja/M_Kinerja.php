@@ -2287,10 +2287,11 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone')
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone, d.id_unitkerjamaster')
                         ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
                         ->where('a.id', $id)
                         ->where('id_m_status_pegawai', 1)
                         ->get()->row_array();
@@ -2305,7 +2306,7 @@
             $uker = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
                             ->where('id_unitkerjamaster', $temp['id_unitkerjamaster'])
-                            ->where('nm_unitkerja LIKE ', '"Kecamatan%"')
+                            ->where('nm_unitkerja LIKE ', 'Kecamatan%')
                             ->get()->row_array();
             $id_unitkerja = $uker['id_unitkerja'];
         } else if($uksearch['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan

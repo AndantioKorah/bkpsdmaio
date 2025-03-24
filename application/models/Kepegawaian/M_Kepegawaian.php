@@ -8847,13 +8847,13 @@ public function submitEditJabatan(){
                 ->from('t_pengajuan_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                ->join('t_request_ds d', 'a.id = d.ref_id')
+                ->join('t_request_ds d', 'a.id = d.ref_id AND table_ref = "t_pengajuan_cuti"', 'left')
                 ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
-                ->where('d.id_m_jenis_layanan', 3)
+                // ->where('d.id_m_jenis_layanan', 3)
                 ->where('a.flag_active', 1)
-                ->where('d.flag_active', 1)
+                // ->where('d.flag_active', 1)
                 ->group_by('a.id')
                 ->order_by('a.created_date', 'desc');
 

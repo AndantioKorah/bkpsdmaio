@@ -444,7 +444,7 @@ class M_Layanan extends CI_Model
     }
 
     public function loadDetailPenomoranDokumenPensiun($id){
-        return $this->db->select('a.*, a.id as id_t_usul_ds, b.nomor_surat, b.counter, d.*, e.url')
+        return $this->db->select('a.*, a.id as id_t_usul_ds, b.nomor_surat, b.counter, d.*, e.url, e.url_done, e.flag_done as flag_done_detail')
                     ->from('t_usul_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
                     // ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
@@ -538,6 +538,7 @@ class M_Layanan extends CI_Model
             $usulDsDpcp['flag_use_nomor_surat'] = 0;
             $usulDsDpcp['keterangan'] = "DPCP pegawai a/n. ".getNamaPegawaiFull($data['profil_pegawai']);
             $usulDsDpcp['id_m_jenis_layanan'] = 104;
+            $usulDsDpcp['url_ds'] = $pathDpcp;
             $usulDsDpcp['files'][0]['url'] = $pathDpcp;
             $usulDsDpcp['files'][0]['name'] = generateRandomString()."_".$fileNameDpcp;
 
@@ -746,9 +747,11 @@ class M_Layanan extends CI_Model
             'pidana' => null
         ];
 
-        $data = $this->db->select('a.*, b.created_date as tanggal_ds, b.keterangan, b.nama_kolom_ds')
+        $data = $this->db->select('a.*, b.created_date as tanggal_ds, b.keterangan, b.nama_kolom_ds, c.flag_done as flag_done_detail, c.url_done,
+                        b.status as status_usul_ds')
                         ->from('t_checklist_pensiun a')
                         ->join('t_usul_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun" AND b.flag_active = 1')
+                        ->join('t_usul_ds_detail c', 'b.id = c.id_t_usul_ds')
                         // ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
                         // ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
                         // ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
@@ -790,31 +793,33 @@ class M_Layanan extends CI_Model
        
         $this->db->trans_begin();
 
-        $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
-                            d.id as id_t_checklist_pensiun, e.nipbaru_ws')
-                            ->from('t_request_ds a')
+        $data = $this->db->select('a.*, b.nomor_surat, b.counter, d.*, c.url, c.url_done, c.flag_done as flag_done_detail, c.flag_status, c.id as id_t_usul_ds_detail,
+                            d.id as id_t_checklist_pensiun, e.nipbaru_ws, f.id as id_t_request_ds, f.flag_selected')
+                            ->from('t_usul_ds a')
                             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                            ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                            ->join('t_usul_ds_detail c', 'a.id = c.id_t_usul_ds')
                             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
                             ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
-                            // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+                            ->join('t_request_ds f', 'c.id = f.ref_id AND f.table_ref = "t_usul_ds_detail" AND f.flag_active = 1', 'left')
                             ->where('a.flag_active', 1)
                             ->where('a.id', $id)
-                            // ->where('a.table_ref', 't_pengajuan_cuti')
                             ->get()->row_array();
 
-        // $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat, f.nomor_surat')
-        //                     ->from('t_pengajuan_cuti a')
-        //                     ->join('m_user b', 'a.id_m_user = b.id')
-        //                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-        //                     ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
-        //                     ->join('t_request_ds e', 'a.id = e.ref_id AND table_ref = "t_pengajuan_cuti"')
-        //                     ->join('t_nomor_surat f', 'e.id_t_nomor_surat = f.id')
-        //                     ->where('a.id', $id)
+        // $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
+        //                     d.id as id_t_checklist_pensiun, e.nipbaru_ws')
+        //                     ->from('t_request_ds a')
+        //                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+        //                     ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+        //                     ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+        //                     ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
+        //                     // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
         //                     ->where('a.flag_active', 1)
+        //                     ->where('a.id', $id)
+        //                     // ->where('a.table_ref', 't_pengajuan_cuti')
         //                     ->get()->row_array();
+
         if($data){
-            $expl = explode("_", $data['nama_kolom_flag']);
+            $expl = explode("_", $data['nama_kolom_ds']);
 
             $this->db->where('id', $data['id_t_checklist_pensiun'])
                     ->update('t_checklist_pensiun', [
@@ -823,38 +828,36 @@ class M_Layanan extends CI_Model
                         'updated_by' => $this->general_library->getId(),
                     ]);
 
-            $this->db->where('id', $data['id_t_request_ds'])
-                    ->update('t_request_ds', [
-                        'flag_selected' => 0
+            $this->db->where('id', $data['id'])
+                    ->update('t_usul_ds', [
+                        'flag_done' => 0,
+                        'keterangan' => "",
+                        'updated_by' => $this->general_library->getId(),
                     ]);
 
-            // $this->db->where('random_string', $data['random_string'])
-            //         ->update('t_dokumen_pendukung', [
-            //             'flag_active' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
+            if($data['id_t_request_ds'] && $data['flag_selected'] == 1){
+                $this->db->where('id', $data['id_t_request_ds'])
+                        ->update('t_request_ds', [
+                            'flag_selected' => 0
+                        ]);
+            }
 
-            // $this->db->where('id', $id)
-            //         ->update('t_pengajuan_cuti', [
-            //             'url_sk_manual' => null,
-            //             'flag_ds_cuti' => 0,
-            //             'flag_ds_manual' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
-
-            // $this->db->where('nosttpp', $data['nomor_surat'])
-            //         ->update('db_pegawai.pegcuti', [
-            //             'flag_active' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
-
-            // $this->db->where('id', $data['id_t_progress_cuti'])
-            //         ->update('t_progress_cuti', [
-            //                 'flag_diterima' => 0,
-            //                 'flag_verif' => 0,
-            //                 'tanggal_verif' => null,
-            //                 'updated_by' => $this->general_library->getId()
-            //         ]);
+            $this->db->where('id', $data['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail', [
+                        'updated_by' => $this->general_library->getId(),
+                        'flag_done' => 0,
+                        'flag_status' => 0,
+                        'url_done' => null,
+                        'keterangan' => ""
+                    ]);
+                    
+            if($data['id_last_active_progress']){
+                $this->db->where('id', $data['id_last_active_progress'])
+                        ->update('t_usul_ds_detail_progress', [
+                            'flag_ds_now' => 0,
+                            'flag_selected' => 0,
+                        ]);
+            }        
 
         } else {
             $rs['code'] = 1;
@@ -880,17 +883,17 @@ class M_Layanan extends CI_Model
        
         $this->db->trans_begin();
 
-        $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
-                            d.id as id_t_checklist_pensiun, e.nipbaru_ws')
-                            ->from('t_request_ds a')
+        $data = $this->db->select('a.*, b.nomor_surat, b.counter, d.*, c.url, c.url_done, c.flag_done as flag_done_detail, c.flag_status,
+                            c.id as id_t_usul_ds_detail, d.id as id_t_checklist_pensiun, e.nipbaru_ws, f.id as id_t_request_ds,
+                            f.flag_selected, a.id as id_t_usul_ds')
+                            ->from('t_usul_ds a')
                             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                            ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                            ->join('t_usul_ds_detail c', 'a.id = c.id_t_usul_ds')
                             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
                             ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
-                            // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+                            ->join('t_request_ds f', 'c.id = f.ref_id AND f.table_ref = "t_usul_ds_detail" AND f.flag_active = 1', 'left')
                             ->where('a.flag_active', 1)
                             ->where('a.id', $id)
-                            // ->where('a.table_ref', 't_pengajuan_cuti')
                             ->get()->row_array();
 
         // $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat, f.nomor_surat')
@@ -903,10 +906,18 @@ class M_Layanan extends CI_Model
         //                     ->where('a.id', $id)
         //                     ->where('a.flag_active', 1)
         //                     ->get()->row_array();
-                            
+            
         if($data && $data['id_t_nomor_surat'] == null){
             $res['code'] = 1;
             $res['message'] = "SK Belum memiliki Nomor Surat. Harap mengisi Nomor Surat terlebih dahulu.";
+            return $res;
+        } else if($data && $data['id_t_request_ds'] && $data['flag_selected'] == 1){
+            $res['code'] = 1;
+            $res['message'] = "File sementara / sudah dilakukan Digital Signature oleh Kepala BKPSDM. Proses tidak dapat dilanjutkan.";
+            return $res;
+        } else if($data && $data['flag_done'] == 1){
+            $res['code'] = 1;
+            $res['message'] = "Tidak dapat mengupload file karena proses DS sudah selesai";
             return $res;
         }
 
@@ -918,10 +929,10 @@ class M_Layanan extends CI_Model
             $filename = 'DPCP_DSM_'.$data['nipbaru_ws'].date('Ymd');
             $path = 'arsippensiunotomatis/arsipdpcp/';
 
-            if($data['id_m_jenis_ds'] == 2){
+            if($data['nama_kolom_ds'] == "flag_ds_hukdis"){
                 $filename = 'SPHUKDIS_DSM_'.$data['nipbaru_ws'].date('Ymd').'.pdf';
                 $path = 'arsippensiunotomatis/arsipskhukdis/';
-            } else if($data['id_m_jenis_ds'] == 3){
+            } else if($data['nama_kolom_ds'] == "flag_ds_pidana"){
                 $filename = 'SPPIANA_DSM_'.$data['nipbaru_ws'].date('Ymd').'.pdf';
                 $path = 'arsippensiunotomatis/arsipskpidana/';
             }
@@ -944,27 +955,68 @@ class M_Layanan extends CI_Model
                 $filepath = $path.$filename;
                 if($uploadfile){
                     $updateChecklistPensiun = null;
-
-                    if($data['id_m_jenis_ds'] == 2){ //hukdis
+                    if($data['nama_kolom_ds'] == "flag_ds_hukdis"){ //hukdis
                         $updateChecklistPensiun['url_ds_manual_hukdis'] = $filepath;
                         $updateChecklistPensiun['flag_ds_hukdis'] = 1;
-                    } else if($data['id_m_jenis_ds'] == 3){ //pidana
+                    } else if($data['nama_kolom_ds'] == "flag_ds_pidana"){ //pidana
                         $updateChecklistPensiun['url_ds_manual_pidana'] = $filepath;
                         $updateChecklistPensiun['flag_ds_pidana'] = 1;
                     } else { //dpcp
                         $updateChecklistPensiun['url_ds_manual_dpcp'] = $filepath;
                         $updateChecklistPensiun['flag_ds_dpcp'] = 1;
                     }
-
                     $updateChecklistPensiun['updated_by'] = $this->general_library->getId();
 
                     $this->db->where('id', $data['id_t_checklist_pensiun'])
                             ->update('t_checklist_pensiun', $updateChecklistPensiun);
 
-                    $this->db->where('id', $data['id_t_request_ds'])
+                    if($data['id_t_request_ds']){
+                        $this->db->where('id', $data['id_t_request_ds'])
                             ->update('t_request_ds', [
-                                'flag_selected' => 1
+                                'flag_selected' => 1,
+                                'updated_by' => $this->general_library->getId()
                             ]);
+                    }
+
+                    $bulan = getNamaBulan(date('m'));
+                    $tahun = date('Y');
+
+                    copy($filepath, "arsipusulds/".$tahun."/".$bulan."/".$filename);
+
+                    $this->db->where('id', $data['id_t_usul_ds_detail'])
+                            ->update('t_usul_ds_detail', [
+                                'updated_by' => $this->general_library->getId(),
+                                'flag_done' => 1,
+                                'flag_status' => 1,
+                                'url_done' => "arsipusulds/".$tahun."/".$bulan."/".$filename,
+                                'keterangan' => "File DS telah diupload secara manual"
+                            ]);
+                    
+                    $this->db->where('id', $data['id_t_usul_ds'])
+                            ->update('t_usul_ds', [
+                                'flag_done' => 1,
+                                'keterangan' => "File DS telah diupload secara manual",
+                                'updated_by' => $this->general_library->getId(),
+                            ]);
+
+                    $usulDsProgres = $this->db->select('*')
+                                            ->from('t_usul_ds_detail_progress')
+                                            ->where('id_t_usul_ds_detail', $data['id_t_usul_ds_detail'])
+                                            ->where('flag_active', 1)
+                                            ->where('flag_ds_now', 0)
+                                            ->get()->row_array();
+                    if($usulDsProgres){
+                        $this->db->where('id_t_usul_ds_detail', $data['id_t_usul_ds_detail'])
+                                ->update('t_usul_ds_detail_progress', [
+                                    'flag_ds_now' => 1,
+                                    'flag_selected' => 1,
+                                ]);
+                    
+                        $this->db->where('id', $data['id'])
+                                ->update('t_usul_ds', [
+                                    'id_last_active_progress' => $usulDsProgres['id']
+                                ]);
+                    }
                 } else {
                     $rs['code'] = 1;
                     $rs['message'] = 'Gagal upload file';
@@ -1620,7 +1672,7 @@ class M_Layanan extends CI_Model
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
             $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
-                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page')
+                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page, b.ref_id, b.table_ref, b.nama_kolom_ds')
                         ->from('t_usul_ds_detail a')
                         ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                         ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
@@ -1705,6 +1757,13 @@ class M_Layanan extends CI_Model
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
+
+                if($dataUsul['ref_id']){ // usul DS integrasi
+                    $this->db->where('id', $dataUsul['ref_id'])
+                            ->update($dataUsul['table_ref'], [
+                                $dataUsul['nama_kolom_ds'] => 1
+                            ]);
+                }
 
                 // update t_file_ds untuk scan QR
                 $this->db->where('random_string', $params['selectedData']['random_string'])

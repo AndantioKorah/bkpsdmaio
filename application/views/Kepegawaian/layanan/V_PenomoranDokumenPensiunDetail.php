@@ -1,7 +1,12 @@
 <div class="row p-3">
-  <?php if($result){ ?>
+  <?php if($result){
+    $url = $result['url'];
+    if($result['url_done']){
+      $url = $result['url_done'];
+    }  
+  ?>
     <div class="col-lg-6">
-      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$result['url'].'?v='.generateRandomString()?>"></iframe>
+      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$url.'?v='.generateRandomString()?>"></iframe>
     </div>
     <div class="col-lg-6">
       <div class="row">
@@ -18,10 +23,12 @@
                   <input required class="form-control" id="counter_nomor_surat_input" name="counter_nomor_surat" value="<?=$result['counter']?>" />
                 </div>
                 <?php if($result[$result['nama_kolom_ds']] == 0){ ?>
-                  <div class="col-lg-6 text-left mt-3">
-                    <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
-                    <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
-                  </div>
+                    <div class="col-lg-6 text-left mt-3">
+                      <?php if($result['id_t_nomor_surat']){ ?>
+                        <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
+                        <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                      <?php } ?>
+                    </div>
                   <div class="col-lg-6 text-right mt-3">
                     <button id="btn_save" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
                     <button id="btn_save_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
@@ -56,9 +63,9 @@
             $keterangan = "File DS sudah diupload";
             if($result[$result['nama_kolom_ds']] == 1){
               $fileUrl = $result['url_ds_manual_dpcp'] ? $result['url_ds_manual_dpcp'] : $result['url_file_dpcp'];
-              if($result['id_m_jenis_ds'] == 2){
+              if($result['nama_kolom_ds'] == "flag_ds_hukdis"){
                 $fileUrl = $result['url_ds_manual_hukdis'] ? $result['url_ds_manual_hukdis'] : $result['url_file_hukdis'];
-              } else if($result['id_m_jenis_ds'] == 3){
+              } else if($result['nama_kolom_ds'] == "flag_ds_pidana"){
                 $fileUrl = $result['url_ds_manual_pidana'] ? $result['url_ds_manual_pidana'] : $result['url_file_pidana'];
               }
             }  

@@ -15,11 +15,15 @@
     <?php if(isset($result[$jenis_file]['flag_sedang_hukdis']) && isset($result[$jenis_file]['flag_sedang_hukdis']) == 1){ ?>
         <label style="font-size: .8rem; color: red; font-weight: bold;">Pegawai sedang menjalani Hukuman Disiplin</label>
     <?php } else { ?>
-        <label style="font-size: .8rem; color: red; font-weight: bold;">Berkas belum dilakukan Digital Signature (DS). Mohon menunggu.</label>
+        <label style="font-size: .8rem; color: red; font-weight: bold;">
+            <?=$result[$jenis_file]['status_usul_ds'] != "" ? $result[$jenis_file]['status_usul_ds'] : "Berkas belum dilakukan Digital Signature (DS). Mohon menunggu." ?>
+        </label>
     <?php } ?>
 <?php }
     $url = $result[$jenis_file]['url_file_'.$jenis_file];
-    if($result[$jenis_file]['url_ds_manual_'.$jenis_file]){
+    if($result[$jenis_file]['flag_done_detail'] == 1){ // jika sudah ds dari usul ds
+        $url = $result[$jenis_file]['url_done'];
+    } else if($result[$jenis_file]['url_ds_manual_'.$jenis_file]){ // jika sudah upload ds manual
         $url = $result[$jenis_file]['url_ds_manual_'.$jenis_file];
     }
 ?> 

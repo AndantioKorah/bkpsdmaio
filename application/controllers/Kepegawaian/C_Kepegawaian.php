@@ -2440,12 +2440,12 @@ class C_Kepegawaian extends CI_Controller
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
-		// dd($data['skp1']);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
 		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
 		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
 		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+		// dd($data['skp2']);
 	
 
 		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){

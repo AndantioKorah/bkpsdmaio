@@ -6,10 +6,11 @@
     ?>
         <label style="font-size: .7rem; color: grey; font-style: italic;">File DS telah diupload</label>
     <?php } else { ?>
-        <label style="font-size: .7rem; color: grey; font-style: italic;">telah ditandatangani secara digital oleh </label>
+        <!-- <label style="font-size: .7rem; color: grey; font-style: italic;">telah ditandatangani secara digital oleh </label>
         <label style="font-size: .8rem; color: black; font-weight: bold;"><?=$result[$jenis_file]['nama_ds']?></label>
         <label style="font-size: .7rem; color: grey; font-style: italic;">pada</label>
-        <label style="font-size: .8rem; color: black; font-weight: bold;"><?=formatDateNamaBulanWT($result[$jenis_file]['tanggal_ds'])?></label>
+        <label style="font-size: .8rem; color: black; font-weight: bold;"><?=formatDateNamaBulanWT($result[$jenis_file]['tanggal_ds'])?></label> -->
+        <label style="font-size: .7rem; color: grey; font-style: italic;"><?=$result[$jenis_file]['keterangan_usul_detail_ds']?></label>
     <?php } }?>
 <?php } else { ?>
     <?php if(isset($result[$jenis_file]['flag_sedang_hukdis']) && isset($result[$jenis_file]['flag_sedang_hukdis']) == 1){ ?>

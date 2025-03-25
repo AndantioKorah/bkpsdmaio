@@ -748,7 +748,7 @@ class M_Layanan extends CI_Model
         ];
 
         $data = $this->db->select('a.*, b.created_date as tanggal_ds, b.keterangan, b.nama_kolom_ds, c.flag_done as flag_done_detail, c.url_done,
-                        b.status as status_usul_ds')
+                        b.status as status_usul_ds, c.keterangan as keterangan_usul_detail_ds')
                         ->from('t_checklist_pensiun a')
                         ->join('t_usul_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun" AND b.flag_active = 1')
                         ->join('t_usul_ds_detail c', 'b.id = c.id_t_usul_ds')
@@ -1204,6 +1204,8 @@ class M_Layanan extends CI_Model
                     if($d['table_ref'] == 't_usul_ds_detail'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'ref_id' => $d['id'],
+                            'table_ref' => 't_usul_ds_detail',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
                                             'flag_progress' => 0,
@@ -1215,6 +1217,8 @@ class M_Layanan extends CI_Model
                     } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'ref_id' => $d['id'],
+                            'table_ref' => 't_usul_ds_detail_progress',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
                                             'flag_progress' => 1,
@@ -1662,7 +1666,7 @@ class M_Layanan extends CI_Model
             $detail['updated_by'] = $this->general_library->getId();
             
             //jika hasil dari cron dan adalah progress, update url_done di detail ambil dari data yang sudah di DS
-            if($params['flag_progress'] == 1){
+            if($params['flag_progress'] == 1 && $currVerifikator['url_done']){
                 $detail['url_done'] = $params['selectedData']['url_file'];
                 copy($params['selectedData']['url_file'], $currVerifikator['url_done']);
             }
@@ -1758,7 +1762,7 @@ class M_Layanan extends CI_Model
                             'updated_by' => $this->general_library->getId()
                         ]);
 
-                if($dataUsul['ref_id']){ // usul DS integrasi
+                if($dataUsul['ref_id']){ // jika usul DS integrasi
                     $this->db->where('id', $dataUsul['ref_id'])
                             ->update($dataUsul['table_ref'], [
                                 $dataUsul['nama_kolom_ds'] => 1
@@ -1884,6 +1888,8 @@ class M_Layanan extends CI_Model
                 // $this->proceedNextVerifikatorUsulDs($selected['id_t_usul_ds_detail'], 0, $selected);
                 $this->db->insert('t_cron_async', [
                     'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                    'ref_id' => $selected['id_t_usul_ds_detail'],
+                    'table_ref' => 't_usul_ds_detail',
                     'param' => json_encode([
                                     'id' => $selected['id_t_usul_ds_detail'],
                                     'flag_progress' => 0,

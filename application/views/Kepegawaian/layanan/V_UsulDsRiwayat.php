@@ -60,7 +60,7 @@
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
         <td class="text-center">
-          <?php if($rs['flag_use_nomor_surat'] && $rs['id_t_nomor_surat']){ ?>
+          <?php if(($rs['flag_use_nomor_surat'] == 1 && $rs['id_t_nomor_surat']) || $rs['flag_use_nomor_surat'] == 0){ ?>
             <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-list"></i> Detail</button>
           <?php } ?>
           <?php if(!$rs['ref_id']){ ?>

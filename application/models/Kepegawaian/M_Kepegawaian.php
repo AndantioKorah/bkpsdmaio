@@ -8185,6 +8185,58 @@ public function submitEditJabatan(){
         $this->db->insert('t_nomor_surat', $data);
     }
 
+    public function deleteNomorSuratManualSkCuti($id){
+        $res['code'] = 0;
+        $res['message'] = '';
+
+        $this->db->trans_begin();
+
+        $request_ds = $this->db->select('a.*')
+                        ->from('t_request_ds a')
+                        ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+
+        //buat file baru dengan nomor surat manual
+        $meta_data = json_decode($request_ds['meta_data'], true);
+        $meta_data['data']['nomor_surat'] = null;
+        unset($meta_data['data']['nomor_surat']);
+
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'Legal-P',
+            // 'debug' => true
+        ]);
+
+        $html = $this->load->view($request_ds['meta_view'], $meta_data, true);
+        $mpdf->WriteHTML($html);
+        $mpdf->showImageErrors = true;
+        $mpdf->Output($request_ds['url_file'], 'F');
+
+        $this->db->where('id', $id)
+                ->update('t_request_ds', [
+                    'id_t_nomor_surat' => null,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
+        $this->db->where('id', $request_ds['id_t_nomor_surat'])
+                ->update('t_nomor_surat', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
     public function deleteNomorSuratManual($id){
         $res['code'] = 0;
         $res['message'] = '';
@@ -8311,6 +8363,88 @@ public function submitEditJabatan(){
 
             $this->db->where('id', $id)
                     ->update('t_usul_ds', [
+                        'id_t_nomor_surat' => $last_insert,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function saveNomorSuratManualSkCuti($id){
+        $res['code'] = 0;
+        $res['message'] = '';
+
+        $this->db->trans_begin();
+
+        $data = $this->input->post();
+        $explode_data = explode("/", $data['nomor_surat']);
+        $tahun = $explode_data[count($explode_data)-1];
+
+        $exists = $this->db->select('*')
+                        ->from('t_nomor_surat')
+                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
+                        ->where('flag_active', 1)
+                        ->where('YEAR(tanggal_surat)', $tahun)
+                        ->get()->row_array();
+
+        $request_ds = $this->db->select('a.*')
+                        ->from('t_request_ds a')
+                        // ->join('m_jenis_layanan b', 'a.id_m_jenis_layanan = b.id')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+        
+        if($exists){
+            if($exists['id'] == $request_ds['id_t_nomor_surat']){
+                $res['code'] = 1;
+                $res['message'] = 'Nomor Surat tidak berubah';
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Nomor Surat atau Counter Nomor Surat telah digunakan';
+            }
+        } else {
+            //insert nomor surat manual
+            $data_input['counter'] = $data['counter_nomor_surat'];
+            $data_input['nomor_surat'] = $data['nomor_surat'];
+            $data_input['id_m_jenis_layanan'] = $request_ds['id_m_jenis_layanan'];
+            $data_input['perihal'] = $request_ds['perihal'];
+            $data_input['tanggal_surat'] = formatDateOnlyForEdit($request_ds['created_date']);
+            $data_input['created_by'] = $this->general_library->getId();
+
+            $this->db->insert('t_nomor_surat', $data_input);
+            $last_insert = $this->db->insert_id();
+
+            //buat file baru dengan nomor surat manual
+            $meta_data = json_decode($request_ds['meta_data'], true);
+            $meta_data['data']['nomor_surat'] = $data_input['nomor_surat'];
+
+            $mpdf = new \Mpdf\Mpdf([
+                'format' => 'Legal-P',
+                // 'debug' => true
+            ]);
+
+            // jika ada file dengan nama sama, hapus terlebih dahulu agar tertimpa file yang lama
+            if(file_exists($request_ds['url_file'])){
+                unlink($request_ds['url_file']);
+            }
+
+            $html = $this->load->view($request_ds['meta_view'], $meta_data, true);
+            $mpdf->WriteHTML($html);
+            $mpdf->showImageErrors = true;
+            $mpdf->Output($request_ds['url_file'], 'F');
+
+            $this->db->where('id', $id)
+                    ->update('t_request_ds', [
                         'id_t_nomor_surat' => $last_insert,
                         'updated_by' => $this->general_library->getId()
                     ]);

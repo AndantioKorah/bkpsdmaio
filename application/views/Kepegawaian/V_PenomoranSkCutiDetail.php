@@ -153,7 +153,7 @@
         $('#btn_save').hide()
         $('#btn_save_loading').show()
         $.ajax({
-          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManual/".$result['id'])?>',
+          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManualSkCuti/".$result['id'])?>',
           method:"POST",  
           data: $(this).serialize(),
           success: function(res){
@@ -180,7 +180,7 @@
           $('#btn_delete').hide()
           $('#btn_delete_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id'])?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManualSkCuti/".$result['id'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){

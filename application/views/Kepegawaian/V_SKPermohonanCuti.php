@@ -182,6 +182,8 @@
                     </div>
                     <!-- <img style="width: 30%;" src="<?=(base_url('assets/adminkit/img/example-ds.png'))?>"> -->
                   <?php } ?>
+                  <br><br><br><br>
+                  $
               </td>
             </tr>
           </table>

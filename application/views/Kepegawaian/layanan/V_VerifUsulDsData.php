@@ -41,7 +41,7 @@
                 overflow: wrap;
               ">
                 <span title="<?=$rs['id_m_jenis_layanan'] != 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>">
-                  <?=$rs['id_m_jenis_layanan'] != 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
+                  <?=$rs['nama_layanan'].' / '.$rs['keterangan']?>
                 </span>
               </div>
             </td>

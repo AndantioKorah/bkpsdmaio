@@ -50,7 +50,7 @@
                                 <?php if($d['flag_done'] == 1){ ?>
                                     <a target="_blank" href="<?=base_url($d['url_done'])?>"><button class="btn btn-sm btn-success"><i class="fa fa-file-pdf"></i></button></a>
                                 <?php } else { ?>
-                                    <!-- <a target="_blank" href="<?=base_url($d['url'])?>"><button class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i></button></a> -->
+                                    <a target="_blank" href="<?=base_url($d['url'])?>"><button class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i></button></a>
                                 <?php } ?>
                             </td>
                         </tr>

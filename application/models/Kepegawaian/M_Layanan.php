@@ -349,7 +349,7 @@ class M_Layanan extends CI_Model
                     ->update('t_checklist_pensiun_detail', [
                         'flag_active' => 0,
                         'created_by' => $this->general_library->getId(),
-                        'udpated_by' => $this->general_library->getId(),
+                        'updated_by' => $this->general_library->getId(),
                         // 'tanggal_validasi' => date('Y-m-d H:i:s')
                     ]);
         }
@@ -397,7 +397,7 @@ class M_Layanan extends CI_Model
 
         $this->db->insert_batch('t_checklist_pensiun_detail', $list_input);
 
-        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWTWT(date('Y-m-d H:i:s'));
+        $rs['message'] = "Telah divalidasi oleh ".strtoupper($this->general_library->getNamaUser())." pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s'));
         
         return $rs;
     }
@@ -416,21 +416,25 @@ class M_Layanan extends CI_Model
     }
 
     public function searchPenomoranDokumenPensiun($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.nama_jenis_ds, e.nomor_surat, d.nama_kolom_flag, d.id as id_t_request_ds, d.id_m_jenis_ds')
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, h.nomor_surat, f.id_m_jenis_layanan, f.nama_kolom_ds,
+                g.nama_layanan, f.id as id_t_usul_ds, f.keterangan')
                 ->from('t_checklist_pensiun a')
                 ->join('m_user b', 'a.nip = b.username')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                ->join('t_request_ds d', 'a.id = d.ref_id')
-                ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
+                // ->join('t_request_ds d', 'a.id = d.ref_id')
+                // ->join('t_nomor_surat e', 'a.id_t_nomor_surat = e.id', 'left')
+                ->join('t_usul_ds f', 'a.id = f.ref_id AND f.table_ref = "t_checklist_pensiun" AND f.flag_active = 1')
+                ->join('m_jenis_layanan g', 'f.id_m_jenis_layanan = g.id')
+                ->join('t_nomor_surat h', 'f.id_t_nomor_surat = h.id', 'left')
                 ->where('a.flag_active', 1)
-                ->where('MONTH(d.created_date)', $data['bulan'])
-                ->where('YEAR(d.created_date)', $data['tahun'])
-                ->where_in('d.id_m_jenis_ds', [1,2,3])
-                ->where('d.flag_selected', 0)
-                ->group_by('d.id')
+                ->where('MONTH(f.created_date)', $data['bulan'])
+                ->where('YEAR(f.created_date)', $data['tahun'])
+                // ->where_in('d.id_m_jenis_ds', [1,2,3])
+                // ->where('d.flag_selected', 0)
+                ->group_by('f.id')
                 ->order_by('a.created_date', 'asc')
-                ->where('a.flag_active', 1)
-                ->where('d.flag_active', 1);
+                ->where('a.flag_active', 1);
+                // ->where('d.flag_active', 1);
 
         if($data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);
@@ -440,16 +444,28 @@ class M_Layanan extends CI_Model
     }
 
     public function loadDetailPenomoranDokumenPensiun($id){
-        return $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*')
-                    ->from('t_request_ds a')
+        return $this->db->select('a.*, a.id as id_t_usul_ds, b.nomor_surat, b.counter, d.*, e.url, e.url_done, e.flag_done as flag_done_detail')
+                    ->from('t_usul_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                    ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                    // ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
                     ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+                    ->join('t_usul_ds_detail e', 'e.id_t_usul_ds = a.id')
                     // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
                     ->where('a.flag_active', 1)
                     ->where('a.id', $id)
                     // ->where('a.table_ref', 't_pengajuan_cuti')
                     ->get()->row_array();
+
+        // return $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*')
+        //             ->from('t_request_ds a')
+        //             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+        //             ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+        //             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+        //             // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+        //             ->where('a.flag_active', 1)
+        //             ->where('a.id', $id)
+        //             // ->where('a.table_ref', 't_pengajuan_cuti')
+        //             ->get()->row_array();
     }
 
     public function getKepalaBkpsdm(){
@@ -463,6 +479,8 @@ class M_Layanan extends CI_Model
         ->get()->row_array();
     }
 
+    
+
     public function createDpcp($data){
         $rs['code'] = 0;
         $rs['message'] = '';
@@ -472,6 +490,7 @@ class M_Layanan extends CI_Model
         // dd($data);
         $exists = $this->db->select('*')
                         ->from('t_request_ds')
+                        // ->from('t_request_ds')
                         ->where('ref_id', $data['id_t_checklist_pensiun'])
                         ->where('table_ref', 't_checklist_pensiun')
                         ->where('flag_active', 1)
@@ -481,8 +500,12 @@ class M_Layanan extends CI_Model
             $rs['code'] = 1;
             $rs['message'] = 'DPCP sudah diajukan';
         } else {
+            $bulan = getNamaBulan(date('m'));
+            $tahun = date('Y');
+
             ///////////////////////////////// DPCP
-            $pathDpcp = 'arsippensiunotomatis/arsipdpcp/DPCP_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $fileNameDpcp = 'DPCP_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathDpcp = 'arsippensiunotomatis/arsipdpcp/'.$fileNameDpcp;
             $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true);
             // dd($html);
             $mpdf = new \Mpdf\Mpdf([
@@ -492,49 +515,70 @@ class M_Layanan extends CI_Model
             $mpdf->WriteHTML($html);
             $mpdf->showImageErrors = true;
             $mpdf->Output($pathDpcp, 'F');
+            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 
+            $metaData = $data;
+            unset($metaData['progress']);
+            
             $rs['data'] = $pathDpcp;
-
             $this->db->where('id', $data['id_t_checklist_pensiun'])
+                    ->where('flag_active', 1)
                     ->update('t_checklist_pensiun', [
-                        'url_file_dpcp' => $pathDpcp
+                        'url_file_dpcp' => $pathDpcp,
+                        'flag_ajukan_ds_dpcp' => 1,
+                        'meta_data' => json_encode($metaData),
+                        'updated_by' => $this->general_library->getId()
                     ]);
 
-            $fileBase64 = convertToBase64(base_url($pathDpcp));
+            $usulDsDpcp['table_ref'] = "t_checklist_pensiun";
+            $usulDsDpcp['ref_id'] = $data['id_t_checklist_pensiun'];
+            $usulDsDpcp['nama_kolom_ds'] = 'flag_ds_dpcp';
+            $usulDsDpcp['ds_code'] = "^";
+            $usulDsDpcp['page'] = 1;
+            $usulDsDpcp['flag_use_nomor_surat'] = 0;
+            $usulDsDpcp['keterangan'] = "DPCP pegawai a/n. ".getNamaPegawaiFull($data['profil_pegawai']);
+            $usulDsDpcp['id_m_jenis_layanan'] = 104;
+            $usulDsDpcp['url_ds'] = $pathDpcp;
+            $usulDsDpcp['files'][0]['url'] = $pathDpcp;
+            $usulDsDpcp['files'][0]['name'] = generateRandomString()."_".$fileNameDpcp;
 
-            $tteTemplateDpcp = $this->general_library->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplateDpcp['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 150,
-                    "height" => 150,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathDpcp))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 1,
-                'nama_jenis_ds' => 'DPCP',
-                'request' => json_encode($request_ws),
-                'url_file' => $pathDpcp,
-                'url_image_ds' => $tteTemplateDpcp['data']['qrBase64'],
-                'random_string' => $tteTemplateDpcp['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_dpcp',
-                'nip' => $data['nip'],
-                'meta_view' => 'kepegawaian/V_CetakDpcp',
-                'meta_data' => json_encode($data),
-                'id_m_jenis_layanan' => '104'
-            ]);
-            $data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+            $this->submitUploadFileUsulDs($usulDsDpcp, 1);
+
+            // $fileBase64 = convertToBase64(base_url($pathDpcp));
+
+            // $tteTemplateDpcp = $this->general_library->createQrTte();
+            // $request_ws = [
+            //     'signatureProperties' => [
+            //         "tampilan" => "VISIBLE",
+            //         "imageBase64" => $tteTemplateDpcp['data']['qrBase64'],
+            //         "tag" => "^",
+            //         "width" => 150,
+            //         "height" => 150,
+            //         "page" => 1,
+            //     ],
+            //     // 'file' => convertToBase64(($pathDpcp))
+            // ];
+            // $this->db->insert('t_request_ds', [
+            //     'ref_id' => $data['id_t_checklist_pensiun'],
+            //     'table_ref' => 't_checklist_pensiun',
+            //     'id_m_jenis_ds' => 1,
+            //     'nama_jenis_ds' => 'DPCP',
+            //     'request' => json_encode($request_ws),
+            //     'url_file' => $pathDpcp,
+            //     'url_image_ds' => $tteTemplateDpcp['data']['qrBase64'],
+            //     'random_string' => $tteTemplateDpcp['data']['randomString'],
+            //     'created_by' => $this->general_library->getId(),
+            //     'nama_kolom_flag' => 'flag_ds_dpcp',
+            //     'nip' => $data['nip'],
+            //     'meta_view' => 'kepegawaian/V_CetakDpcp',
+            //     'meta_data' => json_encode($data),
+            //     'id_m_jenis_layanan' => '104'
+            // ]);
 
             ///////////////////////////////// SP HUKDIS
             if(!$data['berkas']['data_hukdis']){ // jika ada tidak ada data hukdis, buat SP Hukdis
-                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $fileNameHukdis = 'SPHUKDIS_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+                $pathHukdis = 'arsippensiunotomatis/arsipskhukdis/'.$fileNameHukdis;
                 $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
                 // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
                 // dd($html);
@@ -553,40 +597,56 @@ class M_Layanan extends CI_Model
 
                 $this->db->where('id', $data['id_t_checklist_pensiun'])
                         ->update('t_checklist_pensiun', [
-                            'url_file_hukdis' => $pathHukdis
+                            'url_file_hukdis' => $pathHukdis,
+                            'flag_ajukan_ds_hukdis' => 1,
                         ]);
 
-                $fileBase64 = convertToBase64(base_url($pathHukdis));
+                $usulDsHukdis['table_ref'] = "t_checklist_pensiun";
+                $usulDsHukdis['ref_id'] = $data['id_t_checklist_pensiun'];
+                $usulDsHukdis['nama_kolom_ds'] = 'flag_ds_hukdis';
+                $usulDsHukdis['ds_code'] = "^";
+                $usulDsHukdis['page'] = 1;
+                $usulDsHukdis['meta_view'] = 'kepegawaian/surat/V_SuratHukdis';
+                $usulDsHukdis['flag_use_nomor_surat'] = 1;
+                $usulDsHukdis['keterangan'] = 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
+                $usulDsHukdis['id_m_jenis_layanan'] = 39;
+                $usulDsHukdis['url_ds'] = $pathHukdis;
+                $usulDsHukdis['files'][0]['url'] = $pathHukdis;
+                $usulDsHukdis['files'][0]['name'] = generateRandomString()."_".$fileNameHukdis;
+    
+                $this->submitUploadFileUsulDs($usulDsHukdis, 1);
 
-                $tteTemplateHukdis = $this->general_library->createQrTte();
-                $request_ws = [
-                    'signatureProperties' => [
-                        "tampilan" => "VISIBLE",
-                        "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
-                        "tag" => "^",
-                        "width" => 150,
-                        "height" => 150,
-                        "page" => 1,
-                    ],
-                    // 'file' => convertToBase64(($pathHukdis))
-                ];
-                $this->db->insert('t_request_ds', [
-                    'ref_id' => $data['id_t_checklist_pensiun'],
-                    'table_ref' => 't_checklist_pensiun',
-                    'id_m_jenis_ds' => 2,
-                    'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
-                    'perihal' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
-                    'request' => json_encode($request_ws),
-                    'url_file' => $pathHukdis,
-                    'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
-                    'random_string' => $tteTemplateHukdis['data']['randomString'],
-                    'created_by' => $this->general_library->getId(),
-                    'nama_kolom_flag' => 'flag_ds_hukdis',
-                    'nip' => $data['nip'],
-                    'meta_view' => 'kepegawaian/surat/V_SuratHukdis',
-                    'meta_data' => json_encode($data),
-                    'id_m_jenis_layanan' => 39
-                ]);
+                // $fileBase64 = convertToBase64(base_url($pathHukdis));
+
+                // $tteTemplateHukdis = $this->general_library->createQrTte();
+                // $request_ws = [
+                //     'signatureProperties' => [
+                //         "tampilan" => "VISIBLE",
+                //         "imageBase64" => $tteTemplateHukdis['data']['qrBase64'],
+                //         "tag" => "^",
+                //         "width" => 150,
+                //         "height" => 150,
+                //         "page" => 1,
+                //     ],
+                //     // 'file' => convertToBase64(($pathHukdis))
+                // ];
+                // $this->db->insert('t_request_ds', [
+                //     'ref_id' => $data['id_t_checklist_pensiun'],
+                //     'table_ref' => 't_checklist_pensiun',
+                //     'id_m_jenis_ds' => 2,
+                //     'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR',
+                //     'perihal' => 'SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN SEDANG/BERAT DALAM 1 TAHUN TERAKHIR a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
+                //     'request' => json_encode($request_ws),
+                //     'url_file' => $pathHukdis,
+                //     'url_image_ds' => $tteTemplateHukdis['data']['qrBase64'],
+                //     'random_string' => $tteTemplateHukdis['data']['randomString'],
+                //     'created_by' => $this->general_library->getId(),
+                //     'nama_kolom_flag' => 'flag_ds_hukdis',
+                //     'nip' => $data['nip'],
+                //     'meta_view' => 'kepegawaian/surat/V_SuratHukdis',
+                //     'meta_data' => json_encode($data),
+                //     'id_m_jenis_layanan' => 39
+                // ]);
             } else { // jika ada hukdis, masuk di sini
                 
                 $this->db->where('id', $data['id_t_checklist_pensiun'])
@@ -597,7 +657,8 @@ class M_Layanan extends CI_Model
 
 
             ///////////////////////////////// SP PIDANA
-            $pathPidana = 'arsippensiunotomatis/arsipskpidana/SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $fileNamePidana = 'SPPIDANA_'.$data['profil_pegawai']['nipbaru_ws'].'_'.date('Ymd').'.pdf';
+            $pathPidana = 'arsippensiunotomatis/arsipskpidana/'.$fileNamePidana;
     		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
             // $html = $this->load->view('kepegawaian/V_CetakDpcp', $data, true); // sementara pake ini dlu untuk generate file
             // dd($html);
@@ -616,40 +677,56 @@ class M_Layanan extends CI_Model
 
             $this->db->where('id', $data['id_t_checklist_pensiun'])
                     ->update('t_checklist_pensiun', [
-                        'url_file_pidana' => $pathPidana
+                        'url_file_pidana' => $pathPidana,
+                        'flag_ajukan_ds_pidana' => 1
                     ]);
 
-            $fileBase64 = convertToBase64(base_url($pathPidana));
+            $usulDsPidana['table_ref'] = "t_checklist_pensiun";
+            $usulDsPidana['ref_id'] = $data['id_t_checklist_pensiun'];
+            $usulDsPidana['nama_kolom_ds'] = 'flag_ds_pidana';
+            $usulDsPidana['ds_code'] = "^";
+            $usulDsPidana['page'] = 1;
+            $usulDsPidana['meta_view'] = 'kepegawaian/surat/V_SuratPidana';
+            $usulDsPidana['flag_use_nomor_surat'] = 1;
+            $usulDsPidana['keterangan'] = 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']);
+            $usulDsPidana['id_m_jenis_layanan'] = 39;
+            $usulDsPidana['url_ds'] = $pathPidana;
+            $usulDsPidana['files'][0]['url'] = $pathPidana;
+            $usulDsPidana['files'][0]['name'] = generateRandomString()."_".$fileNamePidana;
 
-            $tteTemplatePidana = $this->general_library->createQrTte();
-            $request_ws = [
-                'signatureProperties' => [
-                    "tampilan" => "VISIBLE",
-                    "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
-                    "tag" => "^",
-                    "width" => 150,
-                    "height" => 150,
-                    "page" => 1,
-                ],
-                // 'file' => convertToBase64(($pathPidana))
-            ];
-            $this->db->insert('t_request_ds', [
-                'ref_id' => $data['id_t_checklist_pensiun'],
-                'table_ref' => 't_checklist_pensiun',
-                'id_m_jenis_ds' => 3,
-                'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP',
-                'perihal' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
-                'request' => json_encode($request_ws),
-                'url_file' => $pathPidana,
-                'url_image_ds' => $tteTemplatePidana['data']['qrBase64'],
-                'random_string' => $tteTemplatePidana['data']['randomString'],
-                'created_by' => $this->general_library->getId(),
-                'nama_kolom_flag' => 'flag_ds_pidana',
-                'nip' => $data['nip'],
-                'meta_view' => 'kepegawaian/surat/V_SuratPidana',
-                'meta_data' => json_encode($data),
-                'id_m_jenis_layanan' => 39
-            ]);
+            $this->submitUploadFileUsulDs($usulDsPidana, 1);
+
+            // $fileBase64 = convertToBase64(base_url($pathPidana));
+
+            // $tteTemplatePidana = $this->general_library->createQrTte();
+            // $request_ws = [
+            //     'signatureProperties' => [
+            //         "tampilan" => "VISIBLE",
+            //         "imageBase64" => $tteTemplatePidana['data']['qrBase64'],
+            //         "tag" => "^",
+            //         "width" => 150,
+            //         "height" => 150,
+            //         "page" => 1,
+            //     ],
+            //     // 'file' => convertToBase64(($pathPidana))
+            // ];
+            // $this->db->insert('t_request_ds', [
+            //     'ref_id' => $data['id_t_checklist_pensiun'],
+            //     'table_ref' => 't_checklist_pensiun',
+            //     'id_m_jenis_ds' => 3,
+            //     'nama_jenis_ds' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP',
+            //     'perihal' => 'SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP a.n. '.getNamaPegawaiFull($data['profil_pegawai']),
+            //     'request' => json_encode($request_ws),
+            //     'url_file' => $pathPidana,
+            //     'url_image_ds' => $tteTemplatePidana['data']['qrBase64'],
+            //     'random_string' => $tteTemplatePidana['data']['randomString'],
+            //     'created_by' => $this->general_library->getId(),
+            //     'nama_kolom_flag' => 'flag_ds_pidana',
+            //     'nip' => $data['nip'],
+            //     'meta_view' => 'kepegawaian/surat/V_SuratPidana',
+            //     'meta_data' => json_encode($data),
+            //     'id_m_jenis_layanan' => 39
+            // ]);
         }
 
         if($this->db->trans_status() == FALSE || $rs['code'] != 0){
@@ -670,12 +747,14 @@ class M_Layanan extends CI_Model
             'pidana' => null
         ];
 
-        $data = $this->db->select('a.*, d.nama as nama_ds, c.created_date as tanggal_ds, b.flag_selected, e.keterangan, e.meta_name')
+        $data = $this->db->select('a.*, b.created_date as tanggal_ds, b.keterangan, b.nama_kolom_ds, c.flag_done as flag_done_detail, c.url_done,
+                        b.status as status_usul_ds, c.keterangan as keterangan_usul_detail_ds')
                         ->from('t_checklist_pensiun a')
-                        ->join('t_request_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun"')
-                        ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
-                        ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
-                        ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
+                        ->join('t_usul_ds b', 'a.id = b.ref_id AND b.table_ref = "t_checklist_pensiun" AND b.flag_active = 1')
+                        ->join('t_usul_ds_detail c', 'b.id = c.id_t_usul_ds')
+                        // ->join('t_cron_request_ds c', 'b.id = c.id_t_request_ds AND c.flag_active = 1', 'left')
+                        // ->join('m_user d', 'c.created_by = d.id AND d.flag_active = 1', 'left')
+                        // ->join('m_jenis_ds e', 'b.id_m_jenis_ds = e.id')
                         ->where('a.id', $id)
                         ->where('b.flag_active', 1)
                         // ->where('d.flag_active', 1)
@@ -684,11 +763,11 @@ class M_Layanan extends CI_Model
         if($data){
             // dd(json_encode($data));
             foreach($data as $d){
-                if($d['meta_name'] == 'dpcp'){
+                if($d['nama_kolom_ds'] == 'flag_ds_dpcp'){
                     $result['dpcp'] = $d;
-                } else if($d['meta_name'] == 'sp_hukdis'){
+                } else if($d['nama_kolom_ds'] == 'flag_ds_hukdis'){
                     $result['hukdis'] = $d;
-                } else if($d['meta_name'] == 'sp_pidana'){
+                } else if($d['nama_kolom_ds'] == 'flag_ds_pidana'){
                     $result['pidana'] = $d;
                 }
             }
@@ -714,31 +793,33 @@ class M_Layanan extends CI_Model
        
         $this->db->trans_begin();
 
-        $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
-                            d.id as id_t_checklist_pensiun, e.nipbaru_ws')
-                            ->from('t_request_ds a')
+        $data = $this->db->select('a.*, b.nomor_surat, b.counter, d.*, c.url, c.url_done, c.flag_done as flag_done_detail, c.flag_status, c.id as id_t_usul_ds_detail,
+                            d.id as id_t_checklist_pensiun, e.nipbaru_ws, f.id as id_t_request_ds, f.flag_selected')
+                            ->from('t_usul_ds a')
                             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                            ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                            ->join('t_usul_ds_detail c', 'a.id = c.id_t_usul_ds')
                             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
                             ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
-                            // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+                            ->join('t_request_ds f', 'c.id = f.ref_id AND f.table_ref = "t_usul_ds_detail" AND f.flag_active = 1', 'left')
                             ->where('a.flag_active', 1)
                             ->where('a.id', $id)
-                            // ->where('a.table_ref', 't_pengajuan_cuti')
                             ->get()->row_array();
 
-        // $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat, f.nomor_surat')
-        //                     ->from('t_pengajuan_cuti a')
-        //                     ->join('m_user b', 'a.id_m_user = b.id')
-        //                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-        //                     ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
-        //                     ->join('t_request_ds e', 'a.id = e.ref_id AND table_ref = "t_pengajuan_cuti"')
-        //                     ->join('t_nomor_surat f', 'e.id_t_nomor_surat = f.id')
-        //                     ->where('a.id', $id)
+        // $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
+        //                     d.id as id_t_checklist_pensiun, e.nipbaru_ws')
+        //                     ->from('t_request_ds a')
+        //                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+        //                     ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+        //                     ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
+        //                     ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
+        //                     // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
         //                     ->where('a.flag_active', 1)
+        //                     ->where('a.id', $id)
+        //                     // ->where('a.table_ref', 't_pengajuan_cuti')
         //                     ->get()->row_array();
+
         if($data){
-            $expl = explode("_", $data['nama_kolom_flag']);
+            $expl = explode("_", $data['nama_kolom_ds']);
 
             $this->db->where('id', $data['id_t_checklist_pensiun'])
                     ->update('t_checklist_pensiun', [
@@ -747,38 +828,36 @@ class M_Layanan extends CI_Model
                         'updated_by' => $this->general_library->getId(),
                     ]);
 
-            $this->db->where('id', $data['id_t_request_ds'])
-                    ->update('t_request_ds', [
-                        'flag_selected' => 0
+            $this->db->where('id', $data['id'])
+                    ->update('t_usul_ds', [
+                        'flag_done' => 0,
+                        'keterangan' => "",
+                        'updated_by' => $this->general_library->getId(),
                     ]);
 
-            // $this->db->where('random_string', $data['random_string'])
-            //         ->update('t_dokumen_pendukung', [
-            //             'flag_active' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
+            if($data['id_t_request_ds'] && $data['flag_selected'] == 1){
+                $this->db->where('id', $data['id_t_request_ds'])
+                        ->update('t_request_ds', [
+                            'flag_selected' => 0
+                        ]);
+            }
 
-            // $this->db->where('id', $id)
-            //         ->update('t_pengajuan_cuti', [
-            //             'url_sk_manual' => null,
-            //             'flag_ds_cuti' => 0,
-            //             'flag_ds_manual' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
-
-            // $this->db->where('nosttpp', $data['nomor_surat'])
-            //         ->update('db_pegawai.pegcuti', [
-            //             'flag_active' => 0,
-            //             'updated_by' => $this->general_library->getId()
-            //         ]);
-
-            // $this->db->where('id', $data['id_t_progress_cuti'])
-            //         ->update('t_progress_cuti', [
-            //                 'flag_diterima' => 0,
-            //                 'flag_verif' => 0,
-            //                 'tanggal_verif' => null,
-            //                 'updated_by' => $this->general_library->getId()
-            //         ]);
+            $this->db->where('id', $data['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail', [
+                        'updated_by' => $this->general_library->getId(),
+                        'flag_done' => 0,
+                        'flag_status' => 0,
+                        'url_done' => null,
+                        'keterangan' => ""
+                    ]);
+                    
+            if($data['id_last_active_progress']){
+                $this->db->where('id', $data['id_last_active_progress'])
+                        ->update('t_usul_ds_detail_progress', [
+                            'flag_ds_now' => 0,
+                            'flag_selected' => 0,
+                        ]);
+            }        
 
         } else {
             $rs['code'] = 1;
@@ -804,17 +883,17 @@ class M_Layanan extends CI_Model
        
         $this->db->trans_begin();
 
-        $data = $this->db->select('a.*, a.id as id_t_request_ds, b.nomor_surat, c.id as id_t_cron_request_ds, b.counter, d.*,
-                            d.id as id_t_checklist_pensiun, e.nipbaru_ws')
-                            ->from('t_request_ds a')
+        $data = $this->db->select('a.*, b.nomor_surat, b.counter, d.*, c.url, c.url_done, c.flag_done as flag_done_detail, c.flag_status,
+                            c.id as id_t_usul_ds_detail, d.id as id_t_checklist_pensiun, e.nipbaru_ws, f.id as id_t_request_ds,
+                            f.flag_selected, a.id as id_t_usul_ds')
+                            ->from('t_usul_ds a')
                             ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
-                            ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
+                            ->join('t_usul_ds_detail c', 'a.id = c.id_t_usul_ds')
                             ->join('t_checklist_pensiun d', 'a.ref_id = d.id')
                             ->join('db_pegawai.pegawai e', 'd.nip = e.nipbaru_ws')
-                            // ->join('t_pengajuan_cuti d', 'a.ref_id = d.id')
+                            ->join('t_request_ds f', 'c.id = f.ref_id AND f.table_ref = "t_usul_ds_detail" AND f.flag_active = 1', 'left')
                             ->where('a.flag_active', 1)
                             ->where('a.id', $id)
-                            // ->where('a.table_ref', 't_pengajuan_cuti')
                             ->get()->row_array();
 
         // $data = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, c.id_peg, c.handphone, d.nm_cuti, e.id_t_nomor_surat, f.nomor_surat')
@@ -827,10 +906,18 @@ class M_Layanan extends CI_Model
         //                     ->where('a.id', $id)
         //                     ->where('a.flag_active', 1)
         //                     ->get()->row_array();
-                            
+            
         if($data && $data['id_t_nomor_surat'] == null){
             $res['code'] = 1;
             $res['message'] = "SK Belum memiliki Nomor Surat. Harap mengisi Nomor Surat terlebih dahulu.";
+            return $res;
+        } else if($data && $data['id_t_request_ds'] && $data['flag_selected'] == 1){
+            $res['code'] = 1;
+            $res['message'] = "File sementara / sudah dilakukan Digital Signature oleh Kepala BKPSDM. Proses tidak dapat dilanjutkan.";
+            return $res;
+        } else if($data && $data['flag_done'] == 1){
+            $res['code'] = 1;
+            $res['message'] = "Tidak dapat mengupload file karena proses DS sudah selesai";
             return $res;
         }
 
@@ -842,10 +929,10 @@ class M_Layanan extends CI_Model
             $filename = 'DPCP_DSM_'.$data['nipbaru_ws'].date('Ymd');
             $path = 'arsippensiunotomatis/arsipdpcp/';
 
-            if($data['id_m_jenis_ds'] == 2){
+            if($data['nama_kolom_ds'] == "flag_ds_hukdis"){
                 $filename = 'SPHUKDIS_DSM_'.$data['nipbaru_ws'].date('Ymd').'.pdf';
                 $path = 'arsippensiunotomatis/arsipskhukdis/';
-            } else if($data['id_m_jenis_ds'] == 3){
+            } else if($data['nama_kolom_ds'] == "flag_ds_pidana"){
                 $filename = 'SPPIANA_DSM_'.$data['nipbaru_ws'].date('Ymd').'.pdf';
                 $path = 'arsippensiunotomatis/arsipskpidana/';
             }
@@ -868,27 +955,68 @@ class M_Layanan extends CI_Model
                 $filepath = $path.$filename;
                 if($uploadfile){
                     $updateChecklistPensiun = null;
-
-                    if($data['id_m_jenis_ds'] == 2){ //hukdis
+                    if($data['nama_kolom_ds'] == "flag_ds_hukdis"){ //hukdis
                         $updateChecklistPensiun['url_ds_manual_hukdis'] = $filepath;
                         $updateChecklistPensiun['flag_ds_hukdis'] = 1;
-                    } else if($data['id_m_jenis_ds'] == 3){ //pidana
+                    } else if($data['nama_kolom_ds'] == "flag_ds_pidana"){ //pidana
                         $updateChecklistPensiun['url_ds_manual_pidana'] = $filepath;
                         $updateChecklistPensiun['flag_ds_pidana'] = 1;
                     } else { //dpcp
                         $updateChecklistPensiun['url_ds_manual_dpcp'] = $filepath;
                         $updateChecklistPensiun['flag_ds_dpcp'] = 1;
                     }
-
                     $updateChecklistPensiun['updated_by'] = $this->general_library->getId();
 
                     $this->db->where('id', $data['id_t_checklist_pensiun'])
                             ->update('t_checklist_pensiun', $updateChecklistPensiun);
 
-                    $this->db->where('id', $data['id_t_request_ds'])
+                    if($data['id_t_request_ds']){
+                        $this->db->where('id', $data['id_t_request_ds'])
                             ->update('t_request_ds', [
-                                'flag_selected' => 1
+                                'flag_selected' => 1,
+                                'updated_by' => $this->general_library->getId()
                             ]);
+                    }
+
+                    $bulan = getNamaBulan(date('m'));
+                    $tahun = date('Y');
+
+                    copy($filepath, "arsipusulds/".$tahun."/".$bulan."/".$filename);
+
+                    $this->db->where('id', $data['id_t_usul_ds_detail'])
+                            ->update('t_usul_ds_detail', [
+                                'updated_by' => $this->general_library->getId(),
+                                'flag_done' => 1,
+                                'flag_status' => 1,
+                                'url_done' => "arsipusulds/".$tahun."/".$bulan."/".$filename,
+                                'keterangan' => "File DS telah diupload secara manual"
+                            ]);
+                    
+                    $this->db->where('id', $data['id_t_usul_ds'])
+                            ->update('t_usul_ds', [
+                                'flag_done' => 1,
+                                'keterangan' => "File DS telah diupload secara manual",
+                                'updated_by' => $this->general_library->getId(),
+                            ]);
+
+                    $usulDsProgres = $this->db->select('*')
+                                            ->from('t_usul_ds_detail_progress')
+                                            ->where('id_t_usul_ds_detail', $data['id_t_usul_ds_detail'])
+                                            ->where('flag_active', 1)
+                                            ->where('flag_ds_now', 0)
+                                            ->get()->row_array();
+                    if($usulDsProgres){
+                        $this->db->where('id_t_usul_ds_detail', $data['id_t_usul_ds_detail'])
+                                ->update('t_usul_ds_detail_progress', [
+                                    'flag_ds_now' => 1,
+                                    'flag_selected' => 1,
+                                ]);
+                    
+                        $this->db->where('id', $data['id'])
+                                ->update('t_usul_ds', [
+                                    'id_last_active_progress' => $usulDsProgres['id']
+                                ]);
+                    }
                 } else {
                     $rs['code'] = 1;
                     $rs['message'] = 'Gagal upload file';
@@ -967,8 +1095,33 @@ class M_Layanan extends CI_Model
                     $this->db->where('id', $requestDs['id_t_nomor_surat'])
                             ->update('t_request_ds', [
                                 'flag_active' => 0,
-                                'updated_by' => $this->general_library->getId
+                                'updated_by' => $this->general_library->getId()
                             ]);
+                }
+            }
+
+            $usulDs = $this->db->select('*')
+                            ->from('t_usul_ds')
+                            ->where('ref_id', $id)
+                            ->where('table_ref', 't_checklist_pensiun')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            if($usulDs){
+                foreach($usulDs as $u){
+                    $this->db->where('id', $u['id'])
+                            ->update('t_usul_ds', [
+                                'flag_active' => 0,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
+                    if($u['id_t_nomor_surat']){
+                        $this->db->where('id', $u['id_t_nomor_surat'])
+                                ->update('t_nomor_surat', [
+                                    'flag_active' => 0,
+                                    'updated_by' => $this->general_library->getId()
+                                ]);
+                    }
                 }
             }
         }
@@ -1051,6 +1204,8 @@ class M_Layanan extends CI_Model
                     if($d['table_ref'] == 't_usul_ds_detail'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'ref_id' => $d['id'],
+                            'table_ref' => 't_usul_ds_detail',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
                                             'flag_progress' => 0,
@@ -1062,6 +1217,8 @@ class M_Layanan extends CI_Model
                     } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'ref_id' => $d['id'],
+                            'table_ref' => 't_usul_ds_detail_progress',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
                                             'flag_progress' => 1,
@@ -1193,7 +1350,7 @@ class M_Layanan extends CI_Model
         return $pegawai;
     }
 
-    public function submitUploadFileUsulDs($dataInput){
+    public function submitUploadFileUsulDs($dataInput, $flagIntegrasi = 0){
         $result = [
             'code' => 0,
             'message' => ''
@@ -1205,7 +1362,7 @@ class M_Layanan extends CI_Model
         $tahun = date('Y');
 
 		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
-        if(!$uploadedFile){
+        if(!$uploadedFile && $flagIntegrasi == 0){
             $result['code'] = 1;
             $result['message'] = "Belum ada file yang dipilih";
         } else {
@@ -1220,11 +1377,26 @@ class M_Layanan extends CI_Model
             $data['created_by'] = $this->general_library->getId();
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
+            $data['page'] = $dataInput['page'];
+            $data['table_ref'] = isset($dataInput['table_ref']) ? $dataInput['table_ref'] : null;
+            $data['ref_id'] = isset($dataInput['ref_id']) ? $dataInput['ref_id'] : null;
+            $data['meta_view'] = isset($dataInput['meta_view']) ? $dataInput['meta_view'] : null;
+            $data['nama_kolom_ds'] = isset($dataInput['nama_kolom_ds']) ? $dataInput['nama_kolom_ds'] : null;
+            $data['url_ds'] = isset($dataInput['url_ds']) ? $dataInput['url_ds'] : null;
             $data['batch_id'] = $batchId;
             $data['id_m_jenis_layanan'] = $dataInput['id_m_jenis_layanan'];
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            if($flagIntegrasi == 1){
+                $data['flag_use_nomor_surat'] = isset($dataInput['flag_use_nomor_surat']) ? $dataInput['flag_use_nomor_surat'] : 0;
+            }
+
             $this->db->insert('t_usul_ds', $data);
             $id_t_usul_ds = $this->db->insert_id();
+
+            if($flagIntegrasi == 1){
+                $uploadedFile = $dataInput['files'];
+            }
 
             $usulDetail = null;
             $i = 0;
@@ -1234,6 +1406,10 @@ class M_Layanan extends CI_Model
                 $usulDetail[$i]['created_by'] = $this->general_library->getId();
                 $usulDetail[$i]['filename'] = $uf['name'];
                 $usulDetail[$i]['batch_id_detail'] = generateRandomString();
+
+                if($flagIntegrasi == 1){
+                    copy($uf['url'], $usulDetail[$i]['url']);
+                }
 
                 $this->db->insert('t_usul_ds_detail', $usulDetail[$i]);
                 $id_t_usul_ds_detail = $this->db->insert_id();
@@ -1255,6 +1431,10 @@ class M_Layanan extends CI_Model
                 $i++;
             }
         }
+        // else {
+        //     $result['code'] = 1;
+        //     $result['message'] = "Terjadi Kesalahan";
+        // }
 
         if($this->db->trans_status() == FALSE && $result['code'] != 0){
             $this->db->trans_rollback();
@@ -1370,8 +1550,10 @@ class M_Layanan extends CI_Model
     public function searchVerifUsulDs(){
         $data = $this->input->post();
         
+        $result = null;
+
         $this->db->select('a.keterangan, d.nama as user_inputer, c.created_date, b.filename, b.url, c.id, c.url_file,
-                e.nama_layanan, a.id_m_jenis_layanan, b.id as id_t_usul_ds_detail')
+                e.nama_layanan, a.id_m_jenis_layanan, b.id as id_t_usul_ds_detail, a.flag_use_nomor_surat, a.id_t_nomor_surat')
                 ->from('t_usul_ds a')
                 ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
                 ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
@@ -1387,13 +1569,28 @@ class M_Layanan extends CI_Model
                 ->where('c.id_m_user_verif', $this->general_library->getId())
                 ->where('flag_ds_now', 1)
                 ->where('c.flag_selected', 0)
+                // ->where('(a.flag_use_nomor_surat = 1 AND (a.id_t_nomor_surat is NOT NULL OR a.id_t_nomor_surat != 0)) OR (a.flag_use_nomor_surat = 0 AND (a.id_t_nomor_surat IS NULL OR a.id_t_nomor_surat = 0))')
                 ->order_by('c.created_date', 'desc');
 
         if($data['bulan'] != 0){
             $this->db->where('MONTH(c.created_date)', $data['bulan']);
         }
 
-        return $this->db->get()->result_array();
+        $rs = $this->db->get()->result_array();
+
+        if($rs){
+            foreach($rs as $r){
+                if($r['flag_use_nomor_surat'] == 1){
+                    if($r['id_t_nomor_surat']){
+                        $result[] = $r;
+                    }
+                } else {
+                    $result[] = $r;
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function proceedNextVerifikatorUsulDs($params = null){
@@ -1469,7 +1666,7 @@ class M_Layanan extends CI_Model
             $detail['updated_by'] = $this->general_library->getId();
             
             //jika hasil dari cron dan adalah progress, update url_done di detail ambil dari data yang sudah di DS
-            if($params['flag_progress'] == 1){
+            if($params['flag_progress'] == 1 && $currVerifikator['url_done']){
                 $detail['url_done'] = $params['selectedData']['url_file'];
                 copy($params['selectedData']['url_file'], $currVerifikator['url_done']);
             }
@@ -1479,7 +1676,7 @@ class M_Layanan extends CI_Model
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
             $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
-                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page')
+                            b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page, b.ref_id, b.table_ref, b.nama_kolom_ds')
                         ->from('t_usul_ds_detail a')
                         ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                         ->join('t_usul_ds_detail_progress c', 'a.id = c.id_t_usul_ds_detail')
@@ -1564,6 +1761,13 @@ class M_Layanan extends CI_Model
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
+
+                if($dataUsul['ref_id']){ // jika usul DS integrasi
+                    $this->db->where('id', $dataUsul['ref_id'])
+                            ->update($dataUsul['table_ref'], [
+                                $dataUsul['nama_kolom_ds'] => 1
+                            ]);
+                }
 
                 // update t_file_ds untuk scan QR
                 $this->db->where('random_string', $params['selectedData']['random_string'])
@@ -1684,6 +1888,8 @@ class M_Layanan extends CI_Model
                 // $this->proceedNextVerifikatorUsulDs($selected['id_t_usul_ds_detail'], 0, $selected);
                 $this->db->insert('t_cron_async', [
                     'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                    'ref_id' => $selected['id_t_usul_ds_detail'],
+                    'table_ref' => 't_usul_ds_detail',
                     'param' => json_encode([
                                     'id' => $selected['id_t_usul_ds_detail'],
                                     'flag_progress' => 0,

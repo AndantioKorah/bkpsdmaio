@@ -27,10 +27,10 @@
           $class = "badge badge-danger";
           $classSelesai = "";
 
-          if($rs['nomor_surat'] == null && $rs['id_m_jenis_ds'] != 1){
+          if($rs['nomor_surat'] == null && $rs['id_m_jenis_layanan'] != 104){
             $status = "Nomor Surat belum diinput";
           } else {
-            if($rs[$rs['nama_kolom_flag']] == 0){
+            if($rs[$rs['nama_kolom_ds']] == 0){
               $class = "badge badge-warning";
               $status = "File DS belum diupload";
             } else {
@@ -41,19 +41,19 @@
           }  
         ?>
           <tr class="<?=$classSelesai?>">
-            <td class="text-center"><?=$no++;?></td>
+            <td class="text-center"><?=$rs['id'].' '.$no++;?></td>
             <td class="text-left">
               <span style="font-weight: bold; font-size: .9rem;"><?=getNamaPegawaiFull($rs)?></span><br>
               <span style="color: grey; font-weight: bold; font-size: .75rem;">NIP. <?=$rs['nipbaru_ws']?></span>
             </td>
-            <td class="text-center"><?=$rs['nama_jenis_ds'];?></td>
+            <td class="text-center"><?=$rs['nama_layanan'].' / '.$rs['keterangan']?></td>
             <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
             <td class="text-center">
               <span class="<?=$class?>"><?=$status?></span>
             </td>
             <td class="text-center">
               <button href="#modal_nomor_surat_manual" data-toggle="modal" class="btn btn-sm btn-warning"
-              onclick="openModalPenomoranDokumenPensiun('<?=$rs['id_t_request_ds']?>')">
+              onclick="openModalPenomoranDokumenPensiun('<?=$rs['id_t_usul_ds']?>')">
               <i class="fa fa-edit"></i> Edit</button>
             </td>
           </tr>

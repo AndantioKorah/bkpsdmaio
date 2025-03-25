@@ -1,11 +1,16 @@
 <div class="row p-3">
-  <?php if($result){ ?>
+  <?php if($result){
+    $url = $result['url'];
+    if($result['url_done']){
+      $url = $result['url_done'];
+    }  
+  ?>
     <div class="col-lg-6">
-      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$result['url_file']?>"></iframe>
+      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$url.'?v='.generateRandomString()?>"></iframe>
     </div>
     <div class="col-lg-6">
       <div class="row">
-        <?php if($result['id_m_jenis_ds'] != 1){ ?>
+        <?php if($result['id_m_jenis_layanan'] != 104 && $result['flag_use_nomor_surat'] == 1){ ?>
           <div class="col-lg-12">
             <form id="form_input_nomor_surat_manual">
               <div class="row">
@@ -17,11 +22,13 @@
                   <label>COUNTER NOMOR SURAT</label>
                   <input required class="form-control" id="counter_nomor_surat_input" name="counter_nomor_surat" value="<?=$result['counter']?>" />
                 </div>
-                <?php if($result[$result['nama_kolom_flag']] == 0){ ?>
-                  <div class="col-lg-6 text-left mt-3">
-                    <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
-                    <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
-                  </div>
+                <?php if($result[$result['nama_kolom_ds']] == 0){ ?>
+                    <div class="col-lg-6 text-left mt-3">
+                      <?php if($result['id_t_nomor_surat']){ ?>
+                        <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
+                        <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                      <?php } ?>
+                    </div>
                   <div class="col-lg-6 text-right mt-3">
                     <button id="btn_save" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
                     <button id="btn_save_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
@@ -34,7 +41,7 @@
         <div class="col-lg-12">
           <hr>
           <?php // if($result['flag_ds_manual'] == 0 && $result['flag_ds_cuti'] == 0){ ?>
-          <?php if($result[$result['nama_kolom_flag']] == 0){ ?>
+          <?php if($result[$result['nama_kolom_ds']] == 0){ ?>
           <form id="form_upload_dokumen_ds">
             <div class="row">
               <div class="col-lg-12">
@@ -54,11 +61,11 @@
           <?php } else {
             $fileUrl = "";
             $keterangan = "File DS sudah diupload";
-            if($result[$result['nama_kolom_flag']] == 1){
+            if($result[$result['nama_kolom_ds']] == 1){
               $fileUrl = $result['url_ds_manual_dpcp'] ? $result['url_ds_manual_dpcp'] : $result['url_file_dpcp'];
-              if($result['id_m_jenis_ds'] == 2){
+              if($result['nama_kolom_ds'] == "flag_ds_hukdis"){
                 $fileUrl = $result['url_ds_manual_hukdis'] ? $result['url_ds_manual_hukdis'] : $result['url_file_hukdis'];
-              } else if($result['id_m_jenis_ds'] == 3){
+              } else if($result['nama_kolom_ds'] == "flag_ds_pidana"){
                 $fileUrl = $result['url_ds_manual_pidana'] ? $result['url_ds_manual_pidana'] : $result['url_file_pidana'];
               }
             }  
@@ -68,7 +75,7 @@
                 <span style="font-weight: bold; color: green; size: .8rem;"><?=$keterangan?></span>
               </div>
               <div class="col-lg-6">
-                <?php if($result[$result['nama_kolom_flag']] == 1){ ?>
+                <?php if($result[$result['nama_kolom_ds']] == 1){ ?>
                   <button id="btn_delete_file" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                   <button id="btn_delete_file_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                 <?php } ?>
@@ -88,7 +95,7 @@
           $('#btn_delete_file').hide()
           $('#btn_delete_file_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Layanan/deleteFileDsManual/".$result['id_t_request_ds'])?>',
+            url: '<?=base_url("kepegawaian/C_Layanan/deleteFileDsManual/".$result['id_t_usul_ds'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){
@@ -99,7 +106,7 @@
               if(rs.code == 1){
                 errortoast(rs.message)
               } else {
-                openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                openModalPenomoranDokumenPensiun('<?=$result['id_t_usul_ds']?>')
                 successtoast('Data berhasil dihapus')
               }
             }, error: function(err){
@@ -130,7 +137,7 @@
 
           e.preventDefault()
               $.ajax({
-              url: '<?=base_url('kepegawaian/C_Layanan/saveUploadFileDsPenomoranDokumenPensiun/'.$result['id_t_request_ds'])?>',
+              url: '<?=base_url('kepegawaian/C_Layanan/saveUploadFileDsPenomoranDokumenPensiun/'.$result['id_t_usul_ds'])?>',
               method: 'POST',
               data: form_data,  
               contentType: false,  
@@ -140,7 +147,7 @@
                   let res = JSON.parse(rs)
                   if(res.code == 0){
                       successtoast('Upload Dokumen DS Berhasil')    
-                      openModalPenomoranDokumenPensiun('<?=$result['id_t_request_ds']?>')
+                      openModalPenomoranDokumenPensiun('<?=$result['id_t_usul_ds']?>')
                       // $('#btn_modal_balasan_close').click()
                   } else {
                       errortoast(res.message)
@@ -161,7 +168,7 @@
         $('#btn_save').hide()
         $('#btn_save_loading').show()
         $.ajax({
-          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManual/".$result['id_t_request_ds'])?>',
+          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManual/".$result['id_t_usul_ds'])?>',
           method:"POST",  
           data: $(this).serialize(),
           success: function(res){
@@ -187,7 +194,7 @@
           $('#btn_delete').hide()
           $('#btn_delete_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id_t_request_ds'])?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id_t_usul_ds'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){

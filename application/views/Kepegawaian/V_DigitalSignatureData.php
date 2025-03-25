@@ -44,7 +44,7 @@
                         <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
                         <td class="text-center"><?=($rs['nip'])?></td>
                         <td class="text-left"><?=($rs['nm_unitkerja'])?></td>
-                        <td class="text-left"><?=($rs['id_m_jenis_layanan'] != 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['jenis_ds'])?></td>
+                        <td class="text-left"><?=$rs['nama_layanan'].' / '.$rs['jenis_ds']?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_pengajuan'])?></td>
                         <td class="text-center">
                             <?php if($jenis_layanan == 4){ ?>

@@ -286,25 +286,29 @@ class C_Simata extends CI_Controller
 
         $labelTinggi = ($data['tinggi']['sampai'] - $data['tinggi']['dari']) / 2;
         $data['label_tinggi'] = $data['tinggi']['sampai'] - $labelTinggi;
+
+        if(isset($_POST['jabatan_target_jpt'])){
+            $data['jt_jpt'] = $_POST['jabatan_target_jpt']; 
+        }
         
         if($_POST) {
         $data['post'] = $_POST;
         if($_POST['jenis_jabatan'] == 2){
             $data['result'] = $this->simata->getPenilaianPegawaiJpt($jenis_pengisian);
-            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            // $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxJpt();
         } else if($_POST['jenis_jabatan'] == 1) {
-            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            // $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['result'] = $this->simata->getPenilaianPegawaiAdm($jenis_pengisian);
             // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
         } else if($_POST['jenis_jabatan'] == 3) {
-            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            // $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['result'] = $this->simata->getPenilaianPegawaiPengawas($jenis_pengisian);
             // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();
         } else if($_POST['jenis_jabatan'] == 4) {
-            $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
+            // $data['jt_jpt'] = $_POST['jabatan_target_jpt'];
             $data['result'] = $this->simata->getPenilaianPegawaiPelaksana($jenis_pengisian);
             // $data['result'] = $this->simata->getPenilaianPegawaiAdm();
             $data['jabatan_target'] = $this->simata->getJabatanTargetNineBoxAdm();

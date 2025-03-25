@@ -4,7 +4,7 @@
 
 
   <div class="form-group">
-    <label>File SKP</label>
+    <label>File SKPgit</label>
     <input  class="form-control my-image-field" type="file" id="pdf_file_skp_edit" name="file"   />
     <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
   </div>

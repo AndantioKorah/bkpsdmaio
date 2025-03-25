@@ -353,7 +353,7 @@ ol {
 											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 							</li>
               <li>
-								<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
+								<a class="<?php if($skp2 && $skp2['gambarsk'] != null){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
 									onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_2_lalu;?>* <i
 											class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
@@ -415,7 +415,7 @@ ol {
                 <li>
 								<a class="<?php if($skjabterusmenerus) echo 'select'; else echo 'unselect';?>" <?php if($skjabterusmenerus) { ?>
 									onclick="viewBerkasPangkat('<?=$skjabterusmenerus['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural*<i
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Struktural secara terus menerus dan Surat Pernyataan Pelantikan Jabatan Struktural* (diupload pada pilihan Arsip Lainnya)<i
 											class="fas fa-<?php if($skjabterusmenerus) echo ''; else echo '';?>"></i></a>
 							</li>
                 <li>
@@ -640,6 +640,7 @@ $(function(){
         var id_m_layanan = "<?=$id_m_layanan;?>"
        
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
+          alert(skp2)
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -663,6 +664,7 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+        
         }
         if(id_m_layanan == 7){
         if(pak == ""){

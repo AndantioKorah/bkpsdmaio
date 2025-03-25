@@ -1189,10 +1189,12 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                            ->where('a.id_m_status_pegawai', 1)
                            ->where('c.jenjang_jabatan', $jenis_pengisian)
                            ->group_by('a.id_peg');
+                           if(isset($_POST['jabatan_target_jpt'])){
                            if($_POST['jabatan_target_jpt'] != ""){
                                $this->db->where('e.jabatan_target', $_POST['jabatan_target_jpt']);
                                $this->db->where('e.flag_active', 1);
                            }
+                        }
                return  $this->db->get()->result();
        }
 
@@ -1268,10 +1270,13 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                            ->where('a.id_m_status_pegawai', 1)
                            ->where('c.jenjang_jabatan', $jenis_pengisian)
                            ->group_by('a.id_peg');
-                           if($_POST['jabatan_target_jpt'] != ""){
-                               $this->db->where('e.jabatan_target', $_POST['jabatan_target_jpt']);
-                               $this->db->where('e.flag_active', 1);
+                           if(isset($_POST['jabatan_target_jpt'])){
+                            if($_POST['jabatan_target_jpt'] != ""){
+                                $this->db->where('e.jabatan_target', $_POST['jabatan_target_jpt']);
+                                $this->db->where('e.flag_active', 1);
+                            }
                            }
+                   
                return  $this->db->get()->result();
        }
 

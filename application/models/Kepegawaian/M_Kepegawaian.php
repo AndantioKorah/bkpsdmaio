@@ -6054,7 +6054,8 @@ public function submitEditJabatan(){
                 }
 
                 if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di request untuk DS
-                    $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
+                    $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
+                            f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
                             ->from('t_pengajuan_cuti a')
                             ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
@@ -6164,10 +6165,11 @@ public function submitEditJabatan(){
                             ]
                         ];
     
-                        $this->db->update('t_pengajuan_cuti', [
-                            'url_sk' => $path_file,
-                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                        ]);
+                        $this->db->where('id', $data['id_t_pengajuan_cuti'])
+                                ->update('t_pengajuan_cuti', [
+                                    'url_sk' => $path_file,
+                                    'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                                ]);
                         
                         $this->db->insert('t_file_ds', [
                             'random_string' => $randomString,

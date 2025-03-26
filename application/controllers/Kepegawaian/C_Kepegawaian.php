@@ -1769,7 +1769,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function saveNomorSuratManualSkCuti($id){
-		echo json_encode($this->kepegawaian->saveNomorSuratManualSkCuti($id));
+		echo json_encode($this->kepegawaian->saveNomorSuratManual($id, "t_pengajuan_cuti"));
 	}
 
 	public function deleteNomorSuratManual($id){
@@ -1777,7 +1777,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function deleteNomorSuratManualSkCuti($id){
-		echo json_encode($this->kepegawaian->deleteNomorSuratManualSkCuti($id));
+		echo json_encode($this->kepegawaian->deleteNomorSuratManual($id, "t_pengajuan_cuti"));
 	}
 
 	public function loadNomorSurat(){

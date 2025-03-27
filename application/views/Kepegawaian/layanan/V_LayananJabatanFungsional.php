@@ -302,21 +302,21 @@ ol {
           </div>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 			<?php } ?>
-					<input type="text" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
-					<input type="text" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
-					<input type="text" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
-					<input type="text" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
-					<input type="text" id="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
-					<input type="text" id="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
-					<input type="text" id="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
-					<input type="text" id="ijazah" value="<?php if(isset($ijazah)) echo $ijazah['id']; else echo "";?>">
-					<input type="text" id="str_serdik" value="<?php if(isset($str_serdik)) echo $str_serdik['id']; else echo "";?>">
-					<input type="text" id="rekom_instansi_pembina" value="<?php if(isset($rekom_instansi_pembina)) echo $rekom_instansi_pembina['id']; else echo "";?>">
-					<input type="text" id="surat_usul_pyb" value="<?php if(isset($surat_usul_pyb)) echo $surat_usul_pyb['id']; else echo "";?>">
-					<input type="text" id="pengunduran_diri" value="<?php if(isset($pengunduran_diri)) echo $pengunduran_diri['id']; else echo "";?>">
-					<input type="text" id="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
-					<input type="text" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
-					<input type="text" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
+					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
+					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
+					<input type="hidden" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
+					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+					<input type="hidden" id="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
+					<input type="hidden" id="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+					<input type="hidden" id="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
+					<input type="hidden" id="ijazah" value="<?php if(isset($ijazah)) echo $ijazah['id']; else echo "";?>">
+					<input type="hidden" id="str_serdik" value="<?php if(isset($str_serdik)) echo $str_serdik['id']; else echo "";?>">
+					<input type="hidden" id="rekom_instansi_pembina" value="<?php if(isset($rekom_instansi_pembina)) echo $rekom_instansi_pembina['id']; else echo "";?>">
+					<input type="hidden" id="surat_usul_pyb" value="<?php if(isset($surat_usul_pyb)) echo $surat_usul_pyb['id']; else echo "";?>">
+					<input type="hidden" id="pengunduran_diri" value="<?php if(isset($pengunduran_diri)) echo $pengunduran_diri['id']; else echo "";?>">
+					<input type="hidden" id="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
+					<input type="hidden" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
+					<input type="hidden" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
 
         
 				

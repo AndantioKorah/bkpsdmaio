@@ -10493,6 +10493,29 @@ public function searchPengajuanLayanan($id_m_layanan){
     return $this->db->get()->result_array();
 }
 
+public function searchPengajuanLayananFungsional($id_m_layanan){
+    $data = $this->input->post();
+    $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+     (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
+            ->from('t_layanan a')
+            ->join('m_user d', 'a.id_m_user = d.id')
+            ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+             ->join('m_status_layanan_fungsional g', 'a.status = g.id')
+            ->where_in('a.id_m_layanan', [12,13,14,15,16])
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+                if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+                    $this->db->where('e.skpd', $data['id_unitkerja']);
+                }
+
+                if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+                    $this->db->where('g.id', $data['status_pengajuan']);
+                }
+
+    return $this->db->get()->result_array();
+}
+
 function getPengajuanLayanan($id,$id_m_layanan){
     // $this->db->select('*')
     //                 ->from('t_karis_karsu a')
@@ -10514,6 +10537,10 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
+    if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+        $this->db->join('db_pegawai.pegjabatan l', 'l.id = c.reference_id_dok','left');
+    }
+    
     
     return $this->db->get()->result_array();
 }
@@ -11268,7 +11295,80 @@ public function getFileForVerifLayanan()
                 $this->db->insert('t_cron_wa', $cronWa);
         $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
         // PERBAIKAN DATA
-        }
+        } else if($id_dok == 8){
+            //JABATAN   
+
+            if($this->input->post('myCheck')) {
+                $id_jabatan = "";
+                $nama_jabatan = $this->input->post('jabatan_lama');
+            } else {
+                $str = $this->input->post('jabatan_nama');
+                $newStr = explode(";", $str);
+                $id_jabatan = $newStr[0];
+                $nama_jabatan = $newStr[1];
+            }
+
+            $skpd = $this->input->post('jabatan_unitkerja');
+            $newSkpd = explode("/", $skpd);
+            $id_skpd = $newSkpd[0];
+            $nama_skpd = $newSkpd[1];
+
+            $tgl_sk = date("Y-m-d", strtotime($this->input->post('jabatan_tanggal_sk')));
+            $tmt_jabatan = date("Y-m-d", strtotime($this->input->post('jabatan_tmt')));
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['nm_jabatan']      = $nama_jabatan;
+            $dataInsert['id_jabatan']      = $id_jabatan;
+            $dataInsert['tmtjabatan']     =$tmt_jabatan;
+            $dataInsert['jenisjabatan']      = $this->input->post('jabatan_jenis');
+            $dataInsert['statusjabatan']      = $this->input->post('jabatan_status');
+            $dataInsert['pejabat']      = $this->input->post('jabatan_pejabat');
+            $dataInsert['eselon']      = $this->input->post('jabatan_eselon');
+            $dataInsert['nosk']      = $this->input->post('jabatan_no_sk');
+            $dataInsert['angkakredit']      = $this->input->post('jabatan_angka_kredit');
+            $dataInsert['ket']      = $this->input->post('jabatan_keterangan');
+            $dataInsert['id_unor_siasn']      = $this->input->post('id_unor_siasn');
+            $dataInsert['tglsk']      = $tgl_sk;
+            $dataInsert['skpd']      = $nama_skpd;
+            $dataInsert['id_unitkerja']      = $id_skpd;
+            $dataInsert['alamatskpd']      = "";
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['status']      = 2;
+            $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+            $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+            $result = $this->db->insert('db_pegawai.pegjabatan', $dataInsert);
+            $id_insert_dok = $this->db->insert_id();
+    
+            $this->updateJabatan($id_peg);
+    
+            $dataUpdate['status'] = 6;
+            $dataUpdate['reference_id_dok'] = $id_insert_dok;
+            $url_file = "arsipjabatan/".$data['nama_file'];
+          
+            $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdate);
+    
+            $dataLayanan = $this->db->select('c.*,a.*')
+                    ->from('t_layanan a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                    ->where('a.id', $id_usul)
+                    ->get()->row_array();
+            
+    
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Jabatan Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $cronWa = [
+                        'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                        'message' => $caption,
+                        'filename' => "SK JABATAN.pdf",
+                        'fileurl' => $url_file,
+                        'type' => 'document',
+                        'jenis_layanan' => 'Jabatan Fungsional'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWa);
+            // JABATAN
+            
+            }
        
         return $result;
     }
@@ -11289,7 +11389,7 @@ public function getFileForVerifLayanan()
         ->get()->row_array();
 
         // PANGKAT 
-        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 0){
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $data["reference_id_dok"] = null; 
         $this->db->where('id', $id_usul)
                     ->update('t_layanan', $data);
@@ -11312,6 +11412,18 @@ public function getFileForVerifLayanan()
             $this->updateBerkala($id_pegawai);
             }
         // GAJI BERKALA
+        // JABATAN 
+        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+            $data["reference_id_dok"] = null; 
+            $data["status"] = 4; 
+            $this->db->where('id', $id_usul)
+                        ->update('t_layanan', $data);
+                      
+            $this->db->where('id', $reference_id_dok)
+                        ->update('db_pegawai.pegjabatan', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+            $this->updateJabatan($dataLayanan['id_peg']);
+            }
+        // JABATAN
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;

@@ -53,6 +53,15 @@
               <label>Status Pengajuan</label>
               <select class="form-control select2-navy" style="width: 100%"
               id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
+              <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
+                <option value="" >Semua</option>
+                <option selected value="0">Pengajuan</option>
+                <option value="1">Verifikasi BKPSDM</option>
+                <option value="2">Rekomendasi TPK</option>
+                <option value="3">Pengajuan Pertek</option>
+                <option value="4">Proses SK Jabatan</option>
+                <option value="5">Ditolak</option>
+                <?php } else { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
@@ -65,6 +74,8 @@
                   <?php if($id_m_layanan == 10) { ?>
                   <option value="3" >Selesai</option>
                   <?php } ?>
+                  <?php } ?>
+                 
               </select>
             </div>
           </div>

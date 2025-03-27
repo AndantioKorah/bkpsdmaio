@@ -2613,7 +2613,11 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function searchPengajuanLayanan($id_m_layanan){
-		$data['result'] = $this->kepegawaian->searchPengajuanLayanan($id_m_layanan);
+		if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 ){
+			$data['result'] = $this->kepegawaian->searchPengajuanLayananFungsional($id_m_layanan);
+		} else {
+			$data['result'] = $this->kepegawaian->searchPengajuanLayanan($id_m_layanan);
+		}
 		$data['param'] = $this->input->post();
 		$data['id_m_layanan'] = $id_m_layanan;
 		if($id_m_layanan == 1){
@@ -2630,7 +2634,9 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function verifikasiLayananDetail($id,$layanan){
+		
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
+		// dd($data['result']);
 		$id_peg = $data['result'][0]['id_peg'];
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
@@ -2773,13 +2779,24 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadModalUploadSK($id_usul,$id_m_layanan)
     {
-		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
+		$data['id_usul']= $id_usul;
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
-		$data['id_usul']= $id_usul;
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
-        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
-			$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
+		$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
+		} else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($data['result'][0]['nipbaru_ws']);		
+		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
+		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
+		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
+		$this->load->view('kepegawaian/layanan/V_UploadSKJabatan', $data);
+
 		}
     }
 

@@ -285,9 +285,10 @@ $(function(){
     autoclose: true
     });
 
+    var statuspeg = "<?= $profil_pegawai['statuspeg']?>";
     var end = new Date();
     end.setFullYear(end.getFullYear() - 2);
-
+    if(statuspeg == 1 || statuspeg == 2){
     $('.yearpicker').datepicker({
     format: 'yyyy',
     viewMode: "years", 
@@ -295,7 +296,18 @@ $(function(){
     orientation: 'bottom',
     endDate: end,
     autoclose: true
-});
+    });
+    } else {
+      $('.yearpicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    // endDate: end,
+    autoclose: true
+    });
+    }
+   
 
     
         $('#upload_form_skp').on('submit', function(e){  

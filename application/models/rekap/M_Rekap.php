@@ -2008,9 +2008,16 @@
                             // Surat Tugas
                             if(isset($dokpen[$tr['nip']][$l])){  
                                 if($dokpen[$tr['nip']][$l] == "TLS"){
-                                    $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
-                                    $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLS';
-                                    $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                    if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "" || !$lp[$tr['nip']]['absen'][$l]['jam_masuk']){
+                                        $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
+                                    } else {
+                                        // if($tr['nip'] == '197003161990101002' && $l == '2025-03-14'){
+                                        //     dd($lp[$tr['nip']]['absen'][$l]);
+                                        // }
+                                        $lp[$tr['nip']]['absen'][$l]['jam_pulang'] = $dokpen[$tr['nip']][$l];
+                                        $lp[$tr['nip']]['absen'][$l]['ket_pulang'] = 'TLS';
+                                        $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                    }
                                 } else if($dokpen[$tr['nip']][$l] == "TLP"){
                                     $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = $dokpen[$tr['nip']][$l];
                                     $lp[$tr['nip']]['absen'][$l]['ket_masuk'] = '';

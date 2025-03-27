@@ -190,8 +190,8 @@
                                     if(isset($result['data_absen'][$dates])){
                                         $text_masuk = $result['data_absen'][$dates]['masuk'];
                                         $text_pulang = $result['data_absen'][$dates]['pulang'];
-                                        $alasan_invalid = $result['data_absen'][$dates]['alasan'];
-                                        $status_invalid = $result['data_absen'][$dates]['status'];
+                                        $alasan_invalid = isset($result['data_absen'][$dates]['alasan']) ? $result['data_absen'][$dates]['alasan'] : "";
+                                        $status_invalid = isset($result['data_absen'][$dates]['status']) ? $result['data_absen'][$dates]['status'] : "";
                                     }
                                     
                                     $temp['text_masuk'] = formatTimeAbsen($text_masuk);

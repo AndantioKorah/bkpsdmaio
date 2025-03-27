@@ -1,7 +1,12 @@
 <div class="row p-3">
-  <?php if($result){ ?>
+  <?php if($result){
+    $url = $result['url_sk'];
+    if($result['flag_ds_manual']){
+      $url = $result['url_sk_manual'];
+    }  
+  ?>
     <div class="col-lg-6">
-      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$result['url_file']?>"></iframe>
+      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$url?>"></iframe>
     </div>
     <div class="col-lg-6">
       <div class="row">
@@ -18,8 +23,10 @@
               </div>
               <?php if($result['flag_ds_cuti'] == 0){ ?>
                 <div class="col-lg-6 text-left mt-3">
-                  <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
-                  <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                  <?php if($result['id_t_nomor_surat']){ ?>
+                    <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
+                    <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                  <?php } ?>
                 </div>
                 <div class="col-lg-6 text-right mt-3">
                   <button id="btn_save" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
@@ -80,7 +87,7 @@
           $('#btn_delete_file').hide()
           $('#btn_delete_file_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileDsManual/".$result['id_t_pengajuan_cuti'])?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteFileDsManual/".$result['id_t_usul_ds'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){
@@ -122,7 +129,7 @@
 
           e.preventDefault()
               $.ajax({
-              url: '<?=base_url('kepegawaian/C_Kepegawaian/saveUploadFileDsPenomoranSkCuti/'.$result['id_t_pengajuan_cuti'])?>',
+              url: '<?=base_url('kepegawaian/C_Kepegawaian/saveUploadFileDsPenomoranSkCuti/'.$result['id_t_usul_ds'])?>',
               method: 'POST',
               data: form_data,  
               contentType: false,  
@@ -131,7 +138,7 @@
               success: function(rs){
                   let res = JSON.parse(rs)
                   if(res.code == 0){
-                      successtoast('Upload Dokumen DS Berhasil')    
+                      successtoast('Upload Dokumen DS Berhasil')
                       openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
                       // $('#btn_modal_balasan_close').click()
                   } else {
@@ -153,7 +160,7 @@
         $('#btn_save').hide()
         $('#btn_save_loading').show()
         $.ajax({
-          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManual/".$result['id'])?>',
+          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManualSkCuti/".$result['id_t_usul_ds'])?>',
           method:"POST",  
           data: $(this).serialize(),
           success: function(res){
@@ -163,7 +170,7 @@
             } else {
               successtoast('Data berhasil disimpan')
               $('#iframe_view_file')[0].contentWindow.location.reload(true);
-              // openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
+              // openModalPenomoranSkCuti('<?=$result['id_t_usul_ds']?>')
             }
             $('#btn_save').show()
             $('#btn_save_loading').hide()
@@ -180,7 +187,7 @@
           $('#btn_delete').hide()
           $('#btn_delete_loading').show()
           $.ajax({
-            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManual/".$result['id'])?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteNomorSuratManualSkCuti/".$result['id'])?>',
             method:"POST",  
             data: $(this).serialize(),
             success: function(res){
@@ -188,7 +195,7 @@
               if(rs.code == 1){
                 errortoast(rs.message)
               } else {
-                // openModalPenomoranSkCuti('<?=$result['id_t_pengajuan_cuti']?>')
+                // openModalPenomoranSkCuti('<?=$result['id_t_usul_ds']?>')
                 successtoast('Data berhasil dihapus')
                 $('#nomor_surat_input').val("")
                 $('#counter_nomor_surat_input').val("")

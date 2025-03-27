@@ -102,10 +102,15 @@
           </a>
         </div>
       <?php } ?>
-      <?php if($result['flag_ds_cuti'] == 1){ ?>
+      <?php if($result['flag_ds_cuti'] == 1){
+        $url = $result['url_sk'];
+        if($result['flag_ds_manual'] == 1){
+          $url = $result['url_sk_manual'];
+        }
+      ?>
         <hr>
         <div class="col-lg-12 text-center">
-          <a class="btn btn-navy" target="_blank" href="<?=base_url($result['url_sk'])?>"><fa class="fa fa-file-signature"></fa> LIHAT SK CUTI</a>
+          <a class="btn btn-navy" target="_blank" href="<?=base_url($url).'?v='.generateRandomString()?>"><fa class="fa fa-file-signature"></fa> LIHAT SK CUTI</a>
         </div>
       <?php } ?>
     <?php } else { ?>

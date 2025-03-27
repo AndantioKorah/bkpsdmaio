@@ -1251,7 +1251,7 @@ class M_Layanan extends CI_Model
         if($filename == "0"){
             unlink("arsipusulds/".$tahun."/".$bulan."/".$filename);
         } else {
-    		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+    		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
             if($uploadedFile){
                 foreach($uploadedFile as $uf){
                     unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
@@ -1266,7 +1266,7 @@ class M_Layanan extends CI_Model
         $res['data'] = "";
 
         $file = $_FILES['file'];
-		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
@@ -1301,7 +1301,7 @@ class M_Layanan extends CI_Model
                     $res['message'] = $this->upload->display_errors();
                 } else { // jika berhasil upload
                     $uploadedFile[$newFileName] = $file;
-                    $this->session->set_userdata('uploaded_file_usul_ds', $uploadedFile);
+                    $this->session->set_userdata('uploaded_file_usul_ds_'.$this->general_library->getId(), $uploadedFile);
                     $res['message'] = "Berhasil";
                 }
             }
@@ -1361,20 +1361,25 @@ class M_Layanan extends CI_Model
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
 
-		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
         if(!$uploadedFile && $flagIntegrasi == 0){
             $result['code'] = 1;
             $result['message'] = "Belum ada file yang dipilih";
         } else {
-            $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
+            $userInputer = $this->general_library->getId();
+            if(isset($dataInput['id_m_user'])){
+                $userInputer = $dataInput['id_m_user'];
+            }
+
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $userInputer, 1);
             
             // $kepalabkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_KABAN_BKPSDM);
 
             $sekbkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
 
             $batchId = generateRandomString();
-            $data['id_m_user'] = $this->general_library->getId();
-            $data['created_by'] = $this->general_library->getId();
+            $data['id_m_user'] = $userInputer;
+            $data['created_by'] = $userInputer;
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
             $data['page'] = $dataInput['page'];
@@ -1403,7 +1408,7 @@ class M_Layanan extends CI_Model
             foreach($uploadedFile as $uf){
                 $usulDetail[$i]['id_t_usul_ds'] = $id_t_usul_ds;
                 $usulDetail[$i]['url'] = "arsipusulds/".$tahun."/".$bulan."/".$uf['name'];
-                $usulDetail[$i]['created_by'] = $this->general_library->getId();
+                $usulDetail[$i]['created_by'] = $userInputer;
                 $usulDetail[$i]['filename'] = $uf['name'];
                 $usulDetail[$i]['batch_id_detail'] = generateRandomString();
 

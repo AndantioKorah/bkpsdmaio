@@ -2081,8 +2081,12 @@
                         ){
                             // tambah capaian disiplin kerja
 
+                            if($result['pagu_tpp']['nipbaru_ws'] == '197003161990101002' && $tga == '2025-03-14'){
+                            }
+
                             if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 17 // jika bukan cuti
                                 && $result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] != 15 // jika bukan dispensasi
+                                && !isset($data_absen[$tga]) // dan ada data absen
                             ){
                                 $result['hadir']++;
                             }
@@ -2105,12 +2109,20 @@
                                 $result['rincian_pengurangan_dk']['pksw3']++;
                                 $keterangan[] = "pksw3";
                             } else if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == 20){ // jika TLS, maka TMK 3
-                                $data_absen[$tga]['masuk'] = '00:00:00';
-                                $data_absen[$tga]['pulang'] = '00:00:00';
-                                $data_absen['keterangan'][$tga][] = 'tmk3';
-                                $result['pengurangan_dk'] += 3;
-                                $result['rincian_pengurangan_dk']['tmk3']++;
-                                $keterangan[] = "tmk3";
+                                if(!isset($data_absen[$tga]) || ($data_absen[$tga]['masuk'] == "" || !$data_absen[$tga]['masuk'])){
+                                    $result['dokpen'][$tga] = null;
+                                    $result['pengurangan_dk'] += 10;
+                                    $result['rincian_pengurangan_dk']['TK']++;
+                                    $keterangan = null;
+                                    $keterangan[] = "TK";
+                                } else {
+                                    $data_absen[$tga]['masuk'] = '00:00:00';
+                                    $data_absen[$tga]['pulang'] = '00:00:00';
+                                    $data_absen['keterangan'][$tga][] = 'tmk3';
+                                    $result['pengurangan_dk'] += 3;
+                                    $result['rincian_pengurangan_dk']['tmk3']++;
+                                    $keterangan[] = "tmk3";
+                                }
                             }
 
                             // if($this->general_library->getId() == '1348'){
@@ -2143,6 +2155,9 @@
                 //         dd($keterangan);
                 //         // dd($data_absen[$tga]);
                 //     }
+                // }
+                // if($tga == '2025-03-14'){
+                //     dd($keterangan);
                 // }
                 $data_absen['keterangan'][$tga] = $keterangan;
                 // $result['data_absen']['keterangan'][$tga] = $keterangan;

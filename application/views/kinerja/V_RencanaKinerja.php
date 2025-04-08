@@ -289,7 +289,9 @@ $("#checkBoxID").click(function() {
   var batasMonth = previousMonth - 1;
 
   var statusLock = "<?=$status_lock[0]['status'];?>"
-   var maxDate = "<?= $maxDate['max_date'];?>";
+  //  var maxDate = "<?= $maxDate['max_date'];?>";
+  var maxDate = "2025-04-10";
+
    var currentDate = "<?= $current_date;?>";
    
     if(statusLock == 0){

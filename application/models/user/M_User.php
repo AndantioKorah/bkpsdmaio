@@ -2772,10 +2772,115 @@
             }
             // dd('done');
         }
+        
+        public function cekKenegaraan(){
+            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                                ->where('b.flag_active', 1)
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->where_not_in('c.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
+                                ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                ->get()->result_array();
+
+            $event = $this->db->select('*')
+                            ->from('db_sip.absen_event')
+                            ->where('tgl', '2025-03-03')
+                            ->get()->result_array();
+
+            $absenReguler = $this->db->select('a.user_id, a.masuk, a.pulang, b.username, d.nm_unitkerja')
+                                    ->join('m_user b', 'b.id = a.user_id AND b.flag_active = 1')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                    ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                                    ->from('db_sip.absen a')
+                                    ->where('a.tgl', '2025-03-03')
+                                    ->where('c.id_m_status_pegawai', 1)
+                                    ->where_not_in('d.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
+                                    ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                    ->get()->result_array();
+
+            $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                ->from('t_dokumen_pendukung')
+                                ->where('tanggal', '3')
+                                ->where('bulan', '3')
+                                ->where('tahun', '2025')
+                                ->where('flag_active', 1)
+                                ->where('status', 2)
+                                ->get()->result_array();
+
+            $absenEvent = null;
+            $dokpen = null;
+            $tidakAdaAbsenEvent = null;
+            $tidakAbsenPulangEvent = null;
+            $absenRegulerTidakAbsenEvent = null;
+            $absenRegulerTidakAbsenEventFix = null;
+            $kenegaraan = null;
+            $kenegaraanFix = null;
+            $dokpenKenegaraan;
+
+            foreach($list_dokpen as $ld){
+                $dokpen[$ld['id_m_user']] = $ld;
+            }
+
+            foreach($event as $e){
+                $absenEvent[$e['user_id']] = $e;
+            }
+
+            foreach($absenReguler as $ar){
+                if(!isset($absenEvent[$ar['user_id']])){ // melakukan absen reguler tapi tidak absen event
+                    $absenRegulerTidakAbsenEvent[] = $ar;
+                }
+            }
+            
+            foreach($absenRegulerTidakAbsenEvent as $artae){
+                if(!isset($dokpen[$artae['user_id']])){
+                    $absenRegulerTidakAbsenEventFix[] = $artae;
+                    $kenegaraan[$artae['user_id']] = $artae;
+                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi tidak presensi event Apel Perdana Bulan Maret Tahun 2025";
+                }
+            }
+
+            foreach($list_pegawai as $lp){
+                if(isset($absenEvent[$lp['user_id']]) && $absenEvent[$lp['user_id']]['pulang'] == null){
+                    $tidakAdaAbsenPulangEvent[] = $lp;
+                    if(isset($kenegaraan[$lp['user_id']])){
+                        dd($lp);
+                    }
+                    $kenegaraan[$lp['user_id']] = $lp;
+                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk event Apel Perdana Bulan Maret Tahun 2025";
+                }
+            }
+            
+            $out = null;
+            foreach($kenegaraan as $k){
+                if(!isset($dokpen[$k['user_id']])){
+                    $kenegaraanFix[$k['user_id']] = $k;
+                    $dokpenKenegaraan = null;
+                    $dokpenKenegaraan['id_m_user'] = $k['user_id'];
+                    $dokpenKenegaraan['tanggal'] = 3;
+                    $dokpenKenegaraan['bulan'] = 3;
+                    $dokpenKenegaraan['tahun'] = 2025;
+                    $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
+                    $dokpenKenegaraan['keterangan'] = "Kenegaraan";
+                    $dokpenKenegaraan['pengurangan'] = "5";
+                    $dokpenKenegaraan['status'] = "2";
+                    $dokpenKenegaraan['id_m_user_verif'] = "0";
+                    $dokpenKenegaraan['random_string'] = generateRandomString();
+                    $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                    $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
+                    $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
+                    $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
+                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+
+                    echo "input ".$k['user_id']."\n";
+                } else {
+                    $out[] = $k;
+                }
+            }
+
+            dd("done");
+        }
 
 	}
-
-
-
-   
 ?>

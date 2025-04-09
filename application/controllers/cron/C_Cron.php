@@ -101,4 +101,8 @@ class C_Cron extends CI_Controller
     public function queryInsertTppKelasJabatan(){
         return $this->general->queryInsertTppKelasJabatan();
     }
+
+    public function cekKenegaraan(){
+        return $this->user->cekKenegaraan();
+    }
 }

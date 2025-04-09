@@ -754,7 +754,7 @@ function openPresensiTab(){
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayananFungsional")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

@@ -2777,6 +2777,12 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayanan());
 	}
 
+	public function submitVerifikasiPengajuanLayananFungsional()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayananFungsional());
+	}
+
+	
 
 
 	public function batalVerifikasiPengajuanLayanan()

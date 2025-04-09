@@ -19,12 +19,12 @@
                             <input style="display: none;" autocomplete="off" class="form-control" id="tahun" name="tahun" value="<?= $data_search['tahun']; ?>" />
                             <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                             <?php // if($this->general_library->isProgrammer()){ ?>
-                            <?php if(($data_search['tahun'] != 2025 && $data_search['bulan'] != "04") || $this->general_library->isProgrammer()){ ?>
+                            <?php if(!$this->general_library->isProgrammer() && ($data_search['tahun'] == 2025 && $data_search['bulan'] == "04")){ ?>
+                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu rekap Kenegaraan pada Apel Perdana bulan April</h5>
+                            <?php } else { ?>
                                 <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
                                     <i class="fa fa-download"></i> Download as PDF
                                 </button>
-                            <?php } else { ?>
-                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu rekap Kenegaraan pada Apel Perdana bulan April</h5>
                             <?php } ?>
                             <?php // } ?>
                         </form>

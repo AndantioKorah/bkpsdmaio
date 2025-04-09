@@ -11330,7 +11330,131 @@ public function getFileForVerifLayanan()
             $status = "Ditolak";
             $statusForMessage = "ditolak";
             $tambahan = "Silahkan Perbaiki Berkas Persyaratan dan klik Tombol Ajukan Kembali Pada bagian riwayat layanan agar pengajuan layanan dapat diverifikasi kembali di BKPSDM.";
+        }
 
+        if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n$tambahan\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 10){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\Pengajuan Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Perbaikan Data Kepegawaian";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 11){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Permohonan Salinan SK";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 18){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN DINAS TINGKAT I]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Dinas Tingkat I anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Ujian Dinas Tingkat I";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 19){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN DINAS TINGKAT II]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Dinas Tingkat II anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Ujian Dinas Tingkat II";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 20){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
+        }
+       
+        $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' =>  $jenislayanan,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function submitVerifikasiPengajuanLayananFungsional(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+    
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+       
+
+          
+        $id_pengajuan = $datapost['id_pengajuan'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
+
+       
+        $this->db->where('id', $id_pengajuan)
+                ->update('t_layanan', $data);
+
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('t_layanan c', 'a.id = c.id_m_user')
+                ->join('m_status_layanan_fungsional d', 'c.status = d.id')
+                ->where('c.id', $id_pengajuan)
+                ->get()->result_array();
+
+        if($dataPengajuan[0]['status'] != 5){
+            $status = $dataPengajuan[0]['status_verif'];
+            if($dataPengajuan[0]['status'] == 1){
+                $statusForMessage = "disetujui";
+            } else {
+                $statusForMessage = "diperbaharui";
+            }
+            
+            if(isset($datapost['skp1'])){
+                $this->verifBerkas($datapost['skp1'], "db_pegawai.pegskp");
+            }
+            if(isset($datapost['skp2'])){
+                $this->verifBerkas($datapost['skp2'], "db_pegawai.pegskp");
+            }
+            if(isset($datapost['sk_cpns'])){
+                $this->verifBerkas($datapost['sk_cpns'], "db_pegawai.pegberkaspns");
+            }
+            if(isset($datapost['sk_pns'])){
+                $this->verifBerkas($datapost['sk_pns'], "db_pegawai.pegberkaspns");
+            }
+            if(isset($datapost['diklat'])){
+                $this->verifBerkas($datapost['diklat'], "db_pegawai.pegdiklat");
+            }
+            if(isset($datapost['sk_pangkat']) && $datapost['sk_pangkat'] != ""){
+                $this->verifBerkas($datapost['sk_pangkat'], "db_pegawai.pegpangkat");
+                $this->updatePangkat($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['sk_jabatan']) && $datapost['sk_jabatan'] != ""){
+                $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
+                $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['ijazah_cpns'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+
+            if(isset($datapost['ijazah_s_penyesuaian'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['ijazah_penyesuaian'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['ijazah'])){
+                $this->verifBerkas($datapost['ijazah'], "db_pegawai.pegpendidikan");
+            }
+
+            
+        $tambahan = "";
+
+        } else if($dataPengajuan[0]['status'] == 5){
+            $status = "Ditolak";
+            $statusForMessage = "ditolak";
+            $tambahan = "Silahkan Perbaiki Berkas Persyaratan dan klik Tombol Ajukan Kembali Pada bagian riwayat layanan agar pengajuan layanan dapat diverifikasi kembali di BKPSDM.";
         }
 
         if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){

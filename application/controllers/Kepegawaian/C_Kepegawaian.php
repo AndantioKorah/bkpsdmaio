@@ -619,6 +619,8 @@ class C_Kepegawaian extends CI_Controller
         // $this->kepegawaian->copyfoto();
 		
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+		$id_peg = $this->general_library->getIDPegawaiByNip($this->general_library->getUserName());
+		$this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		$data['page'] = $page;
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
@@ -635,6 +637,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
 		$data['nip'] = $this->general_library->getUserName();
 		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
+		
+
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
 
@@ -2773,6 +2777,12 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayanan());
 	}
 
+	public function submitVerifikasiPengajuanLayananFungsional()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayananFungsional());
+	}
+
+	
 
 
 	public function batalVerifikasiPengajuanLayanan()

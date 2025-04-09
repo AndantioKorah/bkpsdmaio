@@ -655,6 +655,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/12')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Jabatan Fungsional
+					</a>
+				</li>
+				<?php } ?>
 
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">

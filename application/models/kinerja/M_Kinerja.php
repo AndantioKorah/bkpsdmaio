@@ -2424,9 +2424,9 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 6) {
+        if($result[0]['total_verif'] >= 2) {
             $rs['code'] = 1;        
-            $rs['message'] = 'Sudah ada 6 Pengajuan yang diterima';        
+            $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     
 
             $data_verif['status'] = $status;

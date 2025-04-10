@@ -5737,6 +5737,15 @@ public function submitEditJabatan(){
         }
         }
 
+        if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){
+            $id_layanan[] = 12;
+            $id_layanan[] = 13;
+            $id_layanan[] = 14;
+            $id_layanan[] = 15;
+            $id_layanan[] = 16;
+
+        }
+
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
             $id_layanan[] = 10;
         }

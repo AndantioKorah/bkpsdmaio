@@ -135,7 +135,7 @@
                     <?php if($status_kawin){ foreach($status_kawin as $r){ ?>
                         <option   value="<?=$r['id_sk']?>"><?=$r['nm_sk']?></option>
                     <?php } } ?>
-    </select>
+     </select>
       </div> 
 
     
@@ -246,7 +246,18 @@
                         <option value="<?=$r['id_tktpendidikan']?>"><?=$r['nm_tktpendidikan']?></option>
                     <?php } } ?>
     </select>
+    </div>
+
+    <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Terima TPP </label>
       </div>
+      <div class="col-lg-10">
+      <select class="form-control select2" data-dropdown-css-class="" name="flag_terima_tpp" id="flag_terima_tpp" required>
+                    <option value="0" selected>Tidak</option>
+                    <option value="1" >Ya</option>
+      </select>
+      </div>
+    
 
   
       <div class="col-lg-2">

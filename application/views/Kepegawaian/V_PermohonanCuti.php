@@ -47,13 +47,15 @@
               <select class="form-control select2-navy" style="width: 100%"
               id="id_cuti" data-dropdown-css-class="select2-navy" name="id_cuti">
                   <?php if($master_jenis_cuti){
-                      foreach($master_jenis_cuti as $mc){ if($mc['id_cuti'] != 50){
-                        if($mc['id_cuti'] == 00){
+                      foreach($master_jenis_cuti as $mc){ 
+                        if($mc['id_cuti'] != 50 && $mc['id_cuti'] != 10){
+                        // if($mc['id_cuti'] == 00){
                       ?>
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>
                       </option>
-                  <?php } } } } ?>
+                  <?php } } } 
+                //} ?>
               </select>
             </div>
             <div class="col" id="div_surat_pendukung" style="display: none;">

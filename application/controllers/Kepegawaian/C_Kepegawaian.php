@@ -1554,7 +1554,14 @@ class C_Kepegawaian extends CI_Controller
 		$data = $this->input->post();
 		$res['code'] = 0;
 		$res['message'] = 'OK';
-		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+
+		$explTanggalMulai = explode("-", $data['tanggal_mulai']);
+		$explTanggalAkhir = explode("-", $data['tanggal_akhir']);
+
+		$tanggalMulai = $explTanggalMulai[2].'-'.$explTanggalMulai[1].'-'.$explTanggalMulai[0];
+		$tanggalAkhir = $explTanggalAkhir[2].'-'.$explTanggalAkhir[1].'-'.$explTanggalAkhir[0];
+
+		$res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
 		echo json_encode($res);
 	}
 

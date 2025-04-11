@@ -6831,27 +6831,35 @@ public function submitEditJabatan(){
             unset($pegawai['kepala']);
             unset($pegawai['kadis']);
             unset($pegawai['sek']);
-        } else if($pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
+        } else if(isset($pegawai['kepala']) && $pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
             unset($pegawai['kepala']);
             unset($pegawai['sek']);
         } else {
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
             // }
-            if($pegawai['atasan']['id'] == $pegawai['kepala']['id'] && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
+            if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
+                //jika atasan sama dengan kepala sama dengan kadis, hapus atasan dan kepala
+                unset($pegawai['atasan']);
+                unset($pegawai['kepala']);
+            } else if(($pegawai['kadis']) && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
                 //jika atasan sama dengan kepala sama dengan kadis, hapus atasan dan kepala
                 unset($pegawai['atasan']);
                 unset($pegawai['kepala']);
             } else if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
                 //jika atasan dan sama dengan kepala, hapus atasan
                 unset($pegawai['atasan']);
-            } else if($pegawai['atasan']['id'] == $pegawai['kadis']['id']){
+            } else if($pegawai['kadis'] && $pegawai['atasan']['id'] == $pegawai['kadis']['id']){
                 //jika atasan dan sama dengan kadis, hapus atasan
                 unset($pegawai['atasan']);
-            } else if($pegawai['atasan']['id'] == $pegawai['sek']['id']){
+            } else if($pegawai['sek'] && $pegawai['atasan']['id'] == $pegawai['sek']['id']){
                 //jika atasan dan sama dengan sek, hapus atasan
                 unset($pegawai['atasan']);
             }
+        }
+
+        if($pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
+            unset($pegawai['atasan']);
         }
 
         $new_progress = null;
@@ -6866,7 +6874,7 @@ public function submitEditJabatan(){
             if($new_progress){
                 foreach($new_progress as $np){
                     $result[$i]['id_m_user_verifikasi'] = $np['id'];
-                    $result[$i]['nama_jabatan'] = $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
+                    $result[$i]['nama_jabatan'] = isset($np['nama_jabatan_tambahan']) && $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
                     $result[$i]['nohp'] = $np['handphone'];
                     $i++;
                 }

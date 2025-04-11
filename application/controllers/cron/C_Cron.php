@@ -111,6 +111,6 @@ class C_Cron extends CI_Controller
         $insert_id = 0;
         $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
         $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $id_m_user);
-        dd($progressCuti);
+        dd(($progressCuti));
     }
 }

@@ -861,15 +861,15 @@
                     }
                     $atasan = $kepala;
                 } else { //jika bukan kepsek
+                    
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan LIKE', 'Kepala%')
                     ->get()->row_array();
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
-                                    ->join('db_pegawai.pegawai i', 'c.nip_kepalaskpd_hardcode = i.nipbaru_ws')
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    // ->where('h.nama_jabatan LIKE', 'Kepala%')
+                                    ->where('h.nama_jabatan LIKE', 'Kepala%')
                                     ->get()->row_array();
                     }
                     if($pegawai['id_unitkerjamaster'] == 8000000){ //TK
@@ -1128,7 +1128,8 @@
         $result['kadis'] = $kadis;
 
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
-            $result['kepala'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+            $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
+                                        a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone,
                                         e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
                                         ->from('db_pegawai.pegawai a')
                                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
@@ -1138,12 +1139,20 @@
                                         ->where('a.nipbaru_ws', $pegawai['nip_kepalaskpd_hardcode'])
                                         ->get()->row_array();
 
-            $result['kepala']['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
+            $hardcodeKepalaskpd['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
 
-            // if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika guru, atasan = kepala
-            //     $result['atasan'] = $result['kepala'];
-            // }
+            if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah
+                if(!$result['atasan']){
+                    $result['atasan'] = $hardcodeKepalaskpd;
+                }
+            } else { // bukan sekolah
+                // if(!$result['kepala']){
+                    $result['kepala'] = $hardcodeKepalaskpd;
+                // }
+            }
         }
+        
+        // dd($result);
 
         return $result;
     }

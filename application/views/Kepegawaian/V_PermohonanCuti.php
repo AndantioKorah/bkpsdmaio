@@ -66,11 +66,11 @@
           <div class="row mt-2">
             <div class="col-lg-5">
               <label class="lbl_input">Tanggal Mulai</label>
-              <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" readonly value="<?=date('d-m-Y')?>" />
+              <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" readonly value="<?=date('Y-m-d')?>" />
             </div>
             <div class="col-lg-5">
               <label class="lbl_input">Tanggal Akhir</label>
-              <input class="form-control" name="tanggal_akhir" id="tanggal_akhir" readonly value="<?=date('d-m-Y')?>" />
+              <input class="form-control" name="tanggal_akhir" id="tanggal_akhir" readonly value="<?=date('Y-m-d')?>" />
             </div>
             <div class="col-lg-2">
               <label class="lbl_input">Lamanya Cuti</label><br>
@@ -152,13 +152,13 @@
     loadRiwayatCuti()
     $('#id_cuti').select2()
     $('#tanggal_mulai').datepicker({
-      format: 'dd-mm-yyyy',
+      format: 'yyyy-mm-dd',
       orientation: 'bottom',
       autoclose: true,
       todayBtn: true
     })
     $('#tanggal_akhir').datepicker({
-      format: 'dd-mm-yyyy',
+      format: 'yyyy-mm-dd',
       orientation: 'bottom',
       autoclose: true,
       todayBtn: true

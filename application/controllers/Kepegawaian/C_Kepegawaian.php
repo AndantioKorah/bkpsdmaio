@@ -1561,7 +1561,8 @@ class C_Kepegawaian extends CI_Controller
 		$tanggalMulai = $explTanggalMulai[2].'-'.$explTanggalMulai[1].'-'.$explTanggalMulai[0];
 		$tanggalAkhir = $explTanggalAkhir[2].'-'.$explTanggalAkhir[1].'-'.$explTanggalAkhir[0];
 
-		$res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
+		// $res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
+		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
 		echo json_encode($res);
 	}
 

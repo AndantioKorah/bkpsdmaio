@@ -1253,6 +1253,11 @@
             }
         }
 
+        //coding ini untuk mengubah penandatangan menjadi hardcode
+        if($id_unitkerja == 4011000){ // inspektorat, kasub ubah jadi sek karena kasub lagi di luar negeri
+            $result['kasubag'] = $result['sek'];
+        }
+
         if($list_pegawai_unor_induk){
             foreach($list_pegawai_unor_induk as $lpd){
                 if($lpd['kepalaskpd'] == 1 && $result['kepalaskpd'] == null){

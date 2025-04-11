@@ -5842,7 +5842,10 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function getSisaCuti(){
+    public function getSisaCuti($id_m_user = 0){
+        if($id_m_user == 0){
+            $id_m_user = $this->general_library->getId();
+        }
         $total_year = 3;
         $tahunIni = date('Y');
         $yearlist = null;
@@ -5852,7 +5855,7 @@ public function submitEditJabatan(){
             $dataSisaCuti = $this->db->select('*')
                                     ->from('t_sisa_cuti')
                                     ->where('tahun', $tahun)
-                                    ->where('id_m_user', $this->general_library->getId())
+                                    ->where('id_m_user', $id_m_user)
                                     ->where('flag_active', 1)
                                     ->get()->row_array();
             if($dataSisaCuti){
@@ -5873,7 +5876,7 @@ public function submitEditJabatan(){
                 if($tahun != $tahunIni){
                     $jatah = 6;
                     $dataInsert = [
-                        'id_m_user' => $this->general_library->getId(),
+                        'id_m_user' => $id_m_user,
                         'tahun' => $tahun,
                         'jatah' => $jatah,
                         'sisa' => $jatah,
@@ -5888,7 +5891,7 @@ public function submitEditJabatan(){
                                 ->get()->result_array();
 
                     $dataInsert = [
-                        'id_m_user' => $this->general_library->getId(),
+                        'id_m_user' => $id_m_user,
                         'tahun' => $tahun,
                         'jatah' => $jatah,
                         'sisa' => $jatah - count($cuti_bersama),
@@ -7089,7 +7092,7 @@ public function submitEditJabatan(){
 
     public function loadDetailCutiVerifOperator($id){
         return $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, d.nama_jabatan, e.nm_pangkat, c.nipbaru_ws, f.nm_unitkerja, g.nm_cuti, c.handphone,
-                h.nama as nama_verifikator')
+                h.nama as nama_verifikator, b.id as id_m_user')
                 ->from('t_verif_sisa_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -7117,6 +7120,8 @@ public function submitEditJabatan(){
                 ->join('db_pegawai.cuti g', 'a.id_cuti = g.id_cuti')
                 ->where('b.flag_active', 1)
                 ->where('a.flag_active', 1)
+                ->where('MONTH(a.created_date)', $data['bulan'])
+                ->where('YEAR(a.created_date)', $data['tahun'])
                 ->order_by('a.created_date', 'asc')
                 ->order_by('a.status_verifikasi', 'asc');
 
@@ -8424,6 +8429,16 @@ public function submitEditJabatan(){
             // jika ada file dengan nama sama, hapus terlebih dahulu agar tertimpa file yang lama
             if(file_exists($usulDs['url_file'])){
                 unlink($usulDs['url_file']);
+            }
+
+            $explUrlFile = explode("/", $usulDs['url_file']);
+
+            if(!file_exists('arsipusulds/'.$explUrlFile[1])){
+                mkdir('arsipusulds/'.$explUrlFile[1], 0777);
+            }
+
+            if(!file_exists('arsipusulds/'.$explUrlFile[1].'/'.$explUrlFile[2])){
+                mkdir('arsipusulds/'.$explUrlFile[1].'/'.$explUrlFile[2], 0777);
             }
 
             $html = $this->load->view($usulDs['meta_view'], $meta_data, true);

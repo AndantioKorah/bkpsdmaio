@@ -182,7 +182,8 @@
           <?php } ?>
         </div>
       </div>
-      <div class="row mt-2">
+
+      <!-- <div class="row mt-2">
         <hr>
         <h5>REKAP ABSENSI 3 (TIGA) BULAN TERAKHIR</h5>
         <div class="col-lg-12">
@@ -200,7 +201,8 @@
             ?>
           </div>
         </div>
-      </div>
+      </div> -->
+
       <div class="row mt-2">
         <hr>
         <div class="col-lg-12">

@@ -1623,7 +1623,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchOperatorPermohonanCuti(){
 		$data['result'] = $this->kepegawaian->searchOperatorPermohonanCuti();
-		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		// $data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
 		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiItem', $data);
 	}
@@ -1665,7 +1665,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCutiVerifOperator($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerifOperator($id);
-		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti($data['result']['id_m_user']);
 		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiDetail', $data);
 	}
 

@@ -861,15 +861,15 @@
                     }
                     $atasan = $kepala;
                 } else { //jika bukan kepsek
-                    
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan LIKE', 'Kepala%')
                     ->get()->row_array();
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
+                                    ->join('db_pegawai.pegawai i', 'c.nip_kepalaskpd_hardcode = i.nipbaru_ws')
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    ->where('h.nama_jabatan LIKE', 'Kepala%')
+                                    // ->where('h.nama_jabatan LIKE', 'Kepala%')
                                     ->get()->row_array();
                     }
                     if($pegawai['id_unitkerjamaster'] == 8000000){ //TK

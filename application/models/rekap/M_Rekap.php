@@ -1136,9 +1136,23 @@
                                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                                         ->join('m_user f', 'a.nipbaru_ws = f.username')
-                                        ->where('e.nama_jabatan', 'Sekretaris Daerah')
+                                        // ->where('e.nama_jabatan', 'Sekretaris Daerah')
+                                        ->where('a.nipbaru_ws', '197409262002121007')
                                         ->where('id_m_status_pegawai', 1)
                                         ->get()->row_array();
+
+                $result['setda']['nama_jabatan'] = "Plh. Sekretaris Daerah";
+
+                // $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                //     f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                //                         ->from('db_pegawai.pegawai a')
+                //                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                //                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                //                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                //                         ->join('m_user f', 'a.nipbaru_ws = f.username')
+                //                         ->where('e.nama_jabatan', 'Sekretaris Daerah')
+                //                         ->where('id_m_status_pegawai', 1)
+                //                         ->get()->row_array();
 
                 $result['bendahara_setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                     f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1237,6 +1251,11 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
             }
+        }
+
+        //coding ini untuk mengubah penandatangan menjadi hardcode
+        if($id_unitkerja == 4011000){ // inspektorat, kasub ubah jadi sek karena kasub lagi di luar negeri
+            $result['kasubag'] = $result['sek'];
         }
 
         if($list_pegawai_unor_induk){

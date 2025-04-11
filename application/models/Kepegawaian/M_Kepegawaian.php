@@ -6597,7 +6597,7 @@ public function submitEditJabatan(){
                 } else {
                     $config['upload_path'] = './assets/dokumen_pendukung_cuti';
                     $config['allowed_types'] = '*';
-                    $_FILES['surat_pendukung']['name'] = $pegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                    $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
                     $this->load->library('upload',$config);
                     if($this->upload->do_upload('surat_pendukung')){
                         $upload = $this->upload->data();
@@ -6965,13 +6965,13 @@ public function submitEditJabatan(){
     }
 
     public function loadRiwayatPermohonanCuti(){
-        $operatorVerif = $this->db->select('a.*')
+        $operatorVerif = $this->db->select('a.*, b.nm_cuti')
                                     ->from('t_verif_sisa_cuti a')
-                                    // ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
-                                    ->where('id_m_user', $this->general_library->getId())
+                                    ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
+                                    ->where('a.id_m_user', $this->general_library->getId())
                                     ->where('a.flag_active', 1)
-                                    ->where('status_verifikasi', 0)
-                                    ->order_by('created_date', 'desc')
+                                    ->where('a.status_verifikasi', 0)
+                                    ->order_by('a.created_date', 'desc')
                                     ->group_by('a.id')
                                     ->get()->result_array();
 
@@ -6994,7 +6994,7 @@ public function submitEditJabatan(){
                 $dt = json_decode($ov['meta_data'], true);
                 $lamaCuti = explode(" ", $dt['lama_cuti']);
                 $newOv['id'] = $ov['id'];
-                $newOv['nm_cuti'] = "Cuti Tahunan";
+                $newOv['nm_cuti'] = $ov['nm_cuti'];
                 $newOv['tanggal_mulai'] = $dt['tanggal_mulai'];
                 $newOv['tanggal_akhir'] = $dt['tanggal_akhir'];
                 $newOv['lama_cuti'] = $lamaCuti[0];

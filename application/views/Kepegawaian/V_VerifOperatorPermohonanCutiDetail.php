@@ -9,6 +9,7 @@
       <div class="col-lg-12">
         <form id="form_verif_sisa_cuti">
           <div class="row">
+            <?php if($result['id_cuti'] == 00){ ?>
               <div class="col-lg-6">
                 <h5>PEMAKAIAN JATAH CUTI</h5>
                 <table class="table table-sm" style="border: none !important;">
@@ -41,6 +42,8 @@
                   <?php } ?>
                 </table>
               </div>
+            <?php } ?>
+            
               <div class="col-lg-12 mt-3 text-right">
                 <?php if($result['status_verifikasi'] == 0){ ?>
                   <button id="btn_simpan" class="btn btn-navy" type="submit"><i class="fa fa-save"></i> Simpan</button>

@@ -5735,6 +5735,13 @@ public function submitEditJabatan(){
             $id_layanan[] = 8;
             $id_layanan[] = 9;
         }
+
+        if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
+            $id_layanan[] = 18;
+            $id_layanan[] = 19;
+            $id_layanan[] = 20;
+        }
+
         }
 
         if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){
@@ -5754,14 +5761,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 1;
         }
 
-        if($this->general_library->getId() != 78){
-        if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
-            // $id_layanan = array(18,19,20);
-            $id_layanan[] = 18;
-            $id_layanan[] = 19;
-            $id_layanan[] = 20;
-        }
-        }
+       
         
         
       

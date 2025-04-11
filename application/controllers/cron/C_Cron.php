@@ -20,6 +20,7 @@ class C_Cron extends CI_Controller
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('kepegawaian/M_Layanan', 'layanan');
 		$this->load->model('siasn/M_Siasn', 'siasn');
+		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
     }
@@ -104,5 +105,12 @@ class C_Cron extends CI_Controller
 
     public function cekKenegaraan(){
         return $this->user->cekKenegaraan();
+    }
+
+    public function cekProgressCuti($id_m_user){
+        $insert_id = 0;
+        $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
+        $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $id_m_user);
+        dd($progressCuti);
     }
 }

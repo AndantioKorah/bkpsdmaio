@@ -391,19 +391,19 @@
 			</span>
 		</a>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-		<?php 
-			if(
-				$this->general_library->isProgrammer()
-				|| $this->general_library->isPegawaiBkpsdm()
-			)
-			{ ?>
 				
 			<li class="sidebar-item ">
 				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
 				</a>
 			</li>
-
+			
+			<?php 
+			if(
+				$this->general_library->isProgrammer()
+				|| $this->general_library->isPegawaiBkpsdm()
+			)
+			{ ?>
 			<li class="sidebar-item ">
 				<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/usul-ds')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Usul DS

@@ -1126,7 +1126,6 @@
         $result['kepala'] = $kepala;
         $result['sek'] = $sek;
         $result['kadis'] = $kadis;
-
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
                                         a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone,
@@ -1142,8 +1141,15 @@
             $hardcodeKepalaskpd['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
 
             if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah
-                if(!$result['atasan']){
-                    $result['atasan'] = $hardcodeKepalaskpd;
+                if($flag_cuti == 1){
+                    if(!$result['atasan']){
+                        $result['atasan'] = $hardcodeKepalaskpd;
+                    }
+                } else {
+                    $result['kepala'] = $hardcodeKepalaskpd;
+                    $temp = $result['kepala'];
+                    $result['kepala'] = $result['atasan'];
+                    $result['atasan'] = $temp;
                 }
             } else { // bukan sekolah
                 // if(!$result['kepala']){

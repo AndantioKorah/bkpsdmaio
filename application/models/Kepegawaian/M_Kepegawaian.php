@@ -6538,6 +6538,12 @@ public function submitEditJabatan(){
         if($flagVerifOperator == 1){ //jika flag after verif = 0, lakukan pengecekan
             $data = $this->input->post();
             $data['id_m_user'] = $this->general_library->getId();
+
+            $pegawai = $this->kinerja->getAtasanPegawai(null, $data['id_m_user'], 1);
+            $progressCuti = $this->buildProgressCuti($pegawai, 0, $data['id_m_user']);
+            if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
+                return $progressCuti;
+            }
         } else {
             $data = $dataInput;
         }
@@ -6757,6 +6763,11 @@ public function submitEditJabatan(){
                 // kirim pesan yang bisa langsung direply untuk persetujuan
                 // simpan dpe messageId untuk reply
                 if($progressCuti){
+                    if((isset($progressCuti['code']) && $progressCuti['code'] == 1)){
+                        $res = $progressCuti;
+                        return $res;
+                    }
+
                     foreach($progressCuti as $pc){
                         $this->db->insert('t_progress_cuti', $pc);
                         if($pc['urutan'] == '1'){
@@ -6838,12 +6849,8 @@ public function submitEditJabatan(){
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
             // }
-            if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
-                //jika atasan sama dengan kepala sama dengan kadis, hapus atasan dan kepala
-                unset($pegawai['atasan']);
-                unset($pegawai['kepala']);
-            } else if(($pegawai['kadis']) && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
-                //jika atasan sama dengan kepala sama dengan kadis, hapus atasan dan kepala
+            if(($pegawai['kadis']) && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
+                //jika atasan sama dengan kepala sama dengan kadis
                 unset($pegawai['atasan']);
                 unset($pegawai['kepala']);
             } else if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
@@ -6858,7 +6865,7 @@ public function submitEditJabatan(){
             }
         }
 
-        if($pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
+        if(isset($pegawai['atasan']) && $pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
             unset($pegawai['atasan']);
         }
 
@@ -6879,6 +6886,22 @@ public function submitEditJabatan(){
                     $i++;
                 }
             }
+        }
+
+        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+            // jika pegawai sekolah dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya
+            if($thisuser['id_unitkerjamaster'] == 8000000 && !stringStartWith("Kepala Taman", $result[0]['nama_jabatan'])){ // TK 
+                return [
+                    'code' => 1,
+                    'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
+                ];
+            } else if($thisuser['id_unitkerjamaster'] != 8000000 && !stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan'])){ // SD, SMP, SMA 
+                return [
+                    'code' => 1,
+                    'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
+                ];
+            }
+                
         }
 
         return $this->pelengkapDataProgressCuti($result, $insert_id, $kepalabkpsdm);

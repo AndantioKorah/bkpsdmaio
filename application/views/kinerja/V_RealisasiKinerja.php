@@ -162,11 +162,11 @@
   
   var fd = tahun+'-'+bulan+'-01';
    var statusLock = "<?=$status_lock[0]['status'];?>"
-  //  var maxDate = "<?= $maxDate['max_date'];?>";
-   var maxDate = "2025-04-10";
+   var maxDate = "<?= $maxDate['max_date'];?>";
+  //  var maxDate = "2025-04-08";
 
    var currentDate = "<?= $current_date;?>";
-  // alert(maxDate)
+  alert(maxDate)
 
    if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({

@@ -39,7 +39,11 @@
         }
         $dt = json_decode($rs['meta_data'], true);
     ?>
-      <tr class="<?=$rs['status_verifikasi'] != 0 ? 'tr_verif_done' : ''?>">
+      <?php if($rs['status_verifikasi'] == 0){ ?>
+        <tr>
+      <?php } else { ?>
+        <tr class="tr_verif_done">
+      <?php } ?>
         <td style="border: 1px solid grey;" class="text-center"><?=$no++;?></td>
         <td style="border: 1px solid grey;" class="text-left">
           <span class="fw-bold"><?=getNamaPegawaiFull($rs)?></span><br>

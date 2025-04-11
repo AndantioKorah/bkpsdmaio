@@ -167,7 +167,11 @@
             <tr>
               <td style="width: 50%;"></td>
               <td style="width: 50%; text-align: center;">
-                  Manado, <?=formatDateNamaBulan($rs['created_date'])?><br>
+                  Manado, 
+                  <?=// formatDateNamaBulan($rs['created_date'])
+                    formatDateNamaBulan(date('Y-m-d'))
+                   ?>
+                  <br>
                   a.n. WALI KOTA MANADO
                   <?php
                   $padding_top_content_footer = "100px";

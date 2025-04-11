@@ -1,9 +1,9 @@
 <div class="row p-3">
     <?php if($result){ ?>
-        <?php if($result['flag_done'] == 0){ ?>
-            <div class="col-lg-12 text-right">
+        <?php if($result['flag_done'] == 0 ){ ?>
+            <!-- <div class="col-lg-12 text-right">
                 <button class="btn btn-sm btn-danger" onclick="deleteData('<?=$result['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
-            </div>
+            </div> -->
         <?php } ?>
         <div class="col-lg-12">
             <h5>JENIS LAYANAN</h5>

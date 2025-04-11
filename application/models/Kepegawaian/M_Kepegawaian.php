@@ -7122,8 +7122,8 @@ public function submitEditJabatan(){
                 ->where('a.flag_active', 1)
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
-                ->order_by('a.created_date', 'asc')
-                ->order_by('a.status_verifikasi', 'asc');
+                ->order_by('a.status_verifikasi', 'asc')
+                ->order_by('a.created_date', 'asc');
 
         if(!isset($data['id_unitkerja']) && $data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);

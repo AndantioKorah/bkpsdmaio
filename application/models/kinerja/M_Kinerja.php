@@ -866,6 +866,7 @@
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan LIKE', 'Kepala%')
                     ->get()->row_array();
+                    
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -1126,6 +1127,7 @@
         $result['kepala'] = $kepala;
         $result['sek'] = $sek;
         $result['kadis'] = $kadis;
+
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
                                         a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone,

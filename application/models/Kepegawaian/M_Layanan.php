@@ -1379,7 +1379,7 @@ class M_Layanan extends CI_Model
 
             $batchId = generateRandomString();
             $data['id_m_user'] = $userInputer;
-            $data['created_by'] = $userInputer;
+            $data['created_by'] = 101; // pak cliff
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
             $data['page'] = $dataInput['page'];

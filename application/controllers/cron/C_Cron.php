@@ -110,8 +110,10 @@ class C_Cron extends CI_Controller
     public function cekProgressCuti($id_m_user){
         $insert_id = 0;
         $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
-        // dd($pegawai);
         $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $id_m_user);
+        if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
+            // dd('asd');
+        }
         dd(($progressCuti));
     }
 }

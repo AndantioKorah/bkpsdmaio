@@ -6893,12 +6893,14 @@ public function submitEditJabatan(){
 
         if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
             // jika pegawai sekolah dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya
-            if($thisuser['id_unitkerjamaster'] == 8000000 && !stringStartWith("Kepala Taman", $result[0]['nama_jabatan'])){ // TK 
+            if($thisuser['id_unitkerjamaster'] == 8000000 && (!stringStartWith("Kepala Taman", $result[0]['nama_jabatan']) && !stringStartWith("Plt. Kepala Taman", $result[0]['nama_jabatan']) && !stringStartWith("Plh. Kepala Taman", $result[0]['nama_jabatan']))){ // TK 
                 return [
                     'code' => 1,
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
                 ];
-            } else if($thisuser['id_unitkerjamaster'] != 8000000 && !stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan'])){ // SD, SMP, SMA 
+            } else if($thisuser['id_unitkerjamaster'] != 8000000 && (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) && $result[0]['nama_jabatan'] != 'Plt. Kepala Sekolah' && $result[0]['nama_jabatan'] != 'Plh. Kepala Sekolah')){ // SD, SMP, SMA 
+                // dd($result[0]['nama_jabatan']);
+                // dd(!stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']));
                 return [
                     'code' => 1,
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."

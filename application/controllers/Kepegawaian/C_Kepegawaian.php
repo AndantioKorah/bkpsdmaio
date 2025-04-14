@@ -1563,6 +1563,7 @@ class C_Kepegawaian extends CI_Controller
 
 		// $res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
 		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+		// dd(json_encode($res));
 		echo json_encode($res);
 	}
 

@@ -7336,6 +7336,11 @@ public function submitEditJabatan(){
                 $res['code'] = 1;
                 $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
             } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
+                // if(formatDateOnly(date("Y-m-d")) > formatDateOnly($data['tanggal_mulai'])){
+                //     $res['code'] = 1;
+                //     $res['message'] = "Verifikasi tidak dapat dilakukan karena sudah melebihi tanggal mulai cuti.";
+                //     return $res;
+                // }
                 $reply = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
                 if($status == 1){ // jika diterima
                     $reply .= "*DITERIMA*";

@@ -2393,6 +2393,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
+		// $mpdf->Output('Draf SK Pangkat.pdf', 'D');
 		$mpdf->Output($file_pdf.'.pdf');
     }
 
@@ -3031,7 +3032,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
-			
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 			$this->load->view('kepegawaian/layanan/V_LayananUjianDinas', $data);
 		
 		}

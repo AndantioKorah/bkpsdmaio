@@ -333,7 +333,7 @@ class General_library
     public function needResetPassword(){
         $user = $this->nikita->m_general->getOne('m_user', 'id', $this->getId());
         // $user = $this->nikita->m_general->getOne('m_user', 'username', '196908071994032011');
-        if($user['username'] == '001' || $user['username'] == '002'){
+        if($user['username'] == '001' || $user['username'] == '002' || $user['username'] == 'guest'){
             return 1;
         }
         if($user){

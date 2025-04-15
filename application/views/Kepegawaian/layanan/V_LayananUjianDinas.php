@@ -406,7 +406,18 @@ ol {
 
 
 
-				<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
+				<!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
+        <?php if($status_layanan['status'] == 1) { ;?>
+					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
+          <?php } else { ?>
+            <p>
+              <h4>
+            <b style="color:red;">
+              Layanan Ujian Dinas dan Ujian Penyesuaian Kenaikan Pangkat sudah ditutup dan akan dibuka kembali pada periode berikutnya.<br>
+            </b>
+          </h4>
+          </p>
+          <?php }  ?>
 			</form>
 			<p class="mt-5">
 				Keterangan :<br>

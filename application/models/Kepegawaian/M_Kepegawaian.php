@@ -5944,9 +5944,11 @@ public function submitEditJabatan(){
 
     public function verifPermohonanCutiFromWa($resp, $chat){
         $this->db->trans_begin();
-        $dataCuti = $this->db->select('*')
-                            ->from('t_pengajuan_cuti')
-                            ->where('id', $resp['cuti']['id'])
+        $dataCuti = $this->db->select('a.*, c.skpd')
+                            ->from('t_pengajuan_cuti a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
+                            ->where('a.id', $resp['cuti']['id'])
                             ->get()->row_array();
 
         $progress = $this->getProgressCutiAktif($resp['cuti']['id']);
@@ -6043,16 +6045,18 @@ public function submitEditJabatan(){
                     }
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                    $cronWaNextVerifikator = [
-                        'sendTo' => convertPhoneNumber($progress['next']['nohp']),
-                        'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
-                        'type' => 'text',
-                        'ref_id' => $resp['cuti']['id'],
-                        'jenis_layanan' => 'Cuti',
-                        'table_state' => 't_progress_cuti',
-                        'column_state' => 'chatId',
-                        'id_state' => $progress['next']['id']
-                    ];
+                    if(isset($progress['next']['id']) && $progress['next']['id'] == 193 && $dataCuti['skpd'] == 4018000){
+                        $cronWaNextVerifikator = [
+                            'sendTo' => convertPhoneNumber($progress['next']['nohp']),
+                            'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                            'type' => 'text',
+                            'ref_id' => $resp['cuti']['id'],
+                            'jenis_layanan' => 'Cuti',
+                            'table_state' => 't_progress_cuti',
+                            'column_state' => 'chatId',
+                            'id_state' => $progress['next']['id']
+                        ];
+                    }
                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
 
                     // update t_pengajuan_cuti
@@ -9297,7 +9301,7 @@ public function submitEditJabatan(){
                 ->where('a.flag_active', 1)
                 // ->where('d.flag_active', 1)
                 ->group_by('a.id')
-                ->order_by('a.created_date', 'desc');
+                ->order_by('a.created_date', 'asc');
 
         if($data['id_unitkerja'] != 0){
             $this->db->where('c.skpd', $data['id_unitkerja']);

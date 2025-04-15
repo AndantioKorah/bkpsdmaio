@@ -1141,7 +1141,7 @@
                                         ->where('id_m_status_pegawai', 1)
                                         ->get()->row_array();
 
-                $result['setda']['nama_jabatan'] = "Plh. Sekretaris Daerah";
+                $result['setda']['nama_jabatan'] = "Pj. Sekretaris Daerah";
 
                 // $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 //     f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')

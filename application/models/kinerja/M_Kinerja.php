@@ -1144,7 +1144,8 @@
 
             if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah
                 if($flag_cuti == 1){
-                    if(!$result['atasan']){
+                    // dd($result['atasan']['id_unitkerja'] != $pegawai['id_unitkerja']);
+                    if(!$result['atasan'] || ($result['atasan']['id_unitkerja'] != $pegawai['id_unitkerja'])){
                         $result['atasan'] = $hardcodeKepalaskpd;
                     }
                 } else {

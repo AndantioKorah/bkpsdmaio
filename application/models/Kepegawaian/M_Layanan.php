@@ -1371,7 +1371,12 @@ class M_Layanan extends CI_Model
                 $userInputer = $dataInput['id_m_user'];
             }
 
-            $pegawai = $this->kinerja->getAtasanPegawai(0, $userInputer, 1);
+            $createdBy = $userInputer;
+            if(isset($dataInput['table_ref']) && $dataInput['table_ref'] == 't_pengajuan_cuti'){
+                $createdBy = 101; // jika cuti, pak cliff jadi created by untuk usul DS
+            }
+
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $createdBy, 1);
             
             // $kepalabkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_KABAN_BKPSDM);
 
@@ -1379,7 +1384,7 @@ class M_Layanan extends CI_Model
 
             $batchId = generateRandomString();
             $data['id_m_user'] = $userInputer;
-            $data['created_by'] = 101; // pak cliff
+            $data['created_by'] = $createdBy; // pak cliff
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
             $data['page'] = $dataInput['page'];
@@ -1772,6 +1777,37 @@ class M_Layanan extends CI_Model
                             ->update($dataUsul['table_ref'], [
                                 $dataUsul['nama_kolom_ds'] => 1
                             ]);
+
+                    if($dataUsul['table_ref'] == 't_pengajuan_cuti'){ // jika cuti, kirim SK Cuti ke pegawai ybs
+                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti')
+                                            ->from('t_pengajuan_cuti a')
+                                            ->join('m_user b', 'a.id_m_user = b.id')
+                                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                            ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
+                                            ->where('a.id', $dataUsul['ref_id'])
+                                            ->get()->row_array();
+
+                        // $pegawai = $this->db->select('a.*, d.nm_cuti, c.tanggal_mulai, d.id_cuti, c.lama_cuti, c.tanggal_mulai, c.tanggal_akhir, b.id as id_m_user')
+                        // ->from('db_pegawai.pegawai a')
+                        // ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        // ->join('t_pengajuan_cuti c', 'b.id = c.id_m_user')
+                        // ->join('db_pegawai.cuti d', 'c.id_cuti = d.id_cuti')
+                        // ->where('a.nipbaru_ws', $selected['nip'])
+                        // ->where('c.id', $selected['ref_id'])
+                        // ->get()->row_array();
+                
+                        $caption = "*[SK PENGAJUAN ".strtoupper($pegawaiYbs["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawaiYbs).",\nBerikut kami lampirkan SK ".$pegawaiYbs["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+                        $cronWa = [
+                            'sendTo' => convertPhoneNumber($pegawaiYbs['handphone']),
+                            'message' => $caption,
+                            'filename' => "CUTI_".strtoupper($pegawaiYbs["nipbaru_ws"]).'_'.$pegawaiYbs['tanggal_mulai'].'.pdf',
+                            'fileurl' => $newFullPath,
+                            'type' => 'document',
+                            'jenis_layanan' => 'Cuti'
+                        ];
+                        // $this->general->saveToCronWa($cronWa);
+                        $this->db->insert('t_cron_wa', $cronWa); // insert cron WA untuk krim file
+                    }
                 }
 
                 // update t_file_ds untuk scan QR

@@ -587,9 +587,9 @@
 				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') || 
 				$this->general_library->isHakAkses('admin_pengajuan_cuti')
 				// buka 3 dibawah ini untuk verifikasi melalui SILADEN. sekarang ditutup karena bocor
-				// ||
-				// $this->general_library->isKepalaPd() ||
-				// $this->general_library->isVerifPermohonanCuti()
+				||
+				$this->general_library->isKepalaPd() ||
+				$this->general_library->isVerifPermohonanCuti()
 				){
 					?>
 					<li class="sidebar-item ">

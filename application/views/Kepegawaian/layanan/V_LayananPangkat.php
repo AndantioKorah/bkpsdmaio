@@ -640,7 +640,7 @@ $(function(){
         var id_m_layanan = "<?=$id_m_layanan;?>"
        
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
-          alert(skp2)
+          
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

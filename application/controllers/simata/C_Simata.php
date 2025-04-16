@@ -174,12 +174,13 @@ class C_Simata extends CI_Controller
     public function loadListJabatanKosong($id){
         $tab=null;
         $data['tab'] = $tab;
+        $data['jenis_jabatan'] = $id;
         $data['result_jpt'] = $this->simata->loadListTalentaIx($id);
         $data['result_adm'] = $this->simata->loadListTalentaIx($id);
         $data['jabatan_target'] = $this->simata->getJabatanTargetPegawai();
         $data['jabatan_adm'] = $this->simata->getNamaJabatanAdministrator();
         $data['jabatan_jpt'] = $this->simata->getNamaJabatanJpt();
-        // dd($data);
+        // dd($data['tab']);
         $this->load->view('simata/V_JabatanKosongItem', $data);
     }
 
@@ -647,6 +648,34 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,$jenis_pengisian,$id));
 	}
+
+    public function loadSelectJabatanTargetPegawai($id_pegawai,$jenis_jabatan)
+    {
+        $rumpun_jabatan_sekarang = $this->simata->getRumpunJabatanPegawai($id_pegawai);
+        $data['id_pegawai'] = $id_pegawai;
+        if($rumpun_jabatan_sekarang){
+            $data['jabatan_target'] = $this->simata->getNamaJabatanTarget($rumpun_jabatan_sekarang);
+        } else {
+            $data['jabatan_target'] = null;
+        }
+        $this->load->view('simata/V_ModalSelectJabatanTargetPegawai', $data);
+    }
+
+    public function loadListJabatanTargetPegawai($id){
+        $data['result'] = $this->simata->loadListJabatanTargetPegawai($id);
+        $this->load->view('simata/V_ListJabatanTargetPegawai', $data);
+    }
+
+    public function submitJabatanTargetNew()
+	{ 
+		echo json_encode( $this->simata->submitJabatanTargetNew());
+	}
+
+    public function deleteJabatanTargetPegawai($id)
+    {
+        $this->simata->delete('id', $id, "db_simata.t_jabatan_target");
+    }
+
     
 
 

@@ -6014,7 +6014,7 @@ public function submitEditJabatan(){
             //kirim pemberitahuan kepada pegawai
             $reply = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($resp['cuti']).", permohonan ".$resp['cuti']['nm_cuti']." Anda telah ";
             if($resp['response']['flag_diterima'] == 1){
-                $reply .= '*DITERIMA*';
+                $reply .= '*DISETUJUI*';
 
                 if(!$progress['next']){ // jika kaban melakukan verif, kirim pesan harus melakukan DS
                     $flag_reply_thankyou = 0;
@@ -6045,7 +6045,22 @@ public function submitEditJabatan(){
                     }
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
-                    if(isset($progress['next']['id']) && $progress['next']['id'] == 193 && $dataCuti['skpd'] == 4018000){
+                    $cronWaNextVerifikator = null;
+                    if($progress['next']['id'] == 193){
+                        if($dataCuti['skpd'] == 4018000){
+                            $cronWaNextVerifikator = [
+                                'sendTo' => convertPhoneNumber($progress['next']['nohp']),
+                                'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                                'type' => 'text',
+                                'ref_id' => $resp['cuti']['id'],
+                                'jenis_layanan' => 'Cuti',
+                                'table_state' => 't_progress_cuti',
+                                'column_state' => 'chatId',
+                                'id_state' => $progress['next']['id']
+                            ];
+                            // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        }
+                    } else {
                         $cronWaNextVerifikator = [
                             'sendTo' => convertPhoneNumber($progress['next']['nohp']),
                             'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
@@ -6056,8 +6071,11 @@ public function submitEditJabatan(){
                             'column_state' => 'chatId',
                             'id_state' => $progress['next']['id']
                         ];
+                        // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
-                    $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                    if($cronWaNextVerifikator){
+                        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                    }
 
                     // update t_pengajuan_cuti
                     if($progress['next']){
@@ -6639,6 +6657,7 @@ public function submitEditJabatan(){
 
                 // if($this->general_library->isProgrammer()){
                     $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+                    $metaHariKerja = null;
                     $listHari = null;
                     $listBulan = null;
                     $listTahun = null;
@@ -6647,6 +6666,7 @@ public function submitEditJabatan(){
                         $listTahun[] = $explode[0];
                         $listBulan[] = $explode[1];
                         $listHari[] = $explode[2];
+                        $metaHariKerja[$hk] = $hk;
                     }
 
                     //cek jika ada dokumen pendukung lain di antara tanggal antara cuti
@@ -6659,14 +6679,28 @@ public function submitEditJabatan(){
                                         ->where_in('tahun', $listTahun)
                                         ->where('id_m_user', $data['id_m_user'])
                                         ->where('status != ', 3)
-                                        ->limit(1)
-                                        ->get()->row_array();
+                                        // ->limit(1)
+                                        ->get()->result_array();
                     if($dokpen){
-                        $res['code'] = 1;
-                        $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Dokumen Pendukung Presensi '".$dokpen['nama_jenis_disiplin_kerja'].
-                                        "' pada ".formatDateNamaBulan($dokpen['tahun'].'-'.$dokpen['bulan'].'-'.$dokpen['tanggal']);
-                        $this->db->trans_rollback();
-                        return $res;
+                        foreach($dokpen as $dk){
+                            $bulan = $dk['bulan'];
+                            if($dk['bulan'] < 10){
+                                $bulan = "0".$dk['bulan'];
+                            }
+
+                            $tanggal = $dk['tanggal'];
+                            if($dk['tanggal'] < 10){
+                                $tanggal = "0".$dk['tanggal'];
+                            }
+                            if(isset($metaHariKerja[$dk['tahun'].'-'.$bulan.'-'.$tanggal])){
+                                // dd($metaHariKerja[$dk['tahun'].'-'.$bulan.'-'.$tanggal]);
+                                $res['code'] = 1;
+                                $res['message'] = "Permohonan Cuti tidak dapat dilanjutkan dikarenakan Anda memiliki data Dokumen Pendukung Presensi '".$dk['nama_jenis_disiplin_kerja'].
+                                                "' pada ".formatDateNamaBulan($dk['tahun'].'-'.$dk['bulan'].'-'.$dk['tanggal']);
+                                $this->db->trans_rollback();
+                                return $res;
+                            }
+                        }
                     }
 
                     // cek jika ada pengajuan cuti di antara tanggal cuti
@@ -7165,7 +7199,7 @@ public function submitEditJabatan(){
                 ->where('MONTH(a.created_date)', $data['bulan'])
                 ->where('YEAR(a.created_date)', $data['tahun'])
                 ->group_by('a.id')
-                ->order_by('created_date', 'desc');
+                ->order_by('created_date', 'asc');
 
         if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
             $this->db->where('e.skpd', $data['id_unitkerja']);
@@ -7347,7 +7381,7 @@ public function submitEditJabatan(){
                 // }
                 $reply = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
                 if($status == 1){ // jika diterima
-                    $reply .= "*DITERIMA*";
+                    $reply .= "*DISETUJUI*";
                     $update_data_pengajuan = [
                         'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
                         'id_t_progress_cuti' => $res['progress']['next']['id']

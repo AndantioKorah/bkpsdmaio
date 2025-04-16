@@ -30,7 +30,22 @@
         <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td style="border: 1px solid grey;" class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
         <td style="border: 1px solid grey;" class="text-center"><?=$rs['lama_cuti'].' hari'?></td>
-        <td style="border: 1px solid grey;" class="text-center"><span><?=($rs['status_pengajuan_cuti'])?></span></td>
+        <td style="border: 1px solid grey;" class="text-center">
+          <?php
+            $badge = "badge-warning";
+            if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
+              if($rs['flag_ds_cuti'] == 1){
+                $badge = "badge-success";
+                $rs['status_pengajuan_cuti'] = "Selesai";
+              } else {
+                $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              }
+            } else if(isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1){
+              $badge = "badge-danger";
+            }
+          ?>
+          <span style="max-width: 25vw; text-wrap: pretty;" class="badge <?=$badge?>"><?=($rs['status_pengajuan_cuti'])?></span>
+        </td>
         <td style="border: 1px solid grey;" class="text-center">
           <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"
           data-toggle="modal" class="btn btn-navy">Detail</button> -->

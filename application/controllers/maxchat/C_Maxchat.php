@@ -14,6 +14,13 @@ class C_Maxchat extends CI_Controller
 
     public function webhook(){
         $result = $this->maxchatlibrary->webhookCapture();
+        
+        if($this->general_library->isProgrammer()){
+            $resultStr = '{"id":"70CD8CC368E4ADE4F750B9F350B4B4C3","time":1744761336000,"type":"text","status":"none","replyId":"3EB0800E74AD132DD3DFAF","chatType":"user","chat":"6285241389791","from":"6285241389791","name":"Ferdinand","text":"Ya"}';                    
+            $result = json_decode($resultStr);
+            // dd($result);
+        }
+        
         $this->general->insert('t_chat_group', [
             'text' => json_encode($result)
         ]);
@@ -38,12 +45,14 @@ class C_Maxchat extends CI_Controller
         $result->from != GROUP_CHAT_HELPDESK &&
         $result->to != GROUP_CHAT_HELPDESK)) {
                 // dd($result);
-
                 if(!isset($result->replyId)){
                     $this->chatBotLayanan($result);
                 } else {
                     $res = $this->kepegawaian->checkIfReplyCuti($result);
                     if($res && isset($res['wa']) && isset($res['cuti']) && isset($res['progress'])){
+                        // if($this->general_library->isProgrammer()){
+                        //     dd("asdasd");
+                        // }
                         $this->replyCuti($res, $result);
                     }
                 }

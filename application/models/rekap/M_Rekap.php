@@ -1085,12 +1085,14 @@
             }
 
             if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
-                // if($id_unitkerja == 3014000){
-                //     // jika disnaker, kasubag ganti sek krna kasubag sudah pensiun
-                //     $result['kasubag'] = null;
-                // } else {
+                if($id_unitkerja == 3014000){
+                    if($lp['nipbaru_ws'] == '198304212010012005'){
+                        $result['kasubag'] = $lp;
+                        // dd($result['kasubag']);
+                    }
+                } else {
                     $result['kasubag'] = $lp;
-                // } 
+                }
             }
 
             if(stringStartWith('Sekretaris', $lp['nama_jabatan'])){
@@ -1141,7 +1143,7 @@
                                         ->where('id_m_status_pegawai', 1)
                                         ->get()->row_array();
 
-                $result['setda']['nama_jabatan'] = "Plh. Sekretaris Daerah";
+                $result['setda']['nama_jabatan'] = "Pj. Sekretaris Daerah";
 
                 // $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 //     f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1256,6 +1258,8 @@
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 4011000){ // inspektorat, kasub ubah jadi sek karena kasub lagi di luar negeri
             $result['kasubag'] = $result['sek'];
+        } else if($id_unitkerja == 4014000){
+            $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi
         }
 
         if($list_pegawai_unor_induk){

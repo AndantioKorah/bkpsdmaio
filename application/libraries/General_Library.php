@@ -505,7 +505,11 @@ class General_library
 
     public function isVerifPermohonanCuti(){
         return stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan']) ||
-        stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan_tambahan'])
+        stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan_tambahan'])
         ? true : false;
     }
 

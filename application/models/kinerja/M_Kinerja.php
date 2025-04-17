@@ -2421,6 +2421,41 @@
 
         $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
         $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
+
+        // tpp
+
+        $id_unitkerja = null;
+        $datapegawai = $this->db->select('*')
+        ->from('m_user as a')
+        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+        ->where('a.id',$this->input->post('id_user'))
+        ->get()->row_array();
+        
+
+        if($datapegawai['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan
+            $id_unitkerja = 'sekolah_'.$datapegawai['id_unitkerjamaster_kecamatan'];
+        } else {
+            $id_unitkerja = $datapegawai['skpd'];  
+        }
+
+        $lockTpp = $this->db->select('*')
+                            ->from('t_lock_tpp')
+                            ->where('flag_active', 1)
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->where('bulan', $bulan)
+                            ->where('tahun', $tahun)
+                            ->get()->row_array();
+        if($lockTpp){
+            $rs['code'] = 1;        
+            $rs['message'] = 'Berkas TPP '.$lockTpp['nama_param_unitkerja'].' periode '.getNamaBulan($lockTpp['bulan']).' '.$lockTpp['tahun'].' telah direkap. Verifikasi tidak dapat dilanjutkan.';
+        } else {
+
+        
+
+        // tpp
+
+       
         $this->db->select('
         (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
         (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_verif')
@@ -2573,6 +2608,7 @@
 
         }
     }
+}
 
        
 

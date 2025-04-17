@@ -28,7 +28,7 @@
               </span>
             </td>
             <td class="text-left">
-              <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
+              <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan'];?></td>
            
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '12') echo "Kenaikan Jabatan Fungsional"; else if($rs['id_m_layanan'] == '13') echo "Perpindahan Dari Jabatan Lain"; else if($rs['id_m_layanan'] == '14') echo "Penyesuaian/Inpassing"; else if($rs['id_m_layanan'] == '15') echo "Pemberhentian dari Jabatan Fungsional Atas Permintaan Sendiri"; else  echo "Pengangkatan Kembali"?>  

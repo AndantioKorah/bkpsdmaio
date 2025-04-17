@@ -20,7 +20,7 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['created_date'])?></td>
               <td class="text-left">
-             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "Ditolak BKAD"; else echo "Menunggu Verifikasi BKPSDM" ?>
+             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else echo "Menunggu Verifikasi BKPSDM" ?>
 
             </td>
               <td class="text-left"><?=$rs['keterangan']?></td>
@@ -57,6 +57,27 @@
               
                
               <?php } ?>
+              <?php if($rs['id_m_layanan'] == 12) { ?>
+                <?php if($rs['status'] == 5) { ?>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id="<?=$rs['id'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                </button>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+
+                </div>
+                
+              </div>
+              
+               
+              <?php } ?>
+                <?php } ?>
             </td>
            
             </tr>
@@ -191,9 +212,9 @@ function ajukanKembali(id){
                            data: null,
                            success: function(){
                                successtoast('Layanan diajukan kembali')
-                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+                              //  if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
                                loadListRiwayatLayananPangkat()
-                               }
+                              //  }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

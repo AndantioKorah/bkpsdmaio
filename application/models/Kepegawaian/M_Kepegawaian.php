@@ -11516,7 +11516,7 @@ public function getFileForVerifLayanan()
             if($dataPengajuan[0]['status'] == 1){
                 $statusForMessage = "diverifikasi";
             } else {
-                $statusForMessage = "diperbaharui";
+                $statusForMessage = "diverifikasi";
             }
             
             if(isset($datapost['skp1'])){

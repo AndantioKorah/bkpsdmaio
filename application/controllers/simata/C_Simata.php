@@ -483,7 +483,7 @@ class C_Simata extends CI_Controller
     public function loadFormTambahRumpun($id)
     {
         $data['id_jabatan'] = $id;
-        $data['rumpun_jabatan'] = $this->kepegawaian->getAllWithOrder('db_simata.m_rumpun_jabatan', 'id', 'asc');
+        $data['rumpun_jabatan'] = $this->simata->getMasterRumpunJabatan();
         $this->load->view('simata/V_ModalFormTambahRumpun', $data);
     }
 
@@ -505,7 +505,7 @@ class C_Simata extends CI_Controller
     public function rumpun($search = ''){
         $data['search'] = urldecode($search);
        
-        $data['rumpun'] = $this->kepegawaian->getAllWithOrder('db_simata.m_rumpun_jabatan', 'id', 'asc');        
+        $data['rumpun'] = $this->simata->getMasterRumpunJabatan();        
         $data['eselon'] = $this->m_general->getAll('db_pegawai.eselon', 0);
         render('simata/V_RumpunJabatan', '', '', $data);
     }

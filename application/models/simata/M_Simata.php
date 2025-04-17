@@ -3150,6 +3150,7 @@ public function getListRumpunJabatan($id){
                     ->join('db_simata.m_rumpun_jabatan b', 'a.id_m_rumpun_jabatan = b.id') 
                     ->where('a.id_jabatan', $id)
                     ->where('a.flag_active', 1)
+                    ->where('b.flag_active', 1)
                     ->get()->result_array();
 }
 
@@ -3161,6 +3162,7 @@ public function searchRumpunJabatan($data){
             ->join('db_pegawai.jabatan as c', 'a.id_jabatan = c.id_jabatanpeg')
             ->join('db_pegawai.eselon d', 'c.eselon = d.nm_eselon', 'left')
             ->join('db_pegawai.unitkerja e', 'c.id_unitkerja = e.id_unitkerja')
+            ->where('b.flag_active', 1)
             ->where('a.flag_active', 1);
     if($data['rumpun'] != 0){
         $this->db->where('a.id_m_rumpun_jabatan', $data['rumpun']);
@@ -5827,6 +5829,14 @@ function submitJabatanTargetNew(){
        
        return $res;
    }
+
+   function getMasterRumpunJabatan(){
+    $this->db->select('*')
+    ->where('a.flag_active', 1)
+    ->from('db_simata.m_rumpun_jabatan a');
+    return $this->db->get()->result_array(); 
+
+}
    
                    
 

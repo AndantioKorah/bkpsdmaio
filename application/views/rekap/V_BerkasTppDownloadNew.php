@@ -347,10 +347,10 @@
                         $jumlah_bobot_disiplin_kerja = 0;
                         
                         foreach($result as $r){
-                            $pagu_keseluruhan += $r['pagu_tpp'];
-                            $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
+                            $pagu_keseluruhan += pembulatanNew($r['pagu_tpp']);
+                            $jumlah_capaian_keseluruhan += pembulatanNew($r['besaran_tpp']);
                             $potongan_pajak_keseluruhan += pembulatan($r['nominal_pph']);
-                            $jumlah_setelah_pajak_keseluruhan += ($r['tpp_diterima']);
+                            $jumlah_setelah_pajak_keseluruhan += pembulatanNew($r['tpp_diterima']);
 
                             $jumlah_bobot_produktivitas_kerja += $r['bobot_produktivitas_kerja'];
                             $jumlah_bobot_disiplin_kerja += $r['bobot_disiplin_kerja'];
@@ -911,10 +911,10 @@
                             $jumlah_bobot_disiplin_kerja = 0;
                             
                             foreach($result as $r){
-                                $pagu_keseluruhan += $r['pagu_tpp'];
-                                $jumlah_capaian_keseluruhan += $r['besaran_tpp'];
-                                $potongan_pajak_keseluruhan += $r['nominal_pph'];
-                                $jumlah_setelah_pajak_keseluruhan += $r['tpp_diterima'];
+                                $pagu_keseluruhan += pembulatanNew($r['pagu_tpp']);
+                                $jumlah_capaian_keseluruhan += pembulatanNew($r['besaran_tpp']);
+                                $potongan_pajak_keseluruhan += pembulatan($r['nominal_pph']);
+                                $jumlah_setelah_pajak_keseluruhan += pembulatanNew($r['tpp_diterima']);
 
                                 $jumlah_bobot_produktivitas_kerja += $r['bobot_produktivitas_kerja'];
                                 $jumlah_bobot_disiplin_kerja += $r['bobot_disiplin_kerja'];

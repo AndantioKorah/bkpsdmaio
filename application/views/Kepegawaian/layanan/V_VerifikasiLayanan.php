@@ -60,7 +60,7 @@
                 <option value="2">Rekomendasi TPK</option>
                 <option value="3">Pengajuan Pertek</option>
                 <option value="4">Proses SK Jabatan</option>
-                <option value="5">Ditolak</option>
+                <option value="5">BTL</option>
                 <?php } else { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>

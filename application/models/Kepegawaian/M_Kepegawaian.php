@@ -11552,7 +11552,7 @@ public function getFileForVerifLayanan()
         $tambahan = "";
 
         } else if($dataPengajuan[0]['status'] == 5){
-            $status = "Ditolak";
+            $status = "Berkas Tidak Lengkap";
             $statusForMessage = "ditolak";
             $tambahan = "Silahkan Perbaiki Berkas Persyaratan dan klik Tombol Ajukan Kembali Pada bagian riwayat layanan agar pengajuan layanan dapat diverifikasi kembali di BKPSDM.";
         }

@@ -11506,7 +11506,7 @@ public function getFileForVerifLayanan()
         if($dataPengajuan[0]['status'] != 5){
             $status = $dataPengajuan[0]['status_verif'];
             if($dataPengajuan[0]['status'] == 1){
-                $statusForMessage = "disetujui";
+                $statusForMessage = "diverifikasi";
             } else {
                 $statusForMessage = "diperbaharui";
             }

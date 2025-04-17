@@ -149,7 +149,7 @@
                     </td>
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <?php if($r['total_diverif'] <= 2) { ?>
+                            <?php if($r['total_diverif'] < 2) { ?>
                             <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(1, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-success" title="Terima"><i class="fa fa-check"></i></button>
                             <?php } ?>
                             <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(2, '<?=$r['id']?>',<?=$status?>,'<?=$r['jenis_bukti']?>')" style="display: <?=$status == 0 || $status == 3 ? 'block' : 'none'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-danger" title="Tolak"><i class="fa fa-times"></i></button>

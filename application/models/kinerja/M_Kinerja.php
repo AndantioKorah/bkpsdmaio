@@ -2422,7 +2422,7 @@
         $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
         $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
 
-        // tpp
+        // cek tpp
 
         $id_unitkerja = null;
         $datapegawai = $this->db->select('*')
@@ -2446,14 +2446,12 @@
                             ->where('bulan', $bulan)
                             ->where('tahun', $tahun)
                             ->get()->row_array();
+        
         if($lockTpp){
             $rs['code'] = 1;        
             $rs['message'] = 'Berkas TPP '.$lockTpp['nama_param_unitkerja'].' periode '.getNamaBulan($lockTpp['bulan']).' '.$lockTpp['tahun'].' telah direkap. Verifikasi tidak dapat dilanjutkan.';
         } else {
-
-        
-
-        // tpp
+        // cek tpp
 
        
         $this->db->select('

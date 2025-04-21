@@ -6046,7 +6046,7 @@ public function submitEditJabatan(){
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *'YA'* untuk menyetujui atau *'Tidak'* untuk menolak.";
                     $cronWaNextVerifikator = null;
-                    if($progress['next']['id'] == 193){
+                    if($progress['next']['nohp'] == NOMOR_HP_KABAN){
                         if($dataCuti['skpd'] == 4018000){
                             $cronWaNextVerifikator = [
                                 'sendTo' => convertPhoneNumber($progress['next']['nohp']),
@@ -6074,7 +6074,13 @@ public function submitEditJabatan(){
                         // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
                     if($cronWaNextVerifikator){
-                        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        if($cronWaNextVerifikator['sendTo'] == CONVERTED_NOMOR_HP_KABAN){ // jika kaban
+                            if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
+                                $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                            }
+                        } else {
+                            $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        }
                     }
 
                     // update t_pengajuan_cuti
@@ -7439,7 +7445,15 @@ public function submitEditJabatan(){
                             'column_state' => 'chatId',
                             'id_state' => $res['progress']['next']['id']
                         ];
-                        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        if($cronWaNextVerifikator){
+                            if($res['progress']['next']['nohp'] == NOMOR_HP_KABAN){
+                                if($data['id_unitkerja'] == 4018000){
+                                    $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                                }
+                            }
+                        } else {
+                            $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        }
                     }
                 } else if($status == 0){ // jika ditolak
                     $reply .= "*DITOLAK*";
@@ -9343,6 +9357,7 @@ public function submitEditJabatan(){
                 ->where('a.flag_active', 1)
                 // ->where('d.flag_active', 1)
                 ->group_by('a.id')
+                ->order_by('a.flag_ds_cuti', 'asc')
                 ->order_by('a.created_date', 'asc');
 
         if($data['id_unitkerja'] != 0){

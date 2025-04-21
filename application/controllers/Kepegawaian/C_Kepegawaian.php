@@ -586,7 +586,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['page'] = null;
 
 			$id_peg = $this->general_library->getIDPegawaiByNip($nip);
-			$this->kepegawaian->updatePangkat($id_peg['id_peg']);
+			// $this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 			$data['nip'] = $nip;

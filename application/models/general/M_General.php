@@ -1567,5 +1567,43 @@
                 }
             }
         }
+
+        public function cronCheckVerifCuti(){
+            $timeNow = date("H:i:s");
+            $expl = explode(":", $timeNow);
+            $flag_cek = 1;
+            if($expl[0] == "15" && $expl[1] == "00"){
+                $flag_cek = 1;
+            } else if($expl[0] == "11" && $expl[1] == "00"){
+                $flag_cek = 1;
+            }
+
+            if($flag_cek == 1){
+                $this->logCron('cronCheckVerifCuti');
+                
+                $progressCuti = $this->db->select('a.*, b.id_m_user')
+                                    ->from('t_progress_cuti a')
+                                    ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->where('id_m_user_verifikasi !=', 193)
+                                    ->where('a.flag_verif', 0)
+                                    ->where('chatId IS NOT NULL')
+                                    ->where('b.flag_active', 1)
+                                    ->get()->result_array();
+
+                $listProgressCuti = null;
+                if($progressCuti){
+                    foreach($progressCuti as $pc){
+                        if(isset($listProgressCuti[$pc['id_m_user_verifikasi']])){
+                            $listProgressCuti[$pc['id_m_user_verifikasi']]['count']++;
+                        } else {
+                            $listProgressCuti[$pc['id_m_user_verifikasi']] = $pc;
+                            $listProgressCuti[$pc['id_m_user_verifikasi']]['count'] = 1;
+                        }
+                    }
+                }
+
+                dd($listProgressCuti);
+            }
+        }
 	}
 ?>

@@ -9145,12 +9145,12 @@ public function submitEditJabatan(){
                 // dd($getPangkat['tmtpangkat']);
                 $date_now = date("Y-m-d"); // this format is string comparable
 
-                if ($date_now >= $getPangkat['tmtpangkat']) {
+                // if ($date_now >= $getPangkat['tmtpangkat']) {
                     $dataUpdate["tmtpangkat"] =  $getPangkat['tmtpangkat'];
                     $dataUpdate["pangkat"] =   $getPangkat['pangkat'];
                     $this->db->where('id_peg', $id_peg)
                             ->update('db_pegawai.pegawai', $dataUpdate);
-                }
+                // }
                
             }
     

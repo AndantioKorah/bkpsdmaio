@@ -1571,28 +1571,41 @@
         public function cronCheckVerifCuti(){
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
-            $flag_cek = 1;
-            if($expl[0] == "15" && $expl[1] == "00"){
-                $flag_cek = 1;
-            } else if($expl[0] == "11" && $expl[1] == "00"){
+            $flag_cek = 0;
+            if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
             }
+            // else if($expl[0] == "11" && $expl[1] == "45"){
+            //     $flag_cek = 1;
+            // }
 
             if($flag_cek == 1){
                 $this->logCron('cronCheckVerifCuti');
                 
-                $progressCuti = $this->db->select('a.*, b.id_m_user')
+                $progressCuti = $this->db->select('a.*, b.id_m_user, c.flag_sent, c.temp_count, c.date_sent')
                                     ->from('t_progress_cuti a')
                                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->join('t_cron_wa c', 'a.chatId = c.chatId')
                                     ->where('id_m_user_verifikasi !=', 193)
                                     ->where('a.flag_verif', 0)
-                                    ->where('chatId IS NOT NULL')
+                                    ->where('a.chatId IS NOT NULL')
                                     ->where('b.flag_active', 1)
+                                    // ->where('flag_resend !=', 1)
+                                    ->group_by('a.id')
                                     ->get()->result_array();
 
                 $listProgressCuti = null;
+                $listChatIdResend = null;
                 if($progressCuti){
                     foreach($progressCuti as $pc){
+                        $date1 = formatDateOnlyForEdit($pc['date_sent']);
+                        $date2 = (date("Y-m-d"));
+                        $diff = trim(countDiffDateLengkap($date1, $date2, ['hari']));
+                        $diffCount = explode(" ", $diff);
+                        if($diffCount[0] > 1){ // jika lebih dari 1 hari, resend
+                            $listChatIdResend[] = $pc['chatId'];
+                        }
+
                         if(isset($listProgressCuti[$pc['id_m_user_verifikasi']])){
                             $listProgressCuti[$pc['id_m_user_verifikasi']]['count']++;
                         } else {
@@ -1601,8 +1614,20 @@
                         }
                     }
                 }
+                
+                if($listChatIdResend){
+                    $this->db->where_in('chatId', $listChatIdResend)
+                            ->update('t_cron_wa', [
+                                'temp_count' => 0,
+                                'flag_sent' => 0,
+                                'flag_resend' => 1,
+                                'date_resend' => date('Y-m-d H:i:s')
+                            ]);
+                    dd("Resend ".count($listChatIdResend)." pesan");
+                } else {
+                    dd("no resend message");
+                }
 
-                dd($listProgressCuti);
             }
         }
 	}

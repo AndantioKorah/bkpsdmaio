@@ -1591,7 +1591,27 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchPenomoranSkCuti(){
 		$data['result'] = $this->kepegawaian->searchPenomoranSkCuti($this->input->post());
+		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/V_PenomoranSkCutiData', $data);
+	}
+
+	public function downloadAllSkCuti(){
+		$data = $this->input->post();
+		$decodedData = json_decode($data['filenames'], true);
+
+		$zipname = 'SK_PERMOHONAN_CUTI_'.date("ymdhis").'.zip';
+		$zip = new ZipArchive;
+		$zip->open($zipname, ZipArchive::CREATE);
+
+		foreach ($decodedData as $file) {
+			$zip->addFile(base_url().$file);
+		}
+		$zip->close();
+
+		header('Content-Type: application/zip');
+		header('Content-disposition: attachment; filename='.$zipname);
+		header('Content-Length: ' . filesize($zipname));
+		readfile($zipname);
 	}
 
 	public function openModalPenomoranSkCuti($id){

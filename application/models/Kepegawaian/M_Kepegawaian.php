@@ -7455,6 +7455,99 @@ public function submitEditJabatan(){
                             $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                         }
                     }
+
+                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                        $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
+                                f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
+                                g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
+                                ->from('t_pengajuan_cuti a')
+                                ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
+                                ->join('m_user c', 'c.id = a.id_m_user')
+                                ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
+                                ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
+                                ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
+                                ->where('a.id', $data['id'])
+                                ->get()->row_array();
+    
+                        $master = $this->db->select('*')
+                                ->from('m_jenis_layanan')
+                                ->where('integrated_id', $dataCuti['id_cuti'])
+                                ->get()->row_array();
+    
+                        $nomor_surat = "";
+                        if(FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI == 0){
+                            $tahun = date('Y');
+                            $counter = qounterNomorSurat($tahun);
+                            $nomor_surat = $master['nomor_surat']."/BKPSDM/SK/".$counter."/".$tahun;
+                            $resCuti['data']['nomor_surat'] = $nomor_surat;
+                        }
+    
+                        $resCuti['data'] = $dataCuti;
+                        // $resCuti['data']['ds'] = 1;
+                        $resCuti['data']['nomor_surat'] = $nomor_surat;
+    
+                        $filename = 'CUTI_'.$resCuti['data']['nipbaru_ws'].'_'.date("Y", strtotime($resCuti['data']['tanggal_mulai']))."_".date("m", strtotime($resCuti['data']['tanggal_mulai'])).'_'.date("d", strtotime($resCuti['data']['tanggal_mulai'])).'.pdf';
+                        $path_file = 'arsipcuti/'.$filename;
+    
+                        // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+                        // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+                        // $resCuti['qr'] = generateQr($contentQr);
+    
+                        $mpdf = new \Mpdf\Mpdf([
+                            'format' => 'Legal-P',
+                        ]);
+    
+                        $html = $this->load->view('kepegawaian/V_SKPermohonanCuti', $resCuti, true);
+                        $mpdf->WriteHTML($html);
+                        $mpdf->showImageErrors = true;
+                        $mpdf->Output($path_file, 'F');
+    
+                        $perihal = 'SURAT IZIN '.strtoupper($dataCuti['nm_cuti']).' PEGAWAI a.n. '.getNamaPegawaiFull($dataCuti);
+    
+                        if(FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI == 0){
+                            $this->db->insert('t_nomor_surat', [
+                                'perihal' => $perihal,
+                                'counter' => $counter,
+                                'nomor_surat' => $nomor_surat,
+                                // 'created_by' => $kepala_bkpsdm['id_m_user'],
+                                'tanggal_surat' => $dataCuti['created_date'],
+                                'id_m_jenis_layanan' => $master['id']
+                            ]);
+                            $last_insert_nomor_surat = $this->db->insert_id();
+                        }
+    
+                        $usulDs = $this->db->select('*')
+                                        ->from('t_usul_ds')
+                                        ->where('flag_active', 1)
+                                        ->where('ref_id', $dataCuti['id_t_pengajuan_cuti'])
+                                        ->where('table_ref', 't_pengajuan_cuti')
+                                        ->get()->row_array();
+    
+                        if(!$usulDs){
+                            $this->db->where('id', $dataCuti['id_t_pengajuan_cuti'])
+                                    ->update('t_pengajuan_cuti', [
+                                        'url_sk' => $path_file,
+                                        'meta_data' => json_encode($resCuti)
+                                    ]);
+    
+                            $usulCuti['table_ref'] = "t_pengajuan_cuti";
+                            $usulCuti['ref_id'] = $dataCuti['id_t_pengajuan_cuti'];
+                            $usulCuti['nama_kolom_ds'] = 'flag_ds_cuti';
+                            $usulCuti['ds_code'] = "$";
+                            $usulCuti['page'] = 1;
+                            $usulCuti['flag_use_nomor_surat'] = 1;
+                            $usulCuti['keterangan'] = $perihal;
+                            $usulCuti['id_m_jenis_layanan'] = $master['id'];
+                            $usulCuti['url_ds'] = $path_file;
+                            $usulCuti['id_m_user'] = $dataCuti['id_m_user'];
+                            $usulCuti['meta_view'] = 'kepegawaian/V_SKPermohonanCuti';
+                            $usulCuti['files'][0]['url'] = $path_file;
+                            $usulCuti['files'][0]['name'] = generateRandomString()."_".$filename;
+    
+                            $this->layanan->submitUploadFileUsulDs($usulCuti, 1);
+                        }
+                    }
                 } else if($status == 0){ // jika ditolak
                     $reply .= "*DITOLAK*";
                     $update_data_pengajuan = [
@@ -7497,6 +7590,8 @@ public function submitEditJabatan(){
             $res['message'] == 'Terjadi Kesalahan';
             $res['data'] == null;
         }
+
+
 
         if($res['code'] == 1){
             $this->db->trans_rollback();
@@ -8738,12 +8833,14 @@ public function submitEditJabatan(){
 
     public function loadDetailCutiForPenomoranSkCuti($id){
         return $this->db->select('a.*, b.nomor_surat, b.counter, d.flag_ds_cuti, d.flag_ds_manual, d.id as id_t_pengajuan_cuti,
-                    d.flag_ds_cuti, d.flag_ds_manual, d.url_sk, d.url_sk_manual, a.id as id_t_usul_ds, e.url_done')
+                    d.flag_ds_cuti, d.flag_ds_manual, d.url_sk, d.url_sk_manual, a.id as id_t_usul_ds, e.url_done, b.created_date as tanggal_input_nomor_surat,
+                    f.nama as inputer_nomor_surat')
                     ->from('t_usul_ds a')
                     ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
                     // ->join('t_cron_request_ds c', 'a.id = c.id_t_request_ds', 'left')
                     ->join('t_pengajuan_cuti d', 'a.ref_id = d.id AND a.table_ref = "t_pengajuan_cuti" AND a.flag_active = 1')
                     ->join('t_usul_ds_detail e', 'a.id = e.id_t_usul_ds')
+                    ->join('m_user f', 'b.created_by = f.id', 'left')
                     ->where('a.flag_active', 1)
                     ->where('a.ref_id', $id)
                     // ->where('a.table_ref', 't_pengajuan_cuti')
@@ -9344,7 +9441,17 @@ public function submitEditJabatan(){
     }
 
     public function searchPenomoranSkCuti($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat')
+        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat,
+                (
+                    SELECT aa.tanggal_verif
+                    FROM t_progress_cuti aa
+                    WHERE aa.id_t_pengajuan_cuti = a.id
+                    AND aa.flag_active = 1
+                    AND aa.flag_verif = 1
+                    ORDER BY aa.urutan ASC
+                    LIMIT 1
+                ) as tanggal_verif
+                ')
                 ->from('t_pengajuan_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -9364,7 +9471,35 @@ public function submitEditJabatan(){
             $this->db->where('c.skpd', $data['id_unitkerja']);
         }
 
-        return $this->db->get()->result_array();
+        $result = $this->db->get()->result_array();
+
+        $tanggal_verif = array_column($result, 'tanggal_verif');
+        array_multisort($tanggal_verif, SORT_ASC, $result);
+
+        $rs = null;
+        if($data['status'] == 'semua'){
+            $rs = $result;
+        } else if($data['status'] == 'belum_input_nomor_surat'){
+            foreach($result as $r){
+                if(!$r['id_t_nomor_surat']){
+                    $rs[] = $r;
+                }
+            }
+        } else if($data['status'] == 'belum_upload_file_ds'){
+            foreach($result as $r){
+                if($r['id_t_nomor_surat'] && $r['flag_ds_cuti'] == 0){
+                    $rs[] = $r;
+                }
+            }
+        } else if($data['status'] == 'selesai'){
+            foreach($result as $r){
+                if($r['flag_ds_cuti'] == 1){
+                    $rs[] = $r;
+                }
+            }
+        }
+
+        return $rs;
     }
 
     public function insertUsulLayananKarisKarsu($id_m_layanan){

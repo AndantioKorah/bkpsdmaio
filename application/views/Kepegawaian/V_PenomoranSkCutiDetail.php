@@ -21,6 +21,11 @@
                 <label>COUNTER NOMOR SURAT</label>
                 <input required class="form-control" id="counter_nomor_surat_input" name="counter_nomor_surat" value="<?=$result['counter']?>" />
               </div>
+              <div class="col-lg-12 mt-3">
+                <?php if($result['id_t_nomor_surat']){ ?>
+                  <label style="font-size: .75rem;">diinput oleh: <strong><?=$result['inputer_nomor_surat']?></strong> pada <strong><?=formatDateNamaBulanWT($result['tanggal_input_nomor_surat'])?></strong></label>
+                <?php } ?>
+              </div>
               <?php if($result['flag_ds_cuti'] == 0){ ?>
                 <div class="col-lg-6 text-left mt-3">
                   <?php if($result['id_t_nomor_surat']){ ?>

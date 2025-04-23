@@ -421,6 +421,8 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                    <?php } else { ?>
                     <option value=2 >Plt</option>
                     <option value=3 >Plh</option>
+                    <option value=4 >Penjabat</option>
+
                     <?php } ?>
     </select>
     </div>

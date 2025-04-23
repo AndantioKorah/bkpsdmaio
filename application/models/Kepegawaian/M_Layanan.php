@@ -1382,6 +1382,8 @@ class M_Layanan extends CI_Model
 
             $sekbkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
 
+            $kabidMutasiBkpsdm = $this->getPegawaiByIdJabatan('4018000JS10');
+
             $batchId = generateRandomString();
             $data['id_m_user'] = $userInputer;
             $data['created_by'] = $createdBy; // pak cliff
@@ -1396,6 +1398,10 @@ class M_Layanan extends CI_Model
             $data['batch_id'] = $batchId;
             $data['id_m_jenis_layanan'] = $dataInput['id_m_jenis_layanan'];
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            if($data['table_ref'] == 't_pengajuan_cuti'){
+                $data['status'] = "Menunggu DS oleh Kepala Bidang Mutasi dan Promosi";
+            }
 
             if($flagIntegrasi == 1){
                 $data['flag_use_nomor_surat'] = isset($dataInput['flag_use_nomor_surat']) ? $dataInput['flag_use_nomor_surat'] : 0;
@@ -1429,6 +1435,11 @@ class M_Layanan extends CI_Model
                 $progress[1]['id_m_user_verif'] = $pegawai['atasan']['id'];
                 $progress[1]['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
                 $progress[1]['flag_ds_now'] = 1;
+
+                if($data['table_ref'] == 't_pengajuan_cuti'){
+                    $progress[1]['nama_jabatan'] = $kabidMutasiBkpsdm ? $kabidMutasiBkpsdm['nama_jabatan'] : 'Kepala Bidang Mutasi dan Promosi';
+                    $progress[1]['id_m_user_verif'] = $kabidMutasiBkpsdm['id_m_user'];
+                }
                 
                 $progress[2]['urutan'] = 2;
                 $progress[2]['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;

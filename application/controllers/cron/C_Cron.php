@@ -120,4 +120,10 @@ class C_Cron extends CI_Controller
         // }
         dd(($progressCuti));
     }
+
+    public function createQr(){
+        $content = "https://drive.google.com/drive/folders/1tDKJgd4_OFD5Nbhio9-phzA9zL_TlG2F";
+		$data = $this->general_library->createQrTtePortrait(null, null, $content);
+		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
+	}
 }

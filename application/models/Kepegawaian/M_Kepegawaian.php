@@ -9448,7 +9448,7 @@ public function submitEditJabatan(){
                     WHERE aa.id_t_pengajuan_cuti = a.id
                     AND aa.flag_active = 1
                     AND aa.flag_verif = 1
-                    ORDER BY aa.urutan ASC
+                    ORDER BY aa.urutan DESC
                     LIMIT 1
                 ) as tanggal_verif
                 ')

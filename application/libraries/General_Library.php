@@ -817,7 +817,7 @@ class General_library
         
     }
 
-    public function createQrTtePortrait($nip = null, $randomString = null){
+    public function createQrTtePortrait($nip = null, $randomString = null, $contentQr = null){
 		$rs['code'] = 0;
 		$rs['message'] = "";
 		$rs['data'] = null;
@@ -837,7 +837,9 @@ class General_library
         if($randomString == null){
             $randomString = generateRandomString(30, 1, 't_file_ds'); 
         }
-		$contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        if($contentQr == null){
+            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        }
 		// dd($contentQr);
 		$qr = generateQr($contentQr);
 		// $image_ds = explode("data:image/png;base64,", $qr);

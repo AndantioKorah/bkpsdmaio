@@ -544,7 +544,7 @@ class M_Kepegawaian extends CI_Model
                           ->where('c.flag_active', 1)
                           ->group_start() //this will start grouping
                           ->where("FIND_IN_SET(c.ket,'Plt,Plh')!=",0)
-                          ->or_where('c.statusjabatan in (2,3)')
+                          ->or_where('c.statusjabatan in (2,3,4)')
                           ->group_end() //this will end grouping
                          
                           ->order_by('c.tmtjabatan','desc');
@@ -9199,7 +9199,7 @@ public function submitEditJabatan(){
             ->where('a.id_pegawai', $id_peg)
             ->where_in('a.flag_active', [1,2])
             // ->where('a.statusjabatan !=', 2)
-            ->where_not_in('a.statusjabatan', [2,3])
+            ->where_not_in('a.statusjabatan', [2,3,4])
             ->where('a.status', 2)
             // ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')

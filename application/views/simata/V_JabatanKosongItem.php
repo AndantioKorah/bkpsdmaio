@@ -252,11 +252,9 @@
 		// }
 		// $('#profile-tab').click()
 
-	var table = $('.datatable').DataTable({
-
+	$('.datatable').DataTable({
     displayLength: 25,
-    
-});
+	});
 
 	})
 

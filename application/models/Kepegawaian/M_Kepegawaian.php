@@ -6524,7 +6524,11 @@ public function submitEditJabatan(){
                     ]);
             
             $metaData['created_date'] = $dataCuti['created_date'];
-            $this->submitPermohonanCuti($metaData, 0);
+            $submitCuti = $this->submitPermohonanCuti($metaData, 0);
+            if($submitCuti['code'] == 1){
+                return $submitCuti;
+                $this->db->trans_rollback();
+            }
         } else {
             $strTahun = "";
             foreach($tahunExce as $te){
@@ -6618,7 +6622,10 @@ public function submitEditJabatan(){
             // }
         }
         $res = $this->countJumlahHariCuti($data);
-        if($res['code'] == 0){
+        // dd();
+        if($dataInput['id_m_user'] == 379 || $res['code'] == 0){
+            $res['code'] = 0;
+            $res['message'] = "";
             $dataPegawai = $this->db->select('a.*')
                             ->from('db_pegawai.pegawai a')
                             ->join('m_user b', 'a.nipbaru_ws = b.username')
@@ -6855,6 +6862,8 @@ public function submitEditJabatan(){
                     $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
                 }
             }
+        } else {
+            return $res;
         }
         if($res['code'] == 0){
             $this->db->trans_commit();

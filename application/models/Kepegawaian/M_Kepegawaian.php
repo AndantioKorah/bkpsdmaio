@@ -6623,9 +6623,7 @@ public function submitEditJabatan(){
         }
         $res = $this->countJumlahHariCuti($data);
         // dd();
-        if($dataInput['id_m_user'] == 379 || $res['code'] == 0){
-            $res['code'] = 0;
-            $res['message'] = "";
+        if($res['code'] == 0){
             $dataPegawai = $this->db->select('a.*')
                             ->from('db_pegawai.pegawai a')
                             ->join('m_user b', 'a.nipbaru_ws = b.username')

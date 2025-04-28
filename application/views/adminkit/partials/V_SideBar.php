@@ -545,6 +545,7 @@
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
+	$this->general_library->isKepalaSkpdHardcode() ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -589,7 +590,8 @@
 				// buka 3 dibawah ini untuk verifikasi melalui SILADEN. sekarang ditutup karena bocor
 				||
 				$this->general_library->isKepalaPd() ||
-				$this->general_library->isVerifPermohonanCuti()
+				$this->general_library->isVerifPermohonanCuti() ||
+				$this->general_library->isKepalaSkpdHardcode()
 				){
 					?>
 					<li class="sidebar-item ">
@@ -905,6 +907,7 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatanTambahan())
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatanTambahan())
+				|| $this->general_library->isKepalaSkpdHardcode()
 				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">

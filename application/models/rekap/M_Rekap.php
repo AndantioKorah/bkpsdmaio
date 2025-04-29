@@ -1508,7 +1508,7 @@
         // }
         if($pegawai){
             foreach($pegawai as $peg){
-                if(floatval($bulan) <= $peg['bulan'] && floatval($tahun) <= $peg['tahun']){
+                if(floatval($bulan) == $peg['bulan'] && floatval($tahun) == $peg['tahun']){
                     if($peg['flag_add'] == 1){
                         $temp_list_pegawai[$peg['nipbaru_ws']] = $peg;
                     }

@@ -6882,7 +6882,8 @@ public function submitEditJabatan(){
                                 ->where('b.flag_active', 1)
                                 ->get()->row_array();
 
-        $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone')
+        $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone,
+                                d.nip_kepalaskpd_hardcode')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -6930,7 +6931,7 @@ public function submitEditJabatan(){
                     $new_progress[] = $peg;
                 }
             }
-
+            
             $i = 0;
             if($new_progress){
                 foreach($new_progress as $np){
@@ -6942,8 +6943,9 @@ public function submitEditJabatan(){
             }
         }
 
-        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
-            // jika pegawai sekolah dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya
+        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) &&
+            $thisuser['nip_kepalaskpd_hardcode'] != $thisuser['nipbaru_ws']){
+            // jika pegawai sekolah dan bukan kepsek dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya 
             if($thisuser['id_unitkerjamaster'] == 8000000 && (!stringStartWith("Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plh. Kepala Taman", $result[0]['nama_jabatan']) &&
@@ -6958,8 +6960,6 @@ public function submitEditJabatan(){
                 (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
                 $result[0]['nama_jabatan'] != 'Plt. Kepala Sekolah' &&
                 $result[0]['nama_jabatan'] != 'Plh. Kepala Sekolah')){ // SD, SMP, SMA 
-                // dd($result[0]['nama_jabatan']);
-                // dd(!stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']));
                 return [
                     'code' => 1,
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."

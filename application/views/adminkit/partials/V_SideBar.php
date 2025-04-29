@@ -325,19 +325,22 @@
 					<i class="align-middle me-2 far fa-circle"></i>Broadcast WhatsApp
 				</a>
 			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url();?>walikota/dashboard">
+					<i class="align-middle me-2 far fa-circle"></i>Live Absen Event
+				</a>
+			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-wa');?>">
+					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getId() == 193){ ?>
-		<li class="sidebar-item">
-			<a class="sidebar-link" href="<?=base_url();?>walikota/dashboard">
-				<i class="fa fa-desktop"></i> <span class="align-middle">Live Absen Event</span>
-			</a>
-		</li>
-	<?php } ?>
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
 	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN

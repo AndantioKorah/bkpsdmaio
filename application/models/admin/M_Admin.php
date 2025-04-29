@@ -159,4 +159,23 @@ class M_Admin extends CI_Model
                             ->where('a.id_t_broadcast', $id)
                             ->get()->result_array();
     }
+
+    public function getMonitoringCronWaData(){
+        $data = $this->input->post();
+        $explDate = explode(" - ", $data['range_periode']);
+        $explAwal = explode("/", $explDate[0]);
+        $explAkhir = explode("/", $explDate[1]);
+
+        $dateAwal = $explAwal[2].'-'.$explAwal[0].'-'.$explAwal[1].' 00:00:00';
+        $dateAkhir = $explAkhir[2].'-'.$explAkhir[0].'-'.$explAkhir[1].' 23:59:59';
+
+        return $this->db->select('a.*, b.gelar1, b.gelar2, b.nama, b.handphone')
+                    ->from('t_cron_wa a')
+                    ->join('db_pegawai.pegawai b', "REPLACE(a.sendTo,'62','0') = b.handphone", "left")
+                    ->where('a.created_date >=', $dateAwal)
+                    ->where('a.created_date <=', $dateAkhir)
+                    ->order_by('a.created_date', 'desc')
+                    ->group_by('a.id')
+                    ->get()->result_array();
+    }
 }

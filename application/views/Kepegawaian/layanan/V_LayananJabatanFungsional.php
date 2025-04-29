@@ -71,26 +71,7 @@
         color: white;
     } */
 
-.list-type1 {
-	width: 100%;
-	margin: 0 auto;
-	margin-bottom: -30px;
-}
 
-.list-type1 ol {
-	counter-reset: li;
-	list-style: none;
-	*list-style: decimal;
-	font-size: 15px;
-	font-family: 'Raleway', sans-serif;
-	padding: 0;
-	margin-bottom: 4em;
-
-}
-
-.list-type1 ol ol {
-	margin: 0 0 0 2em;
-}
 
 .list-type1 .select {
 	position: relative;
@@ -139,12 +120,14 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
-	margin-bottom: 10px;
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
+	  margin-bottom: 10px;
+  
 
   }
 
   ol ol {
+    
     margin: 0 0 0 2em; /* Add some left margin for inner lists */
   }
 
@@ -198,9 +181,10 @@ ol {
     background: #0ed095;
     height: 2em;
     width: 2em;
-    line-height: 2em;
+    /* line-height: 2em; */
     text-align: center;
-    font-weight: bold;
+    /* font-weight: bold; */
+    color : #0ed095;
   }
 
   .rectangle-list .unselect:before{
@@ -216,6 +200,7 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color : #fa8072;
   }
 
   .rectangle-list .warning:before{
@@ -292,16 +277,23 @@ ol {
 			</div>
 			<div class="card-body mt-2">
 
-				<form id="form_layanan_pangkat" method="post" enctype="multipart/form-data" id="form_cuti"
+				<form id="form_layanan_jabfung" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -35px;">
           <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
-          <div class="form-group">
-            <label>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</label>
+          <div class="form-group mb-2">
+            <label><b>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 			<?php } ?>
+       <?php if($id_m_layanan == 12) { ?>
+        <div class="form-group">
+            <label><b>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+            <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
+          </div>
+        <?php } ?>
 					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
 					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
 					<input type="hidden" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
@@ -337,7 +329,7 @@ ol {
 							</li>
               
               <?php } ?>
-              <?php if($id_m_layanan == 12) { ?>
+        <?php if($id_m_layanan == 12) { ?>
         <li>
 				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
 				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
@@ -610,13 +602,13 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatLayananPangkat()
+  loadListRiwayatLayananJabfung()
     })
-    $('#form_layanan_pangkat').on('submit', function(e){  
+    $('#form_layanan_jabfung').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#form_layanan_pangkat');
+        var formvalue = $('#form_layanan_jabfung');
         var form_data = new FormData(formvalue[0]);
 
         var ins = document.getElementById('pdf_surat_pengantar').files.length;
@@ -774,7 +766,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatLayananPangkat()
+                loadListRiwayatLayananJabfung()
                 window.scrollTo(0, 0);
               } else {
                 errortoast(result.msg)
@@ -837,7 +829,7 @@ $(function(){
 
   }
 
-  function loadListRiwayatLayananPangkat(){
+  function loadListRiwayatLayananJabfung(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

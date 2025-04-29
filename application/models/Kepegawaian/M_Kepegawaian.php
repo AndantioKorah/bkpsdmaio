@@ -11113,7 +11113,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where_in('a.id_m_layanan', [18,19,20]);
             } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
                 $this->db->where_in('a.id_m_layanan', [12,13,14,15,16]);
-            }  else {
+            } else if($id_m_layanan == 21){ 
+                $this->db->where('a.id_m_layanan', 21);
+            }   else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -11514,7 +11516,37 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }   else {
+        } else if($this->input->post('file') == "transkrip"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 77)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "akreditasi_prodi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 68)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pangkalandata"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 12)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }    else {
          return [''];
         }
         
@@ -12359,9 +12391,11 @@ public function getFileForVerifLayanan()
 
     public function insertUsulLayananNew2($id_m_layanan)
 	{
-
+       
         $this->db->trans_begin();
 
+       
+    
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
         ->where('a.id_m_user', $this->general_library->getId())
@@ -12396,20 +12430,26 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/jabatan_fungsional';
-            }    else {
+            } else if($id_m_layanan == 21){
                 $nama_file = "pengantar_$nip"."_$random_number";
-            } 
+                $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+            }     else {
+                $nama_file = "pengantar_$nip"."_$random_number";
+            }
 
-
+            $file2 = null;
+            $this->load->library('upload');
+          
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = 'pdf';
             $config['encrypt_name']			= FALSE;
             $config['overwrite']			= TRUE;
             $config['detect_mime']			= TRUE;
             $config['file_name']            = "$nama_file.pdf";
-            
-            $this->load->library('upload', $config);
-          
+            // $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+
             // coba upload file		
             if (!$this->upload->do_upload('file')) {
                 $data['error']    = strip_tags($this->upload->display_errors());
@@ -12417,17 +12457,38 @@ public function getFileForVerifLayanan()
                 $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
                 return $res;
             } else {
-                $dataFile 			= $this->upload->data();
+                    $dataFile 			= $this->upload->data();
                     $dataUsul['id_m_user']      = $this->general_library->getId();
                     $dataUsul['created_by']      = $this->general_library->getId();
                     $dataUsul['id_m_layanan']      = $id_m_layanan;
                     $dataUsul['file_pengantar']      = "$nama_file.pdf";
+                    $dataUsul['surat_pernyataan_tidak_hd']      = $file2;
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
         }
-        
-        
+
+
+        if(isset($_FILES['file2']['name'])){
+            $file2 = $_FILES['file2']['name'];
+            $config_hd['upload_path']       = './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
+            $config_hd['allowed_types']     = 'pdf';
+            $config_hd['encrypt_name']		= FALSE;
+            $config_hd['overwrite']			= TRUE;
+            $config_hd['detect_mime']		= TRUE;
+            $config_hd['file_name']         = $random_number.$file2;
+            $this->upload->initialize($config_hd);
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                return $res;
+            } else {
+                $dataFile 			= $this->upload->data();
+            }
+        }
+
+   
         
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();

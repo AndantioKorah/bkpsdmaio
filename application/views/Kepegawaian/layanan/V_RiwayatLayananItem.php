@@ -158,6 +158,12 @@
                                if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
                                 loadListRiwayatUjianDinas()
                                }
+                               if(id_layanan == 21){
+                                loadListRiwayatPeningkatanPenambahanGelar()
+                               }
+                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                                loadListRiwayatLayananJabfung()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -181,6 +187,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/ujian_dinas/"+filename+"?v="+number;
 } else if(id_layanan == 12){
   $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/"+filename+"?v="+number;
+} else if(id_layanan == 21){
+  $link = "<?=base_url();?>dokumen_layanan/peningkatan_penambahan_gelar/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

@@ -290,7 +290,7 @@ ol {
        <?php if($id_m_layanan == 12) { ?>
         <div class="form-group">
             <label><b>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</b></label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file" required />
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
         <?php } ?>
@@ -602,7 +602,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatLayananPangkat()
+  loadListRiwayatLayananJabfung()
     })
     $('#form_layanan_jabfung').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -766,7 +766,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatLayananPangkat()
+                loadListRiwayatLayananJabfung()
                 window.scrollTo(0, 0);
               } else {
                 errortoast(result.msg)
@@ -829,7 +829,7 @@ $(function(){
 
   }
 
-  function loadListRiwayatLayananPangkat(){
+  function loadListRiwayatLayananJabfung(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

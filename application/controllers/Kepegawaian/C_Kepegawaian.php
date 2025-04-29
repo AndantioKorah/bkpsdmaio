@@ -2607,6 +2607,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanDataItem', $data);
 	}
 
+	public function loadListRiwayatPeningkatanPenambahanGelar(){
+		$data['result'] = $this->kepegawaian->getRiwayatPerbaikanData();
+		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanDataItem', $data);
+	}
+
 
 	public function loadListRiwayatLayanan($id){
 		$data['result'] = $this->kepegawaian->getRiwayatLayanan($id);
@@ -2672,6 +2677,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananUjianDinasItem', $data);
 		} else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananJabFungItem', $data);
+		} else if($id_m_layanan == 21){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananpeningkatanPenambahanGelarItem', $data);
 		}
 	}
 
@@ -2788,8 +2795,14 @@ class C_Kepegawaian extends CI_Controller
 				$data['cltn'] = $this->kepegawaian->getCutiCltnAdmin($id_peg); 
 			}
 
+			
+
 			render('kepegawaian/layanan/V_VerifikasiLayananJabFungDetail', '', '', $data);
+		} else if($layanan == 21){
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
+			render('kepegawaian/layanan/V_VerifikasiLayananPeningkatanPenambahanGelarDetail', '', '', $data);
 		} 
+		
 
 		
 	}
@@ -3065,7 +3078,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['transkrip'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
 			$data['akreditasi_prodi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
 			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
-
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];

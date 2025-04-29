@@ -266,7 +266,7 @@ ol {
 			<div class="card-header">
 				<div class="card-title">
 					<div class="card-title">
-						<h5>RIWAYAT LAYANAN PERBAIKAN DATA</h5>
+						<h5>RIWAYAT LAYANAN PENINGKATAN PENDIDIKAN / PENAMBAHAN GELAR</h5>
 					</div>
 					<hr>
 				</div>
@@ -312,10 +312,10 @@ ol {
             		CPNS* <i class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
             </li>
             <li>
-            	<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-            		<?php if($sk_pns) { ?> onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)"
-            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK PNS*
-            		<i class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
+            	<a class="<?php if($ijazah){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($ijazah) { ?> onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',3)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah*
+            		<i class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
             </li>
             <li>
             	<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
@@ -323,7 +323,30 @@ ol {
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK
             		Pangkat Akhir* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
             </li>
-           
+            <li>
+            	<a class="<?php if($ibel){ if($ibel['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($ibel) { ?> onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',4)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
+                    Ijin Belajar* <i class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
+            </li>
+            <li>
+            	<a class="<?php if($transkrip){ if($transkrip['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($transkrip) { ?> onclick="viewBerkasPangkat('<?=$transkrip['gambarsk'];?>',4)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
+                    Transkrip Nilai* <i class="fas fa-<?php if($transkrip) echo ''; else echo '';?>"></i></a>
+            </li>
+            <li>
+            	<a class="<?php if($akreditasi_prodi){ if($akreditasi_prodi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($akreditasi_prodi) { ?> onclick="viewBerkasPangkat('<?=$akreditasi_prodi['gambarsk'];?>',4)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
+                    Akreditasi Program Studi* <i class="fas fa-<?php if($akreditasi_prodi) echo ''; else echo '';?>"></i></a>
+            </li>
+            <li>
+            	<a class="<?php if($pangkalandata){ if($pangkalandata['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($pangkalandata) { ?> onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',4)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
+                    Tampilan Layar Pangkalan Data Forlap Dikti* <i class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
+            </li>
 						</ol>
 					</div>
 
@@ -380,7 +403,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatPerbaikanData()
+  loadListRiwayatPeningkatanPenambahanGelar()
     })
     $('#form_perbaikan_data').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -389,18 +412,21 @@ $(function(){
         var formvalue = $('#form_perbaikan_data');
         var form_data = new FormData(formvalue[0]);
         var sk_cpns = $('#sk_cpns').val()
-        var sk_pns = $('#sk_pns').val()
         var sk_pangkat = $('#sk_pangkat').val()
-        var ijazah_cpns = $('#ijazah_cpns').val()
+        var ijazah = $('#ijazah_cpns').val()
+        var ibel = $('#ijazah_cpns').val()
+        var transkrip = $('#ijazah_cpns').val()
+        var akreditasi_prodi = $('#ijazah_cpns').val()
+        var pangkalandata = $('#ijazah_cpns').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
 
-        if(id_m_layanan == 10 || id_m_layanan == 11){
+       
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
         
-        if(sk_pns == ""){
+        if(ijazah == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
@@ -409,14 +435,26 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        }
 
-        if(id_m_layanan == 10){
-        if(ijazah_cpns == ""){
+        if(ibel == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-       }
+        if(transkrip == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(akreditasi_prodi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(pangkalandata == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        
+
+      
 
 
         $.ajax({  
@@ -432,7 +470,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatPerbaikanData()
+                loadListRiwayatPeningkatanPenambahanGelar()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -453,13 +491,13 @@ $(function(){
     var number = Math.floor(Math.random() * 1000);
     if(id == 1){
         $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
-
     } else if(id == 2){
         $link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
-
     } else if(id == 3){
         $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
-    } 
+    } else {
+        $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    }  
    
    
     $('#iframe_view_file_berkas_pns').attr('src', $link)
@@ -470,15 +508,15 @@ $(function(){
 
   }
 
-  // function loadListRiwayatPerbaikanData(){
+  // function loadListRiwayatPeningkatanPenambahanGelar(){
   //   $('#list_riwayat_karsu').html('')
   //   $('#list_riwayat_karsu').append(divLoaderNavy)
-  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPerbaikanData/")?>', function(){
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPeningkatanPenambahanGelar/")?>', function(){
   //     $('#loader').hide()
   //   })
   //   }
 
-  function loadListRiwayatPerbaikanData(){
+  function loadListRiwayatPeningkatanPenambahanGelar(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

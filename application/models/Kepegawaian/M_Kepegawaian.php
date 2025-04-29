@@ -12401,8 +12401,6 @@ public function getFileForVerifLayanan()
 	{
        
         $this->db->trans_begin();
-
-       
     
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
@@ -12447,7 +12445,7 @@ public function getFileForVerifLayanan()
 
             $file2 = null;
             $filehd = null;
-            
+
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
                 $file2 = str_replace(' ', '', $_FILES['file2']['name']);

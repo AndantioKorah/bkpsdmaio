@@ -82,6 +82,18 @@
     $('#form_search').submit()
   })
 
+  $('#bulan').on('change', function(){
+    $('#form_search').submit()
+  })
+
+  $('#id_unitkerja').on('change', function(){
+    $('#form_search').submit()
+  })
+
+  $('#status').on('change', function(){
+    $('#form_search').submit()
+  })
+
   $('#form_search').on('submit', function(e){
     e.preventDefault()
     $('#div_result').html()

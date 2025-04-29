@@ -145,9 +145,10 @@
         public function getDataLiveAbsen($id){
             $data = $this->input->post();
             $agenda = $this->db->select('*')
-                                ->from('db_sip.agenda')
+                                ->from('db_sip.event')
                                 ->where('id', $id)
                                 ->get()->row_array();
+
             $absen = null;
             if($agenda){
                 $this->db->select('a.masuk, a.pulang, a.tgl, c.gelar1, c.nama, c.gelar2, d.nama_jabatan, d.eselon, e.nm_pangkat, f.nm_unitkerja,

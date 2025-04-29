@@ -1259,11 +1259,15 @@
         //                     ->where('id_m_status_pegawai', 1)
         //                     ->where('a.id', $data['id_user'])
         //                     ->get()->row_array();
-      
-        $data_atasan = $this->getAtasanPegawai($pegawai);
+        
+        // dd($data);
+        $data_atasan = $this->getAtasanPegawai(null, $data['id_user'], 1);
         // dd($data_atasan);
         $kepala_pd = $data_atasan['kepala'];
         $atasan_pegawai = $data_atasan['atasan'];
+        if(!$atasan_pegawai){
+            $atasan_pegawai = $kepala_pd;
+        }
 
         $rencana_kinerja = $this->db->select('a.*,
                                 (SELECT SUM(b.realisasi_target_kuantitas)
@@ -1695,6 +1699,8 @@
         $i = 0;
         $batchId = null;
         $existIzin = null;
+        $presensiPegawai = null;
+
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
             // foreach($list_tanggal as $l){
@@ -1732,6 +1738,35 @@
                             }
                         }
                     // }
+                } else if($disiplin[0] == 19){ //jika TLP (Tugas Luar Pagi)
+                    $flagTolakTlp = 0;
+                    if(isset($presensiPegawai[$d['id'].';'.$l])){
+                        $flagTolakTlp = 1;
+                    } else {
+                        $dataPresensi = $this->db->select('*')
+                                            ->from('db_sip.absen')
+                                            ->where('user_id', $d['id'])
+                                            ->where_in('tgl', $list_hari_kerja[3])
+                                            ->get()->result_array();
+                        if($dataPresensi){
+                            $flagTolakTlp = 1;
+                            // foreach($dataPresensi as $dp){
+                            //     $presensiPegawai[$d['id'].';'.$l] = $dp;
+                            // }
+                        }
+                    }
+
+                    // if($l < '2025-05-01'){
+                    //     $flagTolakTlp = 0;
+                    // }
+
+                    if($flagTolakTlp == 1){
+                        $this->db->trans_rollback();
+                        $res['code'] = 1;
+                        $res['message'] = 'Tidak dapat menginput Tugas Luar Pagi karena pegawai atas nama '.$d['nama'].' telah melakukan presensi. Dokumen TLP hanya dapat diupload saat pegawai yang bersangkutan belum melakukan presensi.';
+                        $res['data'] = null;
+                        return $res;   
+                    }
                 }
                 if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);

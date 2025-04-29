@@ -121,6 +121,17 @@
                     <button onclick="loadDataLiveAbsen()" class="btn btn-sm btn-navy">Cari</button>
                 </div> -->
             </div>
+            <div class="col-lg-12 mt-3">
+                <label class="label-filter">Pilih Event</label>
+                <div class="">
+                    <select class="form-control select2-navy" 
+                        id="list_event" data-dropdown-css-class="select2-navy" name="list_event" required>
+                        <?php $i = 0; foreach($list_event as $u){ ?>
+                            <option <?= $i == 0 ? 'selected' : ''?> value="<?=$u['id']?>"><?=$u['judul']?></option>
+                        <?php $i++; } ?>
+                    </select>
+                </div>
+            </div>
             <div class="col-lg-12"><hr></div>
             <div class="col-lg-12 table-responsive" id="div_data_absen"></div>
         </div>
@@ -215,7 +226,7 @@
 
     function loadDataLiveAbsen(){
         $.ajax({
-            url: '<?=base_url("dashboard/C_Dashboard/getDataLiveAbsen/13")?>',
+            url: '<?=base_url("dashboard/C_Dashboard/getDataLiveAbsen/")?>'+$('#list_event').val(),
             method: 'post',
             data: {
                 eselon: eselon,
@@ -226,6 +237,7 @@
             success: function(data){
                 $('#div_data_absen').html('')
                 $('#div_data_absen').append(data)
+                // setInterval(loadDataLiveAbsen, 3000);
                 loadDataLiveAbsen()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')

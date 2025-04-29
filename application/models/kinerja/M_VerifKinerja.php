@@ -663,6 +663,30 @@
         public function loadPegawaiKomponenKinerja($data){
             $result = null;
             $list_id_pegawai = $this->getListIdPegawaiForVerif($data);
+
+            // $unitkerjaKepalaskpdHardcode 
+            $ukhc = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('nip_kepalaskpd_hardcode', $this->general_library->getNipPegawai())
+                            ->get()->result_array();
+            if($ukhc){
+                $ukerhc = null;
+                foreach($ukhc as $u){
+                    $ukerhc[] = $u['id_unitkerja'];
+                }
+
+                $pegawaiUkerHc = $this->db->select('*, a.id as id_m_user')
+                                            ->from('m_user a')
+                                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                            ->where_in('b.skpd', $ukerhc)
+                                            ->get()->result_array();
+                if($pegawaiUkerHc){
+                    foreach($pegawaiUkerHc as $phc){
+                        $list_id_pegawai[] = $phc['id_m_user'];
+                    }
+                }
+            }
+
             // dd($data);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user')
@@ -676,6 +700,7 @@
                                 ->where('id_m_status_pegawai', 1)
                                 ->order_by('c.eselon', 'asc')
                                 ->order_by('g.id_unitkerja', 'asc')
+                                ->group_by('a.id')
                                 ->get()->result_array();
 
                 if($result){

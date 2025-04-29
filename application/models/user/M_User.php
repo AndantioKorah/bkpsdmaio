@@ -2257,14 +2257,14 @@
 
         public function getPegawaiById($id){
             $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, 
-        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, a.id_m_sub_bidang,
-        (SELECT aa.nm_jabatan FROM db_pegawai.pegjabatan aa WHERE b.id_peg = aa.id_pegawai ORDER BY aa.tmtjabatan DESC LIMIT 1) as nama_jabatan')
+        a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, f.nama_bidang, a.id_m_sub_bidang, g.nama_jabatan')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                             // ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
                             ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat')
                             ->join('m_bidang f', 'a.id_m_bidang = f.id', 'left')
+                            ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
                             ->where('a.flag_active', 1)
                             ->where('id_m_status_pegawai', 1)
                             ->where('a.id', $id)

@@ -88,6 +88,7 @@ class C_Dashboard extends CI_Controller
         ];
         $data['pangkat'] = $this->m_general->getAll('db_pegawai.pangkat', 0);
         $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        $data['list_event'] = $this->m_general->getAllWithOrderGeneral('db_sip.event', 'created_at', 'desc');
         render('dashboard/V_DashboardWalikota', '', '', $data);
     }
 

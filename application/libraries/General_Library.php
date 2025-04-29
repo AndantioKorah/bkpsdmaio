@@ -284,6 +284,10 @@ class General_library
         return $result;
     }
 
+    public function getNipPegawai(){
+        return $this->userLoggedIn['nipbaru_ws'];
+    }
+
     public function isPejabatEselon(){
         return $this->userLoggedIn['id_eselon'] != 1;
     }
@@ -526,6 +530,10 @@ class General_library
     public function getIdJabatan(){
         return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
         // return $this->userLoggedIn['jabatan'];
+    }
+
+    public function isKepalaSkpdHardcode(){
+        return $this->userLoggedIn['flag_kepalaskpdhardcode'] == 1;
     }
 
     public function isKepalaBkpsdm(){

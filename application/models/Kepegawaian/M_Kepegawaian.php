@@ -11311,7 +11311,15 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "stlud"){
+        } else if($this->input->post('file') == "surat_pernyataan_hd"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else if($this->input->post('file') == "stlud"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
@@ -12438,7 +12446,13 @@ public function getFileForVerifLayanan()
             }
 
             $file2 = null;
+            $filehd = null;
+            
             $this->load->library('upload');
+            if(isset($_FILES['file2']['name'])){
+                $file2 = str_replace(' ', '', $_FILES['file2']['name']);
+                $filehd = $random_number.$file2;
+            }
           
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = 'pdf';
@@ -12462,7 +12476,7 @@ public function getFileForVerifLayanan()
                     $dataUsul['created_by']      = $this->general_library->getId();
                     $dataUsul['id_m_layanan']      = $id_m_layanan;
                     $dataUsul['file_pengantar']      = "$nama_file.pdf";
-                    $dataUsul['surat_pernyataan_tidak_hd']      = $file2;
+                    $dataUsul['surat_pernyataan_tidak_hd']      = $filehd;
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
@@ -12470,13 +12484,12 @@ public function getFileForVerifLayanan()
 
 
         if(isset($_FILES['file2']['name'])){
-            $file2 = $_FILES['file2']['name'];
             $config_hd['upload_path']       = './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
             $config_hd['allowed_types']     = 'pdf';
             $config_hd['encrypt_name']		= FALSE;
             $config_hd['overwrite']			= TRUE;
             $config_hd['detect_mime']		= TRUE;
-            $config_hd['file_name']         = $random_number.$file2;
+            $config_hd['file_name']         = $filehd;
             $this->upload->initialize($config_hd);
             if (!$this->upload->do_upload('file')) {
                 $data['error']    = strip_tags($this->upload->display_errors());

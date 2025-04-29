@@ -139,7 +139,7 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
 	margin-bottom: 10px;
 
   }
@@ -201,6 +201,8 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color : #0ed095;
+
   }
 
   .rectangle-list .unselect:before{
@@ -216,6 +218,7 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color : #fa8072;
   }
 
   .rectangle-list .warning:before{

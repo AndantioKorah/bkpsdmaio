@@ -291,8 +291,7 @@ ol {
         <div class="form-group">
             <label><b>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
-            <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
-          </div>
+        </div>
         <?php } ?>
 					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
 					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">

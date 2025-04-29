@@ -193,6 +193,11 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
     </li>
+  <?php if($id_m_layanan == 12) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='surat_pernyataan_hd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan tidak sedang hukiman disiplin dari atasan langsung</button>
+  </li>
+  <?php } ?>
   <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 ) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
@@ -688,6 +693,8 @@ function openPresensiTab(){
             dir = "./dokumen_layanan/jabatan_fungsional/";
         } else if(file == "ijazah"){
           dir = "./arsippendidikan/";
+        } else if(file == "surat_pernyataan_hd") {
+          dir = "./dokumen_layanan/jabatan_fungsional/surat_ket_hd/";
         }  else {
           dir = "uploads/";
         }
@@ -708,7 +715,9 @@ function openPresensiTab(){
 
             if(file == "suratpengantar"){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].file_pengantar+"?v="+number;
-            } else {
+            } else if(file == "surat_pernyataan_hd"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
+            }  else {
               var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
 
             }

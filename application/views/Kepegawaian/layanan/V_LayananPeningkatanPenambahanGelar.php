@@ -294,8 +294,12 @@ ol {
 				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_cpns" value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-            <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-					  <input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+			<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+			<input type="hidden" id="ijazah" value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
+			<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
+			<input type="hidden" id="transkrip" value="<?php if($transkrip) echo $transkrip['id']; else echo "";?>">
+			<input type="hidden" id="akreditasi_prodi" value="<?php if($akreditasi_prodi) echo $akreditasi_prodi['id']; else echo "";?>">
+			<input type="hidden" id="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
     
           <span><b>Berkas Persyaratan :</b></span>
 					<div class="list-type1x mt-2">
@@ -413,11 +417,11 @@ $(function(){
         var form_data = new FormData(formvalue[0]);
         var sk_cpns = $('#sk_cpns').val()
         var sk_pangkat = $('#sk_pangkat').val()
-        var ijazah = $('#ijazah_cpns').val()
-        var ibel = $('#ijazah_cpns').val()
-        var transkrip = $('#ijazah_cpns').val()
-        var akreditasi_prodi = $('#ijazah_cpns').val()
-        var pangkalandata = $('#ijazah_cpns').val()
+        var ijazah = $('#ijazah').val()
+        var ibel = $('#ibel').val()
+        var transkrip = $('#transkrip').val()
+        var akreditasi_prodi = $('#akreditasi_prodi').val()
+        var pangkalandata = $('#pangkalandata').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
 
        

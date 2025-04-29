@@ -6,6 +6,7 @@
           <th class="text-left">Unit Kerja</th>
           <th class="text-center">File Gaji Berkala</th>
           <th>Status</th>
+          <th>Keterangan</th>
           <th></th>
           
         </thead>
@@ -23,6 +24,9 @@
               </td>
               <td>
               <?php if($rs['status_berkala'] == '2') echo "Selesai BKPSDM"; else if($rs['status_berkala'] == '3') echo "Usul BKAD"; else if($rs['status_berkala'] == '4') echo "Diterima BKAD"; else echo "Ditolak BKAD"?>  
+              </td>
+              <td>
+              <?=$rs['keterangan_bkad']?>
               </td>
              <td>
              <a target="_blank" href="<?= base_url();?>kepegawaian/C_Kepegawaian/prosesGajiBerkala/<?=$rs['nipbaru_ws']?>/<?=$tahun;?>">

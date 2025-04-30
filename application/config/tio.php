@@ -121,3 +121,6 @@ $route['tpp/verifikasi-berkas'] = 'rekap/C_Rekap/verifikasiBerkasTpp';
 
 //admin siladen
 $route['admin/broadcast-whatsapp'] = 'admin/C_Admin/broadcastWhatsapp';
+
+//admin monitoring
+$route['admin/monitoring/cron-wa'] = 'admin/C_Admin/monitoringCronWa';

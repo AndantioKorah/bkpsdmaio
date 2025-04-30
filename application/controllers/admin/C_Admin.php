@@ -131,4 +131,13 @@ class C_Admin extends CI_Controller
         $data['result'] = $this->admin->loadDetailBroadcast($id);
         $this->load->view('admin/V_BroadcastWhatsappHistoryDetail', $data);
     }
+
+    public function monitoringCronWa(){
+        render('admin/V_MonitoringCronWa', '', '', null);
+    }
+
+    public function getMonitoringCronWaData(){
+        $data['result'] = $this->admin->getMonitoringCronWaData();
+        $this->load->view('admin/V_MonitoringCronWaResult', $data);
+    }
 }

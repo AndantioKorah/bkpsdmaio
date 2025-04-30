@@ -1756,9 +1756,9 @@
                         }
                     }
 
-                    // if($l < '2025-05-01'){
-                    //     $flagTolakTlp = 0;
-                    // }
+                    if($l <= '2025-05-01'){
+                        $flagTolakTlp = 0;
+                    }
 
                     if($flagTolakTlp == 1){
                         $this->db->trans_rollback();

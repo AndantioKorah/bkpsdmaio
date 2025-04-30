@@ -26,7 +26,7 @@
         font-weight: bold;
         background-color: #ea5454; */
 	position: relative;
-	background-color: #fa8072;
+	background-color: #d41e24;
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025);
 	transition: 0.5s ease-in-out;
 	/* border: 3px solid #0a7129; */
@@ -139,7 +139,7 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
 	margin-bottom: 10px;
 
   }
@@ -201,6 +201,9 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color: #0ed095;
+
+    
   }
 
   .rectangle-list .unselect:before{
@@ -210,12 +213,14 @@ ol {
     left: -2.5em;
     top: 50%;
     margin-top: -1em;
-    background: #fa8072;
+    background: #d41e24;
     height: 2em;
     width: 2em;
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color: #d41e24;
+
   }
 
   .rectangle-list .warning:before{
@@ -255,7 +260,7 @@ ol {
 
   .rectangle-list .unselect:hover:after{
     left: -.5em;
-    border-left-color: #fa8072;
+    border-left-color: #d41e24;
   }
 </style>
 

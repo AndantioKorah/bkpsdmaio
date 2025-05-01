@@ -5761,6 +5761,12 @@ public function submitEditJabatan(){
             $id_layanan[] = 1;
         }
 
+        if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
+            $id_layanan[] = 21;
+        }
+
+        
+
        
         
         

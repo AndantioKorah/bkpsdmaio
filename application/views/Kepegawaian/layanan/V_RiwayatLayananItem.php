@@ -28,7 +28,7 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
-            <?php if($m_layanan == 10) { ?>
+            <?php if($m_layanan == 10 || $m_layanan == 21) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openFileSK('<?=$rs['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -203,7 +203,11 @@ async function openFileSK(filename){
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 var number = Math.floor(Math.random() * 2000);
-$link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
+if(id_layanan == 10){
+  $link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
+} else {
+  $link = "<?=base_url();?>arsippeningkatanpenambahangelar/"+filename+"?v="+number;
+}
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
   $('.iframe_loader').hide()

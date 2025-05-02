@@ -9303,6 +9303,42 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function updatePendidikan($id_peg){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        
+       
+        $this->db->trans_begin();
+        
+            $getPendidikan = $this->db->select('b.id_tktpendidikan')
+            ->from('db_pegawai.pegpendidikan a')
+            ->join('db_pegawai.tktpendidikanb b', 'b.id_tktpendidikanb = a.tktpendidikan')
+            ->where('a.id_pegawai', $id_peg)
+            ->where_in('a.flag_active', [1,2])
+            ->where('a.status', 2)
+            ->order_by('a.tahunlulus', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+        
+            if($getPendidikan) {
+                    $dataUpdate["pendidikan"] =  $getPendidikan['id_tktpendidikan'];
+                    $this->db->where('id_peg', $id_peg)
+                            ->update('db_pegawai.pegawai', $dataUpdate);
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
+
     public function updateBerkala($id_peg){
         $res['code'] = 0;
         $res['message'] = 'ok';
@@ -11689,7 +11725,7 @@ public function getFileForVerifLayanan()
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n$tambahan\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Pangkat";
         } else if($dataPengajuan[0]['id_m_layanan'] == 10){
-            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\Pengajuan Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERBAIKAN DATA KEPEGAWAIAN]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Perbaikan Data Kepegawaian anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Perbaikan Data Kepegawaian";
         } else if($dataPengajuan[0]['id_m_layanan'] == 11){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PERMOHONAN SALINAN SK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Permohonan Salinan SK anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
@@ -11706,6 +11742,9 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 21){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINGKATAN PENDIDIKAN / PENAMBAHAN GELAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peningkatan Pendidikan / Penambahan Gelar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Peningkatan Pendidikan / Penambahan Gelar";
         }
        
         $cronWaNextVerifikator = [
@@ -12138,7 +12177,7 @@ public function getFileForVerifLayanan()
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
-                    'filename' => "SK PERBAIKAN DATA.pdf",
+                    'filename' => "SK_PERBAIKAN_DATA.pdf",
                     'fileurl' => $url_file,
                     'type' => 'document',
                     'jenis_layanan' => 'Perbaikan Data'
@@ -12167,12 +12206,14 @@ public function getFileForVerifLayanan()
                 $datapeg["gelar2"] = $this->input->post('edit_gelar2');
                 $this->db->where('id_peg', $dataLayanan['id_peg'])
                 ->update('db_pegawai.pegawai', $datapeg);
+
+                $this->updatePendidikan($dataLayanan['id_peg']);
             
-            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambhana Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan perbaikan data kepegawaian anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambahan Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan peningkata pendidikan / penambahan gelar anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
             $cronWa = [
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,
-                        'filename' => "SK PERBAIKAN DATA.pdf",
+                        'filename' => "SK_Peningkatan_Pendidikan_Penambahan_Gelar.pdf",
                         'fileurl' => $url_file,
                         'type' => 'document',
                         'jenis_layanan' => 'Perbaikan Data'

@@ -98,7 +98,9 @@
             <td style="border: 1px solid black; text-align: center;">Jenis Pelanggaran Disiplin</td>
             <td style="border: 1px solid black; text-align: center;">Keterangan</td>
         </tr>
-        <?php $no = 1; if($hukdis){ foreach($hukdis as $h) { if((isset($rekap['flag_pppk']) && $h['statuspeg'] == 3) || !isset($rekap['flag_pppk']) && $h['statuspeg'] != 3){ ?>
+        <?php $no = 1; if($hukdis){ foreach($hukdis as $h) { 
+                // if((isset($rekap['flag_pppk']) && $h['statuspeg'] == 3) || !isset($rekap['flag_pppk']) && $h['statuspeg'] != 3){
+            ?>
             <tr>
                 <td style="border: 1px solid black; text-align: center;"><?=$no++;?></td>
                 <td style="border: 1px solid black; text-align: left;"><?=getNamaPegawaiFull($h)?></td>
@@ -107,7 +109,8 @@
                 <td style="border: 1px solid black; text-align: left;"><?=$h['nama_jhd']?></td>
                 <td style="border: 1px solid black; text-align: left;"><?=strtoupper('Hukuman Disiplin '.$h['nama_hd'])?></td>
             </tr>
-        <?php } } } ?>
+        <?php } }
+            //} ?>
     </table>
     <!-- <span>C. Pemberhentian TPP</span>
     <table style="width: 100%;" border=1 style="border-collapse: collapse;">

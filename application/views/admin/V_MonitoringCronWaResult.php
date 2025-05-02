@@ -28,14 +28,16 @@
                                     $filename = $explFilename[count($explFilename)-1];
                                 ?>
                                     <br>
-                                    <a class="btn btn-sm btn-danger" href="<?=base_url($rs['fileurl'])?>" target="_blank"><i class="fa fa-file"></i> <?=$filename?></a>
+                                    <a class="btn btn-sm btn-outline-danger" href="<?=base_url($rs['fileurl'])?>" target="_blank">
+                                        <i class="fa fa-file-pdf"></i> <?=$filename?>
+                                    </a>
                                 <?php
                                     }
                                 ?>
                             </td>
                             <td class="text-center">
                                 <?php
-                                    $content_sending = "<span class='badge badge-danger'><i class='fa fa-cancel'></i></span>";
+                                    $content_sending = "<span class='badge badge-danger'><i class='fa fa-times'></i></span>";
                                     if($rs['flag_sending'] == 1){
                                         $explDateSending = explode(" ", $rs['date_sending']);
                                         $dateSending = formatDateNamaBulanWithTime($rs['date_sending']);
@@ -50,7 +52,7 @@
                             </td>
                             <td class="text-center">
                                 <?php
-                                    $content_sent = "<span class='badge badge-danger'><i class='fa fa-cancel'></i></span>";
+                                    $content_sent = "<span class='badge badge-danger'><i class='fa fa-times'></i></span>";
                                     if($rs['flag_sent'] == 1){
                                         $explDateSent = explode(" ", $rs['date_sent']);
                                         $dateSent = formatDateNamaBulanWithTime($rs['date_sent']);

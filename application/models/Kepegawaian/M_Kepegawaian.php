@@ -2229,7 +2229,9 @@ class M_Kepegawaian extends CI_Model
             $name = "HD_".$nip;
         } 
        } else {
-        $name = $_FILES['file']['name'];
+        // $name = $_FILES['file']['name'];
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $name = $random_number."_dokumenpegawai";
        }
     return $name;
     }
@@ -11942,13 +11944,17 @@ public function getFileForVerifLayanan()
             $target_dir						= './arsipdisiplin/';
         } else if($this->input->post('id_dokumen') == 46){
             $target_dir						= './arsipperbaikandata/';
+        } else if($this->input->post('id_dokumen') == 101){
+            $target_dir						= './arsippeningkatanpenambahangelar/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
         } else if($this->input->post('pegpenghargaan')){
             $target_dir						= './arsippenghargaan/';
         } else if($this->input->post('jenispenugasan')){
             $target_dir						= './arsippenugasan/';
-        }     
+        } 
+        
+        
 
 		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $filename = str_replace(' ', '', $random_number.$create_nama_file);
@@ -12109,8 +12115,8 @@ public function getFileForVerifLayanan()
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
         // GAJI BERKALA
-        // PERBAIKAN DATA
         } else if($id_dok == 46){
+        // PERBAIKAN DATA
             $id  = $this->input->post('id_layanan');
               $dataLayanan = $this->db->select('c.*,a.*')
                 ->from('t_layanan a')
@@ -12137,7 +12143,41 @@ public function getFileForVerifLayanan()
                 $this->db->insert('t_cron_wa', $cronWa);
         $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
         // PERBAIKAN DATA
-        } else if($id_dok == 8){
+        } else if($id_dok == 101){
+        // PENINGKATAN PENDIDIKAN / PENAMBAHAN GELAR
+                // dd($data);
+                $id  = $this->input->post('id_layanan');
+                $dataLayanan = $this->db->select('c.*,a.*')
+                    ->from('t_layanan a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                    ->where('a.id', $id)
+                    ->get()->row_array();
+                
+                $datains["dokumen_layanan"] = $data['nama_file'];
+                $datains["status"] = 3;
+                $url_file = "arsippeningkatanpenambahangelar/".$data['nama_file'];
+                $this->db->where('id', $id)
+                ->update('t_layanan', $datains);
+
+                $datapeg["gelar1"] = $this->input->post('edit_gelar1');
+                $datapeg["gelar2"] = $this->input->post('edit_gelar2');
+                $this->db->where('id_peg', $dataLayanan['id_peg'])
+                ->update('db_pegawai.pegawai', $datapeg);
+            
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambhana Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan perbaikan data kepegawaian anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $cronWa = [
+                        'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                        'message' => $caption,
+                        'filename' => "SK PERBAIKAN DATA.pdf",
+                        'fileurl' => $url_file,
+                        'type' => 'document',
+                        'jenis_layanan' => 'Perbaikan Data'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWa);
+            $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            // PENINGKATAN PENDIDIKAN / PENAMBAHAN GELAR
+            } else if($id_dok == 8){
             //JABATAN   
 
             if($this->input->post('myCheck')) {
@@ -12266,6 +12306,15 @@ public function getFileForVerifLayanan()
             $this->updateJabatan($dataLayanan['id_peg']);
             }
         // JABATAN
+        // PENINGKATAN PENDIDIKAN / PENAMBAHANAN GELAR
+        if($id_m_layanan == 21){
+            $data["dokumen_layanan"] = null; 
+            $data["status"] = 1; 
+            $this->db->where('id', $id_usul)
+                        ->update('t_layanan', $data);
+            }
+        // PENINGKATAN PENDIDIKAN / PENAMBAHANAN GELAR
+
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;

@@ -456,7 +456,7 @@
 		</li>
 
    <?php if($this->general_library->isAdminAplikasi()){ ?>
-		<li class="sidebar-item">
+		<!-- <li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
 				style="position: absolute;
@@ -477,7 +477,7 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li>
+							</li> -->
 		<?php } ?>
 
 		
@@ -670,7 +670,7 @@
 				<?php if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/21')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peningkatan Pendidikan Penambahan Gelar
+						<i class="align-middle me-2 far fa-circle"></i>Peningkatan Pendidikan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Penambahan Gelar
 					</a>
 				</li>
 				<?php } ?>

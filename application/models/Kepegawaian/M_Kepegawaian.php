@@ -2227,6 +2227,9 @@ class M_Kepegawaian extends CI_Model
                 $name = "PENGHARGAAN_".$nip;
         } else if($id_dok == 18){
             $name = "HD_".$nip;
+        } else {
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $name = $random_number."_dokumenpegawai"; 
         } 
        } else {
         // $name = $_FILES['file']['name'];

@@ -667,6 +667,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/21')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Verifikasi Peningkatan Pendidikan Penambahan Gelar
+					</a>
+				</li>
+				<?php } ?>
 
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_pensiun')){ ?>
 				<li class="sidebar-item ">

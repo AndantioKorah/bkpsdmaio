@@ -85,7 +85,7 @@
         font-weight: bold;
         background-color: #ea5454; */
 	position: relative;
-	background-color: #fa8072;
+	background-color: #d41e24;
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025);
 	transition: 0.5s ease-in-out;
 	/* border: 3px solid #0a7129; */
@@ -185,7 +185,7 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
 	margin-bottom: 10px;
 
   }
@@ -244,7 +244,7 @@ ol {
     left: -2.5em;
     top: 50%;
     margin-top: -1em;
-    background: #fa8072;
+    background: #d41e24;
     height: 2em;
     width: 2em;
     line-height: 2em;
@@ -268,8 +268,20 @@ ol {
   }
   .rectangle-list .unselect:hover:after{
     left: -.5em;
-    border-left-color: #fa8072;
+    border-left-color: #d41e24;
   }
+
+  .sp_whatsapp{
+  color: #fff !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_whatsapp:hover{
+  color: green !important;
+  text-decoration: none;
+  transition: .2s;
+}
 </style>
 
 
@@ -474,15 +486,18 @@ ol {
                 </span>
               </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 sp_whatsapp" >
               <div class="col-lg-12 div_label text-right">
                 <span class="sp_label">
+                  
                   No Handphone/WA
                 </span>
               </div>
               <div class="col-lg-12 text-right">
                 <span class="sp_profil_sm">
+                <a target="_blank" class="sp_whatsapp" href="https://wa.me/<?=convertPhoneNumber($result[0]['handphone'])?>">
                 <?=($result[0]['handphone'])?>
+                  </a>
                 </span>
               </div>
             </div>
@@ -608,8 +623,8 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_rekom_sakit)) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($surat_rekom_sakit) echo 'select'; else echo 'unselect';?>" <?php if($surat_rekom_sakit) { ?>
+									onclick="viewBerkas('<?=$surat_rekom_sakit['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper(' Surat Rekomendasi Sakit/Uzur dari tim dokter pemerintah yang ditunjuk oleh menteri kesehatan'); ?></a></li>
 							<li>

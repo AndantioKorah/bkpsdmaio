@@ -26,7 +26,7 @@
         font-weight: bold;
         background-color: #ea5454; */
 	position: relative;
-	background-color: #fa8072;
+	background-color: #d41e24;
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025);
 	transition: 0.5s ease-in-out;
 	/* border: 3px solid #0a7129; */
@@ -194,13 +194,13 @@ ol {
     left: -2.5em;
     top: 50%;
     margin-top: -1em;
-    background: #fa8072;
+    background: #d41e24;
     height: 2em;
     width: 2em;
     line-height: 2em;
     text-align: center;
     font-weight: bold;
-    color : #fa8072;
+    color : #d41e24;
   }
 
   .rectangle-list .warning:before{
@@ -240,7 +240,7 @@ ol {
 
   .rectangle-list .unselect:hover:after{
     left: -.5em;
-    border-left-color: #fa8072;
+    border-left-color: #d41e24;
   }
 </style>
 

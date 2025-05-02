@@ -9048,6 +9048,14 @@ public function submitEditJabatan(){
                     $bulan = getNamaBulan(date('m'));
                     $tahun = date('Y');
 
+                    if(!file_exists("arsipusulds/".$tahun)){
+                    	mkdir("arsipusulds/".$tahun, 0777);
+                    }
+
+                    if(!file_exists("arsipusulds/".$tahun."/".$bulan)){
+                    	mkdir("arsipusulds/".$tahun."/".$bulan, 0777);
+                    }
+
                     copy($filepath, "arsipusulds/".$tahun."/".$bulan."/".$filename);
 
                     $this->db->where('id', $data['id_t_pengajuan_cuti'])

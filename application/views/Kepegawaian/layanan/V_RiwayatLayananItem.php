@@ -52,6 +52,7 @@
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
                 data-id="<?=$rs['id'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
@@ -131,6 +132,7 @@
       <form method="post" id="form_ubah_surat_pengantar" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan">
         <input type="hidden" name="file_pengantar" id="file_pengantar">
+        <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
         <label>Surat Pengantar</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
@@ -288,6 +290,7 @@ function ajukanKembali(id){
                 var modal = $(this)
                 modal.find('#file_pengantar').attr("value",div.data('file_pengantar'));
                 modal.find('#id_pengajuan').attr("value",div.data('id'));
+                modal.find('#id_m_layanan').attr("value",div.data('id_m_layanan'));
             });
 
     $('#form_ubah_surat_pengantar').on('submit', function(e){  
@@ -318,7 +321,24 @@ function ajukanKembali(id){
                 // loadListRiwayatLayananPangkat()
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatLayananPangkat, 2000);
-            }
+             } 
+             if(id_layanan == 21){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatPeningkatanPenambahanGelar, 2000);
+             }
+             if(id_layanan == 10){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatPerbaikanData, 2000);
+             }
+             if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatUjianDinas, 2000);
+             }
+             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
+             }
+
            } else {
              errortoast(result.msg)
              return false;

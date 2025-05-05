@@ -98,6 +98,17 @@
         </button> -->
   <?php } ?>
 <?php } ?>
+<?php if($result[0]['verifikator'] == 0) { ;?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
+        Kerjakan Pengajuan ini
+        </button>
+<?php } else { ?>
+  <?php if($result[0]['status_layanan'] == 0) { ;?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Kerjakan Pengajuan ini
+        </button>
+  <?php } ?>
+<?php } ?>
 <?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi

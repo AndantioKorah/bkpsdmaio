@@ -12625,7 +12625,7 @@ public function getFileForVerifLayanan()
             $config_hd['detect_mime']		= TRUE;
             $config_hd['file_name']         = $filehd;
             $this->upload->initialize($config_hd);
-            if (!$this->upload->do_upload('file')) {
+            if (!$this->upload->do_upload('file2')) {
                 $data['error']    = strip_tags($this->upload->display_errors());
                 $data['token']    = $this->security->get_csrf_hash();
                 $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);

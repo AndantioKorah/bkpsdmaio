@@ -9,6 +9,9 @@
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">Surat Pengantar</th>
+          <?php if($m_layanan == 12) { ?>
+          <th class="text-left">Surat Keterangan</th>
+          <?php } ?>
           <?php if($m_layanan == 10) { ?>
           <th class="text-left">SK Perbaikan Data</th>
           <?php } ?>
@@ -28,10 +31,18 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
+            <?php if($m_layanan == 12) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
             <?php if($m_layanan == 10 || $m_layanan == 21) { ?>
           <td class="text-left">
+          <?php if($rs['dokumen_layanan'] != null) { ?>
           <button href="#modal_view_file" onclick="openFileSK('<?=$rs['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
           </td>
           <?php } ?>
               <td>
@@ -190,6 +201,23 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
 } else if(id_layanan == 21){
   $link = "<?=base_url();?>dokumen_layanan/peningkatan_penambahan_gelar/"+filename+"?v="+number;
 }
+
+$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').on('load', function(){
+  $('.iframe_loader').hide()
+  $(this).show()
+})
+}
+
+async function openSuratKeterangan(filename){
+ var id_layanan = "<?=$m_layanan;?>"
+$('#iframe_view_file').hide()
+$('.iframe_loader').show()  
+
+var number = Math.floor(Math.random() * 2000);
+
+  $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/surat_ket_hd/"+filename+"?v="+number;
+
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){

@@ -531,6 +531,7 @@
         <option <?php if($result[0]['status_layanan'] == 3) echo "selected";?> value="3">Pengajuan Pertek</option>
         <option <?php if($result[0]['status_layanan'] == 4) echo "selected";?> value="4">Proses SK Jabatan</option>
         <option <?php if($result[0]['status_layanan'] == 5) echo "selected";?> value="5">BTL</option>
+        <option <?php if($result[0]['status_layanan'] == 7) echo "selected";?> value="7">TMS</option>
 
         <!-- <option value="3">TMS</option> -->
       </select>

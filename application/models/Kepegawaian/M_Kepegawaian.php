@@ -12545,7 +12545,6 @@ public function getFileForVerifLayanan()
         ->where('a.id_m_layanan', $id_m_layanan)
         ->where_in('a.status', [0,2])
         ->get()->result_array();
-
         if($cek){
             $res = array('msg' => 'Sudah ada usul layanan yang belum disetujui', 'success' => false);
         } else {
@@ -12614,26 +12613,28 @@ public function getFileForVerifLayanan()
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
-        }
 
-
-        if(isset($_FILES['file2']['name'])){
-            $config_hd['upload_path']       = './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
-            $config_hd['allowed_types']     = 'pdf';
-            $config_hd['encrypt_name']		= FALSE;
-            $config_hd['overwrite']			= TRUE;
-            $config_hd['detect_mime']		= TRUE;
-            $config_hd['file_name']         = $filehd;
-            $this->upload->initialize($config_hd);
-            if (!$this->upload->do_upload('file2')) {
-                $data['error']    = strip_tags($this->upload->display_errors());
-                $data['token']    = $this->security->get_csrf_hash();
-                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
-                return $res;
-            } else {
-                $dataFile 			= $this->upload->data();
+            if(isset($_FILES['file2']['name'])){
+                $config_hd['upload_path']       = './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
+                $config_hd['allowed_types']     = 'pdf';
+                $config_hd['encrypt_name']		= FALSE;
+                $config_hd['overwrite']			= TRUE;
+                $config_hd['detect_mime']		= TRUE;
+                $config_hd['file_name']         = $filehd;
+                $this->upload->initialize($config_hd);
+                if (!$this->upload->do_upload('file2')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
             }
         }
+
+
+       
 
    
         

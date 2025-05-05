@@ -2774,6 +2774,13 @@
         }
         
         public function cekKenegaraan(){
+            $tanggal = 9;
+            $bulan = 4;
+            $tahun = 2025;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
             $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_ws = b.username')
@@ -2786,7 +2793,7 @@
 
             $event = $this->db->select('*')
                             ->from('db_sip.absen_event')
-                            ->where('tgl', '2025-03-03')
+                            ->where('tgl', $dateLengkap)
                             ->get()->result_array();
 
             $absenReguler = $this->db->select('a.user_id, a.masuk, a.pulang, b.username, d.nm_unitkerja')
@@ -2794,7 +2801,7 @@
                                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                     ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
                                     ->from('db_sip.absen a')
-                                    ->where('a.tgl', '2025-03-03')
+                                    ->where('a.tgl', $dateLengkap)
                                     ->where('c.id_m_status_pegawai', 1)
                                     ->where_not_in('d.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
                                     ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
@@ -2802,9 +2809,9 @@
 
             $list_dokpen = $this->db->select('id_m_user, keterangan')
                                 ->from('t_dokumen_pendukung')
-                                ->where('tanggal', '3')
-                                ->where('bulan', '3')
-                                ->where('tahun', '2025')
+                                ->where('tanggal', $tanggal)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
                                 ->where('flag_active', 1)
                                 ->where('status', 2)
                                 ->get()->result_array();
@@ -2837,7 +2844,7 @@
                 if(!isset($dokpen[$artae['user_id']])){
                     $absenRegulerTidakAbsenEventFix[] = $artae;
                     $kenegaraan[$artae['user_id']] = $artae;
-                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi tidak presensi event Apel Perdana Bulan Maret Tahun 2025";
+                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi tidak presensi event Apel Perdana Bulan ".getNamaBulan($bulan)." Tahun ".$tahun;
                 }
             }
 
@@ -2848,19 +2855,33 @@
                         dd($lp);
                     }
                     $kenegaraan[$lp['user_id']] = $lp;
-                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk event Apel Perdana Bulan Maret Tahun 2025";
+                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk event Apel Perdana Bulan ".getNamaBulan($bulan)." Tahun ".$tahun;
+                }
+            }
+
+            $peninjauanAbsensi = null;
+            $listPeninjauan = $this->db->select('*')
+                                    ->from('t_peninjauan_absensi')
+                                    ->where('tanggal_absensi', $dateLengkap)
+                                    ->where('flag_active', 1)
+                                    ->where('status', 1)
+                                    ->get()->result_array();
+            if($listPeninjauan){
+                foreach($listPeninjauan as $lPnj){
+                    $peninjauanAbsensi[$lPnj['id_m_user']] = $lPnj; 
                 }
             }
             
             $out = null;
             foreach($kenegaraan as $k){
-                if(!isset($dokpen[$k['user_id']])){
+                if(!isset($dokpen[$k['user_id']]) && !isset($peninjauanAbsensi[$k['user_id']])){
+                    //jika tidak ada dokpen dan tidak melakukan peninjauan absensi
                     $kenegaraanFix[$k['user_id']] = $k;
                     $dokpenKenegaraan = null;
                     $dokpenKenegaraan['id_m_user'] = $k['user_id'];
-                    $dokpenKenegaraan['tanggal'] = 3;
-                    $dokpenKenegaraan['bulan'] = 3;
-                    $dokpenKenegaraan['tahun'] = 2025;
+                    $dokpenKenegaraan['tanggal'] = $tanggal;
+                    $dokpenKenegaraan['bulan'] = $bulan;
+                    $dokpenKenegaraan['tahun'] = $tahun;
                     $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
                     $dokpenKenegaraan['keterangan'] = "Kenegaraan";
                     $dokpenKenegaraan['pengurangan'] = "5";
@@ -2873,13 +2894,13 @@
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
                     $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    echo "input ".$k['user_id']."\n";
+                    echo "input ".$k['user_id']."\n <br>";
                 } else {
                     $out[] = $k;
                 }
             }
-
-            dd("done");
+            // dd($kenegaraan);
+            dd("done ".count($kenegaraanFix));
         }
 
 	}

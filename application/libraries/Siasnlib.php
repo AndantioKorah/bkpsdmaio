@@ -128,6 +128,16 @@ class Siasnlib{
         );
     }
 
+    function getListPengadaan($tahun){
+        return $this->postCurl(
+            $this->API_URL.'pengadaan/list-pengadaan-instansi?tahun='.$tahun,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
     function uploadRiwayatDokumen($data){
         return $this->postCurl(
             $this->API_URL.'upload-dok-rw',

@@ -126,4 +126,8 @@ class C_Cron extends CI_Controller
 		$data = $this->general_library->createQrTtePortrait(null, null, $content);
 		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
 	}
+
+    public function getPengadaanInstansiWs($tahun){
+        return $this->general->getListPengadaan($tahun);
+    }
 }

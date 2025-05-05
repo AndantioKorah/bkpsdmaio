@@ -234,6 +234,8 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color:rgb(239, 255, 8);
+
   }
 
   .rectangle-list a:after{

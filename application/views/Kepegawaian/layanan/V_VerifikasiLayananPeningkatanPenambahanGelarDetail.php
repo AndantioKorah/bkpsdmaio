@@ -98,6 +98,17 @@
         </button> -->
   <?php } ?>
 <?php } ?>
+<?php if($result[0]['verifikator'] == 0) { ;?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
+        Kerjakan Pengajuan ini
+        </button>
+<?php } else { ?>
+  <?php if($result[0]['status_layanan'] == 0) { ;?>
+  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Kerjakan Pengajuan ini
+        </button>
+  <?php } ?>
+<?php } ?>
 <?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
@@ -111,62 +122,24 @@
         <?php } ?>
       
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
-        <!-- <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
-        </button> -->
+        </button>
+        <?php } ?>
+        <?php if($result[0]['status_layanan'] == 3) { ?>
+        <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+        <i class="fa fa-file-trash"></i> Hapus File</button>
         <?php } ?>
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
   
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKPangkat/'.$id_usul.'/'.$id_m_layanan.'')?>" target="_blank">
-          <div class="form-group">
-          <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_sk" name="nomor_sk" >
-          </div>
-          <div class="form-group">
-          <label >Nomor Pertek BKN</label>
-          <input type="text" class="form-control" id="nomor_pertek" name="nomor_pertek" >
-          </div>
-          <div class="form-group">
-          <label >Nomor Urut</label>
-          <input type="text" class="form-control" id="nomor_urut" name="nomor_urut" >
-          </div>
-          <div class="form-group">
-          <label >TMT Pangkat</label>
-          <input type="text" class="form-control datepickerr"  id="tmtpangkat" name="tmtpangkat" >
-          </div>
-          <div class="form-group">
-          <label >Gaji</label>
-          <input type="text" class="form-control" id="gaji" name="gaji" >
-          </div>
-          <div class="form-group">
-          <label >Angka Kredit</label>
-          <input type="number" class="form-control" id="ak" name="ak" >
-          </div>
-          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 
   <?php } else { ?>
     
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
     <i class="fa fa-file-pdf"></i> File Pangkat</button>
-    <?php if($result[0]['status_layanan'] <= 2) { ?>
+    <?php if($result[0]['status_layanan'] == 3) { ?>
     <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
     <i class="fa fa-file-trash"></i> Hapus File</button>
     <?php } ?>
@@ -511,9 +484,6 @@
 
 
 
-		</div>
-	</div>
-</div>
 
 
 
@@ -568,13 +538,40 @@
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="46" readonly>
+          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="101" readonly>
           <input type="hidden" class="form-control" id="id_layanan" name="id_layanan" value="<?=$result[0]['id_pengajuan'];?>" readonly>
 
         
           <div class="form-group">
-          <label >Dokumen Layanan</label>
-          <input type="file" class="form-control"  id="pdf_file_dok" name="file">
+          <div class="row g-3 align-items-center" >
+          <div class="col-lg-2">
+          	<label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
+          </div>
+          <div class="col-lg-2">
+          	<input type="text" id="edit_gelar1" name="edit_gelar1" class="form-control"
+          		value="<?=$result[0]['gelar1']?>">
+          </div>
+          <div class="col-lg-6">
+          	<input type="text" id="edit_nama" name="edit_nama" class="form-control" value="<?=$result[0]['nama']?>">
+          </div>
+          <div class="col-lg-2">
+          	<input type="text" id="edit_gelar2" name="edit_gelar2" class="form-control"
+          		value="<?=$result[0]['gelar2']?>">
+          </div>
+          </div>
+
+          <div class="form-group mt-2">
+          <div class="row g-3 align-items-center" >
+          <div class="col-lg-2">
+          	<label for="inputPassword6" class="col-form-label">Dokumen</label>
+          </div>
+          <div class="col-lg-10">
+          <input type="file" class="form-control"  id="pdf_file_dok" name="file"> 
+          </div>
+          
+          </div>
+          <!-- <label >Dokumen Layanan</label>
+          <input type="file" class="form-control"  id="pdf_file_dok" name="file"> -->
           </div>
           <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
@@ -841,7 +838,7 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
+$link = "<?=base_url();?>arsippeningkatanpenambahangelar/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){

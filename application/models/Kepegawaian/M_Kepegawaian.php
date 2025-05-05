@@ -12660,14 +12660,31 @@ public function getFileForVerifLayanan()
     public function submitEditSPLayanan(){
 
         $datapost = $this->input->post();
-      
+        $id_m_layanan = $datapost['id_m_layanan'];
+
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+            $target_dir	= './dokumen_layanan/pangkat';
+        } else if($id_m_layanan == 10){
+            $target_dir	= './dokumen_layanan/perbaikan_data';
+        } else if($id_m_layanan == 11){
+            $target_dir	= './dokumen_layanan/permohonan_salinan_sk';
+        } else if($id_m_layanan == 18){
+            $target_dir	= './dokumen_layanan/ujian_dinas';
+        } else if($id_m_layanan == 19){
+            $target_dir	= './dokumen_layanan/ujian_dinas';
+        } else if($id_m_layanan == 20){
+            $target_dir	= './dokumen_layanan/ujian_dinas';
+        } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+            $target_dir	= './dokumen_layanan/jabatan_fungsional';
+        } else if($id_m_layanan == 21){
+            $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+        }
+
         $this->db->trans_begin();
-        $target_dir = './dokumen_layanan/pangkat/';
         $filename = str_replace(' ', '', $this->input->post('file_pengantar')); 
     
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filename = $random_number.$filename;
-    
+            $filename = $filename;
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = 'pdf';
             $config['encrypt_name']			= FALSE;

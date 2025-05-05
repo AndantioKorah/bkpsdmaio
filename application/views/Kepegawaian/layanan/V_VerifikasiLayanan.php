@@ -61,6 +61,7 @@
                 <option value="3">Pengajuan Pertek</option>
                 <option value="4">Proses SK Jabatan</option>
                 <option value="5">BTL</option>
+                <option value="7">TMS</option>
                 <?php } else { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>

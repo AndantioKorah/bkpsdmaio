@@ -11312,6 +11312,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.status !=', 3)
                 ->order_by('a.tmtpangkat', 'desc')
+                ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "skp1"){

@@ -5747,8 +5747,6 @@ public function submitEditJabatan(){
             $id_layanan[] = 20;
         }
 
-        }
-
         if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){
             $id_layanan[] = 12;
             $id_layanan[] = 13;
@@ -5757,6 +5755,13 @@ public function submitEditJabatan(){
             $id_layanan[] = 16;
 
         }
+        if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
+            $id_layanan[] = 21;
+        }
+
+        }
+
+       
 
         if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){
             $id_layanan[] = 10;
@@ -5766,16 +5771,6 @@ public function submitEditJabatan(){
             $id_layanan[] = 1;
         }
 
-        if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
-            $id_layanan[] = 21;
-        }
-
-        
-
-       
-        
-        
-      
    
         $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')

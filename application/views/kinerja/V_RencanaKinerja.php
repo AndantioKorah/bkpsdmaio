@@ -302,7 +302,7 @@ $("#checkBoxID").click(function() {
         if(bulanSearch < previousMonth) {
           $('.customButton').hide()
         } else {
-          if(currentDate <= maxDate) {
+          if(currentDate < maxDate) {
             $('.customButton').show()
         } else {
             $('.customButton').hide()

@@ -163,7 +163,7 @@
   var fd = tahun+'-'+bulan+'-01';
    var statusLock = "<?=$status_lock[0]['status'];?>"
    var maxDate = "<?= $maxDate['max_date'];?>";
-  //  var maxDate = "2025-04-10";
+  //  var maxDate = "2025-05-05";
 
    var currentDate = "<?= $current_date;?>";
   // alert(maxDate)
@@ -177,7 +177,7 @@
     endDate: new Date()
     })
     } else {
-    if(currentDate <= maxDate) {
+    if(currentDate < maxDate) {
     $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
@@ -201,9 +201,6 @@
   })
   }
     }
-
-  
-
     }) 
     
     function checkLockTpp(){

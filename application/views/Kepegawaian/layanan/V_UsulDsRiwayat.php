@@ -1,107 +1,68 @@
-<style>
-  .div_nama_layanan{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 25vw;
-  }
+<div class="row">
+  <div class="col-lg-12">
+    <form id="form_riwayat">
+      <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                <label class="bmd-label-floating">Pilih Bulan</label>
+                <select class="form-control select2-navy" style="width: 100%"
+                    id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
+                    <option <?=date('m') == '01' ? 'selected' : ''?> value="01">Januari</option>
+                    <option <?=date('m') == '02' ? 'selected' : ''?> value="02">Feburari</option>
+                    <option <?=date('m') == '03' ? 'selected' : ''?> value="03">Maret</option>
+                    <option <?=date('m') == '04' ? 'selected' : ''?> value="04">April</option>
+                    <option <?=date('m') == '05' ? 'selected' : ''?> value="05">Mei</option>
+                    <option <?=date('m') == '06' ? 'selected' : ''?> value="06">Juni</option>
+                    <option <?=date('m') == '07' ? 'selected' : ''?> value="07">Juli</option>
+                    <option <?=date('m') == '08' ? 'selected' : ''?> value="08">Agustus</option>
+                    <option <?=date('m') == '09' ? 'selected' : ''?> value="09">September</option>
+                    <option <?=date('m') == '10' ? 'selected' : ''?> value="10">Oktober</option>
+                    <option <?=date('m') == '11' ? 'selected' : ''?> value="11">November</option>
+                    <option <?=date('m') == '12' ? 'selected' : ''?> value="12">Desember</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                <label class="bmd-label-floating">Pilih Tahun</label>
+                <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
+            </div>
+        </div>
+        <div class="col-lg-12 mt-3 text-right">
+          <button id="btn_search" class="btn btn-navy"><i class="fa fa-search"></i> Cari</button>
+          <button id="btn_search_loading" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mencari...</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-12 mt-3" id="div_result_item"></div>
+</div>
 
-  .div_nama_layanan:hover{
-    white-space: wrap;
-    width: 25vw;
-    cursor: pointer;
-  }
-</style>
-
-<table class="table table-hover" id="table_riwayat_usul_ds">
-  <thead>
-    <th class="text-center">No</th>
-    <?php if($this->general_library->isProgrammer()){ ?>
-      <th class="text-center">Nama Pegawai</th>
-    <?php } ?>
-    <th class="text-center">Jenis Layanan</th>
-    <th class="text-center">Status</th>
-    <th class="text-center">Tanggal Usul</th>
-    <th class="text-center">Jumlah Dokumen</th>
-    <th class="text-center">Pilihan</th>
-  </thead>
-  <tbody>
-    <?php if($result){ $no = 1; foreach($result as $rs){ ?>
-      <tr>
-        <td class="text-center"><?=$no++;?></td>
-        <?php if($this->general_library->isProgrammer()){ ?>
-          <td class="text-left"><?=$rs['nama_pegawai']?></td>
-        <?php } ?>
-        <td class="text-left">
-          <div class="div_nama_layanan">
-            <?=$rs['id_m_jenis_layanan'] == 104 ? $rs['nama_layanan'] : $rs['nama_layanan'].' / '.$rs['keterangan']?>
-          </div>
-        </td>
-        <td class="text-center">
-          <?php
-            $badge = "badge-warning";
-            $status_text = "Belum Selesai";
-            if($rs['flag_done'] == 1){
-                $badge = "badge-success";
-                $status_text = "Selesai";
-            } else if($rs['flag_done'] == 2){
-                $badge = "badge-danger";
-                $status_text = "Ditolak";
-            } else { // jika belum selesai, cek nomor surat
-              if($rs['flag_use_nomor_surat'] && !$rs['id_t_nomor_surat']){
-                $status_text = "Nomor Surat belum diinput";
-              }
-            }
-          ?>
-          <badge style="overflow: wrap; white-space: wrap;" class="badge <?=$badge?>">
-            <?=$status_text?>
-          </badge>
-        </td>
-        <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
-        <td class="text-center"><?=$rs['jumlah_dokumen']?></td>
-        <td class="text-center">
-          <?php if(($rs['flag_use_nomor_surat'] == 1 && $rs['id_t_nomor_surat']) || $rs['flag_use_nomor_surat'] == 0){ ?>
-            <button class="btn btn-navy btn-sm" href="#modal_detail" onclick="openDetailModal('<?=$rs['id']?>')"><i class="fa fa-list"></i> Detail</button>
-          <?php } ?>
-          <?php if(!$rs['ref_id']){ ?>
-            <?php if($rs['flag_done'] == 0){ ?>
-              <button class="btn btn-danger btn-sm" onclick="deleteData('<?=$rs['id']?>')"><i class="fa fa-trash"></i> Hapus</button>
-            <?php } ?>
-          <?php } ?>
-        </td>
-      </tr>
-    <?php } } ?>
-  </tbody>
-</table>
 <script>
   $(function(){
-    $('#table_riwayat_usul_ds').dataTable()
+    $('#form_riwayat').submit()
   })
 
-  function openDetailModal(id){
-    $('#modal_detail').modal('show')
-    $('#modal_detail_content').html('')
-    $('#modal_detail_content').append(divLoaderNavy)
-    $('#modal_detail_content').load('<?=base_url("kepegawaian/C_Layanan/loadDetailUsulDs/")?>'+id, function(){
-      $('#loader').hide()
-    })
-  }
+  $('#form_riwayat').on('submit', function(e){
+    e.preventDefault()
+    $('#div_result_item').html('')
+    $('#div_result_item').append(divLoaderNavy)
 
-  function deleteData(id){
-    if(confirm("Apakah Anda yakin ingin menghapus Usul DS tersebut?")){
-      $.ajax({
-        url: '<?=base_url("kepegawaian/C_Layanan/deleteUsulDs/")?>'+id,
+    $('#btn_search').hide()
+    $('#btn_search_loading').show()
+    $.ajax({
+        url: '<?=base_url("kepegawaian/C_Layanan/loadRiwayatUsulDsData")?>',
         method: 'post',
         data: $(this).serialize(),
         success: function(data){
-          successtoast('Data berhasil dihapus')
-          $('#modal_detail').modal('hide')
-          $('#btn_refresh').click()
+          $('#btn_search').show()
+          $('#btn_search_loading').hide()
+          $('#div_result_item').html(data)
         }, error: function(e){
-            errortoast('Terjadi Kesalahan')
-            errortoast('Terjadi Kesalahan')
+          $('#btn_search').show()
+          $('#btn_search_loading').hide()
+          errortoast('Terjadi Kesalahan')
         }
-      })
-    }
-  }
+    })
+  })
 </script>

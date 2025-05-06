@@ -989,13 +989,15 @@ class M_Layanan extends CI_Model
                                 'flag_done' => 1,
                                 'flag_status' => 1,
                                 'url_done' => "arsipusulds/".$tahun."/".$bulan."/".$filename,
-                                'keterangan' => "File DS telah diupload secara manual"
+                                'flag_ds_manual' => 1
+                                // 'keterangan' => "File DS telah diupload secara manual"
                             ]);
                     
                     $this->db->where('id', $data['id_t_usul_ds'])
                             ->update('t_usul_ds', [
                                 'flag_done' => 1,
-                                'keterangan' => "File DS telah diupload secara manual",
+                                // 'keterangan' => "File DS telah diupload secara manual",
+                                'flag_ds_manual' => 1,
                                 'updated_by' => $this->general_library->getId(),
                             ]);
 
@@ -2084,6 +2086,8 @@ class M_Layanan extends CI_Model
     }
 
     public function loadRiwayatUsulDs(){
+        $data = $this->input->post();
+
         $this->db->select('a.*, b.nama as nama_pegawai, c.nama_layanan,
                 (
                     SELECT COUNT(aa.id)
@@ -2100,6 +2104,14 @@ class M_Layanan extends CI_Model
 
         if(!$this->general_library->isProgrammer()){
             $this->db->where('b.id', $this->general_library->getId());
+        }
+
+        if(isset($data['bulan'])){
+            $this->db->where('MONTH(a.created_date)', $data['bulan']);
+        }
+
+        if(isset($data['tahun'])){
+            $this->db->where('YEAR(a.created_date)', $data['tahun']);
         }
 
         return $this->db->get()->result_array();

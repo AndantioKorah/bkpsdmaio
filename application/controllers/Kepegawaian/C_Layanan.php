@@ -277,8 +277,12 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function loadRiwayatUsulDs(){
+		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', null);
+	}
+
+	public function loadRiwayatUsulDsData(){
 		$data['result'] = $this->layanan->loadRiwayatUsulDs();
-		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', $data);
+		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayatItem', $data);
 	}
 
 	public function tesCopy(){

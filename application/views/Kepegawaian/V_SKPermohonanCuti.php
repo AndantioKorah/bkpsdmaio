@@ -186,7 +186,7 @@
                     </div>
                     <!-- <img style="width: 30%;" src="<?=(base_url('assets/adminkit/img/example-ds.png'))?>"> -->
                   <?php } ?>
-                  <br><br><br><br><br>
+                  <br><br><br><br>
                   $
               </td>
             </tr>
@@ -207,7 +207,7 @@
             </tr>
             <tr valign="top">
               <td>3.</td>
-              <td>Sekretaris Daerah Kota Manado;</td>
+              <td>Pj. Sekretaris Daerah Kota Manado;</td>
             </tr>
             <tr valign="top">
               <td>4.</td>

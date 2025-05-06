@@ -8086,7 +8086,7 @@ public function submitEditJabatan(){
                         ->where('a.flag_sent', 0)
                         // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
-                        ->limit(3)
+                        ->limit(5)
                         ->get()->result_array();
                         // dd($data);
         if($data){
@@ -9081,13 +9081,15 @@ public function submitEditJabatan(){
                                 'flag_done' => 1,
                                 'flag_status' => 1,
                                 'url_done' => "arsipusulds/".$tahun."/".$bulan."/".$filename,
-                                'keterangan' => "File DS telah diupload secara manual"
+                                'flag_ds_manual' => 1,
+                                // 'keterangan' => "File DS telah diupload secara manual"
                             ]);
                     
                     $this->db->where('id', $data['id_t_usul_ds'])
                             ->update('t_usul_ds', [
                                 'flag_done' => 1,
-                                'keterangan' => "File DS telah diupload secara manual",
+                                // 'keterangan' => "File DS telah diupload secara manual",
+                                'flag_ds_manual' => 1,
                                 'updated_by' => $this->general_library->getId(),
                             ]);
 
@@ -9501,29 +9503,34 @@ public function submitEditJabatan(){
     }
 
     public function searchPenomoranSkCuti($data){
-        $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat,
-                (
-                    SELECT aa.tanggal_verif
-                    FROM t_progress_cuti aa
-                    WHERE aa.id_t_pengajuan_cuti = a.id
-                    AND aa.flag_active = 1
-                    AND aa.flag_verif = 1
-                    ORDER BY aa.urutan DESC
-                    LIMIT 1
-                ) as tanggal_verif
-                ')
+        // $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat,
+        //         (
+        //             SELECT aa.tanggal_verif
+        //             FROM t_progress_cuti aa
+        //             WHERE aa.id_t_pengajuan_cuti = a.id
+        //             AND aa.flag_active = 1
+        //             AND aa.flag_verif = 1
+        //             ORDER BY aa.urutan DESC
+        //             LIMIT 1
+        //         ) as tanggal_verif
+        //         ')
+            $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat, f.tanggal_verif')
                 ->from('t_pengajuan_cuti a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                 ->join('t_usul_ds d', 'a.id = d.ref_id AND table_ref = "t_pengajuan_cuti" AND d.flag_active = 1', 'left')
                 ->join('t_nomor_surat e', 'd.id_t_nomor_surat = e.id', 'left')
-                ->where('MONTH(a.created_date)', $data['bulan'])
-                ->where('YEAR(a.created_date)', $data['tahun'])
+                ->join('t_progress_cuti f', 'a.id = f.id_t_pengajuan_cuti AND f.flag_verif = 1 AND f.flag_active = 1')
+                // ->where('MONTH(a.created_date)', $data['bulan'])
+                // ->where('YEAR(a.created_date)', $data['tahun'])
+                ->where('MONTH(f.tanggal_verif)', $data['bulan'])
+                ->where('YEAR(f.tanggal_verif)', $data['tahun'])
                 ->where('a.meta_data IS NOT NULL')
                 // ->where('d.id_m_jenis_layanan', 3)
                 ->where('a.flag_active', 1)
                 // ->where('d.flag_active', 1)
                 ->group_by('a.id')
+                ->order_by('f.urutan', 'desc')
                 ->order_by('a.flag_ds_cuti', 'asc')
                 ->order_by('a.created_date', 'asc');
 

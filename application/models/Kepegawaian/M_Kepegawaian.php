@@ -7082,11 +7082,12 @@ public function submitEditJabatan(){
                                     ->get()->result_array();
 
         $result = null;
-        $riwayat = $this->db->select('a.*, a.status_pengajuan_cuti, c.nm_cuti, d.id as id_progress_cuti')
+        $riwayat = $this->db->select('a.*, a.status_pengajuan_cuti, c.nm_cuti, d.id as id_progress_cuti, e.id_t_nomor_surat')
                     ->from('t_pengajuan_cuti a')
                     // ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
                     ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti')
                     ->join('t_progress_cuti d', 'd.id_t_pengajuan_cuti = a.id AND d.flag_verif = 1', 'left')
+                    ->join('t_usul_ds e', 'a.id = e.ref_id AND e.table_ref = "t_pengajuan_cuti"')
                     ->where('id_m_user', $this->general_library->getId())
                     ->where('a.flag_active', 1)
                     ->order_by('created_date', 'desc')

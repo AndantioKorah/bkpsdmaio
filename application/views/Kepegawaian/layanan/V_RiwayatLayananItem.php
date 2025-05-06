@@ -246,16 +246,28 @@ $('#iframe_view_file').on('load', function(){
 
 function ajukanKembali(id){
                   var id_layanan = "<?=$m_layanan;?>"
-                   if(confirm('Ajukan kembali layanan pangkat ?')){
+                   if(confirm('Ajukan kembali layanan ?')){
                        $.ajax({
                            url: '<?=base_url("kepegawaian/C_Kepegawaian/ajukanKembaliLayananPangkat/")?>'+id,
                            method: 'post',
                            data: null,
                            success: function(){
                                successtoast('Layanan diajukan kembali')
-                              //  if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
                                loadListRiwayatLayananPangkat()
-                              //  }
+                               }
+                               if(id_layanan == 10){
+                                loadListRiwayatPerbaikanData()
+                               }
+                               if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
+                                loadListRiwayatUjianDinas()
+                               }
+                               if(id_layanan == 21){
+                                loadListRiwayatPeningkatanPenambahanGelar()
+                               }
+                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                                loadListRiwayatLayananJabfung()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

@@ -1256,7 +1256,9 @@
         }
 
         //coding ini untuk mengubah penandatangan menjadi hardcode
-        if($id_unitkerja == 4011000){ // inspektorat, kasub ubah jadi sek karena kasub lagi di luar negeri
+        if($id_unitkerja == 4011000 || // inspektorat, kasub ubah jadi sek karena kasub lagi di luar negeri
+        $id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
+        $id_unitkerja == 3015000){ // capil, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
             $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi

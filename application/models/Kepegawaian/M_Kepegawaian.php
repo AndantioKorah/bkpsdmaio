@@ -7817,6 +7817,7 @@ public function submitEditJabatan(){
 
                 $base64File = null;
                 $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
+                $jsonRequest['file'] = null;
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
 

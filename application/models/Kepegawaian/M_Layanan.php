@@ -1157,6 +1157,7 @@ class M_Layanan extends CI_Model
                 }
                 $base64File = null;
                 $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
+                $jsonRequest['file'] = null;
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
 
@@ -1934,6 +1935,7 @@ class M_Layanan extends CI_Model
 
             $base64File = null;
             $base64File = base64_encode(file_get_contents(base_url().$selectedUrl));
+            $jsonRequest['file'] = null;
             $jsonRequest['file'][] = $base64File;
             // dd($base64File);
 

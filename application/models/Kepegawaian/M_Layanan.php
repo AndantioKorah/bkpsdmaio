@@ -1155,6 +1155,7 @@ class M_Layanan extends CI_Model
                 if($d['url_image_ds']){
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
                 }
+                $base64File = null;
                 $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
@@ -1818,7 +1819,7 @@ class M_Layanan extends CI_Model
                 $this->db->where('id', $dataUsul['id'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $newFullPath,
-                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s')),
+                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s')). " melalui aplikasi Siladen",
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
@@ -1931,6 +1932,7 @@ class M_Layanan extends CI_Model
 
             $selectedUrl = $selected['url_done'] ? $selected['url_done'] : $selected['url'];
 
+            $base64File = null;
             $base64File = base64_encode(file_get_contents(base_url().$selectedUrl));
             $jsonRequest['file'][] = $base64File;
             // dd($base64File);
@@ -1967,13 +1969,13 @@ class M_Layanan extends CI_Model
                             'flag_selected' => 1,
                             'url_file' => $fullpath,
                             'updated_by' => $this->general_library->getId(),
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow)
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow). " melalui aplikasi Siladen"
                         ]);
 
                 $this->db->where('id', $selected['id_t_usul_ds_detail'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $fullpath,
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow),
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow). " melalui aplikasi Siladen",
                             'updated_by' => $this->general_library->getId()
                         ]);
 
@@ -2003,8 +2005,8 @@ class M_Layanan extends CI_Model
                             $oldFileName = $ld['url_done'];
                         }
                         $explFn = explode(".pdf", $oldFileName);
-                        $newFileName = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
-                        $newFullPath = $newFileName;
+                        $new_file_name = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
+                        $newFullPath = $new_file_name;
                         
                         // dd($oldFileName.'<br>'.$newFullPath);
                         copy($oldFileName, $newFullPath); // comment ini untuk testing

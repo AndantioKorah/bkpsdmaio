@@ -1248,13 +1248,23 @@ class M_Layanan extends CI_Model
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
 
+        if(!file_exists("arsipusulds/".$tahun) && !is_dir("arsipusulds/".$tahun)) {
+            mkdir("arsipusulds/".$tahun, 0777, TRUE);       
+        }
+
+        if(!file_exists("arsipusulds/".$tahun."/".$bulan) && !is_dir("arsipusulds/".$tahun."/".$bulan)) {
+            mkdir("arsipusulds/".$tahun."/".$bulan, 0777, TRUE);       
+        }
+
         if($filename == "0"){
             unlink("arsipusulds/".$tahun."/".$bulan."/".$filename);
         } else {
     		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
             if($uploadedFile){
                 foreach($uploadedFile as $uf){
-                    unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
+                    if(file_exists("arsipusulds/".$tahun."/".$bulan."/".$uf['name'])){
+                        unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
+                    }
                 }
             }
         }
@@ -1566,6 +1576,36 @@ class M_Layanan extends CI_Model
         }
 
         return $res;
+    }
+
+    public function deleteUsulDs($id){
+        $usulDs = $this->db->select('a.id as id_t_usul_ds, b.id as id_t_usul_ds_detail')
+                        ->from('t_usul_ds a')
+                        ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
+                        ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
+                        ->where('a.id', $id)
+                        ->group_by('a.id')
+                        ->get()->row_array();
+
+        if($usulDs){
+            $this->db->where('id', $id)
+                    ->update('t_usul_ds', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id_t_usul_ds', $id)
+                    ->update('t_usul_ds_detail', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id_t_usul_ds_detail', $usulDs['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail_progress', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
     }
 
     public function searchVerifUsulDs(){

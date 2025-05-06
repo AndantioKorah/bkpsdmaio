@@ -78,7 +78,10 @@
           <?php if(!isset($rs['flag_operator_verif'])){ ?>
             <button type="button" href="#modal_detail_cuti" onclick="loadDetailCuti('<?=$rs['id']?>')"
             data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
-            <?php if(!$rs['id_progress_cuti']){ ?>
+            <?php
+                // if(!$rs['id_progress_cuti']){
+                if(!$rs['id_t_nomor_surat']){ // jika belum input nomor surat, bisa dihapus
+            ?>
               <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
             <?php } ?>
           <?php } else { ?>

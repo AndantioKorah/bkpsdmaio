@@ -55,7 +55,7 @@ class C_Cron extends CI_Controller
         // $this->general->logCron('cronSyncJabatanSiasn');
         // $this->siasn->cronRiwayatJabatanSiasn();
 
-        // $this->cronAsync();
+        $this->cronAsync();
     }
 
     public function cronCheckVerifCuti(){
@@ -126,4 +126,8 @@ class C_Cron extends CI_Controller
 		$data = $this->general_library->createQrTtePortrait(null, null, $content);
 		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
 	}
+
+    public function getPengadaanInstansiWs($tahun){
+        return $this->general->getListPengadaan($tahun);
+    }
 }

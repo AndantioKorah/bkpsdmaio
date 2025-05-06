@@ -7535,7 +7535,8 @@ public function submitEditJabatan(){
                             ]);
                             $last_insert_nomor_surat = $this->db->insert_id();
                         }
-    
+                        
+                        dd($dataCuti);
                         $usulDs = $this->db->select('*')
                                         ->from('t_usul_ds')
                                         ->where('flag_active', 1)

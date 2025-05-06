@@ -7082,7 +7082,7 @@ public function submitEditJabatan(){
                     // ->join('m_status_pengajuan_cuti b', 'a.id_m_status_pengajuan_cuti = b.id')
                     ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti')
                     ->join('t_progress_cuti d', 'd.id_t_pengajuan_cuti = a.id AND d.flag_verif = 1', 'left')
-                    ->join('t_usul_ds e', 'a.id = e.ref_id AND e.table_ref = "t_pengajuan_cuti"')
+                    ->join('t_usul_ds e', 'a.id = e.ref_id AND e.table_ref = "t_pengajuan_cuti"', 'left')
                     ->where('a.id_m_user', $this->general_library->getId())
                     ->where('a.flag_active', 1)
                     ->order_by('created_date', 'desc')
@@ -7531,14 +7531,13 @@ public function submitEditJabatan(){
                             $last_insert_nomor_surat = $this->db->insert_id();
                         }
                         
-                        dd($dataCuti);
                         $usulDs = $this->db->select('*')
                                         ->from('t_usul_ds')
                                         ->where('flag_active', 1)
                                         ->where('ref_id', $dataCuti['id_t_pengajuan_cuti'])
                                         ->where('table_ref', 't_pengajuan_cuti')
                                         ->get()->row_array();
-    
+                        
                         if(!$usulDs){
                             $this->db->where('id', $dataCuti['id_t_pengajuan_cuti'])
                                     ->update('t_pengajuan_cuti', [

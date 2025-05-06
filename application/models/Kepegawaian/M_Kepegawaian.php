@@ -7088,7 +7088,7 @@ public function submitEditJabatan(){
                     ->join('db_pegawai.cuti c', 'a.id_cuti = c.id_cuti')
                     ->join('t_progress_cuti d', 'd.id_t_pengajuan_cuti = a.id AND d.flag_verif = 1', 'left')
                     ->join('t_usul_ds e', 'a.id = e.ref_id AND e.table_ref = "t_pengajuan_cuti"')
-                    ->where('id_m_user', $this->general_library->getId())
+                    ->where('a.id_m_user', $this->general_library->getId())
                     ->where('a.flag_active', 1)
                     ->order_by('created_date', 'desc')
                     ->group_by('a.id')

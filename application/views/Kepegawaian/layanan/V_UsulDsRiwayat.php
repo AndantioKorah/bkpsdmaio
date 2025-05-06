@@ -94,9 +94,11 @@
         method: 'post',
         data: $(this).serialize(),
         success: function(data){
+          successtoast('Data berhasil dihapus')
           $('#modal_detail').modal('hide')
           $('#btn_refresh').click()
         }, error: function(e){
+            errortoast('Terjadi Kesalahan')
             errortoast('Terjadi Kesalahan')
         }
       })

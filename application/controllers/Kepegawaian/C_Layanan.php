@@ -221,11 +221,11 @@ class C_Layanan extends CI_Controller
 
 	public function removeAllUploadedFileDs(){
 		$this->layanan->removeUploadedFileDs("0");
-		$this->session->set_userdata('uploaded_file_usul_ds', null);
+		$this->session->set_userdata('uploaded_file_usul_ds_'.$this->general_library->getId(), null);
 	}
 
 	public function getSelectedFile(){
-		$result['data'] = $this->session->userdata('uploaded_file_usul_ds');
+		$result['data'] = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 		$result['count'] = $result['data'] ? count($result['data']) : 0;
 
 		echo json_encode($result);
@@ -234,17 +234,17 @@ class C_Layanan extends CI_Controller
 	public function removeUploadedFileDs(){
 		$filename = $this->input->post('filename');
 		$this->layanan->removeUploadedFileDs($filename);
-		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 		unset($uploadedFile[$filename]);
 	}
 
 	public function uploadFileUsulDs(){
 		// $file = $_FILES['file'];
 		// // $data = $this->input->post();
-		// $uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		// $uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 
 		// $uploadedFile[$file['name']] = $file;
-		// $this->session->set_userdata('uploaded_file_usul_ds', $uploadedFile);
+		// $this->session->set_userdata('uploaded_file_usul_ds_'.$this->general_library->getId(), $uploadedFile);
 		
 		echo json_encode($this->layanan->uploadFileUsulDs());
 
@@ -310,6 +310,7 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function deleteUsulDs($id){
+		($this->layanan->deleteUsulDs($id));
 		//hapus t_usul_ds, t_usul_ds_detail, t_usul_ds_detail_progress, t_request_ds, t_cron_request_ds
 	}
 }

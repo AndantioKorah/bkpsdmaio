@@ -297,7 +297,9 @@ ol {
 					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
 					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
 					<input type="hidden" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
-					<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+					<!-- <input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>"> -->
+          <input type="hidden" id="skp1" value="<?php if($skp1 && $skp1['gambarsk'] != null) echo $skp1['id']; else echo "";?>">
+					<input type="hidden" id="skp2" value="<?php if($skp2 && $skp2['gambarsk'] != null) echo $skp2['id']; else echo "";?>">
 					<input type="hidden" id="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
 					<input type="hidden" id="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
 					<input type="hidden" id="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
@@ -331,7 +333,7 @@ ol {
               <?php } ?>
         <?php if($id_m_layanan == 12) { ?>
         <li>
-				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+        <a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
 				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
 				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
@@ -364,16 +366,16 @@ ol {
         <?php } ?>
         <?php if($id_m_layanan == 13) { ?>
           <li>
-				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+					<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
 				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
 				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 				</li>
         <li>
-				<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
-				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+        <a class="<?php if($skp2 && $skp2['gambarsk'] != null){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
+				onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
-				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+				class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
 				</li>
           <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
@@ -400,7 +402,7 @@ ol {
 				class="fas fa-<?php if($str_serdik) echo ''; else echo '';?>"></i></a>
         </li>
         <li>
-				<a class="<?php if($skp1){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah) { ?>
+        <a class="<?php if($ijazah){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah) { ?>
 				onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah* <i
 				class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
@@ -414,13 +416,13 @@ ol {
               <?php } ?>
               <?php if($id_m_layanan == 14) { ?>
                 <li>
-                <a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+                <a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
                 onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
                 class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
-                <a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
+                <a class="<?php if($skp2 && $skp2['gambarsk'] != null){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
                 onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
                 class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
@@ -480,13 +482,13 @@ ol {
                 class="fas fa-<?php if($sk_pemberhentian_dari_jabfung) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
-                <a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
+                <a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
                 onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
                 class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
-                <a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
+                <a class="<?php if($skp2 && $skp2['gambarsk'] != null){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
                 onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?> (hasil unduh aplikasi e-kinerja, telah sinkron SIASN)* <i
                 class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>

@@ -1148,7 +1148,7 @@ class M_Layanan extends CI_Model
                         ->where('a.flag_sent', 0)
                         // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
-                        ->limit(3)
+                        ->limit(5)
                         ->get()->result_array();
         // dd($data);
         if($data){
@@ -1761,11 +1761,12 @@ class M_Layanan extends CI_Model
 
             $dataUsul = $this->db->get()->row_array();
 
-            $existsReqDs = $this->db->select('*')
-                                    ->from('t_request_ds')
-                                    ->where('table_ref', 't_usul_ds_detail')
-                                    ->where('ref_id', $dataUsul['id'])
-                                    ->where('flag_active', 1)
+            $existsReqDs = $this->db->select('a.*, b.nomor_surat')
+                                    ->from('t_request_ds a')
+                                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id')
+                                    ->where('a.table_ref', 't_usul_ds_detail')
+                                    ->where('a.ref_id', $dataUsul['id'])
+                                    ->where('a.flag_active', 1)
                                     ->limit(1)
                                     // ->where('flag_selected', 0)
                                     ->get()->row_array();
@@ -1834,7 +1835,7 @@ class M_Layanan extends CI_Model
                             ]);
 
                     if($dataUsul['table_ref'] == 't_pengajuan_cuti'){ // jika cuti, kirim SK Cuti ke pegawai ybs
-                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti')
+                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user')
                                             ->from('t_pengajuan_cuti a')
                                             ->join('m_user b', 'a.id_m_user = b.id')
                                             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -1842,15 +1843,6 @@ class M_Layanan extends CI_Model
                                             ->where('a.id', $dataUsul['ref_id'])
                                             ->get()->row_array();
 
-                        // $pegawai = $this->db->select('a.*, d.nm_cuti, c.tanggal_mulai, d.id_cuti, c.lama_cuti, c.tanggal_mulai, c.tanggal_akhir, b.id as id_m_user')
-                        // ->from('db_pegawai.pegawai a')
-                        // ->join('m_user b', 'a.nipbaru_ws = b.username')
-                        // ->join('t_pengajuan_cuti c', 'b.id = c.id_m_user')
-                        // ->join('db_pegawai.cuti d', 'c.id_cuti = d.id_cuti')
-                        // ->where('a.nipbaru_ws', $selected['nip'])
-                        // ->where('c.id', $selected['ref_id'])
-                        // ->get()->row_array();
-                
                         $caption = "*[SK PENGAJUAN ".strtoupper($pegawaiYbs["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawaiYbs).",\nBerikut kami lampirkan SK ".$pegawaiYbs["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
                         $cronWa = [
                             'sendTo' => convertPhoneNumber($pegawaiYbs['handphone']),
@@ -1860,8 +1852,50 @@ class M_Layanan extends CI_Model
                             'type' => 'document',
                             'jenis_layanan' => 'Cuti'
                         ];
-                        // $this->general->saveToCronWa($cronWa);
                         $this->db->insert('t_cron_wa', $cronWa); // insert cron WA untuk krim file
+
+                        // insert di pegcuti
+                        $this->db->insert('db_pegawai.pegcuti', [
+                            'id_pegawai' => $pegawaiYbs['id_peg'],
+                            'jeniscuti' => $pegawaiYbs['id_cuti'],
+                            'lamacuti' => $pegawaiYbs['lama_cuti'],
+                            'tglmulai' => $pegawaiYbs['tanggal_mulai'],
+                            'tglselesai' => $pegawaiYbs['tanggal_akhir'],
+                            'nosttpp' => $existsReqDs['nomor_surat'],
+                            'tglsttpp' => date('Y-m-d'),
+                            'gambarsk' => $newFullPath,
+                            'status' => 2
+                        ]);
+
+                        //simpan di dokumen pendukung agar tersinkron dengan rekap absen
+                        $dokumen_pendukung = null;
+                        $hariKerja = countHariKerjaDateToDate($pegawaiYbs['tanggal_mulai'], $pegawaiYbs['tanggal_akhir']);
+                        if($hariKerja){
+                            $i = 0;
+                            foreach($hariKerja[2] as $h){
+                                $explode = explode("-", $h);
+                                $dokumen_pendukung[$i] = [
+                                    'id_m_user' => $pegawaiYbs['id_m_user'],
+                                    'id_m_jenis_disiplin_kerja' => 17,
+                                    'tanggal' => $explode[2],
+                                    'bulan' => $explode[1],
+                                    'tahun' => $explode[0],
+                                    'keterangan' => 'Cuti',
+                                    'pengurangan' => 0,
+                                    'status' => 2,
+                                    'keterangan_verif' => '',
+                                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                                    'id_m_user_verif' => 1,
+                                    'flag_outside' => 1,
+                                    'url_outside' => $newFullPath,
+                                    'created_by' => 1
+                                ];
+                                $i++;
+                            }
+                        }
+                        if($dokumen_pendukung){
+                            $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                        }
                     }
                 }
 

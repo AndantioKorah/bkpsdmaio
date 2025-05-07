@@ -677,10 +677,10 @@ $(function(){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;
         // }
-        if(sk_jabatan == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
         // if(pmk == ""){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;

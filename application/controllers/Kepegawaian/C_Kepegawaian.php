@@ -2182,9 +2182,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_layanan_skpangak'] = array(17,2,3,4,5);
 		$data['list_layanan_skjabatan'] = array(17,2,3,4);
 		$data['list_layanan_aktenikah'] = array(17,2,3,4,5);
-		$data['list_layanan_hd'] = array(17,2,3,4,5);
-		$data['list_layanan_pidana'] = array(17,2,3,4,5);
-		$data['list_layanan_dpcp'] = array(2,3,4,5);
+		$data['list_layanan_hd'] = array(2,4,5);
+		$data['list_layanan_pidana'] = array(2,4,5);
+		$data['list_layanan_dpcp'] = array(2,4,5);
 		$data['list_layanan_pmk'] = array(17,2,3,4);
 		$data['list_layanan_skp'] = array(17,2,3,4);
 		$data['list_layanan_surat_ket_kematian'] = array(5);

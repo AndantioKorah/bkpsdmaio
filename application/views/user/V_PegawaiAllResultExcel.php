@@ -44,6 +44,8 @@
                     <td style="font-weight: bold; text-align: center;">Masa Kerja</td>
                 <?php } ?>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Unit Kerja</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">Tanggal Lahir</td>
+
             </tr>
             <tbody>
                 <?php if($result){ $no=1; foreach($result as $rs){ ?>
@@ -71,6 +73,8 @@
                             <td style="padding: 10px; text-align: center;"><?=$rs['masa_kerja']?></td>
                         <?php } ?>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_unitkerja']?></td>
+                        <td style="padding: 10px; text-align: left;"><?=($rs['tgllahir'])?></td>
+
                     </tr>
                 <?php } } ?>
             </tbody>

@@ -390,7 +390,7 @@ ol {
 							<li>
 								<a class="<?php if($sk_jabatan){ if($sk_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_jabatan) { ?>
 									onclick="viewBerkas('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN* </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_dpcp)) { ?>
@@ -677,10 +677,10 @@ $(function(){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;
         // }
-        if(sk_jabatan == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
         // if(pmk == ""){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;

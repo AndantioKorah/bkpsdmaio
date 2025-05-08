@@ -513,7 +513,9 @@ class General_library
         stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan']) ||
         stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan_tambahan']) ||
         stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan']) ||
-        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan_tambahan'])
+        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Kecamatan', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Kecamatan', $this->userLoggedIn['nama_jabatan_tambahan'])
         ? true : false;
     }
 

@@ -7853,6 +7853,8 @@ public function submitEditJabatan(){
                         // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                            'ref_id' => $selected['ref_id'],
+                            'table_ref' => 't_usul_ds_detail',
                             'param' => json_encode([
                                             'id' => $selected['ref_id'],
                                             'flag_progress' => 0,

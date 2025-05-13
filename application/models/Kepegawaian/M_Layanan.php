@@ -1740,7 +1740,7 @@ class M_Layanan extends CI_Model
                     ->update('t_usul_ds_detail', $detail);
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
-            $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
+            $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file, b.id_t_nomor_surat,
                             b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page, b.ref_id, b.table_ref, b.nama_kolom_ds')
                         ->from('t_usul_ds_detail a')
                         ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
@@ -1800,7 +1800,7 @@ class M_Layanan extends CI_Model
 
                 $requestDs = [
                     'created_by' => $this->general_library->getId(),
-                    'id_t_nomor_surat' => 0,
+                    'id_t_nomor_surat' => $dataUsul['id_t_nomor_surat'],
                     'ref_id' => $dataUsul['id'],
                     'table_ref' => 't_usul_ds_detail',
                     'id_m_jenis_ds' => 5,
@@ -1835,7 +1835,7 @@ class M_Layanan extends CI_Model
                             ]);
 
                     if($dataUsul['table_ref'] == 't_pengajuan_cuti'){ // jika cuti, kirim SK Cuti ke pegawai ybs
-                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user')
+                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user, a.id_cuti')
                                             ->from('t_pengajuan_cuti a')
                                             ->join('m_user b', 'a.id_m_user = b.id')
                                             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -1854,6 +1854,13 @@ class M_Layanan extends CI_Model
                         ];
                         $this->db->insert('t_cron_wa', $cronWa); // insert cron WA untuk krim file
 
+                        $explodeFileName = explode("/", $newFullPath);
+                        $filePathCuti = 'arsipcuti/'.$explodeFileName[count($explodeFileName)-1];
+
+                        if(isset($params['selectedData']['url_file'])){
+                            copy($params['selectedData']['url_file'], $filePathCuti);
+                        }
+                        
                         // insert di pegcuti
                         $this->db->insert('db_pegawai.pegcuti', [
                             'id_pegawai' => $pegawaiYbs['id_peg'],
@@ -1863,7 +1870,7 @@ class M_Layanan extends CI_Model
                             'tglselesai' => $pegawaiYbs['tanggal_akhir'],
                             'nosttpp' => $existsReqDs['nomor_surat'],
                             'tglsttpp' => date('Y-m-d'),
-                            'gambarsk' => $newFullPath,
+                            'gambarsk' => $newFileName,
                             'status' => 2
                         ]);
 
@@ -1872,6 +1879,7 @@ class M_Layanan extends CI_Model
                         $hariKerja = countHariKerjaDateToDate($pegawaiYbs['tanggal_mulai'], $pegawaiYbs['tanggal_akhir']);
                         if($hariKerja){
                             $i = 0;
+                            $randomString = generateRandomString();
                             foreach($hariKerja[2] as $h){
                                 $explode = explode("-", $h);
                                 $dokumen_pendukung[$i] = [
@@ -1887,8 +1895,9 @@ class M_Layanan extends CI_Model
                                     'tanggal_verif' => date('Y-m-d H:i:s'),
                                     'id_m_user_verif' => 1,
                                     'flag_outside' => 1,
-                                    'url_outside' => $newFullPath,
-                                    'created_by' => 1
+                                    'random_string' => $randomString,
+                                    'url_outside' => $filePathCuti,
+                                    'created_by' => 0
                                 ];
                                 $i++;
                             }

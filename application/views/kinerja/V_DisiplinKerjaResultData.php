@@ -65,14 +65,18 @@
                             <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN 
                             || ($r['id_m_user'] != $this->general_library->getId() && isKasubKepegawaian($this->general_library->getNamaJabatan()))
                             ) { ?>
-                                <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                <?php if($r['random_string']){ ?>
+                                    <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                <?php } ?>
                                 <button data-list_id='<?=json_encode($r['list_id'])?>' href="#tambah_data_disiplin_kerja"
                                     onclick="reupload('<?=$r['random_string']?>')" type="button" data-toggle="modal"
                                     id="btn_reupload_detail_<?=$r['random_string']?>" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Reupload
                                 </button>
                                 <?php } ?>
                                 <?php } else { ?>
-                                    <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                    <?php if($r['random_string']){ ?>
+                                        <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
+                                    <?php } ?>
                                     <?php if($status == 3){ ?>
                                         <button data-list_id='<?=json_encode($r['list_id'])?>' href="#tambah_data_disiplin_kerja"
                                         onclick="reupload('<?=$r['random_string']?>')" type="button" data-toggle="modal"

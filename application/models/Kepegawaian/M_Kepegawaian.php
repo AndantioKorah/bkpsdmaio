@@ -6889,7 +6889,7 @@ public function submitEditJabatan(){
                                 ->get()->row_array();
 
         $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone,
-                                d.nip_kepalaskpd_hardcode')
+                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -6948,7 +6948,7 @@ public function submitEditJabatan(){
                 }
             }
         }
-
+        
         if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) &&
             $thisuser['nip_kepalaskpd_hardcode'] != $thisuser['nipbaru_ws']){
             // jika pegawai sekolah dan bukan kepsek dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya 
@@ -6957,7 +6957,8 @@ public function submitEditJabatan(){
                 !stringStartWith("Plh. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan']))){ // TK 
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
+                $thisuser['flag_sekolah_negeri'] == 1){ // TK 
                 return [
                     'code' => 1,
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
@@ -6965,7 +6966,8 @@ public function submitEditJabatan(){
             } else if($thisuser['id_unitkerjamaster'] != 8000000 &&
                 (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
                 $result[0]['nama_jabatan'] != 'Plt. Kepala Sekolah' &&
-                $result[0]['nama_jabatan'] != 'Plh. Kepala Sekolah')){ // SD, SMP, SMA 
+                $result[0]['nama_jabatan'] != 'Plh. Kepala Sekolah') &&
+                $thisuser['flag_sekolah_negeri'] == 1){ // SD, SMP, SMA 
                 return [
                     'code' => 1,
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."

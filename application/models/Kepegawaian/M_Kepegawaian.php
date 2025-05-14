@@ -10730,6 +10730,21 @@ public function getFileForKarisKarsu()
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    public function getDokumenAkteAnakForPensiun()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status !=', 3)
+        ->where_in('hubkel', [40])
+        ->order_by('tgllahir', 'asc')
+        ->limit(1)
+        ->from('db_pegawai.pegkeluarga');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenAkteNikahForPensiunAdmin($id_peg)
     {
         $this->db->select('*')

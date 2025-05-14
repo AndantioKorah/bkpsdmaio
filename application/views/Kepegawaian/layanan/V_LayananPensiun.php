@@ -491,7 +491,7 @@ ol {
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_akteanak)) { ?>
                   <li><a class="<?php if($akteanak) echo 'select'; else echo 'unselect';?>" <?php if($akteanak) { ?>
-									onclick="viewBerkas('<?=$akteanak['gambarsk'];?>',4)" data-toggle="modal"
+									onclick="viewBerkas('<?=$akteanak['gambarsk'];?>',5)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte lahir anak (bagi anak kandung yang belum berusia 25 tahun, belum pernah bekerja, belum pernah menikah, dan masih sekolah/kuliah'); ?></a></li>
 							<li>

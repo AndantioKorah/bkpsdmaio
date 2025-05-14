@@ -2165,7 +2165,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
 		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');
 		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','26','0');
-		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		// $data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		$data['akteanak'] = $this->kepegawaian->getDokumenAkteAnakForPensiun();
 		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
 		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
 		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','59','0');

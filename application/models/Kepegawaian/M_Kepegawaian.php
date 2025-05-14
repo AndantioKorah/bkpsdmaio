@@ -10733,6 +10733,21 @@ public function getFileForKarisKarsu()
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    public function getDokumenAkteAnakForPensiun()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status !=', 3)
+        ->where_in('hubkel', [40])
+        ->order_by('tgllahir', 'asc')
+        ->limit(1)
+        ->from('db_pegawai.pegkeluarga');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenAkteNikahForPensiunAdmin($id_peg)
     {
         $this->db->select('*')
@@ -12222,7 +12237,7 @@ public function getFileForVerifLayanan()
 
                 $this->updatePendidikan($dataLayanan['id_peg']);
             
-            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambahan Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan peningkata pendidikan / penambahan gelar anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambahan Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan peningkatan pendidikan / penambahan gelar anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
             $cronWa = [
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,

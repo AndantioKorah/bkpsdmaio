@@ -1763,7 +1763,7 @@ class M_Layanan extends CI_Model
 
             $existsReqDs = $this->db->select('a.*, b.nomor_surat')
                                     ->from('t_request_ds a')
-                                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id')
+                                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
                                     ->where('a.table_ref', 't_usul_ds_detail')
                                     ->where('a.ref_id', $dataUsul['id'])
                                     ->where('a.flag_active', 1)

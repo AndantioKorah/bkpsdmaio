@@ -10641,7 +10641,6 @@ public function getFileForKarisKarsu()
         ->where('a.jenisjabatan', 10)
         ->where('b.jenis_jabatan', "JFT")
         ->order_by('a.tmtjabatan', 'asc')
-        ->order_by('id', 'desc')
         ->limit(1);
        
         $query = $this->db->get()->row_array();

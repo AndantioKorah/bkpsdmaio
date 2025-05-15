@@ -494,10 +494,10 @@ ol {
                 class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
-                <a class="<?php if($sk_jabatan_fungsional_pertama) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
-                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+                <a class="<?php if($sk_jabatan_fungsional_pertama) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional_pertama) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional_pertama['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pengangkatan Pertama dalam Jabatan Fungsional* <i
-                class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                class="fas fa-<?php if($sk_jabatan_fungsional_pertama) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
                 <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>

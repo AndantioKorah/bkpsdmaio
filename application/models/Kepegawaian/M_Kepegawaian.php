@@ -10628,6 +10628,23 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getDokumenJabatanFungsionalPertamaForLayanan()
+    {
+        $this->db->select('*')
+        ->from('db_pegawai.pegjabatan as a')
+        ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('a.flag_active', 1)
+        ->where('a.jenisjabatan', 10)
+        ->where('b.jenis_jabatan', "JFT")
+        ->order_by('a.tmtjabatan', 'asc')
+        ->order_by('id', 'desc')
+        ->limit(1);
+       
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanFungsionalForLayananAdmin($id_peg)
     {
         $this->db->select('*')

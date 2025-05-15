@@ -2903,5 +2903,84 @@
             dd("done ".count($kenegaraanFix));
         }
 
+        public function addUserCpns(){
+            $unitKerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->get()->result_array();
+            $listUnitKerja = null;
+            foreach($unitKerja as $u){
+                $listUnitKerja[$u['id_unor_siasn']] = $u;
+            }
+
+            $mBidang = $this->db->select('*')
+                                ->from('m_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listBidang = null;
+            foreach($mBidang as $bid){
+                $listBidang[$bid['id_unor_siasn']] = $bid;
+            }
+
+            $mSubBidang = $this->db->select('*')
+                                ->from('m_sub_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listSubBidang = null;
+            foreach($mSubBidang as $subBid){
+                $listSubBidang[$subBid['id_unor_siasn']] = $subBid;
+            }
+
+            $mUser = $this->db->select('*')
+                                ->from('m_user')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listUser = null;
+            foreach($mUser as $us){
+                $listUser[$us['username']] = $us;
+            }
+
+            $pegawai = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->get()->result_array();
+
+            $listPegawai = null;
+            foreach($pegawai as $p){
+                $listPegawai[$p['nipbaru_ws']] = $p;
+            }
+
+            $resultJson = $this->db->select('*')
+                                ->from('m_parameter')
+                                ->where('parameter_name', 'TEMP_CPNS_2024')
+                                ->get()->row_array();
+            $result = json_decode($resultJson['parameter_value'], true);
+
+            foreach($result as $rs){
+                $keyUk = 'unor_induk_id';
+                if(!isset($listUnitKerja[$rs['unor_induk_id']])){
+                    $keyUk = 'unor_id';
+                }
+
+                $bidang = isset($listBidang[$rs['unor_id']]) ? $listBidang[$rs['unor_id']] : null;
+
+                $password = $rs['nip'];
+                $pass_split = str_split($password);
+                $new_password = $pass_split[6].$pass_split[7].$pass_split[4].$pass_split[5].$pass_split[0].$pass_split[1].$pass_split[2].$pass_split[3];
+                $newEncPassword = $this->general_library->encrypt($rs['nip'], $new_password);
+
+                $tesspass = '08092001';
+
+                if(!isset($listUser[$rs['nip']])){
+                    $insertUser =  [
+                        'username' => $rs['nip'],
+                        'password' => $newEncPassword,
+                        'id_m_bidang' => $bidang ? $bidang['id'] : 0,
+                        'nama' => $rs['nama']
+                    ];
+
+                    dd($insertUser);
+                }
+            }
+        }
+
 	}
 ?>

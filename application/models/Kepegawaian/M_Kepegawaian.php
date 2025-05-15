@@ -6411,6 +6411,15 @@ public function submitEditJabatan(){
             ]);
 
         } else {
+            $dataCuti = $this->db->select('')
+                                ->from('t_progress_cuti a')
+                                ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                ->join('m_user c', 'b.id_m_user_verifikasi = a.id')
+                                ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                                ->where('a.flag_active', 1)
+                                ->where('b.flag_active', 1)
+                                ->get()->row_array();
+
             $rs['code'] = 1;
             $rs['message'] = "Data Tidak Ditemukan";
         }

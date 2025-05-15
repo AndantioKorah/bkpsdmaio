@@ -130,4 +130,8 @@ class C_Cron extends CI_Controller
     public function getPengadaanInstansiWs($tahun){
         return $this->general->getListPengadaan($tahun);
     }
+
+    public function addUserCpns(){
+        return $this->user->addUserCpns();
+    }
 }

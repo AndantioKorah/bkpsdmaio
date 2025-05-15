@@ -1641,13 +1641,14 @@
         public function getListPengadaan($tahun){
             // $result = $this->siasnlib->getListPengadaan($tahun);
             // $res = json_decode($result['data'], true)['data'];
-            // dd($res);
             // $pns = null;
             // foreach($res as $r){
             //     if($r['jenis_formasi_id'] == "0101"){
             //         $pns[] = $r;
             //     }
             // }
+            // dd(json_encode($pns));
+            // dd(($pns));
 
             $exists = [
                 "199208292025052001",
@@ -1757,20 +1758,6 @@
                             ->get()->row_array();
 
             $result = json_decode($resultJson['parameter_value'], true);
-
-            // $tempNip = null;
-            // foreach($result as $rs){
-            //     $tempNip[$rs['nip']] = $rs;
-            // }
-
-            // $notFound = null;
-            // foreach($exists as $e){
-            //     if(!isset($tempNip[$e])){
-            //         $notFound[] = $e;
-            //     }
-            // }
-
-            // dd(json_encode($notFound));
             
             dd($result);
 

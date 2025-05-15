@@ -114,12 +114,16 @@
         Verifikasi
         </button>
         <?php } ?>
-        <?php if($result[0]['status_layanan'] == 1) { ;?>
+        <?php 
+        // if($result[0]['status_layanan'] == 1) {
+           ;?>
         
         <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-        <?php } ?>
+        <?php 
+        // } 
+        ?>
       
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">

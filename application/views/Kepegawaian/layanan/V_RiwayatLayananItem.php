@@ -15,6 +15,9 @@
           <?php if($m_layanan == 10) { ?>
           <th class="text-left">SK Perbaikan Data</th>
           <?php } ?>
+          <?php if($m_layanan == 21) { ?>
+          <th class="text-left">SK Peningkatan Pendidikan / Penambahan Gelar</th>
+          <?php } ?>
           <th style="width:40%;"></th>
         </thead>
         <tbody>

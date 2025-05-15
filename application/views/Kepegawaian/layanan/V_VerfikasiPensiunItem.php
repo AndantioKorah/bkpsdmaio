@@ -28,10 +28,18 @@
             </td>
             <td class="text-left"><?=$rs['keterangan']?></td>
              <td>
+             
+             <?php if($rs['jenis_pensiun'] != 17) { ?>
              <a href="<?= base_url();?>kepegawaian/verifikasi-pensiun-detail/<?=$rs['id_pengajuan']?>/<?=$rs['jenis_pensiun']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>
+            <?php } else { ?>
+              <a href="<?= base_url();?>kepegawaian/pensiun/kelengkapan-berkas/<?=$rs['nipbaru_ws']?>">
+                <button  class="btn btn-sm btn-primary">
+                Verifikasi</button>
+            <?php } ?>
+
              </td>
               <td>
               <?=$rs['verifikator']?>

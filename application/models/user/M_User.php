@@ -2774,8 +2774,8 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 9;
-            $bulan = 4;
+            $tanggal = 5;
+            $bulan = 5;
             $tahun = 2025;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
@@ -2892,15 +2892,15 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    echo "input ".$k['user_id']."\n <br>";
+                    // echo "input ".$k['user_id']."\n <br>";
                 } else {
                     $out[] = $k;
                 }
             }
-            // dd($kenegaraan);
-            dd("done ".count($kenegaraanFix));
+            dd($kenegaraanFix);
+            // dd("done ".count($kenegaraanFix));
         }
 
         public function addUserCpns(){

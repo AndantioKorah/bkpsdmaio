@@ -121,10 +121,19 @@ class General_library
     public function getProfilePicture(){
         $photo = 'assets/img/user-icon.png';
         $photo_saved = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-        if(file_exists($photo_saved)){
-            $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-            // $photo = 'assets/img/user-icon.png';
+        if($this->userLoggedIn['fotopeg'] == null){
+        if($this->userLoggedIn['jk'] == "Laki-Laki" || $this->userLoggedIn['jk'] == "Laki-laki"){
+            $photo = 'assets/img/user-icon-male.png';
+        } else {
+            $photo = 'assets/img/user-icon-woman.png';
         }
+        } else {
+            if(file_exists($photo_saved)){
+                $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+                // $photo = 'assets/img/user-icon.png';
+            }
+        }
+  
         return base_url().$photo;
     }
 

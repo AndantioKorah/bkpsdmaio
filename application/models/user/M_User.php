@@ -2774,8 +2774,8 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 9;
-            $bulan = 4;
+            $tanggal = 5;
+            $bulan = 5;
             $tahun = 2025;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
@@ -2892,15 +2892,212 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    echo "input ".$k['user_id']."\n <br>";
+                    // echo "input ".$k['user_id']."\n <br>";
                 } else {
                     $out[] = $k;
                 }
             }
-            // dd($kenegaraan);
-            dd("done ".count($kenegaraanFix));
+            dd($kenegaraanFix);
+            // dd("done ".count($kenegaraanFix));
+        }
+
+        public function addUserCpns(){
+            $unitKerja = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->get()->result_array();
+            $listUnitKerja = null;
+            foreach($unitKerja as $u){
+                $listUnitKerja[$u['id_unor_siasn']] = $u;
+            }
+
+            $mBidang = $this->db->select('*')
+                                ->from('m_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listBidang = null;
+            foreach($mBidang as $bid){
+                $listBidang[$bid['id_unor_siasn']] = $bid;
+            }
+
+            $mSubBidang = $this->db->select('*')
+                                ->from('m_sub_bidang')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listSubBidang = null;
+            foreach($mSubBidang as $subBid){
+                $listSubBidang[$subBid['id_unor_siasn']] = $subBid;
+            }
+
+            $mUser = $this->db->select('*')
+                                ->from('m_user')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listUser = null;
+            foreach($mUser as $us){
+                $listUser[$us['username']] = $us;
+            }
+
+            $pegawai = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->get()->result_array();
+
+            $listPegawai = null;
+            foreach($pegawai as $p){
+                $listPegawai[$p['nipbaru_ws']] = $p;
+            }
+
+            $jabatanPelaksana = $this->db->select('*')
+                                    ->from('db_pegawai.jabatan')
+                                    ->where('nama_jabatan LIKE', 'Pelaksana%')
+                                    ->where('eselon', 'Non Eselon')
+                                    ->where('jenis_jabatan', 'JFU')
+                                    ->get()->result_array();
+            $listJabatanPelaksana = null;
+            foreach($jabatanPelaksana as $jp){
+                $listJabatanPelaksana[$jp['id_unitkerja']] = $jp;
+            }
+
+            $resultJson = $this->db->select('*')
+                                ->from('m_parameter')
+                                ->where('parameter_name', 'TEMP_CPNS_2024')
+                                ->get()->row_array();
+            $result = json_decode($resultJson['parameter_value'], true);
+
+            $this->db->trans_begin();
+
+            foreach($result as $rs){
+                // dd($result);%
+                $agama = 1;
+                if($rs['agama_nama'] == 'Katholik'){
+                    $agama = 2;
+                } else if($rs['agama_nama'] == 'Islam'){
+                    $agama = 3;
+                } else if($rs['agama_nama'] == 'Hindu'){
+                    $agama = 4;
+                } else if($rs['agama_nama'] == 'Buddha'){
+                    $agama = 5;
+                }
+                $keyUk = 'unor_induk_id';
+                if(!isset($listUnitKerja[$rs['unor_induk_id']])){
+                    $keyUk = 'unor_id';
+                } else {
+                    if($listUnitKerja[$rs[$keyUk]]['id_unitkerja'] == 1000001){ //jika sekda, ambil unor_id
+                        $keyUk = 'unor_id';
+                    }
+                }
+
+                $bidang = isset($listBidang[$rs['unor_id']]) ? $listBidang[$rs['unor_id']] : null;
+
+                $password = $rs['nip'];
+                $pass_split = str_split($password);
+                $new_password = $pass_split[6].$pass_split[7].$pass_split[4].$pass_split[5].$pass_split[0].$pass_split[1].$pass_split[2].$pass_split[3];
+                $newEncPassword = $this->general_library->encrypt($rs['nip'], $new_password);
+
+                // $tesspass = '08092001';
+                // $encTesPass = $this->general_library->encrypt($rs['nip'], $tesspass);
+
+                if(!isset($listUser[$rs['nip']])){
+                    $insertUser =  [
+                        'username' => $rs['nip'],
+                        'password' => $newEncPassword,
+                        // 'tessPass' => $encTesPass,
+                        'id_m_bidang' => $bidang ? $bidang['id'] : 0,
+                        'nama' => $rs['nama']
+                    ];
+                    echo "inserting user ...".$rs['nip']."<br>";
+                    $this->db->insert('m_user', $insertUser);
+                    $insertIdMUser = $this->db->insert_id();
+
+                    $this->db->insert('m_user_role', [
+                        'id_m_user' => $insertIdMUser,
+                        'id_m_role' => 10,
+                        'is_default' => 1
+                    ]);
+                } else {
+                    echo "skip user because exists ".$rs['nip']."<br>";
+                }
+
+                if(!isset($listPegawai[$rs['nip']])){
+                    $uker = null;
+                    $jabatan = null;
+                    if(isset($listUnitKerja[$rs[$keyUk]])){
+                        $uker = $listUnitKerja[$rs[$keyUk]];
+                    }
+
+                    if(!$uker){
+                        echo "uker tidak ada";
+                        dd($rs);
+                        $this->db->trans_rollback();
+                    } else {
+                        if(!isset($listJabatanPelaksana[$uker['id_unitkerja']])){
+                            echo "jabatan tidak ada ".$uker['id_unitkerja'];
+                            dd($rs);
+                            $this->db->trans_rollback();
+                        } else {
+                            $jabatan = $listJabatanPelaksana[$uker['id_unitkerja']];   
+                        }
+                    }
+
+                    $idpeg = "PEG202503".generateRandomNumber(5);
+
+                    $insertPegawai =  [
+                        'id_peg' => $idpeg,
+                        'niplama' => "",
+                        'nipbaru' => $rs['nip'],
+                        'nipbaru_ws' => $rs['nip'],
+                        'nama' => $rs['nama'],
+                        'tptlahir' => $rs['tempat_lahir'],
+                        'tgllahir' => $rs['tanggal_lahir'],
+                        'jk' => $rs['jenis_kelamin'] == "F" ? "Perempuan" : "Laki-laki",
+                        'agama' => $agama,
+                        'skpd' => $uker['id_unitkerja'],
+                        'jabatan' => $jabatan['id_jabatanpeg'],
+                        'statusjabatan' => 1,
+                        'jenisjabpeg' => 10,
+                        'pangkat' => $rs['golongan_id'],
+                        'tmtpangkat' => "2025-05-01",
+                        'tmtcpns' => "2025-05-01",
+                        'tmtgjberkala' => "2025-05-01",
+                        'golawal' => $rs['golongan_id'],
+                        'statuspeg' => 1,
+                        'jenispeg' => 1,
+                        'id_m_status_pegawai' => 1,
+                        'flag_terima_tpp' => 1,
+                        'besaran_gaji' => $rs['gaji_pokok'],
+                        'id_pns_siasn' => $rs['orang_id']
+                    ];
+                    echo "inserting pegawai ...".$rs['nip']."<br>";
+                    $this->db->insert('db_pegawai.pegawai', $insertPegawai);
+
+                    $pegjabatan = [
+                        'id_pegawai' => $idpeg,
+                        'nm_jabatan' => "Pelaksana",
+                        'id_jabatan' => $jabatan['id_jabatanpeg'],
+                        'tmtjabatan' => "2025-05-01",
+                        'jenisjabatan' => 10,
+                        'pejabat' => "Wali Kota Manado",
+                        'eselon' => 1,
+                        'nosk' => "800.1.2.5/BKPSDM/SK/02/2025",
+                        'tglsk' => '2025-05-05',
+                        'skpd' => $uker['nm_unitkerja'],
+                        'status' => 2,
+                        'tanggal_verif' => date('Y-m-d H:i:s')
+                    ];
+
+                    echo "inserting pegjabatan ...".$rs['nip']."<br>";
+                    $this->db->insert('db_pegawai.pegjabatan', $pegjabatan);
+                } else {
+                    echo "skip pegawai because exists ".$rs['nip']."<br>";
+                }
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
         }
 
 	}

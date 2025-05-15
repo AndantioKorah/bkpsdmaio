@@ -124,13 +124,19 @@
 		</a>
 	</li>
 	<?php } ?>
-	<li class="sidebar-item">
-		<a class="sidebar-link" href="<?=base_url();?>master/list-tpp">
-		<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
-			<i class="align-middle me-2 fa fa-money-bill"></i> 
-			<span class="align-middle">List Pemberian TPP</span>
-		</a>
-	</li>
+
+	<?php if($this->general_library->isProgrammer() ||
+	$this->general_library->isAdminAplikasi() ||
+	isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>master/list-tpp">
+			<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
+				<i class="align-middle me-2 fa fa-money-bill"></i> 
+				<span class="align-middle">List Pemberian TPP</span>
+			</a>
+		</li>
+	<?php } ?>
+
 	<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi()
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())

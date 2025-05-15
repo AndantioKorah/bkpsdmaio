@@ -6411,17 +6411,57 @@ public function submitEditJabatan(){
             ]);
 
         } else {
-            $dataCuti = $this->db->select('')
+            $dataCuti = $this->db->select('b.*, a.urutan, a.nohp, a.id as id_t_progress_cuti, e.nm_cuti, d.gelar1, d.nama, d.gelar2')
                                 ->from('t_progress_cuti a')
                                 ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
-                                ->join('m_user c', 'b.id_m_user_verifikasi = a.id')
+                                ->join('m_user c', 'b.id_m_user = c.id')
                                 ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                                ->join('db_pegawai.cuti e', 'b.id_cuti = e.id_cuti')
                                 ->where('a.flag_active', 1)
                                 ->where('b.flag_active', 1)
+                                ->where('c.flag_active', 1)
+                                ->where('a.id', $id)
                                 ->get()->row_array();
 
-            $rs['code'] = 1;
-            $rs['message'] = "Data Tidak Ditemukan";
+            if($dataCuti){
+                $dataCutiSebelumnya = $this->db->select('a.*')
+                                    ->from('t_progress_cuti a')
+                                    ->where('a.id_t_pengajuan_cuti', $dataCuti['id'])
+                                    ->where('a.urutan', $dataCuti['urutan']-1)
+                                    ->where('a.flag_active', 1)
+                                    ->get()->row_array();
+
+                $pada_tanggal = formatDateNamaBulan($dataCuti['tanggal_mulai']);
+                if($dataCuti['tanggal_mulai'] != $dataCuti['tanggal_akhir']){
+                    $pada_tanggal = formatDateNamaBulan($dataCuti['tanggal_mulai'])." sampai ".formatDateNamaBulan($dataCuti['tanggal_akhir']);
+                }
+
+                $message = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().
+                ", pegawai atas nama: ".getNamaPegawaiFull($dataCuti).
+                " telah mengajukan Permohonan ".
+                $dataCuti['nm_cuti']." selama ".$dataCuti['lama_cuti']." hari pada ".$pada_tanggal;
+
+                if($dataCutiSebelumnya){
+                    $message .= ". Permohonan Cuti ini telah disetujui sebelumnya oleh ".$dataCutiSebelumnya['nama_jabatan'];
+                }
+
+                $message = $message.". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
+
+                $cronWa = [
+                    'ref_id' => $dataCuti['id'],
+                    'type' => 'text',
+                    'sendTo' => convertPhoneNumber($dataCuti['nohp']),
+                    'message' => $message.FOOTER_MESSAGE_CUTI,
+                    'jenis_layanan' => 'Cuti',
+                    'table_state' => 't_progress_cuti',
+                    'column_state' => 'chatId',
+                    'id_state' => $dataCuti['id_t_progress_cuti'],  
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = "Data Tidak Ditemukan";
+            }
         }
 
         if($rs['code'] == 0){

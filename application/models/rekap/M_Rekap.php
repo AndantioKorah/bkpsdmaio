@@ -1262,6 +1262,8 @@
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
             $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi
+        } else if($id_unitkerja == 3014000){ // disnaker, nama jabatan kasub jadi PLT
+            $result['kasubag']['nama_jabatan'] = 'Plt. Kepala Sub Bagian Umum dan Kepegawaian';
         }
 
         if($list_pegawai_unor_induk){

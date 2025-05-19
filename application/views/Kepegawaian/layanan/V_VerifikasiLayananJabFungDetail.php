@@ -484,7 +484,8 @@
       </div>
     </div>
   </div>
-</div>
+<!-- </div> -->
+
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
 </div>

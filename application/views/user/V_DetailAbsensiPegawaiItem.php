@@ -133,11 +133,12 @@
             }
         }
     ?>
+    <php if($dates) ?>
     <div style="position: relative;
-    height: 55px;
-    display: table-cell;
-    vertical-align: middle;
-    width: 100vw;" class="col-12 text-right">
+        height: 55px;
+        display: table-cell;
+        vertical-align: middle;
+        width: 100vw;" class="col-12 text-right">
         <?php if(in_array($status_invalid, [4,5,6])){ ?>
             <div class="row">
                 <div class="col-lg-6 text-left mt-2" style="line-height: 15px;">

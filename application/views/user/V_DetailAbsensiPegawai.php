@@ -142,6 +142,7 @@
                 }
                 $pointer_hari = 0;
                 $tanggal = $pointer_hari + 1;
+                $temp['dataPegawai'] = $result['dataPegawai'];
                 for($i = 1; $i <= $row; $i++){
                     echo "<tr>";
                     for($j = 1; $j <= $col; $j++){

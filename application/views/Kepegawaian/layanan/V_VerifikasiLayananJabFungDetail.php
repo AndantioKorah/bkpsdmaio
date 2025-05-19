@@ -265,6 +265,12 @@
     <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sk_jabatan_fungsional_pertama')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pengangkatan Pertama dalam Jabatan Fungsional</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_pemberhentian_dari_jabfung')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pemberhentian dari Jabatan Fungsional</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
@@ -513,6 +519,8 @@
     <input type="hidden" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
 		<input type="hidden" name="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
 		<input type="hidden" name="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+		<input type="hidden" name="sk_jabatan_fungsional_pertama" value="<?php if($sk_jabatan_fungsional_pertama) echo $sk_jabatan_fungsional_pertama['id']; else echo "";?>">
+
 		<input type="hidden" name="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
 		<input type="hidden" name="ijazah" value="<?php if(isset($ijazah)) echo $ijazah['id']; else echo "";?>">
 		<input type="hidden" name="str_serdik" value="<?php if(isset($str_serdik)) echo $str_serdik['id']; else echo "";?>">
@@ -688,7 +696,7 @@ function openPresensiTab(){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
-        } else if(file == "skjabatan" || file == "sk_jabatan_fungsional"){
+        } else if(file == "skjabatan" || file == "sk_jabatan_fungsional" || file == "sk_jabatan_fungsional_pertama"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
             dir = "./dokumen_layanan/jabatan_fungsional/";

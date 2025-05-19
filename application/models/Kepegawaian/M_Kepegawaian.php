@@ -10696,6 +10696,22 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getDokumenJabatanFungsionalPertamaForLayananAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->from('db_pegawai.pegjabatan as a')
+        ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
+        ->where('id_pegawai', $id_peg)
+        ->where('a.flag_active', 1)
+        ->where('a.jenisjabatan', 10)
+        ->where('b.jenis_jabatan', "JFT")
+        ->order_by('a.tmtjabatan', 'asc')
+        ->limit(1);
+       
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getDokumenJabatanFungsionalForLayananAdmin($id_peg)
     {
         $this->db->select('*')
@@ -11554,7 +11570,20 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.jenisjabatan', "10")
                 ->where('b.jenis_jabatan', "JFT")
+                ->where('a.status !=', 3)
                 ->order_by('a.tmtjabatan', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_jabatan_fungsional_pertama"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegjabatan as a')
+                ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenisjabatan', "10")
+                ->where('b.jenis_jabatan', "JFT")
+                ->where('a.status !=', 3)
+                ->order_by('a.tmtjabatan', 'asc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "akreditasi"){
@@ -11868,7 +11897,7 @@ public function getFileForVerifLayanan()
     
         $datapost = $this->input->post();
         $this->db->trans_begin();
-       
+    //    dd($datapost);
 
           
         $id_pengajuan = $datapost['id_pengajuan'];
@@ -11917,6 +11946,14 @@ public function getFileForVerifLayanan()
             }
             if(isset($datapost['sk_jabatan']) && $datapost['sk_jabatan'] != ""){
                 $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
+                $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['sk_jabatan_fungsional']) && $datapost['sk_jabatan_fungsional'] != ""){
+                $this->verifBerkas($datapost['sk_jabatan_fungsional'], "db_pegawai.pegjabatan");
+                $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['sk_jabatan_fungsional_pertama']) && $datapost['sk_jabatan_fungsional_pertama'] != ""){
+                $this->verifBerkas($datapost['sk_jabatan_fungsional_pertama'], "db_pegawai.pegjabatan");
                 $this->updateJabatan($dataPengajuan[0]['id_peg']);
             }
             if(isset($datapost['ijazah_cpns'])){

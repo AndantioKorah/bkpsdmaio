@@ -341,6 +341,11 @@
 					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
 				</a>
 			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-ds');?>">
+					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron DS
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 

@@ -1823,12 +1823,11 @@
         }
         
         $jskpd = 1;
-        if(in_array($uker['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
+        if(in_array($uker['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS) && stringStartWith('Sekolah', $uker['nm_unitkerja'])){
             $jskpd = 2;
         } else if(in_array($uker['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) || stringStartWith('sekolah_', $data['id_unitkerja'])){
             $jskpd = 4;
         }
-
         $jam_kerja = $this->db->select('*')
                 ->from('t_jam_kerja')
                 ->where('id_m_jenis_skpd', $jskpd)

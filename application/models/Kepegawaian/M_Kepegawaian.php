@@ -6945,7 +6945,7 @@ public function submitEditJabatan(){
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
                                 ->where('b.id', $id_m_user)
                                 ->get()->row_array();
-
+        
         $progress = null;
         if($pegawai['atasan']['id_unitkerja'] == '4018000' && stringStartWith('Kepala', $thisuser['nama_jabatan'])){ // jika kabid di bkpsdm
             unset($pegawai['atasan']);
@@ -7014,8 +7014,8 @@ public function submitEditJabatan(){
                 ];
             } else if($thisuser['id_unitkerjamaster'] != 8000000 &&
                 (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                $result[0]['nama_jabatan'] != 'Plt. Kepala Sekolah' &&
-                $result[0]['nama_jabatan'] != 'Plh. Kepala Sekolah') &&
+                !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
                 $thisuser['flag_sekolah_negeri'] == 1){ // SD, SMP, SMA 
                 return [
                     'code' => 1,

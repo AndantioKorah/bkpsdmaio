@@ -397,7 +397,6 @@
 				<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 				<i class="align-middle" data-feather="settings"></i>
 			</a>
-
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
 				<img src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 50% !important; object-fit: cover;" 
 				class="avatar img-fluid rounded me-1" alt="" /> 

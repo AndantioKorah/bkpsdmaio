@@ -203,20 +203,28 @@
 
                   <div class="foto_containerx">
                             <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
-                           src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important; object-fit: cover;" 
+                           data-src="
                             <?php
-                                // $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                // if($profil_pegawai['fotopeg']){
-                                // if (file_exists($path)) {
-                                //    $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                // } else {
-                                //   $src = './assets/img/user.png';
-                                // }
-                                // } else {
-                                //   $src = './assets/img/user.png';
-                                // }
-                                // echo base_url().$src;?>
-                                
+                                $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                if($profil_pegawai['fotopeg']){
+                                if (file_exists($path)) {
+                                   $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                } else {
+                                  if($profil_pegawai['jk'] == "Laki-Laki" || $profil_pegawai['jk'] == "Laki-laki"){
+                                    $src = 'assets/img/user-icon-male.png';
+                                } else {
+                                    $src = 'assets/img/user-icon-woman.png';
+                                }
+                                }
+                                } else {
+                                if($profil_pegawai['jk'] == "Laki-Laki" || $profil_pegawai['jk'] == "Laki-laki"){
+                                    $src = 'assets/img/user-icon-male.png';
+                                } else {
+                                    $src = 'assets/img/user-icon-woman.png';
+                                }
+                                }
+                                echo base_url().$src;?>
+                                "
                                 /> 
                                 <div class="middle">
                                     <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">

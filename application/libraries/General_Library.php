@@ -130,7 +130,12 @@ class General_library
         } else {
             if(file_exists($photo_saved)){
                 $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-                // $photo = 'assets/img/user-icon.png';
+            } else {
+            if($this->userLoggedIn['jk'] == "Laki-Laki" || $this->userLoggedIn['jk'] == "Laki-laki"){
+                $photo = 'assets/img/user-icon-male.png';
+            } else {
+                $photo = 'assets/img/user-icon-woman.png';
+            } 
             }
         }
   

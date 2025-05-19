@@ -133,63 +133,64 @@
             }
         }
     ?>
-    <php if($dates) ?>
     <div style="position: relative;
-        height: 55px;
-        display: table-cell;
-        vertical-align: middle;
-        width: 100vw;" class="col-12 text-right">
-        <?php if(in_array($status_invalid, [4,5,6])){ ?>
-            <div class="row">
-                <div class="col-lg-6 text-left mt-2" style="line-height: 15px;">
-                    <h6 class="span_absen text_invalid p-1"><?=trim($alasan_invalid)?></h6>
-                </div>
-                <div class="col-lg-6">
-                    <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                    <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
-                </div>
-            </div>
-        <?php
-            } else if($dokpen && $flag_tidak_print == 0){ //cek jika ada dokumen pendukung 
-                if($dokpen['keterangan'] == 'Tugas Luar Pagi'){
-        ?>  
-                    <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span><br>
-                    <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
-                <?php } else if($dokpen['keterangan'] == 'Tugas Luar Sore') { ?>
-                    <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                    <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span>
-                <?php } else if($dokpen['id_m_jenis_disiplin_kerja'] == 4 ||
-                                $dokpen['id_m_jenis_disiplin_kerja'] == 5 ||
-                                $dokpen['id_m_jenis_disiplin_kerja'] == 6) {
-                    // jika MTTI, SIDAK atau Kenegaraan
-                ?>
-                    <div class="row">
-                        <div class="col-lg-6 text-left mt-2">
-                            <span class="span_absen span_light_blue"><?=$dokpen['kode_dokpen']?></span>
-                        </div>
-                        <div class="col-lg-6">
-                            <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                            <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
-                        </div>
+            height: 55px;
+            display: table-cell;
+            vertical-align: middle;
+            width: 100vw;" class="col-12 text-right">
+        <?php if($dates > $dataPegawai['tmt_hitung_absen']){ ?>
+            <?php if(in_array($status_invalid, [4,5,6])){ ?>
+                <div class="row">
+                    <div class="col-lg-6 text-left mt-2" style="line-height: 15px;">
+                        <h6 class="span_absen text_invalid p-1"><?=trim($alasan_invalid)?></h6>
                     </div>
-                <?php } else { ?>
-            <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span>
-        <?php } } else { ?>
-            <?php if(!$keterangan && !$hari_libur && $flag_tidak_print == 0){ //tidak ada pelanggaran absensi ?> 
-                <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                <?php if(($dates != date('Y-m-d')) || ($text_pulang != '' && $text_pulang != '00:00')){ //cek jika bukan hari ini dan jam pulang sudah ada ?>
-                    <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                    <div class="col-lg-6">
+                        <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                        <span title="<?=$alasan_invalid?>" class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                    </div>
+                </div>
+            <?php
+                } else if($dokpen && $flag_tidak_print == 0){ //cek jika ada dokumen pendukung 
+                    if($dokpen['keterangan'] == 'Tugas Luar Pagi'){
+            ?>  
+                        <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span><br>
+                        <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                    <?php } else if($dokpen['keterangan'] == 'Tugas Luar Sore') { ?>
+                        <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                        <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span>
+                    <?php } else if($dokpen['id_m_jenis_disiplin_kerja'] == 4 ||
+                                    $dokpen['id_m_jenis_disiplin_kerja'] == 5 ||
+                                    $dokpen['id_m_jenis_disiplin_kerja'] == 6) {
+                        // jika MTTI, SIDAK atau Kenegaraan
+                    ?>
+                        <div class="row">
+                            <div class="col-lg-6 text-left mt-2">
+                                <span class="span_absen span_light_blue"><?=$dokpen['kode_dokpen']?></span>
+                            </div>
+                            <div class="col-lg-6">
+                                <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                                <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                            </div>
+                        </div>
+                    <?php } else { ?>
+                <span class="span_absen span_light_blue"><?=$dokpen['keterangan']?></span>
+            <?php } } else { ?>
+                <?php if(!$keterangan && !$hari_libur && $flag_tidak_print == 0){ //tidak ada pelanggaran absensi ?> 
+                    <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                    <?php if(($dates != date('Y-m-d')) || ($text_pulang != '' && $text_pulang != '00:00')){ //cek jika bukan hari ini dan jam pulang sudah ada ?>
+                        <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                    <?php } ?>
+                <?php } if($keterangan && !in_array('TK', $keterangan)){ //jika ada pelanggaran absensi dan bukan alpa ?>
+                    <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
+                    <?php if(($text_pulang != '00:00' || $text_pulang != '')){ ?>
+                        <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
+                    <?php } ?>
+                <?php } else if($keterangan && in_array('TK', $keterangan)) { //jika alpa ?>
+                    <span class="span_absen span_tk">Tidak Masuk Kerja</span>
                 <?php } ?>
-            <?php } if($keterangan && !in_array('TK', $keterangan)){ //jika ada pelanggaran absensi dan bukan alpa ?>
-                <span class="span_absen <?=$span_masuk?>"><?=$text_masuk?></span><br>
-                <?php if(($text_pulang != '00:00' || $text_pulang != '')){ ?>
-                    <span class="span_absen <?=$span_pulang?>"><?=$text_pulang?></span>
-                <?php } ?>
-            <?php } else if($keterangan && in_array('TK', $keterangan)) { //jika alpa ?>
-                <span class="span_absen span_tk">Tidak Masuk Kerja</span>
-            <?php } else if($hari_libur){ //jika hari libur ?>
-                <span class="span_absen span_libur"><?=$hari_libur['keterangan']?></span>
             <?php } ?>
+        <?php } if($hari_libur){ ?>
+            <span class="span_absen span_libur"><?=$hari_libur['keterangan']?></span>
         <?php } ?>
     </div>
 </div>

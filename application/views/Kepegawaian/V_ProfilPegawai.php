@@ -202,24 +202,22 @@
                   src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" />  -->
 
                   <div class="foto_containerx">
-                            <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
-                            class="img-circle elevation-2 image-settings" alt="User Image"> -->
                             <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
-                            data-src="<?php
-                                $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                if($profil_pegawai['fotopeg']){
-                                if (file_exists($path)) {
-                                   $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                } else {
-                                  $src = './assets/img/user.png';
-                                  // $src = '../siladen/assets/img/user.png';
-                                }
-                                } else {
-                                  $src = './assets/img/user.png';
-                                }
-                                echo base_url().$src;?>" /> 
+                           src="<?=$this->general_library->getProfilePicture()?>" style="border-radius: 5rem !important; object-fit: cover;" 
+                            <?php
+                                // $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                // if($profil_pegawai['fotopeg']){
+                                // if (file_exists($path)) {
+                                //    $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                                // } else {
+                                //   $src = './assets/img/user.png';
+                                // }
+                                // } else {
+                                //   $src = './assets/img/user.png';
+                                // }
+                                // echo base_url().$src;?>
+                                
+                                /> 
                                 <div class="middle">
                                     <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">

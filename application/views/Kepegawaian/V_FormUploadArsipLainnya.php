@@ -282,8 +282,13 @@ $(function(){
         // var extension = pdf_file_arsip_lainnya.value.split('.')[1];
         var doc = pdf_file_arsip_lainnya.value.split('.')
         var extension = doc[doc.length - 1]
-      
+        var MaxSize = 2048;
         var fileSize = this.files[0].size/1024;
+
+        if (fileSize > MaxSize ){
+          errortoast("Maksimal Ukuran File 2 MB")
+          $(this).val('');
+        }
        
         if(jenis_arsip != 53){
           if (extension != "pdf"){

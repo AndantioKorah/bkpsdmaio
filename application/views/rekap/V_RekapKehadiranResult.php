@@ -60,7 +60,7 @@
                                 foreach($result as $rs){
                                 $capaian = 0;
                                 $capaian_bobot = 0;
-                                $presentase_hadir = (floatval($rs['rekap']['hadir']) / floatval($rs['rekap']['jhk'])) * 100;
+                                $presentase_hadir = $rs['rekap']['hadir'] != 0 ? (floatval($rs['rekap']['hadir']) / floatval($rs['rekap']['jhk'])) * 100 : 0;
                                 $total_presentase_kehadiran += $presentase_hadir;
                             ?>
                                 <tr>

@@ -1484,7 +1484,7 @@
         $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user, f.nm_unitkerja,
-            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp')
+            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp, d.tmt_hitung_absen')
                                 ->from('t_hardcode_nominatif a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg', 'left')
                                 ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
@@ -1551,7 +1551,7 @@
         $result = null;
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
-            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja,
+            b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja, d.tmt_hitung_absen,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
@@ -1634,7 +1634,7 @@
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
             b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan,
             b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
-            a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg')
+            a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg, a.tmt_hitung_absen')
                             ->from('db_pegawai.pegawai a')
                             ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.jabatan')
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
@@ -1701,6 +1701,7 @@
                 $tlp[$lpw['nip']]['kelas_jabatan'] = ($lpw['kelas_jabatan']);
                 // $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
                 $tlp[$lpw['nip']]['golongan'] = getGolonganByIdPangkat($lpw['id_pangkat']);
+                $tlp[$lpw['nip']]['tmt_hitung_absen'] = $lpw['tmt_hitung_absen'];
                 $tlp[$lpw['nip']]['absen'] = null;
                 $tlp[$lpw['nip']]['jumlah_anulir'] = null;
                 foreach($list_hari as $lh){
@@ -2029,7 +2030,12 @@
                     }
                 }
                 foreach($list_hari as $l){
-                    if($l <= date('Y-m-d')){
+                    $isNotTmtAbsen = 0;
+                    if(isset($tr['tmt_hitung_absen']) && $l < $tr['tmt_hitung_absen']){
+                        $isNotTmtAbsen = 1;
+                    }
+
+                    if($l <= date('Y-m-d') && $isNotTmtAbsen == 0){
                         if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
                             $lp[$tr['nip']]['rekap']['jhk']++;
                             // Surat Tugas
@@ -2493,7 +2499,7 @@
                     $result['result'][$tr['nip']]['rekap']['jhk'] = $tr['rekap']['jhk'];
                     $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['hadir'];
                     $result['result'][$tr['nip']]['rekap']['tidak_hadir'] = 0;
-                    $result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] = ($tr['rekap']['hadir'] / $tr['rekap']['jhk']) * 100;
+                    $result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] = $tr['rekap']['hadir'] != 0 ? ($tr['rekap']['hadir'] / $tr['rekap']['jhk']) * 100 : 0;
                     
                     $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] = 0;
                     $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = 0;

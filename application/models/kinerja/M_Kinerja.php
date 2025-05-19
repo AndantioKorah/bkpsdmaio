@@ -3446,12 +3446,19 @@
                 $result[$p['id_m_user']]['kepala_skpd'] = $p['kepalaskpd'];
                 $result[$p['id_m_user']]['count'] = isset($result[$p['id_m_user']]['count']) ? $result[$p['id_m_user']]['count']++ : 1;
 
-                $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
+                $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'] ? $p['kelas_jabatan_jfu'] : $p['kelas_jabatan'];
                 // if(!isset($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'])){
                 //     dd($p);
                 //     dd($result[$p['id_m_user']]);
                 // }
-                $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
+                if(!isset($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'])){
+                    // dd($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]);
+                    // dd($result[$p['id_m_user']]);
+                    dd($p);
+                }
+                $result[$p['id_m_user']]['prestasi_kerja'] =
+                $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
+                
                 $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
                 $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
                 

@@ -67,17 +67,13 @@
     }
 
     #profile_pegawai{
-      width: 300px;
-      height: calc(300px * 1.25);
+      aspect-ratio: 3 / 4;
+      width: 100%;
+      /* height: calc(350px * 1.25); */
       background-size: cover;
       object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
-      border-radius: 10%;
-      <?php if($profil_pegawai['flag_terima_tpp'] == 1) { ?>
-      border-right-style: solid;
-      border-width: 4px;
-      border-color: #222e3c;
-      <?php } ?>
+      border-radius: 5%;
       /* border-color: green; */
 
     }
@@ -142,6 +138,13 @@
   transition: .2s;
 }
 
+.badge-penerima-tpp{
+  box-shadow: 3px 3px 10px #888888;
+  background-color: #327ba8;
+  border: 2px solid #327ba8;
+  color: white;
+}
+
 
 
   </style>
@@ -157,7 +160,7 @@
     <div class="col-lg-12">
       <div class="card card-default">
         <div class="row p-3">
-          <div class="col-lg-4">
+          <div class="col-lg-3 col-md-12 col-sm-12">
             <div class="row">
               <?php
                 $badge_status = 'badge-cpns';
@@ -182,14 +185,13 @@
                   $badge_aktif = 'badge-tidak-aktif';
                 }
               ?>
-              <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              <div class="mb-3 col-lg-12 col-md-12 col-sm-12 text-left">
+                <span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span>
+                <span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span>
+                <?php if($profil_pegawai['flag_terima_tpp'] == 1 && $profil_pegawai['id_m_status_pegawai'] == 1){?>
+                    <span class="badge badge-penerima-tpp float-right"><i class="fa fa-check"></i> Penerima TPP</span>
+                <?php } ?>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                <h3><span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span></h3>
-              </div>
-              
-            
 
               <div class="col-lg-12 text-center">
                 <!-- <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
@@ -312,7 +314,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-8">
+          <div class="col-lg-9 col-md-12 col-sm-12">
             <div class="row">
               <!-- profil  -->
             <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">

@@ -134,4 +134,8 @@ class C_Cron extends CI_Controller
     public function addUserCpns(){
         return $this->user->addUserCpns();
     }
+
+    public function addGelarUserCpns(){
+        return $this->user->addGelarUserCpns();
+    }
 }

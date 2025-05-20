@@ -3067,5 +3067,35 @@
             }
         }
 
+        public function addGelarUserCpns(){
+            $data = $this->db->select('b.id_peg, a.*')
+                        ->from('t_temp_data_cpns a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+            $this->db->trans_begin();
+
+            if($data){
+                foreach($data as $d){
+                    $gelar1 = $d['gelar1'] == '-' ? "" : $d['gelar1'];
+                    $gelar2 = $d['gelar2'] == '-' ? "" : $d['gelar2'];
+
+                    $this->db->where('id_peg', $d['id_peg'])
+                            ->update('db_pegawai.pegawai', [
+                                'nama' => $d['nama'].","
+                            ]);
+
+                    echo "updating ".getNamaPegawaiFull($d)."<br>";
+                }
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+        }
+
 	}
 ?>

@@ -138,4 +138,8 @@ class C_Cron extends CI_Controller
     public function addGelarUserCpns(){
         return $this->user->addGelarUserCpns();
     }
+
+    public function addFileSkJabatanCpns(){
+        return $this->user->addFileSkJabatanCpns();
+    }
 }

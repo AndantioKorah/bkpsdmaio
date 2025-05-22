@@ -162,6 +162,15 @@
         <div class="row p-3">
           <div class="col-lg-3 col-md-12 col-sm-12">
             <div class="row">
+              <?php if(($this->general_library->isProgrammer() || $this->general_library->isHakAkses('login_another_user'))
+                && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
+                <div class="col-lg-12 text-center mb-2">
+                  <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
+                    <i class="fa fa-key"></i> LOGIN</button>
+                  <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
+                    <i class="fa fa-spin fa-spinner"></i> Loading...</button>
+                </div>
+              <?php } ?>
               <?php
                 $badge_status = 'badge-cpns';
                 if($profil_pegawai['statuspeg'] == 2){
@@ -299,13 +308,7 @@
                       margin-top: 4px;
                       margin-left: 30px;">GURU SERTIFIKASI</label>
                   </div>
-                <?php } if($this->general_library->isProgrammer() && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
-                  <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
-                    <i class="fa fa-key"></i> LOGIN</button>
-                  <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
-                    <i class="fa fa-spin fa-spinner"></i> Loading...</button>
-                <?php } ?>
-                <?php  if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
+                <?php } if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
                  
 
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">

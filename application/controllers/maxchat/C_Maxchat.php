@@ -272,7 +272,7 @@ class C_Maxchat extends CI_Controller
         }
 
         if($reply != null && $reply != "" && 
-        ($result->chat != GROUP_CHAT_TPP_HARDWORKER ||
+        ($result->chat != GROUP_CHAT_TPP_HARDWORKER &&
         $result->chat != 120363410445884175) // group cpns
         ){ 
             if($result->type == "text"){

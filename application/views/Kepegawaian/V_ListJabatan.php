@@ -63,10 +63,17 @@
               </td>
               <td class="text-left"><?=$rs['ket']?></td>
               <td class="text-left"> 
-              <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_jabatan" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                 <i class="fa fa-file-pdf"></i></button>
-              <?php } ?>
+              <?php $flagShowFileSkJab = 0; if($rs['gambarsk'] != "") {
+                $flagShowFileSkJab = 1;
+                  if($this->general_library->isCpns()){
+                    $flagShowFileSkJab = 0;
+                  }
+                }
+              
+                if($flagShowFileSkJab == 1){?>
+                  <button href="#modal_view_file_jabatan" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                  <i class="fa fa-file-pdf"></i></button>
+                <?php } ?>
               </td>
               <td>
 

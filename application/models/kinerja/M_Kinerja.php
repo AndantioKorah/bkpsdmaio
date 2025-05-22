@@ -1141,7 +1141,6 @@
                                         ->get()->row_array();
 
             $hardcodeKepalaskpd['nama_jabatan'] = $pegawai['nama_jabatan_kepalaskpd_hardcode'];
-
             if(in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah
                 if($flag_cuti == 1){
                     // dd($result['atasan']['id_unitkerja'] != $pegawai['id_unitkerja']);

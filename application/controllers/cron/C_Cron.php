@@ -43,7 +43,7 @@ class C_Cron extends CI_Controller
 
     public function cronDsBulkTte(){
         $this->general->logCron('cronDsBulkTte');
-		$this->kepegawaian->cronDsBulkTte();
+		// $this->kepegawaian->cronDsBulkTte();
 		$this->layanan->cronBulkDs();
 	}
 
@@ -133,5 +133,13 @@ class C_Cron extends CI_Controller
 
     public function addUserCpns(){
         return $this->user->addUserCpns();
+    }
+
+    public function addGelarUserCpns(){
+        return $this->user->addGelarUserCpns();
+    }
+
+    public function addFileSkJabatanCpns(){
+        return $this->user->addFileSkJabatanCpns();
     }
 }

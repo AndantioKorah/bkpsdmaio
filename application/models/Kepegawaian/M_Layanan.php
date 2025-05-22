@@ -1835,7 +1835,8 @@ class M_Layanan extends CI_Model
                             ]);
 
                     if($dataUsul['table_ref'] == 't_pengajuan_cuti'){ // jika cuti, kirim SK Cuti ke pegawai ybs
-                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user, a.id_cuti')
+                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user,
+                                            a.id_cuti, a.url_sk, a.id as id_t_pengajuan_cuti')
                                             ->from('t_pengajuan_cuti a')
                                             ->join('m_user b', 'a.id_m_user = b.id')
                                             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -1859,6 +1860,11 @@ class M_Layanan extends CI_Model
 
                         if(isset($params['selectedData']['url_file'])){
                             copy($params['selectedData']['url_file'], $filePathCuti);
+
+                            $this->db->where('id', $pegawaiYbs['id_t_pengajuan_cuti'])
+                                    ->update('t_pengajuan_cuti', [
+                                        'url_sk' => $filePathCuti
+                                    ]);
                         }
                         
                         // insert di pegcuti
@@ -1926,7 +1932,7 @@ class M_Layanan extends CI_Model
                     $this->db->where('id', $dataUsul['id_t_usul_ds'])
                             ->update('t_usul_ds', [
                                 'flag_done' => 1,
-                                'status' => "Selesai"
+                                'status' => "Selesai",
                             ]);
                 }
 

@@ -1551,6 +1551,7 @@
         }
 
         public function cronAsync(){
+            $temp = null;
             $data = $this->db->select('*')
                             ->from('t_cron_async')
                             ->where('flag_done', 0)
@@ -1560,6 +1561,7 @@
             if($data){
                 foreach($data as $d){
                     $res = $this->apilib->asyncPost(base_url($d['url']), json_decode($d['param'], $d['method']));
+                    $temp[] = $res;
                     $jsonRes = json_decode($res, true);
                     $update = null;
                     if(!$jsonRes || ($jsonRes && $jsonRes['code'] == 0)){
@@ -1573,6 +1575,7 @@
                             ->update('t_cron_async', $update);
                 }
             }
+            // dd("done ".count($temp));
         }
 
         public function cronCheckVerifCuti(){

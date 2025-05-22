@@ -341,6 +341,11 @@
 					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
 				</a>
 			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-ds');?>">
+					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron DS
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 
@@ -400,12 +405,14 @@
 			</span>
 		</a>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-				
-			<li class="sidebar-item ">
-				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
-				</a>
-			</li>
+			
+			<?php if(!$this->general_library->isCpns()){ ?>
+				<li class="sidebar-item ">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+					</a>
+				</li>
+			<?php } ?>
 			
 			<?php 
 			if(

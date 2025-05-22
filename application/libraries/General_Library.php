@@ -279,6 +279,10 @@ class General_library
         return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
     }
 
+    public function isCpns(){
+        return $this->userLoggedIn['statuspeg'] == 1;
+    }
+
     public function getListAdminLayanan(){
         // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
         // return $result;

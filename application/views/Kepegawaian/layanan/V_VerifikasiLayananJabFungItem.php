@@ -7,7 +7,7 @@
           <th class="text-center">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
-          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
+          <?php if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')) { ?>
             <th class="text-center">Jenis Layanan</th>
             <th class="text-center"></th>
           <?php } ?>

@@ -295,7 +295,41 @@ class C_Layanan extends CI_Controller
 
 	public function loadDetailUsulDs($id){
 		$data['result'] = $this->layanan->loadDetailUsulDs($id);
+		$data['id'] = $id;
 		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayatDetail', $data);
+	}
+
+	public function downloadDoneFileUsulDs($id){
+		$result = $this->layanan->loadDetailUsulDs($id);
+		$listUrl = [];
+
+		$zipName = "siladen/Usul_DS_".$result['batch_id'].".zip";
+
+		$zip = new ZipArchive;
+		$zip->open($zipName, ZipArchive::CREATE);
+		if($result){
+			foreach($result['detail'] as $rd){
+				if($rd['flag_done'] == 1){
+					$fileName = "SIGNED";
+
+					$expl1 = explode("/", $rd['url_done']); 
+					$expl2 = explode("_", $expl1[count($expl1)-1]);
+
+					unset($expl2[0]);
+					unset($expl2[1]);
+
+					foreach($expl2 as $e){
+						$fileName .= "_".$e;
+					}
+
+					$fileContent = file_get_contents($rd['url_done']);
+					$zip->addFromString($fileName, $fileContent);
+				}
+			}
+		}
+		$zip->close();
+
+		header('location: /'.$zipName);
 	}
 
 	public function loadProgressUsulDs($id){

@@ -66,6 +66,8 @@
         <div class="col-lg-12 mt-3" id="div_progress">
 
         </div>
+        <form id="formDownloadBulk" action="<?=base_url('kepegawaian/C_Layanan/downloadDoneFileUsulDs/'.$id)?>" method="POST" target="_blank">
+        </form>
         <script>
             $(function(){
                 $('#table_detail_usul_ds').dataTable()
@@ -92,7 +94,7 @@
                 }
 
                 if(downloadNow == 1){
-                    successtoast("halo")
+                    $('#formDownloadBulk').submit()
                 } else {
                     return
                 }

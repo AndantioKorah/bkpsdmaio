@@ -3114,5 +3114,34 @@
             }
         }
 
+        public function addFileSpmtCpns(){
+            $cpns = $this->db->select("a.*")
+                        ->from('db_pegawai.pegawai a')
+                        ->where('a.nipbaru_ws LIKE "%202505%"')
+                        ->group_by('a.nipbaru_ws')
+                        ->get()->result_array();
+                        
+            // foreach($cpns as $c){
+            //     $input = [];
+            //     $input['id_pegawai'] = $c['id_peg'];
+            //     $input['nama_sk'] = "SPMT";
+            //     $input['gambarsk'] = "SIGNED_SPMT_".$c['nipbaru_ws'].".pdf";
+            //     $input['status'] = 2;
+            //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+            //     $input['id_dokumen'] = 34;
+            //     // $this->db->insert('db_pegawai.pegarsip', $input);
+            // }
+
+            foreach($cpns as $c){
+                $input = [];
+                $input['id_pegawai'] = $c['id_peg'];
+                $input['jenissk'] = 1;
+                $input['status'] = 2;
+                $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
+                $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                // $this->db->insert('db_pegawai.pegberkaspns', $input);
+            }
+        }
+
 	}
 ?>

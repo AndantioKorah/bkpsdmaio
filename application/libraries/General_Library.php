@@ -283,6 +283,10 @@ class General_library
         return $this->userLoggedIn['statuspeg'] == 1;
     }
 
+    public function getKelengkapanBerkasCpns(){
+        return $this->nikita->kepegawaian->getKelengkapanBerkasCpns($this->getId());
+    }
+
     public function getListAdminLayanan(){
         // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
         // return $result;

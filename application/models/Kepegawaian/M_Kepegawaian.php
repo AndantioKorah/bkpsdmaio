@@ -13110,30 +13110,115 @@ public function checkListIjazahCpns($id, $id_pegawai){
     public function catatanGajiBerkala()
     {
 
-    $rs['code'] = 0;        
-    $rs['message'] = 'OK';
+        $rs['code'] = 0;        
+        $rs['message'] = 'OK';
 
-    $this->db->trans_begin();
+        $this->db->trans_begin();
 
-    $id_pegawai = $this->input->post('id_pegawai');
-    $data['catatan_berkala'] = $this->input->post('catatan');
-    $this->db->where_in('id_peg', $id_pegawai)
-                    ->update('db_pegawai.pegawai', $data);
-    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        $id_pegawai = $this->input->post('id_pegawai');
+        $data['catatan_berkala'] = $this->input->post('catatan');
+        $this->db->where_in('id_peg', $id_pegawai)
+                        ->update('db_pegawai.pegawai', $data);
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 
-    if ($this->db->trans_status() === FALSE){
-        $this->db->trans_rollback();
-    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-    }else{
-        $this->db->trans_commit();
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        }else{
+            $this->db->trans_commit();
+        }
+
+        return $res;
     }
 
-    return $res;
-}
+    public function getKelengkapanBerkasCpns($id_m_user){
+        $result['done'] = true;
+        $result['message'] = "";
 
+        $pegawai = $this->db->select('b.*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->where('a.id', $id_m_user)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
 
+        $pendidikan = $this->db->select('*')
+                            ->from('db_pegawai.pegpendidikan')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->where_in('tktpendidikan', [5001, 6001, 7001])
+                            ->get()->result_array();
 
+        $hubkel = $this->db->select('*')
+                            ->from('db_pegawai.pegkeluarga')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->get()->result_array();
 
+        $ktp = $this->db->select('*')
+                            ->from('db_pegawai.pegarsip')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->where('id_dokumen', 37)
+                            ->get()->result_array();
 
+        $kartukeluarga = $this->db->select('*')
+                            ->from('db_pegawai.pegarsip')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->where('id_dokumen', 28)
+                            ->get()->result_array();
+
+        $npwp = $this->db->select('*')
+                            ->from('db_pegawai.pegarsip')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->where('id_dokumen', 38)
+                            ->get()->result_array();
+        
+        if(!$pegawai['handphone']){
+            $result['message'] .= "Nomor Handphone, ";
+        }
+
+        if(!$pegawai['fotopeg'] && !file_exists($pegawai['fotopeg'])){
+            $result['message'] .= "Foto Pegawai, ";
+        }
+
+        if(!$pendidikan){
+            $result['message'] .= "Pendidikan, ";
+        }
+
+        if(!$hubkel){
+            $result['message'] .= "Keluarga, ";
+        }
+
+        if(!$ktp){
+            $result['message'] .= "KTP, ";
+        }
+
+        if(!$kartukeluarga){
+            $result['message'] .= "Kartu Keluarga, ";
+        }
+
+        if(!$npwp){
+            $result['message'] .= "NPWP, ";
+        }
+
+        if($result['message'] != ""){
+            $result['done'] = false;
+            $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
+            $result['message'] = "Data ".$result['message']." belum diinput.";
+        } else if(date('Y-m-d') < '2025-06-02'){
+            $result['done'] = false;
+            $result['message'] = "SK dapat didownload pada tanggal 2 Juni 2025";
+        }
+
+        return $result;
+    }
 
 }

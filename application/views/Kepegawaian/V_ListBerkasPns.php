@@ -20,9 +20,25 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?php if($rs['jenissk'] == 1) echo 'SK CPNS'; else if($rs['jenissk'] == 2) echo 'SK PNS'; else echo 'SK PPPK'?></td>
               <td class="text-left">
-
-              <button href="#modal_view_file_berkas_pns" onclick="openFileBerkasPns('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-              <i class="fa fa-file-pdf"></i></button>
+                <?php 
+                  $flagShowFileBerkas = 1;
+                  $message = "";
+                  if($this->general_library->isCpns()){
+                    $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
+                    if($kelengkapan['done'] == true){
+                      $flagShowFileBerkas = 1;
+                    } else {
+                      $flagShowFileBerkas = 0;
+                      $message = $kelengkapan['message'];
+                    }
+                  }
+                ?>
+                <?php if($flagShowFileBerkas == 1) {?>
+                  <button href="#modal_view_file_berkas_pns" onclick="openFileBerkasPns('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                  <i class="fa fa-file-pdf"></i></button>
+                <?php } else { ?>
+                  <span style="font-size: .75rem; font-weight: bold; font-style: italic; color: red"><?=$message?></span>
+                <?php } ?>
               </td>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>

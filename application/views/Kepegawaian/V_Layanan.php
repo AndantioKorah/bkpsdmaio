@@ -229,7 +229,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananUjianDinas/")?>'+val, function(){
       $('#loader').hide()
     })
-    }  else {
+    } else if(val == 21) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPeningkatanPenambahanGelar/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }   else {
       $('#form_layanan').html('')
     }
 

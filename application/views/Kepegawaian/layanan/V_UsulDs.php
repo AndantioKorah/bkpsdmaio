@@ -69,9 +69,9 @@
     <div class="card card-default">
       <div class="card-body">
         <div class="row">
-          <div class="col-lg-12 text-right">
+          <!-- <div class="col-lg-12 text-right">
             <button id="btn_refresh" class="btn btn-success"><i class="fa fa-sync"></i> Refresh</button>
-          </div>
+          </div> -->
           <div class="col-lg-12 mt-3 table-responsive" id="div_result"></div>
         </div>
       </div>
@@ -98,17 +98,18 @@
 
 <script>
   $(function(){
-    $('#btn_refresh').click()  
+    // $('#btn_refresh').click()  
     $('#id_m_jenis_layanan').select2()
+    loadRiwayatDs()
   })
 
-  $('#btn_refresh').on('click', function(){
+  function loadRiwayatDs(){
     $('#div_result').html('')
     $('#div_result').append(divLoaderNavy)
     $('#div_result').load('<?=base_url('kepegawaian/C_Layanan/loadRiwayatUsulDs')?>', function(){
       $('#loader').hide()
     })
-  })
+  }
 
   $('#form_usul_ds').on('submit', function(e){
     e.preventDefault()

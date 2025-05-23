@@ -289,8 +289,9 @@ $("#checkBoxID").click(function() {
   var batasMonth = previousMonth - 1;
 
   var statusLock = "<?=$status_lock[0]['status'];?>"
-  //  var maxDate = "<?= $maxDate['max_date'];?>";
-  var maxDate = "2025-04-10";
+   var maxDate = "<?= $maxDate['max_date'];?>";
+  // var maxDate = "2025-04-10";
+  // alert(maxDate)
 
    var currentDate = "<?= $current_date;?>";
    
@@ -301,7 +302,7 @@ $("#checkBoxID").click(function() {
         if(bulanSearch < previousMonth) {
           $('.customButton').hide()
         } else {
-          if(currentDate <= maxDate) {
+          if(currentDate < maxDate) {
             $('.customButton').show()
         } else {
             $('.customButton').hide()

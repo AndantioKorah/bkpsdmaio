@@ -221,11 +221,11 @@ class C_Layanan extends CI_Controller
 
 	public function removeAllUploadedFileDs(){
 		$this->layanan->removeUploadedFileDs("0");
-		$this->session->set_userdata('uploaded_file_usul_ds', null);
+		$this->session->set_userdata('uploaded_file_usul_ds_'.$this->general_library->getId(), null);
 	}
 
 	public function getSelectedFile(){
-		$result['data'] = $this->session->userdata('uploaded_file_usul_ds');
+		$result['data'] = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 		$result['count'] = $result['data'] ? count($result['data']) : 0;
 
 		echo json_encode($result);
@@ -234,17 +234,17 @@ class C_Layanan extends CI_Controller
 	public function removeUploadedFileDs(){
 		$filename = $this->input->post('filename');
 		$this->layanan->removeUploadedFileDs($filename);
-		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 		unset($uploadedFile[$filename]);
 	}
 
 	public function uploadFileUsulDs(){
 		// $file = $_FILES['file'];
 		// // $data = $this->input->post();
-		// $uploadedFile = $this->session->userdata('uploaded_file_usul_ds');
+		// $uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
 
 		// $uploadedFile[$file['name']] = $file;
-		// $this->session->set_userdata('uploaded_file_usul_ds', $uploadedFile);
+		// $this->session->set_userdata('uploaded_file_usul_ds_'.$this->general_library->getId(), $uploadedFile);
 		
 		echo json_encode($this->layanan->uploadFileUsulDs());
 
@@ -277,8 +277,12 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function loadRiwayatUsulDs(){
+		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', null);
+	}
+
+	public function loadRiwayatUsulDsData(){
 		$data['result'] = $this->layanan->loadRiwayatUsulDs();
-		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayat', $data);
+		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayatItem', $data);
 	}
 
 	public function tesCopy(){
@@ -291,7 +295,41 @@ class C_Layanan extends CI_Controller
 
 	public function loadDetailUsulDs($id){
 		$data['result'] = $this->layanan->loadDetailUsulDs($id);
+		$data['id'] = $id;
 		$this->load->view('kepegawaian/layanan/V_UsulDsRiwayatDetail', $data);
+	}
+
+	public function downloadDoneFileUsulDs($id){
+		$result = $this->layanan->loadDetailUsulDs($id);
+		$listUrl = [];
+
+		$zipName = "siladen/Usul_DS_".$result['batch_id'].".zip";
+
+		$zip = new ZipArchive;
+		$zip->open($zipName, ZipArchive::CREATE);
+		if($result){
+			foreach($result['detail'] as $rd){
+				if($rd['flag_done'] == 1){
+					$fileName = "SIGNED";
+
+					$expl1 = explode("/", $rd['url_done']); 
+					$expl2 = explode("_", $expl1[count($expl1)-1]);
+
+					unset($expl2[0]);
+					unset($expl2[1]);
+
+					foreach($expl2 as $e){
+						$fileName .= "_".$e;
+					}
+
+					$fileContent = file_get_contents($rd['url_done']);
+					$zip->addFromString($fileName, $fileContent);
+				}
+			}
+		}
+		$zip->close();
+
+		header('location: /'.$zipName);
 	}
 
 	public function loadProgressUsulDs($id){
@@ -310,6 +348,7 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function deleteUsulDs($id){
+		($this->layanan->deleteUsulDs($id));
 		//hapus t_usul_ds, t_usul_ds_detail, t_usul_ds_detail_progress, t_request_ds, t_cron_request_ds
 	}
 }

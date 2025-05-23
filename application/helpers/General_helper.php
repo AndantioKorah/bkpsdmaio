@@ -158,10 +158,10 @@ function countMaxDateUpload($date, $max = 0, $operand = "minus"){
     $lhk = null;
     $i = 0;
     $pointer = null;
-    
+
     foreach($res[3] as $rs){
         $lhk[$i] = $rs;
-        if($rs >= $date && $pointer != null){
+        if($rs >= $date && $pointer == null){
         // if((strtotime($rs) >= strtotime($date)) && $pointer == 0){
             // echo $rs.'  '.$date;
             $pointer = $i;
@@ -210,7 +210,6 @@ function getPredikatSkp($data){
 function countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir){
     $helper = &get_instance();
     $helper->load->model('user/M_User', 'm_user');
-
     $list_hari_libur = $helper->m_user->getListHariLibur($tanggal_awal, $tanggal_akhir);
     $hari_libur = null;
     if($list_hari_libur){
@@ -756,7 +755,12 @@ function formatDateNamaBulanWithTime($data)
 
 function getNamaPegawaiFull($pegawai)
 {
-    return trim(trim($pegawai['gelar1']).' '.ucwords(strtolower(trim($pegawai['nama']))).' '.trim($pegawai['gelar2']));
+    $nama_pegawai = trim($pegawai['nama']);
+    if(trim(substr($nama_pegawai, strlen($nama_pegawai)-1)) != "," && ($pegawai['gelar2'] != "" && $pegawai['gelar2'] != null && $pegawai['gelar2'] != "-")){
+        $nama_pegawai .= ",";
+    }
+
+    return trim(trim($pegawai['gelar1']).' '.ucwords(strtolower(trim($nama_pegawai))).' '.trim($pegawai['gelar2']));
 }
 
 function sortArrayObjectValue($object1, $object2, $value)

@@ -26,7 +26,7 @@
         font-weight: bold;
         background-color: #ea5454; */
 	position: relative;
-	background-color: #fa8072;
+	background-color: #d41e24;
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025);
 	transition: 0.5s ease-in-out;
 	/* border: 3px solid #0a7129; */
@@ -139,7 +139,7 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    /* text-shadow: 0 1px 0 rgba(255,255,255,.5); */
 	margin-bottom: 10px;
 
   }
@@ -201,6 +201,8 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color : #0ed095;
+
   }
 
   .rectangle-list .unselect:before{
@@ -210,12 +212,13 @@ ol {
     left: -2.5em;
     top: 50%;
     margin-top: -1em;
-    background: #fa8072;
+    background: #d41e24;
     height: 2em;
     width: 2em;
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color : #d41e24;
   }
 
   .rectangle-list .warning:before{
@@ -231,6 +234,8 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    color:rgb(239, 255, 8);
+
   }
 
   .rectangle-list a:after{
@@ -255,7 +260,7 @@ ol {
 
   .rectangle-list .unselect:hover:after{
     left: -.5em;
-    border-left-color: #fa8072;
+    border-left-color: #d41e24;
   }
 </style>
 
@@ -505,7 +510,7 @@ ol {
               <h4>
             <b style="color:red;">
               Layanan kenaikan pangkat sudah ditutup dan akan dibuka kembali pada periode kenaikan pangkat berikutnya.<br>
-              periode kenaikan pangkat juni 2025 (dibuka pada tanggal 18 maret - 15 april 2025)
+              periode kenaikan pangkat agustus 2025 (dibuka pada tanggal 20 mei - 17 juni 2025)
             </b>
           </h4>
           </p>
@@ -640,7 +645,7 @@ $(function(){
         var id_m_layanan = "<?=$id_m_layanan;?>"
        
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
-          alert(skp2)
+          
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

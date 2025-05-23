@@ -49,7 +49,7 @@
 
 	
 
-		<p style="text-align: right;"> Manado, <?= formatDateNamaBulan(date('Y-m-d'));?></p>
+		<p style="text-align: right;"> Manado, <?= formatDateNamaBulan($cuti['tanggal_surat']);?></p>
 		<table border="0" >
 			<tr>
 			<td style="width: 50%;"></td>
@@ -95,7 +95,7 @@
 	</tr>
 	<tr>
 		<td style="width: 30%;">1. Cuti Tahunan</td>
-		<td style="width: 20%;">&nbsp;&#8730;
+		<td style="width: 20%;">&nbsp;&#10003;
 		</td>
 		<td style="width: 30%;">2. Cuti Besar</td>
 		<td style="width: 20%;"></td>
@@ -252,7 +252,7 @@
 	</tr>
 	</table>
 	<div class="footer-sk">
-	<img src="<?=base_url();?>assets/images/footer.png" alt="">
+	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 </body>
 </html>

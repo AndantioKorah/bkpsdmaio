@@ -20,6 +20,7 @@ class C_Cron extends CI_Controller
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('kepegawaian/M_Layanan', 'layanan');
 		$this->load->model('siasn/M_Siasn', 'siasn');
+		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
     }
@@ -42,7 +43,7 @@ class C_Cron extends CI_Controller
 
     public function cronDsBulkTte(){
         $this->general->logCron('cronDsBulkTte');
-		$this->kepegawaian->cronDsBulkTte();
+		// $this->kepegawaian->cronDsBulkTte();
 		$this->layanan->cronBulkDs();
 	}
 
@@ -55,6 +56,10 @@ class C_Cron extends CI_Controller
         // $this->siasn->cronRiwayatJabatanSiasn();
 
         $this->cronAsync();
+    }
+
+    public function cronCheckVerifCuti(){
+        $this->general->cronCheckVerifCuti();
     }
 
     public function cronSyncSkpSiasn(){
@@ -100,5 +105,45 @@ class C_Cron extends CI_Controller
 
     public function queryInsertTppKelasJabatan(){
         return $this->general->queryInsertTppKelasJabatan();
+    }
+
+    public function cekKenegaraan(){
+        return $this->user->cekKenegaraan();
+    }
+
+    public function cekProgressCuti($id_m_user){
+        $insert_id = 0;
+        $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
+        $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $id_m_user);
+        // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
+        //     dd(($progressCuti));
+        // }
+        dd(($progressCuti));
+    }
+
+    public function createQr(){
+        $content = "https://drive.google.com/drive/folders/1tDKJgd4_OFD5Nbhio9-phzA9zL_TlG2F";
+		$data = $this->general_library->createQrTtePortrait(null, null, $content);
+		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
+	}
+
+    public function getPengadaanInstansiWs($tahun){
+        return $this->general->getListPengadaan($tahun);
+    }
+
+    public function addUserCpns(){
+        return $this->user->addUserCpns();
+    }
+
+    public function addGelarUserCpns(){
+        return $this->user->addGelarUserCpns();
+    }
+
+    public function addFileSkJabatanCpns(){
+        return $this->user->addFileSkJabatanCpns();
+    }
+
+    public function addFileSpmtCpns(){
+        return $this->user->addFileSpmtCpns();
     }
 }

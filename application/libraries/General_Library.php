@@ -121,10 +121,24 @@ class General_library
     public function getProfilePicture(){
         $photo = 'assets/img/user-icon.png';
         $photo_saved = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-        if(file_exists($photo_saved)){
-            $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
-            // $photo = 'assets/img/user-icon.png';
+        if($this->userLoggedIn['fotopeg'] == null){
+        if($this->userLoggedIn['jk'] == "Laki-Laki" || $this->userLoggedIn['jk'] == "Laki-laki"){
+            $photo = 'assets/img/user-icon-male.png';
+        } else {
+            $photo = 'assets/img/user-icon-woman.png';
         }
+        } else {
+            if(file_exists($photo_saved)){
+                $photo = 'assets/fotopeg/'.$this->userLoggedIn['fotopeg'];
+            } else {
+            if($this->userLoggedIn['jk'] == "Laki-Laki" || $this->userLoggedIn['jk'] == "Laki-laki"){
+                $photo = 'assets/img/user-icon-male.png';
+            } else {
+                $photo = 'assets/img/user-icon-woman.png';
+            } 
+            }
+        }
+  
         return base_url().$photo;
     }
 
@@ -265,6 +279,14 @@ class General_library
         return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
     }
 
+    public function isCpns(){
+        return $this->userLoggedIn['statuspeg'] == 1;
+    }
+
+    public function getKelengkapanBerkasCpns(){
+        return $this->nikita->kepegawaian->getKelengkapanBerkasCpns($this->getId());
+    }
+
     public function getListAdminLayanan(){
         // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
         // return $result;
@@ -282,6 +304,10 @@ class General_library
         $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];
         $result['id_unitkerjamaster'] = $this->nikita->session->userdata('pegawai')['id_unitkerjamaster'];
         return $result;
+    }
+
+    public function getNipPegawai(){
+        return $this->userLoggedIn['nipbaru_ws'];
     }
 
     public function isPejabatEselon(){
@@ -333,7 +359,7 @@ class General_library
     public function needResetPassword(){
         $user = $this->nikita->m_general->getOne('m_user', 'id', $this->getId());
         // $user = $this->nikita->m_general->getOne('m_user', 'username', '196908071994032011');
-        if($user['username'] == '001' || $user['username'] == '002'){
+        if($user['username'] == '001' || $user['username'] == '002' || $user['username'] == 'guest'){
             return 1;
         }
         if($user){
@@ -505,7 +531,13 @@ class General_library
 
     public function isVerifPermohonanCuti(){
         return stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan']) ||
-        stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan_tambahan'])
+        stringStartWith('Kepala', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Dinas', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Badan', $this->userLoggedIn['nama_jabatan_tambahan']) ||
+        stringStartWith('Sekretaris Kecamatan', $this->userLoggedIn['nama_jabatan']) ||
+        stringStartWith('Sekretaris Kecamatan', $this->userLoggedIn['nama_jabatan_tambahan'])
         ? true : false;
     }
 
@@ -522,6 +554,10 @@ class General_library
     public function getIdJabatan(){
         return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
         // return $this->userLoggedIn['jabatan'];
+    }
+
+    public function isKepalaSkpdHardcode(){
+        return $this->userLoggedIn['flag_kepalaskpdhardcode'] == 1;
     }
 
     public function isKepalaBkpsdm(){
@@ -813,7 +849,7 @@ class General_library
         
     }
 
-    public function createQrTtePortrait($nip = null, $randomString = null){
+    public function createQrTtePortrait($nip = null, $randomString = null, $contentQr = null){
 		$rs['code'] = 0;
 		$rs['message'] = "";
 		$rs['data'] = null;
@@ -833,7 +869,9 @@ class General_library
         if($randomString == null){
             $randomString = generateRandomString(30, 1, 't_file_ds'); 
         }
-		$contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        if($contentQr == null){
+            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        }
 		// dd($contentQr);
 		$qr = generateQr($contentQr);
 		// $image_ds = explode("data:image/png;base64,", $qr);

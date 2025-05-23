@@ -27,7 +27,7 @@
         font-weight: bold;
         background-color: #ea5454; */
 	position: relative;
-	background-color: #fa8072;
+	background-color: #d41e24;
 	box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025);
 	transition: 0.5s ease-in-out;
 	/* border: 3px solid #0a7129; */
@@ -47,6 +47,19 @@
         background-color: #0a7129; */
 	position: relative;
 	background-color: #0ed095;
+	/* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025); */
+	/* transition: 0.5s ease-in-out; */
+	/* border: 3px solid #0a7129; */
+	color: #fff;
+}
+
+.filter-warning {
+	/* border: 1px solid #222e3c;
+        color: white;
+        font-weight: bold;
+        background-color: #0a7129; */
+	position: relative;
+	background-color:rgb(239, 255, 8);
 	/* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.025); */
 	/* transition: 0.5s ease-in-out; */
 	/* border: 3px solid #0a7129; */
@@ -127,8 +140,9 @@ ol {
     font: 15px 'trebuchet MS', 'lucida sans';
     padding: 0;
     margin-bottom: 4em;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5);
-	margin-bottom: 10px;
+    text-shadow: #fff;
+	  margin-bottom: 10px;
+    
 
   }
 
@@ -147,6 +161,34 @@ ol {
     text-decoration: none;
     transition: all .3s ease-out;
   }
+
+  .rectangle-list .warning{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em .8em;
+    *padding: .4em;
+    margin: .5em 0 .5em 2.5em;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: all .3s ease-out;
+  }
+
+  .rectangle-list .warning:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background-color:rgb(239, 255, 8);
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+  }
+
 
   .rectangle-list .unselect{
     position: relative;
@@ -177,6 +219,7 @@ ol {
     line-height: 2em;
     text-align: center;
     font-weight: bold;
+    
   }
 
   .rectangle-list .unselect:before{
@@ -186,7 +229,7 @@ ol {
     left: -2.5em;
     top: 50%;
     margin-top: -1em;
-    background: #fa8072;
+    background: #d41e24;
     height: 2em;
     width: 2em;
     line-height: 2em;
@@ -210,7 +253,7 @@ ol {
   }
   .rectangle-list .unselect:hover:after{
     left: -.5em;
-    border-left-color: #fa8072;
+    border-left-color: #d41e24;
   }
 </style>
 
@@ -322,7 +365,7 @@ ol {
 						  <?php } ?>
             <?php if (in_array($jenis_layanan, $list_layanan_skcpns)) { ?>
 							<li>
-								<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
+								<a class="<?php if($sk_cpns){ if($sk_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_cpns) { ?>
 									onclick="viewBerkas('<?=$sk_cpns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS* <i
 											class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
@@ -330,7 +373,7 @@ ol {
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skpns)) { ?>
 							<li>
-								<a class="<?php if($sk_pns) echo 'select'; else echo 'unselect';?>" <?php if($sk_pns) { ?>
+								<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pns) { ?>
 									onclick="viewBerkas('<?=$sk_pns['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> SK PNS* <i
 											class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
@@ -338,16 +381,16 @@ ol {
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skpangak)) { ?>
 							<li>
-								<a class="<?php if($sk_pangkat) echo 'select'; else echo 'unselect';?>" <?php if($sk_pangkat) { ?>
+								<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pangkat) { ?>
 									onclick="viewBerkas('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> SK PANGKAT* </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skjabatan)) { ?>
 							<li>
-								<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan) { ?>
+								<a class="<?php if($sk_jabatan){ if($sk_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_jabatan) { ?>
 									onclick="viewBerkas('<?=$sk_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN* </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> SK JABATAN </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_dpcp)) { ?>
@@ -361,7 +404,7 @@ ol {
 							<li>
 								<a class="<?php if($pmk) echo 'select'; else echo 'unselect';?>" <?php if($pmk) { ?>
 									onclick="viewBerkas('<?=$pmk['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sk peninjauan masa kerja (PMK)*'); ?> </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sk peninjauan masa kerja (PMK)'); ?> </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_skp)) { ?>
@@ -375,21 +418,21 @@ ol {
               <?php if (in_array($jenis_layanan, $list_layanan_hd)) { ?>
                   <li><a class="<?php if($hd) echo 'select'; else echo 'unselect';?>" <?php if($hd) { ?>
 									onclick="viewBerkas('<?=$hd['gambarsk'];?>',4)" data-toggle="modal"
-									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> <?php echo strtoupper('Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin Tingkat Sedang/Berat*'); ?> </a></li>
+									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> <?php echo strtoupper('Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin Tingkat Sedang/Berat'); ?> </a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_rekom_sakit)) { ?>
                   <li><a class="<?php if($surat_rekom_sakit) echo 'select'; else echo 'unselect';?>" <?php if($surat_rekom_sakit) { ?>
 									onclick="viewBerkas('<?=$surat_rekom_sakit['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper(' Surat Rekomendasi Sakit/Uzur dari tim dokter pemerintah yang ditunjuk oleh menteri kesehatan'); ?></a></li>
+                  <?php echo strtoupper(' Surat Rekomendasi Sakit/Uzur dari tim dokter pemerintah yang ditunjuk oleh menteri kesehatan'); ?>*</a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_pidana)) { ?>
                   <li><a class="<?php if($pidana) echo 'select'; else echo 'unselect';?>" <?php if($pidana) { ?>
 									onclick="viewBerkas('<?=$pidana['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
-                  <?php echo strtoupper(' Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah Dipidana Penjara Berdasarkan Putusan Pengadilan Yang Telah Berkekuatan Hukum Tetap*'); ?></a></li>
+                  <?php echo strtoupper(' Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah Dipidana Penjara Berdasarkan Putusan Pengadilan Yang Telah Berkekuatan Hukum Tetap'); ?></a></li>
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_surat_ket_kematian)) { ?>
@@ -408,15 +451,15 @@ ol {
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktenikah)) { ?>
                 <?php if($jenis_layanan != 2) { ?>
-                  <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                  <li><a class="<?php if($akte_nikah){ if($akte_nikah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($akte_nikah) { ?>
+									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',5)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte perkawinan (bagi yang sudah menikah/ pernah menikah)'); ?></a></li>
 							<li>
 
               <?php } else if($jenis_layanan == 2) { ?>
-                <li><a class="<?php if($akte_nikah) echo 'select'; else echo 'unselect';?>" <?php if($akte_nikah) { ?>
-									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',4)" data-toggle="modal"
+                <li><a class="<?php if($akte_nikah){ if($akte_nikah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($akte_nikah) { ?>
+									onclick="viewBerkas('<?=$akte_nikah['gambarsk'];?>',5)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte perkawinan*'); ?></a></li>
 							<li>
@@ -448,7 +491,7 @@ ol {
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_akteanak)) { ?>
                   <li><a class="<?php if($akteanak) echo 'select'; else echo 'unselect';?>" <?php if($akteanak) { ?>
-									onclick="viewBerkas('<?=$akteanak['gambarsk'];?>',4)" data-toggle="modal"
+									onclick="viewBerkas('<?=$akteanak['gambarsk'];?>',5)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte lahir anak (bagi anak kandung yang belum berusia 25 tahun, belum pernah bekerja, belum pernah menikah, dan masih sekolah/kuliah'); ?></a></li>
 							<li>
@@ -522,6 +565,9 @@ ol {
 					Berkas Sudah diupload<br>
 					<button style="width:3%" class="btn btn-sm filter-btn filter-unselect mt-2">  &nbsp;
 					</button> Berkas belum diupload<br>
+          <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
+          </button> Menunggu Verifikasi BKPSDM<br>
+          Berkas dengan tanda * Wajib diupload<br>
 					Berkas diupload Pada Menu Profil <br>
 					Untuk Berkas Selain SK CPNS, SK PNS, SK Jabatan, SK Pangkat<br>
 					di upload pada pilihan Arsip Lainnya.
@@ -619,26 +665,26 @@ $(function(){
             return false;
         }
 
-        if(hd == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        if(pidana == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(hd == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        // if(pidana == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
         // if(dpcp == ""){
         //     errortoast(' Berkas Belum Lengkap')
         //     return false;
         // }
-        if(sk_jabatan == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        if(pmk == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
+        // if(pmk == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
 
         if(skp == ""){
             errortoast(' Berkas Belum Lengkap')
@@ -696,6 +742,13 @@ $(function(){
 
         if(jenis_layanan == 3 || jenis_layanan == 4){
           if(surat_berhenti == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+        }
+
+        if(jenis_layanan == 4){
+          if(surat_rekom_sakit == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
@@ -813,7 +866,9 @@ $(function(){
           dir = "arsipjabatan/";
         } else if(kode == 4){
           dir = "arsiplain/";
-        } else {
+        } else if(kode == 5){
+          dir = "arsipkeluarga/";
+        }  else {
           dir = "arsipskp/"
         }
 

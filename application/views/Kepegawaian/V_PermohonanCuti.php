@@ -47,13 +47,15 @@
               <select class="form-control select2-navy" style="width: 100%"
               id="id_cuti" data-dropdown-css-class="select2-navy" name="id_cuti">
                   <?php if($master_jenis_cuti){
-                      foreach($master_jenis_cuti as $mc){ if($mc['id_cuti'] != 50){
+                      foreach($master_jenis_cuti as $mc){ 
+                        if($mc['id_cuti'] != 50 && $mc['id_cuti'] != 10){
                         if($mc['id_cuti'] == 00){
                       ?>
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>
                       </option>
-                  <?php } } } } ?>
+                  <?php } } } 
+                } ?>
               </select>
             </div>
             <div class="col" id="div_surat_pendukung" style="display: none;">
@@ -64,11 +66,11 @@
           <div class="row mt-2">
             <div class="col-lg-5">
               <label class="lbl_input">Tanggal Mulai</label>
-              <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" readonly value="<?=date('d-m-Y')?>" />
+              <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" readonly value="<?=date('Y-m-d')?>" />
             </div>
             <div class="col-lg-5">
               <label class="lbl_input">Tanggal Akhir</label>
-              <input class="form-control" name="tanggal_akhir" id="tanggal_akhir" readonly value="<?=date('d-m-Y')?>" />
+              <input class="form-control" name="tanggal_akhir" id="tanggal_akhir" readonly value="<?=date('Y-m-d')?>" />
             </div>
             <div class="col-lg-2">
               <label class="lbl_input">Lamanya Cuti</label><br>
@@ -150,13 +152,13 @@
     loadRiwayatCuti()
     $('#id_cuti').select2()
     $('#tanggal_mulai').datepicker({
-      format: 'dd-mm-yyyy',
+      format: 'yyyy-mm-dd',
       orientation: 'bottom',
       autoclose: true,
       todayBtn: true
     })
     $('#tanggal_akhir').datepicker({
-      format: 'dd-mm-yyyy',
+      format: 'yyyy-mm-dd',
       orientation: 'bottom',
       autoclose: true,
       todayBtn: true

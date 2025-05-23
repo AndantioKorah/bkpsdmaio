@@ -33,6 +33,10 @@
     font-size: .7rem;
     color: white;
   }
+
+  .badge{
+    max-width: 15vw;
+  }
 </style>
 <table class="table table-hover table-striped" id="table_riwayat_cuti">
   <thead>
@@ -55,12 +59,29 @@
         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
         <td class="text-center"><?=formatDateNamaBulan($rs['tanggal_mulai']).' - '.formatDateNamaBulan($rs['tanggal_akhir'])?></td>
         <td class="text-left"><?=$rs['lama_cuti'].' hari'?></td>
-        <td class="text-center"><span class=""><?=($rs['status_pengajuan_cuti'])?></span></td>
+        <td style="width: 25%;" class="text-center">
+          <?php
+            $badge = "badge-warning";
+            if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
+              if($rs['flag_ds_cuti'] == 1){
+                $badge = "badge-success";
+                $rs['status_pengajuan_cuti'] = "Selesai";
+              } else {
+                $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              }
+            } else if(isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1){
+              $badge = "badge-danger";
+            }
+          ?>
+          <span style="text-wrap: pretty;" class="badge <?=$badge?>"><?=($rs['status_pengajuan_cuti'])?></span></td>
         <td class="text-center">
           <?php if(!isset($rs['flag_operator_verif'])){ ?>
             <button type="button" href="#modal_detail_cuti" onclick="loadDetailCuti('<?=$rs['id']?>')"
             data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
-            <?php if(!$rs['id_progress_cuti']){ ?>
+            <?php
+                // if(!$rs['id_progress_cuti']){
+                if(!$rs['id_t_nomor_surat']){ // jika belum input nomor surat, bisa dihapus
+            ?>
               <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
             <?php } ?>
           <?php } else { ?>

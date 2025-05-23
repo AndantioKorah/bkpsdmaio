@@ -67,17 +67,13 @@
     }
 
     #profile_pegawai{
-      width: 300px;
-      height: calc(300px * 1.25);
+      aspect-ratio: 3 / 4;
+      width: 100%;
+      /* height: calc(350px * 1.25); */
       background-size: cover;
       object-fit: cover;
       box-shadow: 5px 5px 10px #888888;
-      border-radius: 10%;
-      <?php if($profil_pegawai['flag_terima_tpp'] == 1) { ?>
-      border-right-style: solid;
-      border-width: 4px;
-      border-color: #222e3c;
-      <?php } ?>
+      border-radius: 5%;
       /* border-color: green; */
 
     }
@@ -142,6 +138,13 @@
   transition: .2s;
 }
 
+.badge-penerima-tpp{
+  box-shadow: 3px 3px 10px #888888;
+  background-color: #327ba8;
+  border: 2px solid #327ba8;
+  color: white;
+}
+
 
 
   </style>
@@ -157,8 +160,17 @@
     <div class="col-lg-12">
       <div class="card card-default">
         <div class="row p-3">
-          <div class="col-lg-4">
+          <div class="col-lg-3 col-md-12 col-sm-12">
             <div class="row">
+              <?php if(($this->general_library->isProgrammer() || $this->general_library->isHakAkses('login_another_user'))
+                && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
+                <div class="col-lg-12 text-center mb-2">
+                  <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
+                    <i class="fa fa-key"></i> LOGIN</button>
+                  <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
+                    <i class="fa fa-spin fa-spinner"></i> Loading...</button>
+                </div>
+              <?php } ?>
               <?php
                 $badge_status = 'badge-cpns';
                 if($profil_pegawai['statuspeg'] == 2){
@@ -182,14 +194,13 @@
                   $badge_aktif = 'badge-tidak-aktif';
                 }
               ?>
-              <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                <h3><span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span></h3>
+              <div class="mb-3 col-lg-12 col-md-12 col-sm-12 text-left">
+                <span class="badge <?=$badge_status?>"><?=$profil_pegawai['nm_statuspeg']?></span>
+                <span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span>
+                <?php if($profil_pegawai['flag_terima_tpp'] == 1 && $profil_pegawai['id_m_status_pegawai'] == 1){?>
+                    <span class="badge badge-penerima-tpp float-right"><i class="fa fa-check"></i> Penerima TPP</span>
+                <?php } ?>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                <h3><span class="badge <?=$badge_aktif?>"><?=$profil_pegawai['nama_status_pegawai']?></span></h3>
-              </div>
-              
-            
 
               <div class="col-lg-12 text-center">
                 <!-- <img style="width: 240px; height: 240px" class="img-fluid rounded-circle mb-2 b-lazy"
@@ -200,24 +211,30 @@
                   src="<?=base_url('fotopeg/')?><?=$profil_pegawai['fotopeg']?>" />  -->
 
                   <div class="foto_containerx">
-                            <!-- <img src="<?=$this->general_library->getProfilePicture()?>" style="height: 350px; width: 350px; margin-right: 1px;" 
-                            class="img-circle elevation-2 image-settings" alt="User Image"> -->
                             <img id="profile_pegawai" class="img-fluidx mb-2 b-lazy"
-                            data-src="<?php
+                           data-src="
+                            <?php
                                 $path = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 if($profil_pegawai['fotopeg']){
                                 if (file_exists($path)) {
                                    $src = './assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                  //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                 } else {
-                                  $src = './assets/img/user.png';
-                                  // $src = '../siladen/assets/img/user.png';
+                                  if($profil_pegawai['jk'] == "Laki-Laki" || $profil_pegawai['jk'] == "Laki-laki"){
+                                    $src = 'assets/img/user-icon-male.png';
+                                } else {
+                                    $src = 'assets/img/user-icon-woman.png';
+                                }
                                 }
                                 } else {
-                                  $src = './assets/img/user.png';
+                                if($profil_pegawai['jk'] == "Laki-Laki" || $profil_pegawai['jk'] == "Laki-laki"){
+                                    $src = 'assets/img/user-icon-male.png';
+                                } else {
+                                    $src = 'assets/img/user-icon-woman.png';
                                 }
-                                echo base_url().$src;?>" /> 
+                                }
+                                echo base_url().$src;?>
+                                "
+                                /> 
                                 <div class="middle">
                                     <!-- <form id="form_profile_pict" action="<?=base_url('kepegawaian/C_Kepegawaian/updateProfilePict')?>" method="post" enctype="multipart/form-data">
                                         <input title="Ubah Foto Profil" class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="profilePict" id="profilePict">
@@ -291,13 +308,7 @@
                       margin-top: 4px;
                       margin-left: 30px;">GURU SERTIFIKASI</label>
                   </div>
-                <?php } if($this->general_library->isProgrammer() && !in_array($profil_pegawai['nipbaru_ws'], EXCLUDE_NIP_SWITCH_ACCOUNT)){ ?>
-                  <button class="btn btn-sm btn-outline-success" id="btn_login" onclick="loginAs('<?=$profil_pegawai['nipbaru_ws']?>')" type="button">
-                    <i class="fa fa-key"></i> LOGIN</button>
-                  <button disabled style="display: none;" class="btn btn-sm btn-outline-success" id="btn_login_loading" type="button">
-                    <i class="fa fa-spin fa-spinner"></i> Loading...</button>
-                <?php } ?>
-                <?php  if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
+                <?php } if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_gaji_berkala')){ ?>
                  
 
                   <div style="margin-left: 30px; margin-right: 30px !important; " class="form-check form-switch">
@@ -314,7 +325,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-8">
+          <div class="col-lg-9 col-md-12 col-sm-12">
             <div class="row">
               <!-- profil  -->
             <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
@@ -780,7 +791,7 @@
                 <button onclick="loadFormJabatan('def')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
-                <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan Plt/Plh</button>
+                <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-profile" id="pills-jabatan-tab" data-bs-toggle="pill" data-bs-target="#pills-jabatan" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Jabatan Plt/Plh, Penjabat</button>
               </li>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadFormDiklat()" class="nav-link nav-link-profile" id="pills-diklat-tab" data-bs-toggle="pill" data-bs-target="#pills-diklat" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Bangkom</button>
@@ -847,9 +858,11 @@
               if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
               ?>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ||  $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->getUserName() == $nip){ ?>
-              <li class="nav-item nav-item-profile" role="presentation"> 
+              <?php if($profil_pegawai['statuspeg'] != 1) { ?>
+                <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
               </li>
+               <?php } ?>
               <?php } ?>
               <?php 
                } 

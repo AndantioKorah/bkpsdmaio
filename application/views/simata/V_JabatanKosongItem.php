@@ -35,13 +35,12 @@
 		<div class="table-responsive">
 			<table id="table_jt" class="display table table-bordered datatable" style="width:100%;">
 				<thead>
-					<th class="text-center" style="width:5%;">No</th>
+					<th class="text-center" style="width:5%;">No </th>
 					<th class="" style="width:40%;">Nama/ NIP</th>
 					<th style="width:55%;">Jabatan Target</th>
 				</thead>
 				<tbody>
 					<?php $nomor = 1; foreach($result_adm as $rs){ ?>
-
 					<tr>
 						<td class="align-top tdnama" align="center"><?=$nomor++;?></td>
 						<td class="align-top tdnama">
@@ -56,37 +55,41 @@
 						</td>
 						<td class="align-top">
 							<!-- <form method="post"  action="submit-jabatan-target" enctype="multipart/form-data" > -->
-							<form method="post" id="submit_jabatan_target" class="submit_jabatan_target"
-								enctype="multipart/form-data">
+							<!-- <form method="post" id="submit_jabatan_target" class="submit_jabatan_target" enctype="multipart/form-data"> -->
 
 								<div class="mb-3">
 									<div class="row">
-
 										<div class="col-lg-9 col-md-4">
-											<div class="form-group">
+											<!-- <div class="form-group">
 												<input type="hidden" name="tab" value="adm">
 												<input type="hidden" name="id_pegawai" value="<?=$rs['id_peg'];?>">
 												<select class="form-control js-example-basic-multiple hsl"
 													name="jabatan_target[]" multiple="multiple" required>
-													<!-- <option disabled selected>Pilih Jabatan Target</option> -->
 													<?php if($jabatan_jpt){ foreach($jabatan_jpt as $r){ ?>
 													<option value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?>
 														Pada <?=$r['nm_unitkerja']?> </option>
 													<?php } } ?>
 												</select>
-											</div>
+											</div> -->
 										</div>
 
 										<div class="col-lg-3 col-md-4">
 											<div class="form-group">
-												<button class="btn btn-sm btn-navy float-right btn_simpan_jab_target"
-													type="submit"><i class="fa fa-save"></i> SIMPAN</button>
+												<!-- <button class="btn btn-sm btn-navy float-right btn_simpan_jab_target"
+													type="submit"><i class="fa fa-edit"></i> Tambah Jabatan Target</button> -->
+													<button 
+													data-toggle="modal" 
+													data-id_pegawai="<?=$rs['id_peg']?>"
+													data-nm_jabatan="<?=$rs['nama_jabatan']?>"
+													href="#modal_input_jabatan_target"
+													onclick="loadModalInputJT('<?=$rs['id_peg']?>','<?=$jenis_jabatan;?>')"
+													class="open-DetailJabatanx btn btn-sm btn-info mb-2 float-right col-4" > <i class="fa fa-edit"></i> </button>
 
 											</div>
 										</div>
 
 									</div>
-									<span class="mt-2">Jabatan Target :</span><br>
+									<!-- <span class="mt-2">Jabatan Target :</span><br> -->
 									<?php  foreach($jabatan_target as $jt){ ?>
 									<?php if($rs['id_peg'] == $jt['id_peg']) { ?>
 									<table class="table table-hover table-striped table-bordered">
@@ -101,6 +104,10 @@
 											</td>
 										</tr>
 									</table>
+
+									
+
+
 									<?php } ?>
 									<?php } ?>
 							</form>
@@ -116,6 +123,28 @@
 
 	</div>
 </div>
+
+<div class="modal fade" id="modal_input_jabatan_target" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah Jabatan Target</h5>
+        <button type="button" id="modal_dismis" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <div id="form_tambah_rumpun">
+
+            </div>
+      </div>
+      <div class="modal-footer">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- tutup administrator -->
 
 <!-- jpt -->
@@ -157,14 +186,13 @@
 											<input type="hidden" name="tab" value="jpt">
 
 											<input type="hidden" name="id_pegawai" value="<?=$rs['id_peg'];?>">
-											<select class="form-control js-example-basic-multiple hsl"
+											<!-- <select class="form-control js-example-basic-multiple hsl"
 												name="jabatan_target[]" multiple="multiple" required>
-												<!-- <option disabled selected>Pilih Jabatan Target</option> -->
 												<?php if($jabatan_jpt){ foreach($jabatan_jpt as $r){ ?>
 												<option value="<?=$r['id_jabatanpeg']?>"><?=$r['nama_jabatan']?>
 												</option>
 												<?php } } ?>
-											</select>
+											</select> -->
 										</div>
 									</div>
 
@@ -215,19 +243,18 @@
 
 		$('.js-example-basic-multiple').select2();
 		// $('.datatable').dataTable()
-		var tab = "<?= $tab;?>"
-		if (tab == "adm") {
-			$('#home-tab').click()
-		} else if (tab == "jpt") {
-			$('#profile-tab').click()
-		}
+		// var tab = "<?= $tab;?>"
+		// alert(tab)
+		// if (tab == "adm") {
+		// 	$('#home-tab').click()
+		// } else if (tab == "jpt") {
+		// 	$('#profile-tab').click()
+		// }
 		// $('#profile-tab').click()
 
-	var table = $('.datatable').DataTable({
-
+	$('.datatable').DataTable({
     displayLength: 25,
-    
-});
+	});
 
 	})
 
@@ -294,6 +321,15 @@
 	//     .on( 'keyup', function () {
 	//         table.column(2).search( this.value ).draw();
 	//     } );
+
+
+    function loadModalInputJT(id,jenis_jabatan){
+    $('#form_tambah_rumpun').html('')
+    $('#form_tambah_rumpun').append(divLoaderNavy)
+    $('#form_tambah_rumpun').load('<?=base_url("simata/C_Simata/loadSelectJabatanTargetPegawai/")?>'+id+'/'+jenis_jabatan, function(){
+      $('#loader').hide()
+    })
+    }
 
 </script>
 <?php } else { ?>

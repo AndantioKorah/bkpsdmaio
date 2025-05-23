@@ -5,25 +5,37 @@
 </style>
 
 <div class="row">
-  <div class="col-lg-12 table-responsive">
-    <div style="cursor: pointer;" class="form-check float-right text-right mb-5">
+  <?php if($param['status'] == 'belum_upload_file_ds'){ ?>
+    <div class="colg-lg-12 text-right">
+      <button id="button_download_all" class="btn btn-success"><i class="fa fa-download"></i> Download All File</button>
+      <button style="display: none;" id="button_download_all_loading" class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon menunggu...</button>
+    </div>
+  <?php } ?>
+  <div class="col-lg-12 mt-3 table-responsive">
+    <!-- <div style="cursor: pointer;" class="form-check float-right text-right mb-5">
       <input style="cursor: pointer; width: 25px; height: 25px;" class="form-check-input" type="checkbox" value="" id="checkTampilSemua">
       <label style="cursor: pointer; padding: 5px; font-size: 1rem;" class="form-check-label" for="checkTampilSemua">
         Tampilkan Semua
       </label>
-    </div>
+    </div> -->
     <table class="table table-hover table-striped" id="table_res">
       <thead>
         <th class="text-center">No</th>
         <th class="text-center">Pegawai</th>
         <th class="text-center">Tanggal Cuti</th>
         <th class="text-center">Tanggal Usul</th>
-        <th class="text-center">Nomor Surat</th>
+        <th class="text-center">Tanggal Verif</th>
         <th class="text-center">Status</th>
         <th class="text-center">Pilihan</th>
       </thead>
       <tbody>
-        <?php if($result){ $no = 1; foreach($result as $rs){
+        <?php $filenames = null;
+        if($result){ $no = 1; foreach($result as $rs){
+          if($rs['flag_ds_manual'] == 0){
+            $filenames[] = $rs['url_sk'];
+          } else {
+            $filenames[] = $rs['url_sk_manual'];
+          }
           $classSelesai = "";
           $status = "";
           $status_pengajuan_cuti = $rs['status_pengajuan_cuti'];
@@ -42,7 +54,8 @@
             }
           }
         ?>
-          <tr class="<?=$classSelesai?>">
+          <!-- <tr class="<?=$classSelesai?>"> -->
+          <tr>
             <td class="text-center"><?=$no++;?></td>
             <td class="text-left">
               <span><?=getNamaPegawaiFull($rs)?></span><br>
@@ -58,7 +71,7 @@
               <?=$tanggal_cuti_raw?>
             </td>
             <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
-            <td class="text-center"><?=($rs['nomor_surat'])?></td>
+            <td class="text-center"><?=formatDateNamaBulanWT($rs['tanggal_verif'])?></td>
             <td class="text-center">
               <?=$status_pengajuan_cuti?><br>
               <span class="<?=$class?>"><?=$status?></span>
@@ -101,6 +114,26 @@
       $('#loader').hide()
     })
   }
+
+  $('#button_download_all').on('click', function(){
+    $('#button_download_all_loading').show()
+    $('#button_download_all').hide()
+    $.ajax({
+        url: '<?=base_url("kepegawaian/C_Kepegawaian/downloadAllSkCuti")?>',
+        method: 'post',
+        data: {
+          filenames:  '<?=json_encode($filenames)?>'
+        },
+        success: function(data){
+          $('#button_download_all').show()
+          $('#button_download_all_loading').hide()
+        }, error: function(e){
+          errortoast('Terjadi Kesalahan')
+          $('#button_download_all').show()
+          $('#button_download_all_loading').hide()
+        }
+    })
+  })
 
   $('#checkTampilSemua').on('change', function(){
     if($(this).is(':checked')){

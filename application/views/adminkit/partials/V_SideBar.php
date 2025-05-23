@@ -124,13 +124,19 @@
 		</a>
 	</li>
 	<?php } ?>
-	<li class="sidebar-item">
-		<a class="sidebar-link" href="<?=base_url();?>master/list-tpp">
-		<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
-			<i class="align-middle me-2 fa fa-money-bill"></i> 
-			<span class="align-middle">List Pemberian TPP</span>
-		</a>
-	</li>
+
+	<?php if($this->general_library->isProgrammer() ||
+	$this->general_library->isAdminAplikasi() ||
+	isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>master/list-tpp">
+			<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
+				<i class="align-middle me-2 fa fa-money-bill"></i> 
+				<span class="align-middle">List Pemberian TPP</span>
+			</a>
+		</li>
+	<?php } ?>
+
 	<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi()
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
@@ -325,19 +331,27 @@
 					<i class="align-middle me-2 far fa-circle"></i>Broadcast WhatsApp
 				</a>
 			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url();?>walikota/dashboard">
+					<i class="align-middle me-2 far fa-circle"></i>Live Absen Event
+				</a>
+			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-wa');?>">
+					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
+				</a>
+			</li>
+			<li class="sidebar-item">
+				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-ds');?>">
+					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron DS
+				</a>
+			</li>
 		</ul>
 	<?php } ?>
 
 	<li class="sidebar-header">
 		Kepegawaian
 	</li>
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getId() == 193){ ?>
-		<li class="sidebar-item">
-			<a class="sidebar-link" href="<?=base_url();?>walikota/dashboard">
-				<i class="fa fa-desktop"></i> <span class="align-middle">Live Absen Event</span>
-			</a>
-		</li>
-	<?php } ?>
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
 	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
@@ -391,19 +405,21 @@
 			</span>
 		</a>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-		<?php 
+			
+			<?php if(!$this->general_library->isCpns()){ ?>
+				<li class="sidebar-item ">
+					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+					</a>
+				</li>
+			<?php } ?>
+			
+			<?php 
 			if(
 				$this->general_library->isProgrammer()
 				|| $this->general_library->isPegawaiBkpsdm()
 			)
 			{ ?>
-				
-			<li class="sidebar-item ">
-				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
-				</a>
-			</li>
-
 			<li class="sidebar-item ">
 				<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/usul-ds')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Usul DS
@@ -453,7 +469,7 @@
 		</li>
 
    <?php if($this->general_library->isAdminAplikasi()){ ?>
-		<li class="sidebar-item">
+		<!-- <li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
 								<i class="align-middle me-2 far fa-circle"></i>Pensiun <i class="fa fa-chevron-down" 
 				style="position: absolute;
@@ -474,7 +490,7 @@
 									<a class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan-pensiun/11')?>"><i class="fa fa-minus"></i>Pensiun Tewas</a>
 									</li>
 								</ul>
-							</li>
+							</li> -->
 		<?php } ?>
 
 		
@@ -545,6 +561,7 @@
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
+	$this->general_library->isKepalaSkpdHardcode() ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -565,10 +582,10 @@
 					</a>
 				</li>
 				<?php } ?>
-				<?php if($this->general_library->isProgrammer()
+				<?php if(($this->general_library->isProgrammer()
 				|| stringStartWith('Kepala Bidang', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())
-				){ ?>
+				) && $this->general_library->isPegawaiBkpsdm()){ ?>
 					<li class="sidebar-item ">
 						<a title="Usul DS" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-usul-ds')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Usul DS
@@ -587,9 +604,10 @@
 				$this->general_library->isHakAkses('verifikasi_permohonan_cuti') || 
 				$this->general_library->isHakAkses('admin_pengajuan_cuti')
 				// buka 3 dibawah ini untuk verifikasi melalui SILADEN. sekarang ditutup karena bocor
-				// ||
-				// $this->general_library->isKepalaPd() ||
-				// $this->general_library->isVerifPermohonanCuti()
+				||
+				$this->general_library->isKepalaPd() ||
+				$this->general_library->isVerifPermohonanCuti() ||
+				$this->general_library->isKepalaSkpdHardcode()
 				){
 					?>
 					<li class="sidebar-item ">
@@ -652,6 +670,20 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/11')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Permohonan Salinan SK
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/12')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Jabatan Fungsional
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/21')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Peningkatan Pendidikan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Penambahan Gelar
 					</a>
 				</li>
 				<?php } ?>
@@ -898,6 +930,7 @@
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatanTambahan())
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatanTambahan())
+				|| $this->general_library->isKepalaSkpdHardcode()
 				){ ?>
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/verifikasi')?>">

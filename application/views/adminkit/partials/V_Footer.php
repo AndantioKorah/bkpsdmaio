@@ -4,7 +4,7 @@
 			<div class="col-6 text-start">
 				<p class="mb-0">
 				<!-- Copyright © 2022 BKPSDM Manado -->
-				Copyright © <?=date('Y')?> BKPSDM Manado
+				<?=COPYRIGHT?>
 				</p>
 			</div>
 			<div class="col-6 text-end">

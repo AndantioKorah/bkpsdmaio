@@ -63,10 +63,27 @@
               </td>
               <td class="text-left"><?=$rs['ket']?></td>
               <td class="text-left"> 
-              <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_jabatan" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                 <i class="fa fa-file-pdf"></i></button>
-              <?php } ?>
+              <?php 
+                $flagShowFileSkJab = 1;
+                $message = "";
+                if($this->general_library->isCpns()){
+                  $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
+                  if($kelengkapan['done'] == true){
+                    $flagShowFileSkJab = 1;
+                  } else {
+                    $flagShowFileSkJab = 0;
+                    $message = $kelengkapan['message'];
+                  }
+                }
+              ?>
+              <?php if($rs['gambarsk'] != "") {?>
+                  <?php if($flagShowFileSkJab == 1){?>
+                    <button href="#modal_view_file_jabatan" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                    <i class="fa fa-file-pdf"></i></button>
+                  <?php } else { ?>
+                  <span style="font-size: .75rem; font-weight: bold; font-style: italic; color: red"><?=$message?></span>
+                  <?php } ?>
+                <?php } ?>
               </td>
               <td>
 

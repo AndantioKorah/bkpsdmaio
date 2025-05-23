@@ -12,7 +12,7 @@
               // if($this->general_library->isProgrammer() ||
               //   $this->general_library->isKepalaBkpsdm()){
               ?>
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-3 col-md-12">
               <label>PERANGKAT DAERAH</label>
               <select class="form-control select2-navy" style="width: 100%"
                 id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
@@ -26,7 +26,6 @@
                   <?php } ?>
               </select>
             </div>
-            <?php // } ?>
             <div class="col-lg-3 col-md-12">
               <label>Pilih Bulan</label>  
               <select class="form-control select2-navy" style="width: 100%"
@@ -49,6 +48,16 @@
               <label>Pilih Tahun</label>  
               <input style="height:38px;" readonly autocomplete="off" class="form-control yearpicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
             </div>
+            <div class="col-lg-3 col-md-12">
+              <label>Status</label>  
+              <select class="form-control select2-navy" style="width: 100%"
+                id="status" data-dropdown-css-class="select2-navy" name="status">
+                <option value="semua">Semua</option>
+                <option selected value="belum_input_nomor_surat">Nomor Surat Belum Diinput</option>
+                <option value="belum_upload_file_ds">File DS Belum Diupload</option>
+                <option value="selesai">Selesai</option>
+              </select>
+            </div>
           </div>
           <div class="row mt-3">
             <div class="col-lg-12 text-right">
@@ -69,6 +78,19 @@
   $(function(){
     $('#bulan').select2()
     $('#id_unitkerja').select2()
+    $('#status').select2()
+    $('#form_search').submit()
+  })
+
+  $('#bulan').on('change', function(){
+    $('#form_search').submit()
+  })
+
+  $('#id_unitkerja').on('change', function(){
+    $('#form_search').submit()
+  })
+
+  $('#status').on('change', function(){
     $('#form_search').submit()
   })
 

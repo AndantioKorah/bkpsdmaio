@@ -159,4 +159,88 @@ class M_Admin extends CI_Model
                             ->where('a.id_t_broadcast', $id)
                             ->get()->result_array();
     }
+
+    public function getMonitoringCronWaData(){
+        $data = $this->input->post();
+        $explDate = explode(" - ", $data['range_periode']);
+        $explAwal = explode("/", $explDate[0]);
+        $explAkhir = explode("/", $explDate[1]);
+
+        $dateAwal = $explAwal[2].'-'.$explAwal[0].'-'.$explAwal[1].' 00:00:00';
+        $dateAkhir = $explAkhir[2].'-'.$explAkhir[0].'-'.$explAkhir[1].' 23:59:59';
+
+        return $this->db->select('a.*, b.gelar1, b.gelar2, b.nama, b.handphone')
+                    ->from('t_cron_wa a')
+                    ->join('db_pegawai.pegawai b', "REPLACE(a.sendTo,'62','0') = b.handphone", "left")
+                    ->where('a.created_date >=', $dateAwal)
+                    ->where('a.created_date <=', $dateAkhir)
+                    ->order_by('a.created_date', 'desc')
+                    ->group_by('a.id')
+                    ->get()->result_array();
+    }
+
+    public function getMonitoringDsData(){
+        $data = $this->input->post();
+        $explDate = explode(" - ", $data['range_periode']);
+        $explAwal = explode("/", $explDate[0]);
+        $explAkhir = explode("/", $explDate[1]);
+
+        $dateAwal = $explAwal[2].'-'.$explAwal[0].'-'.$explAwal[1].' 00:00:00';
+        $dateAkhir = $explAkhir[2].'-'.$explAkhir[0].'-'.$explAkhir[1].' 23:59:59';
+
+        $res = $this->db->select('a.id, a.batchId, a.flag_send, a.date_send, a.flag_sent, a.date_sent')
+                    ->from('t_cron_request_ds a')
+                    ->where('a.created_date >=', $dateAwal)
+                    ->where('a.created_date <=', $dateAkhir)
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.flag_send', 'asc')
+                    ->order_by('a.date_send', 'asc')
+                    ->order_by('a.created_date', 'desc')
+                    // ->group_by('a.batchId')
+                    ->get()->result_array();
+
+        $result = null;
+        if($res){
+            foreach($res as $rs){
+                if(isset($result[$rs['batchId']])){
+                    $result[$rs['batchId']]['data'][] = $rs;
+                } else {
+                    $result[$rs['batchId']] = null;
+                    $result[$rs['batchId']]['data'][] = $rs;
+                    $result[$rs['batchId']]['done'] = 0;
+                    $result[$rs['batchId']]['total'] = 1;
+                    $result[$rs['batchId']]['last_send'] = null;
+                    $result[$rs['batchId']]['last_sent'] = null;
+                }
+
+                $result[$rs['batchId']]['total']++;
+
+                if($rs['flag_send'] == 1){
+                    if($result[$rs['batchId']]['last_send'] == null){
+                        $result[$rs['batchId']]['last_send'] = $rs['date_send'];
+                    } else {
+                        if($result[$rs['batchId']]['last_send'] < $rs['date_send']){
+                            $result[$rs['batchId']]['last_send'] = $rs['date_send'];
+                        }
+                    }
+                }
+
+                if($rs['flag_sent'] == 1){
+                    if($result[$rs['batchId']]['last_sent'] == null){
+                        $result[$rs['batchId']]['last_sent'] = $rs['date_sent'];
+                    } else {
+                        if($result[$rs['batchId']]['last_sent'] < $rs['date_sent']){
+                            $result[$rs['batchId']]['last_sent'] = $rs['date_sent'];
+                        }
+                    }
+                }
+
+                if($rs['flag_sent'] == 1){
+                    $result[$rs['batchId']]['done']++;
+                }
+            }
+        }
+        dd(json_encode($result));
+        return $result;
+    }
 }

@@ -21,10 +21,22 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?></td>
               <td class="text-left">
-              <?php if($rs['gambarsk'] != "") { ?>
-                <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-                 <i class="fa fa-file-pdf"></i></button>
-                 <?php } ?>
+                <?php if($rs['gambarsk'] != "") {
+                  $flagShowButtonArsip = 1;
+                  $messageCpns = null;
+                  if($this->general_library->isCpns() && date("Y-m-d") < '2025-06-02' && $rs['id_dokumen'] == 34){ // hilangkan tombol jika CPNS dan belum tanggal 2 Juni 2025 untuk SPMT
+                    $flagShowButtonArsip = 0;
+                    $messageCpns = "File SPMT dapat didownload pada tanggal 2 Juni 2025";
+                  }
+                ?>
+                  <?php if($flagShowButtonArsip == 1){ ?>
+                    <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                    <i class="fa fa-file-pdf"></i></button>
+                  <?php } ?>
+                  <?php if($messageCpns){ ?>
+                    <span style="font-size: .75rem; color: red; font-weight: bold;"><i><?=$messageCpns?></i></span>
+                  <?php } ?>
+                <?php } ?>
               </td>
               <td>
 
@@ -81,7 +93,7 @@
               </td>
               <?php } ?>
               <td>
-              <?=$rs['created_date'];?>
+              <?=formatDateNamaBulanWT($rs['created_date']);?>
               </td>
             </tr>
           <?php } ?>

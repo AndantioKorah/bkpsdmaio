@@ -193,6 +193,11 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
     </li>
+  <?php if($id_m_layanan == 12) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='surat_pernyataan_hd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan tidak sedang hukiman disiplin dari atasan langsung</button>
+  </li>
+  <?php } ?>
   <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 ) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
@@ -258,6 +263,12 @@
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sk_jabatan_fungsional_pertama')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pengangkatan Pertama dalam Jabatan Fungsional</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_pemberhentian_dari_jabfung')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pemberhentian dari Jabatan Fungsional</button>
@@ -473,7 +484,8 @@
       </div>
     </div>
   </div>
-</div>
+<!-- </div> -->
+
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
 </div>
@@ -508,6 +520,8 @@
     <input type="hidden" name="skp2" value="<?php if($skp2) echo $skp2['id']; else echo "";?>">
 		<input type="hidden" name="pak" value="<?php if(isset($pak)) echo $pak['id']; else echo "";?>">
 		<input type="hidden" name="sk_jabatan_fungsional" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
+		<input type="hidden" name="sk_jabatan_fungsional_pertama" value="<?php if($sk_jabatan_fungsional_pertama) echo $sk_jabatan_fungsional_pertama['id']; else echo "";?>">
+
 		<input type="hidden" name="dok_lain" value="<?php if($dok_lain) echo $dok_lain['id']; else echo "";?>">
 		<input type="hidden" name="ijazah" value="<?php if(isset($ijazah)) echo $ijazah['id']; else echo "";?>">
 		<input type="hidden" name="str_serdik" value="<?php if(isset($str_serdik)) echo $str_serdik['id']; else echo "";?>">
@@ -525,7 +539,8 @@
         <option <?php if($result[0]['status_layanan'] == 2) echo "selected";?> value="2">Rekomendasi TPK</option>
         <option <?php if($result[0]['status_layanan'] == 3) echo "selected";?> value="3">Pengajuan Pertek</option>
         <option <?php if($result[0]['status_layanan'] == 4) echo "selected";?> value="4">Proses SK Jabatan</option>
-        <option <?php if($result[0]['status_layanan'] == 5) echo "selected";?> value="5">Tolak Pengajuan</option>
+        <option <?php if($result[0]['status_layanan'] == 5) echo "selected";?> value="5">BTL</option>
+        <option <?php if($result[0]['status_layanan'] == 7) echo "selected";?> value="7">TMS</option>
 
         <!-- <option value="3">TMS</option> -->
       </select>
@@ -682,12 +697,14 @@ function openPresensiTab(){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
-        } else if(file == "skjabatan" || file == "sk_jabatan_fungsional"){
+        } else if(file == "skjabatan" || file == "sk_jabatan_fungsional" || file == "sk_jabatan_fungsional_pertama"){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
             dir = "./dokumen_layanan/jabatan_fungsional/";
         } else if(file == "ijazah"){
           dir = "./arsippendidikan/";
+        } else if(file == "surat_pernyataan_hd") {
+          dir = "./dokumen_layanan/jabatan_fungsional/surat_ket_hd/";
         }  else {
           dir = "uploads/";
         }
@@ -708,7 +725,9 @@ function openPresensiTab(){
 
             if(file == "suratpengantar"){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].file_pengantar+"?v="+number;
-            } else {
+            } else if(file == "surat_pernyataan_hd"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
+            }  else {
               var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
 
             }
@@ -754,7 +773,7 @@ function openPresensiTab(){
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayananFungsional")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

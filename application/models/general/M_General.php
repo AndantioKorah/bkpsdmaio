@@ -99,6 +99,13 @@
                         if($this->validateApps() == 1){
                             $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
                                     ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+
+                            $hardcodeKepalaSkpd = $this->db->select('*')
+                                                        ->from('db_pegawai.unitkerja')
+                                                        ->where('nip_kepalaskpd_hardcode', $result[0]['nipbaru_ws'])
+                                                        ->get()->row_array();
+                            $result[0]['flag_kepalaskpdhardcode'] = $hardcodeKepalaSkpd ? 1 : 0;
+                            
                             return $result;
                         } else {
                             return null;
@@ -1544,6 +1551,7 @@
         }
 
         public function cronAsync(){
+            $temp = null;
             $data = $this->db->select('*')
                             ->from('t_cron_async')
                             ->where('flag_done', 0)
@@ -1553,6 +1561,7 @@
             if($data){
                 foreach($data as $d){
                     $res = $this->apilib->asyncPost(base_url($d['url']), json_decode($d['param'], $d['method']));
+                    $temp[] = $res;
                     $jsonRes = json_decode($res, true);
                     $update = null;
                     if(!$jsonRes || ($jsonRes && $jsonRes['code'] == 0)){
@@ -1566,6 +1575,195 @@
                             ->update('t_cron_async', $update);
                 }
             }
+            // dd("done ".count($temp));
+        }
+
+        public function cronCheckVerifCuti(){
+            $timeNow = date("H:i:s");
+            $expl = explode(":", $timeNow);
+            $flag_cek = 0;
+            if($expl[0] == "11" && $expl[1] == "00"){
+                $flag_cek = 1;
+            }
+            // else if($expl[0] == "11" && $expl[1] == "45"){
+            //     $flag_cek = 1;
+            // }
+
+            if($flag_cek == 1){
+                $this->logCron('cronCheckVerifCuti');
+                
+                $progressCuti = $this->db->select('a.*, b.id_m_user, c.flag_sent, c.temp_count, c.date_sent')
+                                    ->from('t_progress_cuti a')
+                                    ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->join('t_cron_wa c', 'a.chatId = c.chatId')
+                                    ->where('id_m_user_verifikasi !=', 193)
+                                    ->where('a.flag_verif', 0)
+                                    ->where('a.chatId IS NOT NULL')
+                                    ->where('b.flag_active', 1)
+                                    // ->where('flag_resend !=', 1)
+                                    ->group_by('a.id')
+                                    ->get()->result_array();
+
+                $listProgressCuti = null;
+                $listChatIdResend = null;
+                if($progressCuti){
+                    foreach($progressCuti as $pc){
+                        $date1 = formatDateOnlyForEdit($pc['date_sent']);
+                        $date2 = (date("Y-m-d"));
+                        $diff = trim(countDiffDateLengkap($date1, $date2, ['hari']));
+                        $diffCount = explode(" ", $diff);
+                        if($diffCount[0] > 1){ // jika lebih dari 1 hari, resend
+                            $listChatIdResend[] = $pc['chatId'];
+                        }
+
+                        if(isset($listProgressCuti[$pc['id_m_user_verifikasi']])){
+                            $listProgressCuti[$pc['id_m_user_verifikasi']]['count']++;
+                        } else {
+                            $listProgressCuti[$pc['id_m_user_verifikasi']] = $pc;
+                            $listProgressCuti[$pc['id_m_user_verifikasi']]['count'] = 1;
+                        }
+                    }
+                }
+                
+                if($listChatIdResend){
+                    $this->db->where_in('chatId', $listChatIdResend)
+                            ->update('t_cron_wa', [
+                                'temp_count' => 0,
+                                'flag_sent' => 0,
+                                'flag_resend' => 1,
+                                'date_resend' => date('Y-m-d H:i:s')
+                            ]);
+                    dd("Resend ".count($listChatIdResend)." pesan");
+                } else {
+                    dd("no resend message");
+                }
+
+            }
+        }
+
+        public function getListPengadaan($tahun){
+            // $result = $this->siasnlib->getListPengadaan($tahun);
+            // $res = json_decode($result['data'], true)['data'];
+            // $pns = null;
+            // foreach($res as $r){
+            //     if($r['jenis_formasi_id'] == "0101"){
+            //         $pns[] = $r;
+            //     }
+            // }
+            // dd(json_encode($pns));
+            // dd(($pns));
+
+            $exists = [
+                "199208292025052001",
+                "199909092025052001",
+                "199704272025052001",
+                "199906212025052002",
+                "199511232025051001",
+                "199812242025052001",
+                "199612292025052001",
+                "199803032025052003",
+                "200008072025052002",
+                "200101012025052002",
+                "199608172025052002",
+                "199810262025051001",
+                "200002042025052003",
+                "199206292025052001",
+                "199310072025052001",
+                "199911162025051001",
+                "199911202025051002",
+                "199512122025052001",
+                "200101012025052001",
+                "199802022025051001",
+                "200006022025052001",
+                "200006162025052001",
+                "199703132025051001",
+                "200002042025052001",
+                "199608172025052001",
+                "199607112025052001",
+                "200109082025052001",
+                "200010022025052002",
+                "200007312025051001",
+                "200106102025051001",
+                "199401292025052001",
+                "199904172025052001",
+                "200102032025051001",
+                "199902012025052001",
+                "199902102025052001",
+                "199402022025052001",
+                "200005292025052001",
+                "199306092025051001",
+                "199907282025052001",
+                "200002272025052001",
+                "200201192025052001",
+                "200006092025052001",
+                "199408302025052002",
+                "200102192025052001",
+                "200010292025051001",
+                "199508302025051001",
+                "200208242025051001",
+                "200206212025052001",
+                "200106252025052001",
+                "200003212025051001",
+                "199802092025051001",
+                "199507282025052001",
+                "199612102025051001",
+                "199710142025051001",
+                "200111222025051001",
+                "200011252025052001",
+                "200106272025051001",
+                "199803302025052001",
+                "199905092025051001",
+                "200205142025052001",
+                "199105242025052001",
+                "199305212025052001",
+                "199908052025052001",
+                "199905072025051001",
+                "200004292025052001",
+                "199502132025051001",
+                "200209062025052001",
+                "199406012025052001",
+                "199709032025051001",
+                "199905212025051001",
+                "200106222025051001",
+                "199608202025051001",
+                "199506042025051001",
+                "199612232025052001",
+                "200002042025052002",
+                "199905142025052002",
+                "199804252025052002",
+                "200011122025052001",
+                "199411132025052001",
+                "199902152025051001",
+                "199605252025051001",
+                "199305242025052001",
+                "200206082025052001",
+                "199511302025052001",
+                "199105062025052001",
+                "199506142025052002",
+                "199909292025051001",
+                "199612212025052001",
+                "199505122025051002",
+                "199509252025052002",
+                "199309192025051001",
+                "200110052025051001"
+            ];
+
+            $listExists = null;
+            $i = 0;
+            // foreach($exists as $e){
+            //     $listExists['nip'] = $e;
+            //     $i++;
+            // }
+
+            $resultJson = $this->db->select('*')
+                            ->from('m_parameter')
+                            ->where('parameter_name', 'TEMP_CPNS_2024')
+                            ->get()->row_array();
+
+            $result = json_decode($resultJson['parameter_value'], true);
+            
+            dd($result);
+
         }
 	}
 ?>

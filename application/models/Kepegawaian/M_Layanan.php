@@ -989,13 +989,15 @@ class M_Layanan extends CI_Model
                                 'flag_done' => 1,
                                 'flag_status' => 1,
                                 'url_done' => "arsipusulds/".$tahun."/".$bulan."/".$filename,
-                                'keterangan' => "File DS telah diupload secara manual"
+                                'flag_ds_manual' => 1
+                                // 'keterangan' => "File DS telah diupload secara manual"
                             ]);
                     
                     $this->db->where('id', $data['id_t_usul_ds'])
                             ->update('t_usul_ds', [
                                 'flag_done' => 1,
-                                'keterangan' => "File DS telah diupload secara manual",
+                                // 'keterangan' => "File DS telah diupload secara manual",
+                                'flag_ds_manual' => 1,
                                 'updated_by' => $this->general_library->getId(),
                             ]);
 
@@ -1146,7 +1148,7 @@ class M_Layanan extends CI_Model
                         ->where('a.flag_sent', 0)
                         // ->where('a.flag_send', 0)
                         // ->where('b.url_sk IS NULL')
-                        ->limit(3)
+                        ->limit(5)
                         ->get()->result_array();
         // dd($data);
         if($data){
@@ -1155,7 +1157,9 @@ class M_Layanan extends CI_Model
                 if($d['url_image_ds']){
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
                 }
+                $base64File = null;
                 $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
+                $jsonRequest['file'] = null;
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
 
@@ -1248,13 +1252,23 @@ class M_Layanan extends CI_Model
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
 
+        if(!file_exists("arsipusulds/".$tahun) && !is_dir("arsipusulds/".$tahun)) {
+            mkdir("arsipusulds/".$tahun, 0777, TRUE);       
+        }
+
+        if(!file_exists("arsipusulds/".$tahun."/".$bulan) && !is_dir("arsipusulds/".$tahun."/".$bulan)) {
+            mkdir("arsipusulds/".$tahun."/".$bulan, 0777, TRUE);       
+        }
+
         if($filename == "0"){
             unlink("arsipusulds/".$tahun."/".$bulan."/".$filename);
         } else {
     		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
             if($uploadedFile){
                 foreach($uploadedFile as $uf){
-                    unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
+                    if(file_exists("arsipusulds/".$tahun."/".$bulan."/".$uf['name'])){
+                        unlink("arsipusulds/".$tahun."/".$bulan."/".$uf['name']);
+                    }
                 }
             }
         }
@@ -1371,15 +1385,22 @@ class M_Layanan extends CI_Model
                 $userInputer = $dataInput['id_m_user'];
             }
 
-            $pegawai = $this->kinerja->getAtasanPegawai(0, $userInputer, 1);
+            $createdBy = $userInputer;
+            if(isset($dataInput['table_ref']) && $dataInput['table_ref'] == 't_pengajuan_cuti'){
+                $createdBy = 101; // jika cuti, pak cliff jadi created by untuk usul DS
+            }
+
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $createdBy, 1);
             
             // $kepalabkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_KABAN_BKPSDM);
 
             $sekbkpsdm = $this->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
 
+            $kabidMutasiBkpsdm = $this->getPegawaiByIdJabatan('4018000JS10');
+
             $batchId = generateRandomString();
             $data['id_m_user'] = $userInputer;
-            $data['created_by'] = $userInputer;
+            $data['created_by'] = $createdBy; // pak cliff
             $data['keterangan'] = $dataInput['keterangan'];
             $data['ds_code'] = $dataInput['ds_code'];
             $data['page'] = $dataInput['page'];
@@ -1391,6 +1412,10 @@ class M_Layanan extends CI_Model
             $data['batch_id'] = $batchId;
             $data['id_m_jenis_layanan'] = $dataInput['id_m_jenis_layanan'];
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            if($data['table_ref'] == 't_pengajuan_cuti'){
+                $data['status'] = "Menunggu DS oleh Kepala Bidang Mutasi dan Promosi";
+            }
 
             if($flagIntegrasi == 1){
                 $data['flag_use_nomor_surat'] = isset($dataInput['flag_use_nomor_surat']) ? $dataInput['flag_use_nomor_surat'] : 0;
@@ -1424,6 +1449,11 @@ class M_Layanan extends CI_Model
                 $progress[1]['id_m_user_verif'] = $pegawai['atasan']['id'];
                 $progress[1]['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
                 $progress[1]['flag_ds_now'] = 1;
+
+                if($data['table_ref'] == 't_pengajuan_cuti'){
+                    $progress[1]['nama_jabatan'] = $kabidMutasiBkpsdm ? $kabidMutasiBkpsdm['nama_jabatan'] : 'Kepala Bidang Mutasi dan Promosi';
+                    $progress[1]['id_m_user_verif'] = $kabidMutasiBkpsdm['id_m_user'];
+                }
                 
                 $progress[2]['urutan'] = 2;
                 $progress[2]['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
@@ -1550,6 +1580,36 @@ class M_Layanan extends CI_Model
         }
 
         return $res;
+    }
+
+    public function deleteUsulDs($id){
+        $usulDs = $this->db->select('a.id as id_t_usul_ds, b.id as id_t_usul_ds_detail')
+                        ->from('t_usul_ds a')
+                        ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
+                        ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail')
+                        ->where('a.id', $id)
+                        ->group_by('a.id')
+                        ->get()->row_array();
+
+        if($usulDs){
+            $this->db->where('id', $id)
+                    ->update('t_usul_ds', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id_t_usul_ds', $id)
+                    ->update('t_usul_ds_detail', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id_t_usul_ds_detail', $usulDs['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail_progress', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
     }
 
     public function searchVerifUsulDs(){
@@ -1680,7 +1740,7 @@ class M_Layanan extends CI_Model
                     ->update('t_usul_ds_detail', $detail);
 
         } else { // jika tidak ada, insert di t_request_ds untuk di DS kaban
-            $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file,
+            $this->db->select('a.*, b.ds_code, c.nama_jabatan, d.username as nip, b.id as id_t_usul_ds, c.url_file, b.id_t_nomor_surat,
                             b.keterangan as keterangan_ds, b.id_m_jenis_layanan, b.page, b.ref_id, b.table_ref, b.nama_kolom_ds')
                         ->from('t_usul_ds_detail a')
                         ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
@@ -1701,11 +1761,12 @@ class M_Layanan extends CI_Model
 
             $dataUsul = $this->db->get()->row_array();
 
-            $existsReqDs = $this->db->select('*')
-                                    ->from('t_request_ds')
-                                    ->where('table_ref', 't_usul_ds_detail')
-                                    ->where('ref_id', $dataUsul['id'])
-                                    ->where('flag_active', 1)
+            $existsReqDs = $this->db->select('a.*, b.nomor_surat')
+                                    ->from('t_request_ds a')
+                                    ->join('t_nomor_surat b', 'a.id_t_nomor_surat = b.id', 'left')
+                                    ->where('a.table_ref', 't_usul_ds_detail')
+                                    ->where('a.ref_id', $dataUsul['id'])
+                                    ->where('a.flag_active', 1)
                                     ->limit(1)
                                     // ->where('flag_selected', 0)
                                     ->get()->row_array();
@@ -1739,7 +1800,7 @@ class M_Layanan extends CI_Model
 
                 $requestDs = [
                     'created_by' => $this->general_library->getId(),
-                    'id_t_nomor_surat' => 0,
+                    'id_t_nomor_surat' => $dataUsul['id_t_nomor_surat'],
                     'ref_id' => $dataUsul['id'],
                     'table_ref' => 't_usul_ds_detail',
                     'id_m_jenis_ds' => 5,
@@ -1762,7 +1823,7 @@ class M_Layanan extends CI_Model
                 $this->db->where('id', $dataUsul['id'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $newFullPath,
-                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s')),
+                            'keterangan' => "Telah ditandatangani secara elektronik oleh Kepala BKPSDM Kota Manado pada ".formatDateNamaBulanWT(date('Y-m-d H:i:s')). " melalui aplikasi Siladen",
                             'flag_status' => 1,
                             'updated_by' => $this->general_library->getId()
                         ]);
@@ -1772,6 +1833,85 @@ class M_Layanan extends CI_Model
                             ->update($dataUsul['table_ref'], [
                                 $dataUsul['nama_kolom_ds'] => 1
                             ]);
+
+                    if($dataUsul['table_ref'] == 't_pengajuan_cuti'){ // jika cuti, kirim SK Cuti ke pegawai ybs
+                        $pegawaiYbs = $this->db->select('c.*, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir, a.lama_cuti, b.id as id_m_user,
+                                            a.id_cuti, a.url_sk, a.id as id_t_pengajuan_cuti')
+                                            ->from('t_pengajuan_cuti a')
+                                            ->join('m_user b', 'a.id_m_user = b.id')
+                                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                            ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
+                                            ->where('a.id', $dataUsul['ref_id'])
+                                            ->get()->row_array();
+
+                        $caption = "*[SK PENGAJUAN ".strtoupper($pegawaiYbs["nm_cuti"])."]*\n\n"."Selamat ".greeting().", Yth. ".getNamaPegawaiFull($pegawaiYbs).",\nBerikut kami lampirkan SK ".$pegawaiYbs["nm_cuti"]." Anda. Terima kasih.".FOOTER_MESSAGE_CUTI;
+                        $cronWa = [
+                            'sendTo' => convertPhoneNumber($pegawaiYbs['handphone']),
+                            'message' => $caption,
+                            'filename' => "CUTI_".strtoupper($pegawaiYbs["nipbaru_ws"]).'_'.$pegawaiYbs['tanggal_mulai'].'.pdf',
+                            'fileurl' => $newFullPath,
+                            'type' => 'document',
+                            'jenis_layanan' => 'Cuti'
+                        ];
+                        $this->db->insert('t_cron_wa', $cronWa); // insert cron WA untuk krim file
+
+                        $explodeFileName = explode("/", $newFullPath);
+                        $filePathCuti = 'arsipcuti/'.$explodeFileName[count($explodeFileName)-1];
+
+                        if(isset($params['selectedData']['url_file'])){
+                            copy($params['selectedData']['url_file'], $filePathCuti);
+
+                            $this->db->where('id', $pegawaiYbs['id_t_pengajuan_cuti'])
+                                    ->update('t_pengajuan_cuti', [
+                                        'url_sk' => $filePathCuti
+                                    ]);
+                        }
+                        
+                        // insert di pegcuti
+                        $this->db->insert('db_pegawai.pegcuti', [
+                            'id_pegawai' => $pegawaiYbs['id_peg'],
+                            'jeniscuti' => $pegawaiYbs['id_cuti'],
+                            'lamacuti' => $pegawaiYbs['lama_cuti'],
+                            'tglmulai' => $pegawaiYbs['tanggal_mulai'],
+                            'tglselesai' => $pegawaiYbs['tanggal_akhir'],
+                            'nosttpp' => $existsReqDs['nomor_surat'],
+                            'tglsttpp' => date('Y-m-d'),
+                            'gambarsk' => $newFileName,
+                            'status' => 2
+                        ]);
+
+                        //simpan di dokumen pendukung agar tersinkron dengan rekap absen
+                        $dokumen_pendukung = null;
+                        $hariKerja = countHariKerjaDateToDate($pegawaiYbs['tanggal_mulai'], $pegawaiYbs['tanggal_akhir']);
+                        if($hariKerja){
+                            $i = 0;
+                            $randomString = generateRandomString();
+                            foreach($hariKerja[2] as $h){
+                                $explode = explode("-", $h);
+                                $dokumen_pendukung[$i] = [
+                                    'id_m_user' => $pegawaiYbs['id_m_user'],
+                                    'id_m_jenis_disiplin_kerja' => 17,
+                                    'tanggal' => $explode[2],
+                                    'bulan' => $explode[1],
+                                    'tahun' => $explode[0],
+                                    'keterangan' => 'Cuti',
+                                    'pengurangan' => 0,
+                                    'status' => 2,
+                                    'keterangan_verif' => '',
+                                    'tanggal_verif' => date('Y-m-d H:i:s'),
+                                    'id_m_user_verif' => 1,
+                                    'flag_outside' => 1,
+                                    'random_string' => $randomString,
+                                    'url_outside' => $filePathCuti,
+                                    'created_by' => 0
+                                ];
+                                $i++;
+                            }
+                        }
+                        if($dokumen_pendukung){
+                            $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                        }
+                    }
                 }
 
                 // update t_file_ds untuk scan QR
@@ -1792,7 +1932,7 @@ class M_Layanan extends CI_Model
                     $this->db->where('id', $dataUsul['id_t_usul_ds'])
                             ->update('t_usul_ds', [
                                 'flag_done' => 1,
-                                'status' => "Selesai"
+                                'status' => "Selesai",
                             ]);
                 }
 
@@ -1844,7 +1984,9 @@ class M_Layanan extends CI_Model
 
             $selectedUrl = $selected['url_done'] ? $selected['url_done'] : $selected['url'];
 
+            $base64File = null;
             $base64File = base64_encode(file_get_contents(base_url().$selectedUrl));
+            $jsonRequest['file'] = null;
             $jsonRequest['file'][] = $base64File;
             // dd($base64File);
 
@@ -1880,13 +2022,13 @@ class M_Layanan extends CI_Model
                             'flag_selected' => 1,
                             'url_file' => $fullpath,
                             'updated_by' => $this->general_library->getId(),
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow)
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow). " melalui aplikasi Siladen"
                         ]);
 
                 $this->db->where('id', $selected['id_t_usul_ds_detail'])
                         ->update('t_usul_ds_detail', [
                             'url_done' => $fullpath,
-                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow),
+                            'keterangan' => 'Telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan'].' pada '.formatDateNamaBulanWT($dateNow). " melalui aplikasi Siladen",
                             'updated_by' => $this->general_library->getId()
                         ]);
 
@@ -1916,8 +2058,8 @@ class M_Layanan extends CI_Model
                             $oldFileName = $ld['url_done'];
                         }
                         $explFn = explode(".pdf", $oldFileName);
-                        $newFileName = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
-                        $newFullPath = $newFileName;
+                        $new_file_name = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
+                        $newFullPath = $new_file_name;
                         
                         // dd($oldFileName.'<br>'.$newFullPath);
                         copy($oldFileName, $newFullPath); // comment ini untuk testing
@@ -1993,6 +2135,8 @@ class M_Layanan extends CI_Model
     }
 
     public function loadRiwayatUsulDs(){
+        $data = $this->input->post();
+
         $this->db->select('a.*, b.nama as nama_pegawai, c.nama_layanan,
                 (
                     SELECT COUNT(aa.id)
@@ -2009,6 +2153,14 @@ class M_Layanan extends CI_Model
 
         if(!$this->general_library->isProgrammer()){
             $this->db->where('b.id', $this->general_library->getId());
+        }
+
+        if(isset($data['bulan'])){
+            $this->db->where('MONTH(a.created_date)', $data['bulan']);
+        }
+
+        if(isset($data['tahun'])){
+            $this->db->where('YEAR(a.created_date)', $data['tahun']);
         }
 
         return $this->db->get()->result_array();

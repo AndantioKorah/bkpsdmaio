@@ -586,7 +586,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['page'] = null;
 
 			$id_peg = $this->general_library->getIDPegawaiByNip($nip);
-			$this->kepegawaian->updatePangkat($id_peg['id_peg']);
+			// $this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 			$data['agama'] = $this->kepegawaian->getAllWithOrder('db_pegawai.agama', 'id_agama', 'asc');
 			$data['nip'] = $nip;
@@ -619,6 +619,8 @@ class C_Kepegawaian extends CI_Controller
         // $this->kepegawaian->copyfoto();
 		
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
+		$id_peg = $this->general_library->getIDPegawaiByNip($this->general_library->getUserName());
+		$this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		$data['page'] = $page;
         $data['dokumen']         	= $this->kepegawaian->getDokumen();
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
@@ -635,6 +637,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
 		$data['nip'] = $this->general_library->getUserName();
 		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
+		
+
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
 
@@ -1550,7 +1554,16 @@ class C_Kepegawaian extends CI_Controller
 		$data = $this->input->post();
 		$res['code'] = 0;
 		$res['message'] = 'OK';
+
+		$explTanggalMulai = explode("-", $data['tanggal_mulai']);
+		$explTanggalAkhir = explode("-", $data['tanggal_akhir']);
+
+		$tanggalMulai = $explTanggalMulai[2].'-'.$explTanggalMulai[1].'-'.$explTanggalMulai[0];
+		$tanggalAkhir = $explTanggalAkhir[2].'-'.$explTanggalAkhir[1].'-'.$explTanggalAkhir[0];
+
+		// $res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
 		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+		// dd(json_encode($res));
 		echo json_encode($res);
 	}
 
@@ -1578,7 +1591,27 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchPenomoranSkCuti(){
 		$data['result'] = $this->kepegawaian->searchPenomoranSkCuti($this->input->post());
+		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/V_PenomoranSkCutiData', $data);
+	}
+
+	public function downloadAllSkCuti(){
+		$data = $this->input->post();
+		$decodedData = json_decode($data['filenames'], true);
+
+		$zipname = 'SK_PERMOHONAN_CUTI_'.date("ymdhis").'.zip';
+		$zip = new ZipArchive;
+		$zip->open($zipname, ZipArchive::CREATE);
+
+		foreach ($decodedData as $file) {
+			$zip->addFile(base_url().$file);
+		}
+		$zip->close();
+
+		header('Content-Type: application/zip');
+		header('Content-disposition: attachment; filename='.$zipname);
+		header('Content-Length: ' . filesize($zipname));
+		readfile($zipname);
 	}
 
 	public function openModalPenomoranSkCuti($id){
@@ -1611,7 +1644,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchOperatorPermohonanCuti(){
 		$data['result'] = $this->kepegawaian->searchOperatorPermohonanCuti();
-		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		// $data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
 		$data['param'] = $this->input->post();
 		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiItem', $data);
 	}
@@ -1653,7 +1686,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadDetailCutiVerifOperator($id){
 		$data['result'] = $this->kepegawaian->loadDetailCutiVerifOperator($id);
-		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti();
+		$data['sisa_cuti'] = $this->kepegawaian->getSisaCuti($data['result']['id_m_user']);
 		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiDetail', $data);
 	}
 
@@ -2121,7 +2154,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 		$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
-		$data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		// $data['akte_nikah'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','24','0');
+		$data['akte_nikah'] = $this->kepegawaian->getDokumenAkteNikahForPensiun();
 		$data['hd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','18','0');
 		$data['pidana'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','19','0');
 		$data['dpcp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','30','0');
@@ -2131,7 +2165,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['surat_laporan_kronologis'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','57','0');
 		$data['aktecerai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','25','0');
 		$data['aktekematian'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','26','0');
-		$data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		// $data['akteanak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','58','0');
+		$data['akteanak'] = $this->kepegawaian->getDokumenAkteAnakForPensiun();
 		$data['kk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','28','0');
 		$data['ktp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','37','0');
 		$data['jandaduda'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','59','0');
@@ -2148,9 +2183,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_layanan_skpangak'] = array(17,2,3,4,5);
 		$data['list_layanan_skjabatan'] = array(17,2,3,4);
 		$data['list_layanan_aktenikah'] = array(17,2,3,4,5);
-		$data['list_layanan_hd'] = array(17,2,3,4,5);
-		$data['list_layanan_pidana'] = array(17,2,3,4,5);
-		$data['list_layanan_dpcp'] = array(2,3,4,5);
+		$data['list_layanan_hd'] = array(2,4,5);
+		$data['list_layanan_pidana'] = array(2,4,5);
+		$data['list_layanan_dpcp'] = array(2,4,5);
 		$data['list_layanan_pmk'] = array(17,2,3,4);
 		$data['list_layanan_skp'] = array(17,2,3,4);
 		$data['list_layanan_surat_ket_kematian'] = array(5);
@@ -2380,6 +2415,7 @@ class C_Kepegawaian extends CI_Controller
 		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
+		// $mpdf->Output('Draf SK Pangkat.pdf', 'D');
 		$mpdf->Output($file_pdf.'.pdf');
     }
 
@@ -2503,8 +2539,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $id_layanan;
 		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 		$data['dok_lain'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','75','0');	
-		$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
-	
+		$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan();
+		$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayanan();
+
+		
 
 			if($id_layanan == 12){
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
@@ -2569,6 +2607,11 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function loadListRiwayatPerbaikanData(){
+		$data['result'] = $this->kepegawaian->getRiwayatPerbaikanData();
+		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanDataItem', $data);
+	}
+
+	public function loadListRiwayatPeningkatanPenambahanGelar(){
 		$data['result'] = $this->kepegawaian->getRiwayatPerbaikanData();
 		$this->load->view('kepegawaian/layanan/V_LayananPerbaikanDataItem', $data);
 	}
@@ -2638,6 +2681,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananUjianDinasItem', $data);
 		} else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananJabFungItem', $data);
+		} else if($id_m_layanan == 21){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananpeningkatanPenambahanGelarItem', $data);
 		}
 	}
 
@@ -2748,14 +2793,23 @@ class C_Kepegawaian extends CI_Controller
 			
 			}
 			if($layanan == 16){
+				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayananAdmin($id_peg); 
+				$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayananAdmin($id_peg); 
+
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
 				$data['sk_pemberhentian_dari_jabfung'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','73','0',$id_peg);	
 				$data['sk_pengaktifan_kembali'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','74','0',$id_peg);	
 				$data['cltn'] = $this->kepegawaian->getCutiCltnAdmin($id_peg); 
 			}
 
+			
+
 			render('kepegawaian/layanan/V_VerifikasiLayananJabFungDetail', '', '', $data);
+		} else if($layanan == 21){
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
+			render('kepegawaian/layanan/V_VerifikasiLayananPeningkatanPenambahanGelarDetail', '', '', $data);
 		} 
+		
 
 		
 	}
@@ -2773,6 +2827,12 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayanan());
 	}
 
+	public function submitVerifikasiPengajuanLayananFungsional()
+	{ 
+		echo json_encode( $this->kepegawaian->submitVerifikasiPengajuanLayananFungsional());
+	}
+
+	
 
 
 	public function batalVerifikasiPengajuanLayanan()
@@ -2789,6 +2849,7 @@ class C_Kepegawaian extends CI_Controller
     {
 		$data['id_usul']= $id_usul;
         if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 ){
+		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
@@ -3012,8 +3073,25 @@ class C_Kepegawaian extends CI_Controller
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
-			
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 			$this->load->view('kepegawaian/layanan/V_LayananUjianDinas', $data);
+		
+		}
+
+		public function layananPeningkatanPenambahanGelar($id_layanan){
+			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
+			$data['transkrip'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
+			$data['akreditasi_prodi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
+			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+			$this->load->view('kepegawaian/layanan/V_LayananPeningkatanPenambahanGelar', $data);
 		
 		}
 

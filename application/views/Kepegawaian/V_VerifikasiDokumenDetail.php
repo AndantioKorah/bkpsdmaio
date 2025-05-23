@@ -39,7 +39,7 @@
       <div class="col-lg-6 text-left">
         <span style="color: grey; font-size .8rem; font-style: italic;">Nama </span><br>
 				<a style="color:#495057" href="<?=base_url()?>kepegawaian/profil-pegawai/<?=$result['nipbaru_ws']?>" target="_blank">
-        <span style="font-size: 1rem; font-weight: bold;"><?=getNamaPegawaiFull($result)?>  <span class="badge <?=$badge_status?>"> <?php echo $result['statuspeg'] == 2 ? 'PNS' : 'PPPK';?> </span></span>
+        <span style="font-size: 1rem; font-weight: bold;"><?=getNamaPegawaiFull($result)?>  <span class="badge <?=$badge_status?>"> <?php  if($result['statuspeg'] == 1) echo "CPNS"; else if($result['statuspeg'] == 2) echo "PNS"; else echo "PPPK";?> </span></span>
         </a>
       </div>
       <div class="col-lg-6 text-right">

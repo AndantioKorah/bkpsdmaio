@@ -60,9 +60,10 @@
             </select>
           </div>
           <div class="col-lg-12">
+          <div class="row">
           <div class="col-lg-6">
             <label>Status Pegawai</label>
-            <select class="form-control form-custom-input select2-navy select2_this" style="width: 100%"
+            <select class="form-control form-custom-input select2-navy select2_this" 
                 id="status" data-dropdown-css-class="select2-navy" name="statuspeg">
                 <option selected value="0">Semua</option>
                   <option value="1">CPNS</option>
@@ -70,6 +71,8 @@
                   <option value="3">PPPK</option>
             </select>
           </div>
+          </div>
+
           </div>
           <div class="col-lg-12 mt-3 text-right">
             <button type="submit" style="width: 25% !important; height: 35px !important; font-size: .8rem;"

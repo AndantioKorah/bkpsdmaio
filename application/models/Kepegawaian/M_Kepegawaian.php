@@ -300,6 +300,10 @@ class M_Kepegawaian extends CI_Model
                 $this->db->like('b.nama', $data['nama']);
             }
 
+            if($data['statuspeg']){
+                $this->db->where('b.statuspeg', $data['statuspeg']);
+            }
+
             if($data['nip']){
                 $this->db->like('b.nipbaru_ws', $data['nip']);
             }

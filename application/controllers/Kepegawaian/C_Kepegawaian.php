@@ -470,7 +470,9 @@ class C_Kepegawaian extends CI_Controller
 				$data['path'] = 'arsipinovasi/'.$data['result']['gambarsk'];
             } else if($jd == "penugasan"){
 				$data['path'] = 'arsippenugasan/'.$data['result']['gambarsk'];
-            }        else {
+            } else if($jd == "keluarga"){
+				$data['path'] = 'arsipkeluarga/'.$data['result']['gambarsk'];
+            }         else {
 				$data['path'] = null;
 			}
 			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();

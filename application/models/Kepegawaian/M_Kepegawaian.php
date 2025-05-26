@@ -7194,6 +7194,56 @@ public function submitEditJabatan(){
 		$res['message'] = 'Permohonan Cuti Berhasil';
 		$res['data'] = null;
         if($data['id_cuti'] == "00"){
+            $hari_libur = $this->db->select('*')
+                                ->from('t_hari_libur')
+                                ->where('flag_active', 1)
+                                ->where('flag_hari_libur_nasional', 1)
+                                ->where('bulan', date('m'))
+                                ->where('tahun', date('Y'))
+                                ->order_by('tanggal')
+                                ->get()->result_array();
+            if($hari_libur){
+                foreach($hari_libur as $hl){
+                    if(date('Y-m-d') == $hl['tanggal']){
+                        $res['code'] = 1;
+                        $res['message'] = 'Permohonan Cuti hanya dapat diajukan pada hari kerja';
+                        return $res;
+                    }
+                }
+            }
+
+            $date = date('Y-m-d H:i:s');
+            $expl = explode(" ", $date);
+            $dateOnly = $expl[0];
+            $timeOnly = $expl[1];
+            $maxJam = 1;
+
+            $jam_kerja = $this->db->select('*')
+                ->from('t_jam_kerja')
+                ->where('id_m_jenis_skpd', 1)
+                ->where('flag_event', 0)
+                ->where('flag_active', 1)
+                ->order_by('created_date')
+                ->get()->row_array();
+
+            if(getNamaHari($dateOnly) == "Sabtu" || getNamaHari($dateOnly) == "Minggu"){
+                $res['code'] = 1;
+                $res['message'] = 'Permohonan Cuti hanya dapat diajukan pada hari kerja';
+                return $res;
+            } else {
+                $jamPulang = $jam_kerja['wfo_pulang'];
+                if(getNamaHari($dateOnly) == "Jumat"){
+                    $jamPulang = $jam_kerja['wfoj_pulang'];
+                }
+
+                $diff = strtotime($jamPulang) - strtotime($timeOnly);
+                if($diff < ($maxJam * (3600 - 59))){
+                    $res['code'] = 1;
+                    $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
+                    return $res;
+                }
+            }
+
             $startDate = strtotime($data['tanggal_mulai']);
             $endDate = strtotime($data['tanggal_akhir']);
             $today = strtotime(date('d-m-Y'));
@@ -7210,6 +7260,7 @@ public function submitEditJabatan(){
                 $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
             }
         }
+
 		return $res;
 	}
 
@@ -13184,6 +13235,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->where_in('status', [1,2])
                             ->where('id_dokumen', 38)
                             ->get()->result_array();
+
+        $suratPernyataanTidakPindah = $this->db->select('*')
+                            ->from('db_pegawai.pegarsip')
+                            ->where('flag_active', 1)
+                            ->where('id_pegawai', $pegawai['id_peg'])
+                            ->where_in('status', [1,2])
+                            ->where('id_dokumen', 78)
+                            ->get()->result_array();
         
         if(!$pegawai['handphone']){
             $result['message'] .= "Nomor Handphone, ";
@@ -13209,8 +13268,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['message'] .= "Kartu Keluarga, ";
         }
 
-        if(!$npwp){
-            $result['message'] .= "NPWP, ";
+        if(!$suratPernyataanTidakPindah){
+            $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
         }
 
         if($result['message'] != ""){

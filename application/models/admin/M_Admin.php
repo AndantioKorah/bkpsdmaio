@@ -174,6 +174,7 @@ class M_Admin extends CI_Model
                     ->join('db_pegawai.pegawai b', "REPLACE(a.sendTo,'62','0') = b.handphone", "left")
                     ->where('a.created_date >=', $dateAwal)
                     ->where('a.created_date <=', $dateAkhir)
+                    ->order_by('a.flag_prioritas', 'desc')
                     ->order_by('a.created_date', 'desc')
                     ->group_by('a.id')
                     ->get()->result_array();

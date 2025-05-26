@@ -915,15 +915,19 @@
                             ->where('flag_active', 1)
                             ->where('temp_count <=', 2)
                             ->where('sendTo IS NOT NULL')
+                            ->where('sendTo != 62')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
-                            ->order_by('created_date', 'asc')
                             ->order_by('flag_prioritas', 'desc')
+                            ->order_by('created_date', 'asc')
                             ->limit(10)
                             ->get()->result_array();
 
             if($list){
                 // dd($list);
                 foreach($list as $l){
+                    if($l['type'] == null){
+                        $l['type'] = 'text';
+                    }
                     if($l['type'] == 'text'){
                         if($l['replyId']){
                             $req = $this->maxchatlibrary->sendText($l['sendTo'], $l['message'], $l['replyId'], 1);

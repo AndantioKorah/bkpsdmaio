@@ -2741,19 +2741,21 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 5;
+            $tanggal = 20;
             $bulan = 5;
             $tahun = 2025;
+            $namaKegiatan = "Upacara Hari Kebangkitan Nasional"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
 
-            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja')
+            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_ws = b.username')
                                 ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                                 ->where('b.flag_active', 1)
                                 ->where('a.id_m_status_pegawai', 1)
+                                ->where('a.statuspeg !=' , 1)
                                 ->where_not_in('c.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
                                 ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
                                 ->get()->result_array();
@@ -2763,7 +2765,7 @@
                             ->where('tgl', $dateLengkap)
                             ->get()->result_array();
 
-            $absenReguler = $this->db->select('a.user_id, a.masuk, a.pulang, b.username, d.nm_unitkerja')
+            $absenReguler = $this->db->select('a.user_id, a.masuk, a.pulang, b.username, d.nm_unitkerja, c.handphone, c.nama, c.gelar1, c.gelar2')
                                     ->join('m_user b', 'b.id = a.user_id AND b.flag_active = 1')
                                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                     ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
@@ -2772,6 +2774,7 @@
                                     ->where('c.id_m_status_pegawai', 1)
                                     ->where_not_in('d.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
                                     ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                    ->where('c.statuspeg !=' , 1)
                                     ->get()->result_array();
 
             $list_dokpen = $this->db->select('id_m_user, keterangan')
@@ -2811,7 +2814,7 @@
                 if(!isset($dokpen[$artae['user_id']])){
                     $absenRegulerTidakAbsenEventFix[] = $artae;
                     $kenegaraan[$artae['user_id']] = $artae;
-                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi tidak presensi event Apel Perdana Bulan ".getNamaBulan($bulan)." Tahun ".$tahun;
+                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi bukan presensi ".$namaKegiatan;
                 }
             }
 
@@ -2822,7 +2825,7 @@
                         dd($lp);
                     }
                     $kenegaraan[$lp['user_id']] = $lp;
-                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk event Apel Perdana Bulan ".getNamaBulan($bulan)." Tahun ".$tahun;
+                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk ".$namaKegiatan;
                 }
             }
 
@@ -2841,7 +2844,12 @@
             
             $out = null;
             foreach($kenegaraan as $k){
-                if(!isset($dokpen[$k['user_id']]) && !isset($peninjauanAbsensi[$k['user_id']])){
+                if(!isset($dokpen[$k['user_id']])
+                && !isset($peninjauanAbsensi[$k['user_id']])
+                && $k['user_id'] != 122
+                && $k['user_id'] != 87
+                && $k['user_id'] != 915
+                ){
                     //jika tidak ada dokpen dan tidak melakukan peninjauan absensi
                     $kenegaraanFix[$k['user_id']] = $k;
                     $dokpenKenegaraan = null;
@@ -2859,9 +2867,15 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    // echo "input ".$k['user_id']."\n <br>";
+                    $sendWa['sendTo'] = convertPhoneNumber($k['handphone']);
+                    $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$k['keterangan_sistem']."*";
+                    $sendWa['flag_prioritas'] = 0;
+                    $sendWa['type'] = "text";
+                    $this->db->insert('t_cron_wa', $sendWa);
+
+                    echo "input ".$k['user_id']."\n <br>";
                 } else {
                     $out[] = $k;
                 }

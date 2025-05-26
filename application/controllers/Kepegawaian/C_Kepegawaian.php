@@ -471,12 +471,13 @@ class C_Kepegawaian extends CI_Controller
             } else if($jd == "penugasan"){
 				$data['path'] = 'arsippenugasan/'.$data['result']['gambarsk'];
             } else if($jd == "keluarga"){
+				$data['file'] = $data['result']['gambarsk'];
 				$data['path'] = 'arsipkeluarga/'.$data['result']['gambarsk'];
             }         else {
 				$data['path'] = null;
 			}
 			$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
-			// dd($data['nama_jabatan']);
+			
 			
 		
 		$this->load->view('kepegawaian/V_VerifikasiDokumenDetail', $data);

@@ -484,9 +484,11 @@
         </table>
       </div>
       <div class="col-lg-6">
+        <?php if($file != null) { ?>
         <span style="font-weight: bold;">GAMBAR SK</span>
         <h5 id="" class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
         <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  class="view_file_ws"  frameborder="0" ></iframe>	
+        <?php } ?>
       </div>
     </div>
     <?php } else if($param['jenisdokumen']['value'] == 'penugasan') { ?>

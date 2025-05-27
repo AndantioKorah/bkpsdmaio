@@ -6690,6 +6690,17 @@ public function submitEditJabatan(){
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
+            if($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1){
+                $diff = countDiffDateLengkap(date('Y-m-d'), $dataPegawai['tmtcpns'], ['tahun']);
+                $expl = explode(" ", trim($diff));
+                if($expl[0] < 1){
+                    $res['code'] = 1;
+                    $res['message'] = "Pengajuan Permohonan Cuti tidak dapat dilakukan karena belum 1 tahun sejak TMT CPNS/PPPK";
+                    $this->db->trans_rollback();
+                    return $res;
+                }
+            }   
+
             $filename = null;
             if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
                 if($_FILES['surat_pendukung']['type'] != "application/pdf"){
@@ -6918,6 +6929,9 @@ public function submitEditJabatan(){
                     $res['code'] = 1;
                     $res['message'] = "Terjadi Kesalahan, Data Atasan tidak ditemukan.";
                 }
+            } else {
+                $this->db->trans_rollback();
+                return $res;
             }
         } else {
             return $res;

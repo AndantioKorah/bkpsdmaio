@@ -3,6 +3,10 @@
     $url = $result['url_sk'];
     if($result['flag_ds_manual']){
       $url = $result['url_sk_manual'];
+    } else {
+      if($result['flag_ds_cuti'] == 1){
+        $url = $result['url_done'];
+      }
     }  
   ?>
     <div class="col-lg-6">
@@ -65,6 +69,10 @@
             $keterangan = "File sudah dilakukan Digital Signature oleh Kepala BKPSDM";
             if($result['flag_ds_manual'] == 1){
               $fileUrl = $result['url_sk_manual'];
+            } else {
+              if($result['flag_ds_cuti'] == 1){
+                $fileUrl = $result['url_done'];
+              }
             }  
           ?>
             <div class="row">

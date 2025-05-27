@@ -2092,7 +2092,7 @@
                                         $flag_check = 0;
                                         $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                                         $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++; // disini ba tambah dokpen
-                                        if($dokpen[$tr['nip']][$l] == "MTTI"){
+                                        if($dokpen[$tr['nip']][$l] == "MTTI" || $dokpen[$tr['nip']][$l] == "KENEG"){
                                             $flag_check = 1;
                                         } else {
                                             $lp[$tr['nip']]['absen'][$l]['jam_masuk'] = "";

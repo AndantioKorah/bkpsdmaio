@@ -2574,6 +2574,7 @@ class C_Kepegawaian extends CI_Controller
 			if($id_layanan == 15){
 				$data['surat_usul_pyb'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','71','0');	
 				$data['pengunduran_diri'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','72','0');	
+				$data['rekom_kepala_pd'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','79','0');	
 			
 			}
 			if($id_layanan == 16){
@@ -2793,6 +2794,7 @@ class C_Kepegawaian extends CI_Controller
 			if($layanan == 15){
 				$data['surat_usul_pyb'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','71','0',$id_peg);	
 				$data['pengunduran_diri'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','72','0',$id_peg);	
+				$data['rekom_kepala_pd'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','79','0',$id_peg);	
 			
 			}
 			if($layanan == 16){

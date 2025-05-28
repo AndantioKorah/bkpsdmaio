@@ -461,6 +461,12 @@ ol {
                 <?php } ?>> <i class="fa fa-file-pdf"></i> Permohonan Pengunduran Diri*<i
                 class="fas fa-<?php if($pengunduran_diri) echo ''; else echo '';?>"></i></a>
                 </li>
+                 <li>
+                <a class="<?php if($rekom_kepala_pd) echo 'select'; else echo 'unselect';?>" <?php if($rekom_kepala_pd) { ?>
+                onclick="viewBerkasPangkat('<?=$rekom_kepala_pd['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Rekomendasi Kepala Perangkat Daerah*<i
+                class="fas fa-<?php if($rekom_kepala_pd) echo ''; else echo '';?>"></i></a>
+                </li>
                 <li>
                 <a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
                 onclick="viewBerkasPangkat('<?=$dok_lain['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"

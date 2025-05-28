@@ -253,6 +253,9 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='pengunduran_diri')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Permohonan Pengunduran Diri </button>
   </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='rekom_kepala_pd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Rekomendasi Kepala Perangkat Daerah </button>
+  </li>
 <?php } ?>
 <?php if($id_m_layanan == 16) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
@@ -693,7 +696,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file =="sk_pengaktifan_kembali" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
+        } else if(file =="sk_pengaktifan_kembali" || file == "rekom_kepala_pd" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

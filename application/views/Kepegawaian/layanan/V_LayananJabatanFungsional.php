@@ -311,7 +311,9 @@ ol {
 					<input type="hidden" id="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
 					<input type="hidden" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
 					<input type="hidden" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
+					<input type="hidden" id="rekom_kepala_pd" value="<?php if(isset($rekom_kepala_pd)) echo $rekom_kepala_pd['id']; else echo "";?>">
 
+          
         
 				
 					<div class="list-type1x">
@@ -751,6 +753,12 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+         if(rekom_kepala_pd == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        
         }
         
         if(id_m_layanan == 16){

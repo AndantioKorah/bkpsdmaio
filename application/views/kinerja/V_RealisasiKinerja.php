@@ -166,7 +166,7 @@
   //  var maxDate = "2025-05-05";
 
    var currentDate = "<?= $current_date;?>";
-  // alert(maxDate)
+  alert(maxDate)
 
    if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({

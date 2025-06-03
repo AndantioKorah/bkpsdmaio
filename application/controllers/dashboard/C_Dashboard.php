@@ -92,8 +92,8 @@ class C_Dashboard extends CI_Controller
         render('dashboard/V_DashboardWalikota', '', '', $data);
     }
 
-    public function getDataLiveAbsen($id_agenda){
-        list($data['result'], $data['agenda']) = $this->dashboard->getDataLiveAbsen($id_agenda);
+    public function getDataLiveAbsen(){
+        list($data['result'], $data['agenda']) = $this->dashboard->getDataLiveAbsen();
         $this->load->view('dashboard/V_DashboardLiveAbsen', $data);
     }
 

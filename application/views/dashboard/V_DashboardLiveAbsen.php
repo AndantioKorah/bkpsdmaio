@@ -13,7 +13,7 @@
     <div class="col-lg-12">
         <h4>LIVE ABSEN</h4>
         <!-- <h2><?=$agenda['judul']?></h2> -->
-        <h4><?=formatDateNamaBulan($agenda['tgl'])?></h4>
+        <!-- <h4><?=formatDateNamaBulan($agenda['tgl'])?></h4> -->
     </div>
 </div>
 <table class="table table_dashboard_live">
@@ -22,7 +22,8 @@
         <th colspan=2 class="text-left">Nama</th>
         <!-- <th class="text-center">Eselon</th> -->
         <th class="text-left">Jabatan</th>
-        <th class="text-center">Absen</th>
+        <th class="text-center">Masuk</th>
+        <th class="text-center">Pulang</th>
     </thead>
     <tbody>
         <?php if($result){ ?>
@@ -42,7 +43,8 @@
                         <span style="font-size: 1.3rem; font-weight: bold;"><?=$rs['nama_jabatan']?></span><br>
                         <span style="font-size: 1.3rem; font-weight: 500;"><?=$rs['nm_unitkerja']?></span>
                     </td>
-                    <td style="font-size: 1.3rem;" class="text-center fw-bold"><?=$rs['pulang'] ? $rs['pulang'] : $rs['masuk']?></td>
+                    <td style="font-size: 1.3rem;" class="text-center fw-bold"><?=$rs['masuk']?></td>
+                    <td style="font-size: 1.3rem;" class="text-center fw-bold"><?=$rs['pulang']?></td>
                     <!-- <td class="text-center fw-bold"><?=$rs['pulang'] ? countDiffDateLengkap(date('Y-m-d H:i:s'), $rs['pulang'], ['menit']) : countDiffDateLengkap(date('Y-m-d H:i:s'), $rs['masuk'], ['menit'])?> yang lalu</td> -->
                 </tr>
             <?php } ?>
@@ -51,6 +53,6 @@
 </table>
 <script>
     $(function(){
-        // $('.table_dashboard_live').dataTable()
+        $('.table_dashboard_live').dataTable()
     })
 </script>

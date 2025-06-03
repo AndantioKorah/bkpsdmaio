@@ -313,8 +313,10 @@
 			</li>
 		</ul>
 	<?php } ?>
-
-	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_siladen')){ ?>
+	<?php if($this->general_library->isProgrammer() ||
+	$this->general_library->isHakAkses('admin_siladen') ||
+	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+	){ ?>
 		<a title="Admin SILADEN" data-bs-target="#adminsiladen" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-cogs"></i> 
 			<span class="align-middle">Admin SILADEN
@@ -326,26 +328,28 @@
 			</span>
 		</a>
 		<ul id="adminsiladen" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-			<li class="sidebar-item ">
-				<a title="Broadcast WhatsApp" class="sidebar-link sidebar-link-child" href="<?=base_url('admin/broadcast-whatsapp')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Broadcast WhatsApp
-				</a>
-			</li>
 			<li class="sidebar-item">
 				<a class="sidebar-link sidebar-link-child" href="<?=base_url();?>walikota/dashboard">
 					<i class="align-middle me-2 far fa-circle"></i>Live Absen Event
 				</a>
 			</li>
-			<li class="sidebar-item">
-				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-wa');?>">
-					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
-				</a>
-			</li>
-			<li class="sidebar-item">
-				<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-ds');?>">
-					<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron DS
-				</a>
-			</li>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_siladen')){ ?>
+				<li class="sidebar-item ">
+					<a title="Broadcast WhatsApp" class="sidebar-link sidebar-link-child" href="<?=base_url('admin/broadcast-whatsapp')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Broadcast WhatsApp
+					</a>
+				</li>
+				<li class="sidebar-item">
+					<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-wa');?>">
+						<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
+					</a>
+				</li>
+				<li class="sidebar-item">
+					<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-ds');?>">
+						<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron DS
+					</a>
+				</li>
+			<?php } ?>
 		</ul>
 	<?php } ?>
 

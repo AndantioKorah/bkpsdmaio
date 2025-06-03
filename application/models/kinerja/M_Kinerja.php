@@ -1615,7 +1615,7 @@
         if(($tanggal_akhir > $batasHari['max_date']) && $param_lock_upload_dokpen == 1 &&
         (!$this->general_library->isProgrammer()) && // bukan role programmer
         $jenis_disiplin[4] == 1){ // flag_lock == 1
-            if($this->general_library->isAdminAplikasi() && $this->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
+            if($this->general_library->isAdminAplikasi() && $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ // jika admin aplikasi dan dari bidang pekin
 
             } else {
                 $res['code'] = 1;
@@ -1702,8 +1702,20 @@
 
         foreach($data['pegawai'] as $d){
             $disiplin = explode(';', $data['jenis_disiplin']);
+            $listTanggalInput = $list_hari_kerja[3];
+            if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+                // jika admin bisa input di hari libur
+                $listTanggalInput = $list_hari_kerja[2];
+            }
+            if(!$listTanggalInput){
+                $this->db->trans_rollback();
+                $res['code'] = 1;
+                $res['message'] = 'Tanggal yang dipilih tidak ada tanggal hari kerja';
+                $res['data'] = null;
+                return $res;
+            }
             // foreach($list_tanggal as $l){
-            foreach($list_hari_kerja[3] as $l){
+            foreach($listTanggalInput as $l){
                 $explTanggal = explode("-", $l);
                 // $list_hari_kerja[$explTanggal[0].$explTanggal[1]] = 
                 if($disiplin[0] == 2){ // jika izin, masuk sini
@@ -1767,10 +1779,21 @@
                         return $res;   
                     }
                 }
-                if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
+
+                $flagContInput = 1;
+                if(getNamaHari($l) == 'Sabtu' || getNamaHari($l) == 'Minggu'){
+                    $flagContInput = 0;
+                }
+
+                if($flagContInput == 0){
+                    if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+                        $flagContInput = 1;
+                    }
+                }
+                
+                if($flagContInput == 1){
                     $date = explode('-', $l);
                     // dd($list_exist[$d['id'].$date[2].$date[1].$date[0]]);
-                    
                     if(isset($list_exist[$d['id'].$date[2].$date[1].$date[0]]) // jika ada dokumen pendukung pada tanggal tersebut
                     ){  
                         $tolak = 1;
@@ -1826,6 +1849,9 @@
                     $insert_data[$i]['tahun'] = $date[0];
                     $insert_data[$i]['bulan'] = $date[1];
                     $insert_data[$i]['tanggal'] = $date[2];
+                    if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+                        $insert_data[$i]['status'] = 2;
+                    }
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
                     if($disiplin[0] == 14){
                         if(isset($data['jenis_tugas_luar'])){

@@ -20,7 +20,8 @@
                             <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                             <?php // if($this->general_library->isProgrammer()){ ?>
                             <?php if(!$this->general_library->isProgrammer() && ($data_search['tahun'] == 2025 && $data_search['bulan'] == "05")){ ?>
-                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu rekap Kenegaraan untuk Apel Perdana bulan Mei </h5>
+                                <!-- <h5 style="font-weight: bold; color: red;">Rekap TPP sedang dalam maintenance, silahkan dicoba dalam beberapa saat lagi</h5> -->
+                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu Rekap Kenegaraan Gladi Bersih Upacara Peringatan Hari Pancasila </h5>
                             <?php } else { ?>
                                 <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
                                     <i class="fa fa-download"></i> Download as PDF

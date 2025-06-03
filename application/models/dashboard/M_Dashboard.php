@@ -142,30 +142,40 @@
         //                     ->get()->result_array();
         // }
 
-        public function getDataLiveAbsen($id){
+        public function getDataLiveAbsen(){
             $data = $this->input->post();
-            $agenda = $this->db->select('*')
-                                ->from('db_sip.event')
-                                ->where('id', $id)
-                                ->get()->row_array();
+            // $agenda = $this->db->select('*')
+            //                     ->from('db_sip.event')
+            //                     ->where('id', $id)
+            //                     ->get()->row_array();
+
+            // dd($data);
+            $explTgl = explode("-", $data['range_periode']);
 
             $absen = null;
-            if($agenda){
+            $agenda = null;
+            if(isset($explTgl[1])){
+                $explTglAwal = explode("/", trim($explTgl[0]));
+                $explTglAkhir = explode("/", trim($explTgl[1]));
+
+                $tglAwal = $explTglAwal[2].'-'.$explTglAwal[0].'-'.$explTglAwal[1];
+                $tglAkhir = $explTglAkhir[2].'-'.$explTglAkhir[0].'-'.$explTglAkhir[1];
                 $this->db->select('a.masuk, a.pulang, a.tgl, c.gelar1, c.nama, c.gelar2, d.nama_jabatan, d.eselon, e.nm_pangkat, f.nm_unitkerja,
                     c.nipbaru_ws as nip')
-                    ->from('db_sip.absen a')
+                    ->from('db_sip.absen_event a')
                     ->join('m_user b', 'a.user_id = b.id')
                     ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
                     ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
                     ->join('db_pegawai.pangkat e', 'c.pangkat = e.id_pangkat')
                     ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
                     ->join('db_pegawai.eselon g', 'd.eselon = g.nm_eselon')
-                    ->where('a.tgl', $agenda['tgl'])
-                    ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
+                    ->where('a.tgl >=', $tglAwal)
+                    ->where('a.tgl <=', $tglAkhir)
+                    // ->where('(a.masuk >= "'.$agenda['buka_masuk'].'" OR a.pulang >= "'.$agenda['buka_pulang'].'")') //komen ini
                     // ->where('a.pulang >=', $agenda['buka_pulang']) //buka ini
-                    ->group_by('a.id')
+                    // ->group_by('a.id')
                     ->where('id_m_status_pegawai', 1)
-                    ->where_in('a.aktivitas', [1,2,3]) //buka ini
+                    // ->where_in('a.aktivitas', [1,2,3]) //buka ini
                     // ->order_by('a.masuk', 'desc'); //komen ini
                     ->order_by('a.pulang', 'desc'); //buka ini
 

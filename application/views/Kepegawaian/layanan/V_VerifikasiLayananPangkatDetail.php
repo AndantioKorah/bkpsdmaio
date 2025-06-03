@@ -70,7 +70,7 @@
       data-toggle="modal" 
       href="#modal_upload_sk"
       onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK a</button>
+      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK </button>
     <?php } ?>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
   <button 
@@ -78,7 +78,7 @@
   data-toggle="modal" 
   href="#modal_upload_sk"
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK b</button>
+  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK </button>
   <!-- Button trigger modal -->
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK

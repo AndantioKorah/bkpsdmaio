@@ -311,7 +311,9 @@ ol {
 					<input type="hidden" id="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
 					<input type="hidden" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
 					<input type="hidden" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
+					<input type="hidden" id="rekom_kepala_pd" value="<?php if(isset($rekom_kepala_pd)) echo $rekom_kepala_pd['id']; else echo "";?>">
 
+          
         
 				
 					<div class="list-type1x">
@@ -460,6 +462,12 @@ ol {
                 onclick="viewBerkasPangkat('<?=$pengunduran_diri['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> Permohonan Pengunduran Diri*<i
                 class="fas fa-<?php if($pengunduran_diri) echo ''; else echo '';?>"></i></a>
+                </li>
+                 <li>
+                <a class="<?php if($rekom_kepala_pd) echo 'select'; else echo 'unselect';?>" <?php if($rekom_kepala_pd) { ?>
+                onclick="viewBerkasPangkat('<?=$rekom_kepala_pd['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Rekomendasi Kepala Perangkat Daerah*<i
+                class="fas fa-<?php if($rekom_kepala_pd) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
                 <a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
@@ -745,6 +753,12 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+         if(rekom_kepala_pd == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+
+        
         }
         
         if(id_m_layanan == 16){

@@ -26,7 +26,14 @@
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['created_date'])?></td>
               <td class="text-left">
+                 <?php if($m_layanan == 10) { ?>
+             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Selesai"; else echo "Menunggu Verifikasi BKPSDM" ?>
+                  
+          <?php } else { ?>
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else if($rs['status'] == '7') echo "TMS / Tidak Memenuhi Syarat"; else echo "Menunggu Verifikasi BKPSDM" ?>
+
+          <?php } ?>
+
              </td>
               <td class="text-left"><?=$rs['keterangan']?></td>
             <td>

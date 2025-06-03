@@ -178,6 +178,42 @@ function countMaxDateUpload($date, $max = 0, $operand = "minus"){
     return $res;
 }
 
+function countMaxDateUpload2($date, $max = 0, $operand = "minus"){
+    $res = null;
+    $untillDate = null;
+    $tempMax = $max + 30;
+    if($operand == 'plus'){
+        $untillDate = date('Y-m-d', strtotime($date. ' +'.$tempMax.' days'));
+        $res = countHariKerjaDateToDate($date, $untillDate);
+    } else {
+        $untillDate = date('Y-m-d', strtotime($date. ' -'.$tempMax.' days'));
+        $res = countHariKerjaDateToDate($untillDate, $date);
+    }
+    $res['max_date'] = null;
+
+    $lhk = null;
+    $i = 0;
+    $pointer = null;
+
+    foreach($res[3] as $rs){
+        $lhk[$i] = $rs;
+        if($rs >= $date && $pointer == null){
+        // if((strtotime($rs) >= strtotime($date)) && $pointer == 0){
+            // echo $rs.'  '.$date;
+            $pointer = $i;
+            // dd($pointer+$max);
+        }
+        $i++;
+    }
+    if($operand == 'plus'){
+        $res['max_date'] = $lhk[$max];
+    } else {
+        $res['max_date'] = $lhk[$pointer-$max];
+    }
+    
+    return $res;
+}
+
 function getPredikatSkp($data){
     if(isset($data['hasilKinerja']) && isset($data['perilakuKerja'])){
         $predikatAngka = [

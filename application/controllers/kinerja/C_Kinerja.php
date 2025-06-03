@@ -64,7 +64,7 @@ class C_Kinerja extends CI_Controller
 
         $date = new DateTime();
         $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
         $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
 

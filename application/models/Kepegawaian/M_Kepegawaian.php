@@ -11297,12 +11297,19 @@ public function getFileForKarisKarsu()
 
 
     function getRiwayatLayanan($id){
-        $this->db->select('*')
+        $this->db->select('*, a.created_date as tanggal_usul, a.id as id_t_layanan')
                        ->from('t_layanan a')
                        ->where('a.id_m_user', $this->general_library->getId())
                        ->where('a.id_m_layanan', $id)
                        ->where('a.flag_active', 1)
                        ->order_by('a.id','desc');
+
+                        if($id == 6 || $id == 7 || $id == 8 || $id == 9 ){
+                         $this->db->join('m_status_layanan_pangkat b', 'a.status = b.status_id','left');
+                        }
+                        if($id == 12 || $id == 13 || $id == 14 || $id == 15 || $id == 16){
+                         $this->db->join('m_status_layanan_fungsional b', 'a.status = b.id','left');
+                        }
                        $query = $this->db->get()->result_array();
                        return $query;
    }
@@ -11409,6 +11416,30 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
 
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('g.id', $data['status_pengajuan']);
+                }
+
+    return $this->db->get()->result_array();
+}
+
+public function searchPengajuanLayananPangkat($id_m_layanan){
+    $data = $this->input->post();
+    $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+     (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
+            ->from('t_layanan a')
+            ->join('m_user d', 'a.id_m_user = d.id')
+            ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+            ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('m_status_layanan_pangkat g', 'a.status = g.status_id')
+            ->join('db_pegawai.pegpangkat h', 'h.id = a.reference_id_dok','left')
+            ->where_in('a.id_m_layanan', [6,7,8,9])
+            ->where('a.flag_active', 1)
+            ->order_by('a.created_date', 'desc');
+                if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+                    $this->db->where('e.skpd', $data['id_unitkerja']);
+                }
+
+                if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+                    $this->db->where('g.status_id', $data['status_pengajuan']);
                 }
 
     return $this->db->get()->result_array();
@@ -11956,6 +11987,108 @@ public function getFileForVerifLayanan()
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function submitVerifikasiPengajuanLayananPangkat(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+    
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+       
+        $id_pengajuan = $datapost['id_pengajuan'];
+        $data["status"] = $datapost["status"];
+        $data["keterangan"] = $datapost['keterangan'];
+        $data["id_m_user_verif"] = $this->general_library->getId();
+       
+        $this->db->where('id', $id_pengajuan)
+                ->update('t_layanan', $data);
+
+        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('t_layanan c', 'a.id = c.id_m_user')
+                ->join('m_status_layanan_pangkat d', 'c.status = d.status_id')
+                ->where('c.id', $id_pengajuan)
+                ->get()->result_array();
+
+        if($dataPengajuan[0]['status'] == 1 || $dataPengajuan[0]['status'] == 7 || $dataPengajuan[0]['status'] == 8){
+            $status = $dataPengajuan[0]['status_verif'];
+            $statusForMessage = "diverifikasi";
+            if(isset($datapost['skp1'])){
+                $this->verifBerkas($datapost['skp1'], "db_pegawai.pegskp");
+            }
+            if(isset($datapost['skp2'])){
+                $this->verifBerkas($datapost['skp2'], "db_pegawai.pegskp");
+            }
+            if(isset($datapost['sk_cpns'])){
+                $this->verifBerkas($datapost['sk_cpns'], "db_pegawai.pegberkaspns");
+            }
+            if(isset($datapost['sk_pns'])){
+                $this->verifBerkas($datapost['sk_pns'], "db_pegawai.pegberkaspns");
+            }
+            if(isset($datapost['diklat'])){
+                $this->verifBerkas($datapost['diklat'], "db_pegawai.pegdiklat");
+            }
+            if(isset($datapost['sk_pangkat']) && $datapost['sk_pangkat'] != ""){
+                $this->verifBerkas($datapost['sk_pangkat'], "db_pegawai.pegpangkat");
+                $this->updatePangkat($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['sk_jabatan']) && $datapost['sk_jabatan'] != ""){
+                $this->verifBerkas($datapost['sk_jabatan'], "db_pegawai.pegjabatan");
+                $this->updateJabatan($dataPengajuan[0]['id_peg']);
+            }
+            if(isset($datapost['ijazah_cpns'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+
+            if(isset($datapost['ijazah_s_penyesuaian'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['ijazah_penyesuaian'])){
+                $this->verifBerkas($datapost['ijazah_cpns'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['ijazah'])){
+                $this->verifBerkas($datapost['ijazah'], "db_pegawai.pegpendidikan");
+            }
+
+            
+        $tambahan = "";
+
+        } else if($dataPengajuan[0]['status'] == 2 || $dataPengajuan[0]['status'] == 6){
+            $status = $dataPengajuan[0]['status_verif'];
+            $statusForMessage = "ditolak";
+            $tambahan = "Silahkan Perbaiki Berkas Persyaratan dan klik Tombol Ajukan Kembali Pada bagian riwayat layanan agar pengajuan layanan dapat diverifikasi kembali di BKPSDM.";
+        }
+
+        if($dataPengajuan[0]['id_m_layanan'] == 6 || $dataPengajuan[0]['id_m_layanan'] == 7 || $dataPengajuan[0]['id_m_layanan'] == 8 || $dataPengajuan[0]['id_m_layanan'] == 9){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n$tambahan\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Pangkat";
+        }
+
+        if($dataPengajuan[0]['status'] != 0){
+             $cronWaNextVerifikator = [
+                    'sendTo' => convertPhoneNumber($dataPengajuan[0]['handphone']),
+                    'message' => trim($message.FOOTER_MESSAGE_CUTI),
+                    'type' => 'text',
+                    'jenis_layanan' =>  $jenislayanan,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+        }
+       
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

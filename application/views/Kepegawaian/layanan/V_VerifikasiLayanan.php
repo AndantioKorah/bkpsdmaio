@@ -62,16 +62,22 @@
                 <option value="4">Proses SK Jabatan</option>
                 <option value="5">BTL</option>
                 <option value="7">TMS</option>
-                <?php } else { ?>
+              <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+                  <option value="" >Semua</option>
+                  <option value="0" selected>Pengajuan</option>
+                  <option value="1" >Selesai verifikasi BKPSDM dan menunggu jadwal pengusulan ke BKN</option>
+                  <option value="2" >Tolak Siladen</option>
+                  <option value="6" >Tolak BKN</option>
+                  <option value="7" >ACC BKN</option>
+                  <option value="8" >Proses SK</option>
+                  <option value="3" >Usul BKAD</option>
+                  <option value="4" >Diterima BKAD</option>
+                  <option value="5" >Ditolak BKAD</option>
+                  <?php } else { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
                   <option value="2" >Ditolak</option>
-                  <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
-                  <option value="3" >Usul BKAD</option>
-                  <option value="4" >Diterima BKAD</option>
-                  <option value="5" >Ditolak BKAD</option>
-                  <?php } ?>
                   <?php if($id_m_layanan == 10 || $id_m_layanan == 21) { ?>
                   <option value="3" >Selesai</option>
                   <?php } ?>

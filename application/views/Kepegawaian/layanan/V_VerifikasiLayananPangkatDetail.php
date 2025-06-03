@@ -70,7 +70,7 @@
       data-toggle="modal" 
       href="#modal_upload_sk"
       onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK a</button>
     <?php } ?>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
   <button 
@@ -78,7 +78,7 @@
   data-toggle="modal" 
   href="#modal_upload_sk"
   onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button>
+  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK b</button>
   <!-- Button trigger modal -->
   <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
   Download Draf SK
@@ -94,13 +94,23 @@
         </button>
   <?php } ?>
 <?php } ?>
+  <?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
-
-        <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
-        Batal Verif
+          <?php } ?>
+      <?php if($result[0]['status_layanan'] != 0) { ;?>
+          <button  type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+        Update Status
         </button>
+       <?php } ?>
+        <!-- <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Verif
+        </button> -->
+      
+        <!-- <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        Batal Verif
+        </button> -->
   
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -529,9 +539,15 @@
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
-        <option value="1">ACC</option>
-        <option value="2">TOLAK</option>
+        <!-- <option value="1">ACC</option>
+        <option value="2">TOLAK</option>  -->
         <!-- <option value="3">TMS</option> -->
+          <option <?php if($result[0]['status_layanan'] == 0) echo "selected";?> value="0" >Pengajuan</option>
+          <option <?php if($result[0]['status_layanan'] == 1) echo "selected";?> value="1" >Selesai verifikasi BKPSDM dan menunggu jadwal pengusulan ke BKN</option>
+          <option <?php if($result[0]['status_layanan'] == 2) echo "selected";?> value="2" >Tolak Siladen</option>
+          <option <?php if($result[0]['status_layanan'] == 6) echo "selected";?> value="6" >Tolak BKN</option>
+          <option <?php if($result[0]['status_layanan'] == 7) echo "selected";?> value="7" >ACC BKN</option>
+          <option <?php if($result[0]['status_layanan'] == 8) echo "selected";?> value="8" >Proses SK</option>
       </select>
       </div>
       <div class="mb-3">
@@ -618,7 +634,7 @@ $(function(){
     $('#btn_upload_sk').show()
     $('#btn_tolak_verifikasi').show()
     $('#btn_verifikasi').hide()
-   } else if(status == 2) {
+   } else if(status == 2 || status == 6) {
     $('#btn_tolak_verifikasi').show()
     $('#btn_upload_sk').hide()
     $('#btn_verifikasi').hide()
@@ -716,17 +732,17 @@ function openPresensiTab(){
             return false;
            }
 
-          //  if(status == "2"){
+           if(status != "0"){
            if(catatan == ""){
             errortoast('Silahkan mengisi catatan')
             return false;
            }
-          //  }
+           }
 
 
             e.preventDefault()
             $.ajax({
-                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayanan")?>',
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifikasiPengajuanLayananPangkat")?>',
                 method: 'post',
                 data: $(this).serialize(),
                 success: function(datares){

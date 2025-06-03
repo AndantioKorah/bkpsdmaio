@@ -38,7 +38,13 @@
           <?php } ?>
 
              </td>
+             <?php if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
+                  <td class="text-left">
+                    <?php if($rs['status_id'] == 0 || $rs['status_id'] == 1 || $rs['status_id'] == 2 || $rs['status_id'] == 3 || $rs['status_id'] == 7 || $rs['status_id'] == 8 ) echo $rs['keterangan']; else echo $rs['keterangan_bkad']; ?>
+                  </td>
+              <?php } else { ?>
                   <td class="text-left"><?=$rs['keterangan']?></td>
+              <?php } ?>
             <td>
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>

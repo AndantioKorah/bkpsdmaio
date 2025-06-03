@@ -28,7 +28,7 @@
               </span>
             </td>
             <td class="text-left">
-              <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
+              <?php if($rs['status_layanan'] == 0 || $rs['status_layanan'] == 1 || $rs['status_layanan'] == 2 || $rs['status_layanan'] == 3 || $rs['status_layanan'] == 7 || $rs['status_layanan'] == 8 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">

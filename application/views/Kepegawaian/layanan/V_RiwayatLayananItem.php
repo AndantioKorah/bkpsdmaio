@@ -24,18 +24,27 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?= formatDateNamaBulan($rs['created_date'])?></td>
+              <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul'])?></td>
               <td class="text-left">
                  <?php if($m_layanan == 10) { ?>
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Selesai"; else echo "Menunggu Verifikasi BKPSDM" ?>
-                  
-          <?php } else { ?>
+          <?php } else if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
+             <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8') echo "success"; else  echo "danger"; ?>"><?=$rs['status_verif'];?>
+            <?php } else if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 14 || $m_layanan == 15 ||  $m_layanan == 16) { ?>
+             <span class="badge badge-<?php if($rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else  echo "success"; ?>"><?=$rs['status_verif'];?>
+             <?php } else { ?>
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else if($rs['status'] == '7') echo "TMS / Tidak Memenuhi Syarat"; else echo "Menunggu Verifikasi BKPSDM" ?>
 
           <?php } ?>
 
              </td>
-              <td class="text-left"><?=$rs['keterangan']?></td>
+             <?php if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
+                  <td class="text-left">
+                    <?php if($rs['status_id'] == 0 || $rs['status_id'] == 1 || $rs['status_id'] == 2 || $rs['status_id'] == 3 || $rs['status_id'] == 7 || $rs['status_id'] == 8 ) echo $rs['keterangan']; else echo $rs['keterangan_bkad']; ?>
+                  </td>
+              <?php } else { ?>
+                  <td class="text-left"><?=$rs['keterangan']?></td>
+              <?php } ?>
             <td>
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
@@ -58,27 +67,8 @@
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
-              <?php if($rs['status'] == 2) { ?>
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
-                data-id="<?=$rs['id'];?>"
-                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
-                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
-                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
-                </button>
-                </div>
-                <div class="btn-group mr-2" role="group" aria-label="Second group">
-                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
 
-                </div>
-                
-              </div>
-              
-               
-              <?php } ?>
-              <?php if($rs['id_m_layanan'] == 12) { ?>
+              <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16) { ?>
                 <?php if($rs['status'] == 5) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -90,7 +80,7 @@
                 </button>
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
-                <button onclick="ajukanKembali('<?=$rs['id']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
 
                 </div>
                 
@@ -98,7 +88,30 @@
               
                
               <?php } ?>
-                <?php } ?>
+              <?php } else { ?>
+              <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                </button>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+
+                </div>
+                
+              </div>
+              
+               
+              <?php } ?>
+                             
+              <?php } ?>
+              
             </td>
            
             </tr>

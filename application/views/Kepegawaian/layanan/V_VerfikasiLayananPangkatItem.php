@@ -24,11 +24,11 @@
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_pengajuan'])?></td>
               <td class="text-left">
-              <span class="badge badge-<?php if($rs['status_pengajuan'] == '1' || $rs['status_pengajuan'] == '4') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else if($rs['status_pengajuan'] == '3') echo "Usul BKAD"; else if($rs['status_pengajuan'] == '4')  echo "Diterima BKAD"; else if($rs['status_pengajuan'] == '5') echo "Ditolak BKAD"; else echo "Menunggu Verifikasi BKPSDM" ?>
+              <span class="badge badge-<?php if($rs['status_pengajuan'] == '2' || $rs['status_pengajuan'] == '5') echo "danger"; else echo "success";?>"><?=$rs['status_verif']?>
               </span>
             </td>
             <td class="text-left">
-              <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
+              <?php if($rs['status_layanan'] == 0 || $rs['status_layanan'] == 1 || $rs['status_layanan'] == 2 || $rs['status_layanan'] == 3 || $rs['status_layanan'] == 7 || $rs['status_layanan'] == 8 ) echo $rs['ket_layanan']; else echo $rs['keterangan_bkad'];?></td>
            
           <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')) { ?>
             <td class="text-left">

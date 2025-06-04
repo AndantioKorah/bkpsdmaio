@@ -1164,7 +1164,10 @@ class M_Layanan extends CI_Model
                 // dd($base64File);
 
                 $credential = json_decode($d['credential'], true);
+
+                $jsonRequest['signatureProperties'] = null;
                 $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+                
                 $jsonRequest['nik'] = $credential['nik'];
                 $jsonRequest['passphrase'] = $credential['passphrase'];
                 // dd(json_encode($jsonRequest));

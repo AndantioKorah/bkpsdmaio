@@ -3,7 +3,7 @@
     <?php if($result['code'] == 0){ ?>
       <div class="row p-3">
         <div class="col-lg-6">
-          <iframe src="<?=base_url($result['result']['url']).'?v='.generateRandomString()?>" style="width: 100%; height: 75vh;">
+          <iframe src="<?=base_url($result['result']['url_file']).'?v='.generateRandomString()?>" style="width: 100%; height: 75vh;">
           </iframe>
         </div>
         <div class="col-lg-6" style="height: 75vh;">

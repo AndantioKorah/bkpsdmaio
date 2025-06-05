@@ -12,7 +12,18 @@
             <h3><?=$result['id_m_jenis_layanan'] == 104 ? $result['nama_layanan'].' / '.$result['keterangan'] : $result['nama_layanan']?></h3>
             <h4>Keterangan: <?=$result['id_m_jenis_layanan'] != 104 ? $result['keterangan'] : ""?></h4>
             <h4>DS CODE: <?=$result['ds_code']?></h4>
-            <button onclick="downloadAllDoneFile()" class="float-right btn btn-danger"><i class="fa fa-download"></i> Download File</button>
+            <?php if($result['flag_done'] == 2){ ?>
+                <h6><?=$result['status']?></h6>
+            <?php } ?>
+            <div class="row">
+                <div class="col-lg-12 text-right">
+                    <?php if($result['flag_done'] == 2){ ?>
+                        <button id="btnAjukan" onclick="ajukanKembali()" class="btn btn-sm btn-warning"><i class="fa fa-share-square"></i> Ajukan Kembali</button>
+                        <button id="btnAjukanLoading" style="display: none;" disabled class="btn btn-sm btn-warning"><i class="fa fa-spin fa-spinner"></i> Menuggu...</button>
+                    <?php } ?>
+                    <button onclick="downloadAllDoneFile()" class="btn btn-sm btn-danger"><i class="fa fa-download"></i> Download File</button>
+                </div>
+            </div>
         </div>
         <div class="col-lg-12 table-responsive">
             <table border=1 style="border-collapse: collapse;" id="table_detail_usul_ds" class="mt-3 table table-hover table-sm table-striped">
@@ -78,6 +89,27 @@
                 $('#div_progress').append(divLoaderNavy)
                 $('#div_progress').load('<?=base_url('kepegawaian/C_Layanan/loadProgressUsulDs/')?>'+id, function(){
                     $('#loader').hide()
+                })
+            }
+
+            function ajukanKembali(){
+                $('#btnAjukan').hide()
+                $('#btnAjukanLoading').show()
+                $.ajax({
+                    url: '<?=base_url("kepegawaian/C_Layanan/ajukanKembaliUsulDs/".$result['id'])?>',
+                    method: 'post',
+                    data: $(this).serialize(),
+                    success: function(data){
+                        let resp = JSON.parse(data)
+                        if(resp.code == 0){
+                            successtoast('Pengajuan Kembali berhasil')
+                            openDetailModal('<?=$result["id"]?>')
+                        } else {
+                            errortoast(resp['message'])
+                        }
+                    }, error: function(e){
+                        errortoast('Terjadi Kesalahan')
+                    }
                 })
             }
 

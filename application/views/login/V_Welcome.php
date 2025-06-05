@@ -150,28 +150,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
        
         <?php } else { ?>
           <?php if($this->general_library->isGuest()) { ?>
-            
-            <?php } else { ?>  
-           <div class="p-3">
-            <h4><?="Selamat ".greeting().","?></h4>
-            <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
-            <?php
-              $this->load->view('user/V_QuickMenuPegawai', null); 
-              // $this->load->view('user/V_Pdm', null);
-            ?>
-            <!-- <center>
-              <h3>Welcome to</h3>
-                <div style="z-index:0;">
-                  <img style="height : auto;
-                            width: 300px; 
-                              margin-bottom:20px;"  class="" src="assets/adminkit/img/logo-siladen-new-with-text.png" />
-                </div>
-            
-              <h4><strong class="nmuser"><?=$this->general_library->getNamaUser();?></strong></h4>
-              <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
-            </center> -->
-        </div>
-        <?php }  ?>  
+          <?php } else { ?>  
+            <div class="p-3">
+              <h4><?="Selamat ".greeting().","?></h4>
+              <strong><h1 class="nmuser font-weight-bold"><?=$this->general_library->getNamaUser()?></h1></strong>
+              <?php if($this->general_library->getId() == 122){ ?>
+                <!-- <button id="btn_rekap_kasubkepeg" data-toggle="modal" href="#modal_rekap_hedairan"
+                  class="btn-success-outline">Rekap Kehadiran <?=$this->general_library->getNamaSKPDUser()." ".formatDateNamaBulan(date('Y-m-d'))?> </button> -->
+              <?php } ?>
+              <?php $this->load->view('user/V_QuickMenuPegawai', null); ?>
+            </div>
+          <?php }  ?>  
         <?php } ?>
       </div>
       <!-- <div class="col-12 text-center">
@@ -198,6 +187,17 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
     <div id="modal-dialog" class="modal-dialog modal-xl">
         <div id="modal-announcement-content">
             <!-- <image id="modal-announcement-image" /> -->
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal_rekap_kehadiran" tabindex="-1" data-backdrop="static" data-keyboard="false" 
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="col-lg-12 float-right text-right">
+      <button type="button" class="btn-close btn-close-modal_rekap_kehadiran btn-light" style="width: 50px; height: 50px; background-color: white;" data-dismiss="modal"><i class="fa fa-3x fa-times"></i></button>
+    </div>
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div id="modal_rekap_kehadiran_content">
         </div>
     </div>
   </div>
@@ -278,6 +278,18 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
 	})
 
 
+  })
+
+  $('#btn_rekap_kasubkepeg').on('click', function(){
+    $('#dashboard_pdm_welcome').html('')
+      $('#dashboard_pdm_welcome').append(divLoaderNavy)
+      $('#dashboard_pdm_welcome').load('<?=base_url('dashboard/C_Dashboard/getDashboardPdmAll')?>', function(){
+          $('#loader').hide()
+      })
+  })
+
+  $('.btn-close-modal_rekap_hedairan').on('click', function(){
+    $('#modal_rekap_kehadiran').hide()
   })
 
   $('.btn-close-modal-announcement').on('click', function(){

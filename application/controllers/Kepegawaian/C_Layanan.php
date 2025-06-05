@@ -351,4 +351,8 @@ class C_Layanan extends CI_Controller
 		($this->layanan->deleteUsulDs($id));
 		//hapus t_usul_ds, t_usul_ds_detail, t_usul_ds_detail_progress, t_request_ds, t_cron_request_ds
 	}
+	
+	public function ajukanKembaliUsulDs($id){
+		echo json_encode($this->layanan->ajukanKembaliUsulDs($id));
+	}
 }

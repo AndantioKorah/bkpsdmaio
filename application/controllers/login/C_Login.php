@@ -149,7 +149,8 @@ class C_Login extends CI_Controller
         $password = $this->general_library->encrypt($username, $this->input->post('password'));
         // dd($password);
         if($flagSwitchAccount == 1){
-            if($this->general_library->isProgrammer()){
+            if($this->general_library->isProgrammer() ||
+            $this->general_library->isHakAkses('login_another_user')){
                 $username = $nip;
                 $password = null;
 

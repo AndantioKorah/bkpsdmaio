@@ -288,7 +288,7 @@ ol {
           </div>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 			<?php } ?>
-       <?php if($id_m_layanan == 12) { ?>
+       <?php if($id_m_layanan == 12 || $id_m_layanan == 13) { ?>
         <div class="form-group">
             <label><b>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />

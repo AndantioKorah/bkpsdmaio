@@ -195,7 +195,7 @@
     </li>
   <?php if($id_m_layanan == 12) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='surat_pernyataan_hd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan tidak sedang hukiman disiplin dari atasan langsung</button>
+    <button onclick="getFile(file='surat_pernyataan_hd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan tidak sedang hukuman disiplin dari atasan langsung</button>
   </li>
   <?php } ?>
   <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 ) { ?>

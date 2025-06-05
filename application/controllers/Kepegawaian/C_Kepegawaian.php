@@ -2333,7 +2333,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		// dd($data['profil_pegawai']);
 		$data['nomorsurat'] = "123";
-		$this->load->view('kepegawaian/surat/V_SuratPidana',$data);	
+		// $this->load->view('kepegawaian/surat/V_SuratHukdis',$data);	
 
 		// $this->load->library('pdfgenerator');
         // // filename dari pdf ketika didownload
@@ -2378,10 +2378,9 @@ class C_Kepegawaian extends CI_Controller
 		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
 		$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
 		} 
-		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true);
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf');
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf', 'D');
     }
 
 	public function suratFormulirCuti($id_cuti){
@@ -2788,7 +2787,6 @@ class C_Kepegawaian extends CI_Controller
 				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','76','0',$id_peg);
 				$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg); 
 				$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayananAdmin($id_peg); 
-
 			}
 			if($layanan == 14){
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','69','0',$id_peg);	

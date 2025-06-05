@@ -410,7 +410,7 @@ ol {
               <?php if (in_array($jenis_layanan, $list_layanan_skp)) { ?>
 							<li>
 								<a class="<?php if($skp) echo 'select'; else echo 'unselect';?>" <?php if($skp) { ?>
-									onclick="viewBerkas('<?=$skp['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkas('<?=$skp['gambarsk'];?>',22)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('sasaran kinerja pegawai dan penilaian prestasi kerja 1 tahun terakhir*'); ?> </a>
 							</li>
               <?php } ?>

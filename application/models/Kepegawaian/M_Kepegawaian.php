@@ -9602,7 +9602,7 @@ public function submitEditJabatan(){
     public function getDokumenForKarisKarsuAdmin($table,$id_dokumen,$jenissk,$id_peg)
     {
         $this->db->select('*')
-        ->where('id_pegawai', $id_peg)
+        ->where('id_pegawaix', $id_peg)
         ->where('flag_active', 1)
         // ->where('status', 2)
         ->from($table);

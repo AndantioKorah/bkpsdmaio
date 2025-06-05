@@ -2963,6 +2963,11 @@ class C_Kepegawaian extends CI_Controller
 			echo json_encode($this->kepegawaian->submitEditSPLayanan());
 		}
 
+			public function submitEditSuketLayanan()
+		{ 
+			echo json_encode($this->kepegawaian->submitEditSuketLayanan());
+		}
+
 	public function prosesGajiBerkala($nip,$tahun){
 		
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);

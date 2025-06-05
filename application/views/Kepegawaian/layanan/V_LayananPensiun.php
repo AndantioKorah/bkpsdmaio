@@ -397,7 +397,7 @@ ol {
 							<li>
 								<a class="<?php if($dpcp) echo 'select'; else echo 'unselect';?>" <?php if($dpcp) { ?>
 									onclick="viewBerkas('<?=$dpcp['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('daftar perorangan calon penerima pensiun (dpcp)*'); ?> </a>
+									<?php } ?>><i class="fa fa-file-pdf"></i> <?php echo strtoupper('daftar perorangan calon penerima pensiun (dpcp)'); ?> </a>
 							</li>
               <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_pmk)) { ?>
@@ -474,14 +474,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktekematian)) { ?>
-                <?php if($jenis_layanan != 5) { ?>
+                <?php if($jenis_layanan == 17 || $jenis_layanan == 3 || $jenis_layanan == 4 || $jenis_layanan == 2) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte kematian (bagi pasangan yang sudah meninggal)'); ?></a></li>
 							<li>
               <?php } ?>
-              <?php if($jenis_layanan == 5) { ?>
+              <?php if($jenis_layanan == 5 || $jenis_layanan == 22) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
@@ -650,7 +650,7 @@ $(function(){
         var npwp = $('#npwp').val();
         var buku_rekening = $('#buku_rekening').val();
 
-        if(jenis_layanan == 17 || jenis_layanan == 2 || jenis_layanan == 3){
+        if(jenis_layanan == 17 || jenis_layanan == 2 || jenis_layanan == 3 || jenis_layanan == 22){
         if(sk_cpns == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -754,6 +754,13 @@ $(function(){
           }
         }
 
+        if(jenis_layanan == 22){
+          if(jandaduda == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+
         if(jenis_layanan == 5){
           if(surat_ket_kematian == ""){
             errortoast(' Berkas Belum Lengkap')
@@ -775,6 +782,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
+          if(jandaduda == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
         }
          
         } 

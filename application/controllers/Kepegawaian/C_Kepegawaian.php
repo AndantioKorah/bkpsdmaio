@@ -2082,29 +2082,29 @@ class C_Kepegawaian extends CI_Controller
 		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','39','0',$id_peg);
 
 
-		$data['list_layanan_skcpns'] = array(1,2,3,4,5);
-		$data['list_layanan_skpns'] = array(1,2,3,4,5);
-		$data['list_layanan_skpangak'] = array(1,2,3,4,5);
-		$data['list_layanan_skjabatan'] = array(1,2,3,4);
-		$data['list_layanan_aktenikah'] = array(1,2,3,4,5);
+		$data['list_layanan_skcpns'] = array(22,1,2,3,4,5);
+		$data['list_layanan_skpns'] = array(22,1,2,3,4,5);
+		$data['list_layanan_skpangak'] = array(22,1,2,3,4,5);
+		$data['list_layanan_skjabatan'] = array(22,1,2,3,4);
+		$data['list_layanan_aktenikah'] = array(22,1,2,3,4,5);
 		$data['list_layanan_hd'] = array(1,2,3,4,5);
 		$data['list_layanan_pidana'] = array(1,2,3,4,5);
 		$data['list_layanan_dpcp'] = array(1,2,3,4,5);
-		$data['list_layanan_pmk'] = array(1,2,3,4);
-		$data['list_layanan_skp'] = array(1,2,3,4);
+		$data['list_layanan_pmk'] = array(22,1,2,3,4);
+		$data['list_layanan_skp'] = array(22,1,2,3,4);
 		$data['list_layanan_surat_ket_kematian'] = array(5);
 		$data['list_layanan_surat_laporan_kronologis'] = array(5);
-		$data['list_layanan_aktercerai'] = array(1,2,3,4,5);
-		$data['list_layanan_aktekematian'] = array(1,2,3,4,5);
-		$data['list_layanan_akteanak'] = array(1,2,3,4,5);
-		$data['list_layanan_kk'] = array(1,2,3,4,5);
-		$data['list_layanan_ket_janda_duda'] = array(2,5);
+		$data['list_layanan_aktercerai'] = array(22,1,2,3,4,5);
+		$data['list_layanan_aktekematian'] = array(22,1,2,3,4,5);
+		$data['list_layanan_akteanak'] = array(22,1,2,3,4,5);
+		$data['list_layanan_kk'] = array(22,1,2,3,4,5);
+		$data['list_layanan_ket_janda_duda'] = array(22,2,5);
 		$data['list_layanan_spt'] = array(5);
 		$data['list_layanan_visum'] = array(5);
 		$data['list_layanan_berita_acara'] = array(5);
-		$data['list_layanan_ktp'] = array(1,2,3,4,5);
-		$data['list_layanan_npwp'] = array(1,2,3,4,5);
-		$data['list_layanan_buku_rek'] = array(1,2,3,4,5);
+		$data['list_layanan_ktp'] = array(22,1,2,3,4,5);
+		$data['list_layanan_npwp'] = array(22,1,2,3,4,5);
+		$data['list_layanan_buku_rek'] = array(22,1,2,3,4,5);
 		$data['list_layanan_surat_rekom_sakit'] = array(4);
 		$data['list_layanan_surat_berhenti'] = array(3,4);
 		
@@ -2181,29 +2181,29 @@ class C_Kepegawaian extends CI_Controller
 		$data['npwp'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','38','0');
 		$data['buku_rekening'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','39','0');
 
-		$data['list_layanan_skcpns'] = array(17,2,3,4,5);
-		$data['list_layanan_skpns'] = array(17,2,3,5,5);
-		$data['list_layanan_skpangak'] = array(17,2,3,4,5);
-		$data['list_layanan_skjabatan'] = array(17,2,3,4);
-		$data['list_layanan_aktenikah'] = array(17,2,3,4,5);
+		$data['list_layanan_skcpns'] = array(22,17,2,3,4,5);
+		$data['list_layanan_skpns'] = array(22,17,2,3,5,5);
+		$data['list_layanan_skpangak'] = array(22,17,2,3,4,5);
+		$data['list_layanan_skjabatan'] = array(22,17,2,3,4);
+		$data['list_layanan_aktenikah'] = array(22,17,2,3,4,5);
 		$data['list_layanan_hd'] = array(2,4,5);
 		$data['list_layanan_pidana'] = array(2,4,5);
 		$data['list_layanan_dpcp'] = array(2,4,5);
-		$data['list_layanan_pmk'] = array(17,2,3,4);
-		$data['list_layanan_skp'] = array(17,2,3,4);
+		$data['list_layanan_pmk'] = array(22,17,2,3,4);
+		$data['list_layanan_skp'] = array(22,17,2,3,4);
 		$data['list_layanan_surat_ket_kematian'] = array(5);
 		$data['list_layanan_surat_laporan_kronologis'] = array(5);
-		$data['list_layanan_aktercerai'] = array(17,2,3,4,5);
-		$data['list_layanan_aktekematian'] = array(17,2,3,4,5);
-		$data['list_layanan_akteanak'] = array(17,2,3,4,5);
-		$data['list_layanan_kk'] = array(17,2,3,4,5);
-		$data['list_layanan_ket_janda_duda'] = array(2,5);
+		$data['list_layanan_aktercerai'] = array(22,17,2,3,4,5);
+		$data['list_layanan_aktekematian'] = array(22,17,2,3,4,5);
+		$data['list_layanan_akteanak'] = array(22,17,2,3,4,5);
+		$data['list_layanan_kk'] = array(22,17,2,3,4,5);
+		$data['list_layanan_ket_janda_duda'] = array(22,2,5);
 		$data['list_layanan_spt'] = array(5);
 		$data['list_layanan_visum'] = array(5);
 		$data['list_layanan_berita_acara'] = array(5);
-		$data['list_layanan_ktp'] = array(17,2,3,4,5);
-		$data['list_layanan_npwp'] = array(17,2,3,4,5);
-		$data['list_layanan_buku_rek'] = array(17,2,3,4,5);
+		$data['list_layanan_ktp'] = array(22,17,2,3,4,5);
+		$data['list_layanan_npwp'] = array(22,17,2,3,4,5);
+		$data['list_layanan_buku_rek'] = array(22,17,2,3,4,5);
 		$data['list_layanan_surat_rekom_sakit'] = array(4);
 		$data['list_layanan_surat_berhenti'] = array(3,4);
 		
@@ -2217,6 +2217,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['nama_layanan'] = "SAKIT/UZUR";
 		} else if($jenis_layanan == 5){
 		$data['nama_layanan'] = "TEWAS";
+		} else if($jenis_layanan == 22){
+		$data['nama_layanan'] = "Meninggal";
 		}
 		// $data['dokumen_layanan'] = $this->kepegawaian->getDokumenLayanan($jenis_layanan);
 

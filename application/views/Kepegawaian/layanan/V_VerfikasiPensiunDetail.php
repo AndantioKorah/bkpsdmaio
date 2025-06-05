@@ -527,7 +527,7 @@ ol {
    <!-- berkas -->
    <div class="col-md-8">
     <!-- berkas persyaratan -->
-<span>Berkas Persyaratan  <?php if($jenis_layanan == 1) { ?>
+<span>Berkas Persyaratan  <?php if($jenis_layanan == 17) { ?>
    <b>Pensiun BUP</b>
     <?php } else if($jenis_layanan == 2) { ?>
      <b>Pensiun Janda/Duda</b>
@@ -537,6 +537,8 @@ ol {
         <b>Pensiun Sakit/Uzur</b>
         <?php } else if($jenis_layanan == 5) { ?>
           <b>Pensiun Tewas</b>
+           <?php } else if($jenis_layanan == 22) { ?>
+          <b>Pensiun Meninggal</b>
           <?php } ?></span>
         <div class="list-type1x">
 						<ol class="rectangle-list">
@@ -675,14 +677,14 @@ ol {
 							<li>
 						  <?php } ?>
               <?php if (in_array($jenis_layanan, $list_layanan_aktekematian)) { ?>
-                <?php if($jenis_layanan != 5) { ?>
+                <?php if($jenis_layanan == 17 || $jenis_layanan == 3 || $jenis_layanan == 4 || $jenis_layanan == 2) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>
                   <?php echo strtoupper('akte kematian (bagi pasangan yang sudah meninggal)'); ?></a></li>
 							<li>
               <?php } ?>
-              <?php if($jenis_layanan == 5) { ?>
+              <?php if($jenis_layanan == 5 || $jenis_layanan == 22) { ?>
                   <li><a class="<?php if($aktekematian) echo 'select'; else echo 'unselect';?>" <?php if($aktekematian) { ?>
 									onclick="viewBerkas('<?=$aktekematian['gambarsk'];?>',4)" data-toggle="modal"
 									data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i>

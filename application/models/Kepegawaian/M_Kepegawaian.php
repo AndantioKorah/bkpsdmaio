@@ -2248,6 +2248,7 @@ class M_Kepegawaian extends CI_Model
     {
         $this->db->select('*')
         ->where('flag_active', 1)
+        ->order_by('nama_layanan')
         ->from('m_layanan');
         return $this->db->get()->result_array(); 
     }

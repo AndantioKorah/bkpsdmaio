@@ -2248,6 +2248,7 @@ class M_Kepegawaian extends CI_Model
     {
         $this->db->select('*')
         ->where('flag_active', 1)
+        ->order_by('nama_layanan')
         ->from('m_layanan');
         return $this->db->get()->result_array(); 
     }
@@ -11789,7 +11790,19 @@ public function getFileForVerifLayanan()
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
-                return $this->db->get()->result_array();
+                 $str_serdik = $this->db->get()->result_array();
+             if($str_serdik == null){
+                $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 21)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                  $str_serdik = $this->db->get()->result_array();
+             }    
+            return $str_serdik;
         } else if($this->input->post('file') == "rekom_instansi_pembina"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
@@ -11973,7 +11986,7 @@ public function getFileForVerifLayanan()
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
         } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
+            $jenislayanan = "Layanan Jabatan Fungsional";
         } else if($dataPengajuan[0]['id_m_layanan'] == 21){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINGKATAN PENDIDIKAN / PENAMBAHAN GELAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peningkatan Pendidikan / Penambahan Gelar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Peningkatan Pendidikan / Penambahan Gelar";
@@ -13002,7 +13015,6 @@ public function getFileForVerifLayanan()
 
         $datapost = $this->input->post();
         $id_m_layanan = $datapost['id_m_layanan'];
-
         if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
             $target_dir	= './dokumen_layanan/pangkat';
         } else if($id_m_layanan == 10){
@@ -13045,6 +13057,53 @@ public function getFileForVerifLayanan()
 			$dataFile = $this->upload->data();
             $id = $datapost['id_pengajuan'];
             $data["file_pengantar"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('t_layanan', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
+       public function submitEditSuketLayanan(){
+
+        $datapost = $this->input->post();
+        $id_m_layanan = $datapost['id_m_layanan'];
+
+        $target_dir	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
+
+        $this->db->trans_begin();
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number."_SUKET_TIDAK_HUKDIS.pdf";
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+			$dataFile = $this->upload->data();
+            $id = $datapost['id_pengajuan'];
+            $data["surat_pernyataan_tidak_hd"] = $filename;
             $this->db->where('id', $id)
                     ->update('t_layanan', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);

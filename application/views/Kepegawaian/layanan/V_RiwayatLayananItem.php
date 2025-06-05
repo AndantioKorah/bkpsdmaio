@@ -23,7 +23,7 @@
         <tbody>
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr>
-              <td class="text-left"><?=$no++;?></td>
+              <td class="text-left"><?=$no++;?> </td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul'])?></td>
               <td class="text-left">
                  <?php if($m_layanan == 10) { ?>
@@ -49,7 +49,7 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
-            <?php if($m_layanan == 12) { ?>
+            <?php if($m_layanan == 12 || $m_layanan == 13) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -73,7 +73,8 @@
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
-                data-id="<?=$rs['id'];?>"
+                data-id_m_layanan = <?=$rs['id_m_layanan'];?>
+                data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
                 <i class="fa fa-edit"></i> Ubah Surat Pengantar 
@@ -85,8 +86,15 @@
                 </div>
                 
               </div>
-              
-               
+                 <?php if($m_layanan == 12 || $m_layanan == 13) { ?>
+                   <button
+                    data-id_m_layanan = <?=$rs['id_m_layanan'];?>
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-surat_pernyataan_tidak_hd="<?=$rs['surat_pernyataan_tidak_hd'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2 mt-2" data-toggle="modal" data-target="#modalUbahSuket">
+                <i class="fa fa-edit"></i> Ubah Surat Keterangan 
+                </button>
+                 <?php } ?>
               <?php } ?>
               <?php } else { ?>
               <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
@@ -94,7 +102,7 @@
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
                 data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
-                data-id="<?=$rs['id'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
                 <i class="fa fa-edit"></i> Ubah Surat Pengantar 
@@ -153,9 +161,9 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_ubah_surat_pengantar" enctype="multipart/form-data" >
-        <input type="hidden" name="id_pengajuan" id="id_pengajuan">
-        <input type="hidden" name="file_pengantar" id="file_pengantar">
-        <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
+        <input type="text" name="id_pengajuan" id="id_pengajuan">
+        <input type="text" name="file_pengantar" id="file_pengantar">
+        <input type="text" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
         <label>Surat Pengantar</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
@@ -169,6 +177,34 @@
   </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="modalUbahSuket" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="post" id="form_ubah_surat_keterangan" enctype="multipart/form-data" >
+        <input type="text" name="id_pengajuan" id="id_pengajuan">
+        <input type="text" name="surat_pernyataan_tidak_hd" id="surat_pernyataan_tidak_hd">
+        <input type="text" name="id_m_layanan" id="id_m_layanan" >
+        <div class="form-group">
+        <label>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</label>
+        <input  class="form-control my-image-field" type="file" id="pdf_surat_keterangan_ubah" name="file"   />
+        <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
+      </div>
+    
+      <button id="btn_submit_sp" class="btn btn-primary" style="float: right;">Simpan</button>
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   $(function(){ 
@@ -326,6 +362,17 @@ function ajukanKembali(id){
                 modal.find('#file_pengantar').attr("value",div.data('file_pengantar'));
                 modal.find('#id_pengajuan').attr("value",div.data('id'));
                 modal.find('#id_m_layanan').attr("value",div.data('id_m_layanan'));
+                
+            });
+
+            $('#modalUbahSuket').on('show.bs.modal', function (event) {
+    
+                var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
+                var modal = $(this)
+                modal.find('#surat_pernyataan_tidak_hd').attr("value",div.data('surat_pernyataan_tidak_hd'));
+                modal.find('#id_pengajuan').attr("value",div.data('id'));
+                modal.find('#id_m_layanan').attr("value",div.data('id_m_layanan'));
+                
             });
 
     $('#form_ubah_surat_pengantar').on('submit', function(e){  
@@ -382,7 +429,66 @@ function ajukanKembali(id){
      }  
      });  
        
+     });
+     
+     $('#form_ubah_surat_keterangan').on('submit', function(e){  
+     
+     e.preventDefault();
+     var formvalue = $('#form_ubah_surat_keterangan');
+     var form_data = new FormData(formvalue[0]);
+     var ins = document.getElementById('pdf_surat_keterangan_ubah').files.length;
+     var id_layanan = "<?=$m_layanan;?>"
+    //  document.getElementById('btn_submit_sp').disabled = true;
+    //  $('#btn_submit_sp').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+   
+     $.ajax({  
+     url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditSuketLayanan")?>",
+     method:"POST",  
+     data:form_data,  
+     contentType: false,  
+     cache: false,  
+     processData:false,  
+     // dataType: "json",
+     success:function(res){ 
+         console.log(res)
+         var result = JSON.parse(res); 
+         console.log(result)
+         if(result.success == true){
+             successtoast(result.msg)
+             if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+                // loadListRiwayatLayananPangkat()
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatLayananPangkat, 2000);
+             } 
+             if(id_layanan == 21){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatPeningkatanPenambahanGelar, 2000);
+             }
+             if(id_layanan == 10){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatPerbaikanData, 2000);
+             }
+             if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatUjianDinas, 2000);
+             }
+             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
+             }
+
+           } else {
+             errortoast(result.msg)
+             return false;
+           } 
+         
+     }  
+     });  
+       
      }); 
+
+
 </script>
 <?php } else { ?>
   <div class="row">

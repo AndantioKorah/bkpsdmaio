@@ -1140,10 +1140,11 @@ class M_Layanan extends CI_Model
     }
 
     public function cronBulkDs(){
-        $data = $this->db->select('a.*, b.request, b.url_image_ds, b.url_file, b.ref_id, b.table_ref,
+        $data = $this->db->select('a.*, b.request, b.url_image_ds, b.url_file, b.ref_id, b.table_ref, c.url_file as url_progress,
                         b.nama_kolom_flag, b.random_string, b.id as id_t_request_ds, b.id_m_jenis_ds')
                         ->from('t_cron_request_ds a')
                         ->join('t_request_ds b', 'a.id_t_request_ds = b.id')
+                        ->join('t_usul_ds_detail_progress c', 'b.ref_id = c.id AND b.table_ref = "t_usul_ds_detail_progress"', 'left')
                         ->where('a.flag_active', 1)
                         ->where('a.flag_sent', 0)
                         // ->where('a.flag_send', 0)
@@ -1151,6 +1152,8 @@ class M_Layanan extends CI_Model
                         ->limit(5)
                         ->get()->result_array();
         // dd($data);
+        $this->db->trans_begin();
+
         if($data){
             foreach($data as $d){
                 $request = json_decode($d['request'], true);
@@ -1158,13 +1161,23 @@ class M_Layanan extends CI_Model
                     $request['signatureProperties']['imageBase64'] = $d['url_image_ds'];
                 }
                 $base64File = null;
-                $base64File = base64_encode(file_get_contents(base_url().$d['url_file']));
+                $urlFile = $d['url_file'];
+                if(!file_exists($d['url_file']) && $d['table_ref'] == 't_usul_ds_detail_progress'){
+                    $urlFile = $d['url_progress'];
+                }
+                copy($urlFile, $d['url_file']);
+
+                $base64File = base64_encode(file_get_contents(base_url().$urlFile));
+
                 $jsonRequest['file'] = null;
                 $jsonRequest['file'][] = $base64File;
                 // dd($base64File);
 
                 $credential = json_decode($d['credential'], true);
+
+                $jsonRequest['signatureProperties'] = null;
                 $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+                
                 $jsonRequest['nik'] = $credential['nik'];
                 $jsonRequest['passphrase'] = $credential['passphrase'];
                 // dd(json_encode($jsonRequest));
@@ -1234,6 +1247,12 @@ class M_Layanan extends CI_Model
                     }
                 }
             }
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
         }
     }
 
@@ -2057,6 +2076,11 @@ class M_Layanan extends CI_Model
                         if($ld['url_done']){
                             $oldFileName = $ld['url_done'];
                         }
+
+                        if(!file_exists($oldFileName)){
+                            $oldFileName = $ld['url'];
+                        }
+
                         $explFn = explode(".pdf", $oldFileName);
                         $new_file_name = $explFn[0].'_signed_'.$ld['id_m_user_verif'].'.pdf';
                         $newFullPath = $new_file_name;

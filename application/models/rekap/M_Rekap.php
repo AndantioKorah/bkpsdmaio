@@ -1919,7 +1919,7 @@
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
                 ->where_in('c.nipbaru_ws', $temp_list_nip)
-                ->where_not_in('a.tanggal', $list_tanggal_exclude)
+                // ->where_not_in('a.tanggal', $list_tanggal_exclude)
                 // ->where('c.skpd', $uker['id_unitkerja'])
                 ->where('id_m_status_pegawai', 1)
                 ->where('a.status', 2);
@@ -1950,10 +1950,6 @@
                 $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
             }
         }
-
-        // if($this->general_library->getId() == 16){ // checkpoint
-        //     dd($data['list_dokpen_per_date']);
-        // }
 
         $tempresult = $data['result'];
         $data['result'] = null;
@@ -2033,12 +2029,14 @@
                     if(isset($tr['tmt_hitung_absen']) && $l < $tr['tmt_hitung_absen']){
                         $isNotTmtAbsen = 1;
                     }
-
                     if($l <= date('Y-m-d') && $isNotTmtAbsen == 0){
-                        if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
-                            $lp[$tr['nip']]['rekap']['jhk']++;
+                        // if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
+                        if($format_hari[$l]['jam_masuk'] != '' || isset($dokpen[$tr['nip']][$l])){ //ada jam kerja atau ada dokpen di hari libur
+                            if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ // jhk bertambah jika hari kerja saja
+                                $lp[$tr['nip']]['rekap']['jhk']++;
+                            }
                             // Surat Tugas
-                            if(isset($dokpen[$tr['nip']][$l])){  
+                            if(isset($dokpen[$tr['nip']][$l])){
                                 if($dokpen[$tr['nip']][$l] == "TLS"){
                                     if($lp[$tr['nip']]['absen'][$l]['jam_masuk'] == "" || !$lp[$tr['nip']]['absen'][$l]['jam_masuk']){
                                         $lp[$tr['nip']]['absen'][$l]['ket'] = "TK";
@@ -2080,7 +2078,11 @@
                                     $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
                                     $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
                                 } else {
-                                    $lp[$tr['nip']]['rekap']['TK']++;
+                                    // if($this->general_library->isProgrammer() &&
+                                    // $tr['nip'] == 199502182020121013 &&
+                                    // $l == '2025-05-31'){
+                                    //     dd('asd');
+                                    // }
                                     if($lp[$tr['nip']]['rekap']['TK'] > 10 && !isset($list_alpha[$tr['nip']])){
                                         $list_alpha[$tr['nip']] = $tr['nip'];
                                     }
@@ -2125,7 +2127,7 @@
                                 }
                             }
 
-                            if($flag_check == 1) {
+                            if($flag_check == 1 && $format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])) {
                                 $flag_check_done = 0;
                                 $lp[$tr['nip']]['rekap']['hadir']++;
                                 // if(isset($dokpen[$tr['nip']][$l]) && $dokpen[$tr['nip']][$l] == 'TLP'){
@@ -2218,9 +2220,27 @@
                                 }
                             }   
                         }
+                        // else {
+                        //     if($l == '2025-05-31' && $this->general_library->isProgrammer()){
+                        //         dd($dokpen[199502182020121013]);
+                        //     }
+                        // }
+                    }
+                    if(isset($hari_libur[$l]) &&
+                        isset($lp[$tr['nip']]['absen'][$l]) &&
+                        $lp[$tr['nip']]['absen'][$l]['ket'] == "TK"){ // jika hari libur ket TK, maka hapus
+                            $lp[$tr['nip']]['absen'][$l]['ket'] = "";
+                            $lp[$tr['nip']]['rekap']['TK']--;
+                    }
+
+                    if((getNamaHari($l) == "Sabtu" || getNamaHari($l) == "Minggu") &&
+                        isset($lp[$tr['nip']]['absen'][$l]) &&
+                        $lp[$tr['nip']]['absen'][$l]['ket'] == "TK"){ // jika hari libur ket TK, maka hapus
+                            $lp[$tr['nip']]['absen'][$l]['ket'] = "";
+                            $lp[$tr['nip']]['rekap']['TK']--;
                     }
                 }
-                
+
                 if(isset($data['list_dokpen'][$tr['nip']])){
                     if($data['disiplin_kerja']){
                         foreach($data['disiplin_kerja'] as $dk){
@@ -2228,7 +2248,7 @@
                                 $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
                             }
                         }
-
+                        
                         foreach($data['list_dokpen'][$tr['nip']] as $ldok){
                             $lp[$tr['nip']]['rekap'][$ldok['keterangan']]++;
                         }

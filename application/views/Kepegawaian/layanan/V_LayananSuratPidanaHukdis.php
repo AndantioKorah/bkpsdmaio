@@ -299,6 +299,7 @@ ol {
 				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+            <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 		
     
           <span><b>Berkas Persyaratan :</b></span>
@@ -308,21 +309,25 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-						<ol class="rectangle-list">
+          <div class="form-group mt-2">
+            <label><b>Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin dari Perangkat Daerah</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+         </div>
+         <div class="form-group mt-2">
+            <label><b>Surat Pernyataan tidak sedang menjalani proses pidana penjara berdasarkan putusan pengadilan yang berkekuatan hukum tetap (bermaterai Rp. 10.000)</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
+         </div>
+			<ol class="rectangle-list">
             <li>
             	<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sk_pns) { ?> onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK
             		PNS* <i class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
             </li>
-            
-           
-						</ol>
-					</div>
+			</ol>
+			</div>
 
-
-				
-					<!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
+		  <!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
           <?php if($status_layanan['status'] == 1) { ;?>
 					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
           <?php } else { ?>
@@ -384,7 +389,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatPeningkatanPenambahanGelar()
+  loadListRiwayatSuratPidana()
     })
     $('#form_perbaikan_data').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -451,7 +456,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatPeningkatanPenambahanGelar()
+                loadListRiwayatSuratPidana()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -489,15 +494,15 @@ function viewBerkasPangkat(filename,id){
 
   }
 
-  // function loadListRiwayatPeningkatanPenambahanGelar(){
+  // function loadListRiwayatSuratPidana(){
   //   $('#list_riwayat_karsu').html('')
   //   $('#list_riwayat_karsu').append(divLoaderNavy)
-  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPeningkatanPenambahanGelar/")?>', function(){
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatSuratPidana/")?>', function(){
   //     $('#loader').hide()
   //   })
   //   }
 
-  function loadListRiwayatPeningkatanPenambahanGelar(){
+  function loadListRiwayatSuratPidana(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){
@@ -525,4 +530,42 @@ function viewBerkasPangkat(filename,id){
 
       });
 
+      $("#pdf_surat_hd").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
+
+
+ $("#pdf_surat_pidana").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
 </script>

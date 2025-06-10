@@ -2663,6 +2663,7 @@ class C_Kepegawaian extends CI_Controller
 		if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
 			$data['nm_layanan'] = "JABATAN FUNGSIONAL";
 		}
+		
 		$data['id_m_layanan'] = $id_m_layanan;
 
 		render('kepegawaian/layanan/V_VerifikasiLayanan', '', '', $data);
@@ -2690,6 +2691,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananJabFungItem', $data);
 		} else if($id_m_layanan == 21){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananpeningkatanPenambahanGelarItem', $data);
+		} else if($id_m_layanan == 23){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananSuratPidanaHukdisItem', $data);
 		}
 	}
 
@@ -2816,6 +2819,7 @@ class C_Kepegawaian extends CI_Controller
 				$data['sk_pengaktifan_kembali'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','74','0',$id_peg);	
 				$data['cltn'] = $this->kepegawaian->getCutiCltnAdmin($id_peg); 
 			}
+			
 
 			
 
@@ -2823,6 +2827,9 @@ class C_Kepegawaian extends CI_Controller
 		} else if($layanan == 21){
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananPeningkatanPenambahanGelarDetail', '', '', $data);
+		} else if($layanan == 23){
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
+			render('kepegawaian/layanan/V_VerifikasiLayananSuratPidanaHukdisDetail', '', '', $data);
 		} 
 		
 

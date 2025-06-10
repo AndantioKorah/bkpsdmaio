@@ -309,9 +309,13 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-          <div class="form-group">
-            <label><b>Surat pernyataan tidak sedang hukuman disiplin dari atasan langsung</b></label>
+          <div class="form-group mt-2">
+            <label><b>Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin dari Perangkat Daerah</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+         </div>
+         <div class="form-group mt-2">
+            <label><b>Surat Pernyataan tidak sedang menjalani proses pidana penjara berdasarkan putusan pengadilan yang berkekuatan hukum tetap (bermaterai Rp. 10.000)</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
          </div>
 			<ol class="rectangle-list">
             <li>
@@ -320,14 +324,10 @@ ol {
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK
             		PNS* <i class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
             </li>
-            
-           
-						</ol>
-					</div>
+			</ol>
+			</div>
 
-
-				
-					<!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
+		  <!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
           <?php if($status_layanan['status'] == 1) { ;?>
 					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
           <?php } else { ?>
@@ -530,4 +530,42 @@ function viewBerkasPangkat(filename,id){
 
       });
 
+      $("#pdf_surat_hd").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
+
+
+ $("#pdf_surat_pidana").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
 </script>

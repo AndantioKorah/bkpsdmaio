@@ -10,7 +10,10 @@
           <th class="text-left">Keterangan</th>
           <th class="text-left">Surat Pengantar</th>
           <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
-          <th class="text-left">Surat Pernyataan</th>
+          <th class="text-left">Surat Pernyataan tidak sedang Hukuman Disiplin</th>
+          <?php } ?>
+          <?php if($m_layanan == 23) { ?>
+          <th class="text-left">Surat Pernyataan tidak sedang menjalani proses pidana</th>
           <?php } ?>
           <?php if($m_layanan == 10) { ?>
           <th class="text-left">SK Perbaikan Data</th>
@@ -52,6 +55,12 @@
             <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
+            <?php if($m_layanan == 23) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_pidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
           </td>
           <?php } ?>

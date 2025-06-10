@@ -11402,6 +11402,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where_in('a.id_m_layanan', [12,13,14,15,16]);
             } else if($id_m_layanan == 21){ 
                 $this->db->where('a.id_m_layanan', 21);
+            } else if($id_m_layanan == 23){ 
+                $this->db->where('a.id_m_layanan', 23);
             }   else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -11641,7 +11643,15 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }  else if($this->input->post('file') == "stlud"){
+        }  else if($this->input->post('file') == "surat_pernyataan_pidana"){
+            $this->db->select('a.surat_pernyataan_tidak_pidana')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "stlud"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
@@ -12954,8 +12964,9 @@ public function getFileForVerifLayanan()
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
-            $file2 = null;
+            // $file2 = null;
             $filehd = null;
+            $filepidana = null;
 
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
@@ -12967,6 +12978,12 @@ public function getFileForVerifLayanan()
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
             }
+
+             if(isset($_FILES['file3']['name'])){
+                $filepidana =  "surat_pernyataan_tidak_pidana_$nip"."_$random_number".".pdf";
+                $target_dir_pidana	= './dokumen_layanan/suratpidanahukdis';
+            } 
+            
           
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = 'pdf';
@@ -12991,6 +13008,8 @@ public function getFileForVerifLayanan()
                     $dataUsul['id_m_layanan']      = $id_m_layanan;
                     $dataUsul['file_pengantar']      = "$nama_file.pdf";
                     $dataUsul['surat_pernyataan_tidak_hd']      = $filehd;
+                    $dataUsul['surat_pernyataan_tidak_pidana']      = $filepidana;
+                    
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
@@ -13004,6 +13023,24 @@ public function getFileForVerifLayanan()
                 $config_hd['file_name']         = $filehd;
                 $this->upload->initialize($config_hd);
                 if (!$this->upload->do_upload('file2')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
+            if(isset($_FILES['file3']['name'])){
+                $config_pidana['upload_path']       = $target_dir_hd;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $filepidana;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file3')) {
                     $data['error']    = strip_tags($this->upload->display_errors());
                     $data['token']    = $this->security->get_csrf_hash();
                     $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);

@@ -9,8 +9,8 @@
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th class="text-left">Surat Pengantar</th>
-          <?php if($m_layanan == 12) { ?>
-          <th class="text-left">Surat Keterangan</th>
+          <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
+          <th class="text-left">Surat Pernyataan</th>
           <?php } ?>
           <?php if($m_layanan == 10) { ?>
           <th class="text-left">SK Perbaikan Data</th>
@@ -40,7 +40,7 @@
              </td>
              <?php if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
                   <td class="text-left">
-                    <?php if($rs['status_id'] == 0 || $rs['status_id'] == 1 || $rs['status_id'] == 2 || $rs['status_id'] == 3 || $rs['status_id'] == 7 || $rs['status_id'] == 8 ) echo $rs['keterangan']; else echo $rs['keterangan_bkad']; ?>
+                    <?php if($rs['status_id'] == 0 || $rs['status_id'] == 1 || $rs['status_id'] == 2 || $rs['status_id'] == 3 || $rs['status_id'] == 7 || $rs['status_id'] == 8  || $rs['status_id'] == 6) echo $rs['keterangan']; else echo $rs['keterangan_bkad']; ?>
                   </td>
               <?php } else { ?>
                   <td class="text-left"><?=$rs['keterangan']?></td>
@@ -49,7 +49,7 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
-            <?php if($m_layanan == 12 || $m_layanan == 13) { ?>
+            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -65,7 +65,7 @@
           <?php } ?>
               <td>
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
-              <button title="Hapus" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
 
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16) { ?>
@@ -86,8 +86,8 @@
                 </div>
                 
               </div>
-                 <?php if($m_layanan == 12 || $m_layanan == 13) { ?>
-                   <button
+                 <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
+                <button
                     data-id_m_layanan = <?=$rs['id_m_layanan'];?>
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-surat_pernyataan_tidak_hd="<?=$rs['surat_pernyataan_tidak_hd'];?>" 
@@ -235,6 +235,10 @@
                                if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
                                 loadListRiwayatLayananJabfung()
                                }
+                              if(id_layanan == 23){
+                                loadListRiwayatSuratPidana()
+                               }
+                               
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -260,6 +264,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/"+filename+"?v="+number;
 } else if(id_layanan == 21){
   $link = "<?=base_url();?>dokumen_layanan/peningkatan_penambahan_gelar/"+filename+"?v="+number;
+} else if(id_layanan == 23){
+  $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -275,8 +281,11 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 2000);
-
+if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/surat_ket_hd/"+filename+"?v="+number;
+} else {
+  $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
+}
 
 
 $('#iframe_view_file').attr('src', $link)

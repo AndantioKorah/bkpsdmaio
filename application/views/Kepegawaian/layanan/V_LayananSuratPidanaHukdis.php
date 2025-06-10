@@ -299,6 +299,7 @@ ol {
 				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+            <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 		
     
           <span><b>Berkas Persyaratan :</b></span>
@@ -308,7 +309,11 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-						<ol class="rectangle-list">
+          <div class="form-group">
+            <label><b>Surat pernyataan tidak sedang hukuman disiplin dari atasan langsung</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+         </div>
+			<ol class="rectangle-list">
             <li>
             	<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sk_pns) { ?> onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)"
@@ -384,7 +389,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatPeningkatanPenambahanGelar()
+  loadListRiwayatSuratPidana()
     })
     $('#form_perbaikan_data').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -451,7 +456,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatPeningkatanPenambahanGelar()
+                loadListRiwayatSuratPidana()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -489,15 +494,15 @@ function viewBerkasPangkat(filename,id){
 
   }
 
-  // function loadListRiwayatPeningkatanPenambahanGelar(){
+  // function loadListRiwayatSuratPidana(){
   //   $('#list_riwayat_karsu').html('')
   //   $('#list_riwayat_karsu').append(divLoaderNavy)
-  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatPeningkatanPenambahanGelar/")?>', function(){
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatSuratPidana/")?>', function(){
   //     $('#loader').hide()
   //   })
   //   }
 
-  function loadListRiwayatPeningkatanPenambahanGelar(){
+  function loadListRiwayatSuratPidana(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

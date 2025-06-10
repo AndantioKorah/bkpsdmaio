@@ -12947,6 +12947,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 21){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+            } else if($id_m_layanan == 23){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/suratpidanahukdis';
             }     else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -12956,8 +12959,13 @@ public function getFileForVerifLayanan()
 
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
-                $file2 = str_replace(' ', '', $_FILES['file2']['name']);
-                $filehd = $random_number.$file2;
+                // $file2 = str_replace(' ', '', $_FILES['file2']['name']);
+                $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
+                 if($id_m_layanan == 23){
+                $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
+                } else {
+                $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
+                } 
             }
           
             $config['upload_path']          = $target_dir;
@@ -12988,7 +12996,7 @@ public function getFileForVerifLayanan()
             }
 
             if(isset($_FILES['file2']['name'])){
-                $config_hd['upload_path']       = './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
+                $config_hd['upload_path']       = $target_dir_hd;
                 $config_hd['allowed_types']     = 'pdf';
                 $config_hd['encrypt_name']		= FALSE;
                 $config_hd['overwrite']			= TRUE;

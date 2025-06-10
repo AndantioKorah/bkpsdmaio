@@ -290,7 +290,7 @@ ol {
 			<?php } ?>
        <?php if($id_m_layanan == 12 || $id_m_layanan == 13) { ?>
         <div class="form-group">
-            <label><b>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</b></label>
+            <label><b>Surat pernyataan tidak sedang hukuman disiplin dari atasan langsung</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
         <?php } ?>

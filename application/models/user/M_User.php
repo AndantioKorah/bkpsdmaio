@@ -1947,7 +1947,9 @@
                                     $keterangan[] = $result['dokpen'][$tga]['kode_dokpen'];
                                 // }
                             } else {
-                                if(($data_absen[$tga]['masuk'] == '00:00:00' || $data_absen[$tga]['masuk'] == null)){ //cek jika tidak ada data absen masuk
+                                if(($data_absen[$tga]['masuk'] == '00:00:00' ||
+                                $data_absen[$tga]['masuk'] == "00:00" ||
+                                $data_absen[$tga]['masuk'] == null)){ //cek jika tidak ada data absen masuk
                                     if(!isset($result['dokpen'][$tga])){ //tidak ada dokumen pendukung
                                         $result['pengurangan_dk'] += 10;
                                         $result['rincian_pengurangan_dk']['TK']++;
@@ -1982,7 +1984,9 @@
                                                     }
                                                 }
                                             } if($result['dokpen'][$tga]['id_m_jenis_disiplin_kerja'] == '20'){ // jika TLS
-                                                if($data_absen[$tga]['masuk'] == '00:00:00' || $data_absen[$tga]['masuk'] == null){ //jika tidak ada absen masuk
+                                                if($data_absen[$tga]['masuk'] == '00:00:00' ||
+                                                $data_absen[$tga]['masuk'] == "00:00" ||
+                                                $data_absen[$tga]['masuk'] == null){ //jika tidak ada absen masuk
                                                     $result['pengurangan_dk'] += 3;
                                                     $result['rincian_pengurangan_dk']['pksw3']++;
                                                     $keterangan[] = "pksw3";

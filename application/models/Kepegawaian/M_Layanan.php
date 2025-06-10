@@ -1515,10 +1515,11 @@ class M_Layanan extends CI_Model
             $res['code'] = 1;
             $res['message'] = "Data tidak dapat ditolak karena sudah masuk dalam antrian untuk ditandatangani secara digital oleh Kepala BKPSDM.";
         } else {
-            $res['result'] = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer')
+            $res['result'] = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer, d.url_file')
                                     ->from('t_usul_ds_detail a')
                                     ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                                     ->join('m_user c', 'a.created_by = c.id')
+                                    ->join('t_usul_ds_detail_progress d', 'a.id = d.id_t_usul_ds_detail')
                                     ->where('c.flag_active', 1)
                                     ->where('a.flag_active', 1)
                                     ->where('a.id', $id_t_usul_ds_detail)
@@ -1553,7 +1554,7 @@ class M_Layanan extends CI_Model
             $res['code'] = 1;
             $res['message'] = "Data tidak dapat ditolak karena sudah masuk dalam antrian untuk ditandatangani secara digital oleh Kepala BKPSDM.";
         } else {
-            $dsDetail = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer')
+            $dsDetail = $this->db->select('a.*, b.keterangan as keterangan_t_usul_ds, trim(c.nama) as user_inputer, b.table_ref, b.id as id_t_usul_ds')
                                     ->from('t_usul_ds_detail a')
                                     ->join('t_usul_ds b', 'a.id_t_usul_ds = b.id')
                                     ->join('m_user c', 'a.created_by = c.id')
@@ -1591,6 +1592,14 @@ class M_Layanan extends CI_Model
                                 'flag_verif' => 2,
                                 'keterangan' => $this->input->post('keterangan_verifikasi'),
                             ]);
+
+                    if($dsDetail['table_ref']){
+                        $this->db->where('id', $dsDetail['id_t_usul_ds'])
+                                ->update('t_usul_ds', [
+                                    'flag_done' => 2,
+                                    'status' => 'Ditolak oleh '.$dsProgress['nama_jabatan'].' '.formatDateNamaBulanWT(date('Y-m-d H:i:s'))." (".$this->input->post('keterangan_verifikasi').")"
+                                ]);
+                    }
                 }
             } else {
                 $res['code'] = 1;
@@ -2222,5 +2231,63 @@ class M_Layanan extends CI_Model
                         ->where('a.flag_active', 1)
                         ->order_by('a.urutan')
                         ->get()->result_array();
+    }
+
+    public function ajukanKembaliUsulDs($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+        
+        $data = $this->db->select('a.*, b.id as id_t_usul_ds_detail, c.nama_jabatan, c.id as id_t_usul_ds_detail_progress')
+                        ->from('t_usul_ds a')
+                        ->join('t_usul_ds_detail b', 'a.id = b.id_t_usul_ds')
+                        ->join('t_usul_ds_detail_progress c', 'b.id = c.id_t_usul_ds_detail AND urutan = 1')
+                        ->group_by('a.id')
+                        ->where('a.id', $id)
+                        ->get()->row_array();
+
+        $this->db->trans_begin();
+        
+            $this->db->where('id', $data['id'])
+                ->update('t_usul_ds', [
+                    'flag_done' => 0,
+                    'status' => "Menunggu Digital Signature oleh ".$data['nama_jabatan'],
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
+            $this->db->where('id', $data['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail', [
+                        'flag_done' => 0,
+                        'flag_status' => 0,
+                        'keterangan' => "Menunggu Digital Signature oleh ".$data['nama_jabatan'],
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id_t_usul_ds_detail', $data['id_t_usul_ds_detail'])
+                    ->update('t_usul_ds_detail_progress', [
+                        'date_verif' => null,
+                        'flag_verif' => 0,
+                        'flag_selected' => 0,
+                        'keterangan' => null,
+                        'url_file' => null,
+                        'flag_ds_now' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->db->where('id', $data['id_t_usul_ds_detail_progress'])
+                    ->update('t_usul_ds_detail_progress', [
+                        'flag_ds_now' => 1,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+                
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan";
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
     }
 }

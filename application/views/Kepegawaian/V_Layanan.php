@@ -237,7 +237,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/layanan-pensiun/")?>'+val, function(){
       $('#loader').hide()
     })
-    }   else {
+    } else if(val == 23) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratPidanaHukdis/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }    else {
       $('#form_layanan').html('')
     }
 

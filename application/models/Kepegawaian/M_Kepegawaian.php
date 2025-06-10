@@ -2027,7 +2027,7 @@ class M_Kepegawaian extends CI_Model
         $this->db->trans_begin();
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
-        $filename = $this->general_library->getId().$random_number.$nama_dok;
+        $filename = $this->general_library->getId().$random_number."ArsipLain.pdf";
         $target_dir						= './arsiplain/';
         		
 		$config['upload_path']          = $target_dir;
@@ -2060,8 +2060,23 @@ class M_Kepegawaian extends CI_Model
             //     'docfile'  => $base64
             // ]);
 
-            
+             $cekArsip = $this->db->select('*')
+                                        ->from('db_pegawai.pegarsip a')
+                                        ->where('a.flag_active', 1)
+                                        ->where('id_pegawai', $this->input->post('id_pegawai'))
+                                        ->where('id_dokumen', $this->input->post('jenis_arsip'))
+                                        ->limit(1)
+                                        ->order_by('a.id','desc')
+                                        ->get()->result_array();
 
+            if($cekArsip) {
+            // dd($cekArsip[0]['id']);
+            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
+            $dataInsert['gambarsk']         = $filename;
+            $this->db->where('id', $cekArsip[0]['id'])
+                ->update('db_pegawai.pegarsip', $dataInsert);
+            } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
@@ -2074,6 +2089,9 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+            }
+
+ 
 
             // if($target_dir != null){
             //     unlink($target_dir.$dataFile['file_name']);

@@ -146,4 +146,9 @@ class C_Cron extends CI_Controller
     public function addFileSpmtCpns(){
         return $this->user->addFileSpmtCpns();
     }
+
+    public function cekHariKerja($tanggal_awal, $tanggal_akhir){
+        $hariKerja = countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
+        dd($hariKerja);
+    }
 }

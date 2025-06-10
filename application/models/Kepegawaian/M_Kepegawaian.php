@@ -8134,7 +8134,7 @@ public function submitEditJabatan(){
         $hariKerja = countHariKerjaDateToDate($pegawai['tanggal_mulai'], $pegawai['tanggal_akhir']);
         if($hariKerja){
             $i = 0;
-            foreach($hariKerja[2] as $h){
+            foreach($hariKerja[3] as $h){
                 $explode = explode("-", $h);
                 $dokumen_pendukung[$i] = [
                     'id_m_user' => $pegawai['id_m_user'],
@@ -8402,7 +8402,7 @@ public function submitEditJabatan(){
             $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
             if($hariKerja){
                 $i = 0;
-                foreach($hariKerja[2] as $h){
+                foreach($hariKerja[3] as $h){
                     $explode = explode("-", $h);
                     $dokumen_pendukung[$i] = [
                         'id_m_user' => $data['id_m_user'],
@@ -9252,7 +9252,7 @@ public function submitEditJabatan(){
                     $hariKerja = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
                     if($hariKerja){
                         $i = 0;
-                        foreach($hariKerja[2] as $h){
+                        foreach($hariKerja[3] as $h){
                             $explode = explode("-", $h);
                             $dokumen_pendukung[$i] = [
                                 'id_m_user' => $data['id_m_user'],

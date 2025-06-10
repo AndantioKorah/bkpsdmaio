@@ -1914,7 +1914,7 @@ class M_Layanan extends CI_Model
                         if($hariKerja){
                             $i = 0;
                             $randomString = generateRandomString();
-                            foreach($hariKerja[2] as $h){
+                            foreach($hariKerja[3] as $h){
                                 $explode = explode("-", $h);
                                 $dokumen_pendukung[$i] = [
                                     'id_m_user' => $pegawaiYbs['id_m_user'],

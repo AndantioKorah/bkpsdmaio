@@ -1264,6 +1264,17 @@
             $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi
         } else if($id_unitkerja == 3014000){ // disnaker, nama jabatan kasub jadi PLT
             $result['kasubag']['nama_jabatan'] = 'Plt. Kepala Sub Bagian Umum dan Kepegawaian';
+        } else if($id_unitkerja == 3028000){
+            $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '196903102002122007')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
         }
 
         if($list_pegawai_unor_induk){

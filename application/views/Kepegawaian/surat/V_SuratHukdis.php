@@ -92,7 +92,7 @@
 	</div>
 		<p class="judul" style="margin-top:5px;text-align: center;"> SURAT PERNYATAAN<br>
 			<u>TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</u></p>
-		<p style="text-align: center;"> Nomor : <?php if(isset($data['nomor_surat'])) echo $data['nomor_surat']; else echo "";?></p>
+		<p style="text-align: center;"> Nomor : <?php if(isset($nomor_surat)) echo $nomor_surat; else echo "";?></p>
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">
@@ -185,14 +185,13 @@
 			Tembusan Yth. :<br>
 			1. Wali Kota Manado (sebagai laporan);<br>
 			2. Wakil Wali Kota Manado;<br>
-			3. Sekretaris Daerah Kota Manado;<br>
+			3. Pj. Sekretaris Daerah Kota Manado;<br>
 			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
 				4. Kepala Dinas Pendidikan dan Kebudayaan<br>
 			<?php } else { ?>
 				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
 			<?php } ?>
 			5. Arsip.
-
 			</td>
 			
 		</tr>

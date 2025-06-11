@@ -45,7 +45,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 <?php }  ?>
 <?php }  ?>
 <?php }  ?>
-<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
+<?php 
+// if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ 
+  ?>
   <button onclick="syncRiwayatSkpSiasn('<?=$profil_pegawai['id_m_user']?>')" class="btn btn-block text-right float-right btn-info ml-2">
     <i class="fa fa-file-download"></i> Sinkron Riwayat SKP SIASN
   </button><br>
@@ -86,7 +88,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <!-- <button data-toggle="modal" onclick="openSiasn('SKP', '<?=$profil_pegawai['id_m_user']?>')" href="#modal_sync_siasn" class="btn btn-block text-right float-right btn-navy">
     <i class="fa fa-users-cog"></i> SIASN
   </button> -->
-<?php } ?>
+<?php 
+// } 
+?>
 
 
 <script>

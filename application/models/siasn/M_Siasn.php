@@ -246,6 +246,7 @@
                                 $dataSkpPegawai[$rsd['tahun']]['meta_data_siasn'] = json_encode($rsd);
                                 $dataSkpPegawai[$rsd['tahun']]['predikat'] = strtoupper(getPredikatSkp($rsd));
                                 $dataSkpPegawai[$rsd['tahun']]['nilai'] = intval($rsd['hasilKinerjaNilai']).''.intval($rsd['PerilakuKerjaNilai']);
+                                $dataSkpPegawai[$rsd['tahun']]['status'] = 2;
                                 
                                 $this->db->where('id', $dataSkpPegawai[$rsd['tahun']]['id'])
                                         ->update('db_pegawai.pegskp', $dataSkpPegawai[$rsd['tahun']]);

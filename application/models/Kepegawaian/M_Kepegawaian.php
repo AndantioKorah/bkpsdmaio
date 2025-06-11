@@ -11472,7 +11472,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-     $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
+     $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan, l.gambarsk as dokhd, m.gambarsk as dokpidana')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -11489,6 +11489,10 @@ function getPengajuanLayanan($id,$id_m_layanan){
     }
     if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
         $this->db->join('db_pegawai.pegjabatan l', 'l.id = c.reference_id_dok','left');
+    }
+    if($id_m_layanan == 23){
+        $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_hd','left');
+        $this->db->join('db_pegawai.pegarsip m', 'm.id = c.reference_id_pidana','left');
     }
     
     
@@ -13433,8 +13437,12 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     $dataHD['id_dokumen']      = 18; 
                     $dataHD['status']          = 2; 
                     $dataHD['gambarsk']        = $filehd;
-                    
                     $this->db->insert('db_pegawai.pegarsip', $dataHD);
+                    $id_insert_hd = $this->db->insert_id();
+                    $dataUpdateHD["status"] = 3;
+                    $dataUpdateHD["reference_id_hd"] = $id_insert_hd;
+                    $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdateHD);
                     $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
                     $url_file = "arsiplain/".$filehd;
                     $cronWa = [
@@ -13446,8 +13454,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     'jenis_layanan' => 'Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin dan Hukuman Pidana'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
-
-                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
 
             if(isset($_FILES['file2']['name'])){
@@ -13471,6 +13478,11 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     $dataPidana['status']              = 2; 
                     $dataPidana['gambarsk']        = $filepidana;
                     $this->db->insert('db_pegawai.pegarsip', $dataPidana);
+                    $id_insert_pidana = $this->db->insert_id();
+                    $dataUpdatePidana["status"] = 3;
+                    $dataUpdatePidana["reference_id_pidana"] = $id_insert_pidana;
+                    $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdatePidana);
                     $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Sedang Menjalani Proses Pidana Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
                     $url_file = "arsiplain/".$filepidana;
                     $cronWa = [
@@ -13486,6 +13498,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 }
             }
 
+      
+
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $rs['code'] = 1;
@@ -13493,7 +13507,6 @@ public function checkListIjazahCpns($id, $id_pegawai){
     } else {
         $this->db->trans_commit();
     }
-
     return $res;
         
 	}

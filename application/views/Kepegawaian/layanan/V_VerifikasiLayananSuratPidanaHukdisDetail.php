@@ -460,7 +460,7 @@
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
           <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat_" name="nomor_surat">
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           </div> 
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
@@ -486,8 +486,9 @@
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          
           <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat_" name="nomor_surat">
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           </div> 
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
@@ -513,11 +514,14 @@
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          
           <label for="exampleInputEmail1">Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin</label>
-          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file">
+          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
 
            <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Menjalani Proses Pidana</label>
-          <input type="file" class="form-control "  id="pdf_surat_pidana" name="file2">
+          <input type="file" class="form-control "  id="pdf_surat_pidana" name="file2" required>
           </div> 
           <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
@@ -826,20 +830,20 @@ function kirimBkad(id,status){
                }
 
         $('#upload_dok_form').on('submit', function(e){  
-        document.getElementById('btn_uploadkgb').disabled = true;
+        // document.getElementById('btn_uploadkgb').disabled = true;
         $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#upload_dok_form');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_dok').files.length;
+        // var ins = document.getElementById('pdf_surat_hd').files.length;
        
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSKLayanan")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananPidanaHukdis")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

@@ -2699,7 +2699,6 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayananDetail($id,$layanan){
 		
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
-		// dd($data['result']);
 		$id_peg = $data['result'][0]['id_peg'];
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
@@ -2900,6 +2899,12 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->uploadSKLayanan());
 	}
+
+	public function uploadSuratLayananPidanaHukdis()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananPidanaHukdis());
+	}
+
 
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {

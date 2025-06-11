@@ -13385,6 +13385,119 @@ public function checkListIjazahCpns($id, $id_pegawai){
     return $rs;
     }
 
+    public function uploadSuratLayananPidanaHukdis()
+	{
+       
+        $this->db->trans_begin();
+        $id_pegawai = $this->input->post('id_pegawai'); 
+        $id_usul = $this->input->post('id_usul'); 
+        $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+            $filehd = null;
+            $filepidana = null;
+            $nip = $this->input->post('nip');
+
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filehd = "HD_$nip"."_$random_number".".pdf";
+            $target_dir	= './arsiplain/';
+
+            $this->load->library('upload');
+            if(isset($_FILES['file2']['name'])){
+            $filepidana =  "PIDANA_$nip"."_$random_number".".pdf";
+            $target_dir	= './arsiplain/';
+            }
+
+            
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE;
+            $config['file_name']            = $filehd;
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                return $res;
+            } else {
+                    $dataFile 			= $this->upload->data();
+                    $dataHD['id_pegawai']      = $id_pegawai;
+                    $dataHD['created_by']      = $this->general_library->getId();
+                    $dataHD['id_dokumen']      = 18; 
+                    $dataHD['status']          = 2; 
+                    $dataHD['gambarsk']        = $filehd;
+                    
+                    $this->db->insert('db_pegawai.pegarsip', $dataHD);
+                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+                    $url_file = "arsiplain/".$filehd;
+                    $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                    'message' => $caption,
+                    'filename' => $filehd,
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin dan Hukuman Pidana'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+            if(isset($_FILES['file2']['name'])){
+                $config_hd['upload_path']       = $target_dir;
+                $config_hd['allowed_types']     = 'pdf';
+                $config_hd['encrypt_name']		= FALSE;
+                $config_hd['overwrite']			= TRUE;
+                $config_hd['detect_mime']		= TRUE;
+                $config_hd['file_name']         = $filepidana;
+                $this->upload->initialize($config_hd);
+                if (!$this->upload->do_upload('file2')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                    $dataPidana['id_pegawai']      = $id_pegawai;
+                    $dataPidana['created_by']      = $this->general_library->getId();
+                    $dataPidana['id_dokumen']      = 19; 
+                    $dataPidana['status']              = 2; 
+                    $dataPidana['gambarsk']        = $filepidana;
+                    $this->db->insert('db_pegawai.pegarsip', $dataPidana);
+                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Sedang Menjalani Proses Pidana Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+                    $url_file = "arsiplain/".$filepidana;
+                    $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                    'message' => $caption,
+                    'filename' => $filepidana,
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin dan Hukuman Pidana'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+            }
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+	}
+
     public function checkListIjazahSP($id, $id_pegawai){
         $rs['code'] = 0;        
         $rs['message'] = 'OK';

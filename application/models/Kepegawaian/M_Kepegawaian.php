@@ -570,7 +570,7 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.jenjang_diklat e','c.jenjang_diklat = e.id')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
-                            ->order_by('c.created_date','desc')
+                            ->order_by('c.tglsttpp','desc')
                             ->where('c.flag_active', 1);
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -11472,7 +11472,8 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.id', $id)
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
-     $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan, l.gambarsk as dokhd, m.gambarsk as dokpidana')
+    if($id_m_layanan == 23){
+ $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan, l.gambarsk as dokhd, m.gambarsk as dokpidana')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -11483,6 +11484,20 @@ function getPengajuanLayanan($id,$id_m_layanan){
     ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
     ->join('db_pegawai.statuspeg k', 'b.statuspeg = k.id_statuspeg')
     ->where('c.id', $id);
+    } else {
+ $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan')
+    ->from('m_user a')
+    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+    ->join('t_layanan c', 'a.id = c.id_m_user')
+    ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+    ->join('db_pegawai.jabatan g', 'b.jabatan = g.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja h', 'b.skpd = h.id_unitkerja')
+    ->join('db_pegawai.agama i', 'b.agama = id_agama')
+    ->join('db_pegawai.unitkerjamaster j', 'h.id_unitkerjamaster = j.id_unitkerjamaster')
+    ->join('db_pegawai.statuspeg k', 'b.statuspeg = k.id_statuspeg')
+    ->where('c.id', $id);
+    }
+    
 
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');

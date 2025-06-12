@@ -1568,7 +1568,8 @@
                     $temp[] = $res;
                     $jsonRes = json_decode($res, true);
                     $update = null;
-                    if(!$jsonRes || ($jsonRes && $jsonRes['code'] == 0)){
+                    if($jsonRes && isset($jsonRes['code']) && $jsonRes['code'] == 0){
+                    // if(!$jsonRes || ($jsonRes && $jsonRes['code'] == 0)){
                         $update['flag_done'] = 1;
                         $update['date_done'] = date('Y-m-d H:i:s');
                     }

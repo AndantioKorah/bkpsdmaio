@@ -78,7 +78,7 @@
 
   function openFile(url){
     // successtoast(url)
-    window.open('<?=base_url()?>'+url, '_blank');
+    window.open('<?=base_url()?>'+url+'?v='+'<?=generateRandomNumber(5)?>', '_blank');
   }
 
   function tolakUsulFile(id_t_usul_ds_detail, id_t_usul_ds_detail_progress){

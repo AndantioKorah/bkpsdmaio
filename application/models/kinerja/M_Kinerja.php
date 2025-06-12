@@ -2365,7 +2365,7 @@
             $data_verif['keterangan_verif'] = $this->input->post('keterangan');
         }
 
-        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone, d.id_unitkerjamaster')
+        $temp = $this->db->select('c.skpd, a.bulan, a.tahun, a.random_string, c.handphone, d.id_unitkerjamaster, a.id_m_jenis_disiplin_kerja, id_m_user')
                         ->from('t_dokumen_pendukung a')
                         ->join('m_user b', 'a.id_m_user = b.id')
                         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2404,6 +2404,54 @@
             $rs['message'] = 'Berkas TPP '.$lockTpp['nama_param_unitkerja'].' periode '.getNamaBulan($lockTpp['bulan']).' '.$lockTpp['tahun'].' telah direkap. Verifikasi tidak dapat dilanjutkan.';
         } else {
             if($temp['random_string']){
+                if($status == 2 && !$this->general_library->isProgrammer()){
+                    $dataDokumen = $this->db->select('*')
+                                    ->from('t_dokumen_pendukung')
+                                    ->where('random_string', $temp['random_string'])
+                                    ->where('flag_active', 1)
+                                    ->get()->result_array();
+
+                    if($dataDokumen){
+                        $list_tanggal_dok = [];
+                        foreach($dataDokumen as $dDok){
+                            $tanggal = $dDok['tanggal'] < 10 ? "0".$dDok['tanggal'] : $dDok['tanggal'];
+                            $bulan = $dDok['bulan'] < 10 ? "0".$dDok['bulan'] : $dDok['bulan'];
+                            $tglLengkap = $dDok['tahun']."-".$bulan."-".$tanggal;
+                            $list_tanggal_dok[] = $tglLengkap;
+                        }
+
+                        $dataInvalid = $this->db->select('*')
+                                            ->from('db_sip.absen')
+                                            ->where_in('status', [4,5,6])
+                                            ->where_in('tgl', $list_tanggal_dok)
+                                            ->where('user_id', $temp['id_m_user'])
+                                            ->get()->result_array();
+                        if($dataInvalid){
+                            if($temp['id_m_jenis_disiplin_kerja'] == 19 ||
+                                $temp['id_m_jenis_disiplin_kerja'] == 20){
+                                foreach($dataInvalid as $dInv){
+                                    if($temp['id_m_jenis_disiplin_kerja'] == 19 && $dInv['status'] == 4){
+                                        $rs['code'] = 1;        
+                                        $rs['message'] = 'Dokumen tidak dapat dilakukan verifikasi karena data absensi pegawai yang bersangkutan tidak sesuai ketentuan atau Invalid ('.$dInv['alasan'].')';
+                                        $this->db->trans_rollback();
+                                        return $rs;
+                                    } else if($temp['id_m_jenis_disiplin_kerja'] == 20 && $dInv['status'] == 5){
+                                        $rs['code'] = 1;        
+                                        $rs['message'] = 'Dokumen tidak dapat dilakukan verifikasi karena data absensi pegawai yang bersangkutan tidak sesuai ketentuan atau Invalid ('.$dInv['alasan'].')';
+                                        $this->db->trans_rollback();
+                                        return $rs;
+                                    }
+                                }
+                            } else {
+                                $this->db->trans_rollback();
+                                $rs['code'] = 1;        
+                                $rs['message'] = 'Dokumen tidak dapat dilakukan verifikasi karena data absensi pegawai yang bersangkutan tidak sesuai ketentuan atau Invalid ('.$dataInvalid[0]['alasan'].')';
+                                return $rs;
+                            }
+                        }
+                    }
+                }
+
                 $this->db->where('random_string', $temp['random_string'])
                     ->update('t_dokumen_pendukung', $data_verif);
 

@@ -55,7 +55,7 @@ class C_Cron extends CI_Controller
         // $this->general->logCron('cronSyncJabatanSiasn');
         // $this->siasn->cronRiwayatJabatanSiasn();
 
-        $this->cronAsync();
+        // $this->cronAsync();
     }
 
     public function cronCheckVerifCuti(){

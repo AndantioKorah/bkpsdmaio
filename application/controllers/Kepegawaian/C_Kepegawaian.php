@@ -2699,7 +2699,6 @@ class C_Kepegawaian extends CI_Controller
 	public function verifikasiLayananDetail($id,$layanan){
 		
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id,$layanan);
-		// dd($data['result']);
 		$id_peg = $data['result'][0]['id_peg'];
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
@@ -2900,6 +2899,12 @@ class C_Kepegawaian extends CI_Controller
 	{ 
 		echo json_encode( $this->kepegawaian->uploadSKLayanan());
 	}
+
+	public function uploadSuratLayananPidanaHukdis()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananPidanaHukdis());
+	}
+
 
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {
@@ -3137,14 +3142,47 @@ class C_Kepegawaian extends CI_Controller
 		
 		}
 
-		
-		
+		public function downloadDraftPidanaHukdis(){
 
-
-
-
-
-
-
+		$nip = $this->input->post('nip');
+		$jenis = $this->input->post('jenis');
+		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
+		// $this->load->library('pdf');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		// dd($data['profil_pegawai']);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		// dd($data['profil_pegawai']);
+		$data['nomor_surat'] = $this->input->post('nomor_surat');;
+		// $this->load->view('kepegawaian/surat/V_SuratHukdis',$data);	
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+		if($jenis == 1){
+		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		}
+		if($jenis == 2){
+		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+		$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
+		} 
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.$data['profil_pegawai']['nipbaru_ws'].'.pdf', 'D');
+    }
 
 }

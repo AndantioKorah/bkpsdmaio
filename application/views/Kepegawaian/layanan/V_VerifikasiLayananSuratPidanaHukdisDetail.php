@@ -76,53 +76,33 @@
    <a href="<?= base_url('kepegawaian/verifikasi-layanan');?>/<?=$id_m_layanan;?>" >
     <button  class="btn btn-primary btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
   </a>
-  <?php if($result[0]['reference_id_dok'] == null) { ;?>
-  <!-- <button 
-  id="btn_upload_sk"
-  data-toggle="modal" 
-  href="#modal_upload_sk"
-  onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-  <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK</button> -->
-  <!-- Button trigger modal -->
-  <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
-  Download Draf SK
-  </button> -->
-  <?php if($result[0]['verifikator'] == 0) { ;?>
-  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',1)" type="button" class="btn btn-sm btn-primary ml-2">
-        Kerjakan Pengajuan ini
-        </button> -->
-<?php } else { ?>
-  <?php if($result[0]['status_layanan'] == 0) { ;?>
-  <!-- <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
-        Batal Kerjakan Pengajuan ini
-        </button> -->
-  <?php } ?>
-<?php } ?>
-<?php if($result[0]['verifikator'] == 0) { ;?>
  
-<?php } else { ?>
-  <?php if($result[0]['status_layanan'] == 0) { ;?>
-  <button id="btn_kerjakan" onclick="kerjakanPengajuan('<?=$id_usul;?>',0)" type="button" class="btn btn-sm btn-danger ml-2">
-        Batal Kerjakan Pengajuan ini
-        </button>
-  <?php } ?>
-<?php } ?>
+ 
+
 <?php if($result[0]['status_layanan'] == 0) { ;?>
   <button id="btn_verifikasi" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
         Verifikasi
         </button>
         <?php } ?>
-        <?php 
-        // if($result[0]['status_layanan'] == 1) {
-           ;?>
         
-        <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        
+       
+       
+<?php 
+        if($result[0]['status_layanan'] == 1) {
+           ;?>
+            <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-        <?php 
-        // } 
+         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
+        Download Draf Surat Keterangan Hukuman Disiplin
+        </button>
+        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftPidana">
+        Download Draf Surat Keterangan Pidana
+        </button>
+       <?php 
+        } 
         ?>
-      
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
@@ -130,29 +110,17 @@
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
         <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
-        <i class="fa fa-file-trash"></i> Hapus File</button>
+        <i class="fa fa-file-trash"></i> Hapus Dokumen</button>
+        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['dokhd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> Lihat Dokumen HD</button>
+       <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['dokpidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> Lihat Dokumen Pidana</button>
+
         <?php } ?>
-        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-        <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
-  
+        
 
 
-  <?php } else { ?>
-    
-    <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-    <i class="fa fa-file-pdf"></i> File Pangkat</button>
-    <?php if($result[0]['status_layanan'] == 3) { ?>
-    <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
-    <i class="fa fa-file-trash"></i> Hapus File</button>
-    <?php } ?>
-    <?php if($result[0]['status_layanan'] == 1) { ?>
-    <button onclick="kirimBkad('<?=$id_usul;?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
-    Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
-    <?php } else if($result[0]['status_layanan'] == 3) { ?>
-    <button onclick="kirimBkad('<?=$id_usul;?>',1)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
-    Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
-    <?php } ?>
-    <?php } ?>
+   
 
 
 
@@ -181,7 +149,11 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
     </li>
- 
+  
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormDisiplin(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Riwayat Disiplin</button>
+    </li>
+  
  
 
 
@@ -433,14 +405,12 @@
           </div>
 			</div>
     
-<style>
-</style>
-
+<div class="text-center" id="riwayat_disiplin"></div>
 
 
 <!-- Modal -->
 <div class="modal fade" id="modelVerif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg"  role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Verifikasi Layanan</h5>
@@ -449,7 +419,7 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
+        <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
         <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
         <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
@@ -473,32 +443,97 @@
       </div>
     </div>
   </div>
-</div>
-
-
-
-
+</div> 
 
 
 <!-- Modal -->
-<div class="modal fade" id="modal_upload_sk" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="modalDownloadDraftHukdis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <h5 class="modal-title" id="exampleModalLabel"> Download Draf Surat Keterangan Hukuman Disiplin</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="modal_body">
-        ...
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+         <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
+          <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+          </div> 
+          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
       </div>
-     
     </div>
   </div>
-</div>
+</div>   
 
 
+<!-- Modal -->
+<div class="modal fade" id="modalDownloadDraftPidana" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Download Draf Surat Keterangan Pidana</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+              <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+         <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          
+          <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+          </div> 
+          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>   
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalUploadDok" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Upload Dokumen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+           <form id="upload_dok_form" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          
+          <label for="exampleInputEmail1">Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin</label>
+          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
+
+           <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Menjalani Proses Pidana</label>
+          <input type="file" class="form-control "  id="pdf_surat_pidana" name="file2" required>
+          </div> 
+          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> 
+
+		
 <div class="modal fade" id="modal_view_file" >
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -516,82 +551,6 @@
 </div>
     
 
-<!-- Modal -->
-<div class="modal fade" id="modalUploadDok" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-         <form id="upload_dok_form" method="post" enctype="multipart/form-data">
-         <div class="form-group">
-          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="101" readonly>
-          <input type="hidden" class="form-control" id="id_layanan" name="id_layanan" value="<?=$result[0]['id_pengajuan'];?>" readonly>
-
-        
-          <div class="form-group">
-          <div class="row g-3 align-items-center" >
-          <div class="col-lg-2">
-          	<label for="inputPassword6" class="col-form-label">Nama Lengkap</label>
-          </div>
-          <div class="col-lg-2">
-          	<input type="text" id="edit_gelar1" name="edit_gelar1" class="form-control"
-          		value="<?=$result[0]['gelar1']?>">
-          </div>
-          <div class="col-lg-6">
-          	<input type="text" id="edit_nama" name="edit_nama" class="form-control" value="<?=$result[0]['nama']?>">
-          </div>
-          <div class="col-lg-2">
-          	<input type="text" id="edit_gelar2" name="edit_gelar2" class="form-control"
-          		value="<?=$result[0]['gelar2']?>">
-          </div>
-          </div>
-
-          <div class="form-group mt-2">
-          <div class="row g-3 align-items-center" >
-          <div class="col-lg-2">
-          	<label for="inputPassword6" class="col-form-label">Dokumen</label>
-          </div>
-          <div class="col-lg-10">
-          <input type="file" class="form-control"  id="pdf_file_dok" name="file"> 
-          </div>
-          
-          </div>
-          <!-- <label >Dokumen Layanan</label>
-          <input type="file" class="form-control"  id="pdf_file_dok" name="file"> -->
-          </div>
-          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="modal_view_file" >
-<div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-        <div class="modal-body">
-           <div id="modal_view_file_content">
-            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-    
-
-
-
-		
 <script>
 
 
@@ -652,6 +611,7 @@ function openPresensiTab(){
 
   
   async function getFile(file){
+    $('#riwayat_disiplin').html('')
     $('#view_file_verif').hide()
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
@@ -696,8 +656,10 @@ function openPresensiTab(){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].file_pengantar+"?v="+number;
             } else if(file == "surat_pernyataan_hd"){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
-            } else {
-              var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_pidana+"?v="+number;
+            } else if(file == "surat_pernyataan_pidana"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_pidana+"?v="+number;
+            }  else {
+              var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
             }
 
             // var link = "<?=base_url();?>/arsipberkaspns/tes.jpg?v="+number;
@@ -825,13 +787,12 @@ function openPresensiTab(){
         }
 }
 
-  async function openFilePangkat(filename){
-
+async function openDokumen(filename){
 $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>arsippeningkatanpenambahangelar/"+filename+"?v="+number;
+$link = "<?=base_url();?>arsiplain/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
@@ -893,16 +854,15 @@ function kirimBkad(id,status){
         e.preventDefault();
         var formvalue = $('#upload_dok_form');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_dok').files.length;
+        // var ins = document.getElementById('pdf_surat_hd').files.length;
        
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
-
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSKLayanan")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananPidanaHukdis")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -917,22 +877,16 @@ function kirimBkad(id,status){
                 successtoast(result.msg)
                 document.getElementById("upload_dok_form").reset();
                 setTimeout(window.location.reload.bind(window.location), 1000);
-                
-                  
-            //    $('#btn_upload_pangkat').html('Simpan')
-               
               } else {
                 errortoast(result.msg)
                 return false;
               } 
-            
         }  
         });  
           
         });
         
-               $("#pdf_file_dok").change(function (e) {
-
+        $("#pdf_file_dok").change(function (e) {
               // var extension = pdf_file_dok.value.split('.')[1];
               var doc = pdf_file_dok.value.split('.')
               var extension = doc[doc.length - 1]
@@ -952,4 +906,15 @@ function kirimBkad(id,status){
 
               });
 
+    function loadFormDisiplin(){
+    $('#view_file_verif').hide()
+      $('#riwayat_disiplin').html('')
+        $('#riwayat_disiplin').append(divLoaderNavy)
+        //  $('#riwayat_disiplin').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+        $('#riwayat_disiplin').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormDisiplin/')?>'+nip, function(){
+        $('#loader').hide()    
+        })
+    }
+
+  
 </script>

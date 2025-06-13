@@ -278,10 +278,12 @@ $(function(){
         cekPengajuan()
     })
 
+    var maxDate = "<?= $maxDate['max_date'];?>";
+
     $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',
-    startDate: '-0d',
-    // startDate : '2025-03-10',
+    // startDate: '-0d',
+    startDate : maxDate,
     endDate: '-0d',
     // todayBtn: true,
     todayHighlight: true,
@@ -289,8 +291,6 @@ $(function(){
 });
 
 function loadListPeninjauan(){
-       
- 
        $('#list_kegiatan').html('')
        $('#list_kegiatan').append(divLoaderNavy)
        $('#list_kegiatan').load('<?=base_url("kinerja/C_Kinerja/loadPeninjauanAbsensi/")?>', function(){

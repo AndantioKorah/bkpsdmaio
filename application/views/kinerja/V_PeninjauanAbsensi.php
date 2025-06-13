@@ -27,9 +27,7 @@
     <br>
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
-    - Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
-    <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
-    - Upload bukti pada hari yang sama. <br>
+    - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen setelah itu discreenshot dan diupload sebagai bukti.<br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>
     <div class="row ml-2">
@@ -38,8 +36,8 @@
       <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_foto.png');?>" alt="">
     </div>
     <div class="col-lg-6">
-    <b style="color:red">contoh Screenshot Whatsapp Grup</b><br>
-    <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt="">
+    <!-- <b style="color:red">contoh Screenshot Whatsapp Grup</b><br>
+    <img style="height:500px;" src="<?=base_url('assets/peninjauan_absen/contoh/contoh_ss.png');?>" alt=""> -->
     </div>
     </div>
     </div>
@@ -65,7 +63,7 @@
          <select class="form-control select2-navy select2" name="jenis_bukti" id="jenis_bukti"  required>
          <option value="" selected disabled>- Pilih Jenis Bukti Absen -</option>
          <option value="1" >Foto Bersama Teman </option>
-         <option value="2" >Screenshot Whatsapp Grup</option>
+         <option value="2" >Screenshot Whatsapp Siladen</option>
          </select>
     </div>
     <div class="form-group mt-2" style="display:none;" id="teman_pegawai">

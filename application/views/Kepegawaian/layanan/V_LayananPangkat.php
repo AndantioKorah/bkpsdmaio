@@ -325,7 +325,9 @@ ol {
           <input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
 					<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
 					<input type="hidden" id="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
-					<input type="hidden" id="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
+					<input type="hidden" id="ijazah" value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
+					
+          <input type="hidden" id="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
 					<input type="hidden" id="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
           
           <?php } ?>
@@ -458,7 +460,7 @@ ol {
 							</li>
                 <li>
 								<a class="<?php if($ijazah) echo 'select'; else echo 'unselect';?>" <?php if($ijazah) { ?>
-									onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i>  Ijazah terakhir/transkrip nilai*<i
 											class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -648,6 +650,8 @@ $(function(){
         var stlud = $('#stlud').val()
         var uraiantugas = $('#uraiantugas').val()
         var pangkalandata = $('#pangkalandata').val()
+        var ijazah = $('#ijazah').val()
+
         var akreditasi = $('#akreditasi').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
        
@@ -701,6 +705,10 @@ $(function(){
         }
      
         if(pangkalandata == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(ijazah == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
@@ -758,6 +766,8 @@ $(function(){
         $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
     } else if(id == 6){
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
+    } else if(id == 7){
+        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
     }
    
    

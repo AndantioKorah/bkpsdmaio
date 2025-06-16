@@ -2744,6 +2744,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','67','0',$id_peg);	
 		}
 		if($layanan == 9){
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
 			$data['uraiantugas'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','15','0',$id_peg);	
 			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','12','0',$id_peg);	
 			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','13','0',$id_peg);	

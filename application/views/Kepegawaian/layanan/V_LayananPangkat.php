@@ -457,11 +457,18 @@ ol {
 											class="fas fa-<?php if($uraiantugas) echo ''; else echo '';?>"></i></a>
 							</li>
                 <li>
+								<a class="<?php if($ijazah) echo 'select'; else echo 'unselect';?>" <?php if($ijazah) { ?>
+									onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i>  Ijazah terakhir/transkrip nilai*<i
+											class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
+							</li>
+               <li>
 								<a class="<?php if($pangkalandata) echo 'select'; else echo 'unselect';?>" <?php if($pangkalandata) { ?>
 									onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-									<?php } ?>> <i class="fa fa-file-pdf"></i>  Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti*<i
+									<?php } ?>> <i class="fa fa-file-pdf"></i>Tampilan layar Pangkalan Data/Forlap Dikti*<i
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
 							</li>
+
               <li>
 								<a class="<?php if($ibel) echo 'select'; else echo 'unselect';?>" <?php if($ibel) { ?>
 									onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"

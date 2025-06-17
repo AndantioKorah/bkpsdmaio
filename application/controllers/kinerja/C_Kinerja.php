@@ -1092,4 +1092,18 @@ class C_Kinerja extends CI_Controller
         echo json_encode($response);
     }
 
+    //     public function getFotoWAPeninjauanAbsensi()
+    // {
+    //     $response   = $this->kinerja->getFotoWAPeninjauanAbsensi();
+    //     echo json_encode($response);
+    // }
+
+       public function getFotoWAPeninjauanAbsensi($tanggal_absensi,$nip,$jenis_absensi)
+    {
+        $data['result'] = $this->kinerja->getFotoWAPeninjauanAbsensi($tanggal_absensi,$nip,$jenis_absensi);
+      
+        //  dd($data);    
+        $this->load->view('kinerja/V_ViewFotoPeninjauanSiladen', $data);
+    }
+
 }

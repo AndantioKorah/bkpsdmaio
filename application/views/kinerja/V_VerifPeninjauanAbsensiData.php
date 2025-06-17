@@ -73,7 +73,7 @@
                              <!-- <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
                               <i class="fa fa-file"></i> Dokumen
                             </button> -->
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">vdfv
                             <?php 
                             
                             $file = json_decode($r['bukti_kegiatan']);
@@ -252,9 +252,18 @@
     </figure>
   </div>
       </div>
-      <div class="col-lg-4" id="foto_absen_teman" style="display:none">
+    <div class="col-lg-4" id="foto_absen_teman" style="display:none">
       <b >Foto Absensi Teman</b>
       <img  id="foto_absen" class="mt-3" style="width:360px;height:510px;"  alt="">
+    </div>
+    <div class="col-lg-4" style="width: 360px; height: 560px; overflow-y: scroll;" >
+    <b>Foto WA Siladen</b>
+    <div style="width: 360px; height: 560px; overflow-y: scroll;"  id="foto_wa_siladen">
+    </div>  
+    <!-- <b >Foto WA Siladen</b>
+      <img  id="" class="mt-3" style="width:360px;height:510px;"  alt="">
+      <img  id="" class="mt-3" style="width:360px;height:510px;"  alt=""> -->
+
     </div>
 
 
@@ -480,6 +489,42 @@
             '</div>'+
             '</div>');
         }
+
+
+
+
+              // $.ajax({
+              // url : "<?php echo base_url();?>kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi",
+              // method : "POST",
+              // data : {tanggal_absensi: '2025-06-17',
+              //   nip : '199401042020121011',
+              //   jenis_absensi : 2
+              // },
+              // async : false,
+              // dataType : 'json',
+              // success: function(res){
+              //   console.log(res.success);
+              // if(res.success == true){
+              //   $('#temp').val(1)
+             
+              // } else {
+              //   $('#temp').val('')
+              //   errortoast(res.msg)
+              //   res = null
+              // }
+              // }
+              // });
+
+
+              var tanggal_absensi= '2025-06-17';
+              var nip = '199401042020121011';
+              var jenis_absensi = 2;
+
+                $('#foto_wa_siladen').html('')
+                $('#foto_wa_siladen').append(divLoaderNavy)
+                $('#foto_wa_siladen').load('<?=base_url('kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi')?>'+'/'+tanggal_absensi+'/'+nip+'/'+jenis_absensi, function(){
+                    $('#loader').hide()
+                })
             
         });
 

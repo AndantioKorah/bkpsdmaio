@@ -4968,5 +4968,17 @@
             return $res;
         }
 
+
+         function getFotoWAPeninjauanAbsensi($tanggal_absensi,$nip,$jenis_absensi)
+        {        
+            $res = null;
+            $this->db->select('*')
+            ->from('t_image_message a')
+            ->where('date(a.date_received)', $tanggal_absensi);
+            // ->where('a.nip', $this->input->post('nip'));
+            $result = $this->db->get()->result_array();
+            return $result;
+        }
+
     
 }

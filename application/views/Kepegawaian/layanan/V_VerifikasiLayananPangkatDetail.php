@@ -261,7 +261,10 @@
     <button onclick="getFile(file='uraiantugas')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Asli Surat Keterangan Uraian Tugas sesuai dengan Ijazah yang diperoleh dan ditandatangani oleh serendah-rendahnya Pejabat Eselon II definitif</button>
   <li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti </button>
+    <button onclick="getFile(file='ijazah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijazah terakhir/transkrip nilai</button>
+  <li>
+     <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='forlap')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Tampilan layar Pangkalan Data/Forlap Dikti </button>
   <li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Ijin Belajar atau fotokopi legalisir SK Tugas Belajar </button>
@@ -676,6 +679,8 @@ function openPresensiTab(){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
           dir = "./dokumen_layanan/pangkat/";
+        } else if(file == "ijazah"){
+          dir = "arsippendidikan";
         }  else {
           dir = "uploads/";
         }

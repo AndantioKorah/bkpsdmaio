@@ -97,7 +97,7 @@
         </div>
         <div class="div_sp_content">
           Diberikan <?=strtolower($rs['nm_cuti'])?>, tahun <?=date("Y", strtotime($rs['created_date']))?> kepada Pegawai Negeri Sipil:
-          <table style="width: 100%; padding-left: 30px;">
+          <table style="width: 100%; margin-top: 10px; padding-left: 30px;">
             <tr valign="top">
               <td style="width: 20%;">Nama</td>
               <td style="width: 5%;">:</td>

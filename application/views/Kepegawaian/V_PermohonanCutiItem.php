@@ -51,7 +51,7 @@
   <tbody>
     <?php if($result){
       $no = 1;
-      foreach($result as $rs){ 
+      foreach($result as $rs){
     ?>
       <tr>
         <td class="text-center"><?=$no++;?></td>
@@ -80,7 +80,7 @@
             data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
             <?php
                 // if(!$rs['id_progress_cuti']){
-                if(!$rs['id_t_nomor_surat']){ // jika belum input nomor surat, bisa dihapus
+                if(!$rs['id_t_nomor_surat'] && $rs['flag_ds_cuti'] != 1){ // jika belum input nomor surat dan belum selesai, bisa dihapus
             ?>
               <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
             <?php } ?>

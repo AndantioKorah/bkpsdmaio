@@ -16,7 +16,7 @@ class C_Maxchat extends CI_Controller
         $result = $this->maxchatlibrary->webhookCapture();
         
         if($this->general_library->isProgrammer()){
-            $resultStr = '{"id":"70CD8CC368E4ADE4F750B9F350B4B4C3","time":1744761336000,"type":"text","status":"none","replyId":"3EB0800E74AD132DD3DFAF","chatType":"user","chat":"6285241389791","from":"6285241389791","name":"Ferdinand","text":"Ya"}';                    
+            $resultStr = '{"id":"3ADD2EF0BCE001206C04","time":1749795765000,"type":"image","status":"none","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","mimetype":"image\/jpeg","thumbnail":"\/9j\/4AAQSkZJRgABAQAAAQABAAD\/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T\/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT\/wgARCABIAEgDASIAAhEBAxEB\/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAIBAwQFBv\/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv\/aAAwDAQACEAMQAAAA76tAiWKUsMM6sMBEZ74AhQMW2mZZhiAgSJXxW8czem8v3l2Nzddl5QQZ82HOr6Y053VVfQV7MVGs9Y4Zc6mCzPWFiuFIgFoGb\/\/EABwRAQACAwADAAAAAAAAAAAAAAEAAhASITBBUf\/aAAgBAgEBPwDyd953rG3eMFgWmr9jUewAyz\/\/xAAcEQACAgIDAAAAAAAAAAAAAAAAAQIRECESMEH\/2gAIAQMBAT8A66HXhWODIx1tDobiWhSa0NvKR\/\/EACUQAAICAgEDBQEBAQAAAAAAAAECAAMEESEFEjEQEyJBUTIjcf\/aAAgBAQABPwAwwiERhzFEUQQQ+hhEYRRBBBCZbkmu1U9skEeYCGUEfcMYQQQQehGxEPxlti1Vl3OgJX1THts7Nlfwn7gg9AZubitvY1rU6sVbDdC2iZRi7dNtsbiDtQD8E3ACZuFoGO5feKe5t+Zk5HeGG9lvoym1wO4NrtPiUZqtQrt5lnVKkft0dynLVqyzgKNcGV5COuwwMtsRBtmAl2XUK21ZzrjUTJqdSpYlz+x8Yli3uLz4ns0pXpuTrmO61gKjEAfsXVlgA2TMit3rVVYADzMUnGIL2Dt8kS7EyLkYe8Dv7h6VkjhbOInTru75Oo19y6igBS1wDKPO4crFr\/tw\/H0I+ZjM3+eP3GWdQsQ6WpUP\/I2bc5+TSyxmHLGY3ULsc8MWH4ZZ1bIfwdR8q9\/6sMLMfJJ9Kr3pJKeTLLGsYsx2TA0pqFx5btE\/\/\/4AAwD\/2Q==","url":"https:\/\/core.maxchat.id\/bkdmdo\/download\/3ADD2EF0BCE001206C04.jpeg"}';                    
             $result = json_decode($resultStr);
             // dd($result);
         }
@@ -41,7 +41,7 @@ class C_Maxchat extends CI_Controller
         // } else {
             $this->general->updateCronWa($result);
         // }
-        if (($result->type == "text" || $result->type == "image") && ($result->chatType != "story" &&
+        if (($result->type == "text" || $result->type == "image") && (!isset($result->to) || $result->chatType != "story" &&
         $result->from != GROUP_CHAT_HELPDESK &&
         $result->to != GROUP_CHAT_HELPDESK)) {
                 // dd($result);
@@ -206,7 +206,8 @@ class C_Maxchat extends CI_Controller
         if(!$pegawai){
             // $reply = "Layanan ini hanya tersedia bagi ASN Pemerintah Kota Manado. Nomor HP ".$result->from." belum terdaftar. Silahkan update data Nomor HP dengan menggunakan Aplikasi Siladen.";
         }
-        if($reply == null){
+        $pegawai_simpeg = null;
+        if($reply == null && $result->type == "text"){
             $pegawai_simpeg = $this->user->getProfilUserByNip($pegawai['username']);
             $explode = explode("_", $result->text);
             if(strcasecmp($result->text, "info") == 0 || strcasecmp($result->text, "tabea") == 0 || strcasecmp($result->text, "halo") == 0 || strcasecmp($result->text, "hai") == 0){
@@ -267,14 +268,15 @@ class C_Maxchat extends CI_Controller
                     $reply = getNamaPegawaiFull($pegawai_simpeg)."\n".$pegawai_simpeg['nipbaru_ws']."\n".$result->id."\n\n".$result->caption;
                 }
             } else {
-                $reply = $result->fromName."\n".$result->id."\n\n".$result->text;
+                if(isset($result->fromName)){
+                    $reply = $result->fromName."\n".$result->id."\n\n".$result->text;
+                }
             }
         }
-
         if($reply != null && $reply != "" && 
         ($result->chat != GROUP_CHAT_TPP_HARDWORKER &&
         $result->chat != 120363410445884175) // group cpns
-        ){ 
+        ){
             if($result->type == "text"){
                 // $log = $this->maxchatlibrary->sendText($sendTo, $reply);
                 $cronWa = [
@@ -283,13 +285,11 @@ class C_Maxchat extends CI_Controller
                     'type' => 'text'
                 ];
                 $this->general->saveToCronWa($cronWa);
-            } else if($result->type == "image"){
-                $filename = explode("/", $str);
-                $log = $this->maxchatlibrary->sendImg($sendTo, $reply, $filename[5], $result->url);
-                // $this->general->insert('t_chat_group', [
-                //     'text' => json_encode($filename)
-                // ]);
             }
+        }
+
+         if($result->type == "image"){
+            $this->general->retrieveImageMessage($result);
         }
 
         // $response['text'] = $reply;

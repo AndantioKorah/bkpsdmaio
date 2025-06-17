@@ -6552,7 +6552,7 @@ public function submitEditJabatan(){
         return $result;
     }
 
-    public function submitVerifOperatorCuti(){
+    public function submitVerifOperatorCuti($status){
         $rs['code'] = 0;
         $rs['message'] = "Berhasil";
 
@@ -6561,9 +6561,13 @@ public function submitEditJabatan(){
         $metaData = json_decode($dataCuti['meta_data'], true);
         $tahunExce = null;
 
+        $keteranganVerifCuti = $dataVerif['keterangan'];
+        unset($dataVerif['keterangan']);
+
         $this->db->trans_begin();
 
         $flag_continue_save = 1;
+        $flag_sisa_cuti_tidak_cukup = 0;
 
         foreach($dataVerif as $kDv => $vDv){
             $expl = explode("_", $kDv);
@@ -6574,6 +6578,7 @@ public function submitEditJabatan(){
                 if(floatval($vDv) < floatval($metaData['keterangan_cuti'][$expl[2]])){
                     $tahunExce[] = $expl[2];
                     $flag_continue_save = 0;
+                    $flag_sisa_cuti_tidak_cukup = 1;
                 }
             }
 
@@ -6588,7 +6593,21 @@ public function submitEditJabatan(){
 
         $message = "*[PERMOHONAN CUTI]* \n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($dataCuti).", data Permohonan Cuti Anda telah ";
 
+        $flag_continue_save = $status == 1 ? 1 : 0;
+
         if($flag_continue_save == 1){
+            if($flag_sisa_cuti_tidak_cukup == 1){
+                $strTahun = "";
+                foreach($tahunExce as $te){
+                    $strTahun .= $te.", "; 
+                }
+
+                $rs['code'] = 1;
+                $rs['message'] = "Verifikasi tidak dapat dilanjutkan. Sisa Cuti Tahun ".trim($strTahun)." tidak mencukupi";
+                // $this->db->trans_rollback();
+                return $rs;
+            }
+
             $metaData['id_m_user'] = $dataCuti['id_m_user'];
 
             $message .= "*DISETUJUI* oleh operator. Menunggu proses verifikasi selanjutnya. Terima Kasih."; 
@@ -6608,11 +6627,8 @@ public function submitEditJabatan(){
                 $this->db->trans_rollback();
             }
         } else {
-            $strTahun = "";
-            foreach($tahunExce as $te){
-                $strTahun .= $te.", "; 
-            }
-            $keterangan = "Sisa Cuti Tahun ".trim($strTahun)." tidak mencukupi";
+            // $keterangan = "Sisa Cuti Tahun ".trim($strTahun)." tidak mencukupi";
+            $keterangan = $keteranganVerifCuti;
 
             $message .= "*DITOLAK* oleh operator dengan keterangan: *".$keterangan."*. \nSilahkan melakukan pengajuan kembali. Terima Kasih."; 
 

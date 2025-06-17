@@ -6998,7 +6998,6 @@ public function submitEditJabatan(){
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
                                 ->where('b.id', $id_m_user)
                                 ->get()->row_array();
-        
         $progress = null;
         if(isset($pegawai['atasan']) &&
             $pegawai['atasan']['id_unitkerja'] == '4018000' &&

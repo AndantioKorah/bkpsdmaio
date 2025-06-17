@@ -111,10 +111,11 @@ class C_Cron extends CI_Controller
         return $this->user->cekKenegaraan();
     }
 
-    public function cekProgressCuti($id_m_user){
+    public function cekProgressCuti($nip){
         $insert_id = 0;
-        $pegawai = $this->kinerja->getAtasanPegawai(null, $id_m_user, 1);
-        $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $id_m_user);
+        $peg = $this->general->getOne('m_user', 'username', $nip, 1);
+        $pegawai = $this->kinerja->getAtasanPegawai(null, $peg['id'], 1);
+        $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $peg['id']);
         // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
         //     dd(($progressCuti));
         // }

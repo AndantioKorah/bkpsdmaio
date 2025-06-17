@@ -1087,6 +1087,13 @@
                 $atasan = $this->baseQueryAtasan()
                                 ->where('f.id_eselon', 4)
                                 ->get()->row_array(); // cari setda
+                if(!$atasan){
+                    $atasan = $this->baseQueryAtasan()
+                                ->where('b.nipbaru_ws', '197409262002121007') // hardocde setda, pak steaven
+                                ->get()->row_array();
+
+                    $atasan['nama_jabatan'] = "Pj. Sekretaris Daerah";
+                }
                 $kepala = $atasan;
             }
         }

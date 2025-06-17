@@ -46,7 +46,7 @@ label:has([type=radio]:checked) {
     <?php $date=date_create($rs['date_received']);?> </b>
      <!-- <input type="radio"  id="myCheck" checked="checked" name="radio" onclick="ambiljam('<?= date_format($date,'H:i') ?>')"><br>     -->
     <label>
-  <input  type="radio"  id="myCheck" checked="checked" name="radio" onclick="ambiljam('<?= date_format($date,'H:i') ?>',<?=$id;?>)"> Ikut Jam Siladen
+  <input  type="radio"  id="myCheck"  name="radio" onclick="ambiljam('<?= date_format($date,'H:i') ?>',<?=$id;?>)"> Ikut Jam Siladen
 </label>
      <hr style="border-width: 5px;">
 <?php } ?>

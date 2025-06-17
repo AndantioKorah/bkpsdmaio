@@ -703,6 +703,18 @@
         
     }
 
+    public function getKepalaSkpdPlt($id_unitkerja){
+        return $this->db->select('c.*, CONCAT(a.jenis," ",d.nama_jabatan) as nama_jabatan, c.skpd as id_unitkerja, b.id')
+                                ->from('t_plt_plh a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->join('db_pegawai.jabatan d', 'a.id_jabatan = d.id_jabatanpeg', 'left')
+                                ->where('a.id_unitkerja', $id_unitkerja)
+                                ->order_by('a.tanggal_akhir', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
+    }
+
     public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         if($id_m_user != null){
             $pegawai = $this->db->select('b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
@@ -920,15 +932,7 @@
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
                 if($kepala == null){
-                     $kepala = $this->db->select('c.*, CONCAT(a.jenis," ",d.nama_jabatan) as nama_jabatan')
-                                ->from('t_plt_plh a')
-                                ->join('m_user b', 'a.id_m_user = b.id')
-                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
-                                ->join('db_pegawai.jabatan d', 'a.id_jabatan = d.id_jabatanpeg', 'left')
-                                ->where('a.id_unitkerja', $pegawai['id_unitkerja'])
-                                ->order_by('a.tanggal_akhir', 'desc')
-                                ->limit(1)
-                                ->get()->row_array();
+                    $kepala = $this->getKepalaSkpdPlt($pegawai['id_unitkerja']);
                 }
                 // dd($kepala);
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
@@ -970,6 +974,10 @@
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
+                if(!$kepala){
+                    $kepala = $this->getKepalaSkpdPlt($pegawai['id_unitkerja']);
+                }
+                
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
                     $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])

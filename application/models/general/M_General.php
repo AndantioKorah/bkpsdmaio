@@ -1584,6 +1584,7 @@
         }
 
         public function cronCheckVerifCuti(){
+            // dd('asd');
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
             $flag_cek = 0;
@@ -1631,18 +1632,89 @@
                 }
                 
                 if($listChatIdResend){
-                    $this->db->where_in('chatId', $listChatIdResend)
-                            ->update('t_cron_wa', [
-                                'temp_count' => 0,
-                                'flag_sent' => 0,
-                                'flag_resend' => 1,
-                                'date_resend' => date('Y-m-d H:i:s')
-                            ]);
-                    dd("Resend ".count($listChatIdResend)." pesan");
+                    // $this->db->where_in('chatId', $listChatIdResend)
+                    //         ->update('t_cron_wa', [
+                    //             'temp_count' => 0,
+                    //             'flag_sent' => 0,
+                    //             'flag_resend' => 1,
+                    //             'date_resend' => date('Y-m-d H:i:s')
+                    //         ]);
+                    // dd("Resend ".count($listChatIdResend)." pesan");
                 } else {
-                    dd("no resend message");
+                    // dd("no resend message");
                 }
+                $cronWaNextVerifikator = null;
+                $listNip = [
+                    199110282022042001,
+                    198311012008032003
+                ];
+                $progressCutiWithoutChatId = $this->db->select('a.*, b.id_m_user, b.random_string, b.tanggal_mulai, b.tanggal_akhir, b.lama_cuti,
+                                    c.nm_cuti, e.nama, e.gelar1, e.gelar2, e.skpd, b.id as id_t_pengajuan_cuti, e.nipbaru_ws,
+                                    (
+                                        SELECT aa.nama_jabatan
+                                        FROM t_progress_cuti aa
+                                        WHERE aa.urutan = (a.urutan)-1
+                                        AND aa.id_t_pengajuan_cuti = b.id
+                                        AND aa.flag_active = 1
+                                        LIMIT 1
+                                    ) as nm_jabatan_verifikator_sebelum
+                                    ')
+                                    ->from('t_progress_cuti a')
+                                    ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->join('db_pegawai.cuti c', 'b.id_cuti = c.id_cuti')
+                                    ->join('m_user d', 'd.id = b.id_m_user')
+                                    ->join('db_pegawai.pegawai e', 'e.nipbaru_ws = d.username')
+                                    ->where('id_m_user_verifikasi !=', 193)
+                                    ->where('a.flag_verif', 0)
+                                    ->where('a.chatId IS NULL')
+                                    ->where('b.flag_active', 1)
+                                    // ->where_in('e.nipbaru_ws', $listNip)
+                                    // ->where('flag_resend !=', 1)
+                                    ->order_by('a.urutan', 'asc')
+                                    // ->group_by('b.id')
+                                    ->get()->result_array();
+                
+                $tempExists = null;
+                if($progressCutiWithoutChatId){
+                    foreach($progressCutiWithoutChatId as $pcw){
+                        if(!isset($tempExists[$pcw['id_t_pengajuan_cuti']])){
+                            if($pcw['tanggal_akhir'] > date('Y-m-d')){
+                                $tempExists[$pcw['id_t_pengajuan_cuti']] = $pcw;
 
+                                $pada_tanggal = formatDateNamaBulan($pcw['tanggal_mulai']);
+                                if($pcw['tanggal_mulai'] != $pcw['tanggal_akhir']){
+                                    $pada_tanggal .= " sampai ".formatDateNamaBulan($pcw['tanggal_akhir']);
+                                }
+
+                                $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$pcw['random_string']."]*\n\nSelamat ".greeting().
+                                        ", pegawai atas nama: ".getNamaPegawaiFull($pcw)." telah mengajukan Permohonan ".
+                                        $pcw['nm_cuti']." selama ".$pcw['lama_cuti']." hari pada ".$pada_tanggal;
+
+                                if($pcw['nm_jabatan_verifikator_sebelum']){
+                                    $replyToNextVerifikator .=  ". Permohonan Cuti ini telah disetujui sebelumnya oleh ".$pcw['nm_jabatan_verifikator_sebelum'];
+                                }
+
+                                $replyToNextVerifikator .= ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
+
+                                $cronWaNextVerifikator[] = [
+                                    'sendTo' => convertPhoneNumber($pcw['nohp']),
+                                    'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                                    'type' => 'text',
+                                    'ref_id' => $pcw['id_t_pengajuan_cuti'],
+                                    'jenis_layanan' => 'Cuti',
+                                    'table_state' => 't_progress_cuti',
+                                    'column_state' => 'chatId',
+                                    'id_state' => $pcw['id']
+                                ];
+                            }
+                            // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                        }
+                    }
+
+                    if($cronWaNextVerifikator){
+                        dd($cronWaNextVerifikator);
+                    }
+                }
             }
         }
 
@@ -1770,5 +1842,38 @@
             dd($result);
 
         }
+
+        public function retrieveImageMessage($rs){
+            $expl = explode(".", $rs->url);
+            $filename = "arsipimagemessagewa/".date('Ymd')."_".generateRandomString().".".$expl[count($expl)-1];
+            $ch = curl_init($rs->url);
+            $fp = fopen($filename, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_exec($ch);
+            curl_close($ch);
+            fclose($fp);
+            
+            date_default_timezone_set("Asia/Singapore");
+            // $rs->time = 1749795765000;
+            $formattedDt = substr(strval($rs->time), 0, strlen(strval($rs->time))-3);
+
+            $dateTimeObj = new DateTime();
+            $dateTimeObj->setTimestamp($formattedDt);
+            $dateTime = $dateTimeObj->format("Y-m-d H:i:s");
+            
+            $pegawai = $this->db->select('*')
+                                ->from('db_pegawai.pegawai')
+                                ->where('handphone', "0".substr($rs->from, 2, strlen($rs->from)))
+                                ->get()->row_array();
+
+            $this->db->insert('t_image_message', [
+                'sender' => $rs->from,
+                'nip' => $pegawai ? $pegawai['nipbaru_ws'] : null,
+                'url' => $rs->url,
+                'date_received' => $dateTime
+            ]);
+        }
+
 	}
 ?>

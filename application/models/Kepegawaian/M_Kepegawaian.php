@@ -6984,11 +6984,13 @@ public function submitEditJabatan(){
                                 ->get()->row_array();
         
         $progress = null;
-        if($pegawai['atasan']['id_unitkerja'] == '4018000' && stringStartWith('Kepala', $thisuser['nama_jabatan'])){ // jika kabid di bkpsdm
-            unset($pegawai['atasan']);
-            unset($pegawai['kepala']);
-            unset($pegawai['kadis']);
-            unset($pegawai['sek']);
+        if(isset($pegawai['atasan']) &&
+            $pegawai['atasan']['id_unitkerja'] == '4018000' &&
+            stringStartWith('Kepala', $thisuser['nama_jabatan'])){ // jika kabid di bkpsdm
+                unset($pegawai['atasan']);
+                unset($pegawai['kepala']);
+                unset($pegawai['kadis']);
+                unset($pegawai['sek']);
         } else if(isset($pegawai['kepala']) && $pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
             unset($pegawai['kepala']);
             unset($pegawai['sek']);
@@ -6996,17 +6998,23 @@ public function submitEditJabatan(){
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
             // }
-            if(($pegawai['kadis']) && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
+            if(!$pegawai['atasan']){
+                return [
+                    'code' => 1,
+                    'message' => "Data Atasan belum terdata. Silahkan menghubungi Administrator. Terima Kasih."
+                ];
+            }
+            if(($pegawai['kadis']) && $pegawai['kepala'] && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
                 //jika atasan sama dengan kepala sama dengan kadis
                 unset($pegawai['atasan']);
                 unset($pegawai['kepala']);
-            } else if($pegawai['atasan']['id'] == $pegawai['kepala']['id']){
+            } else if($pegawai['atasan'] && $pegawai['atasan']['id'] == $pegawai['kepala']['id']){
                 //jika atasan dan sama dengan kepala, hapus atasan
                 unset($pegawai['atasan']);
-            } else if($pegawai['kadis'] && $pegawai['atasan']['id'] == $pegawai['kadis']['id']){
+            } else if($pegawai['kadis'] && $pegawai['atasan'] && $pegawai['atasan']['id'] == $pegawai['kadis']['id']){
                 //jika atasan dan sama dengan kadis, hapus atasan
                 unset($pegawai['atasan']);
-            } else if($pegawai['sek'] && $pegawai['atasan']['id'] == $pegawai['sek']['id']){
+            } else if($pegawai['sek'] && $pegawai['atasan'] && $pegawai['atasan']['id'] == $pegawai['sek']['id']){
                 //jika atasan dan sama dengan sek, hapus atasan
                 unset($pegawai['atasan']);
             }

@@ -668,6 +668,10 @@ function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
     return number_format($data, $decimal, ",", ".");
 }
 
+function formatDateFromTimestamp($date){
+    return gmdate("Y-m-d\TH:i:s\Z", $date);
+}
+
 function formatDateOnly($data)
 {
     $date1 = strtr($data, '/', '-');

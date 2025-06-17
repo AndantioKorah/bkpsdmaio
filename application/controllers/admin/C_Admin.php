@@ -149,4 +149,14 @@ class C_Admin extends CI_Controller
         $data['result'] = $this->admin->getMonitoringDsData();
         $this->load->view('admin/V_MonitoringCronDsResult', $data);
     }
+
+    public function monitoringInboxWa(){
+        render('admin/V_MonitoringInboxWa', '', '', null);
+    }
+
+    public function getMonitoringInboxWaData(){
+        $data['result'] = $this->admin->getMonitoringInboxWaData();
+        $this->load->view('admin/V_MonitoringInboxWaResult', $data);
+    }
+    
 }

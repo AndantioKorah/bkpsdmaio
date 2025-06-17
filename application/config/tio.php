@@ -124,5 +124,6 @@ $route['admin/broadcast-whatsapp'] = 'admin/C_Admin/broadcastWhatsapp';
 
 //admin monitoring
 $route['admin/monitoring/cron-wa'] = 'admin/C_Admin/monitoringCronWa';
+$route['admin/monitoring/inbox-whatsapp'] = 'admin/C_Admin/monitoringInboxWa';
 $route['admin/monitoring/cron-ds'] = 'admin/C_Admin/monitoringDs';
 $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikota';

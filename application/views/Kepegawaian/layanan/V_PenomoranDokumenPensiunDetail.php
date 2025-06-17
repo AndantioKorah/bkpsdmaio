@@ -6,7 +6,7 @@
     }  
   ?>
     <div class="col-lg-6">
-      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$url.'?v='.generateRandomString()?>"></iframe>
+      <iframe id="iframe_view_file" style="width: 100%; min-height: 75vh;" src="<?=base_url().$url.'?v='.generateRandomNumber(5)?>"></iframe>
     </div>
     <div class="col-lg-6">
       <div class="row">

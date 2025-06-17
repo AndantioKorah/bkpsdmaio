@@ -257,14 +257,10 @@
       <b >Foto Absensi Teman</b>
       <img  id="foto_absen" class="mt-3" style="width:360px;height:510px;"  alt="">
     </div>
-    <div class="col-lg-4" style="width: 360px; height: 560px;" >
+    <div class="col-lg-4" id="foto_wa"  style="display:none">
     <b>Foto WA Siladen</b>
     <div style="width: 360px; height: 525px; overflow-y: scroll;"  id="foto_wa_siladen">
     </div>  
-    <!-- <b >Foto WA Siladen</b>
-      <img  id="" class="mt-3" style="width:360px;height:510px;"  alt="">
-      <img  id="" class="mt-3" style="width:360px;height:510px;"  alt=""> -->
-
     </div>
 
 
@@ -459,8 +455,11 @@
 
             if(div.data('jenis_bukti') == 1){
               $('#foto_absen_teman').show();
-            } else {
+              $('#foto_wa').hide();
+            } else if(div.data('jenis_bukti') == 2) {
+              $('#foto_wa').show();
               $('#foto_absen_teman').hide();
+
             }
            
             $('#nama_peg').html('');
@@ -522,7 +521,7 @@
               var jenis_absensi = div.data('jenis_absen');
               // alert(tanggal_absensi)
               // return false
-
+              alert(nip)
                 $('#foto_wa_siladen').html('')
                 $('#foto_wa_siladen').append(divLoaderNavy)
                 $('#foto_wa_siladen').load('<?=base_url('kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi')?>'+'/'+tanggal_absensi+'/'+nip+'/'+jenis_absensi+'/'+id, function(){

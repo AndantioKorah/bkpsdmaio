@@ -340,6 +340,11 @@
 					</a>
 				</li>
 				<li class="sidebar-item">
+					<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/inbox-whatsapp');?>">
+						<i class="align-middle me-2 far fa-circle"></i>Inbox WA
+					</a>
+				</li>
+				<li class="sidebar-item">
 					<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/cron-wa');?>">
 						<i class="align-middle me-2 far fa-circle"></i>Monitoring Cron WA
 					</a>

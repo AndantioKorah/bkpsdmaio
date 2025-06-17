@@ -58,6 +58,7 @@
                         data-jenis_bukti="<?=$r['jenis_bukti'];?>" 
                         data-jenis_absen="<?=$r['jenis_absensi'];?>" 
                         data-nama="<?=$nama_peg;?>" 
+                        data-tglabsen="<?=($r['tanggal_absensi']);?>" 
                         data-tgl_absen="<?=formatDateNamaBulan($r['tanggal_absensi']);?>" 
                         data-nip="<?=$r['nipbaru'];?>" 
                         data-fotopeg="<?=$r['fotopeg'];?>" 
@@ -256,9 +257,9 @@
       <b >Foto Absensi Teman</b>
       <img  id="foto_absen" class="mt-3" style="width:360px;height:510px;"  alt="">
     </div>
-    <div class="col-lg-4" style="width: 360px; height: 560px; overflow-y: scroll;" >
+    <div class="col-lg-4" style="width: 360px; height: 560px;" >
     <b>Foto WA Siladen</b>
-    <div style="width: 360px; height: 560px; overflow-y: scroll;"  id="foto_wa_siladen">
+    <div style="width: 360px; height: 525px; overflow-y: scroll;"  id="foto_wa_siladen">
     </div>  
     <!-- <b >Foto WA Siladen</b>
       <img  id="" class="mt-3" style="width:360px;height:510px;"  alt="">
@@ -477,13 +478,12 @@
             modal.find('#id').attr("value",div.data('id'));
             modal.find('#foto_pegawai').attr("src","<?=base_url('assets/fotopeg/')?>"+div.data('fotopeg'));
             modal.find('#bukti_absen').attr("src","<?=base_url('assets/peninjauan_absen/')?>"+div.data('tahun')+'/'+div.data('bulan')+'/'+div.data('gambar'));
-           
             $('#nama_peg').append('<a href="<?= base_url()?>kepegawaian/profil-pegawai/'+div.data('nip')+'" target="_blank"><span class="badge badge-pns">'+div.data('nama')+'</span></a> Absen '+jenis_absen+' Tanggal '+div.data('tgl_absen'));
             if(div.data('jenis_bukti') == 2){
 
             // $('#input_jam').append('<input type="time" onchange="myFunction('+div.data('id')+')" style="width:30%" class="form-control col-lg-4" id="verifjam_'+div.data('id')+'"/> ');
             $('#input_jam').append('<div style="width:65%" class="input-group col-lg-2">'+
-            '<input type="time" onchange="myFunction('+div.data('id')+')" style="width:30%" class="form-control col-lg-4" id="verifjam_'+div.data('id')+'"/>'+
+            '<input type="time" onchange="myFunction('+div.data('id')+')" style="width:30%" class="form-control col-lg-4"  id="verifjam_'+div.data('id')+'"/>'+
                 '<div class="input-group-append">'+
                 '<span class="input-group-text">Input Jam</span>'+
             '</div>'+
@@ -516,13 +516,16 @@
               // });
 
 
-              var tanggal_absensi= '2025-06-17';
-              var nip = '199401042020121011';
-              var jenis_absensi = 2;
+              var id = div.data('id');
+              var tanggal_absensi = div.data('tglabsen');
+              var nip = div.data('nip');
+              var jenis_absensi = div.data('jenis_absen');
+              // alert(tanggal_absensi)
+              // return false
 
                 $('#foto_wa_siladen').html('')
                 $('#foto_wa_siladen').append(divLoaderNavy)
-                $('#foto_wa_siladen').load('<?=base_url('kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi')?>'+'/'+tanggal_absensi+'/'+nip+'/'+jenis_absensi, function(){
+                $('#foto_wa_siladen').load('<?=base_url('kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi')?>'+'/'+tanggal_absensi+'/'+nip+'/'+jenis_absensi+'/'+id, function(){
                     $('#loader').hide()
                 })
             

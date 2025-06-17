@@ -109,7 +109,13 @@
 		<p class="judul" style="margin-top:5px;"> SURAT PERNYATAAN<br>
 			TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA<br>
 			<u>BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP</u> </p>
-		<p class="judul" style="margin-top:-18px;"> Nomor : <?php if(isset($nomor_surat)) echo $nomor_surat; else echo "";?> </p>
+		<?php 
+			$ns = isset($data['nomor_surat']) ? $data['nomor_surat'] : "";
+			if(isset($nomor_surat)){
+				$ns = $nomor_surat;
+			}
+		?>
+		<p class="judul" style="margin-top:-18px;"> Nomor : <?= $ns ?> </p>
 
 	<p>Yang bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">

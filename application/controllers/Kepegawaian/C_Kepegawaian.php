@@ -1693,8 +1693,8 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_VerifOperatorPermohonanCutiDetail', $data);
 	}
 
-	public function submitVerifOperatorCuti(){
-		echo json_encode($this->kepegawaian->submitVerifOperatorCuti());
+	public function submitVerifOperatorCuti($status){
+		echo json_encode($this->kepegawaian->submitVerifOperatorCuti($status));
 	}
 
 	public function loadDetailCutiVerif($id){

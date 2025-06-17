@@ -29,25 +29,29 @@
               <div class="col-lg-6">
                 <h5>SISA CUTI</h5>
                 <table class="table table-sm" style="border: none !important;">
-                  <?php foreach($sisa_cuti as $kSc => $vSc){ ?>
+                  <?php $sc = null; $i = 1; foreach($sisa_cuti as $kSc => $vSc){?>
                     <tr>
                       <td style="width: 35%;">
                         <?=$kSc?>
                       </td>
                       <td style="width: 5%;">:</td>
                       <td style="width: 60%;">
-                        <input type="number" style="font-size: 1rem;" class="form-control form-control-sm" value="<?=$vSc['sisa']?>" name="sisa_cuti_<?=$kSc?>" />
+                        <input type="number" style="font-size: 1rem;" class="form-control form-control-sm" value="<?=$vSc['sisa']?>" id="sisa_cuti_<?=$kSc?>" name="sisa_cuti_<?=$kSc?>" />
                       </td>
                     </tr>
-                  <?php } ?>
+                  <?php $i++; } ?>
                 </table>
               </div>
             <?php } ?>
-            
+              <div class="col-lg-12">
+                <label>Keterangan</label>
+                <textarea style="width: 100%;" name="keterangan" rows="3"></textarea>
+              </div>
               <div class="col-lg-12 mt-3 text-right">
                 <?php if($result['status_verifikasi'] == 0){ ?>
-                  <button id="btn_simpan" class="btn btn-navy" type="submit"><i class="fa fa-save"></i> Simpan</button>
-                  <button id="btn_simpan_loading" disabled class="btn btn-navy" style="display: none;"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
+                  <button onclick="saveVerifikasi(1)" type="button" class="btn btn_verif btn-success"><i class="fa fa-check"></i> Terima</button>
+                  <button onclick="saveVerifikasi(2)" type="button" class="btn btn_verif btn-danger"><i class="fa fa-times"></i> Tolak</button>
+                  <button disabled class="btn btn_verif_loader btn-navy" style="display: none;"><i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
                 <?php } else { ?>
                   <i><h6>Telah <?=$result['status_verifikasi'] == 1 ? "DISETUJUI" : "DITOLAK" ?> oleh <?=$result['nama_verifikator']?> pada <?=formatDateNamaBulanWT($result['tanggal_verif'])?> </h6></i>
                 <?php } ?>
@@ -64,31 +68,33 @@
 <?php } ?>
 
 <script>
-  $('#form_verif_sisa_cuti').on('submit', function(e){
+  $(function(){
     <?php $this->session->set_userdata('data_verif_sisa_cuti', $result); ?>
-    e.preventDefault()
-    $('#btn_simpan').hide()
-    $('#btn_simpan_loading').show()
-    $.ajax({
-        url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifOperatorCuti")?>',
-        method: 'post',
-        data: $(this).serialize(),
-        success: function(data){
-            let resp = JSON.parse(data)
-            if(resp.code != 0){
-              errortoast(resp.message)
-              $('#btn_simpan').show()
-              $('#btn_simpan_loading').hide()
-            } else {
-              successtoast(resp.message)
-              $('#modal_detail_cuti').modal('hide')
-              $('#form_search').submit()
-            }
-        }, error: function(e){
-            errortoast('Terjadi Kesalahan')
-            $('#btn_simpan').show()
-            $('#btn_simpan_loading').hide()
-        }
-    })
   })
+
+  function saveVerifikasi(statusVerif){
+    $('.btn_verif').hide()
+    $('.btn_verif_loader').show()
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/submitVerifOperatorCuti/")?>'+statusVerif,
+      method: 'post',
+      data : $('#form_verif_sisa_cuti').serialize(),
+      success: function(data){
+          let resp = JSON.parse(data)
+          if(resp.code != 0){
+            errortoast(resp.message)
+            $('.btn_verif').show()
+            $('.btn_verif_loader').hide()
+          } else {
+            successtoast(resp.message)
+            $('#modal_detail_cuti').modal('hide')
+            $('#form_search').submit()
+          }
+      }, error: function(e){
+          errortoast('Terjadi Kesalahan')
+          $('.btn_verif').show()
+          $('.btn_verif_loader').hide()
+      }
+    })
+  }
 </script>

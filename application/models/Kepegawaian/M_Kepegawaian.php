@@ -12792,6 +12792,22 @@ public function getFileForVerifLayanan()
                         ->update('t_layanan', $data);
             }
         // PENINGKATAN PENDIDIKAN / PENAMBAHANAN GELAR
+        // PIDANA HUKDIS
+
+            if($id_m_layanan == 23){
+            $this->db->where('id', $dataLayanan['reference_id_hd'])
+                    ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+            
+            $this->db->where('id', $dataLayanan['reference_id_pidana'])
+                    ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+
+            $data["reference_id_hd"] = null; 
+            $data["reference_id_pidana"] = null; 
+            $data["status"] = 1; 
+            $this->db->where('id', $id_usul)
+                        ->update('t_layanan', $data);
+            }
+        // PIDANA HUKDIS
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

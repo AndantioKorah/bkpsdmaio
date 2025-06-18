@@ -45,6 +45,8 @@
                 <?php } ?>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Unit Kerja</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Tanggal Lahir</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">Status Pegawai</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">Bidang</td>
 
             </tr>
             <tbody>
@@ -74,6 +76,8 @@
                         <?php } ?>
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_unitkerja']?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['tgllahir'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?=($rs['nm_statuspeg'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?=($rs['nama_bidang'])?></td>
 
                     </tr>
                 <?php } } ?>

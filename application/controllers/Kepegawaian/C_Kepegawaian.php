@@ -3141,7 +3141,20 @@ class C_Kepegawaian extends CI_Controller
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
 			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 			$this->load->view('kepegawaian/layanan/V_LayananSuratPidanaHukdis', $data);
-		
+		}
+
+		public function layananSuratKeteranganTidakTubel($id_layanan){
+			$currentYear = date('Y'); 
+			$previous1Year = $currentYear - 1;   
+			$previous2Year = $currentYear - 2; 
+			$data['tahun_1_lalu'] = $previous1Year;
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+			$this->load->view('kepegawaian/layanan/V_LayananSuratKeteranganTidakTubel', $data);
 		}
 
 		public function downloadDraftPidanaHukdis(){

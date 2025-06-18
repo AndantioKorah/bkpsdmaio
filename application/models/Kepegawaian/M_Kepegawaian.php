@@ -6998,7 +6998,6 @@ public function submitEditJabatan(){
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
                                 ->where('b.id', $id_m_user)
                                 ->get()->row_array();
-        
         $progress = null;
         if(isset($pegawai['atasan']) &&
             $pegawai['atasan']['id_unitkerja'] == '4018000' &&
@@ -7058,7 +7057,6 @@ public function submitEditJabatan(){
                 }
             }
         }
-        
         if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) &&
             $thisuser['nip_kepalaskpd_hardcode'] != $thisuser['nipbaru_ws']){
             // jika pegawai sekolah dan bukan kepsek dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya 
@@ -7066,8 +7064,12 @@ public function submitEditJabatan(){
                 !stringStartWith("Plt. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plh. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plt. Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plh. Kepala Bidang", $result[0]['nama_jabatan'])) &&
                 $thisuser['flag_sekolah_negeri'] == 1){ // TK 
                 return [
                     'code' => 1,
@@ -7076,7 +7078,10 @@ public function submitEditJabatan(){
             } else if($thisuser['id_unitkerjamaster'] != 8000000 &&
                 (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plt. Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plh. Kepala Bidang", $result[0]['nama_jabatan'])) &&
                 $thisuser['flag_sekolah_negeri'] == 1){ // SD, SMP, SMA 
                 return [
                     'code' => 1,

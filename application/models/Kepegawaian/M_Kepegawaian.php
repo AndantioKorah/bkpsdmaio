@@ -3604,6 +3604,8 @@ public function getDataKabanBkd()
     ->from('db_pegawai.pegawai a')
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
+
     ->where('a.jabatan', '4018000JS01');
     return $this->db->get()->row_array(); 
 }
@@ -11433,6 +11435,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 21);
             } else if($id_m_layanan == 23){ 
                 $this->db->where('a.id_m_layanan', 23);
+            } else if($id_m_layanan == 24){ 
+                $this->db->where('a.id_m_layanan', 24);
             }   else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -13027,7 +13031,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 23){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/suratpidanahukdis';
-            }     else {
+            } else if($id_m_layanan == 24){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/suratkettidaktubel';
+            } else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 

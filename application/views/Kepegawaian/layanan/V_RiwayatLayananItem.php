@@ -275,6 +275,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/peningkatan_penambahan_gelar/"+filename+"?v="+number;
 } else if(id_layanan == 23){
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
+} else if(id_layanan == 24){
+  $link = "<?=base_url();?>dokumen_layanan/suratkettidaktubel/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

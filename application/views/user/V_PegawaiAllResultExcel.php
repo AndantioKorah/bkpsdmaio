@@ -40,6 +40,8 @@
                 <td style="font-weight: bold; text-align: center; width: 15%;">Pangkat</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">TMT Pangkat</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">TMT Jabatan</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">TMT CPNS</td>
+
                 <?php if($use_masa_kerja == 1){ ?>
                     <td style="font-weight: bold; text-align: center;">Masa Kerja</td>
                 <?php } ?>
@@ -47,6 +49,10 @@
                 <td style="font-weight: bold; text-align: center; width: 20%;">Tanggal Lahir</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Status Pegawai</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Bidang</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">No HP</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">Email</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">NIK</td>
+
 
             </tr>
             <tbody>
@@ -71,6 +77,8 @@
                         <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>
                         <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
                         <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtjabatan'])?></td>
+                        <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtcpns'])?></td>
+                        
                         <?php if($use_masa_kerja == 1){ ?>
                             <td style="padding: 10px; text-align: center;"><?=$rs['masa_kerja']?></td>
                         <?php } ?>
@@ -78,6 +86,10 @@
                         <td style="padding: 10px; text-align: left;"><?=($rs['tgllahir'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['nm_statuspeg'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['nama_bidang'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?='`'.($rs['handphone'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?=($rs['email'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?='`'.($rs['nik'])?></td>
+
 
                     </tr>
                 <?php } } ?>

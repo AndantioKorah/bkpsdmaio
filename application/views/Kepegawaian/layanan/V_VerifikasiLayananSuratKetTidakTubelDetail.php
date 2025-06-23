@@ -95,7 +95,7 @@
         Batal Verif
         </button>
          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
-        Download Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas
+        Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas
         </button>
        
        <?php 
@@ -108,12 +108,7 @@
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
         <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
-        <i class="fa fa-file-trash"></i> Hapus Dokumen</button>
-        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['dokhd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-        <i class="fa fa-file-pdf"></i> Lihat Dokumen HD</button>
-       <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['dokpidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-        <i class="fa fa-file-pdf"></i> Lihat Dokumen Pidana</button>
-
+        <i class="fa fa-file-trash"></i> Batal DS</button>
         <?php } ?>
         
 
@@ -438,56 +433,42 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> Download Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftSuketTidakTubel')?>" target="_blank">
-         <div class="form-group">
+      <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/previewDraftSuketTidakTubel')?>" target="_blank">
+      
+      <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+
           <label for="exampleInputEmail1">Nomor Surat</label>
           <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           <label for="exampleInputEmail1">Instansi Tujuan</label>
           <input type="text" class="form-control" id="instansi_tujuan" name="instansi_tujuan">
           </div> 
-          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+          <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Preview</button>
+
         </form>
-      </div>
-    </div>
-  </div>
-</div>   
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalDownloadDraftPidana" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> Download Draf Surat Keterangan Pidana</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-              <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
-         <div class="form-group">
-          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+         <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
+      <div class="form-group">
+          <!-- <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
-          
-          <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
-          </div> 
-          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly> -->
+          <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
+       
         </form>
+
       </div>
     </div>
   </div>
 </div>   
+
 
 
 <!-- Modal -->
@@ -701,12 +682,34 @@ function openPresensiTab(){
                     $('#btn_upload_sk').show()
                   } else {
                     $('#btn_upload_sk').hide()
-
                   }
-                  // loadListUsulLayanan(1)
                   $('#btn_tolak_verifikasi').show()
-                  // $('#btn_upload_sk').show()
                   $('#btn_verifikasi').hide()
+                  location.reload()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        })
+
+         $('#form_usul_ds').on('submit', function(e){
+         document.getElementById('btn_usul_ds').disabled = true;
+         $('#btn_usul_ds').html('Loading.. <i class="fas fa-spinner fa-spin"></i>')
+            e.preventDefault()
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/usulDSSuketTidakTubel")?>',
+                method: 'post',
+                // data: $(this).serialize(),
+                data: {
+                  nip : $('#nip').val(),
+                  id_usul : $('#id_usul').val(),
+                  nomor_surat : $('#nomor_surat').val(),
+                  instansi_tujuan : $('#instansi_tujuan').val(),
+                  id_pegawai : $('#id_pegawai').val()
+                },
+
+                success: function(datares){
+                  successtoast('Berhasil Usul DS')
                   location.reload()
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')

@@ -565,6 +565,8 @@
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_karis_karsu') ||
 	$this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') ||
+	$this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel') ||
+	$this->general_library->isHakAkses('verifikasi_ujian_dinas') ||
 	$this->general_library->isHakAkses('menu_bidang_pekin') ||
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
@@ -686,6 +688,13 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/12')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Jabatan Fungsional
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/24')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Keterangan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tidak sedang Tubel/Ikatan Dinas
 					</a>
 				</li>
 				<?php } ?>

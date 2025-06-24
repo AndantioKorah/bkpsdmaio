@@ -170,9 +170,9 @@ function countMaxDateUpload($date, $max = 0, $operand = "minus"){
         $i++;
     }
     if($operand == 'plus'){
-        $res['max_date'] = $lhk[$pointer+$max];
+        $res['max_date'] = $lhk[($pointer+$max)-1];
     } else {
-        $res['max_date'] = $lhk[$pointer-$max];
+        $res['max_date'] = $lhk[($pointer-$max)-1];
     }
     
     return $res;

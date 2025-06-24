@@ -216,23 +216,23 @@
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
+					<a title="Syarat Layanan" class="sidebar-link sidebar-link-child" href="<?=base_url('master/syarat-layanan')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Syarat Layanan
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/klasifikasi-arsip')?>">
+					<a title="Klasifikasi Arsip" class="sidebar-link sidebar-link-child" href="<?=base_url('master/klasifikasi-arsip')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Klasifikasi Arsip
 					</a>
 				</li>
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
+					<a title="Announcement" class="sidebar-link sidebar-link-child" href="<?=base_url('master/announcement')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Announcement
 					</a>
 				</li>
 
 				<li class="sidebar-item ">
-					<a title="Hari Libur" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-plh')?>">
+					<a title="PLT/TPLH" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-plh')?>">
 						<i class="align-middle me-2 far fa-circle"></i>PLT/PLH
 					</a>
 				</li>
@@ -248,6 +248,12 @@
 						</a>
 					</li>
 				<?php } ?>
+
+				<li class="sidebar-item ">
+					<a title="Event" class="sidebar-link sidebar-link-child" href="<?=base_url('master/event')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Event
+					</a>
+				</li>
 			</ul>
 		</li>
 		<?php } ?>

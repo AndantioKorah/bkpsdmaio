@@ -579,6 +579,10 @@
 <script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
 
 <script>
+
+var tmpLabel = null;
+var tmpIcon = null;
+
 function fixedHeaderTable() {
   var $th = $('.tableFixHead').find('thead th')
   $('.tableFixHead').on('scroll', function() {
@@ -640,8 +644,22 @@ $(function(){
     // startCountDownExpireApp()
   })
    function divLoaderNavy(message = 'Loading'){
- 
     return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
+  }
+
+  function btnLoader(btnId, label = "Loading...", faLbl = "fa-spin fa-spinner"){
+    var btn = document.getElementById(btnId)
+    if(tmpLabel == null){
+      tmpLabel = $('#'+btnId).text();
+      tmpIcon = $('#'+btnId).find('i').attr('class')
+      $('#'+btnId).html('<i class="fas '+faLbl+'"></i> '+label)
+      btn.disabled = true;
+    } else {
+      $('#'+btnId).html('<i class="'+tmpIcon+'"></i> '+tmpLabel)
+      tmpLabel = null;
+      tmpIcon = null;
+      btn.disabled = false
+    }
   }
 
   function getFirstDayOfMonth(year, month) {

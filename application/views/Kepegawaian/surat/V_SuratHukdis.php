@@ -172,7 +172,7 @@
 		mengakibatkan kerugian negara, maka saya bersedia menanggung kerugian tersebut.</p>
 
 
-	<table border="0" style="width:100%;margin-top:10px;">
+	<table border="0" style="width:100%;margin-top:128px;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA

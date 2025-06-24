@@ -176,7 +176,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan berkas 
     Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.</p>
 
-	<table border="0" style="width:100%;margin-top:10px;">
+	<table border="0" style="width:100%;margin-top:140px;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA

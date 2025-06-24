@@ -3331,7 +3331,7 @@ class C_Kepegawaian extends CI_Controller
 	    $url = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($url, 'D');
+		$mpdf->Output($file_pdf, 'D');
     }
 
 }

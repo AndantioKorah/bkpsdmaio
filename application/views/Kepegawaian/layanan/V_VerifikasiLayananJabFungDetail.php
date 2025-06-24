@@ -225,6 +225,9 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
   </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='str_serdik')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">STR / Serdik </button>
+  </li>
   <?php } ?>
   <?php if($id_m_layanan == 13) { ?>
     <li class="nav-item nav-item-layanan" role="presentation">

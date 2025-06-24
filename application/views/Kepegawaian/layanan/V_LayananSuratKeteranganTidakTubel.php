@@ -299,6 +299,8 @@ ol {
 				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
+            <input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+            
             <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 		
     
@@ -309,20 +311,19 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-          <div class="form-group mt-2">
-            <label><b>Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin dari Perangkat Daerah</b></label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
-         </div>
-         <div class="form-group mt-2">
-            <label><b>Surat Pernyataan tidak sedang menjalani proses pidana penjara berdasarkan putusan pengadilan yang berkekuatan hukum tetap (bermaterai Rp. 10.000)</b></label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
-         </div>
+        
 			<ol class="rectangle-list">
             <li>
             	<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sk_pns) { ?> onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK
             		PNS* <i class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
+            </li>
+              <li>
+            	<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($skp1) { ?> onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SKP <?=$tahun_1_lalu;?>* 
+                <i class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
             </li>
 			</ol>
 			</div>
@@ -398,7 +399,7 @@ $(function(){
         var formvalue = $('#form_perbaikan_data');
         var form_data = new FormData(formvalue[0]);
         var sk_pns = $('#sk_pns').val()
-        
+        var skp1 = $('#skp1').val()
         var id_m_layanan = "<?=$id_m_layanan;?>"
 
        
@@ -406,7 +407,11 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-       
+        
+        if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
 
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananNew/")?>"+id_m_layanan,
@@ -445,7 +450,7 @@ function viewBerkasPangkat(filename,id){
     } else if(id == 2){
         $link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
     } else if(id == 3){
-        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
+        $link = "<?=base_url();?>/arsipskp/"+filename+"?v="+number;
     } else {
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
     }  

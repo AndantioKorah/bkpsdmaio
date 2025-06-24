@@ -241,7 +241,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratPidanaHukdis/")?>'+val, function(){
       $('#loader').hide()
     })
-    }    else {
+    } else if(val == 24) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratKeteranganTidakTubel/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }     else {
       $('#form_layanan').html('')
     }
 

@@ -2447,7 +2447,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -2458,6 +2458,10 @@
                     ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                     ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon', 'left')
                     ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+                    ->join('m_user i', 'a.nipbaru_ws = i.username','left')
+                    ->join('m_bidang j', 'i.id_m_bidang = j.id','left')
+
+                    ->where('i.flag_active', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->order_by('c.eselon, a.nama');
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){

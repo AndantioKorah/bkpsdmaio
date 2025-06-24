@@ -3604,6 +3604,8 @@ public function getDataKabanBkd()
     ->from('db_pegawai.pegawai a')
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
+    ->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
+
     ->where('a.jabatan', '4018000JS01');
     return $this->db->get()->row_array(); 
 }
@@ -7057,7 +7059,6 @@ public function submitEditJabatan(){
                 }
             }
         }
-        
         if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) &&
             $thisuser['nip_kepalaskpd_hardcode'] != $thisuser['nipbaru_ws']){
             // jika pegawai sekolah dan bukan kepsek dan result[0] bukan kepsek, return false agar diisi dulu kepala sekolahnya 
@@ -7065,8 +7066,12 @@ public function submitEditJabatan(){
                 !stringStartWith("Plt. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plh. Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Taman", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plt. Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plh. Kepala Bidang", $result[0]['nama_jabatan'])) &&
                 $thisuser['flag_sekolah_negeri'] == 1){ // TK 
                 return [
                     'code' => 1,
@@ -7075,7 +7080,10 @@ public function submitEditJabatan(){
             } else if($thisuser['id_unitkerjamaster'] != 8000000 &&
                 (!stringStartWith("Kepala Sekolah", $result[0]['nama_jabatan']) &&
                 !stringStartWith("Plt. Kepala Sekolah", $result[0]['nama_jabatan']) &&
-                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan'])) &&
+                !stringStartWith("Plh. Kepala Sekolah", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plt. Kepala Bidang", $result[0]['nama_jabatan']) &&
+                !stringStartWith("Plh. Kepala Bidang", $result[0]['nama_jabatan'])) &&
                 $thisuser['flag_sekolah_negeri'] == 1){ // SD, SMP, SMA 
                 return [
                     'code' => 1,
@@ -11427,6 +11435,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 21);
             } else if($id_m_layanan == 23){ 
                 $this->db->where('a.id_m_layanan', 23);
+            } else if($id_m_layanan == 24){ 
+                $this->db->where('a.id_m_layanan', 24);
             }   else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -12786,6 +12796,22 @@ public function getFileForVerifLayanan()
                         ->update('t_layanan', $data);
             }
         // PENINGKATAN PENDIDIKAN / PENAMBAHANAN GELAR
+        // PIDANA HUKDIS
+
+            if($id_m_layanan == 23){
+            $this->db->where('id', $dataLayanan['reference_id_hd'])
+                    ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+            
+            $this->db->where('id', $dataLayanan['reference_id_pidana'])
+                    ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+
+            $data["reference_id_hd"] = null; 
+            $data["reference_id_pidana"] = null; 
+            $data["status"] = 1; 
+            $this->db->where('id', $id_usul)
+                        ->update('t_layanan', $data);
+            }
+        // PIDANA HUKDIS
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -13005,7 +13031,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 23){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/suratpidanahukdis';
-            }     else {
+            } else if($id_m_layanan == 24){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/suratkettidaktubel';
+            } else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
@@ -13725,6 +13754,77 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(date('Y-m-d') < '2025-06-02'){
             $result['done'] = false;
             $result['message'] = "SK dapat didownload pada tanggal 2 Juni 2025";
+        }
+
+        return $result;
+    }
+
+    function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
+        $this->db->trans_begin();
+
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+         $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
+            $sekbkpsdm = $this->layanan->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
+
+            $batchId = generateRandomString();
+            $data['id_m_user'] = $dataLayanan['id_m_user'];
+            $data['created_by'] = $this->general_library->getId();
+            $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
+            $data['ds_code'] = "^";
+            $data['page'] = 1;
+            $data['table_ref'] = 't_layanan';
+            $data['ref_id'] = $id_usul;
+            $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
+            $data['nama_kolom_ds'] = "flag_ds_suket_tidak_tubel";
+            $data['url_ds'] = $url2;
+            $data['batch_id'] = $batchId;
+            $data['id_m_jenis_layanan'] = 30;
+            $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            $this->db->insert('t_usul_ds', $data);
+            $id_t_usul_ds = $this->db->insert_id();
+
+            $usulDetail['id_t_usul_ds'] = $id_t_usul_ds;
+            $usulDetail['url'] = $url1;
+            $usulDetail['created_by'] = $this->general_library->getId();
+            $usulDetail['filename'] = $file_pdf;
+            $usulDetail['batch_id_detail'] = generateRandomString();
+
+            $this->db->insert('t_usul_ds_detail', $usulDetail);
+            $id_t_usul_ds_detail = $this->db->insert_id();
+
+            $progress1['urutan'] = 1;
+            $progress1['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+            $progress1['id_m_user_verif'] = $pegawai['atasan']['id'];
+            $progress1['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
+            $progress1['flag_ds_now'] = 1;
+            $this->db->insert('t_usul_ds_detail_progress', $progress1);
+
+            $progress2['urutan'] = 2;
+            $progress2['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+            $progress2['id_m_user_verif'] = $sekbkpsdm['id_m_user'];
+            $progress2['nama_jabatan'] = $sekbkpsdm['nama_jabatan'];
+            $progress2['flag_ds_now'] = 0;
+            $this->db->insert('t_usul_ds_detail_progress', $progress2);
+
+            $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
+            $dataUpdate['status'] = 3;
+            $this->db->where('id', $id_usul)
+                ->update('t_layanan', $dataUpdate);
+
+        if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
         }
 
         return $result;

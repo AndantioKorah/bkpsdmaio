@@ -358,7 +358,12 @@ ol {
 				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
 				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
                 </li>
-                
+        <li>
+				<a class="<?php if($str_serdik) echo 'select'; else echo 'unselect';?>" <?php if($str_serdik) { ?>
+				onclick="viewBerkasPangkat('<?=$str_serdik['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> STR (kersehatan) / Serdik (pendidikan) <i
+				class="fas fa-<?php if($str_serdik) echo ''; else echo '';?>"></i></a>
+        </li>
         <li>
 				<a class="<?php if($dok_lain) echo 'select'; else echo 'unselect';?>" <?php if($dok_lain) { ?>
 				onclick="viewBerkasPangkat('<?=$dok_lain['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
@@ -682,6 +687,7 @@ $(function(){
         }
 
         if(id_m_layanan == 13){
+        
         if(formasi == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

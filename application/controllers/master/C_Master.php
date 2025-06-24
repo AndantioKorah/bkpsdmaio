@@ -607,4 +607,13 @@ class C_Master extends CI_Controller
 		echo json_encode( $this->master->doUploadAnnouncement());
 	}
 
+    public function masterEvent(){
+        render('master/V_MasterEvent', '', '', null);
+    }
+
+    public function loadListEvent(){
+        $data['result'] = $this->master->loadListEvent();
+        $this->load->view('master/V_MasterEventList', $data);
+    }
+
 }

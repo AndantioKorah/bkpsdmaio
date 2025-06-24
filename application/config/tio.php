@@ -19,10 +19,11 @@ $route['master/perangkat-daerah'] = 'master/C_Master/masterSkpd';
 $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
 $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
+$route['master/event'] = 'master/C_Master/masterEvent';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 
-
-
+//event
+$route['event/surat-tugas'] = 'kepegawaian/C_Layanan/suratTugasEvent';
 
 //pelanggaran
 $route['pelanggaran'] = 'kinerja/C_Kinerja/pelanggaran';

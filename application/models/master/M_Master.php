@@ -1364,6 +1364,15 @@
         return $this->db->get()->result_array(); 
     }
 
+    public function loadListEvent(){
+        return $this->db->select('*')
+                        ->from('db_sip.event')
+                        ->where('flag_active', 1)
+                        ->order_by('tgl', 'desc')
+                        ->order_by('created_at', 'asc')
+                        ->get()->result_array();
+    }
+
 
 	}
 ?>

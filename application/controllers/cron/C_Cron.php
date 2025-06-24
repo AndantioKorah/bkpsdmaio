@@ -152,4 +152,8 @@ class C_Cron extends CI_Controller
         $hariKerja = countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
         dd($hariKerja);
     }
+
+    public function cekMaxDateUpload($tgl, $max, $operand){
+        dd(countMaxDateUpload(formatDateOnlyForEdit($tgl), 3, "plus"));
+    }
 }

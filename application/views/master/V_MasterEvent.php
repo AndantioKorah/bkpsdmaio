@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-lg-8">
                                 <label>Judul</label>
-                                <input class="form-control" name="judul" />
+                                <input required class="form-control" name="judul" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-2">
                                 <label>Tanggal</label>
@@ -18,43 +18,51 @@
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-2">
                                 <label>Radius (m)</label>
-                                <input class="form-control" name="radius" />
+                                <input required class="form-control" name="radius" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Buka Masuk</label>
-                                <input class="form-control timepicker" name="buka_masuk" />
+                                <input type="time" required class="form-control" name="buka_masuk" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Batas Masuk</label>
-                                <input class="form-control timepicker" name="batas_masuk" />
+                                <input type="time" required class="form-control" name="batas_masuk" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Buka Pulang</label>
-                                <input class="form-control timepicker" name="buka_pulang" />
+                                <input type="time" required class="form-control" name="buka_pulang" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Batas Pulang</label>
-                                <input class="form-control timepicker" name="batas_pulang" />
+                                <input type="time" required class="form-control" name="batas_pulang" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Lat</label>
-                                <input class="form-control" name="titik_lat" />
+                                <input required class="form-control" name="titik_lat" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
                                 <label>Lang</label>
-                                <input class="form-control" name="titik_lang" />
+                                <input required class="form-control" name="titik_lang" />
                             </div>
                             <div class="col-md-12 col-sm-12 col-lg-12 mt-3">
                                 <label>Keterangan</label>
-                                <textarea class="form-control" name="keterangan" rows=3></textarea>
+                                <textarea class="form-control" name="ket" rows=3></textarea>
                             </div>
-                            <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
+                            <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
                                 <label>Tanggal Batas Input</label>
                                 <input class="form-control datepickerthis" value="<?=date('Y-m-d')?>" name="max_input_date">
                             </div>
-                            <div class="col-md-12 col-sm-12 col-lg-6 mt-3">
+                            <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
                                 <label>Tanggal Batas Edit</label>
                                 <input class="form-control datepickerthis" value="<?=date('Y-m-d')?>" name="max_change_date">
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
+                                <label>Surat Tugas</label>
+                                <select class="form-control select2-navy" style="width: 100%;"
+                                    id="flag_surat_tugas" data-dropdown-css-class="select2-navy" name="flag_surat_tugas">
+                                    <option value="0">Tidak</option>
+                                    <option value="1">Ya</option>
+                                </select>
                             </div>
                             <div class="col-lg-12 col-md-12 mt-3 text-right">
                                 <hr>
@@ -93,14 +101,16 @@
 
         $(".timepicker").datetimepicker({
             pickDate: false,
-            minuteStep: 15,
+            minuteStep: 1,
             // pickerPosition: 'bottom-right',
             format: 'HH:ii',
             autoclose: true,
-            showMeridian: true,
+            // showMeridian: true,
             startView: 1,
             maxView: 1,
         });
+
+        $('.timepicker').val('<?=date("H:i")?>')
 
         loadListEvent()
     })
@@ -118,4 +128,27 @@
             btnLoader('btn_refresh')
         })
     }
+
+    $('#form_input').on('submit', function(e){
+        e.preventDefault()
+        btnLoader('btn_save', 'Menyimpan...')
+        $.ajax({
+            url: '<?=base_url("master/C_Master/inputDataEvent")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let resp = JSON.parse(data)
+                if(resp.code == 1){
+                    errortoast(resp.message)
+                } else {
+                    successtoast('Data Event Berhasil Ditambahkan')
+                    loadListEvent()
+                }
+                btnLoader('btn_save')
+            }, error: function(e){
+                btnLoader('btn_save')
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
 </script>

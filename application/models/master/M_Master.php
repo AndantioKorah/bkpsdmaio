@@ -1365,12 +1365,47 @@
     }
 
     public function loadListEvent(){
-        return $this->db->select('*')
-                        ->from('db_sip.event')
-                        ->where('flag_active', 1)
-                        ->order_by('tgl', 'desc')
-                        ->order_by('created_at', 'asc')
+        return $this->db->select('a.*, trim(b.nama) as inputer')
+                        ->from('db_sip.event a')
+                        ->where('a.flag_active', 1)
+                        ->join('m_user b', 'a.created_by = b.id', 'left')
+                        ->order_by('a.tgl', 'desc')
+                        ->order_by('a.created_at', 'asc')
                         ->get()->result_array();
+    }
+
+    public function inputDataEvent($dataInput){
+        $data['code'] = 0;
+        $data['message'] = "";
+
+        $dataInput['created_by'] = $this->general_library->getId();
+        $this->db->insert('db_sip.event', $dataInput);
+
+        return $data;
+    }
+
+    public function saveEditDataEvent($dataEdit, $id){
+        $data['code'] = 0;
+        $data['message'] = "";
+
+        $dataEdit['updated_by'] = $this->general_library->getId();
+        $this->db->where('id', $id)
+                ->update('db_sip.event', $dataEdit);
+
+        return $data;
+    }
+
+    public function deleteDataEvent($id){
+        $data['code'] = 0;
+        $data['message'] = "";
+
+        $this->db->where('id', $id)
+                ->update('db_sip.event', [
+                    'updated_by' => $this->general_library->getId(),
+                    'flag_active' => 0
+                ]);
+
+        return $data;
     }
 
 

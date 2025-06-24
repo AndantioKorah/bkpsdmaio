@@ -7269,7 +7269,7 @@ public function submitEditJabatan(){
             if($hari_libur){
                 foreach($hari_libur as $hl){
                     if(date('Y-m-d') == $hl['tanggal']){
-                        if($flagVerifOperator == 0){
+                        if($flagVerifOperator == 1){
                             $res['code'] = 1;
                             $res['message'] = 'Permohonan Cuti hanya dapat diajukan pada hari kerja';
                             return $res;
@@ -7293,7 +7293,7 @@ public function submitEditJabatan(){
                 ->get()->row_array();
 
             if(getNamaHari($dateOnly) == "Sabtu" || getNamaHari($dateOnly) == "Minggu"){
-                if($flagVerifOperator == 0){
+                if($flagVerifOperator == 1){
                     $res['code'] = 1;
                     $res['message'] = 'Permohonan Cuti hanya dapat diajukan pada hari kerja';
                     return $res;
@@ -7306,7 +7306,7 @@ public function submitEditJabatan(){
 
                 $diff = strtotime($jamPulang) - strtotime($timeOnly);
                 if($diff < ($maxJam * (3600 - 59))){
-                    if($flagVerifOperator == 0){
+                    if($flagVerifOperator == 1){
                         $res['code'] = 1;
                         $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
                         return $res;

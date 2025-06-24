@@ -102,20 +102,14 @@
         } 
         ?>
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
-        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDokSuket">
         Upload Dokumen
         </button>
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
-        <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
-        <i class="fa fa-file-trash"></i> Batal DS</button>
+        <button onclick="deleteFilex('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-info ml-1 ">
+        <i class="fa fa-file"></i> Sudah Usul DS </button>
         <?php } ?>
-        
-
-
-   
-
-
 
    </div>
 
@@ -132,7 +126,7 @@
  </li>
 
  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sk_pns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
+    <button onclick="getFile(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP <?=$tahun_1_lalu;?></button>
@@ -404,7 +398,7 @@
       <div class="modal-body">
         <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+        <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
         <input type="hidden" id="skp1" name="skp1"  value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
@@ -439,7 +433,7 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/previewDraftSuketTidakTubel')?>" target="_blank">
+      <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftSuketTidakTubel')?>" target="_blank">
       
       <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
@@ -451,17 +445,12 @@
           <label for="exampleInputEmail1">Instansi Tujuan</label>
           <input type="text" class="form-control" id="instansi_tujuan" name="instansi_tujuan">
           </div> 
-          <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Preview</button>
+          <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
 
         </form>
          <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
       <div class="form-group">
-          <!-- <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
-          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly> -->
-          <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
-       
+          <!-- <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button> -->
         </form>
 
       </div>
@@ -471,37 +460,6 @@
 
 
 
-<!-- Modal -->
-<div class="modal fade" id="modalUploadDok" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> Upload Dokumen</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-           <form id="upload_dok_form" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
-          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
-          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
-          
-          <label for="exampleInputEmail1">Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin</label>
-          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
-
-           <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Menjalani Proses Pidana</label>
-          <input type="file" class="form-control "  id="pdf_surat_pidana" name="file2" required>
-          </div> 
-          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> 
 
 		
 <div class="modal fade" id="modal_view_file" >
@@ -520,6 +478,8 @@
     </div>
 </div>
     
+
+
 
 <script>
 
@@ -588,7 +548,7 @@ function openPresensiTab(){
     $('#ket').html('');
    
     var id_layanan = "<?=$id_m_layanan;?>";
-    if(file == "skcpns" || file == "sk_pns"){
+    if(file == "skcpns" || file == "skpns"){
           dir = "arsipberkaspns/";
         } else if(file == "skpangkat"){
           dir = "arsipelektronik/";

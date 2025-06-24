@@ -704,6 +704,14 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/23')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Keterangan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tidak Pernah Dijatuhi <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hukuman Disiplin dan Hukuman Pidana
+					</a>
+				</li>
+				<?php } ?>
+				
 				<?php if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/21')?>">

@@ -2555,7 +2555,11 @@ class C_Kepegawaian extends CI_Controller
 				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
-				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','76','0');
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','22','0');
+                if($data['str_serdik'] == null){
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','21','0');
+				}
+
 
 			}
 			if($id_layanan == 13){
@@ -2563,7 +2567,10 @@ class C_Kepegawaian extends CI_Controller
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
-				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','76','0');
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','22','0');
+                if($data['str_serdik'] == null){
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','21','0');
+				}
 				$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
 
 			}
@@ -3290,6 +3297,41 @@ class C_Kepegawaian extends CI_Controller
 		$dataPost = $this->input->post();
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 
+    }
+
+	public function downloadDraftSuketTidakTubel(){
+		$nip = $this->input->post('nip');
+		$id_usul = $this->input->post('id_usul');
+		$jenis = $this->input->post('jenis');
+		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		$data['nomor_surat'] = $this->input->post('nomor_surat');
+		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
+		$mpdf = new \Mpdf\Mpdf();
+			$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+
+		
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		$html = $this->load->view('kepegawaian/surat/V_SuratKetTidakTubel', $data, true); 
+		$file_pdf = $random_number."surat_ket_tidak_tubel_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
+	    $url = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($url, 'D');
     }
 
 }

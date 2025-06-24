@@ -1,32 +1,14 @@
-<!-- <style>
-  @media print {
-
-    
-@page {
-  size: F4;
-}
-
-	p {
-		font-size: 16pt;
-        font-family: "Bookman Old Style";
-        color:#000;
-	}
-
-    table {
-        font-size: 14;
-        font-family: "Bookman Old Style";
-        color:#000;
-    }
-}
-</style> -->
 <html>
 <style>
+	#body_dpcp{
+	font-family: Tahoma !important;
+    }
+
 	#bodysurat {
+		/* font-family: Arial, Helvetica, sans-serif !important; */
 		font-family: Tahoma !important;
 		font-size: 17px !important;
 		/* line-height: 20px !important; */
-		
-
 	}
 
 	/* td {
@@ -48,15 +30,17 @@
 
 	/* .center {
 		text-align: center;
-	}
+	} */
 
 	.justify {
 		text-align: justify;
-	} */
-
-	p {
-		/* text-align: center; */
 	}
+
+	/* p {
+		font-family: Arial, Helvetica, sans-serif !important;
+		font-size: 17px !important;
+		line-height: 20px !important;
+	} */
 
 	p.judul {
 		text-align: center;
@@ -72,6 +56,7 @@
 		font-size: 17px !important;
 	} */
 
+	
 	.table_footer_sk{
             font-size: .95rem !important;
 			/* font-size: 17px !important; */
@@ -120,8 +105,8 @@
 	<p>Yang bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
-			<td style="width:22%;">Nama</td>
-			<td style="text-align: center;width:1%;">:</td>
+			<td style="width:25%;">Nama</td>
+			<td style="text-align: center;width:5%;">:</td>
 			<td style="width:70%;">
 			<?= getNamaPegawaiFull($kaban);?>
 		</td>
@@ -151,8 +136,8 @@
 
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
-			<td style="width:22%;">Nama</td>
-			<td style="text-align: center;width:1%;">:</td>
+			<td style="width:25%;">Nama</td>
+			<td style="text-align: center;width:5%;">:</td>
 			<td style="width:70%;">
 				<?= getNamaPegawaiFull($profil_pegawai);?>
 			</td>

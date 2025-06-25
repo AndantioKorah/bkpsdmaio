@@ -5757,7 +5757,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 11;
         }
 
-        if($this->general_library->getId() != 78){
+        if($this->general_library->getId() != 78 AND $this->general_library->getId() != 87){
         if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){
             // $id_layanan = array(6,7,8,9);
             $id_layanan[] = 6;
@@ -5780,18 +5780,18 @@ public function submitEditJabatan(){
             $id_layanan[] = 16;
 
         }
-        if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
+
+         if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
             $id_layanan[] = 21;
         }
-       
 
-        }
-
-         if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){
+        if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){
             $id_layanan[] = 23;
         }
+
          if($this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel')){
             $id_layanan[] = 24;
+        }
         }
 
        
@@ -12832,7 +12832,17 @@ public function getFileForVerifLayanan()
                         ->update('t_layanan', $data);
             }
         // PIDANA HUKDIS
-
+        // SUKET TIDAK TUBEL 
+        if($id_m_layanan == 24){
+        $data["status"] = 1; 
+        $data["reference_id_dok"] = null; 
+        $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+                  
+        $this->db->where('id', $reference_id_dok)
+                    ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        }
+         // SUKET TIDAK TUBEL
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -13639,7 +13649,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     $dataFile 			= $this->upload->data();
                     $dataHD['id_pegawai']      = $id_pegawai;
                     $dataHD['created_by']      = $this->general_library->getId();
-                    $dataHD['id_dokumen']      = 80; 
+                    $dataHD['id_dokumen']      = 81; 
                     $dataHD['status']          = 2; 
                     $dataHD['gambarsk']        = $filehd;
                     $this->db->insert('db_pegawai.pegarsip', $dataHD);

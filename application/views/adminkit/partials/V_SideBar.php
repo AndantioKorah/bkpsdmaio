@@ -477,6 +477,21 @@
 				</a>
 			</li>
 		<?php } ?>
+		<?php 
+			if($this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi()
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
+			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+			){ ?>
+			
+			<li class="sidebar-item ">
+				<a title="Surat Tugas Event" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Surat Tugas Event
+				</a>
+			</li>
+		<?php } ?>
 		<li class="sidebar-item ">
 			<a title="Layanan Karis Karsu" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/layanan')?>">
 				<i class="align-middle me-2 far fa-circle"></i>Administrasi Kepegawaian

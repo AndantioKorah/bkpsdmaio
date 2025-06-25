@@ -2290,4 +2290,46 @@ class M_Layanan extends CI_Model
 
         return $res;
     }
+
+    public function getListUnitKerjaBerjenjang(){
+        $result = null;
+
+        $id_unitkerja = $this->general_library->getUnitKerjaPegawai();
+        $unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->order_by('nm_unitkerja')
+                            ->get()->result_array();
+
+        foreach($unitkerja as $u){
+            if($id_unitkerja == 3010000){ //jika diknas, ambil sekolah2
+                if($u['id_unitkeraj'] == 3010000 ||
+                in_array($u['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+                    $result[] = $u;
+                }
+            } else {
+                if($u['id_unitkerja'] = $id_unitkerja){
+                    $result[] = $u;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
+    public function getListPegawaiSuratTugasEvent($unitkerja){
+        $listUnitKerja = null;
+        foreach($unitkerja as $u){
+            $listUnitKerja[] = $u['id_unitkerja'];
+        }
+
+        return $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                        ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                        ->where_in('a.skpd', $listUnitKerja)
+                        ->order_by('b.eselon', 'asc')
+                        ->order_by('c.id_pangkat', 'asc')
+                        ->order_by('a.nama', 'asc')
+                        ->get()->result_array();
+    }
 }

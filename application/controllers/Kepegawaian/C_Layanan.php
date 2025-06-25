@@ -355,4 +355,11 @@ class C_Layanan extends CI_Controller
 	public function ajukanKembaliUsulDs($id){
 		echo json_encode($this->layanan->ajukanKembaliUsulDs($id));
 	}
+
+	public function suratTugasEvent(){
+		$data['list_unikerja'] = $this->layanan->getListUnitKerjaBerjenjang();
+		$data['list_pegawai'] = $this->layanan->getListPegawaiSuratTugasEvent();
+		$data['list_event'] = $this->general->getAllWithOrder('db_sip.event', 'tgl', 'asc');
+		render('kepegawaian/layanan/V_SuratTugasEvent', '', '', $data);
+	}
 }

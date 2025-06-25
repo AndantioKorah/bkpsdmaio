@@ -139,12 +139,13 @@
             success: function(data){
                 let resp = JSON.parse(data)
                 if(resp.code == 1){
+                    btnLoader('btn_save')
                     errortoast(resp.message)
                 } else {
+                    btnLoader('btn_save')
                     successtoast('Data Event Berhasil Ditambahkan')
                     loadListEvent()
                 }
-                btnLoader('btn_save')
             }, error: function(e){
                 btnLoader('btn_save')
                 errortoast('Terjadi Kesalahan')

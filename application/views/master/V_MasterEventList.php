@@ -6,6 +6,8 @@
             <th class="text-center">Tanggal</th>
             <th class="text-center">Absen Masuk</th>
             <th class="text-center">Absen Pulang</th>
+            <th class="text-center">Radius</th>
+            <th class="text-center">Surat Tugas</th>
             <th class="text-center">Pilihan</th>
         </thead>
         <tbody>
@@ -16,6 +18,8 @@
                     <td class="text-center"><?=formatDateNamaBulan($rs['tgl'])?></td>
                     <td class="text-center"><?=formatTimeAbsen($rs['buka_masuk'])?></td>
                     <td class="text-center"><?=formatTimeAbsen($rs['buka_pulang'])?></td>
+                    <td class="text-center"><?=($rs['radius'])?></td>
+                    <td class="text-center"><?=($rs['flag_surat_tugas'] == 1 ? "Ya" : "Tidak")?></td>
                     <td class="text-center">
                         <button onclick="openModalEdit('<?=$rs['id']?>')" id="btn_edit_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></button>
                         <button onclick="deleteEvent('<?=$rs['id']?>')" id="btn_delete_<?=$rs['id']?>" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>

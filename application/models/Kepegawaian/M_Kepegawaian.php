@@ -11548,6 +11548,9 @@ function getPengajuanLayanan($id,$id_m_layanan){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_hd','left');
         $this->db->join('db_pegawai.pegarsip m', 'm.id = c.reference_id_pidana','left');
     }
+    if($id_m_layanan == 24){
+        $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
+    }
     
     
     return $this->db->get()->result_array();
@@ -13575,6 +13578,81 @@ public function checkListIjazahCpns($id, $id_pegawai){
             }
 
       
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+    return $res;
+        
+	}
+
+    public function uploadSuratLayananSuketTidakTubel()
+	{
+       
+        $this->db->trans_begin();
+        $id_pegawai = $this->input->post('id_pegawai'); 
+        $id_usul = $this->input->post('id_usul'); 
+        $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+            $filehd = null;
+            $filepidana = null;
+            $nip = $this->input->post('nip');
+
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filehd = "suket_tidak_tubel_$nip"."_$random_number".".pdf";
+            $target_dir	= './arsiplain/';
+
+            $this->load->library('upload');
+
+            
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE;
+            $config['file_name']            = $filehd;
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                return $res;
+            } else {
+                    $dataFile 			= $this->upload->data();
+                    $dataHD['id_pegawai']      = $id_pegawai;
+                    $dataHD['created_by']      = $this->general_library->getId();
+                    $dataHD['id_dokumen']      = 80; 
+                    $dataHD['status']          = 2; 
+                    $dataHD['gambarsk']        = $filehd;
+                    $this->db->insert('db_pegawai.pegarsip', $dataHD);
+                    $id_insert_hd = $this->db->insert_id();
+                    $dataUpdateHD["status"] = 3;
+                    $dataUpdateHD["reference_id_dok"] = $id_insert_hd;
+                    $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdateHD);
+                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+                    $url_file = "arsiplain/".$filehd;
+                    $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                    'message' => $caption,
+                    'filename' => $filehd,
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => 'Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin dan Hukuman Pidana'
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
 
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();

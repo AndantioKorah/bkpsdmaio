@@ -2921,6 +2921,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->uploadSuratLayananPidanaHukdis());
 	}
 
+	public function uploadSuratLayananSuketTidakTubel()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananSuketTidakTubel());
+	}
+
 
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {

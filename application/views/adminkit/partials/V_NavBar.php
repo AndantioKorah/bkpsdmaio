@@ -165,7 +165,8 @@
 	<?php if($this->general_library->getRole() == 'programmer' 
 	|| $this->general_library->getRole() == 'admin_aplikasi' 
 	|| $this->general_library->isHakAkses('akses_profil_pegawai') 
-	|| $this->general_library->isKasubagKepegawaianDiknas() 
+	|| $this->general_library->isKasubagKepegawaianDiknas()
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
 	|| $this->general_library->getRole() == 'walikota') { ?>
 		<?php
 			// $number = excelRoundDown(30665.78, 5);

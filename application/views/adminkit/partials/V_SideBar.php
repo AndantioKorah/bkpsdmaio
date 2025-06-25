@@ -487,7 +487,7 @@
 			){ ?>
 			
 			<li class="sidebar-item ">
-				<a title="Surat Tugas Event" class="sidebar-link sidebar-link-child" href="<?=base_url('tpp/upload-berkas')?>">
+				<a title="Surat Tugas Event" class="sidebar-link sidebar-link-child" href="<?=base_url('event/surat-tugas')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Surat Tugas Event
 				</a>
 			</li>

@@ -2322,14 +2322,274 @@ class M_Layanan extends CI_Model
             $listUnitKerja[] = $u['id_unitkerja'];
         }
 
-        return $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat')
+        return $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat, d.id as id_m_user')
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                         ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                        ->join('m_user d', 'a.nipbaru_ws = d.username')
                         ->where_in('a.skpd', $listUnitKerja)
                         ->order_by('b.eselon', 'asc')
-                        ->order_by('c.id_pangkat', 'asc')
+                        // ->order_by('c.id_pangkat', 'desc')
                         ->order_by('a.nama', 'asc')
+                        ->where('a.id_m_status_pegawai', 1)
+                        ->where('d.flag_active', 1)
                         ->get()->result_array();
+    }
+
+    public function uploadFileSuratTugasEvent(){
+        $res['code'] = 0;
+        $res['message'] = "";
+        $res['data'] = "";
+
+        $file = $_FILES['file'];
+		$uploadedFile = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
+
+        $namaFolder = "arsipsurattugasevent";
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+        
+        if(!file_exists($namaFolder."/".$tahun) && !is_dir($namaFolder."/".$tahun)) {
+            mkdir($namaFolder."/".$tahun, 0777, TRUE);       
+        }
+
+        if(!file_exists($namaFolder."/".$tahun."/".$bulan) && !is_dir($namaFolder."/".$tahun."/".$bulan)) {
+            mkdir($namaFolder."/".$tahun."/".$bulan, 0777, TRUE);       
+        }
+
+        if($file){
+            $newFileName = generateRandomString()."_".str_replace(' ', '_', $_FILES['file']['name']);
+            $config['upload_path'] = $namaFolder.'/'.$tahun.'/'.$bulan.'/';
+            $config['allowed_types'] = '*';
+            $config['file_name'] = $newFileName;
+            $this->load->library('upload', $config);
+
+            // $newFileName = generateRandomString()."_".str_replace(' ', '_', $file['name']);
+            $file['name'] = $newFileName;
+
+            $_FILES['file_usul_ds']['name'] = $newFileName;
+            $_FILES['file_usul_ds']['type'] = $file['type'];
+            $_FILES['file_usul_ds']['tmp_name'] = $file['tmp_name'];
+            $_FILES['file_usul_ds']['error'] = $file['error'];
+            $_FILES['file_usul_ds']['size'] = $file['size'];
+
+            if(!file_exists($namaFolder."/".$tahun."/".$bulan."/".$newFileName)){
+                if(!$this->upload->do_upload('file_usul_ds')){ // jika gagal upload
+                    $res['code'] = 1;
+                    $res['message'] = $this->upload->display_errors();
+                } else { // jika berhasil upload
+                    $uploadedFile[$newFileName] = $file;
+                    $this->session->set_userdata('upload_surat_tugas_event_'.$this->general_library->getId(), $uploadedFile);
+                    $res['message'] = "Berhasil";
+                }
+            }
+        }
+
+        $res['data'] = $uploadedFile ? count($uploadedFile) : 0;
+        return $res;
+    }
+
+    public function removeuploadSuratTugasEvent($filename){
+        $namaFolder = "arsipsurattugasevent";
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+        if(!file_exists($namaFolder."/".$tahun) && !is_dir($namaFolder."/".$tahun)) {
+            mkdir($namaFolder."/".$tahun, 0777, TRUE);       
+        }
+
+        if(!file_exists($namaFolder."/".$tahun."/".$bulan) && !is_dir($namaFolder."/".$tahun."/".$bulan)) {
+            mkdir($namaFolder."/".$tahun."/".$bulan, 0777, TRUE);       
+        }
+
+        if($filename == "0"){
+            unlink($namaFolder."/".$tahun."/".$bulan."/".$filename);
+        } else {
+    		$uploadedFile = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
+            if($uploadedFile){
+                foreach($uploadedFile as $uf){
+                    if(file_exists($namaFolder."/".$tahun."/".$bulan."/".$uf['name'])){
+                        unlink($namaFolder."/".$tahun."/".$bulan."/".$uf['name']);
+                    }
+                }
+            }
+        }
+    }
+
+    public function submitUploadSuratTugasEvent(){
+        $rs['code'] = 0;
+        $rs['message'] = "";
+
+        $this->db->trans_begin();
+
+        $dataInput = $this->input->post();
+        
+        $event = $this->db->select('*')
+                        ->from('db_sip.event')
+                        ->where('id', $dataInput['list_event'])
+                        ->get()->row_array();
+
+        if(date('Y-m-d') > $event['max_input_date']){
+            $rs['code'] = 1;
+            $rs['message'] = "Tidak bisa mengupload Surat Tugas Event karena sudah melewati batas upload Surat Tugas Event yaitu pada ".formatDateNamaBulan($event['max_input_date']);
+            $this->db->trans_rollback();
+            return $rs;
+        }
+        
+        $uploadedFile = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
+        $selectedFile = null;
+        foreach($uploadedFile as $uf){
+            $selectedFile = $uf['name'];
+        }
+
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+        
+        $dataEvent = null;
+        $dataEventDetail = null;
+        $insertId = null;
+
+        $idMUser = [];
+        $idUnitKerja = null;
+        $explTglEvent = explode("-", $event['tgl']);
+        $tanggalEvent = $explTglEvent[2];
+        $bulanEvent = $explTglEvent[1];
+        $tahunEvent = $explTglEvent[0];
+
+        foreach($dataInput['list_pegawai'] as $di){
+            $expl = explode(";", $di);
+            $idMUser[] = $expl[2];
+            $idUnitKerja = $expl[0];
+        }
+
+        $exists = $this->db->select('a.*, b.nm_unitkerja, c.judul')
+                            ->from('t_pegawai_event a')
+                            ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                            ->join('db_sip.event c', 'a.id_event = c.id')
+                            ->where('a.id_unitkerja', $idUnitKerja)
+                            ->where('a.id_event', $dataInput['list_event'])
+                            ->where('a.flag_active', 1)
+                            ->limit(1)
+                            ->get()->row_array();
+
+        if($exists){
+            $rs['code'] = 1;
+            $rs['message'] = "Surat Tugas Event ".$exists['judul']." untuk ".$exists['nm_unitkerja']." tidak bisa diinput karena sudah ada.";
+            $this->db->trans_rollback();
+            return $rs;
+        }
+
+        $existsDokpen = $this->db->select('a.*, b.nama')
+                                    ->from('t_dokumen_pendukung a')
+                                    ->join('m_user b', 'a.id_m_user = b.id')
+                                    ->where('a.id_m_user', $expl[2])
+                                    ->where_not_in('a.id_m_jenis_disiplin_kerja', [19, 20])
+                                    ->where_in('a.status', [1,2])
+                                    ->where('a.flag_active', 1)
+                                    ->where('a.tanggal', floatval($tanggalEvent))
+                                    ->where('a.bulan', floatval($bulanEvent))
+                                    ->where('a.tahun', $tahunEvent)
+                                    ->where('b.flag_active', 1)
+                                    ->limit(1)
+                                    ->get()->row_array();
+            if($existsDokpen){
+                $rs['code'] = 1;
+                $rs['message'] = "Tidak dapat menginput Surat Tugas Event karena pegawai atas nama ".$existsDokpen['nama']." memiliki Dokumen Pendukung pada tanggal ".formatDateNamaBulan($event['tgl']);
+                $this->db->trans_rollback();
+                return $rs;
+            }
+
+        foreach($dataInput['list_pegawai'] as $d){
+            $expl = explode(";", $d);
+
+            if(!isset($dataEvent[$expl[0]])){
+                $dataEvent[$expl[0]]['id_unitkerja'] = $expl[0];
+                $dataEvent[$expl[0]]['id_event'] = $dataInput['list_event'];
+                $dataEvent[$expl[0]]['url_file'] = "arsipusulds/".$tahun."/".$bulan."/".$selectedFile;
+                $dataEvent[$expl[0]]['created_by'] = $this->general_library->getId();
+
+                $this->db->insert('t_pegawai_event', $dataEvent[$expl[0]]);
+                $insertId[$expl[0]] = $this->db->insert_id();
+            }
+
+            $dataEventDetail[$expl[1]]['id_t_pegawai_event'] = $insertId[$expl[0]];
+            $dataEventDetail[$expl[1]]['nip'] = $expl[1];
+            $dataEventDetail[$expl[1]]['id_m_user'] = $expl[2];
+            $dataEventDetail[$expl[1]]['created_by'] = $this->general_library->getId();
+        }
+
+        if($dataEventDetail){
+            $this->db->insert_batch('t_pegawai_event_detail', $dataEventDetail);
+        }
+
+        if($this->db->trans_status() == FALSE || $rs['code'] != 0){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $rs;
+    }
+
+    public function loadListSuratTugas(){
+        $unitkerja = $this->getListUnitKerjaBerjenjang();
+        $listUk = null;
+        foreach($unitkerja as $u){
+            $listUk[] = $u['id_unitkerja'];
+        }
+
+        return $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
+                    ->from('t_pegawai_event a')
+                    ->join('db_sip.event b', 'a.id_event = b.id')
+                    ->join('m_user c', 'a.created_by = c.id')
+                    ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
+                    ->where('c.flag_active', 1)
+                    ->where_in('a.id_unitkerja', $listUk)
+                    ->where('a.flag_active', 1)
+                    ->order_by('b.tgl', 'desc')
+                    ->order_by('a.created_date', 'desc')
+                    ->get()->result_array();
+    }
+
+    public function deleteSuratTugasEvent($id){
+        $this->db->where('id', $id)
+                ->update('t_pegawai_event', [
+                    'updated_by' => $this->general_library->getId(),
+                    'flag_active' => 0
+                ]);
+
+        $this->db->where('id_t_pegawai_event', $id)
+                ->update('t_pegawai_event_detail', [
+                    'updated_by' => $this->general_library->getId(),
+                    'flag_active' => 0
+                ]);
+    }
+
+    public function getListPegawaiEventDetail($id){
+        return $this->db->select('a.id as id_t_pegawai_event_detail, b.*, c.nama_jabatan, d.nm_pangkat')
+                            ->from('t_pegawai_event_detail a')
+                            ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                            ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                            ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
+                            ->where('a.id_t_pegawai_event', $id)
+                            ->where('a.flag_active', 1)
+                            ->order_by('b.nama')
+                            ->get()->result_array();
+    }
+
+    public function loadDetailSuratTugasEvent($id){
+        $tEvent = $this->db->select('a.*, c.nama as inputer, b.*, a.id as id_t_pegawai_event')
+                        ->from('t_pegawai_event a')
+                        ->join('db_sip.event b', 'a.id_event = b.id')
+                        ->join('m_user c', 'a.created_by = c.id')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+
+        // $tEventDetail = $this->getListPegawaiEventDetail($tEvent['id_t_pegawai_event']);
+
+        return [
+            'data' => $tEvent,
+            // 'detail' => $tEventDetail
+        ];
     }
 }

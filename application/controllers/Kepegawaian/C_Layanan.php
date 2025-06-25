@@ -357,9 +357,57 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function suratTugasEvent(){
-		$data['list_unikerja'] = $this->layanan->getListUnitKerjaBerjenjang();
-		$data['list_pegawai'] = $this->layanan->getListPegawaiSuratTugasEvent();
+		$data['list_unitkerja'] = $this->layanan->getListUnitKerjaBerjenjang();
+		$data['list_pegawai'] = $this->layanan->getListPegawaiSuratTugasEvent($data['list_unitkerja']);
 		$data['list_event'] = $this->general->getAllWithOrder('db_sip.event', 'tgl', 'asc');
+		$this->session->set_userdata('upload_surat_tugas_event_'.$this->general_library->getId(), null);
 		render('kepegawaian/layanan/V_SuratTugasEvent', '', '', $data);
 	}
+
+	public function uploadFileSuratTugasEvent(){
+		echo json_encode($this->layanan->uploadFileSuratTugasEvent());
+	}
+
+	public function removeuploadSuratTugasEvent(){
+		$filename = $this->input->post('filename');
+		$this->layanan->removeuploadSuratTugasEvent($filename);
+		$uploadedFile = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
+		unset($uploadedFile[$filename]);
+	}
+
+	public function removeAllUploadFileSuratTugasEvent(){
+		$this->layanan->removeuploadSuratTugasEvent("0");
+		$this->session->set_userdata('upload_surat_tugas_event_'.$this->general_library->getId(), null);
+	}
+
+	public function getSelectedFileSuratTugasEvent(){
+		$result['data'] = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
+		$result['count'] = $result['data'] ? count($result['data']) : 0;
+
+		echo json_encode($result);
+	}
+	
+	public function submitUploadSuratTugasEvent(){
+		echo json_encode($this->layanan->submitUploadSuratTugasEvent());
+	}
+
+	public function loadListSuratTugas(){
+		$data['result'] = $this->layanan->loadListSuratTugas();
+		$this->load->view('kepegawaian/layanan/V_SuratTugasEventList', $data);
+	}
+
+	public function deleteSuratTugasEvent($id){
+		$this->layanan->deleteSuratTugasEvent($id);
+	}
+
+	public function loadDetailSuratTugasEvent($id){
+		$data['result'] = $this->layanan->loadDetailSuratTugasEvent($id);
+		$this->load->view('kepegawaian/layanan/V_SuratTugasEventDetail', $data);
+	}
+
+	public function getListPegawaiEventDetail($id){
+		$data['list_pegawai'] = $this->layanan->getListPegawaiEventDetail($id);
+		$this->load->view('kepegawaian/layanan/V_SuratTugasEventDetailListPegawai', $data);
+	}
+
 }

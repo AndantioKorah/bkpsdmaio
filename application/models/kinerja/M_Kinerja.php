@@ -1722,12 +1722,34 @@
                 // jika admin bisa input di hari libur
                 $listTanggalInput = $list_hari_kerja[2];
             }
+            
             if(!$listTanggalInput){
                 $this->db->trans_rollback();
                 $res['code'] = 1;
                 $res['message'] = 'Tanggal yang dipilih tidak ada tanggal hari kerja';
                 $res['data'] = null;
                 return $res;
+            }
+
+            if($disiplin[0] != 19 && $disiplin[0] != 20){
+                $stEvent = $this->db->select('a.*, c.judul, c.tgl')
+                                ->from('t_pegawai_event_detail a')
+                                ->join('t_pegawai_event b', 'a.id_t_pegawai_event = b.id')
+                                ->join('db_sip.event c', 'b.id_event = c.id')
+                                ->where_in('c.tgl', $listTanggalInput)
+                                ->where('a.flag_active', 1)
+                                ->where('b.flag_active', 1)
+                                ->where('c.flag_active', 1)
+                                ->where('a.id_m_user', $d['id'])
+                                ->get()->row_array();
+
+                if($stEvent){
+                    $this->db->trans_rollback();
+                    $res['code'] = 1;
+                    $res['message'] = 'Gagal mengisi Dokumen Pendukung karena pegawai atas nama '.$d['nama'].' telah masuk dalam Surat Tugas Event '.$stEvent['judul'].' pada '.formatDateNamaBulan($stEvent['tgl']);
+                    $res['data'] = null;
+                    return $res;
+                }
             }
             // foreach($list_tanggal as $l){
             foreach($listTanggalInput as $l){
@@ -2433,6 +2455,27 @@
                             $bulan = $dDok['bulan'] < 10 ? "0".$dDok['bulan'] : $dDok['bulan'];
                             $tglLengkap = $dDok['tahun']."-".$bulan."-".$tanggal;
                             $list_tanggal_dok[] = $tglLengkap;
+                        }
+
+                        if($dataDokumen[0]['id_m_jenis_disiplin_kerja'] != 19 && $dataDokumen[0]['id_m_jenis_disiplin_kerja'] != 20){
+                            $stEvent = $this->db->select('a.*, c.judul, c.tgl')
+                                            ->from('t_pegawai_event_detail a')
+                                            ->join('t_pegawai_event b', 'a.id_t_pegawai_event = b.id')
+                                            ->join('db_sip.event c', 'b.id_event = c.id')
+                                            ->where_in('c.tgl', $list_tanggal_dok)
+                                            ->where('a.flag_active', 1)
+                                            ->where('b.flag_active', 1)
+                                            ->where('c.flag_active', 1)
+                                            ->where('a.id_m_user', $dataDokumen[0]['id_m_user'])
+                                            ->get()->row_array();
+
+                            if($stEvent){
+                                $this->db->trans_rollback();
+                                $res['code'] = 1;
+                                $res['message'] = 'Verifikasi tidak dapat dilanjutkan karena pegawai yang bersangkutan telah masuk dalam Surat Tugas Event '.$stEvent['judul'].' pada '.formatDateNamaBulan($stEvent['tgl']);
+                                $res['data'] = null;
+                                return $res;
+                            }
                         }
 
                         $dataInvalid = $this->db->select('*')

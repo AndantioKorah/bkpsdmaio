@@ -102,13 +102,15 @@
         } 
         ?>
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
-        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDokSuket">
+        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
         Upload Dokumen
         </button>
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
-        <button onclick="deleteFilex('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-info ml-1 ">
-        <i class="fa fa-file"></i> Sudah Usul DS </button>
+          <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+        <i class="fa fa-file-trash"></i> Hapus Dokumen</button>
+        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
         <?php } ?>
 
    </div>
@@ -384,6 +386,51 @@
     
 <div class="text-center" id="riwayat_disiplin"></div>
 
+<div class="modal fade" id="modal_view_file" >
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+           <div id="modal_view_file_content">
+            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form id="upload_dok_form" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          
+          <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</label>
+          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
+
+          </div> 
+          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="modelVerif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -462,23 +509,8 @@
 
 
 		
-<div class="modal fade" id="modal_view_file" >
-<div id="modal-dialog" class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-        <div class="modal-body">
-           <div id="modal_view_file_content">
-            <h5  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
-            <iframe style="display: none; width: 100%; height: 80vh;" type="application/pdf"  id="iframe_view_file"  frameborder="0" ></iframe>	
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-    
 
+    
 
 
 <script>
@@ -814,7 +846,7 @@ function kirimBkad(id,status){
         // }
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananPidanaHukdis")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananSuketTidakTubel")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

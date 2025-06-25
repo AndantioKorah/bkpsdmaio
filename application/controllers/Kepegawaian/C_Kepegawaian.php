@@ -2921,6 +2921,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->uploadSuratLayananPidanaHukdis());
 	}
 
+	public function uploadSuratLayananSuketTidakTubel()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananSuketTidakTubel());
+	}
+
 
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {
@@ -3201,13 +3206,14 @@ class C_Kepegawaian extends CI_Controller
             18, // margin header
             12
         );
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
 		if($jenis == 1){
 		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
-		$file_pdf = "surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
+		$file_pdf = $random_number."surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
 		}
 		if($jenis == 2){
 		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
-		$file_pdf = "surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
+		$file_pdf = $random_number."surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
 		} 
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;

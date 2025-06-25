@@ -608,11 +608,11 @@
 			</a>
 			<ul id="verifikasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAksesVerifLayanan()){ ?>
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="Layanan" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/teknis')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan
 					</a>
-				</li>
+				</li> -->
 				<?php } ?>
 				<?php if(($this->general_library->isProgrammer()
 				|| stringStartWith('Kepala Bidang', $this->general_library->getNamaJabatan())

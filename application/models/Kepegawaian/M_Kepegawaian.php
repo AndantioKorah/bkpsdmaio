@@ -5783,6 +5783,12 @@ public function submitEditJabatan(){
         if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){
             $id_layanan[] = 21;
         }
+        if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){
+            $id_layanan[] = 23;
+        }
+         if($this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel')){
+            $id_layanan[] = 24;
+        }
 
         }
 

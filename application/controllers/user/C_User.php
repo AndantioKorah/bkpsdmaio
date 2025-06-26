@@ -570,7 +570,7 @@ class C_User extends CI_Controller
         $data = $this->session->userdata('data_search_database');
         if($flag_excel == 0){
             $mpdf = new \Mpdf\Mpdf([
-                'format' => 'Legal-P',
+                'format' => 'Legal-L',
                 'debug' => true
             ]);
             $html = $this->load->view('user/V_PegawaiAllResultPdf', $data, true);

@@ -19,48 +19,43 @@
             text-decoration: underline;
             color: #17a2b8 !important;
         }
+
+        #body_download_database{
+        }
     </style>
-    <body style="font-family: Tahoma;">
+    <body id="body_download_database" style="font-family: Tahoma;">
         <?php
             $this->load->view('adminkit/partials/V_HeaderRekapAbsen', '');
         ?>
+        <b><center>DAFTAR NOMINATIF<br><?=strtoupper($result[0]['nm_unitkerja'])?></center><b>
         <table border=1 style="width: 100%; border-collapse: collapse; padding: 3px; margin-top: 10px;" id="result_all_pegawai">
             <tr>
-                <td style="font-weight: bold; text-align: center; width: 10%;">No</td>
-                <td style="font-weight: bold; text-align: center; width: 30%;">Pegawai</td>
-                <td style="font-weight: bold; text-align: center; width: 5%;">Eselon</td>
-                <td style="font-weight: bold; text-align: center; width: 15%;">Pangkat</td>
-                <td style="font-weight: bold; text-align: center; width: 20%;">TMT Pangkat</td>
-                <td style="font-weight: bold; text-align: center; width: 20%;">TMT Jabatan</td>
-                <?php if($use_masa_kerja == 1){ ?>
-                    <td style="font-weight: bold; text-align: center;">Masa Kerja</td>
-                <?php } ?>
-                <td style="font-weight: bold; text-align: center; width: 20%;">Unit Kerja</td>
+                <td style="font-weight: bold; text-align: center;">No</td>
+                <td style="font-weight: bold; text-align: center;">Pegawai</td>
+                <td style="font-weight: bold; text-align: center;">Eselon</td>
+                <td style="font-weight: bold; text-align: center;">NIK</td>
+                <td style="font-weight: bold; text-align: center;">No. HP</td>
+                <td style="font-weight: bold; text-align: center;">Email</td>
             </tr>
             <tbody>
-                <?php if($result){ $no=1; foreach($result as $rs){ ?>
+                <?php if($result){ $no=1; foreach($result as $rs){
+                    $nama_jabatan = $rs['nama_jabatan'];
+                    if($rs['jenis_plt_plh'] && $rs['jabatan'] == $rs['id_jabatan_plt_plh']){
+                        $nama_jabatan = $rs['jenis_plt_plh'].". ".$rs['nama_jabatan'];
+                    }
+                ?>
                     <tr>
-                        <td style="padding: 10px; text-align: center;"><?=$no++?></td>
-                        <td style="padding: 10px; text-align: left;">
-                            <span class="fw-bold namapegawai">
-                                <a target="_blank" style="font-weight: bold; color: black !important;" href="<?=base_url('kepegawaian/profil-pegawai/'.$rs['nipbaru_ws'])?>"><?=getNamaPegawaiFull($rs)?></a>
-                            </span><br>
-                            <span><?=($rs['nama_jabatan'])?></span><br>
-                            <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br>
-                            <?php if($rs['id_statuspeg'] == 1){ ?>
-                                <span class="badge badge-cpns"><?=$rs['nm_statuspeg']?></span>
-                            <?php } else if($rs['id_statuspeg'] == 3){ ?>
-                                <span class="badge badge-pppk"><?=$rs['nm_statuspeg']?></span>
-                            <?php } ?>
+                        <td style="padding: 5px; text-align: center;"><?=$no++?></td>
+                        <td style="padding: 5px; text-align: left;">
+                            <span style="font-weight: bold; color: black !important;" class="fw-bold namapegawai"><?=getNamaPegawaiFull($rs)?></span><br>
+                            <span><?=$nama_jabatan?></span><br>
+                            <span><?=$rs['nm_pangkat']?></span><br>
+                            <span><?="NIP. ".($rs['nipbaru_ws'])?></span><br>
                         </td>
-                        <td style="padding: 10px; text-align: center;"><?=$rs['eselon']?></td>
-                        <td style="padding: 10px; text-align: left;"><?=$rs['nm_pangkat']?></td>
-                        <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtpangkat'])?></td>
-                        <td class="padding: 10px; text-align: center;"><?=formatDateNamaBulan($rs['tmtjabatan'])?></td>
-                        <?php if($use_masa_kerja == 1){ ?>
-                            <td style="padding: 10px; text-align: center;"><?=$rs['masa_kerja']?></td>
-                        <?php } ?>
-                        <td style="padding: 10px; text-align: left;"><?=$rs['nm_unitkerja']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['eselon']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['nik']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['handphone']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['email']?></td>
                     </tr>
                 <?php } } ?>
             </tbody>

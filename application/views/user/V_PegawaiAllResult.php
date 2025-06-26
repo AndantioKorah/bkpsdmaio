@@ -46,6 +46,10 @@
         </thead>
         <tbody>
             <?php if($result){ $no=1; foreach($result as $rs){
+                $nama_jabatan = $rs['nama_jabatan'];
+                if($rs['jenis_plt_plh'] && $rs['jabatan'] == $rs['id_jabatan_plt_plh']){
+                    $nama_jabatan = $rs['jenis_plt_plh'].". ".$rs['nama_jabatan'];
+                }
                     $badge_status = 'badge-cpns';
                 if($rs['statuspeg'] == 2){
                     $badge_status = 'badge-pns';
@@ -74,7 +78,7 @@
                         <span class="fw-bold namapegawai">
                             <a target="_blank" style="color: black !important;" href="<?=base_url('kepegawaian/profil-pegawai/'.$rs['nipbaru_ws'])?>"><?=getNamaPegawaiFull($rs)?></a>
                         </span><br>
-                        <span><?=($rs['nama_jabatan'])?></span><br>
+                        <span><?=($nama_jabatan)?></span><br>
                         <span><?="NIP. ".formatNip($rs['nipbaru_ws'])?></span><br>
                         <span class="badge <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>
                         <span class="badge <?=$badge_aktif?>"><?=$rs['nama_status_pegawai']?></span>

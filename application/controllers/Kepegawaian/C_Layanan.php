@@ -402,12 +402,22 @@ class C_Layanan extends CI_Controller
 
 	public function loadDetailSuratTugasEvent($id){
 		$data['result'] = $this->layanan->loadDetailSuratTugasEvent($id);
+		$data['list_unitkerja'] = $this->layanan->getListUnitKerjaBerjenjang();
+		$data['list_pegawai'] = $this->layanan->getListPegawaiSuratTugasEvent($data['list_unitkerja']);
 		$this->load->view('kepegawaian/layanan/V_SuratTugasEventDetail', $data);
 	}
 
 	public function getListPegawaiEventDetail($id){
 		$data['list_pegawai'] = $this->layanan->getListPegawaiEventDetail($id);
 		$this->load->view('kepegawaian/layanan/V_SuratTugasEventDetailListPegawai', $data);
+	}
+
+	public function deletePegawaiSuratTugasEvent($id){
+		$this->layanan->deletePegawaiSuratTugasEvent($id);
+	}
+
+	public function editSuratTugasEvent($id){
+		echo json_encode($this->layanan->editSuratTugasEvent($id));
 	}
 
 }

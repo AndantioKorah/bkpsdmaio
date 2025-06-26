@@ -52,13 +52,43 @@
             <div class="col-lg-12 mt-2">
                 <hr>
                 <div class="row">
-                    <div class="col-lg-4">
-                        <h5>LIST PEGAWAI</h5>
+                    <div style="border-right: 1px grey solid;" class="col-lg-4">
+                        <h5>LIST PEGAWAI (<span id="sp_total_pegawai"></span>)</h5>
                         <div class="row">
                             <div class="col-lg-12" style="max-height: 75vh; overflow-x: auto;" id="div_list_pegawai"></div>
                         </div>
                     </div>
-                    <div class="col-lg-8"></div>
+                    <div class="col-lg-8">
+                        <h5>EDIT LIST PEGAWAI</h5>
+                        <form id="form_edit_st">
+                            <div class="col-lg-12 col-md-12 mt-2">
+                                <label>Pilih Pegawai</label>
+                                <select required multiple="multiple" class="form-control select2-navy" style="width: 100%"
+                                    id="list_pegawai_edit" data-dropdown-css-class="select2-navy" name="list_pegawai_edit[]">
+                                    <?php foreach($list_pegawai as $p){ ?>
+                                        <option value="<?=$p['skpd'].";".$p['nipbaru_ws'].";".$p['id_m_user']?>"><?=getNamaPegawaiFull($p)?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-lg-12 mt-2">
+                                <label>Upload Surat Tugas:</label>                                
+                                <input class="form-control" type="file" id="file_st" name="file_st" accept="application/pdf" />
+                                <span style="color:red; font-size: .7rem; font-weight: bold; font-style: italic;">
+                                    *diisi hanya jika ada perubahan Nama Pegawai pada Surat Tugas
+                                </span>
+                            </div>
+                            <div class="col-lg-12 mt-2 text-right">
+                                <hr>
+                                <?php if(date('Y-m-d') <= $result['data']['max_change_date']){ ?>
+                                    <button id="btn_edit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
+                                <?php } else { ?>
+                                    <span style="color:red; font-size: .7rem; font-weight: bold; font-style: italic;">
+                                        Batas Waktu perubahan data Surat Tugas sudah selesai yaitu pada <?=formatDateNamaBulan($result['data']['max_change_date'])?>
+                                    </span>
+                                <?php } ?>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,6 +96,7 @@
     <script>
         $(function(){
             loadListPegawaiSTEvent()
+            $('#list_pegawai_edit').select2()
         })
 
         function loadListPegawaiSTEvent(){
@@ -75,5 +106,36 @@
                 $('#loader').hide()
             })
         }
+
+        $('#form_edit_st').on('submit', function(e){
+            btnLoader('btn_edit')
+            e.preventDefault();
+            var formvalue = $('#form_edit_st');
+            var form_data = new FormData(formvalue[0]);
+            var ins = document.getElementById('file_st').files.length;
+
+            $.ajax({  
+                url:"<?=base_url("kepegawaian/C_Layanan/editSuratTugasEvent/".$result['data']['id'])?>",
+                method:"POST",  
+                data:form_data,  
+                contentType: false,  
+                cache: false,  
+                processData:false,  
+                // dataType: "json",
+                success:function(res){ 
+                    var rs = JSON.parse(res); 
+                    if(rs.code == 0){
+                        successtoast('Data berhasil ditambahkan')
+                        loadListPegawaiSTEvent()
+                    } else {
+                        errortoast(rs.message)
+                    }
+                    btnLoader("btn_edit")
+                }, error: function(e){
+                    btnLoader("btn_edit")
+                    errortoast('Terjadi Kesalahan')
+                }   
+            });
+        })
     </script>
 <?php } ?>

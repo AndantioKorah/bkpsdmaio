@@ -7,8 +7,8 @@
         }
 
         .sec_value{
-            font-size: .65rem;
-            color: grey;
+            font-size: .7em;
+            color: black;
             font-weight: bold;
         }
     </style>
@@ -35,8 +35,8 @@
                     echo base_url().$src;?>" /> 
             </center>
         </div>
-        <div class="col-lg-9">
-            <table class="table_data" style="line-height: 15px;">
+        <div class="col-lg-8">
+            <table class="table_data" style="line-height: 13px;">
                 <tr>
                     <td><span class="value_tabel"><?=getNamaPegawaiFull($lp)?></span></td>
                 </tr>
@@ -64,10 +64,24 @@
     <script>
         $(function(){
             var bLazy = new Blazy();
+            $('#sp_total_pegawai').html('<?=count($list_pegawai)?>')
         })
 
         function deletePegawai(id){
-            btnLoader("btn_delete_pegawai_"+id)
+            if(confirm("Apakah Anda yakin ingin menghapus pegawai?")){
+                btnLoader("btn_delete_pegawai_"+id)
+                $.ajax({
+                    url: '<?=base_url("kepegawaian/C_Layanan/deletePegawaiSuratTugasEvent/")?>'+id,
+                    method: 'post',
+                    data: null,
+                    success: function(data){
+                        successtoast('Data berhasil dihapus')
+                        loadListPegawaiSTEvent()
+                    }, error: function(e){
+                        errortoast('Terjadi Kesalahan')
+                    }
+                })
+            }
         }
     </script>
 <?php } } else { ?>

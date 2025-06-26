@@ -2592,4 +2592,62 @@ class M_Layanan extends CI_Model
             // 'detail' => $tEventDetail
         ];
     }
+
+    public function deletePegawaiSuratTugasEvent($id){
+        $this->db->where('id', $id)
+                ->update('t_pegawai_event_detail', [
+                    'flag_active' => 0,
+                    'updated_by' => $this->general_library->getId()
+                ]);
+    }
+
+    public function editSuratTugasEvent($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $this->db->trans_begin();
+
+        $data = $this->input->post();
+        if($_FILES['file_st']['name'] != ""){
+            $namaFolder = "arsipsurattugasevent";
+            $bulan = getNamaBulan(date('m'));
+            $tahun = date('Y');
+            
+            if(!file_exists($namaFolder."/".$tahun) && !is_dir($namaFolder."/".$tahun)) {
+                mkdir($namaFolder."/".$tahun, 0777, TRUE);       
+            }
+
+            if(!file_exists($namaFolder."/".$tahun."/".$bulan) && !is_dir($namaFolder."/".$tahun."/".$bulan)) {
+                mkdir($namaFolder."/".$tahun."/".$bulan, 0777, TRUE);       
+            }
+
+            $newFileName = generateRandomString()."_".str_replace(' ', '_', $_FILES['file_st']['name']);
+            $_FILES['file_st']['name'] = $newFileName;
+            $config['upload_path'] = $namaFolder.'/'.$tahun.'/'.$bulan.'/';
+            $config['allowed_types'] = '*';
+            $config['file_name'] = $newFileName;
+            $this->load->library('upload', $config);
+
+            if(!$this->upload->do_upload('file_st')){ // jika gagal upload
+            $this->db->trans_rollback();
+                $res['code'] = 1;
+                $res['message'] = $this->upload->display_errors();
+                return $res;
+            } else { // jika berhasil upload
+                $newUrl = $config['upload_path'].$newFileName;
+            }         
+        } else {
+            
+        }
+
+        if($this->db->trans_status() == FALSE || $res['code'] != 0){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan";
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
 }

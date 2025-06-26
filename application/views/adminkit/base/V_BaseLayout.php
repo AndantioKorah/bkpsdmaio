@@ -581,6 +581,7 @@
 <script>
 
 var tmpLabel = null;
+var tmpIdBtn = null;
 var tmpIcon = null;
 
 function fixedHeaderTable() {
@@ -648,6 +649,18 @@ $(function(){
   }
 
   function btnLoader(btnId, label = "Loading...", faLbl = "fa-spin fa-spinner"){
+    if(tmpIdBtn == null){
+      tmpIdBtn = btnId
+    } else {
+      if(tmpIdBtn != btnId){
+        $('#'+tmpIdBtn).html('<i class="'+tmpIcon+'"></i> '+tmpLabel)
+        tmpLabel = null;
+        tmpIcon = null;
+        btn.disabled = false
+        tmpIdBtn = btnId
+      }
+    }
+
     var btn = document.getElementById(btnId)
     if(tmpLabel == null){
       tmpLabel = $('#'+btnId).text();

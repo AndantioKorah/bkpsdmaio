@@ -7,6 +7,7 @@
                 <th class="text-center">Unit Kerja</th>
                 <th class="text-center">Inputer</th>
                 <th class="text-center">Tanggal Input</th>
+                <th class="text-center">File ST</th>
                 <th class="text-center">Pilihan</th>
             </thead>
             <tbody>
@@ -17,6 +18,9 @@
                         <td class="text-left"><?=$rs['nm_unitkerja']?></td>
                         <td class="text-left"><?=($rs['inputer'])?></td>
                         <td class="text-center"><?=formatDateNamaBulanWT($rs['created_date'])?></td>
+                        <td class="text-center">
+                            <a target="_blank" href="<?=base_url($rs['url_file'])?>" class="btn btn-sm btn-outline-danger"><i class="fa fa-file"></i></a>
+                        </td>
                         <td class="text-left">
                             <button onclick="editData('<?=$rs['id']?>')" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></button>
                             <button id="btn_delete_<?=$rs['id']?>" onclick="deleteData('<?=$rs['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>

@@ -51,10 +51,12 @@
                 </tr>
             </table>
             <div class="text-right float-right">
-                <button id="btn_delete_pegawai_<?=$lp['id_t_pegawai_event_detail']?>"
-                    onclick="deletePegawai('<?=$lp['id_t_pegawai_event_detail']?>')" class="btn btn-danger btn-sm">
-                    <i class="fa fa-trash"></i>
-                </button>
+                <?php if(date('Y-m-d') <= $lp['max_change_date']){ ?>
+                    <button id="btn_delete_pegawai_<?=$lp['id_t_pegawai_event_detail']?>"
+                        onclick="deletePegawai('<?=$lp['id_t_pegawai_event_detail']?>')" class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                <?php } ?>
             </div>
         </div>
         <div class="col-lg-12">

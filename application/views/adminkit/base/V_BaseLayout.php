@@ -649,28 +649,30 @@ $(function(){
   }
 
   function btnLoader(btnId, label = "Loading...", faLbl = "fa-spin fa-spinner"){
-    if(tmpIdBtn == null){
-      tmpIdBtn = btnId
-    } else {
-      if(tmpIdBtn != btnId){
-        $('#'+tmpIdBtn).html('<i class="'+tmpIcon+'"></i> '+tmpLabel)
-        tmpLabel = null;
-        tmpIcon = null;
-        btn.disabled = false
-        tmpIdBtn = btnId
-      }
-    }
+    // if(tmpIdBtn == null){
+    //   tmpIdBtn = btnId
+    // } else {
+    //   if(tmpIdBtn != btnId){
+    //     $('#'+tmpIdBtn).html('<i class="'+tmpIcon+'"></i> '+tmpLabel)
+    //     tmpLabel = null;
+    //     tmpIcon = null;
+    //     btn.disabled = false
+    //     tmpIdBtn = btnId
+    //   }
+    // }
 
     var btn = document.getElementById(btnId)
     if(tmpLabel == null){
       tmpLabel = $('#'+btnId).text();
       tmpIcon = $('#'+btnId).find('i').attr('class')
       $('#'+btnId).html('<i class="fas '+faLbl+'"></i> '+label)
+      tempIdBtn = btnId;
       btn.disabled = true;
     } else {
       $('#'+btnId).html('<i class="'+tmpIcon+'"></i> '+tmpLabel)
       tmpLabel = null;
       tmpIcon = null;
+      tempIdBtn = null;
       btn.disabled = false
     }
   }

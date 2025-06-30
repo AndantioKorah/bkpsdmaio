@@ -2504,7 +2504,7 @@ class M_Layanan extends CI_Model
             if(!isset($dataEvent[$expl[0]])){
                 $dataEvent[$expl[0]]['id_unitkerja'] = $expl[0];
                 $dataEvent[$expl[0]]['id_event'] = $dataInput['list_event'];
-                $dataEvent[$expl[0]]['url_file'] = "arsipusulds/".$tahun."/".$bulan."/".$selectedFile;
+                $dataEvent[$expl[0]]['url_file'] = "arsipsurattugasevent/".$tahun."/".$bulan."/".$selectedFile;
                 $dataEvent[$expl[0]]['created_by'] = $this->general_library->getId();
 
                 $this->db->insert('t_pegawai_event', $dataEvent[$expl[0]]);
@@ -2565,11 +2565,13 @@ class M_Layanan extends CI_Model
     }
 
     public function getListPegawaiEventDetail($id){
-        return $this->db->select('a.id as id_t_pegawai_event_detail, b.*, c.nama_jabatan, d.nm_pangkat')
+        return $this->db->select('a.id as id_t_pegawai_event_detail, b.*, c.nama_jabatan, d.nm_pangkat, f.max_change_date')
                             ->from('t_pegawai_event_detail a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
                             ->join('db_pegawai.pangkat d', 'b.pangkat = d.id_pangkat')
+                            ->join('t_pegawai_event e', 'a.id_t_pegawai_event = e.id')
+                            ->join('db_sip.event f', 'e.id_event = f.id')
                             ->where('a.id_t_pegawai_event', $id)
                             ->where('a.flag_active', 1)
                             ->order_by('b.nama')
@@ -2577,7 +2579,7 @@ class M_Layanan extends CI_Model
     }
 
     public function loadDetailSuratTugasEvent($id){
-        $tEvent = $this->db->select('a.*, c.nama as inputer, b.*, a.id as id_t_pegawai_event')
+        $tEvent = $this->db->select('a.*, c.nama as inputer, b.*, a.id as id_t_pegawai_event, b.id as id_event')
                         ->from('t_pegawai_event a')
                         ->join('db_sip.event b', 'a.id_event = b.id')
                         ->join('m_user c', 'a.created_by = c.id')
@@ -2594,21 +2596,56 @@ class M_Layanan extends CI_Model
     }
 
     public function deletePegawaiSuratTugasEvent($id){
-        $this->db->where('id', $id)
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $dataEvent = $this->db->select('a.*')
+                            ->from('t_pegawai_event a')
+                            ->join('t_pegawai_event_detail b', 'a.id = b.id_t_pegawai_event')
+                            ->where('flag_active', 1)
+                            ->where('b.id', $id)
+                            ->get()->row_array();
+
+        if(date('Y-m-d') > $dataEvent['max_change_date']){
+            $res['code'] = 1;
+            $res['message'] = "Data tidak dapat diubah karena sudah melewati Batas Waktu Edit yaitu ".formatDateNamaBulan($dataEvent['max_change_date']);
+        } else {
+            $this->db->where('id', $id)
                 ->update('t_pegawai_event_detail', [
                     'flag_active' => 0,
                     'updated_by' => $this->general_library->getId()
                 ]);
+        }
+
+        return $res;
     }
 
     public function editSuratTugasEvent($id){
         $res['code'] = 0;
         $res['message'] = "";
 
+        $dataEvent = $this->db->select('b.*, a.id as id_t_pegawai_event')
+                            ->from('t_pegawai_event a')
+                            ->join('db_sip.event b', 'a.id_event = b.id')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id', $id)
+                            ->get()->row_array();
+        if($dataEvent){
+            if(date('Y-m-d') > $dataEvent['max_change_date']){
+                $res['code'] = 1;
+                $res['message'] = "Tidak dapat mengubah data karena sudah melewati batas waktu penggantian data yaitu pada tanggal ".formatDateNamaBulan($dataEvent['max_change_date']);
+                return $res;
+            }
+        }
+
         $this->db->trans_begin();
 
         $data = $this->input->post();
+        $newUrl = "";
+        $flagNoChange = 1;
+
         if($_FILES['file_st']['name'] != ""){
+            $flagNoChange = 0;
             $namaFolder = "arsipsurattugasevent";
             $bulan = getNamaBulan(date('m'));
             $tahun = date('Y');
@@ -2635,9 +2672,56 @@ class M_Layanan extends CI_Model
                 return $res;
             } else { // jika berhasil upload
                 $newUrl = $config['upload_path'].$newFileName;
-            }         
-        } else {
-            
+                $this->db->where('id', $id)
+                        ->update('t_pegawai_event', [
+                            'url_file' => $newUrl,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+            }
+        }
+
+        if(isset($data['list_pegawai_edit'])){
+            $flagNoChange = 0;
+            $dataEdit = null;
+            foreach($data['list_pegawai_edit'] as $lpe){
+                $expl = explode(";", $lpe);
+                $dataEdit[$expl[2]]['id_t_pegawai_event'] = $id;
+                $dataEdit[$expl[2]]['id_m_user'] = $expl[2];
+                $dataEdit[$expl[2]]['nip'] = $expl[1];
+                $dataEdit[$expl[2]]['created_by'] = $this->general_library->getId();
+
+                $listId[] = $expl[2];
+            }
+
+            if($dataEdit){
+                $existsPegawai = $this->db->select('*')
+                                        ->from('t_pegawai_event_detail')
+                                        ->where_in('id_m_user', $listId)
+                                        ->where('flag_active', 1)
+                                        ->where('id_t_pegawai_event', $id)
+                                        ->get()->result_array();
+                if($existsPegawai){
+                    foreach($existsPegawai as $ep){
+                        unset($dataEdit[$ep['id_m_user']]);
+                    }
+                }
+
+                if($dataEdit){
+                    $this->db->insert_batch('t_pegawai_event_detail', $dataEdit);
+                } else {
+                    $this->db->trans_rollback();
+                    $res['code'] = 1;
+                    $res['message'] = "Pegawai yang dipilih sudah ada dalam daftar pegawai";
+                    return $res;
+                }
+            }
+        }
+
+        if($flagNoChange == 1){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = "Tidak ada perubahan data, silahkan memilih data yang ingin diubah";
+            return $res;   
         }
 
         if($this->db->trans_status() == FALSE || $res['code'] != 0){

@@ -1668,6 +1668,9 @@
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NULL')
                                     ->where('b.flag_active', 1)
+                                    ->where('b.flag_ditolak', 0)
+                                    ->group_by('a.id')
+                                    ->where('b.flag_ds_cuti', 0)
                                     // ->where_in('e.nipbaru_ws', $listNip)
                                     // ->where('flag_resend !=', 1)
                                     ->order_by('a.urutan', 'asc')
@@ -1676,6 +1679,7 @@
                 
                 $tempExists = null;
                 if($progressCutiWithoutChatId){
+                    $cronWaNextVerifikator = null;
                     foreach($progressCutiWithoutChatId as $pcw){
                         if(!isset($tempExists[$pcw['id_t_pengajuan_cuti']])){
                             if($pcw['tanggal_akhir'] > date('Y-m-d')){
@@ -1707,8 +1711,12 @@
                                     'id_state' => $pcw['id']
                                 ];
                             }
-                            // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                         }
+                    }
+
+                    if($cronWaNextVerifikator){
+                        dd($cronWaNextVerifikator);
+                        // $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
                     }
 
                     if($cronWaNextVerifikator){

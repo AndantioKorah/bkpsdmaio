@@ -44,11 +44,11 @@
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
                     <label>Tanggal Batas Input</label>
-                    <input class="form-control datepickerthisedit" value="<?=date('Y-m-d')?>" name="max_input_date" value="<?=$result['max_input_date']?>">
+                    <input class="form-control datepickerthisedit" name="max_input_date" value="<?=$result['max_input_date']?>">
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
                     <label>Tanggal Batas Edit</label>
-                    <input class="form-control datepickerthisedit" value="<?=date('Y-m-d')?>" name="max_change_date" value="<?=$result['max_change_date']?>">
+                    <input class="form-control datepickerthisedit" name="max_change_date" value="<?=$result['max_change_date']?>">
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-4 mt-3">
                     <label>Surat Tugas</label>

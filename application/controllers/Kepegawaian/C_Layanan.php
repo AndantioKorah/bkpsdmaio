@@ -413,7 +413,7 @@ class C_Layanan extends CI_Controller
 	}
 
 	public function deletePegawaiSuratTugasEvent($id){
-		$this->layanan->deletePegawaiSuratTugasEvent($id);
+		echo json_encode($this->layanan->deletePegawaiSuratTugasEvent($id));
 	}
 
 	public function editSuratTugasEvent($id){

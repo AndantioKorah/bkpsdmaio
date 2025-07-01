@@ -2010,7 +2010,22 @@ class M_Layanan extends CI_Model
                 'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$selected['nama_jabatan']." melalui apikasi Siladen."
             ];
 
-            $selectedUrl = $selected['url_done'] ? $selected['url_done'] : $selected['url'];
+            $selectedUrl = $selected['url_done'];
+            if(!file_exists($selectedUrl)){
+                $selectedUrl = $selected['url'];    
+            }
+
+            $namaFolder = "arsipusulds";
+            $bulan = getNamaBulan(date('m'));
+            $tahun = date('Y');
+            
+            if(!file_exists($namaFolder."/".$tahun) && !is_dir($namaFolder."/".$tahun)) {
+                mkdir($namaFolder."/".$tahun, 0777, TRUE);       
+            }
+
+            if(!file_exists($namaFolder."/".$tahun."/".$bulan) && !is_dir($namaFolder."/".$tahun."/".$bulan)) {
+                mkdir($namaFolder."/".$tahun."/".$bulan, 0777, TRUE);       
+            }
 
             $base64File = null;
             $base64File = base64_encode(file_get_contents(base_url().$selectedUrl));

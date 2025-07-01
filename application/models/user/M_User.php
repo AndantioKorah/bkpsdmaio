@@ -2750,10 +2750,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 20;
-            $bulan = 5;
+            $tanggal = 21;
+            $bulan = 6;
             $tahun = 2025;
-            $namaKegiatan = "Upacara Hari Kebangkitan Nasional"; 
+            $namaKegiatan = "Festival Bung Karno Manado"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -2765,8 +2765,9 @@
                                 ->where('b.flag_active', 1)
                                 ->where('a.id_m_status_pegawai', 1)
                                 ->where('a.statuspeg !=' , 1)
-                                ->where_not_in('c.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
-                                ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                ->where_not_in('c.id_unitkerja', [9000001]) // exclude tubel
+                                // ->where_not_in('c.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                // ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
                                 ->get()->result_array();
 
             $event = $this->db->select('*')
@@ -2781,8 +2782,9 @@
                                     ->from('db_sip.absen a')
                                     ->where('a.tgl', $dateLengkap)
                                     ->where('c.id_m_status_pegawai', 1)
-                                    ->where_not_in('d.id_unitkerja', [9000001, 7005010, 7005020]) // exclude tubel, RSUD, RSKDGM
-                                    ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                    ->where_not_in('d.id_unitkerja', [9000001]) // exclude tubel
+                                    // ->where_not_in('d.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                    // ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
                                     ->where('c.statuspeg !=' , 1)
                                     ->get()->result_array();
 
@@ -2813,28 +2815,39 @@
                 $absenEvent[$e['user_id']] = $e;
             }
 
-            foreach($absenReguler as $ar){
-                if(!isset($absenEvent[$ar['user_id']])){ // melakukan absen reguler tapi tidak absen event
-                    $absenRegulerTidakAbsenEvent[] = $ar;
-                }
-            }
+            // dd($absenEvent);
+
+            // buka ini untuk apel perdana
+            // foreach($absenReguler as $ar){
+            //     if(!isset($absenEvent[$ar['user_id']])){ // melakukan absen reguler tapi tidak absen event
+            //         $absenRegulerTidakAbsenEvent[] = $ar;
+            //     }
+            // }
             
-            foreach($absenRegulerTidakAbsenEvent as $artae){
-                if(!isset($dokpen[$artae['user_id']])){
-                    $absenRegulerTidakAbsenEventFix[] = $artae;
-                    $kenegaraan[$artae['user_id']] = $artae;
-                    $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi bukan presensi ".$namaKegiatan;
-                }
-            }
+            // buka ini untuk apel perdana
+            // foreach($absenRegulerTidakAbsenEvent as $artae){
+            //     if(!isset($dokpen[$artae['user_id']])){
+            //         $absenRegulerTidakAbsenEventFix[] = $artae;
+                    // $kenegaraan[$artae['user_id']] = $artae;
+                    // $kenegaraan[$artae['user_id']]['keterangan_sistem'] = "Melakukan presensi tapi bukan presensi ".$namaKegiatan;
+            //     }
+            // }
 
             foreach($list_pegawai as $lp){
-                if(isset($absenEvent[$lp['user_id']]) && $absenEvent[$lp['user_id']]['pulang'] == null){
-                    $tidakAdaAbsenPulangEvent[] = $lp;
-                    if(isset($kenegaraan[$lp['user_id']])){
-                        dd($lp);
-                    }
+                // buka ini untuk apel perdana
+                // if(isset($absenEvent[$lp['user_id']]) && $absenEvent[$lp['user_id']]['pulang'] == null){
+                //     $tidakAdaAbsenPulangEvent[] = $lp;
+                //     if(isset($kenegaraan[$lp['user_id']])){
+                //         dd($lp);
+                //     }
+                //     // $kenegaraan[$lp['user_id']] = $lp;
+                //     // $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk ".$namaKegiatan;
+                // }
+
+                // buka ini untuk siapapun yang tidak melakukan absen event
+                if(!isset($absenEvent[$lp['user_id']]) && !isset($dokpen[$lp['user_id']])){
                     $kenegaraan[$lp['user_id']] = $lp;
-                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi pulang untuk ".$namaKegiatan;
+                    $kenegaraan[$lp['user_id']]['keterangan_sistem'] = "Tidak melakukan presensi di kegiatan ".$namaKegiatan;
                 }
             }
 
@@ -2850,6 +2863,47 @@
                     $peninjauanAbsensi[$lPnj['id_m_user']] = $lPnj; 
                 }
             }
+
+            $EXCLUDE_NIP_FBKM_ADVENT = [
+                199611292022031012,
+                199310222022032010,
+                199011152022031005,
+                197711062006041006,
+                200002042025052001,
+                197004101991032008,
+                196811062002121003,
+                198307082010012007,
+                198510172003121001,
+                197902042009022003,
+                198209112014102002,
+                199606102024211030,
+                197112182003121005,
+                196711151987021001,
+                197307272002122006,
+                198511252010012008,
+                198307262009021001,
+                198302132002121003,
+                197005212000121004,
+                198009132009022003,
+                198212072006042015,
+                199310302020122017,
+                197812272006042006,
+                198902102019031001,
+                197707042010011005,
+                199608092020122017
+            ];
+
+            $excludeNipPegawai = null;
+            $pegawaiExclude = $this->db->select('*')
+                                    ->from('m_user')
+                                    ->where('flag_active', 1)
+                                    ->where_in('username', $EXCLUDE_NIP_FBKM_ADVENT)
+                                    ->get()->result_array();
+            if($pegawaiExclude){
+                foreach($pegawaiExclude as $pe){
+                    $excludeNipPegawai[$pe['id']] = $pe;
+                }
+            }
             
             $out = null;
             foreach($kenegaraan as $k){
@@ -2858,6 +2912,7 @@
                 && $k['user_id'] != 122
                 && $k['user_id'] != 87
                 && $k['user_id'] != 915
+                && !isset($excludeNipPegawai[$k['user_id']])
                 ){
                     //jika tidak ada dokpen dan tidak melakukan peninjauan absensi
                     $kenegaraanFix[$k['user_id']] = $k;
@@ -2876,15 +2931,15 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
                     $sendWa['sendTo'] = convertPhoneNumber($k['handphone']);
                     $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$k['keterangan_sistem']."*";
                     $sendWa['flag_prioritas'] = 0;
                     $sendWa['type'] = "text";
-                    $this->db->insert('t_cron_wa', $sendWa);
+                    // $this->db->insert('t_cron_wa', $sendWa);
 
-                    echo "input ".$k['user_id']."\n <br>";
+                    // echo "input ".$k['user_id']."\n <br>";
                 } else {
                     $out[] = $k;
                 }

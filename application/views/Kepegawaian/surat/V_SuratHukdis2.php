@@ -86,14 +86,12 @@
       }
 </style>
 <body id="bodysurat">
-	<div class="header" style="margin-top:-40px;margin-right:40px;">
-		<!-- <?php $this->load->view('kepegawaian/surat/V_KopSurat.php');?> -->
-		<?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?>
 
+	<div class="header" style="margin-top:-40px;margin-right:40px;">
+		<?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?>
 	</div>
-		<p class="judul" style="margin-top:5px;"> SURAT PERNYATAAN<br>
-			TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA PENJARA<br>
-			BERDASARKAN PUTUSAN PENGADILAN YANG TELAH BERKEKUATAN HUKUM TETAP </p>
+		<p class="judul" style="margin-top:5px;text-align: center;margin-bottom:-100px;">SURAT PERNYATAAN </p>
+		<p class="" style="margin-top:-5px;text-align: center;margin-bottom:-4px;">TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</p>
 		<?php 
 			$ns = isset($data['nomor_surat']) ? $data['nomor_surat'] : "";
 			if(isset($nomor_surat)){
@@ -105,14 +103,14 @@
 		<?php } else { ?>
 		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
 		<?php }  ?>
-	<p>Yang bertanda-tangan dibawah ini :</p>
+
+
+	<p>Yang nama bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
-			<td style="text-align: center;width:5%;">:</td>
-			<td style="width:70%;">
-			<?= getNamaPegawaiFull($kaban);?>
-		</td>
+			<td style="width:5%;text-align: center;">:</td>
+			<td style="width:70%;"><?= $kaban['gelar1'];?><?= getNamaPegawaiFull($kaban);?></td>
 		</tr>
 		<tr>
 			<td>NIP</td>
@@ -133,16 +131,16 @@
 	</table>
 
 
-	<p>
+	<span>
 		Dengan ini menyatakan dengan sesungguhnya bahwa Pegawai Negeri Sipil :
-	</p>
+	</span>
 
 	<table style="margin-left:50px;width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
-			<td style="text-align: center;width:5%;">:</td>
+			<td style="width:5%;text-align: center;">:</td>
 			<td style="width:70%;">
-				<?= getNamaPegawaiFull($profil_pegawai);?>
+			<?= getNamaPegawaiFull($profil_pegawai);?>
 			</td>
 		</tr>
 		<tr>
@@ -156,8 +154,8 @@
 			<td><?= $profil_pegawai['nm_pangkat'];?></td>
 		</tr>
 		<tr>
-			<td valign="top">Jabatan</td>
-			<td valign="top" style="text-align: center;">:</td>
+			<td>Jabatan</td>
+			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nama_jabatan'];?></td>
 		</tr>
 		<tr>
@@ -165,28 +163,21 @@
 			<td style="text-align: center;">:</td>
 			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
 		</tr>
-
+		<tr>
+			<td colspan="3"> <p class="justify" > Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </p> </td>
+		</tr>
 
 	</table>
 
 
-	<p class="justify besar">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;Tidak sedang menjalani proses pidana atau pernah dipidana penjara
-		berdasarkan putusan pengadilan yang telah berkekuatan hukum tetap karena
-		melakukan tindak pidana kejahatan jabatan atau tindak pidana kejahatan yang
-		ada hubungannya dengan jabatan dan/atau pidana umum. </p>
-
-	<p class="justify besar">
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;Demikian Surat Pernyataan ini saya buat dengan sesungguhnya dengan
-		mengingat sumpah jabatan, dan apabila dikemudian hari ternyata isi surat
-		pernyataan ini tidak benar yang mengakibatkan kerugian bagi negara maka saya
-		bersedia menanggung kerugian negara sesuai dengan ketentuan peraturan
-		perundang-undangan.
-	</p>
+	<p class="justify" >
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian Surat Pernyataan ini saya buat dengan
+		sesungguhnya dengan mengingat
+		sumpah jabatan dan apabila dikemudian hari ternyata isi surat pernyataan ini tidak benar yang
+		mengakibatkan kerugian negara, maka saya bersedia menanggung kerugian tersebut.</p>
 
 
-	<table border="0" style="width:100%;margin-top:10px;">
+	<table border="0" style="width:100%;margin-top:64px;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>
@@ -197,7 +188,9 @@
 			<td class="center" style="width:38%;height:130px;text-align: center;">^</td>
 		</tr>
 	</table>
+
 	<div class="footer-sk-2">
+		<br>
 	<table border="0" style="width:100%;">
 		<tr>
 			<td style="width:100%;">
@@ -211,11 +204,9 @@
 				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
 			<?php } ?>
 			5. Arsip.
-
 			</td>
 			
 		</tr>
-		
 	</table>
 	</div>
 	<div class="footer-sk">
@@ -224,8 +215,8 @@
 	<?php
         // $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
-	<!-- <img style="width: 100%;margin-top: 90px;" src="<?=base_url();?>assets/images/footer.png" alt=""> -->
-	<!-- <span >
+
+	<!-- <span style="margin-top:900px;">
 
 Tembusan Yth.:<br>
 1. Wali Kota Manado;<br>
@@ -234,5 +225,5 @@ Tembusan Yth.:<br>
 4. <?= $this->general_library->getTembusanHukdis($profil_pegawai['id_unitkerjamaster'],$profil_pegawai['nm_unitkerjamaster'],$profil_pegawai['nm_unitkerja']);?>;<br>
 5. Arsip.
 </span> -->
-	</body>
-	</html>
+</body>
+</html>

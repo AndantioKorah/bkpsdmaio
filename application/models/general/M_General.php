@@ -1875,10 +1875,24 @@
                                 ->where('handphone', "0".substr($rs->from, 2, strlen($rs->from)))
                                 ->get()->row_array();
 
+            $namaFile = date('ymdhis');
+            if($pegawai){
+                $namaFile = $pegawai['nipbaru_ws']."_".$namaFile; 
+            }
+            $namaFile .= ".jpg";
+
+            $ch = curl_init($rs->url);
+            $fp = fopen('arsipimagewa/'.$namaFile, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_exec($ch);
+            curl_close($ch);
+            fclose($fp);
+
             $this->db->insert('t_image_message', [
                 'sender' => $rs->from,
                 'nip' => $pegawai ? $pegawai['nipbaru_ws'] : null,
-                'url' => $rs->url,
+                'url' => 'arsipimagewa/'.$namaFile,
                 'date_received' => $dateTime
             ]);
         }

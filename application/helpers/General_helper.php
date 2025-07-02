@@ -1257,6 +1257,9 @@ function countDiffDateLengkap($date1, $date2, $params = '')
     if ($tahun != '0' && in_array('tahun', $params)) {
         $total_waktu = $total_waktu . ' ' . $tahun . ' tahun';
     }
+    if ($tahun == '0' && in_array('tahun', $params)) {
+        $total_waktu = $total_waktu . ' ' . $tahun . ' tahun';
+    }
     if ($bulan != '0' && in_array('bulan', $params)) {
         $total_waktu = $total_waktu . ' ' . $bulan . ' bulan';
     }

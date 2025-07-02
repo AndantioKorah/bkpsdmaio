@@ -91,14 +91,19 @@
 		<?php $this->load->view('adminkit/partials/V_HeaderSKCuti.php');?>
 	</div>
 		<p class="judul" style="margin-top:5px;text-align: center;"> SURAT PERNYATAAN<br>
-			<u>TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</u></p>
+			TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT</p>
 		<?php 
 			$ns = isset($data['nomor_surat']) ? $data['nomor_surat'] : "";
 			if(isset($nomor_surat)){
 				$ns = $nomor_surat;
 			}
 		?>
-		<p class="judul" style="margin-top:-18px;"> Nomor : <?= $ns ?> </p>
+		<?php if(isset($nomor_surat)){ ?>
+		<p class="judul" style="margin-top:-18px;"> Nomor :  800.1.6.2/B.04/BKPSDM/<?= $ns ?>/2025  </p>
+		<?php } else { ?>
+		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
+		<?php }  ?>
+
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:50px;width:100%;" border="0">
@@ -159,7 +164,7 @@
 			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
 		</tr>
 		<tr>
-			<td colspan="3"> <p class="justify"> Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </p> </td>
+			<td colspan="3"> <p class="justify" > Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </p> </td>
 		</tr>
 
 	</table>
@@ -175,8 +180,8 @@
 	<table border="0" style="width:100%;margin-top:128px;">
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA
-				MANADO</td>
+			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>
+				</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
@@ -185,6 +190,7 @@
 	</table>
 
 	<div class="footer-sk-2">
+		<br>
 	<table border="0" style="width:100%;">
 		<tr>
 			<td style="width:100%;">

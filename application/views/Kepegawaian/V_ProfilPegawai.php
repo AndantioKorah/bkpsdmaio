@@ -847,6 +847,9 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
+              <li class="nav-item nav-item-profile" role="presentation">
+                <button onclick="LoadFormKp4()" class="nav-link nav-link-profile" id="pills-kp4-tab" data-bs-toggle="pill" data-bs-target="#pills-kp4" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">KP4</button>
+              </li>
               <?php 
               // if(
                 // $this->general_library->getIdEselon() < 8 && 
@@ -939,6 +942,9 @@
               
               <div class="tab-pane fade" id="pills-arsip" role="tabpanel" aria-labelledby="pills-arsip-tab">
                 <div id="form_arsip"></div>
+              </div>
+                <div class="tab-pane fade" id="pills-kp4" role="tabpanel" aria-labelledby="pills-kp4-tab">
+                <div id="form_kp4"></div>
               </div>
               <div class="tab-pane fade" id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab">
                 <div class="row">
@@ -1571,6 +1577,14 @@
   $('#form_arsip').html(' ')
     $('#form_arsip').append(divLoaderNavy)
     $('#form_arsip').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormArsip/')?>'+nip, function(){
+    $('#loader').hide()    
+    })
+ }
+
+  function LoadFormKp4(){
+  $('#form_kp4').html(' ')
+    $('#form_kp4').append(divLoaderNavy)
+    $('#form_kp4').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormKp4/')?>'+nip, function(){
     $('#loader').hide()    
     })
  }

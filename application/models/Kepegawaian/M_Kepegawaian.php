@@ -733,6 +733,30 @@ class M_Kepegawaian extends CI_Model
                             return $query;
         }
 
+        function getKeluargaPegawai($nip,$jenis){
+             $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegkeluarga c', 'b.id_peg = c.id_pegawai')
+                            ->join('db_pegawai.keluarga d', 'c.hubkel = d.id_keluarga')
+                            ->where('a.username', $nip)
+                            ->where('c.flag_active', 1)
+                            ->where('a.flag_active', 1)
+                            ->where('c.status', 2)
+                            ->order_by('d.id_keluarga','asc');
+                            if($jenis == 1){
+                                $this->db->where('c.hubkel', 30);
+                                $this->db->limit(1);
+                                $query = $this->db->get()->result_array();
+                                  
+                            } else {
+                                $this->db->where('c.hubkel', 40);
+                                $query = $this->db->get()->result_array();
+                            }
+                           
+                            return $query;
+        }
+
         function getOrganisasi($nip,$kode){
             //  $this->db->select('b.*,c.*,b.*,d.*,e.nm_jabatan_organisasi')
              $this->db->select('*, c.id as id_pegorganisasi')
@@ -13934,5 +13958,101 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
         return $result;
     }
+
+    public function simpanKp4(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+   
+
+        $this->db->trans_begin();
+        $datapost = $this->input->post();
+        $id_pegawai = $datapost['id_pegawai']; 
+        $id_pasangan = $datapost['kp4_id_pasangan'];
+        
+
+
+
+        $data['id_pegawai'] = $id_pegawai;
+        $data['jumlah_kel_tertanggung'] = $datapost['kp4_jumlah_kel_tertanggung'];
+        $data['sumber_gaji'] = $datapost['kp4_sumber_gaji'];
+        $data['total_penghasilan'] = $datapost['kp4_total_penghasilan'];
+        $data['gaji_pokok'] = $datapost['kp4_gaji_pokok'];
+        $data['sk_terakhir'] = $datapost['kp4_sk_terakhir'];
+        $data['nama_pasangan'] = $datapost['kp4_nama_pasangan'];
+        $data['tptlahir_pasangan'] = $datapost['kp4_tempat_lahir_pasangan'];
+        $data['tgllahir_pasangan'] = $datapost['kpt_tgl_lahir_pasangan'];
+        $data['penghasilan_pasangan'] = $datapost['kp4_pasangan_penghasilan'];
+        $data['pekerjaan_pasangan'] = $datapost['kp4_pekerjaan_pasangan'];
+        $data['pasangan_ke'] = $datapost['kp4_pasangan_ke'];
+        $data['nip_nii'] = $datapost['kp4_nip_pasangan'];
+        $data['tgl_kawin'] = $datapost['kp4_tanggal_kawin'];
+        // dd($data);
+        $cekKp4 = $this->db->select('*')
+                                        ->from('db_pegawai.pegkp4 a')
+                                        ->where('a.flag_active', 1)
+                                        ->where('id_pegawai', $id_pegawai)
+                                        ->get()->result_array();
+        
+        if($cekKp4) {
+        $this->db->where('id_pegawai', $id_pegawai)
+                ->update('db_pegawai.pegkp4', $data);
+        } else {
+        $this->db->insert('db_pegawai.pegkp4', $data);
+        }
+
+        $dataPasanganUpdate["penghasilan"] = $datapost["kp4_pasangan_penghasilan"];
+        $dataPasanganUpdate["nip_nii"] = $datapost["kp4_nip_pasangan"];
+
+        $this->db->where('id', $id_pasangan)
+                ->update('db_pegawai.pegkeluarga', $dataPasanganUpdate);
+
+        for ($count = 0; $count < count($datapost['id_anak']); $count++) {
+            $id_anak = $datapost['id_anak'][$count];
+            $dataAnakUpdate["jenis_kelamin"] = $datapost['kp4_jk_anak_'.$id_anak];
+             $dataAnakUpdate["status_tunjangan"] = $datapost['kp4_tunjangan_anak_'.$id_anak];
+              $dataAnakUpdate["status_kawin"] = $datapost['kp4_status_kawin_anak_'.$id_anak];
+               $dataAnakUpdate["status_kerja"] = $datapost['kp4_status_kerja_anak_'.$id_anak];
+                $dataAnakUpdate["status_pendidikan"] = $datapost['kp4_status_pendidikan_anak_'.$id_anak];
+                 $dataAnakUpdate["keputusan_pengadilan"] = $datapost['kp4_keputusan_pengadilan_anak_'.$id_anak];
+
+            $this->db->where('id', $id_anak)
+                ->update('db_pegawai.pegkeluarga', $dataAnakUpdate);
+        }
+
+        $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+            function getKp4($nip){
+             $this->db->select('*')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
+                            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
+                            ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                            ->join('db_pegawai.statuskawin g', 'a.status = g.id_sk', 'left')
+                            ->join('db_pegawai.statuspeg h', 'a.statuspeg = h.id_statuspeg', 'left')
+                            ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
+                            ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
+                            ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
+                            ->join('db_pegawai.pegkp4 l', 'a.id_peg = l.id_pegawai')
+                            ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
+                            ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
+                            ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
+                            ->where('a.nipbaru_ws', $nip)
+                            ->where('l.flag_active', 1);
+                            $query = $this->db->get()->row_array();
+                            return $query;
+        }
 
 }

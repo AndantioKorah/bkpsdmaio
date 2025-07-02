@@ -949,6 +949,8 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_FormUploadArsipLainnya', $data);
     }
 
+
+
 	public function LoadViewTalenta($nip){
 		$data['nip'] = $nip;
 		$data['jenis_arsip'] = $this->kepegawaian->getJenisArsip();
@@ -3188,7 +3190,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		// dd($data['profil_pegawai']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
-		// $this->load->view('kepegawaian/surat/V_SuratHukdis',$data);	
+		// $this->load->view('kepegawaian/surat/V_SuratHukdis2',$data);	
 		$mpdf = new \Mpdf\Mpdf([
 			'format' => 'A4',
 			'debug' => true
@@ -3208,7 +3210,8 @@ class C_Kepegawaian extends CI_Controller
         );
 		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
 		if($jenis == 1){
-		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis', $data, true); 
+		$mpdf->adjustFontDescLineheight = 1.80;
+		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
 		$file_pdf = $random_number."surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
 		}
 		if($jenis == 2){
@@ -3338,6 +3341,33 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($file_pdf, 'D');
+    }
+
+
+	public function LoadFormKp4($nip){
+		$data['nip'] = $nip;
+		$data['kp4'] = $this->kepegawaian->getKp4($nip);
+		// dd($data['kp4']);
+		// $data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
+		$data['pasangan'] = $this->kepegawaian->getKeluargaPegawai($nip,1);
+		$data['anak'] = $this->kepegawaian->getKeluargaPegawai($nip,2);
+        $this->load->view('kepegawaian/V_FormKp4', $data);
+    }
+
+	 public function simpanKp4()
+    {
+		echo json_encode($this->kepegawaian->simpanKp4());
+        // for ($count = 0; $count < count($dataPost['anak']); $count++) {
+        //     // $id_anak = $dataPost['id_t_tindakan'][$count];
+        //     $data = null;
+        //     if(isset($dataPost['hasil_'.$id_t_tindakan])){
+        //         $data['hasil'] = $dataPost['hasil_'.$id_t_tindakan];
+        //     }
+        //     if($data){
+        //         $this->kepegawaian->createHasil($id_t_tindakan, $data, $id_pendaftaran);
+        //     }
+        // }
+
     }
 
 }

@@ -3370,4 +3370,41 @@ class C_Kepegawaian extends CI_Controller
 
     }
 
+	public function downloadkp4(){
+		$nip = $this->input->post('nip');
+		$data['nip'] = $nip;
+		$data['kp4'] = $this->kepegawaian->getKp4($nip);
+		$data['pasangan'] = $this->kepegawaian->getKeluargaPegawai($nip,1);
+		$data['anak'] = $this->kepegawaian->getKeluargaPegawai($nip,2);
+
+		$this->load->view('kepegawaian/surat/V_kp4', $data);
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => [216, 430],
+			'debug' => true,
+			'default_font_size' => 20,
+		]);
+		$mpdf = new \Mpdf\Mpdf();
+			$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+
+		
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		$html = $this->load->view('kepegawaian/surat/V_kp4', $data, true); 
+		$file_pdf = $random_number."kp4".$data['kp4']['nipbaru_ws'].'.pdf';  	
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf, 'D');
+    }
+
 }

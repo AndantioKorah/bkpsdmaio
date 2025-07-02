@@ -14045,12 +14045,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->join('db_pegawai.jenispeg i', 'a.jenispeg = i.id_jenispeg', 'left')
                             ->join('db_pegawai.jenisjab j', 'a.jenisjabpeg = j.id_jenisjab', 'left')
                             ->join('db_pegawai.statusjabatan k', 'a.statusjabatan = k.id_statusjabatan','left')
-                            ->join('db_pegawai.pegkp4 l', 'a.id_peg = l.id_pegawai')
+                            ->join('db_pegawai.pegkp4 l', 'a.id_peg = l.id_pegawai','left')
                             ->join('m_kecamatan m', 'a.id_m_kecamatan = m.id','left')
                             ->join('m_kelurahan n', 'a.id_m_kelurahan = n.id','left')
                             ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
-                            ->where('a.nipbaru_ws', $nip)
-                            ->where('l.flag_active', 1);
+                            ->join('db_pegawai.unitkerja s', 'a.skpd = s.id_unitkerja')
+
+                            ->where('a.nipbaru_ws', $nip);
+                            // ->where('l.flag_active', 1);
                             $query = $this->db->get()->row_array();
                             return $query;
         }

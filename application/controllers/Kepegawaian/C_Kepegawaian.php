@@ -1609,14 +1609,16 @@ class C_Kepegawaian extends CI_Controller
 		$zip->open($zipname, ZipArchive::CREATE);
 
 		foreach ($decodedData as $file) {
-			$zip->addFile(base_url().$file);
+			$expl = explode("/", $file);
+			$fileName = trim($expl[1]);
+
+			$fileContent = file_get_contents($file);
+			dd($fileContent);
+			$zip->addFromString($fileName, $fileContent);
 		}
 		$zip->close();
 
-		header('Content-Type: application/zip');
-		header('Content-disposition: attachment; filename='.$zipname);
-		header('Content-Length: ' . filesize($zipname));
-		readfile($zipname);
+		header('location: /'.$zipname);
 	}
 
 	public function openModalPenomoranSkCuti($id){

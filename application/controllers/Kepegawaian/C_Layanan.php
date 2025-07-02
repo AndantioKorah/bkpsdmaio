@@ -301,7 +301,6 @@ class C_Layanan extends CI_Controller
 
 	public function downloadDoneFileUsulDs($id){
 		$result = $this->layanan->loadDetailUsulDs($id);
-		$listUrl = [];
 
 		$zipName = "siladen/Usul_DS_".$result['batch_id'].".zip";
 

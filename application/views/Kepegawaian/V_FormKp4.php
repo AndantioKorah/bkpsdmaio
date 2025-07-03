@@ -10,6 +10,7 @@
     background-color:rgb(223, 223, 223);
     }
 </style>
+
 <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 
 <!-- Button trigger modal -->
@@ -287,6 +288,12 @@ Data KP4
      <button class="btn btn-block btn-primary customButton float-right"  id="btn_upload_arsip"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 
+<form method="post" action="<?=base_url("kepegawaian/C_Kepegawaian/downloadkp4")?>" target="_blank">
+  <input type="text" name="nip" value="<?=$kp4['nipbaru_ws'];?>" >
+  <button type="submit" class="btn btn-info float-right mr-2" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
+        Download 
+  </button>
+  </form>
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -388,5 +395,25 @@ $(function(){
           
         }); 
 
+        function downloadkp4(nip){
+          
+            if(confirm('Apakah Anda yakin ingin batal verifikasi?')){
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/downloadkp4")?>',
+                method: 'post',
+                data: {
+                nip: nip
+            },
+                success: function(data){
+                  successtoast('Berhasil batal verifikasi ')
+                  // location.reload()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+
+            
+          }
+  }
 
 </script>

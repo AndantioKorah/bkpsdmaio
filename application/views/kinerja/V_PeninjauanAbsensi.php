@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" readonly value="<?= date('Y-m-d') ;?>">
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?=date('Y-m-d');?>" readonly >
     </div>
 
     <div class="form-group mt-2">
@@ -278,15 +278,27 @@ $(function(){
 
     var maxDate = "<?= $maxDate['max_date'];?>";
 
-    $('.datepicker2').datepicker({
-    format: 'yyyy-mm-dd',
-    // startDate: '-0d',
+    var datearray = ["2025-07-04"];
+$('.datepicker2').datepicker({
+    format: 'yyyy-mm-dd',       
+    datesDisabled: datearray,
+    // daysOfWeekDisabled: [0],   //Disable sunday
+    autoclose:true,
+    todayHighlight: true,
     startDate : maxDate,
     endDate: '-0d',
-    // todayBtn: true,
-    todayHighlight: true,
-    autoclose: true,
 });
+
+
+//     $('.datepicker2').datepicker({
+//     format: 'yyyy-mm-dd',
+//     // startDate: '-0d',
+//     startDate : maxDate,
+//     endDate: '-0d',
+//     // todayBtn: true,
+//     todayHighlight: true,
+//     autoclose: true,
+// });
 
 function loadListPeninjauan(){
        $('#list_kegiatan').html('')

@@ -1931,7 +1931,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where('a.id_pegawai', $id)
             ->where('a.flag_active', 1);
         $hukdis = $this->db->get()->row_array();
-        // dd($hukdis);
+       
         $id_hukdis = null;
         if($hukdis){
             $yearHukdis = date('Y', strtotime($hukdis['tglsurat']));
@@ -1942,6 +1942,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             $years = floor($date_diff / (365*60*60*24));
             $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
             $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+//  dd($years);
             if($years > 10){
                 $id_hukdis = 115;
             } else if($years >= 10){

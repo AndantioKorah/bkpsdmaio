@@ -3149,7 +3149,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['transkrip'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
 			$data['akreditasi_prodi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
 			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
-			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir2(); 
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
@@ -3371,6 +3371,46 @@ class C_Kepegawaian extends CI_Controller
         //     }
         // }
 
+    }
+
+	public function downloadkp4(){
+		$nip = $this->input->post('nip');
+		$data['nip'] = $nip;
+		$data['kp4'] = $this->kepegawaian->getKp4($nip);
+		$data['pasangan'] = $this->kepegawaian->getKeluargaPegawai($nip,1);
+		$data['anak'] = $this->kepegawaian->getKeluargaPegawai($nip,2);
+
+		$this->load->view('kepegawaian/surat/V_kp4', $data);
+		$mpdf = new \Mpdf\Mpdf([
+			'debug' => true,
+			// 'default_font_size' => 14,
+			'mode' => 'utf-8', 
+			'format' => [210, 330],
+			'default_font_size' => 10,
+			'orientation' => 'P'
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+		$mpdf->shrink_tables_to_fit;
+		$mpdf->use_kwt = true;
+		// $mpdf->adjustFontDescLineheight = 1.80;
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		$html = $this->load->view('kepegawaian/surat/V_kp4', $data, true); 
+		$file_pdf = $random_number."kp4".$data['kp4']['nipbaru_ws'].'.pdf';  	
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf, 'D');
     }
 
 }

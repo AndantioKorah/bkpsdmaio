@@ -10716,6 +10716,17 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+     public function getIjazahTerakhir2()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->order_by('tktpendidikan', 'desc')
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getCutiCltn()
     {
         $this->db->select('*')

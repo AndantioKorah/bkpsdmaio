@@ -23,7 +23,7 @@ class C_Kinerja extends CI_Controller
     {
         $date = new DateTime();
         $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 4, 'plus');
         $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
         $data['list_rencana_kinerja'] = $this->kinerja->getRencanaKinerja(date('m'), date('Y'));
@@ -64,7 +64,7 @@ class C_Kinerja extends CI_Controller
 
         $date = new DateTime();
         $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 4, 'plus');
         $data['current_date'] = date('Y-m-d');
         $data['status_lock'] = $this->kinerja->getStatusLockKinerja('Kinerja');
 
@@ -527,7 +527,7 @@ class C_Kinerja extends CI_Controller
     {
         $date = new DateTime();
         // $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'minus');
+        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 2, 'minus');
         // dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();

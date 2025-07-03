@@ -10792,6 +10792,16 @@ public function getFileForKarisKarsu()
         $query = $this->db->get()->row_array();
         return $query;  
     }
+     public function getIjazahTerakhir2Admin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->order_by('tktpendidikan', 'desc')
+        ->from('db_pegawai.pegpendidikan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
 
 
     public function getIjazahSPAdmin($id_peg)
@@ -11863,6 +11873,14 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->order_by('a.tahunlulus', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "ijazah2"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpendidikan as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->order_by('a.tktpendidikan', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "karya_tulis"){

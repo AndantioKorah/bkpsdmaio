@@ -2841,7 +2841,8 @@ class C_Kepegawaian extends CI_Controller
 
 			render('kepegawaian/layanan/V_VerifikasiLayananJabFungDetail', '', '', $data);
 		} else if($layanan == 21){
-			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir2Admin($id_peg);
+			// dd($data['ijazah']);
 			render('kepegawaian/layanan/V_VerifikasiLayananPeningkatanPenambahanGelarDetail', '', '', $data);
 		} else if($layanan == 23){
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg);
@@ -3397,12 +3398,15 @@ class C_Kepegawaian extends CI_Controller
             10, // margin_left
             10, // margin right
             5, // margin top
-            10, // margin bottom
+            20, // margin bottom
             18, // margin header
             12
         );
 		$mpdf->shrink_tables_to_fit;
 		$mpdf->use_kwt = true;
+		$mpdf->shrink_tables_to_fit = 1;
+		$mpdf->defaultPageNumStyle = 'slice';
+		$mpdf->autoPageBreak = false;
 		// $mpdf->adjustFontDescLineheight = 1.80;
 		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
 		$html = $this->load->view('kepegawaian/surat/V_kp4', $data, true); 

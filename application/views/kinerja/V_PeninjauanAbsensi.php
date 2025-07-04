@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?=date('Y-m-d');?>" readonly >
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi"  readonly required>
     </div>
 
     <div class="form-group mt-2">
@@ -284,7 +284,7 @@ $('.datepicker2').datepicker({
     datesDisabled: datearray,
     // daysOfWeekDisabled: [0],   //Disable sunday
     autoclose:true,
-    todayHighlight: true,
+    // todayHighlight: true,
     startDate : maxDate,
     endDate: '-0d',
 });
@@ -339,8 +339,11 @@ function loadListPeninjauan(){
 $('#form_tinjau_absen').on('submit', function(e){  
        
         e.preventDefault();
-        var tanggal = $('#tanggal_kegiatan').val()
-       
+        var tanggal = $('#tanggal_absensi').val()
+       if(tanggal == "" || tanggal == null){
+        errortoast('Tanggal masih kosong')
+       return false;
+       }
         var formvalue = $('#form_tinjau_absen');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('image_file').files.length;

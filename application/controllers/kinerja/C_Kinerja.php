@@ -526,9 +526,9 @@ class C_Kinerja extends CI_Controller
     public function tinjauABsensi()
     {
         $date = new DateTime();
-        // $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 2, 'minus');
-        // dd($data['maxDate']['max_date']);
+        $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 0, 'minus');
+        dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();
         render('kinerja/V_PeninjauanAbsensi', '', '', $data);

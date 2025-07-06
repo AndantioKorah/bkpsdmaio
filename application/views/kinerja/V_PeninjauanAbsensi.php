@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi"  readonly required>
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?= date('Y-m-d');?>"  readonly required>
     </div>
 
     <div class="form-group mt-2">

@@ -192,17 +192,7 @@
     endDate: new Date()
   })
   } else {
-     <?php if($this->general_library->getId() == '2590'){ ?>
-     $('.datetimepickerthisRealisasi').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
-    autoclose: true,
-    todayHighlight: true,
-    todayBtn: true,
-    // startDate: firstDay,  
-    startDate : '2025-06-01', 
-    endDate: new Date()
-    })
-    <?php } else { ?>
+     
          $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
@@ -212,7 +202,6 @@
     // startDate : '2024-12-01', 
     endDate: new Date()
     })
-    <?php } ?>
 
  
   }

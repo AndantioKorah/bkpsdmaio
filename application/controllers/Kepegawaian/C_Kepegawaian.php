@@ -1600,25 +1600,56 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_PenomoranSkCutiData', $data);
 	}
 
+	public function downloadAllSkCutiNew(){
+		// $data = $this->input->post();
+		$data = $this->session->userdata('data_penomoranskcuti');
+
+		$filenames = null;
+		foreach($data as $d){
+			if($d['flag_ds_manual'] == 0){
+				$filenames[] = $d['url_sk'];
+			} else {
+				$filenames[] = $d['url_sk_manual'];
+			}
+		}
+		$zip = new ZipArchive;
+		$zipname = "siladen/SK_PERMOHONANCUTI_".date('ymdhis').".zip";
+		$zip->open($zipname, ZipArchive::OVERWRITE || ZipArchive::CREATE);
+		// dd($zip);
+		foreach ($filenames as $file) {
+			$expl = explode("/", $file);
+			$fileName = trim($expl[1]);
+
+			$fileContent = file_get_contents($file);
+			$zip->addFromString($fileName, $fileContent);
+		}
+		$zip->close();
+
+		header('location: /'.($zipname));
+
+		// unlink("siladen/".$zipname);
+	}
+
 	public function downloadAllSkCuti(){
 		$data = $this->input->post();
 		$decodedData = json_decode($data['filenames'], true);
 
-		$zipname = 'SK_PERMOHONAN_CUTI_'.date("ymdhis").'.zip';
 		$zip = new ZipArchive;
+		$zipname = "SK_PERMOHONANCUTI_".date('ymdhis').".zip";
 		$zip->open($zipname, ZipArchive::CREATE);
-
+		// dd($zip);
 		foreach ($decodedData as $file) {
 			$expl = explode("/", $file);
 			$fileName = trim($expl[1]);
 
 			$fileContent = file_get_contents($file);
-			dd($fileContent);
 			$zip->addFromString($fileName, $fileContent);
 		}
 		$zip->close();
 
-		header('location: /'.$zipname);
+		header('location: /'."siladen/".($zipname));
+
+		// unlink("siladen/".$zipname);
 	}
 
 	public function openModalPenomoranSkCuti($id){

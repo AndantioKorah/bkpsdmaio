@@ -2136,14 +2136,23 @@
         if($tmp['random_string']){
             if($this->input->post('list_id')){
                 $this->db->where_in('id', $this->input->post('list_id'))
-                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);    
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId()
+                        ]);    
             } else {
                 $this->db->where('random_string', $tmp['random_string'])
-                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
             }
         } else {
             $this->db->where_in('id', $this->input->post('list_id'))
-                        ->update('t_dokumen_pendukung', ['flag_active' => 0]);
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
         }
 
         $id_count = $tmp['id_m_user'];

@@ -364,7 +364,7 @@ UNTUK MENDAPATKAN PEMBAYARAN TUNJANGAN KELUARGA</b>
 </p>
 <!-- <pagebreak type="NEXT-ODD" resetpagenum="1" pagenumstyle="i" suppress="off" /> -->
 
-<table border="0" style="width:100%;margin-top:18px;">
+<table border="0" style="width:100%;margin-top:5px;">
 		<tr>
 			<td style="width:62%;"></td>
 			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?>

@@ -166,7 +166,7 @@
   //  var maxDate = "2025-05-05";
 
    var currentDate = "<?= $current_date;?>";
-  console.log(maxDate)
+   console.log(maxDate)
 
    if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({
@@ -177,6 +177,8 @@
     endDate: new Date()
     })
     } else {
+
+
     if(currentDate < maxDate) {
     $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
@@ -190,7 +192,8 @@
     endDate: new Date()
   })
   } else {
-    $('.datetimepickerthisRealisasi').datetimepicker({
+     
+         $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
     todayHighlight: true,
@@ -198,7 +201,9 @@
     startDate: firstDay,  
     // startDate : '2024-12-01', 
     endDate: new Date()
-  })
+    })
+
+ 
   }
     }
     }) 

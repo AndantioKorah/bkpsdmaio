@@ -179,7 +179,7 @@
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
     </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ijazah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah</button>
+    <button onclick="getFile(file='ijazah2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah</button>
     </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
@@ -684,7 +684,7 @@ function openPresensiTab(){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
           dir = "./dokumen_layanan/peningkatan_penambahan_gelar/";
-        } else if(file == "ijazah"){
+        } else if(file == "ijazah2"){
           dir = "./arsippendidikan/";
         }  else {
           dir = "uploads/";

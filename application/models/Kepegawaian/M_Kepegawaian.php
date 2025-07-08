@@ -13075,6 +13075,23 @@ public function getFileForVerifLayanan()
        
         $this->db->trans_begin();
     
+        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+        $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_not_in('a.status', [6])
+        ->get()->result_array();
+        } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) {
+         $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_in('a.status', [3,6])
+        ->get()->result_array();
+        } else {
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
         ->where('a.id_m_user', $this->general_library->getId())
@@ -13082,8 +13099,18 @@ public function getFileForVerifLayanan()
         ->where('a.id_m_layanan', $id_m_layanan)
         ->where_in('a.status', [0,2])
         ->get()->result_array();
+        }
+        // $cek =  $this->db->select('*')
+        // ->from('t_layanan a')
+        // ->where('a.id_m_user', $this->general_library->getId())
+        // ->where('a.flag_active', 1)
+        // ->where('a.id_m_layanan', $id_m_layanan)
+        // ->where_in('a.status', [0,2])
+        // ->get()->result_array();
+
+
         if($cek){
-            $res = array('msg' => 'Sudah ada usul layanan yang belum disetujui', 'success' => false);
+            $res = array('msg' => 'Sudah ada usul layanan', 'success' => false);
         } else {
             $nip = $this->input->post('nip');
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );

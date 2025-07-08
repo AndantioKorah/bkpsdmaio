@@ -7047,12 +7047,12 @@ public function submitEditJabatan(){
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
             // }
-            if(!$pegawai['atasan']){
-                return [
-                    'code' => 1,
-                    'message' => "Data Atasan belum terdata. Silahkan menghubungi Administrator. Terima Kasih."
-                ];
-            }
+            // if(!$pegawai['atasan']){
+            //     return [
+            //         'code' => 1,
+            //         'message' => "Data Atasan belum terdata. Silahkan menghubungi Administrator. Terima Kasih."
+            //     ];
+            // }
             if(($pegawai['kadis']) && $pegawai['kepala'] && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
                 //jika atasan sama dengan kepala sama dengan kadis
                 unset($pegawai['atasan']);

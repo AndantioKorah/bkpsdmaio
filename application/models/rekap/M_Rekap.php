@@ -1257,13 +1257,14 @@
 
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
-        $id_unitkerja == 3015000){ // capil, kasub sudah pensiun
+        $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
+        $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
             $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi
         } else if($id_unitkerja == 3014000){ // disnaker, nama jabatan kasub jadi PLT
             $result['kasubag']['nama_jabatan'] = 'Plt. Kepala Sub Bagian Umum dan Kepegawaian';
-        } else if($id_unitkerja == 3028000){
+        } else if($id_unitkerja == 3028000){ // dinas pangan, kasub dan sek sudah pensiun ganti jadi kabid
             $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')

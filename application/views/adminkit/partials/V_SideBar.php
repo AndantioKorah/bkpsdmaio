@@ -484,6 +484,7 @@
 			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
+			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
 			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
 			){ ?>
 			

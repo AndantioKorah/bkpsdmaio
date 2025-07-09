@@ -2552,17 +2552,23 @@ class M_Layanan extends CI_Model
             $listUk[] = $u['id_unitkerja'];
         }
 
-        return $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
+        $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
                     ->from('t_pegawai_event a')
                     ->join('db_sip.event b', 'a.id_event = b.id')
                     ->join('m_user c', 'a.created_by = c.id')
                     ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
                     ->where('c.flag_active', 1)
-                    ->where_in('a.id_unitkerja', $listUk)
+                    // ->where_in('a.id_unitkerja', $listUk)
                     ->where('a.flag_active', 1)
                     ->order_by('b.tgl', 'desc')
-                    ->order_by('a.created_date', 'desc')
-                    ->get()->result_array();
+                    ->order_by('a.created_date', 'desc');
+
+        if(!$this->general_library->isProgrammer()
+        || !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+            $this->db->where_in('a.id_unitkerja', $listUk);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function deleteSuratTugasEvent($id){

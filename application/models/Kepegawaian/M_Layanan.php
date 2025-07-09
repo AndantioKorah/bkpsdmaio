@@ -2312,13 +2312,22 @@ class M_Layanan extends CI_Model
         $id_unitkerja = $this->general_library->getUnitKerjaPegawai();
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->get()->row_array();
+
+        $list_unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
                             ->order_by('nm_unitkerja')
                             ->get()->result_array();
 
-        foreach($unitkerja as $u){
+        foreach($list_unitkerja as $u){
             if($id_unitkerja == 3010000){ //jika diknas, ambil sekolah2
                 if($u['id_unitkeraj'] == 3010000 ||
                 in_array($u['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+                    $result[] = $u;
+                }
+            } else if(stringStartWith("Kecamatan", $unitkerja['nm_unitkerja'])){
+                if($u['id_unitkerjamaster'] == $unitkerja['id_unitkerjamaster']){
                     $result[] = $u;
                 }
             } else {
@@ -2552,17 +2561,23 @@ class M_Layanan extends CI_Model
             $listUk[] = $u['id_unitkerja'];
         }
 
-        return $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
+        $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
                     ->from('t_pegawai_event a')
                     ->join('db_sip.event b', 'a.id_event = b.id')
                     ->join('m_user c', 'a.created_by = c.id')
                     ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
                     ->where('c.flag_active', 1)
-                    ->where_in('a.id_unitkerja', $listUk)
+                    // ->where_in('a.id_unitkerja', $listUk)
                     ->where('a.flag_active', 1)
                     ->order_by('b.tgl', 'desc')
-                    ->order_by('a.created_date', 'desc')
-                    ->get()->result_array();
+                    ->order_by('a.created_date', 'desc');
+
+        if(!$this->general_library->isProgrammer()
+        && !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+            $this->db->where_in('a.id_unitkerja', $listUk);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function deleteSuratTugasEvent($id){

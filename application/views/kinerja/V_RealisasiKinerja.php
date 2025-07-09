@@ -193,7 +193,7 @@
   })
   } else {
      
-         $('.datetimepickerthisRealisasi').datetimepicker({
+    $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
     todayHighlight: true,

@@ -350,7 +350,7 @@ class C_Kinerja extends CI_Controller
     {
         $data['rencana'] = $this->kinerja->getRencanaKinerjaEdit($id);
         $data['jumlah_realisasi'] = $jlmhrealisasi;
-        // dd($data['realisasi']);
+        // dd($data['rencana']);
         $this->load->view('kinerja/V_EditRencanaKinerja', $data);
     }
 

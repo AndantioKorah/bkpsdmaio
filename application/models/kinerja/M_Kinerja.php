@@ -653,7 +653,7 @@
 
     
         $data["target_kuantitas"] = $datapost["edit_target_kuantitas"];
-        $data["total_realisasi"] = $datapost["edit_total_realisasi"];
+        // $data["total_realisasi"] = $datapost["edit_total_realisasi"];
         $data["satuan"] = $datapost["edit_satuan"];
         $data["sasaran_kerja"] = $datapost["edit_sasaran_kerja"];
 

@@ -1716,7 +1716,7 @@
 
                     if($cronWaNextVerifikator){
                         $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
-                        // dd($cronWaNextVerifikator);
+                        dd($cronWaNextVerifikator);
                     }
                 }
             }

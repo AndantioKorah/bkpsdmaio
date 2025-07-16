@@ -1715,12 +1715,8 @@
                     }
 
                     if($cronWaNextVerifikator){
-                        dd($cronWaNextVerifikator);
-                        // $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
-                    }
-
-                    if($cronWaNextVerifikator){
-                        dd($cronWaNextVerifikator);
+                        $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
+                        // dd($cronWaNextVerifikator);
                     }
                 }
             }

@@ -1258,6 +1258,7 @@
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
         $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
+        $id_unitkerja == 3017000 || // kominfo, kasub cuti
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
@@ -2945,9 +2946,9 @@
                         $result[$l['nipbaru_ws']]['pagu_tpp'] = $l['pagu_tpp'] * ($param['presentasi_tpp_tambahan'] / 100);
                     }
 
-                    if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
-                        $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
-                    }
+                    // if(in_array($l['nipbaru_ws'], EXCLUDE_NIP)){
+                    //     $result[$l['nipbaru_ws']]['pagu_tpp'] = 0;
+                    // }
 
                     $result[$l['nipbaru_ws']]['bobot_komponen_kinerja'] = isset($l['komponen_kinerja']) ? $l['komponen_kinerja'][1] : 0;
                     $result[$l['nipbaru_ws']]['bobot_skp'] = isset($l['kinerja']) ? $l['kinerja']['rekap_kinerja']['bobot'] : 0;

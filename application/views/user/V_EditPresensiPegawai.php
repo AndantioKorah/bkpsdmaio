@@ -30,6 +30,11 @@
       cursor: pointer;
     }
 
+    .img_foto{
+      min-width: 70%;
+      max-width: 70%;
+    }
+
 </style>
 
 <?php
@@ -98,7 +103,7 @@
             </div>
             <div class="col-lg-12 mt-3">
               <?php if(isset($result['path_masuk']) && $result['path_masuk']){ ?>
-                <img src="http://203.175.10.90/sip/upload/<?=$result['path_masuk']?>" />
+                <img class="img_foto" src="http://203.175.10.90/sip/upload/<?=$result['path_masuk']?>" />
               <?php } ?>
             </div>
           </div>
@@ -158,7 +163,7 @@
             </div>
             <div class="col-lg-12 mt-3">
               <?php if(isset($result['path_pulang']) && $result['path_pulang']){ ?>
-                <img src="http://203.175.10.90/sip/upload/<?=$result['path_pulang']?>" />
+                <img class="img_foto" src="http://203.175.10.90/sip/upload/<?=$result['path_pulang']?>" />
               <?php } ?>
             </div>
           </div>

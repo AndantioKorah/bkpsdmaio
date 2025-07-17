@@ -11951,6 +11951,17 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                   $str_serdik = $this->db->get()->result_array();
+                  if($str_serdik == null){
+                    $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 22)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                  $str_serdik = $this->db->get()->result_array();
+                  }
              }    
             return $str_serdik;
         } else if($this->input->post('file') == "rekom_instansi_pembina"){
@@ -12720,7 +12731,7 @@ public function getFileForVerifLayanan()
 
                 $this->updatePendidikan($dataLayanan['id_peg']);
             
-            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nUsulan Peningkatan Pendidikan / Penambahan Gelar telah selesai dan Riwayat Pendidikan/Gelar Anda telah ditambahkan ke Profil Aplikasi Siladen dan SIASN.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nUsulan Peningkatan Pendidikan / Penambahan Gelar telah selesai dan Riwayat Pendidikan/Gelar Anda telah ditambahkan ke Profil Aplikasi Siladen dan SIASN BKN.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
             $cronWa = [
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,

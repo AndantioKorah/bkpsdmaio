@@ -753,7 +753,7 @@
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
                 if($pegawai['jenis_jabatan'] == "JFU" && $pegawai['id_m_bidang'] != null){ //cari kepala sub bidang
-                    if($flag_cuti != 1){ // kalau cuti, ambil langsung eselon 3
+                    if($flag_cuti != 1 || stringStartWith('Sekretariat', $pegawai['nama_bidang'])){ // kalau bukan cuti atau bukan sekretariat ambil sub, kalau cuti dan bukan sekretariat, ambil langsung eselon 3
                         $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
                                     ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
@@ -1100,12 +1100,14 @@
 
         $kadis = null;
         $sek = null;
+        $fl = 0;
         if($flag_cuti == 1){
             if(stringStartWith('Puskesmas', $pegawai['nm_unitkerja'])
             || $pegawai['id_unitkerja'] == 7005020 
             || $pegawai['id_unitkerja'] == 7005010
             || $pegawai['id_unitkerja'] == 6160000
             ){ // jika puskes, rumah sakit, gudang farmasi, ambil kadis dan sek dinkes 
+                $fl = 1;
                 $kadis = $this->baseQueryAtasan()
                             ->where('b.skpd', 3012000)
                             ->where('d.eselon', 'II B')
@@ -1116,6 +1118,7 @@
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // sek
             } else if (in_array($pegawai['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah, ambil kadis dan sek diknas
+                $fl = 2;
                 $kadis = $this->baseQueryAtasan()
                             ->where('b.skpd', 3010000)
                             ->where('d.eselon', 'II B')
@@ -1126,6 +1129,7 @@
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // sek
             } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika di kelurahan
+                $fl = 3;
                 $kadis = $this->baseQueryAtasan()
                             ->where('c.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
                             ->where('d.eselon', 'III A')
@@ -1136,13 +1140,29 @@
                             ->where('d.eselon', 'III B')
                             ->get()->row_array(); // sekcam
             }
+            else if(!stringStartWith('Inspektorat', $pegawai['nm_unitkerja']) 
+                && (stringStartWith("Dinas", $pegawai['nm_unitkerja'])
+                || stringStartWith("Badan", $pegawai['nm_unitkerja']))){ //jika bukan inspektorat, dan dinas atau badan
+                    $fl = 4;
+                    $sek = $this->baseQueryAtasan()
+                                ->where('b.skpd', $pegawai['id_unitkerja'])
+                                ->where('d.eselon', 'III A')
+                                ->get()->row_array(); // sek  
+            } else if(stringStartWith('Inspektorat', $pegawai['nm_unitkerja'])){ //jika bukan inspektorat, dan dinas atau badan
+                $fl = 5;
+                $sek = $this->baseQueryAtasan()
+                            ->where('b.skpd', $pegawai['id_unitkerja'])
+                            ->where('d.eselon', 'III A')
+                            ->where_like('d.nama_jabatan LIKE "Sekretaris"')
+                            ->get()->row_array(); // sek inspektorat
+            }
         }
 
         $result['atasan'] = $atasan;
-        $result['kepala'] = $kepala;
         $result['sek'] = $sek;
+        $result['kepala'] = $kepala;
         $result['kadis'] = $kadis;
-
+        // dd($result);
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
                                         a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone,

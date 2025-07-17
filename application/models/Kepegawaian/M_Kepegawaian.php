@@ -4036,9 +4036,11 @@ public function getAllPelanggaranByNip($nip){
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $data['id_unor_siasn']
             ];
+            dd(json_encode($update));
             $ws = $this->siasnlib->saveJabatan($update);
             
-            if($ws['code'] == 0){
+            $rs = json_decode($ws['data'], true);
+            if($ws['code'] == 0 && $rs['message'] != "Not Found"){
                 $data_success = json_decode($ws['data'], true);
                 $id_jabatan_siasn = $data_success['mapData']['rwJabatanId'];
 
@@ -4064,6 +4066,9 @@ public function getAllPelanggaranByNip($nip){
                                 'updated_by' => $this->general_library->getId()
                             ]);
                 }
+            } else {
+                $ws['code'] = 1;
+                $ws['message'] = $rs['message'];
             }
 
             return $ws;

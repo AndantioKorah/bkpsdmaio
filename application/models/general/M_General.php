@@ -1716,7 +1716,7 @@
 
                     if($cronWaNextVerifikator){
                         $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
-                        // dd($cronWaNextVerifikator);
+                        dd($cronWaNextVerifikator);
                     }
                 }
             }
@@ -1891,6 +1891,30 @@
                 'url' => 'arsipimagewa/'.$namaFile,
                 'date_received' => $dateTime
             ]);
+        }
+
+        public function syncUnor(){
+            $res = $this->siasnlib->getAllDataUnor();
+            if($res['code'] == 0){
+                $list = json_decode($res['data'], true);
+                $notfound = null;
+                foreach($list['data'] as $l){
+                    if(stringStartWith("SEKOLAH", $l['NamaUnor']) ||
+                    stringStartWith("SD", $l['NamaUnor']) ||
+                    stringStartWith("SMP", $l['NamaUnor']) ||
+                    stringStartWith("TK", $l['NamaUnor']) ||
+                    stringStartWith("BADAN", $l['NamaUnor']) ||
+                    stringStartWith("DINAS", $l['NamaUnor']) ||
+                    stringStartWith("INSPEKTORAT", $l['NamaUnor'])
+                    ){
+
+                    } else {
+                        $notfound[] = $l;
+                    }
+                }
+
+                dd($notfound);
+            }
         }
 
 	}

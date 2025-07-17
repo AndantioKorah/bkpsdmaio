@@ -2322,7 +2322,7 @@ class M_Layanan extends CI_Model
 
         foreach($list_unitkerja as $u){
             if($id_unitkerja == 3010000){ //jika diknas, ambil sekolah2
-                if($u['id_unitkeraj'] == 3010000 ||
+                if($u['id_unitkerja'] == 3010000 ||
                 in_array($u['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
                     $result[] = $u;
                 }

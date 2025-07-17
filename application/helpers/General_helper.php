@@ -187,6 +187,7 @@ function countMaxDateUpload2($date, $max = 0, $operand = "minus"){
         $res = countHariKerjaDateToDate($date, $untillDate);
     } else {
         $untillDate = date('Y-m-d', strtotime($date. ' -'.$tempMax.' days'));
+        // dd($date);
         $res = countHariKerjaDateToDate($untillDate, $date);
     }
     $res['max_date'] = null;

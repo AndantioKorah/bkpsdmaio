@@ -383,7 +383,7 @@ class M_Kepegawaian extends CI_Model
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
              (SELECT jurusan from db_pegawai.pegpendidikan as dd where a.id_peg = dd.id_pegawai and dd.flag_active in (1,2) and dd.status = 2  ORDER BY dd.id desc limit 1) as jurusan,
             r.nama_kabupaten_kota,m.nama_kecamatan,n.nama_kelurahan, a.flag_sertifikasi, a.flag_terima_tpp')
-                ->from('db_pegawai.pegawaix a')
+                ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.agama b', 'a.agama = b.id_agama', 'left')
                 ->join('db_pegawai.tktpendidikan c', 'a.pendidikan = c.id_tktpendidikan', 'left')
                 ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
@@ -12720,7 +12720,7 @@ public function getFileForVerifLayanan()
 
                 $this->updatePendidikan($dataLayanan['id_peg']);
             
-            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambahan Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan peningkatan pendidikan / penambahan gelar anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nUsulan Peningkatan Pendidikan / Penambahan Gelar telah selesai dan Riwayat Pendidikan/Gelar Anda telah ditambahkan ke Profil Aplikasi Siladen dan SIASN.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
             $cronWa = [
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,

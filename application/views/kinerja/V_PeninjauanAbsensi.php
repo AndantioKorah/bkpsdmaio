@@ -27,7 +27,7 @@
     <br>
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
-    - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen setelah itu discreenshot dan diupload sebagai bukti.<br>
+    - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen <b>(0895355011333)</b> setelah itu discreenshot dan diupload sebagai bukti.<br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>
     <div class="row ml-2">
@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?= date('Y-m-d');?>"  readonly required>
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?=date('Y-m-d');?>"  readonly required>
     </div>
 
     <div class="form-group mt-2">
@@ -277,8 +277,10 @@ $(function(){
     })
 
     var maxDate = "<?= $maxDate['max_date'];?>";
+    // var maxDate = "2025-07-09";
 
-    var datearray = ["2025-07-04"];
+
+    var datearray = ["2025-07-04","2025-07-14"];
 $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,

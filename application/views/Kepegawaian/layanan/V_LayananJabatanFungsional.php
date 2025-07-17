@@ -312,6 +312,7 @@ ol {
 					<input type="hidden" id="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
 					<input type="hidden" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
 					<input type="hidden" id="rekom_kepala_pd" value="<?php if(isset($rekom_kepala_pd)) echo $rekom_kepala_pd['id']; else echo "";?>">
+					<input type="hidden" id="sk_mutasi_instansi" value="<?php if(isset($sk_mutasi_instansi)) echo $sk_mutasi_instansi['id']; else echo "";?>">
 
           
         
@@ -483,6 +484,19 @@ ol {
               <?php } ?>
               <?php if($id_m_layanan == 16) { ?>
                 <li>
+                <a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
+                onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> PAK Terakhir* <i
+                class="fas fa-<?php if($pak) echo ''; else echo '';?>"></i></a>
+                </li>
+                 <li>
+                <a class="<?php if($sk_mutasi_instansi) echo 'select'; else echo 'unselect';?>" <?php if($sk_mutasi_instansi) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_mutasi_instansi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Mutasi Antar Instansi* <i
+                class="fas fa-<?php if($sk_mutasi_instansi) echo ''; else echo '';?>"></i></a>
+                </li>
+                
+                <li>
                 <a class="<?php if($peta_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($peta_jabatan) { ?>
                 onclick="viewBerkasPangkat('<?=$peta_jabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> Peta Jabatan* <i
@@ -597,7 +611,7 @@ ol {
 			</div>
 		</div>
 	</div>
-  
+ 
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -654,6 +668,7 @@ $(function(){
         var sk_pemberhentian_dari_jabfung = $('#sk_pemberhentian_dari_jabfung').val()
         var sk_pengaktifan_kembali = $('#sk_pengaktifan_kembali').val()
         var cltn = $('#cltn').val()
+        var sk_mutasi_instansi = $('#sk_mutasi_instansi').val()
 
 
         var id_m_layanan = "<?=$id_m_layanan;?>"
@@ -768,6 +783,15 @@ $(function(){
         }
         
         if(id_m_layanan == 16){
+        if(pak == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+          
+        if(sk_mutasi_instansi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
           if(peta_jabatan == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
@@ -785,17 +809,33 @@ $(function(){
             return false;
         }
         }
+        // testoast('tes')
 
-        
-        $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananPangkat/")?>"+id_m_layanan,
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        // dataType: "json",
-        success:function(res){ 
+        Swal.fire({
+        title: "<strong>Konfirmasi</strong>",
+          icon: "warning",
+          html: `
+           "Dengan ini saya menyatakan bahwa seluruh data dan dokumen yang saya sertakan adalah sesuai dengan kondisi factual. Apabila dikemudian hari ditemukan bahwa data dan dokumen tersebut tidak sesuai dengan kondisi sebenarnya, maka saya bertanggung jawab sepenuhnya dan bersedia menerima konsekuensi administratif.",\n
+           Apakah anda setuju dengan pernyataan tersebut?
+          `,
+          showCloseButton: true,
+          showCancelButton: true,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: "Ya",
+          cancelButtonText: 'Tidak'
+        }).then((result) => {
+          console.log(result)
+          if (result.value) {
+             $.ajax({  
+          url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananPangkat/")?>"+id_m_layanan,
+          method:"POST",  
+          data:form_data,  
+          contentType: false,  
+          cache: false,  
+          processData:false,  
+          // dataType: "json",
+          success:function(res){ 
             console.log(res)
             var result = JSON.parse(res); 
             if(result.success == true){
@@ -808,8 +848,9 @@ $(function(){
               } 
             
         }  
-        });  
-          
+        }); 
+          } 
+        });        
         });
 
 
@@ -892,4 +933,7 @@ $(function(){
 
 
     });
+
+
+ 
 </script>

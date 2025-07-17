@@ -156,4 +156,13 @@ class C_Cron extends CI_Controller
     public function cekMaxDateUpload($tgl, $max, $operand){
         dd(countMaxDateUpload(formatDateOnlyForEdit($tgl), 3, "plus"));
     }
+
+    public function getDataUtamaPnsByNip($nip){
+        $res = $this->siasnlib->getDataUtamaPnsByNip($nip);
+        dd(json_decode($res['data'], true));
+    }
+
+    public function syncUnor(){
+        $this->general->syncUnor();
+    } 
 }

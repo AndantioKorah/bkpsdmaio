@@ -7030,11 +7030,13 @@ public function submitEditJabatan(){
                                 ->get()->row_array();
 
         $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone,
-                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri')
+                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri, e.nama_bidang, f.nama_sub_bidang')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
+                                ->join('m_bidang e', 'b.id_m_bidang = e.id', 'left')
+                                ->join('m_sub_bidang f', 'b.id_m_sub_bidang = f.id', 'left')
                                 ->where('b.id', $id_m_user)
                                 ->get()->row_array();
         $progress = null;
@@ -7046,8 +7048,10 @@ public function submitEditJabatan(){
                 unset($pegawai['kadis']);
                 unset($pegawai['sek']);
         } else if(isset($pegawai['kepala']) && $pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
-            unset($pegawai['kepala']);
-            unset($pegawai['sek']);
+            if($thisuser['nama_bidang'] && $thisuser['nama_bidang'] != "Sekretariat"){
+                unset($pegawai['kepala']);
+                unset($pegawai['sek']);
+            }
         } else {
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
@@ -7129,7 +7133,7 @@ public function submitEditJabatan(){
             }
                 
         }
-
+        
         return $this->pelengkapDataProgressCuti($result, $insert_id, $kepalabkpsdm);
     }
 

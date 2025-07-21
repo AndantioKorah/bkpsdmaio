@@ -288,7 +288,7 @@ $('.datepicker2').datepicker({
     autoclose:true,
     // todayHighlight: true,
     startDate : maxDate,
-    endDate: '-0d',
+    endDate: '0d',
 });
 
 

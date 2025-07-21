@@ -1630,15 +1630,14 @@
                         }
                     }
                 }
-                
                 if($listChatIdResend){
-                    // $this->db->where_in('chatId', $listChatIdResend)
-                    //         ->update('t_cron_wa', [
-                    //             'temp_count' => 0,
-                    //             'flag_sent' => 0,
-                    //             'flag_resend' => 1,
-                    //             'date_resend' => date('Y-m-d H:i:s')
-                    //         ]);
+                    $this->db->where_in('chatId', $listChatIdResend)
+                            ->update('t_cron_wa', [
+                                'temp_count' => 0,
+                                'flag_sent' => 0,
+                                'flag_resend' => 1,
+                                'date_resend' => date('Y-m-d H:i:s')
+                            ]);
                     // dd("Resend ".count($listChatIdResend)." pesan");
                 } else {
                     // dd("no resend message");

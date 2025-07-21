@@ -7081,6 +7081,14 @@ public function submitEditJabatan(){
         if(isset($pegawai['atasan']) && $pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
             unset($pegawai['atasan']);
         }
+           
+        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) ||
+        stringStartWith("Puskesmas", $thisuser['nm_unitkerja'])){
+            $tmp = $pegawai['kepala'];
+            $pegawai['kepala'] = $pegawai['sek'];
+            $pegawai['sek'] = $tmp;
+            // dd($pegawai);
+        }
 
         $new_progress = null;
         if($pegawai){

@@ -12,7 +12,13 @@
                     <tr>
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=$lp['nama_bidang']?></td>
-                        <td class="text-left"><label id="label_unor_siasn_<?=$lp['id']?>"><?=$lp['nama_unor']?></label></td>
+                        <td class="text-left">
+                            <label id="label_unor_siasn_<?=$lp['id']?>"><?=$lp['nama_unor']?></label>
+                            <br>
+                            <label style="font-size: .75rem; color: grey; font-style: italic; font-weight: bold;"
+                                id="label_id_unor_siasn_<?=$lp['id']?>"><?=$lp['id_unor_siasn']?>
+                            </label>
+                        </td>
                         <td class="text-center">
                             <button href="#modal_edit_unor" data-toggle="modal" onclick="editUnorBidang('<?=$lp['id']?>')"
                             class="btn btn-sm btn-navy">

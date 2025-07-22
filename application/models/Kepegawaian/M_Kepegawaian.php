@@ -7083,7 +7083,9 @@ public function submitEditJabatan(){
         }
            
         if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) ||
-        stringStartWith("Puskesmas", $thisuser['nm_unitkerja'])){
+        stringStartWith("Puskesmas", $thisuser['nm_unitkerja']) || 
+        stringStartWith("Rumah Sakit", $thisuser['nm_unitkerja']) 
+        ){
             $tmp = $pegawai['kepala'];
             $pegawai['kepala'] = $pegawai['sek'];
             $pegawai['sek'] = $tmp;

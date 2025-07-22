@@ -1153,7 +1153,7 @@
                 $sek = $this->baseQueryAtasan()
                             ->where('b.skpd', $pegawai['id_unitkerja'])
                             ->where('d.eselon', 'III A')
-                            ->where_like('d.nama_jabatan LIKE "Sekretaris"')
+                            ->where('d.nama_jabatan LIKE "Sekretaris"')
                             ->get()->row_array(); // sek inspektorat
             }
         }

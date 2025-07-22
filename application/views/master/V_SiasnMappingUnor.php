@@ -16,7 +16,11 @@
                                 <tr>
                                     <td class="text-center"><?=$no++;?></td>
                                     <td class="text-left"><?=$rs['nm_unitkerja']?></td>
-                                    <td class="text-left"><label id="id_label_unor_<?=$rs['id_unitkerja']?>"><?=$rs['nama_unor']?></label></td>
+                                    <td class="text-left">
+                                        <label id="id_label_unor_<?=$rs['id_unitkerja']?>"><?=$rs['nama_unor']?></label>
+                                        <br>
+                                        <label style="color: grey; font-weight: bold; font-size: .75rem;"><?=$rs['id_unor_siasn']?></label>
+                                    </td>
                                     <td class="text-center">
                                         <button href="#modal_edit_unor" data-toggle="modal" onclick="editUnorSiasn('<?=$rs['id_unitkerja']?>')"
                                         class="btn btn-sm btn-navy">

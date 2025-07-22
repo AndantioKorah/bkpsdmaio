@@ -6,6 +6,10 @@
                     <div class="col-lg-12">
                         <label>BIDANG</label><br>
                         <label style="font-weight: bold; font-size: 1.5rem;"><?=$result['nama_bidang']?></label>
+                        <br>
+                        <label style="color: grey; font-weight: bold; font-size: 1rem;">
+                            <?= $result['id_unor_siasn'] ? $result['id_unor_siasn'] : "" ?>
+                        </label>
                         <input class="form-control" value="<?=$result['id_m_bidang']?>" name="id_m_bidang" style="display: none;" />
                     </div>
                     <div class="col-lg-12"><hr></div>
@@ -13,6 +17,7 @@
                         <label>UNOR SIASN</label>
                         <select class="form-control select2-navy" style="width: 100%;"
                             id="id_unor_siasn" data-dropdown-css-class="select2-navy" name="id_unor_siasn">
+                            <option selected disabled>Pilih Unor</option>
                             <?php if($list_unor_siasn){
                                 foreach($list_unor_siasn as $ls){
                                 ?>
@@ -43,10 +48,17 @@
                         <tr>
                             <td class="text-center"><?=$no++;?></td>
                             <td class="text-left"><?=$lsb['nama_sub_bidang']?></td>
-                            <td class="text-left"><label id="label_unor_sub_bidang_<?=$lsb['id']?>"><?=$lsb['nama_unor']?></label></td>
+                            <td class="text-left">
+                                <label id="label_unor_sub_bidang_<?=$lsb['id']?>"><?=$lsb['nama_unor']?></label>
+                                <br>
+                                <label style="color: grey; font-weight: bold; font-size: .75rem;">
+                                    <?=$lsb['id_unor_siasn']?>
+                                </label>
+                            </td>
                             <td class="text-left">
                                 <select class="form-control select2-unor select2-navy" style="width: 100%;"
                                     id="id_unor_siasn_<?=$lsb['id']?>" data-dropdown-css-class="select2-navy" name="id_unor_siasn">
+                                    <option selected disabled>Pilih Unor</option>
                                     <?php if($list_unor_siasn_sub_bidang){
                                         foreach($list_unor_siasn_sub_bidang as $ls){
                                         ?>

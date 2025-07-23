@@ -1128,17 +1128,51 @@
                             ->where('b.skpd', 3010000)
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // sek
-            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika di kelurahan
+            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja']) ||
+                    stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])
+            ){ // jika di kelurahan
                 $fl = 3;
                 $kadis = $this->baseQueryAtasan()
                             ->where('c.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // camat
+
+                if(!$kadis){ // jika camat kosong, cari PLT
+                    $kadis = $this->baseQueryAtasan()
+                                    ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
+                                    ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
+                                    ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
+                                    ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
+                                    ->where('ac.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
+                                    ->where('ab.eselon', 'III A')
+                                    ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
+                                    ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
+                                    ->get()->row_array();
+                    if($kadis){
+                        $kadis['nama_jabatan'] = $kadis['jenis_plt'].". ".$kadis['nama_jabatan_plt_plh'];
+                    }
+                }
                 
                 $sek = $this->baseQueryAtasan()
                             ->where('c.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
                             ->where('d.eselon', 'III B')
                             ->get()->row_array(); // sekcam
+                            
+                if(!$sek){ // jika sekcam kosong, cari PLT
+                    $sek = $this->baseQueryAtasan()
+                                    ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
+                                    ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
+                                    ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
+                                    ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
+                                    ->where('ac.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
+                                    ->where('ab.eselon', 'III B')
+                                    ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
+                                    ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
+                                    ->get()->row_array();
+                    if($sek){
+                        $sek['nama_jabatan'] = $sek['jenis_plt'].". ".$sek['nama_jabatan_plt_plh'];
+                    }
+                }
             }
             else if(!stringStartWith('Inspektorat', $pegawai['nm_unitkerja']) 
                 && (stringStartWith("Dinas", $pegawai['nm_unitkerja'])

@@ -1925,6 +1925,7 @@
                 $insertMRefUnor = null;
 
                 foreach($list['data'] as $l){
+                    // dd($list['data']);
                     if(isset($listUnorPerencanaan[$l['Id']])){
                         $this->db->where('id', $l['Id'])
                                 ->update('db_siasn.m_unor_perencanaan', [
@@ -1933,8 +1934,9 @@
                                     'induk_unor_id' => $l['IndukUnorId'],
                                     'jenis_unor_id' => $l['JenisUnorId'],
                                 ]);
-                        echo "update unor perencanaan ".$l['NamaUnor']."<br>";
+                        echo "update unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
                     } else {
+                        echo "put in insert unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
                         $insertMUnorPerencanaan[$l['Id']] = [
                             'id' => $l['Id'],
                             'nama_unor' => $l['NamaUnor'],
@@ -1949,8 +1951,9 @@
                                 ->update('db_siasn.m_ref_unor', [
                                     'nama_unor' => $l['NamaUnor']
                                 ]);
-                        echo "update unor ".$l['NamaUnor']."<br>";
+                        echo "update unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
                     } else {
+                        echo "put in insert unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
                         $insertMRefUnor[$l['Id']] = [
                             'id' => $l['Id'],
                             'nama_unor' => $l['NamaUnor'],

@@ -20,7 +20,9 @@
                     </select>
                 </div>
                 <div class="col-lg-3">
-                    <button type="submit" style="margin-top: 23px;" class="btn btn-navy btn-block"><i class="fa fa-save"></i> Simpan</button>
+                    <?php if($this->general_library->isProgrammer()){ ?>
+                        <button type="submit" style="margin-top: 23px;" class="btn btn-navy btn-block"><i class="fa fa-save"></i> Simpan</button>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col-lg-12">

@@ -47,13 +47,19 @@
             <?php } else { ?> 
             <div>
             <?php } ?>
-            <?php }?>
-
+            <?php }
+              $selectedUnitKerja = null;
+            ?>
+              
             <div class="form-group" style="margin-bottom:10px !important;">
               <label for="jabatan_unitkerja">Unit Kerja </label>
               <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan"  name="edit_jabatan_unit_kerja" id="edit_jabatan_unit_kerja"  <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?> >
                               <option value="" disabled selected>Pilih Unit Kerja</option>
-                              <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
+                              <?php if($unit_kerja){ foreach($unit_kerja as $r){
+                                if($jabatan[0]['id_unitkerja'] == $r['id_unitkerja']){
+                                  $selectedUnitKerja = $r;
+                                }
+                              ?>
                                   <option <?php if($jabatan[0]['id_unitkerja'] == $r['id_unitkerja']) echo "selected"; else echo ""; ?> value="<?=$r['id_unitkerja']?>/<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
                               <?php } } ?>
               </select>
@@ -62,7 +68,7 @@
               <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan"  name="id_unor_siasn" id="id_unor_siasn" >
                               <!-- <option value="" disabled selected>Pilih Unor SIASN</option> -->
                               <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
-                                  <option <?php if($jabatan[0]['id_unor_siasn'] == $r['id']) echo "selected"; else echo ""; ?> value="<?=$r['id']?>"><?=$r['nama']?></option>
+                                  <option <?php if($selectedUnitKerja && ($selectedUnitKerja['id_unor_siasn'] == $r['id'])) echo "selected"; else echo ""; ?> value="<?=$r['id']?>"><?=$r['nama_unor']?></option>
                               <?php } } ?>
               </select>
 

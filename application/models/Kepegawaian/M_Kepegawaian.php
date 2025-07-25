@@ -4037,7 +4037,7 @@ public function getAllPelanggaranByNip($nip){
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $data['id_unor_siasn']
             ];
-            dd(json_encode($update));
+            // dd(json_encode($update));
             $ws = $this->siasnlib->saveJabatan($update);
             
             $rs = json_decode($ws['data'], true);

@@ -97,8 +97,8 @@
                         return $result;
                     } else {
                         if($this->validateApps() == 1){
-                            $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
-                                    ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+                            // $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
+                            //         ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
 
                             $hardcodeKepalaSkpd = $this->db->select('*')
                                                         ->from('db_pegawai.unitkerja')

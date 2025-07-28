@@ -97,8 +97,8 @@
                         return $result;
                     } else {
                         if($this->validateApps() == 1){
-                            $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
-                                    ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+                            // $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
+                            //         ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
 
                             $hardcodeKepalaSkpd = $this->db->select('*')
                                                         ->from('db_pegawai.unitkerja')
@@ -1100,7 +1100,7 @@
                             ->get()->result_array();
 
             $unorSiasn = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('row_level', '2')
                             ->get()->result_array();
 
@@ -1127,7 +1127,7 @@
         public function revertMappingUnor($percent){
             $uker = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id')
                             ->where('a.id_unor_siasn IS NOT NULL')
                             ->get()->result_array();
 
@@ -1149,7 +1149,7 @@
         public function getDataMappingUnor(){
             $data = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->group_by('a.id_unitkerja')
                             ->get()->result_array();
             return $data;
@@ -1158,7 +1158,7 @@
         public function editMappingUnor($id){
             return $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id_unitkerja', $id)
                             ->get()->row_array();
         }
@@ -1171,7 +1171,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1201,7 +1201,7 @@
         public function loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja){
             return $this->db->select('a.*, b.nama_unor')
                             ->from('m_bidang a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id_unitkerja', $id_unitkerja)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama_bidang', 'asc')
@@ -1211,31 +1211,34 @@
         public function getDataForEditUnorBidang($id){
             return $this->db->select('a.*, a.id as id_m_bidang, b.nama_unor, b.id')
                             ->from('m_bidang a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
         }
         
         public function getUnorSiasnByUnitKerja($id_unitkerja){
-            return $this->db->select('*')
+            return $this->db->select('a.*, c.*')
                         ->from('db_pegawai.unitkerja a')
                         ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                        ->join('db_siasn.m_ref_unor c', 'b.id = c.id')
                         ->where('a.id_unitkerja', $id_unitkerja)
                         ->get()->result_array();
         }
 
         public function getUnorSiasnByBidang($id_m_bidang){
-            $data = $this->db->select('*')
+            $data = $this->db->select('a.*, c.*, d.*')
                         ->from('m_bidang a')
                         ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
-                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id')
+                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id', 'left')
+                        ->join('db_siasn.m_ref_unor d', 'b.id = d.id')
                         ->where('a.id', $id_m_bidang)
                         ->get()->result_array();
 
-            $tambahan = $this->db->select('*')
+            $tambahan = $this->db->select('a.*, c.*')
                                 ->from('m_bidang a')
                                 ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                                ->join('db_siasn.m_ref_unor c', 'b.id = c.id', 'left')
                                 ->where('a.id', $id_m_bidang)
                                 ->get()->result_array();
             if($data && (stringStartWith('Kecamatan', $data[0]['nm_unitkerja']) || stringStartWith('Kelurahan', $data[0]['nm_unitkerja']))){
@@ -1263,7 +1266,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1277,7 +1280,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1286,7 +1289,7 @@
         public function getListSubBidangByIdBidang($id_m_bidang){
             return $this->db->select('a.*, b.nama_unor')
                         ->from('m_sub_bidang a')
-                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                        ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                         ->where('a.id_m_bidang', $id_m_bidang)
                         ->where('a.flag_active', 1)
                         ->group_by('a.id')
@@ -1587,7 +1590,7 @@
             // dd('asd');
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
-            $flag_cek = 0;
+            $flag_cek = 1;
             if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
             }
@@ -1630,7 +1633,7 @@
                         }
                     }
                 }
-                
+                // dd($listChatIdResend);
                 if($listChatIdResend){
                     // $this->db->where_in('chatId', $listChatIdResend)
                     //         ->update('t_cron_wa', [
@@ -1660,7 +1663,7 @@
                                     ) as nm_jabatan_verifikator_sebelum
                                     ')
                                     ->from('t_progress_cuti a')
-                                    ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->join('t_pengajuan_cuti b', 'a.id = b.id_t_progress_cuti')
                                     ->join('db_pegawai.cuti c', 'b.id_cuti = c.id_cuti')
                                     ->join('m_user d', 'd.id = b.id_m_user')
                                     ->join('db_pegawai.pegawai e', 'e.nipbaru_ws = d.username')
@@ -1673,12 +1676,13 @@
                                     ->where('b.flag_ds_cuti', 0)
                                     // ->where_in('e.nipbaru_ws', $listNip)
                                     // ->where('flag_resend !=', 1)
-                                    ->order_by('a.urutan', 'asc')
+                                    // ->order_by('a.urutan', 'asc')
                                     // ->group_by('b.id')
                                     ->get()->result_array();
-                
+
                 $tempExists = null;
                 if($progressCutiWithoutChatId){
+                    // dd($progressCutiWithoutChatId);
                     $cronWaNextVerifikator = null;
                     foreach($progressCutiWithoutChatId as $pcw){
                         if(!isset($tempExists[$pcw['id_t_pengajuan_cuti']])){
@@ -1715,8 +1719,8 @@
                     }
 
                     if($cronWaNextVerifikator){
+                        // dd($cronWaNextVerifikator);
                         $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
-                        dd($cronWaNextVerifikator);
                     }
                 }
             }
@@ -1896,24 +1900,94 @@
         public function syncUnor(){
             $res = $this->siasnlib->getAllDataUnor();
             if($res['code'] == 0){
-                $list = json_decode($res['data'], true);
-                $notfound = null;
-                foreach($list['data'] as $l){
-                    if(stringStartWith("SEKOLAH", $l['NamaUnor']) ||
-                    stringStartWith("SD", $l['NamaUnor']) ||
-                    stringStartWith("SMP", $l['NamaUnor']) ||
-                    stringStartWith("TK", $l['NamaUnor']) ||
-                    stringStartWith("BADAN", $l['NamaUnor']) ||
-                    stringStartWith("DINAS", $l['NamaUnor']) ||
-                    stringStartWith("INSPEKTORAT", $l['NamaUnor'])
-                    ){
-
-                    } else {
-                        $notfound[] = $l;
+                $listUnorPerencanaan = null; 
+                $mUnorPerencanaan = $this->db->select('*')
+                                        ->from('db_siasn.m_unor_perencanaan')
+                                        ->get()->result_array();
+                if($mUnorPerencanaan){
+                    foreach($mUnorPerencanaan as $mup){
+                        $listUnorPerencanaan[$mup['id']] = $mup;
                     }
                 }
 
-                dd($notfound);
+                $listRefUnor = null; 
+                $mRefUnor = $this->db->select('*')
+                                        ->from('db_siasn.m_ref_unor')
+                                        ->get()->result_array();
+                if($mRefUnor){
+                    foreach($mRefUnor as $mru){
+                        $listRefUnor[$mru['id']] = $mru;
+                    }
+                }
+
+                $list = json_decode($res['data'], true);
+                $insertMUnorPerencanaan = null;
+                $insertMRefUnor = null;
+
+                foreach($list['data'] as $l){
+                    // dd($list['data']);
+                    if(isset($listUnorPerencanaan[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_unor_perencanaan', [
+                                    'nama_unor' => $l['NamaUnor'],
+                                    'diatasan_id' => $l['DiatasanId'],
+                                    'induk_unor_id' => $l['IndukUnorId'],
+                                    'jenis_unor_id' => $l['JenisUnorId'],
+                                ]);
+                        echo "update unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                        $insertMUnorPerencanaan[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                            'diatasan_id' => $l['DiatasanId'],
+                            'induk_unor_id' => $l['IndukUnorId'],
+                            'jenis_unor_id' => $l['JenisUnorId'],
+                        ];
+                    }
+
+                    if(isset($listRefUnor[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_ref_unor', [
+                                    'nama_unor' => $l['NamaUnor']
+                                ]);
+                        echo "update unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                        $insertMRefUnor[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                        ];
+                    }
+                }
+
+                if($insertMUnorPerencanaan){
+                    $this->db->insert_batch('db_siasn.m_unor_perencanaan', $insertMUnorPerencanaan);
+                    echo "insert unor perencanaan ".count($insertMUnorPerencanaan)."<br>";
+                }
+
+                if($insertMRefUnor){
+                    $this->db->insert_batch('db_siasn.m_ref_unor', $insertMRefUnor);
+                    echo "insert unor perencanaan ".count($insertMRefUnor)."<br>";
+                }
+                
+                // $notfound = null;
+                // foreach($list['data'] as $l){
+                //     if(stringStartWith("SEKOLAH", $l['NamaUnor']) ||
+                //     stringStartWith("SD", $l['NamaUnor']) ||
+                //     stringStartWith("SMP", $l['NamaUnor']) ||
+                //     stringStartWith("TK", $l['NamaUnor']) ||
+                //     stringStartWith("BADAN", $l['NamaUnor']) ||
+                //     stringStartWith("DINAS", $l['NamaUnor']) ||
+                //     stringStartWith("INSPEKTORAT", $l['NamaUnor'])
+                //     ){
+
+                //     } else {
+                //         $notfound[] = $l;
+                //     }
+                // }
+
+                // dd($notfound);
             }
         }
 

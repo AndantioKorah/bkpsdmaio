@@ -513,14 +513,14 @@ class C_Master extends CI_Controller
 
     public function mappingUnor(){
         // $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
-        // $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        // $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_ref_unor', 0);
         $data['result'] = $this->general->getDataMappingUnor();
         render('master/V_SiasnMappingUnor', '', '', $data);
     }
 
     public function editMappingUnor($id){
         $data['result'] = $this->general->editMappingUnor($id);
-        $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_ref_unor', 0);
         $data['id_unitkerja'] = $id;
         $this->load->view('master/V_SiasnEditMappingUnor', $data);
     }

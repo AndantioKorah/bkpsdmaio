@@ -598,17 +598,14 @@ class C_Kinerja extends CI_Controller
                     $config['upload_path'] = './assets/dokumen_pendukung_disiplin_kerja';
                     //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = '5000'; // max_size in kb
+                    $config['max_size'] = '1000'; // max_size in kb
 
                     //Load upload library
                     $this->load->library('upload', $config);
-                    if ( ! $this->upload->do_upload('file'))
-                    {
-                            $error = array('error' => $this->upload->display_errors());
-                            $res = array('msg' => $error, 'success' => false);
-                            return $res;
-                    }
-
+                    // if ( ! $this->upload->do_upload('file'))
+                    // {
+                            
+                    // }
                   
                     if ($this->upload->do_upload('file')) {
 
@@ -633,6 +630,10 @@ class C_Kinerja extends CI_Controller
 
                         $this->image_lib->initialize($config);
                         $this->image_lib->resize();
+                    } else {
+                        $error = array('error' => $this->upload->display_errors());
+                        $res = array('msg' => $error, 'success' => false, 'code' => 1, 'message' => $error);
+                        return $res;
                     }
                 }
                 $nama_file[] = $data['file_name'];

@@ -4034,9 +4034,10 @@ public function getAllPelanggaranByNip($nip){
                 "tanggalSk" => formatDateOnlyForEdit2($data['tglsk']),
                 "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
+                "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $data['id_unor_siasn']
             ];
-            dd(json_encode($update));
+            // dd(json_encode($update));
             $ws = $this->siasnlib->saveJabatan($update);
             
             $rs = json_decode($ws['data'], true);
@@ -7080,6 +7081,17 @@ public function submitEditJabatan(){
 
         if(isset($pegawai['atasan']) && $pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
             unset($pegawai['atasan']);
+        }
+           
+        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) ||
+        stringStartWith("Puskesmas", $thisuser['nm_unitkerja']) || 
+        stringStartWith("Rumah Sakit", $thisuser['nm_unitkerja']) || 
+        stringStartWith("Kelurahan", $thisuser['nm_unitkerja']) 
+        ){
+            $tmp = $pegawai['kepala'];
+            $pegawai['kepala'] = $pegawai['sek'];
+            $pegawai['sek'] = $tmp;
+            // dd($pegawai);
         }
 
         $new_progress = null;

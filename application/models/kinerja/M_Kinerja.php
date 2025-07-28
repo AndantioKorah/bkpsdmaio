@@ -1128,17 +1128,51 @@
                             ->where('b.skpd', 3010000)
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // sek
-            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja'])){ // jika di kelurahan
+            } else if(stringStartWith('Kelurahan', $pegawai['nm_unitkerja']) ||
+                    stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])
+            ){ // jika di kelurahan
                 $fl = 3;
                 $kadis = $this->baseQueryAtasan()
                             ->where('c.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
                             ->where('d.eselon', 'III A')
                             ->get()->row_array(); // camat
+
+                if(!$kadis){ // jika camat kosong, cari PLT
+                    $kadis = $this->baseQueryAtasan()
+                                    ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
+                                    ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
+                                    ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
+                                    ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
+                                    ->where('ac.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
+                                    ->where('ab.eselon', 'III A')
+                                    ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
+                                    ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
+                                    ->get()->row_array();
+                    if($kadis){
+                        $kadis['nama_jabatan'] = $kadis['jenis_plt'].". ".$kadis['nama_jabatan_plt_plh'];
+                    }
+                }
                 
                 $sek = $this->baseQueryAtasan()
                             ->where('c.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
                             ->where('d.eselon', 'III B')
                             ->get()->row_array(); // sekcam
+                            
+                if(!$sek){ // jika sekcam kosong, cari PLT
+                    $sek = $this->baseQueryAtasan()
+                                    ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
+                                    ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
+                                    ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
+                                    ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
+                                    ->where('ac.id_unitkerjamaster', $pegawai['id_unitkerjamaster'])
+                                    ->where('ab.eselon', 'III B')
+                                    ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
+                                    ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
+                                    ->get()->row_array();
+                    if($sek){
+                        $sek['nama_jabatan'] = $sek['jenis_plt'].". ".$sek['nama_jabatan_plt_plh'];
+                    }
+                }
             }
             else if(!stringStartWith('Inspektorat', $pegawai['nm_unitkerja']) 
                 && (stringStartWith("Dinas", $pegawai['nm_unitkerja'])
@@ -1153,7 +1187,7 @@
                 $sek = $this->baseQueryAtasan()
                             ->where('b.skpd', $pegawai['id_unitkerja'])
                             ->where('d.eselon', 'III A')
-                            ->where_like('d.nama_jabatan LIKE "Sekretaris"')
+                            ->where('d.nama_jabatan LIKE "Sekretaris"')
                             ->get()->row_array(); // sek inspektorat
             }
         }
@@ -5076,5 +5110,118 @@
             
         }
 
+    public function manageDokpen($bulan, $tahun){
+        // $tahun = "23";
+        $dir = "assets/dokumen_pendukung_disiplin_kerja";
+        $listEntryFile = null;
+        if($handle = opendir($dir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    if(file_exists($dir."/".$entry)){
+                        $listEntryFile[$entry] = $entry;
+                    }
+                }
+            }
+            closedir($handle);
+        }
+
+        // for($i = 2; $i <= 12; $i++){
+            $bulan = $bulan < 10 ? "0".$bulan : $bulan;
+
+            $tDokpen = $this->db->select('*')
+                                ->from('t_dokumen_pendukung')
+                                ->where('bulan', $bulan)
+                                ->where('tahun', "20".$tahun)
+                                // ->where('flag_active', 1)
+                                ->get()->result_array();
+            
+            $listDok = null;
+            $listDeleteDok = null;
+            if($tDokpen){
+                foreach($tDokpen as $td){
+                    if($td['dokumen_pendukung'] && $td['dokumen_pendukung'] != '[""]'){
+                        $foreachDokpen = json_decode($td['dokumen_pendukung'], true);
+                        if($foreachDokpen){
+                            foreach($foreachDokpen as $tdDokpen){
+                                if(isset($listEntryFile[$tdDokpen])){
+                                    if($td['flag_active'] == 1){ // jika flag active = 1, listkan untuk backup
+                                        $listDok[$tdDokpen] = $tdDokpen;
+                                    } else { // jika tidak, listkan untuk dihapus
+                                        $listDeleteDok[] = $tdDokpen;
+                                    }
+                                } else {
+                                    $listDeleteDok[] = $tdDokpen;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if($listDok){
+                $zip = new ZipArchive;
+                $zipname = "backup/dokpen/dokpen_"."20".$tahun."_".getNamaBulan($bulan);
+                $folderName = $zipname;
+                if(!file_exists($folderName)){
+                    mkdir($zipname, 0777);
+                }
+
+                for($i = 1; $i <= 1000; $i++){
+                    $tempZipName = $zipname."_".$i;
+                    // $zipname .= "_".$i;
+                    if(!file_exists($tempZipName.".zip")){
+                        $zipname = $tempZipName;
+                        break;
+                    }
+                }
+
+                $zip->open($zipname.".zip", ZipArchive::CREATE || ZipArchive::OVERWRITE);
+
+                // $fileDone = $this->db->select('*')
+                //                 ->where('bulan', $bulan)
+                //                 ->where('tahun', '20'.$tahun)
+                //                 ->from('t_filedone_zip')
+                //                 ->get()->result_array();
+
+                $zippedFile = null;
+                if($handle = opendir($folderName)) {
+                    while (false !== ($entry = readdir($handle))) {
+                        if ($entry != "." && $entry != "..") {
+                            if(file_exists($folderName."/".$entry)){
+                                $zippedFile[$entry] = $entry;
+                            }
+                        }
+                    }
+                    closedir($handle);
+                }
+
+                $insertFile = null;
+                foreach($listDok as $lDok){
+                    if(!isset($zippedFile[$lDok])){ // cek jika belum dibackup sebelumnya
+                        $fileContent = file_get_contents($dir."/".$lDok);
+                        $zip->addFromString($lDok, $fileContent); // taruh di zip
+
+                        copy($dir."/".$lDok, $folderName."/".$lDok); // copy file taruh di folder
+
+                        $insertFile[$lDok] = [
+                            'nama_file' => $lDok,
+                            'bulan' => $bulan,
+                            'tahun' => "20".$tahun
+                        ];
+                    }
+                }
+                $zip->close();
+            }
+
+            if($listDeleteDok){
+                foreach($listDeleteDok as $lDelDok){
+                    if(file_exists($dir."/".$lDelDok)){
+                        unlink($dir."/".$lDelDok);
+                    }
+                }
+            }
+            // break;
+        // }
+    }
     
 }

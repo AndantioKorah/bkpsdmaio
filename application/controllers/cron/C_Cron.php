@@ -166,4 +166,8 @@ class C_Cron extends CI_Controller
     public function syncUnor(){
         $this->general->syncUnor();
     } 
+
+    public function manageDokpen($bulan, $tahun){
+        $this->kinerja->manageDokpen($bulan, $tahun);
+    }
 }

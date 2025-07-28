@@ -733,7 +733,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['statusjabatan'] = $statusjab;
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['dok'] = $this->kepegawaian->getDataDok('db_pegawai.pegjabatan', $id_peg );
-		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama_unor', 'asc');
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			
@@ -1389,7 +1389,7 @@ class C_Kepegawaian extends CI_Controller
 		// $data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
-		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama_unor', 'asc');
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
@@ -2937,7 +2937,7 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/layanan/V_UploadSKPangkat', $data);
 		} else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
 		$data['result'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
-		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama', 'asc');
+		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama_unor', 'asc');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($data['result'][0]['nipbaru_ws']);		
 		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();

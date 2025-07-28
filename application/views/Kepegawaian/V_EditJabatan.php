@@ -186,7 +186,7 @@
             <div class="form-group">
               <label>File SK</label>
               <input  class="form-control my-image-field" type="file" id="pdf_file_jab" name="file"/>
-              <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+              <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
             </div>
 
             <div class="form-group col-lg-12">
@@ -385,7 +385,7 @@ $('#form_edit_jabatann').on('submit', function(e){
         var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>
+        var MaxSize = 2048
 
         if (extension != "pdf"){
         errortoast("Harus File PDF")
@@ -393,7 +393,7 @@ $('#form_edit_jabatann').on('submit', function(e){
         }
 
         if (fileSize > MaxSize ){
-        errortoast("Maksimal Ukuran File 1 MB")
+        errortoast("Maksimal Ukuran File 2 MB")
         $(this).val('');
         }
 

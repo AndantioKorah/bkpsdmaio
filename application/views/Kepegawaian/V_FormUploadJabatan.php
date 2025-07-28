@@ -474,7 +474,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
-    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+    <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
   </div>
 
   <div class="form-group">
@@ -697,7 +697,7 @@ $(function(){
         var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>;
+        var MaxSize = 2048;
         
      
         if (extension != "pdf"){
@@ -706,7 +706,7 @@ $(function(){
         }
 
         if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 1 MB")
+          errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
 

@@ -727,10 +727,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(sk_jabatan_fungsional == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan_fungsional == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false; 
+        // }
         if(ijazah == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

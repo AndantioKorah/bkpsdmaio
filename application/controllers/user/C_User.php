@@ -562,6 +562,7 @@ class C_User extends CI_Controller
 
     public function searchAllPegawai(){
         list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
+        // dd($data);
         $this->session->set_userdata('data_search_database', $data);
         $this->load->view('user/V_PegawaiAllResult', $data);
     }

@@ -5258,6 +5258,30 @@
     }
 
     public function customManageDokpen(){
+        // cari mana yg tahun ini punya, jangan hapus.
+        // semua file yg masih ada di assets/dokumen_pendukung_disiplin_kerja dan tidak ada di t_dokumen_pendukung tahun 2025 punya, itu yang dihapus
+
+        $listDokpenTY = null; //list dokpen this year
+        $listDokpenTYDelete = null; //list dokpen this year delete
+        $tDokpen = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('tahun', '2025')
+                            ->group_by('dokumen_pendukung')
+                            ->get()->result_array();
+        if($tDokpen){
+            // dd($tDokpen);
+            foreach($tDokpen as $td){
+                if($td['dokumen_pendukung'] && $td['dokumen_pendukung'] != '[""]'){
+                    $foreachDokpen = json_decode($td['dokumen_pendukung'], true);
+                    // dd($foreachDokpen);
+                    foreach($foreachDokpen as $tdDokpen){
+                        $listDokpenTY[$tdDokpen] = $tdDokpen;
+                    }
+                }   
+            }
+        }
+        // dd(($listDokpenTY));
+
         $oldFile = null;
         $filesTY = null;
         $dir = "assets/dokumen_pendukung_disiplin_kerja";
@@ -5265,8 +5289,8 @@
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
                     if(file_exists($dir."/".$entry)){
-                        if(stringStartWith('25', $entry)){
-                            $filesTY[$entry] = $entry;
+                        if(isset($listDokpenTY[$entry])){
+                            $filesTY[$entry] = $entry; // cari di folder jika 
                         } else {
                             $oldFile[$entry] = $entry;
                         }
@@ -5276,7 +5300,36 @@
             closedir($handle);
         }
 
-        dd($oldFile);
+        // dd(count($filesTY));
+
+        // echo(count($oldFile))." sebelum hapus.<br>";
+        if($oldFile){
+            $customDirBu = "backup/dokpen/custom_backup";
+            $customDirFileBacked = null;
+            if($handle = opendir($customDirBu)) {
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry != "." && $entry != "..") {
+                       $customDirFileBacked[$entry] = $entry; 
+                    }
+                }
+                closedir($handle);
+            }
+
+            $total = 0;
+            foreach($oldFile as $of){
+                if(!isset($customDirFileBacked[$of])){
+                    $total++;
+                    copy($dir."/".$of, $customDirBu."/".$of); // copy ke folder baru untuk backup     
+                    unlink($dir."/".$of); // hapus dari folder lama
+                    if($total == 10000){
+                        break;
+                    }
+                }
+            }
+            echo "total: ".$total."<br>";
+            echo "oldFile: ".count($oldFile)."<br>";
+            echo "customDirFileBacked: ".count($customDirFileBacked)."<br>";
+        }
     }
     
 }

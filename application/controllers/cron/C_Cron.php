@@ -175,7 +175,7 @@ class C_Cron extends CI_Controller
         $this->kinerja->deleteBackuppedDokpen($bulan, $tahun);
     }
 
-    public function customManageDokpen(){
-        $this->kinerja->customManageDokpen();
+    public function customManageDokpenc(){
+        $this->kinerja->customManageDokpenc();
     }
 }

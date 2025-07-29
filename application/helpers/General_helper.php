@@ -1332,6 +1332,18 @@ function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
 }
 
+function getDefaultSubJabatan($idJabatanSiasn){
+    switch($idJabatanSiasn){
+        case "A5EB03E23DAAF6A0E040640A040252AD" : return "1100"; //PENYULUH AGAMA KRISTEN
+        case "A5EB03E23DAAF6A0E040640A040252AD" : return "1102"; //PENERJEMAH BAHASA INGGRIS
+        case "A5EB03E23DD0F6A0E040640A040252AD" : return "36"; //DOKTER GIGI(UMUM)
+        case "A5EB03E23DE9F6A0E040640A040252AD" : return "1"; //DOKTER (UMUM)
+        case "8ae482893580790801358a184e1848b9" : return "865"; //Dokter Gigi Spesialis Bedah Mulut
+        case "A5EB03E23DCFF6A0E040640A040252AD" : return "127"; //GURU KELAS
+        default: return 1;
+    }
+}
+
 function isKapus($nama_jabatan){
     return (stringStartWith('Kepala Puskesmas', $nama_jabatan)); 
 }

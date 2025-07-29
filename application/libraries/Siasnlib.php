@@ -130,7 +130,7 @@ class Siasnlib{
 
     function saveJabatan($data){
         return $this->postCurl(
-            $this->API_URL.'unorjabatan/save',
+            $this->API_URL.'jabatan/unorjabatan/save',
             json_encode($data),
             "POST",
             0,

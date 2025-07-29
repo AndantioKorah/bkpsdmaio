@@ -2031,7 +2031,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function lakukan_download(){                                                          
 		$this->load->helper(array('url','download'));
-		force_download('./dokumen_layanan/Lap Perkawinan I Daftar Keluarga Mengetahui Atasan Langsung - Karis Karsu.docx',NULL);
+		force_download('./dokumen_layanan/FORMAT RENCANA TAHUNAN KEBUTUHAN PENGEMBANGAN DIRI.pdf',NULL);
 	}  
 	
 	public function insertUsulLayananKarisKarsu($id_m_layanan)
@@ -3455,8 +3455,23 @@ class C_Kepegawaian extends CI_Controller
 			$previous1Year = $currentYear - 1;   
 			$previous2Year = $currentYear - 2; 
 			$data['tahun_1_lalu'] = $previous1Year;
+			$data['tahun_2_lalu'] = $previous2Year;
 			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
-			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+			$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year);
+			$data['surat_permohonan_walikota'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','83','0');	
+			$data['surat_rekom_masuk_pt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','83','0');	
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
+			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','78','0');	
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
+			$data['surat_ket_lulus_mhs'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','85','0');	
+			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
+			$data['suket_kuliah_online'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
+			$data['krs'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','89','0');	
+			$data['suket_beasiswa'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','87','0');	
+			$data['rencana_pengembangan_diri'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','90','0');	
+			
+			
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
